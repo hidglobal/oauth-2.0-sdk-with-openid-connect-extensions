@@ -10,7 +10,7 @@ import com.nimbusds.langtag.LangTagException;
  * (RFC 5646).
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-15)
+ * @version $version$ (2012-05-16)
  */
 public abstract class StringClaimWithLangTag extends StringClaim {
 
@@ -19,6 +19,14 @@ public abstract class StringClaimWithLangTag extends StringClaim {
 	 * Optional language tag (RFC 5646).
 	 */
 	protected LangTag langTag = null;
+	
+	
+	/**
+	 * Gets the base claim name (without the language tag designation).
+	 *
+	 * @return The base claim name.
+	 */
+	public abstract String getBaseClaimName();
 	
 	
 	/**

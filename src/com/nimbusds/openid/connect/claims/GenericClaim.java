@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.claims;
 
 /**
  * Generic claim. It can be used to represent an arbitrary claim, e.g. a custom
- * claim outside the reserved ones.
+ * claim outside the typed claims used in OpenID Connect.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-21)

@@ -5,12 +5,25 @@ package com.nimbusds.openid.connect.claims;
 /**
  * UserInfo claims.
  *
+ * <p>Example UserInfo claims set:
+ *
+ * <pre>
+ * {
+ *   "user_id"     : "248289761001",
+ *   "name"        : "Jane Doe",
+ *   "given_name"  : "Jane",
+ *   "family_name" : "Doe",
+ *   "email"       : "janedoe@example.com",
+ *   "picture"     : "http://example.com/janedoe/me.jpg"
+ * }
+ * </pre>
+ *
  * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#anchor14
  * 
  * <p>See http://openid.net/specs/openid-connect-standard-1_0.html#id_res
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-05-16)
  */
 public class UserInfo {
 
@@ -21,6 +34,17 @@ public class UserInfo {
 	 */
 	public static class Name extends StringClaimWithLangTag {
 	
+	
+		/**
+		 * @inheritDoc
+		 *
+		 * @return "name".
+		 */
+		public String getBaseClaimName() {
+		
+			return "name";
+		}
+		
 	
 		/**
 		 * @inheritDoc
@@ -46,6 +70,17 @@ public class UserInfo {
 		/**
 		 * @inheritDoc
 		 *
+		 * @return "given_name".
+		 */
+		public String getBaseClaimName() {
+		
+			return "given_name";
+		}
+		
+		
+		/**
+		 * @inheritDoc
+		 *
 		 * @return "given_name" or "given_name#lang-tag".
 		 */
 		public String getClaimName() {
@@ -64,6 +99,17 @@ public class UserInfo {
 	public static class FamilyName extends StringClaimWithLangTag {
 	
 	
+		/**
+		 * @inheritDoc
+		 *
+		 * @return "family_name".
+		 */
+		public String getBaseClaimName() {
+		
+			return "family_name";
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 *
@@ -88,14 +134,25 @@ public class UserInfo {
 		/**
 		 * @inheritDoc
 		 *
-		 * @return "family_name" or "family_name#lang-tag".
+		 * @return "middle_name".
+		 */
+		public String getBaseClaimName() {
+		
+			return "middle_name";
+		}
+		
+		
+		/**
+		 * @inheritDoc
+		 *
+		 * @return "middle_name" or "middle_name#lang-tag".
 		 */
 		public String getClaimName() {
 
 			if (langTag == null)
-				return "family_name";
+				return "middle_name";
 			else
-				return "family_name" + langTag.toString();
+				return "middle_name" + langTag.toString();
 		}
 	}
 	
@@ -108,6 +165,17 @@ public class UserInfo {
 	public static class Nickname extends StringClaimWithLangTag {
 	
 	
+		/**
+		 * @inheritDoc
+		 *
+		 * @return "nickname".
+		 */
+		public String getBaseClaimName() {
+		
+			return "nickname";
+		}
+		
+		
 		/**
 		 * @inheritDoc
 		 *
@@ -340,6 +408,17 @@ public class UserInfo {
 			/**
 			 * @inheritDoc
 			 *
+			 * @return "formatted".
+			 */
+			public String getBaseClaimName() {
+
+				return "formatted";
+			}
+			
+			
+			/**
+			 * @inheritDoc
+			 *
 			 * @return "formatted" or "formatted#lang-tag".
 			 */
 			public String getClaimName() {
@@ -360,6 +439,17 @@ public class UserInfo {
 		public static class StreetAddress extends StringClaimWithLangTag {
 		
 		
+			/**
+			 * @inheritDoc
+			 *
+			 * @return "street_address".
+			 */
+			public String getBaseClaimName() {
+
+				return "street_address";
+			}
+			
+			
 			/**
 			 * @inheritDoc
 			 *
@@ -384,6 +474,17 @@ public class UserInfo {
 			/**
 			 * @inheritDoc
 			 *
+			 * @return "locality".
+			 */
+			public String getBaseClaimName() {
+
+				return "locality";
+			}
+			
+			
+			/**
+			 * @inheritDoc
+			 *
 			 * @return "locality" or "locality#lang-tag".
 			 */
 			public String getClaimName() {
@@ -402,6 +503,17 @@ public class UserInfo {
 		public static class Region extends StringClaimWithLangTag {
 		
 		
+			/**
+			 * @inheritDoc
+			 *
+			 * @return "region".
+			 */
+			public String getBaseClaimName() {
+
+				return "region";
+			}
+			
+			
 			/**
 			 * @inheritDoc
 			 *
@@ -426,6 +538,17 @@ public class UserInfo {
 			/**
 			 * @inheritDoc
 			 *
+			 * @return "postal_code".
+			 */
+			public String getBaseClaimName() {
+
+				return "postal_code";
+			}
+			
+			
+			/**
+			 * @inheritDoc
+			 *
 			 * @return "postal_code" or "postal_code#lang-tag".
 			 */
 			public String getClaimName() {
@@ -444,6 +567,17 @@ public class UserInfo {
 		public static class Country extends StringClaimWithLangTag {
 		
 		
+			/**
+			 * @inheritDoc
+			 *
+			 * @return "country".
+			 */
+			public String getBaseClaimName() {
+
+				return "country";
+			}
+			
+			
 			/**
 			 * @inheritDoc
 			 *
