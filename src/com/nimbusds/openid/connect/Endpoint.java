@@ -8,14 +8,18 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
 /**
  * Authorisation server endpoint.
  *
- * <p>Parses incoming {@link HTTPRequest}s into OpenID Connect {@link Request} 
+ * <p>Parses incoming {@link com.nimbusds.openid.connect.http.HTTPRequest}s into
+ * OpenID Connect {@link com.nimbusds.openid.connect.messages.Request} 
  * objects which are then passed to a dedicated {@link RequestHandler} to 
  * perform the actual back-end processing (e.g. by making a database query).
  *
- * <p>If the {@link HTTPRequest} doesn't parse to a valid OpenID Connect 
- * {@link Request} or the request is found to be otherwise invalid, the endpoint
- * may choose to return a {@link HTTPResponse} indicating an 
- * {@link ErrorCode error} without the {@link RequestHandler} being called.
+ * <p>If the {@link com.nimbusds.openid.connect.http.HTTPRequest} doesn't parse 
+ * to a valid OpenID Connect 
+ * {@link com.nimbusds.openid.connect.messages.Request} or the request is found 
+ * to be otherwise invalid, the endpoint may choose to return a 
+ * {@link com.nimbusds.openid.connect.http.HTTPResponse} indicating an 
+ * {@link com.nimbusds.openid.connect.messages.ErrorCode error} without the 
+ * {@link RequestHandler} being called.
  *
  * <p>To do: Add event handler setter for logging and monitoring purposes.
  *
@@ -26,7 +30,8 @@ public interface Endpoint {
 
 
 	/**
-	 * Sets a handler for OpenID Connect {@link Request}s received at the 
+	 * Sets a handler for OpenID Connect 
+	 * {@link com.nimbusds.openid.connect.messages.Request}s received at the 
 	 * endpoint.
 	 *
 	 * @param handler The handler.
@@ -35,7 +40,8 @@ public interface Endpoint {
 	
 	
 	/**
-	 * Gets the handler for OpenID Connect {@link Request}s received at the
+	 * Gets the handler for OpenID Connect 
+	 * {@link com.nimbusds.openid.connect.messages.Request}s received at the
 	 * endpoint.
 	 *
 	 * @return The handler.

@@ -68,6 +68,12 @@ public class AddressClaims extends JSONObjectClaims {
 	
 	
 	/**
+	 * The language tag applied to the whole UserInfo address claims set.
+	 */
+	private LangTag langTag = null;
+	
+	
+	/**
 	 * The full mailing address, formatted for display or use with a mailing
 	 * label (optional).
 	 */
@@ -112,7 +118,31 @@ public class AddressClaims extends JSONObjectClaims {
 	 */
 	public AddressClaims() {
 	
-		// Nothing
+		this(null);
+	}
+	
+	
+	/**
+	 * Creates a new minimal (empty) UserInfo address claims set. Use the 
+	 * setter methods for the optional claims (all).
+	 *
+	 * @param langTag The language tag to apply to the whole UserInfo claims
+	 *                set, {@code null} if none.
+	 */
+	public AddressClaims(final LangTag langTag) {
+	
+		this.langTag = langTag;
+	}
+	
+	
+	/**
+	 * Gets the language tag applied to the whole UserInfo claims set.
+	 *
+	 * @return The language tag, {@code null} if none.
+	 */
+	public LangTag getLangTag() {
+	
+		return langTag;
 	}
 	
 	

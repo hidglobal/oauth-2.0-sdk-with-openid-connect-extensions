@@ -6,7 +6,7 @@ package com.nimbusds.openid.connect;
  * implementation.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-05-16)
  */
 public class Version {
 
@@ -15,5 +15,11 @@ public class Version {
 	 * The matching OpenID Connect specification version.
 	 */
 	public static final String OPENID_CONNECT_VERSION = "1.0";
+	
+	
+	/**
+	 * This SDK version.
+	 */
+	public static final String SDK_VERSION = "$version$";
 
 }
