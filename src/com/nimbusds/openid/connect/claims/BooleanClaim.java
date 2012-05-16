@@ -30,9 +30,9 @@ public abstract class BooleanClaim implements Claim<Boolean> {
 	/**
 	 * @inheritDoc
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
-		return Claim.Type.BOOLEAN;
+		return Claim.ValueType.BOOLEAN;
 	}
 	
 	

@@ -37,7 +37,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-16)
  */
-public class AddressClaims extends JSONObjectClaims {
+public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject> {
 
 
 	/**
@@ -132,6 +132,53 @@ public class AddressClaims extends JSONObjectClaims {
 	public AddressClaims(final LangTag langTag) {
 	
 		this.langTag = langTag;
+	}
+	
+	
+	/**
+	 * @inheritDoc
+	 */
+	public Claim.ValueType getClaimValueType() {
+	
+		return Claim.ValueType.OBJECT;
+	}
+	
+	
+	/**
+	 * @inheritDoc
+	 *
+	 * @return "address" or "address#lang-tag".
+	 */
+	public String getClaimName() {
+	
+		if (langTag == null)
+			return "address";
+		
+		else
+			return "address#" + langTag;
+	}
+	
+	
+	/**
+	 * @inheritDoc
+	 *
+	 * @see #toJSONObject
+	 *
+	 * @return The JSON object representation of this UserInfo address 
+	 *         claims set.
+	 */
+	public JSONObject getClaimValue() {
+	
+		return toJSONObject();
+	}
+	
+	
+	/**
+	 * @inheritDoc
+	 */
+	public void setClaimValue(final JSONObject o) {
+	
+	
 	}
 	
 	

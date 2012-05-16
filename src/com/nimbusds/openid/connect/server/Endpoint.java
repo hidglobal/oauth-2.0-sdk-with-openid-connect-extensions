@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect;
+package com.nimbusds.openid.connect.server;
 
 
 import com.nimbusds.openid.connect.http.HTTPRequest;
@@ -24,7 +24,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * <p>To do: Add event handler setter for logging and monitoring purposes.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-03-15)
+ * @version $version$ (2012-05-16)
  */
 public interface Endpoint {
 

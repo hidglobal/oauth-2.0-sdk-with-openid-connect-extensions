@@ -56,7 +56,7 @@ public class UserInfo {
 			if (langTag == null)
 				return "name";
 			else
-				return "name" + langTag.toString();
+				return "name" + langTag;
 		}
 	}
 	

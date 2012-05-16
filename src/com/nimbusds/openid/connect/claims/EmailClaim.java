@@ -33,9 +33,9 @@ public abstract class EmailClaim implements Claim<InternetAddress> {
 	/**
 	 * @inheritDoc
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
-		return Claim.Type.EMAIL;
+		return Claim.ValueType.EMAIL;
 	}
 	
 	

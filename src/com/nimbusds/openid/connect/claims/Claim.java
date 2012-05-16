@@ -29,7 +29,7 @@ import net.minidev.json.JSONObject;
  * </pre>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-21)
+ * @version $version$ (2012-05-16)
  */
 public interface Claim<T> {
 
@@ -38,7 +38,7 @@ public interface Claim<T> {
 	 * Enumeration of the underlying claim value JSON types. Intended to be
 	 * used in claim parsing.
 	 */
-	public static enum Type {
+	public static enum ValueType {
 	
 	
 		/**
@@ -102,14 +102,16 @@ public interface Claim<T> {
 		
 		
 		/**
-		 * Resolves the matching claim type of the specified object.
+		 * Resolves the matching claim value type of the specified 
+		 * object.
 		 *
 		 * @param o The object to check. May be {@code null}.
 		 *
-		 * @return The resolved claim type, {@code null} if the object 
-		 *         doesn't match an enumerated type or is {@code null}.
+		 * @return The resolved claim value type, {@code null} if the 
+		 *         object doesn't match an enumerated type or is 
+		 *         {@code null}.
 		 */
-		public static Type resolve(final Object o) {
+		public static ValueType resolve(final Object o) {
 		
 			if (o == null)
 				return null;
@@ -176,7 +178,7 @@ public interface Claim<T> {
 	 *
 	 * @return The underlying JSON type of the claim value.
 	 */
-	public Type getType();
+	public ValueType getClaimValueType();
 	
 	
 	/**

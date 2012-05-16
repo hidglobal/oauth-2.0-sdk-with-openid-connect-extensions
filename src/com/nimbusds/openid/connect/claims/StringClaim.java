@@ -34,9 +34,9 @@ public abstract class StringClaim implements Claim<String> {
 	/**
 	 * @inheritDoc
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
-		return Claim.Type.STRING;
+		return Claim.ValueType.STRING;
 	}
 	
 	

@@ -33,9 +33,9 @@ public abstract class URLClaim implements Claim<URL> {
 	/**
 	 * @inheritDoc
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
-		return Claim.Type.URL;
+		return Claim.ValueType.URL;
 	}
 	
 	

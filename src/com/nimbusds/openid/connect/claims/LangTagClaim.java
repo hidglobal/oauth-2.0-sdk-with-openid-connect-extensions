@@ -34,9 +34,9 @@ public abstract class LangTagClaim implements Claim<String> {
 	/**
 	 * @inheritDoc
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
-		return Claim.Type.STRING;
+		return Claim.ValueType.STRING;
 	}
 	
 	

@@ -30,9 +30,9 @@ public abstract class LongClaim implements Claim<Long> {
 	/**
 	 * @inheritDoc
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
-		return Claim.Type.LONG;
+		return Claim.ValueType.LONG;
 	}
 	
 	

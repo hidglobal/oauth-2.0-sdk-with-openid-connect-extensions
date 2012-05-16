@@ -26,7 +26,7 @@ public class GenericClaim implements Claim<Object> {
 	/**
 	 * The claim value type.
 	 */
-	private Claim.Type type = null;
+	private Claim.ValueType type = null;
 	
 	
 	/**
@@ -58,14 +58,14 @@ public class GenericClaim implements Claim<Object> {
 	 * Sets the claim value.
 	 *
 	 * @param value The claim value. It must map to one of the supported
-	 *              {@link Claim.Type claim types}. 
+	 *              {@link Claim.ValueType claim types}. 
 	 *
 	 * @throws IllegalArgumentException If the value is {@code null} or its
 	 *                                  type is not supported.
 	 */
 	public void setClaimValue(final Object value) {
 	
-		type = Claim.Type.resolve(value);
+		type = Claim.ValueType.resolve(value);
 		
 		if (type == null)
 			throw new IllegalArgumentException("Unexpected claim value type");
@@ -78,7 +78,7 @@ public class GenericClaim implements Claim<Object> {
 	 * Gets the claim value.
 	 *
 	 * @return The claim value. If defined (not {@code null}) it matches the 
-	 *         type indicated by {@link #getType}.
+	 *         type indicated by {@link #getClaimValueType}.
 	 */
 	public Object getClaimValue() {
 	
@@ -92,7 +92,7 @@ public class GenericClaim implements Claim<Object> {
 	 * @return The claim type, {@code null} if the claim value is not
 	 *         specified.
 	 */
-	public Claim.Type getType() {
+	public Claim.ValueType getClaimValueType() {
 	
 		return type;
 	}

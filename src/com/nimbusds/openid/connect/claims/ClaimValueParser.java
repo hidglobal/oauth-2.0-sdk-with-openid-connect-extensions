@@ -25,8 +25,8 @@ public class ClaimValueParser {
 	
 	/**
 	 * Parses a claim value from the specified JSON object. Supports all 
-	 * {@link Claim.Type claim JSON data types} expect
-	 * {@link Claim.Type#ARRAY array} and {@link Claim.Type#OBJECT object}.
+	 * {@link Claim.ValueType claim JSON data types} expect
+	 * {@link Claim.ValueType#ARRAY array} and {@link Claim.ValueType#OBJECT object}.
 	 *
 	 *
 	 * @param o     The JSON object containing a member representing the
@@ -45,7 +45,7 @@ public class ClaimValueParser {
 		
 		final String claimName = claim.getClaimName();
 		
-		switch (claim.getType()) {
+		switch (claim.getClaimValueType()) {
 		
 			case BOOLEAN:
 				claim.setClaimValue(JSONObjectUtils.getBoolean(o, claimName));
