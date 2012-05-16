@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.messages;
+package com.nimbusds.openid.connect.claims;
 
 
 import java.util.Collections;
@@ -12,19 +12,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.openid.connect.ParseException;
 
-import com.nimbusds.openid.connect.claims.AccessTokenHash;
-import com.nimbusds.openid.connect.claims.Audience;
-import com.nimbusds.openid.connect.claims.AuthenticationContextClassReference;
-import com.nimbusds.openid.connect.claims.AuthenticationTime;
-import com.nimbusds.openid.connect.claims.Claim;
-import com.nimbusds.openid.connect.claims.ClaimValueParser;
-import com.nimbusds.openid.connect.claims.ClientID;
-import com.nimbusds.openid.connect.claims.CodeHash;
-import com.nimbusds.openid.connect.claims.ExpirationTime;
-import com.nimbusds.openid.connect.claims.GenericClaim;
-import com.nimbusds.openid.connect.claims.Issuer;
-import com.nimbusds.openid.connect.claims.IssueTime;
-import com.nimbusds.openid.connect.claims.UserID;
+import com.nimbusds.openid.connect.messages.Nonce;
 
 import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
@@ -48,7 +36,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#id_token
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-10)
+ * @version $version$ (2012-05-16)
  */
 public class IDTokenClaims extends JSONObjectClaims {
 

@@ -15,6 +15,7 @@ import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
 
+import com.nimbusds.openid.connect.claims.ClientAuthenticationClaims;
 import com.nimbusds.openid.connect.claims.ClientID;
 
 import com.nimbusds.openid.connect.http.CommonContentTypes;
@@ -34,7 +35,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * <p>See draft-jones-oauth-jwt-bearer-04
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-13)
+ * @version $version$ (2012-05-16)
  */
 public abstract class JWTClientAuthentication extends ClientAuthentication {
 

@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.messages;
+package com.nimbusds.openid.connect.claims;
 
 
 import java.util.Collections;
@@ -10,16 +10,6 @@ import java.util.Set;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.openid.connect.ParseException;
-
-import com.nimbusds.openid.connect.claims.Audience;
-import com.nimbusds.openid.connect.claims.ClaimValueParser;
-import com.nimbusds.openid.connect.claims.ExpirationTime;
-import com.nimbusds.openid.connect.claims.GenericClaim;
-import com.nimbusds.openid.connect.claims.JWTID;
-import com.nimbusds.openid.connect.claims.Issuer;
-import com.nimbusds.openid.connect.claims.IssueTime;
-import com.nimbusds.openid.connect.claims.NotBeforeTime;
-import com.nimbusds.openid.connect.claims.Principal;
 
 import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
