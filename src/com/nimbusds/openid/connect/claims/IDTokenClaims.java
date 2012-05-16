@@ -458,7 +458,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 *
 	 * @param jsonObject The JSON object to parse. Must not be {@code null}.
 	 *
-	 * @return The parsed ID Token claims set.
+	 * @return The ID Token claims set.
 	 *
 	 * @throws ParseException If the JSON object cannot be parsed to a valid
 	 *                        ID Token claims set.

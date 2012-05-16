@@ -315,4 +315,21 @@ public class AddressClaims extends JSONObjectClaims {
 		
 		return o;
 	}
+	
+	
+	/**
+	 * Parses a UserInfo address claims set from the specified JSON object.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be {@code null}.
+	 *
+	 * @return The UserInfo address claims set.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to a
+	 *                        valid UserInfo address claims set.
+	 */
+	public static AddressClaims parse(final JSONObject jsonObject)
+		throws ParseException {
+		
+		return null;
+	}
 }

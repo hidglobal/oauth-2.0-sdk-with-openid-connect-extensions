@@ -920,4 +920,21 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 		return o;
 	}
+	
+	
+	/**
+	 * Parses a UserInfo claims set from the specified JSON object.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be {@code null}.
+	 *
+	 * @return The UserInfo claims set.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to a
+	 *                        valid UserInfo authentication claims set.
+	 */
+	public static UserInfoClaims parse(final JSONObject jsonObject)
+		throws ParseException {
+		
+		return null;
+	}
 }

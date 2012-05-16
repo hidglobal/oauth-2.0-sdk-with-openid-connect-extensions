@@ -16,7 +16,8 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 /**
  * Client authentication claims, serialisable to a JSON object. Used for 
- * {@link ClientSecretJWT client secret JWT} and {@link PrivateKeyJWT private 
+ * {@link com.nimbusds.openid.connect.messages.ClientSecretJWT client secret 
+ * JWT} and {@link com.nimbusds.openid.connect.messages.PrivateKeyJWT private 
  * key JWT} authentication at the Token endpoint.
  *
  * <p>Note that OpenID Connect mandates the use the {@code jti} claim, see
@@ -377,7 +378,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	 *
 	 * @param jsonObject The JSON object to parse. Must not be {@code null}.
 	 *
-	 * @return The parsed client authentication claims set.
+	 * @return The client authentication claims set.
 	 *
 	 * @throws ParseException If the JSON object cannot be parsed to a valid
 	 *                        client authentication claims set.
