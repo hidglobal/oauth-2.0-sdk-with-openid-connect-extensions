@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * Connect {@link com.nimbusds.openid.connect.messages.Request request message}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-05-17)
  */
 public class HTTPRequest {
 

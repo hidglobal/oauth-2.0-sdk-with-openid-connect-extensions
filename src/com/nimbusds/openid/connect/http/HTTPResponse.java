@@ -3,15 +3,22 @@ package com.nimbusds.openid.connect.http;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import java.net.URL;
 
 import javax.mail.internet.ContentType;
 
 import javax.servlet.http.HttpServletResponse;
 
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTException;
+
 import com.nimbusds.openid.connect.ParseException;
 
 import com.nimbusds.openid.connect.util.ContentTypeUtils;
+import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 
 /**
@@ -20,7 +27,7 @@ import com.nimbusds.openid.connect.util.ContentTypeUtils;
  * message}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-05-17)
  */
 public class HTTPResponse {
 
@@ -95,7 +102,7 @@ public class HTTPResponse {
 	
 	
 	/**
-	 * The response content.
+	 * The raw response content.
 	 */
 	private String content = null;
 	
@@ -130,6 +137,23 @@ public class HTTPResponse {
 	public void setStatusCode(final int statusCode) {
 	
 		this.statusCode = statusCode;
+	}
+	
+	
+	/**
+	 * Ensures this HTTP response has the specified {@link #getStatusCode
+	 * status code}.
+	 *
+	 * @param statusCode The expected status code.
+	 *
+	 * @throws ParseException If the status code of this HTTP response 
+	 *                        doesn't match the expected.
+	 */ 
+	public void ensureStatusCode(final int statusCode)
+		throws ParseException {
+	
+		if (this.statusCode != statusCode)
+			throw new ParseException("Unexpected HTTP status code, must be " +  statusCode);
 	}
 	
 	
@@ -264,9 +288,9 @@ public class HTTPResponse {
 	
 	
 	/**
-	 * Gets the response content.
+	 * Gets the raw response content.
 	 *
-	 * @return The response content, {@code null} if none.
+	 * @return The raw response content, {@code null} if none.
 	 */
 	public String getContent() {
 	
@@ -275,9 +299,59 @@ public class HTTPResponse {
 	
 	
 	/**
-	 * Sets the response content.
+	 * Gets the response content as a JSON object.
 	 *
-	 * @param content The response content, {@code null} if none.
+	 * @return The response content as a JSON object.
+	 *
+	 * @throws ParseException If the Content-Type header isn't 
+	 *                        {@code application/json}, the response content
+	 *                        is {@code null}, empty or couldn't be parsed
+	 *                        to a valid JSON object.
+	 */
+	public JSONObject getContentAsJSONObject()
+		throws ParseException {
+		
+		ensureContentType(CommonContentTypes.APPLICATION_JSON);
+		
+		if (content == null || content.isEmpty())
+			throw new ParseException("Missing or empty HTTP response body");
+		
+		return JSONObjectUtils.parseJSONObject(content);
+	}
+	
+	
+	/**
+	 * Gets the response content as a JSON Web Token (JWT).
+	 *
+	 * @return The response content as a JSON Web Token (JWT).
+	 *
+	 * @throws ParseException If the Content-Type header isn't
+	 *                        {@code application/jwt}, the response content 
+	 *                        is {@code null}, empty or couldn't be parsed
+	 *                        to a valid JSON Web Token (JWT).
+	 */
+	public JWT getContentAsJWT()
+		throws ParseException {
+		
+		ensureContentType(CommonContentTypes.APPLICATION_JWT);
+		
+		if (content == null || content.isEmpty())
+			throw new ParseException("Missing or empty HTTP response body");
+		
+		try {
+			return JWT.parse(content);
+			
+		} catch (JWTException e) {
+		
+			throw new ParseException(e.getMessage(), e);
+		}
+	}
+	
+	
+	/**
+	 * Sets the raw response content.
+	 *
+	 * @param content The raw response content, {@code null} if none.
 	 */
 	public void setContent(final String content) {
 	

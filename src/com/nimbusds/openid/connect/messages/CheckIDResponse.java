@@ -5,12 +5,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.openid.connect.ParseException;
 
-import com.nimbusds.openid.connect.claims.Audience;
-import com.nimbusds.openid.connect.claims.ClaimValueParser;
 import com.nimbusds.openid.connect.claims.IDTokenClaims;
-import com.nimbusds.openid.connect.claims.Issuer;
-import com.nimbusds.openid.connect.claims.IssueTime;
-import com.nimbusds.openid.connect.claims.UserID;
 
 import com.nimbusds.openid.connect.http.HTTPResponse;
 import com.nimbusds.openid.connect.http.CommonContentTypes;
@@ -42,7 +37,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * <p>See 
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-05-17)
  */
 public class CheckIDResponse implements SuccessResponse {
 
@@ -105,20 +100,10 @@ public class CheckIDResponse implements SuccessResponse {
 	public static CheckIDResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		if (! httpResponse.getContentType().equals(CommonContentTypes.APPLICATION_JSON))
-			throw new ParseException("The Content-Type header must be application/json");
+		JSONObject o = httpResponse.getContentAsJSONObject();
 		
-		String content = httpResponse.getContent();
+		IDTokenClaims claims = IDTokenClaims.parse(o);
 		
-		if (content == null || content.isEmpty())
-			throw new ParseException("Missing or empty HTTP response body");
-		
-		JSONObject o = JSONObjectUtils.parseJSONObject(content);
-		
-		
-		
-		
-		
-		return null;
+		return new CheckIDResponse(claims);
 	}
 }

@@ -13,8 +13,6 @@ import com.nimbusds.openid.connect.SerializeException;
 import com.nimbusds.openid.connect.http.HTTPRequest;
 import com.nimbusds.openid.connect.http.CommonContentTypes;
 
-import com.nimbusds.openid.connect.util.URLUtils;
-
 
 /**
  * Check ID request. To request the defails of the authentication performed on 
@@ -41,7 +39,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#anchor10
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-13)
+ * @version $version$ (2012-05-17)
  */
 public class CheckIDRequest implements Request {
 	
@@ -170,7 +168,7 @@ public class CheckIDRequest implements Request {
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *
-	 * @return The parsed check ID request.
+	 * @return The check ID request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
 	 *                        valid check ID request.
@@ -178,16 +176,9 @@ public class CheckIDRequest implements Request {
 	public static CheckIDRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
 		
-		if (httpRequest.getContentType() != null &&
-		    ! httpRequest.getContentType().equals(CommonContentTypes.APPLICATION_URLENCODED))
-			throw new ParseException("The Content-Type header must be application/x-www-form-urlencoded");
+		httpRequest.ensureContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		
-		String query = httpRequest.getQuery();
-		
-		if (query == null || query.isEmpty())
-			throw new ParseException("Missing HTTP POST body");
-		
-		Map<String,String> params = URLUtils.parseParameters(query);
+		Map<String,String> params = httpRequest.getQueryParameters();
 		
 		String jwtString = params.get("access_token");
 		

@@ -173,37 +173,22 @@ public class UserInfoResponse implements SuccessResponse {
 	public static UserInfoResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		if (httpResponse.getStatusCode() != HTTPResponse.SC_OK)
-			throw new ParseException("Unexpected HTTP status code, must be " + HTTPResponse.SC_OK);
+		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
 		
 		ContentType ct = httpResponse.getContentType();
 		
 		if (ct == null)
 			throw new ParseException("Missing HTTP Content-Type header");
 		
-		String content = httpResponse.getContent();
-		
-		if (content == null)
-			throw new ParseException("Missing HTTP response body");
 		
 		UserInfoResponse response = null;
 		
 		if (ct.match(CommonContentTypes.APPLICATION_JSON)) {
 		
-			JSONObject jsonObject = null;
-			
-			try {
-				jsonObject = JSONObjectUtils.parseJSONObject(content);
-				
-			} catch (ParseException e) {
-			
-				throw new ParseException("Couldn't parse UserInfo claims JSON object: " + e.getMessage(), e);
-			}
-			
 			UserInfoClaims claims = null;
 			
 			try {
-				claims = UserInfoClaims.parse(jsonObject);
+				claims = UserInfoClaims.parse(httpResponse.getContentAsJSONObject());
 				
 			} catch (ParseException e) {
 				
@@ -217,9 +202,9 @@ public class UserInfoResponse implements SuccessResponse {
 			JWT jwt = null;
 			
 			try {
-				jwt = JWT.parse(content);
+				jwt = httpResponse.getContentAsJWT();
 				
-			} catch (JWTException e) {
+			} catch (ParseException e) {
 			
 				throw new ParseException("Couldn't parse UserInfo claims JWT: " + e.getMessage(), e);
 			}

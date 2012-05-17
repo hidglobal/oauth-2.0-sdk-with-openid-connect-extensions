@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * <p>See draft-ietf-oauth-v2-26, section 5.1.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-13)
+ * @version $version$ (2012-05-17)
  */
 public class AccessTokenResponse implements SuccessResponse {
 
@@ -178,6 +178,27 @@ public class AccessTokenResponse implements SuccessResponse {
 	
 	
 	/**
+	 * Parses an access token response from the specified JSON object.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be {@code null}.
+	 *
+	 * @return The access token response.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to a
+	 *                        valid access token response.
+	 */
+	public static AccessTokenResponse parse(final JSONObject jsonObject)
+		throws ParseException {
+		
+		
+		
+		AccessToken accessToken = null;
+		
+		return null;
+	}
+	
+	
+	/**
 	 * Parses an access token response from the specified HTTP response.
 	 *
 	 * @param httpResponse The HTTP response. Must not be {@code null}.
@@ -190,7 +211,10 @@ public class AccessTokenResponse implements SuccessResponse {
 	public static AccessTokenResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
+		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
 		
-		return null;
+		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
+		
+		return parse(jsonObject);
 	}
 }

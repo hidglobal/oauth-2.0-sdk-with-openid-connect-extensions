@@ -31,7 +31,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * <p>See draft-ietf-oauth-v2-26
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-05-17)
  */
 public abstract class TokenRequest implements Request {
 
@@ -106,13 +106,7 @@ public abstract class TokenRequest implements Request {
 		
 		// No fragment!
 		// May use query component!
-		
-		String query = httpRequest.getQuery();
-		
-		if (query == null)
-			throw new ParseException("Missing HTTP POST request entity body");
-		
-		Map<String,String> params = URLUtils.parseParameters(query);
+		Map<String,String> params = httpRequest.getQueryParameters();
 		
 		
 		// Parse grant type
