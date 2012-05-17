@@ -18,7 +18,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * Parses claim values from a JSON object containing a claims set.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-05-17)
  */
 public class ClaimValueParser {
 
@@ -101,7 +101,13 @@ public class ClaimValueParser {
 				break;
 			
 			case ARRAY:
+				claim.setClaimValue(JSONObjectUtils.getJSONArray(o, claimName));
+				break;
+				
 			case OBJECT:
+				claim.setClaimValue(JSONObjectUtils.getJSONObject(o, claimName));
+				break;
+			
 			default:
 				throw new ParseException("Unsupported type for claim \"" + claimName + "\"");
 		}

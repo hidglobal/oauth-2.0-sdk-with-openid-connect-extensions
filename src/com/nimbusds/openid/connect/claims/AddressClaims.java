@@ -4,6 +4,7 @@ package com.nimbusds.openid.connect.claims;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,7 +36,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#address_claim
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-05-17)
  */
 public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject> {
 
@@ -178,7 +179,22 @@ public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject>
 	 */
 	public void setClaimValue(final JSONObject o) {
 	
-	
+		AddressClaims ac = null;
+		
+		try {
+			ac = AddressClaims.parse(o);
+			
+		} catch (ParseException e) {
+		
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+		
+		formatted = ac.getFormatted();
+		streetAddress = ac.getStreetAddress();
+		locality = ac.getLocality();
+		region = ac.getRegion();
+		postalCode = ac.getPostalCode();
+		country = ac.getCountry();
 	}
 	
 	
@@ -190,6 +206,17 @@ public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject>
 	public LangTag getLangTag() {
 	
 		return langTag;
+	}
+	
+	
+	/**
+	 * Sets the language tag applied to the whole UserInfo claims set.
+	 *
+	 * @param langTag The language tag, {@code null} if none.
+	 */
+	public void setLangTag(final LangTag langTag) {
+	
+		this.langTag = langTag;
 	}
 	
 	
@@ -407,6 +434,86 @@ public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject>
 	public static AddressClaims parse(final JSONObject jsonObject)
 		throws ParseException {
 		
-		return null;
+		AddressClaims ac = new AddressClaims();
+		
+		// formatted
+		UserInfo.Address.Formatted formatted = new UserInfo.Address.Formatted();
+		
+		if (jsonObject.containsKey(formatted.getClaimName())) {
+		
+			ClaimValueParser.parse(jsonObject, formatted);
+			jsonObject.remove(formatted.getClaimName());
+			ac.setFormatted(formatted);
+		}
+		
+		// street_address
+		UserInfo.Address.StreetAddress streetAddress = new UserInfo.Address.StreetAddress();
+		
+		if (jsonObject.containsKey(streetAddress.getClaimName())) {
+		
+			ClaimValueParser.parse(jsonObject, streetAddress);
+			jsonObject.remove(streetAddress.getClaimName());
+			ac.setStreetAddress(streetAddress);
+		}
+		
+		// locality
+		UserInfo.Address.Locality locality = new UserInfo.Address.Locality();
+		
+		if (jsonObject.containsKey(locality.getClaimName())) {
+		
+			ClaimValueParser.parse(jsonObject, locality);
+			jsonObject.remove(locality.getClaimName());
+			ac.setLocality(locality);
+		}
+		
+		
+		// region
+		UserInfo.Address.Region region = new UserInfo.Address.Region();
+		
+		if (jsonObject.containsKey(region.getClaimName())) {
+		
+			ClaimValueParser.parse(jsonObject, region);
+			jsonObject.remove(region.getClaimName());
+			ac.setRegion(region);
+		}
+		
+		
+		// postal_code
+		UserInfo.Address.PostalCode postalCode = new UserInfo.Address.PostalCode();
+		
+		if (jsonObject.containsKey(postalCode.getClaimName())) {
+		
+			ClaimValueParser.parse(jsonObject, postalCode);
+			jsonObject.remove(postalCode.getClaimName());
+			ac.setPostalCode(postalCode);
+		}
+		
+		
+		// country
+		UserInfo.Address.Country country = new UserInfo.Address.Country();
+		
+		if (jsonObject.containsKey(country.getClaimName())) {
+		
+			ClaimValueParser.parse(jsonObject, country);
+			jsonObject.remove(country.getClaimName());
+			ac.setCountry(country);
+		}
+		
+		
+		// Add remaing claims as custom
+		
+		Iterator <Map.Entry<String,Object>> it = jsonObject.entrySet().iterator();
+		
+		while (it.hasNext()) {
+		
+			Map.Entry <String,Object> entry = it.next();
+			
+			GenericClaim gc = new GenericClaim(entry.getKey());
+			gc.setClaimValue(entry.getValue());
+			
+			ac.addCustomClaim(gc);
+		}
+		
+		return ac;
 	}
 }
