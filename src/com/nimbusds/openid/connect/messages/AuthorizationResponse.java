@@ -346,7 +346,7 @@ public class AuthorizationResponse implements SuccessResponse {
 	 *            fragment or query string containing the authorisation
 	 *            response parameters. Must not be {@code null}.
 	 *
-	 * @return The parsed authorisation response.
+	 * @return The authorisation response.
 	 *
 	 * @throws ParseException If no valid authorisation response parameters
 	 *                        are found in the URL.

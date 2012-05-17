@@ -97,7 +97,7 @@ public class CheckIDResponse implements SuccessResponse {
 	 *
 	 * @param httpResponse The HTTP response. Must not be {@code null}.
 	 *
-	 * @return The parsed check ID response.
+	 * @return The check ID response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to a 
 	 *                        valid check ID response.
