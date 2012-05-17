@@ -1,0 +1,160 @@
+package com.nimbusds.openid.connect.util;
+
+
+import java.io.UnsupportedEncodingException;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * URL operations.
+ *
+ * @author Vladimir Dzhuvinov
+ * @version 0.9 (2012-05-07)
+ */
+public class URLUtils {
+
+	
+	/**
+	 * The default charset.
+	 */
+	public static final String CHARSET = "utf-8";
+	
+	
+	/**
+	 * Gets the base part (protocol, host, port and path) of the specified
+	 * URL.
+	 *
+	 * @param url The URL. May be {@code null}.
+	 *
+	 * @return The base part of the URL, {@code null} if the original URL is
+	 *         {@code null} or doesn't specify a protocol.
+	 */
+	public static URL getBaseURL(final URL url) {
+	
+		if (url == null)
+			return null;
+		
+		try {
+			return new URL(url.getProtocol(), url.getHost(), url.getPort(), url.getPath());
+			
+		} catch (MalformedURLException e) {
+		
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * Serialises the specified map of parameters into a URL query string. 
+	 * The parameter keys and values are 
+	 * {@code application/x-www-form-urlencoded} encoded.
+	 *
+	 * <p>The opposite method is {@link #parseParameters}.
+	 *
+	 * @param params A map of the URL query parameters. May be empty or
+	 *               {@code null}.
+	 *
+	 * @return The serialised URL query string, empty if no parameters.
+	 */
+	public static String serializeParameters(final Map<String,String> params) {
+	
+		if (params == null || params.isEmpty())
+			return "";
+		
+		StringBuilder sb = new StringBuilder();
+		
+		Iterator <Map.Entry<String,String>> it = params.entrySet().iterator();
+		
+		while (it.hasNext()) {
+		
+			Map.Entry<String,String> entry = it.next();
+			
+			if (entry.getKey() == null || entry.getValue() == null)
+				continue;
+			
+			try {
+				String encodedKey = URLEncoder.encode(entry.getKey(), CHARSET);
+				String encodedValue = URLEncoder.encode(entry.getValue(), CHARSET);
+				
+				if (sb.length() > 0)
+					sb.append('&');
+				
+				sb.append(encodedKey);
+				sb.append('=');
+				sb.append(encodedValue);
+	
+			} catch (UnsupportedEncodingException e) {
+			  			  
+				// UTF-8 should always be supported
+			}
+		}
+		
+		return sb.toString();
+	}
+
+
+	/**
+	 * Parses the specified URL query string into a parameter map. If a 
+	 * parameter has multiple values only the first one will be saved. The
+	 * parameter keys and values are 
+	 * {@code application/x-www-form-urlencoded} decoded.
+	 *
+	 * <p>The opposite method {@link #serializeParameters}.
+	 *
+	 * @param query The URL query string to parse. May be {@code null}.
+	 *
+	 * @return A map of the URL query parameters, empty if none are found.
+	 */
+	public static Map<String,String> parseParameters(final String query) {
+		
+		Map<String,String> params = new HashMap<String, String>();
+		
+		if (query == null)
+			return params; // empty map
+		
+		try {
+			for (String param : query.split("&")) {
+
+				String pair[] = param.split("=");
+
+				String key = URLDecoder.decode(pair[0], CHARSET);
+				
+				// Save the first value only
+				if (params.containsKey(key))
+					continue;
+
+				String value = "";
+
+				if (pair.length > 1)
+					value = URLDecoder.decode(pair[1], CHARSET);
+				
+				params.put(key, value);
+			}
+			
+		} catch (UnsupportedEncodingException e) {
+			
+			// UTF-8 should always be supported
+		}
+		
+		return params;
+	}
+
+
+	/**
+	 * Prevents instantiation.
+	 */
+	private URLUtils() {
+	
+		// do nothing
+	}
+}

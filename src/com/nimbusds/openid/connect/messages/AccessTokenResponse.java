@@ -177,6 +177,16 @@ public class AccessTokenResponse implements SuccessResponse {
 	}
 	
 	
+	/**
+	 * Parses an access token response from the specified HTTP response.
+	 *
+	 * @param httpResponse The HTTP response. Must not be {@code null}.
+	 *
+	 * @return The access token response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a 
+	 *                        valid access token response.
+	 */
 	public static AccessTokenResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		

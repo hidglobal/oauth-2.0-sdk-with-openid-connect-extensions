@@ -61,7 +61,7 @@ public class UserInfoResponse implements SuccessResponse {
 	 * Creates a new UserInfo response where the claims are specified as
 	 * plain JSON.
 	 *
-	 * @param The UserInfo claims. Must not be {@code null}.
+	 * @param claims The UserInfo claims. Must not be {@code null}.
 	 */
 	public UserInfoResponse(final UserInfoClaims claims) {
 	
@@ -76,7 +76,7 @@ public class UserInfoResponse implements SuccessResponse {
 	 * Creates a new UserInfo response where the claims are specified as
 	 * plain, signed or encrypted JSON Web Token (JWT).
 	 *
-	 * @param The UserInfo claims. Must not be {@code null}.
+	 * @param jwt The UserInfo claims. Must not be {@code null}.
 	 */
 	public UserInfoResponse(final JWT jwt) {
 	
