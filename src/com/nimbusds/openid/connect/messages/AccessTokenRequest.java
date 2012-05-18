@@ -33,9 +33,11 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * client_assertion=PHNhbWxwOl...[omitted for brevity]...ZT
  * </pre>
  *
- * <p>See http://tools.ietf.org/html/draft-ietf-oauth-v2-26#section-4.1.3
+ * <p>Related specifications:
  *
- * <p>See draft-ietf-oauth-v2-26, section 4.1.3.
+ * <ul>
+ *     <li>draft-ietf-oauth-v2-26, section 4.1.3.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

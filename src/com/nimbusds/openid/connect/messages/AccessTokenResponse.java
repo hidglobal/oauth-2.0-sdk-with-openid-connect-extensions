@@ -38,9 +38,11 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * }
  * </pre>
  *
- * <p>See draft-ietf-oauth-v2-26, section 4.1.4.
+ * <p>Related specifications:
  *
- * <p>See draft-ietf-oauth-v2-26, section 5.1.
+ * <ul>
+ *     <li>draft-ietf-oauth-v2-26, section 4.1.4 and 5.1.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-18)

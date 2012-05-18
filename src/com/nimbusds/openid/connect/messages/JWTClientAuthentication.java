@@ -28,11 +28,13 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * Base abstract class for JSON Web Token (JWT) based client authentication at 
  * the Token endpoint.
  *
- * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#client_authentication
+ * <p>Related specifications:
  *
- * <p>See draft-ietf-oauth-assertions-03
- *
- * <p>See draft-jones-oauth-jwt-bearer-04
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.2.1.
+ *     <li>draft-ietf-oauth-assertions-03
+ *     <li>draft-jones-oauth-jwt-bearer-04
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-16)

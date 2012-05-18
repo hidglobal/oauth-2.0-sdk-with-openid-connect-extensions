@@ -22,6 +22,12 @@ import com.nimbusds.openid.connect.util.URLUtils;
 /**
  * Authorisation response.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.3.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-13)
  */

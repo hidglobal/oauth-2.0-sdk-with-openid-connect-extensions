@@ -28,7 +28,12 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
  * </pre>
  *
- * <p>See draft-ietf-oauth-v2-26
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.2.2.
+ *     <li>draft-ietf-oauth-v2-26
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

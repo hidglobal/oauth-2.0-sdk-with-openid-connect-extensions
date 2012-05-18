@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests authorisation response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-03-25)
+ * @version 0.2 (2012-05-18)
  */
 public class AuthorizationResponseTest extends TestCase {
 	
@@ -55,7 +55,7 @@ public class AuthorizationResponseTest extends TestCase {
 		assertEquals(0, rts.size());
 		
 		assertNull(resp.getAuthorizationCode());
-		assertNull(resp.getUserInfoAccessToken());
+		assertNull(resp.getAccessToken());
 		assertNull(resp.getIDToken());
 		
 		assertNull(resp.getState());
@@ -148,8 +148,8 @@ public class AuthorizationResponseTest extends TestCase {
 	
 		AuthorizationResponse resp = new AuthorizationResponse(REDIRECT_URL);
 		
-		UserInfoAccessToken token = new UserInfoAccessToken("jHkWEdUXMU1BwAsC4vtUsZwnNvTIxEl0z9K3vx5KF0Y");
-		resp.setUserInfoAccessToken(token);
+		AccessToken token = new AccessToken("jHkWEdUXMU1BwAsC4vtUsZwnNvTIxEl0z9K3vx5KF0Y");
+		resp.setAccessToken(token);
 		
 		resp.setIDToken(ID_TOKEN);
 				
@@ -162,7 +162,7 @@ public class AuthorizationResponseTest extends TestCase {
 		assertTrue(rts.contains(ResponseType.TOKEN));
 		assertTrue(rts.contains(ResponseType.ID_TOKEN));
 		
-		assertEquals("jHkWEdUXMU1BwAsC4vtUsZwnNvTIxEl0z9K3vx5KF0Y", resp.getUserInfoAccessToken().getValue());
+		assertEquals("jHkWEdUXMU1BwAsC4vtUsZwnNvTIxEl0z9K3vx5KF0Y", resp.getAccessToken().getValue());
 		assertNotNull(resp.getIDToken());
 		assertEquals(state.toString(), resp.getState().toString());
 		

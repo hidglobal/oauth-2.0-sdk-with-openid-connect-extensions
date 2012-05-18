@@ -31,7 +31,13 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  *                   error_description="The ID token expired"
  * </pre>
  *
- * <p>See http://tools.ietf.org/html/draft-ietf-oauth-v2-bearer-19#section-3.1
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.3.3.
+ *     <li>draft-ietf-oauth-v2-bearer-19, section 3.1.
+ * </ul>
+ * 
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-03)

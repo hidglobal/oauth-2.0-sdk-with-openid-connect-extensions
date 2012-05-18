@@ -10,6 +10,12 @@ import com.nimbusds.openid.connect.ParseException;
 /**
  * Prompts for end-user reauthentication and consent.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.
+ * </ul>
+ * 
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-22)
  */

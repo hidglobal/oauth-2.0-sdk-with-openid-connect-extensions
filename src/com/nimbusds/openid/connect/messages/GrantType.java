@@ -7,7 +7,11 @@ import com.nimbusds.openid.connect.ParseException;
 /**
  * Enumeration of the OAuth 2.0 grant types used by OpenID Connect.
  *
- * <p>See draft-ietf-oauth-v2-26
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>draft-ietf-oauth-v2-26
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-11)

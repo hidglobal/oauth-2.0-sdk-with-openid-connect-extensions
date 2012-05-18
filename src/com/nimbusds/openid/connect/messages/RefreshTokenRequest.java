@@ -29,7 +29,12 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * grant_type=refresh_token&refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
  * </pre>
  *
- * <p>See draft-ietf-oauth-v2-26, section 6.
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.2.2.
+ *     <li>draft-ietf-oauth-v2-26, section 6.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

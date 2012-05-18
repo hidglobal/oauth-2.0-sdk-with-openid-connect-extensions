@@ -11,7 +11,12 @@ package com.nimbusds.openid.connect.claims;
  *
  * <p>The ACR is represented by a string or an URL string.
  *
- * <p>See ISO/IEC DIS 29115
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>See ISO/IEC DIS 29115
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-21)

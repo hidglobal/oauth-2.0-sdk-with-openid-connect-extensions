@@ -7,6 +7,12 @@ import com.nimbusds.openid.connect.ParseException;
 /**
  * Enumeration of the individual registered OpenID Connect response types.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Standard 1.0, section 2.2.1.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-22)
  */

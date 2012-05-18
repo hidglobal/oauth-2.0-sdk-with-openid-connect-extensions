@@ -12,6 +12,12 @@ import com.nimbusds.langtag.LangTagException;
  * claims from the optional {@link AuthorizationRequest#getResolvedRequestObject
  * OpenID request object}.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-23)
  */

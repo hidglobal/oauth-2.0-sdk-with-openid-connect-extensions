@@ -9,6 +9,12 @@ import com.nimbusds.langtag.LangTagException;
  * The base abstract class for string-based claims with optional language tag
  * (RFC 5646).
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>RFC 5646.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-16)
  */

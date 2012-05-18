@@ -50,7 +50,12 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * }
  * </pre>
  *
- * <p>See http://tools.ietf.org/html/draft-ietf-oauth-v2-26#section-5.2
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.2.4.
+ *     <li>draft-ietf-oauth-v2-26, section 5.2.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-03)

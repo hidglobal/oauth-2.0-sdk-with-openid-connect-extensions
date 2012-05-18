@@ -58,6 +58,13 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * &state=af0ifjsldkj
  * </pre>
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.4.
+ *     <li>draft-ietf-oauth-v2-26, section 4.1.2.1 and 4.2.2.1.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-03)
  */

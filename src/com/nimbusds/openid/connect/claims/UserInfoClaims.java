@@ -33,7 +33,11 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * }
  * </pre>
  *
- * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#anchor14
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.4.2.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

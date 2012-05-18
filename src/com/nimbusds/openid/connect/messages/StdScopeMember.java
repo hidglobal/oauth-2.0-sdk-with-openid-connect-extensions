@@ -4,6 +4,12 @@ package com.nimbusds.openid.connect.messages;
 /**
  * Enumeration of the standard {@link ScopeMember}s.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-09)
  */

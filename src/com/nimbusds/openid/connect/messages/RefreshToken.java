@@ -4,7 +4,11 @@ package com.nimbusds.openid.connect.messages;
 /**
  * OAuth 2.0 refresh token.
  *
- * <p>See draft-ietf-oauth-v2-26, section 1.5
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>draft-ietf-oauth-v2-26, section 1.5.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-11)

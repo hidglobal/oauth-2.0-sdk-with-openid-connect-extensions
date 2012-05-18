@@ -7,7 +7,11 @@ import com.nimbusds.openid.connect.ParseException;
 /**
  * OAuth 2.0 access token. Supports only {@link #TYPE bearer type} tokens.
  *
- * <p>See draft-ietf-oauth-v2-26, section 1.4 and section 4.2.2.
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>draft-ietf-oauth-v2-26, section 1.4 and section 4.2.2.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

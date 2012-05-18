@@ -33,7 +33,12 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  * schema=openid&access_token=mF_9.B5f-4.1JqM
  * </pre>
  *
- * <p>See draft-ietf-oauth-v2-bearer-19, section 2.
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.4.1.
+ *     <li>draft-ietf-oauth-v2-bearer-19, section 2.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

@@ -5,7 +5,11 @@ package com.nimbusds.openid.connect.messages;
 /**
  * OAuth 2.0 authorisation code.
  *
- * <p>See http://tools.ietf.org/html/draft-ietf-oauth-v2-25#section-1.3.1
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>draft-ietf-oauth-v2-26, section 1.3.1.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-25)

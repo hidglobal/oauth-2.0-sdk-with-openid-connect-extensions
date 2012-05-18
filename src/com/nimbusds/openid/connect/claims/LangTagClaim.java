@@ -8,6 +8,12 @@ import com.nimbusds.langtag.LangTagException;
 /**
  * The base abstract class for language tag (RFC 5646) based claims.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>RFC 5646.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-20)
  */

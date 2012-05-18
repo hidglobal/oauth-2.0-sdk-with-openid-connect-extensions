@@ -35,8 +35,11 @@ import com.nimbusds.openid.connect.http.CommonContentTypes;
  * 3T1G3liaTNOrfaeWYjuRCEPNXVtaazNQ
  * </pre>
  *
- * <p>See http://openid.net/specs/openid-connect-standard-1_0.html#anchor15
- * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#anchor10
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.3.1.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-17)

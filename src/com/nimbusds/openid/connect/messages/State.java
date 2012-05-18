@@ -8,6 +8,12 @@ import org.apache.commons.lang3.RandomStringUtils;
  * Opaque value used to maintain state between a request and a callback. Also
  * serves as a protection against XSRF attacks.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-04-09)
  */

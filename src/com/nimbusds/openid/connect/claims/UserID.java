@@ -8,6 +8,12 @@ package com.nimbusds.openid.connect.claims;
  * <p>The user identifier cannot exceed {@link #MAX_LENGTH 255 ASCII characters}
  * in length.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.2.1 and 2.4.2.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-03-14)
  */

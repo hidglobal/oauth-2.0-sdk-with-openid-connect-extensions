@@ -18,9 +18,11 @@ package com.nimbusds.openid.connect.claims;
  * }
  * </pre>
  *
- * <p>See http://openid.net/specs/openid-connect-messages-1_0.html#anchor14
- * 
- * <p>See http://openid.net/specs/openid-connect-standard-1_0.html#id_res
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.4.2.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-16)
