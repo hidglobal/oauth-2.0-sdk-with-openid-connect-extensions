@@ -92,6 +92,7 @@
 			 version="true"
 			 use="false"
 			 linksource="true"
+			 overview="doc/overview.html"
 			 windowtitle="OpenID Connect / NimbusDS"
 			 doctitle="OpenID Connect / NimbusDS">
 			<bottom>
