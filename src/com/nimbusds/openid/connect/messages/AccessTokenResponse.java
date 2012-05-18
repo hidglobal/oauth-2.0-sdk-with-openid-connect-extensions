@@ -12,6 +12,8 @@ import com.nimbusds.openid.connect.SerializeException;
 import com.nimbusds.openid.connect.http.CommonContentTypes;
 import com.nimbusds.openid.connect.http.HTTPResponse;
 
+import com.nimbusds.openid.connect.util.JSONObjectUtils;
+
 
 /**
  * Access token response.
@@ -41,7 +43,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * <p>See draft-ietf-oauth-v2-26, section 5.1.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-18)
  */
 public class AccessTokenResponse implements SuccessResponse {
 
@@ -66,13 +68,6 @@ public class AccessTokenResponse implements SuccessResponse {
 	
 	/**
 	 * Creates a new access token response.
-	 *
-	 * <p>Rules:
-	 *
-	 * <ul>
-	 *     <li>
-	 *     <li>
-	 * </ul>
 	 *
 	 * @param accessToken  The access token. Must not be {@code null}.
 	 * @param idToken      The ID token. Must not be {@code null} if a 
@@ -190,11 +185,43 @@ public class AccessTokenResponse implements SuccessResponse {
 	public static AccessTokenResponse parse(final JSONObject jsonObject)
 		throws ParseException {
 		
+		String tokenType = JSONObjectUtils.getString(jsonObject, "token_type");
+		
+		if (! tokenType.equals(AccessToken.TYPE))
+			throw new ParseException("The access token type must be \"" + AccessToken.TYPE + "\"");
+		
+		AccessToken accessToken = new AccessToken(JSONObjectUtils.getString(jsonObject, "access_token"));
+		
+		if (jsonObject.containsKey("expires_in"))
+			accessToken.setExpiration(JSONObjectUtils.getInt(jsonObject, "expires_in"));
 		
 		
-		AccessToken accessToken = null;
+		JWT idToken = null;
 		
-		return null;
+		if (jsonObject.containsKey("id_token")) {
+			
+			try {
+				idToken = JWT.parse(JSONObjectUtils.getString(jsonObject, "id_token"));
+				
+			} catch (JWTException e) {
+			
+				throw new ParseException("Couldn't parse ID token: " + e.getMessage(), e);
+			}
+		}
+		
+		
+		RefreshToken refreshToken = null;
+		
+		if (jsonObject.containsKey("refresh_token"))
+			refreshToken = new RefreshToken(JSONObjectUtils.getString(jsonObject, "refresh_token"));
+		
+		try {
+			return new AccessTokenResponse(accessToken, idToken, refreshToken);
+			
+		} catch (IllegalArgumentException e) {
+		
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 	
 	

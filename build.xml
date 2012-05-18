@@ -1,7 +1,7 @@
 <project name="OpenID Connect / NimbusDS" default="dist" basedir=".">
 
-	<property name="version" value="0.9"/>
-	<property name="version-date" value="2012-05-13"/>
+	<property name="version" value="1.0"/>
+	<property name="version-date" value="2012-05-18"/>
 	<property name="jarfile" value="nimbusds-openid-connect-${version}.jar"/>
 	
 	<path id="classpath.compile">
@@ -94,6 +94,10 @@
 			 linksource="true"
 			 windowtitle="OpenID Connect / NimbusDS"
 			 doctitle="OpenID Connect / NimbusDS">
+			<bottom>
+				<![CDATA[<i>Copyright &#169; Nimbus Directory Services / 
+			        Vladimir Dzhuvinov, 2012. All Rights Reserved.</i>]]>
+			</bottom>
 		</javadoc>
 	</target>
 	

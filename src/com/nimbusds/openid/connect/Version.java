@@ -2,8 +2,8 @@ package com.nimbusds.openid.connect;
 
 
 /**
- * Version information about this SDK and the matching OpenID Connect draft
- * implementation.
+ * Version information about this SDK and the matching OpenID Connect 
+ * specification.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-16)

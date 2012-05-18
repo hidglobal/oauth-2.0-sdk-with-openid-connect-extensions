@@ -47,7 +47,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </pre>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-12)
+ * @version $version$ (2012-05-18)
  */
 public class AuthorizationRequest implements Request {
 
@@ -998,9 +998,6 @@ public class AuthorizationRequest implements Request {
 	 */
 	public static AuthorizationRequest parse(final String query)
 		throws ParseException {
-		
-		if (query == null)
-			throw new ParseException("Missing URL query string");
 	
 		Map <String,String> params = URLUtils.parseParameters(query);
 		
@@ -1168,6 +1165,11 @@ public class AuthorizationRequest implements Request {
 	public static AuthorizationRequest parse(final HTTPRequest httpRequest) 
 		throws ParseException {
 		
-		return parse(httpRequest.getQuery());
+		String query = httpRequest.getQuery();
+		
+		if (query == null)
+			throw new ParseException("Missing URL query string");
+		
+		return parse(query);
 	}
 }
