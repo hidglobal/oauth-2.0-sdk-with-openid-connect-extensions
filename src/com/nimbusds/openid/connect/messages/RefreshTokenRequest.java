@@ -37,7 +37,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-19)
  */
 public class RefreshTokenRequest extends TokenRequest {
 
@@ -73,6 +73,17 @@ public class RefreshTokenRequest extends TokenRequest {
 			throw new NullPointerException("The refresh token must not be null");
 		
 		this.refreshToken = refreshToken;
+	}
+	
+	
+	/**
+	 * Gets the refresh token.
+	 *
+	 * @return The refresh token.
+	 */
+	public RefreshToken getRefreshToken() {
+	
+		return refreshToken;
 	}
 	
 	
@@ -133,7 +144,7 @@ public class RefreshTokenRequest extends TokenRequest {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter");
 			
-		if (! grantTypeString.equals(GrantType.AUTHORIZATION_CODE.toString()))
+		if (! grantTypeString.equals(GrantType.REFRESH_TOKEN.toString()))
 			throw new ParseException("Invalid \"grant_type\" parameter: " + grantTypeString);
 		
 		

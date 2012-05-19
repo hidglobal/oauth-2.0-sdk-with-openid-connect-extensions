@@ -41,11 +41,12 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * <p>Related specifications:
  *
  * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.2.3.
  *     <li>draft-ietf-oauth-v2-26, section 4.1.4 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-18)
+ * @version $version$ (2012-05-19)
  */
 public class AccessTokenResponse implements SuccessResponse {
 
@@ -72,13 +73,10 @@ public class AccessTokenResponse implements SuccessResponse {
 	 * Creates a new access token response.
 	 *
 	 * @param accessToken  The access token. Must not be {@code null}.
-	 * @param idToken      The ID token. Must not be {@code null} if a 
-	 *                     refresh token is not specified. Must be 
-	 *                     {@code null} if a refresh token is specified.
+	 * @param idToken      The ID token. Must be {@code null} if the
+	 *                     request grant type was not 
+	 *                     {@link GrantType#AUTHORIZATION_CODE}.
 	 * @param refreshToken Optional refresh token, {@code null} if none.
-	 *
-	 * @throws IllegalArgumentException If an ID token and a refresh token
-	 *                                  are specified at the same time.
 	 */
 	public AccessTokenResponse(final AccessToken accessToken,
 	                           final JWT idToken,
@@ -89,12 +87,6 @@ public class AccessTokenResponse implements SuccessResponse {
 		
 		this.accessToken = accessToken;
 		
-		if (idToken != null && refreshToken != null)
-			throw new IllegalArgumentException("An ID token and a refresh token cannot be specified at the same time");
-		
-		if (idToken == null && refreshToken == null)
-			throw new IllegalArgumentException("Missing ID token");
-			
 		this.idToken = idToken;
 		this.refreshToken = refreshToken;
 	}
@@ -108,6 +100,17 @@ public class AccessTokenResponse implements SuccessResponse {
 	public AccessToken getAccessToken() {
 	
 		return accessToken;
+	}
+	
+	
+	/**
+	 * Gets the ID token.
+	 *
+	 * @return The ID token, {@code null} if none.
+	 */
+	public JWT getIDToken() {
+	
+		return idToken;
 	}
 	
 	
@@ -141,12 +144,15 @@ public class AccessTokenResponse implements SuccessResponse {
 		if (accessToken.getExpiration() > 0)
 			o.put("expires_in", accessToken.getExpiration());
 		
-		try {
-			o.put("id_token", idToken.serialize());
+		if (idToken != null) {
 			
-		} catch (JWTException e) {
-		
-			throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
+			try {
+				o.put("id_token", idToken.serialize());
+
+			} catch (JWTException e) {
+
+				throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
+			}
 		}
 		
 		if (refreshToken != null)
@@ -217,13 +223,7 @@ public class AccessTokenResponse implements SuccessResponse {
 		if (jsonObject.containsKey("refresh_token"))
 			refreshToken = new RefreshToken(JSONObjectUtils.getString(jsonObject, "refresh_token"));
 		
-		try {
-			return new AccessTokenResponse(accessToken, idToken, refreshToken);
-			
-		} catch (IllegalArgumentException e) {
-		
-			throw new ParseException(e.getMessage(), e);
-		}
+		return new AccessTokenResponse(accessToken, idToken, refreshToken);
 	}
 	
 	
