@@ -40,7 +40,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-22)
  */
 public class UserInfoClaims extends JSONObjectClaims {
 
@@ -1114,6 +1114,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 			JSONObject addressJSON = JSONObjectUtils.getJSONObject(jsonObject, "address");
 			AddressClaims address = AddressClaims.parse(addressJSON);
+			jsonObject.remove(address.getClaimName());
 			uic.setAddress(address);
 		}
 		

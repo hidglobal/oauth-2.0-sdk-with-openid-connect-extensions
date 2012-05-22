@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * Connect {@link com.nimbusds.openid.connect.messages.Request request message}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-22)
  */
 public class HTTPRequest {
 
@@ -235,6 +235,20 @@ public class HTTPRequest {
 	
 	
 	/**
+	 * Ensures this HTTP request has a specified {@code Content-Type} 
+	 * header value.
+	 *
+	 * @throws ParseException if the {@code Content-Type} header is missing.
+	 */
+	public void ensureContentType()
+		throws ParseException {
+	
+		if (contentType == null)
+			throw new ParseException("Missing HTTP Content-Type header");
+	}
+	
+	
+	/**
 	 * Ensures this HTTP request has the specified {@code Content-Type} 
 	 * header value. Note that this method compares only the primary type 
 	 * and subtype; any content type parameters, such as {@code charset}, 
@@ -281,6 +295,20 @@ public class HTTPRequest {
 	 * Gets the raw (undecoded) query string if the request is HTTP GET or
 	 * the entity body if the request is HTTP POST.
 	 *
+	 * <p>Note that the '?' character preceding the query string in GET
+	 * requests is not included in the returned string.
+	 *
+	 * <p>Example query string:
+	 *
+	 * <pre>
+	 * response_type=code%20id_token
+	 * &client_id=s6BhdRkqt3
+	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &scope=openid
+	 * &nonce=n-0S6_WzA2Mj
+	 * &state=af0ifjsldkj
+	 * </pre>
+	 *
 	 * @return For HTTP GET requests the URL query string, for HTTP POST 
 	 *         requests the body. {@code null} if not specified.
 	 */
@@ -293,6 +321,20 @@ public class HTTPRequest {
 	/**
 	 * Sets the raw (undecoded) query string if the request is HTTP GET or
 	 * the entity body if the request is HTTP POST.
+	 *
+	 * <p>Note that the '?' character preceding the query string in GET
+	 * requests must not be included.
+	 *
+	 * <p>Example query string:
+	 *
+	 * <pre>
+	 * response_type=code%20id_token
+	 * &client_id=s6BhdRkqt3
+	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &scope=openid
+	 * &nonce=n-0S6_WzA2Mj
+	 * &state=af0ifjsldkj
+	 * </pre>
 	 *
 	 * @param query For HTTP GET requests the URL query string, for HTTP 
 	 *              POST requests the body. {@code null} if not specified.

@@ -1,7 +1,7 @@
 <project name="OpenID Connect / NimbusDS" default="dist" basedir=".">
 
 	<property name="version" value="1.0"/>
-	<property name="version-date" value="2012-05-19"/>
+	<property name="version-date" value="2012-05-22"/>
 	<property name="jarfile" value="nimbusds-openid-connect-${version}.jar"/>
 	
 	<path id="classpath.compile">
@@ -79,7 +79,10 @@
 			<test name="com.nimbusds.openid.connect.messages.TokenRequestTest"/>
 			<test name="com.nimbusds.openid.connect.messages.AccessTokenResponseTest"/>
 			<test name="com.nimbusds.openid.connect.messages.TokenErrorResponseTest"/>
+			<test name="com.nimbusds.openid.connect.messages.CheckIDRequestTest"/>
 			<test name="com.nimbusds.openid.connect.messages.CheckIDErrorResponseTest"/>
+			<test name="com.nimbusds.openid.connect.messages.UserInfoRequestTest"/>
+			<test name="com.nimbusds.openid.connect.messages.UserInfoResponseTest"/>
 			<test name="com.nimbusds.openid.connect.messages.UserInfoErrorResponseTest"/>
 		</junit>
 	</target>

@@ -27,7 +27,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * message}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-22)
  */
 public class HTTPResponse {
 
@@ -198,6 +198,20 @@ public class HTTPResponse {
 	public void setContentType(final ContentType contentType) {
 	
 		this.contentType = contentType;
+	}
+	
+	
+	/**
+	 * Ensures this HTTP response has a specified {@code Content-Type} 
+	 * header value.
+	 *
+	 * @throws ParseException if the {@code Content-Type} header is missing.
+	 */
+	public void ensureContentType()
+		throws ParseException {
+	
+		if (contentType == null)
+			throw new ParseException("Missing HTTP Content-Type header");
 	}
 	
 	

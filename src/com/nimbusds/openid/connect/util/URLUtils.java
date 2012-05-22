@@ -59,6 +59,20 @@ public class URLUtils {
 	 * The parameter keys and values are 
 	 * {@code application/x-www-form-urlencoded} encoded.
 	 *
+	 * <p>Note that the '?' character preceding the query string in GET
+	 * requests is not included in the returned string.
+	 *
+	 * <p>Example query string:
+	 *
+	 * <pre>
+	 * response_type=code%20id_token
+	 * &client_id=s6BhdRkqt3
+	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &scope=openid
+	 * &nonce=n-0S6_WzA2Mj
+	 * &state=af0ifjsldkj
+	 * </pre>
+	 *
 	 * <p>The opposite method is {@link #parseParameters}.
 	 *
 	 * @param params A map of the URL query parameters. May be empty or
@@ -108,6 +122,20 @@ public class URLUtils {
 	 * parameter has multiple values only the first one will be saved. The
 	 * parameter keys and values are 
 	 * {@code application/x-www-form-urlencoded} decoded.
+	 *
+	 * <p>Note that the '?' character preceding the query string in GET
+	 * requests must not be included.
+	 *
+	 * <p>Example query string:
+	 *
+	 * <pre>
+	 * response_type=code%20id_token
+	 * &client_id=s6BhdRkqt3
+	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &scope=openid
+	 * &nonce=n-0S6_WzA2Mj
+	 * &state=af0ifjsldkj
+	 * </pre>
 	 *
 	 * <p>The opposite method {@link #serializeParameters}.
 	 *

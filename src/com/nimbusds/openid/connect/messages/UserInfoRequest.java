@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-22)
  */
 public class UserInfoRequest implements Request {
 
@@ -126,12 +126,12 @@ public class UserInfoRequest implements Request {
 		
 			case GET:
 				httpRequest.setAuthorization(accessToken.toAuthorizationHeader());	
-				httpRequest.setQuery("?schema=openid");
+				httpRequest.setQuery("schema=openid");
 				break;
 				
 			case POST:
 				httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-				httpRequest.setQuery("?schema=openid" +
+				httpRequest.setQuery("schema=openid" +
 				                     "&access_token=" + accessToken.getValue());
 				break;
 			

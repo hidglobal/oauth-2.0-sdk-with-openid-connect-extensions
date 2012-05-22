@@ -181,10 +181,9 @@ public class UserInfoResponse implements SuccessResponse {
 		
 		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
 		
-		ContentType ct = httpResponse.getContentType();
+		httpResponse.ensureContentType();
 		
-		if (ct == null)
-			throw new ParseException("Missing HTTP Content-Type header");
+		ContentType ct = httpResponse.getContentType();
 		
 		
 		UserInfoResponse response = null;

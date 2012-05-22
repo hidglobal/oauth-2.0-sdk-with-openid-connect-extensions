@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.mail.internet.ContentType;
-
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.openid.connect.ParseException;
@@ -58,7 +56,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-03)
+ * @version $version$ (2012-05-22)
  */
 public class TokenErrorResponse implements ErrorResponse {
 
@@ -201,33 +199,11 @@ public class TokenErrorResponse implements ErrorResponse {
 	public static TokenErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		if (httpResponse.getStatusCode() != HTTPResponse.SC_BAD_REQUEST)
-		       throw new ParseException("Unexpected HTTP status code, must be 400 (Bad request): " + httpResponse.getStatusCode());
+		httpResponse.ensureStatusCode(HTTPResponse.SC_BAD_REQUEST);
 
 		// Cache-Control and Pragma headers are ignored
 		
-		ContentType contentType = httpResponse.getContentType();
-		
-		if (contentType == null)
-			throw new ParseException("Missing HTTP Content-Type header");
-		
-		if (! contentType.match(CommonContentTypes.APPLICATION_JSON))
-			throw new ParseException("Expected HTTP Content-Type \"" + CommonContentTypes.APPLICATION_JSON + "\"");
-		
-		String content = httpResponse.getContent();
-		
-		if (content == null)
-			throw new ParseException("Missing HTTP content");
-		
-		JSONObject jsonObject = null;
-		
-		try {
-			jsonObject = JSONObjectUtils.parseJSONObject(content);
-		
-		} catch (ParseException e) {
-		
-			throw new ParseException("Invalid JSON object: " + e.getMessage(), e);
-		}
+		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
 		
 		String errorCodeString = null;
 		ErrorCode errorCode = null;

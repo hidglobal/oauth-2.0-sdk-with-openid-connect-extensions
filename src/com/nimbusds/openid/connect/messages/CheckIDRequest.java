@@ -96,8 +96,8 @@ public class CheckIDRequest implements Request {
 	 *
 	 * @return The access token.
 	 *
-	 * @throws JWTException If the access token was specified as a JWT which 
-	 *                      is in a state doesn't permit serialisation (e.g. 
+	 * @throws JWTException If the access token was specified as a JWT in a 
+	 *                      state which doesn't permit serialisation (e.g. 
 	 *                      unsigned or enencrypted).
 	 */
 	public AccessToken getAccessToken()
