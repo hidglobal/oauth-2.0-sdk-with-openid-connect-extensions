@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.claims;
+package com.nimbusds.openid.connect.claims.sets;
 
 
 import java.util.HashMap;
@@ -6,12 +6,14 @@ import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.openid.connect.claims.GenericClaim;
+
 
 /**
  * Claims set serialisable to a JSON object.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-05-23)
  */
 public abstract class JSONObjectClaims {
 

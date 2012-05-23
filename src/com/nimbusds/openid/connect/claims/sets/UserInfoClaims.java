@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.claims;
+package com.nimbusds.openid.connect.claims.sets;
 
 
 import java.util.Collections;
@@ -13,6 +13,12 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.langtag.LangTag;
 
 import com.nimbusds.openid.connect.ParseException;
+
+import com.nimbusds.openid.connect.claims.ClaimValueParser;
+import com.nimbusds.openid.connect.claims.GenericClaim;
+import com.nimbusds.openid.connect.claims.StringClaimWithLangTag;
+import com.nimbusds.openid.connect.claims.UserID;
+import com.nimbusds.openid.connect.claims.UserInfo;
 
 import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
