@@ -3,8 +3,8 @@ package com.nimbusds.openid.connect.claims;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +40,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-05-23)
  */
 public class IDTokenClaims extends JSONObjectClaims {
 
@@ -48,7 +48,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	/**
 	 * The names of the reserved ID Token claims.
 	 */
-	private static final Set<String> reservedClaimNames = new HashSet<String>();
+	private static final Set<String> reservedClaimNames = new LinkedHashSet<String>();
 	
 	
 	static {
