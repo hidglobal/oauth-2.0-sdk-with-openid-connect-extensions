@@ -14,9 +14,10 @@ import com.nimbusds.langtag.LangTag;
 
 import com.nimbusds.openid.connect.ParseException;
 
+import com.nimbusds.openid.connect.claims.ClaimName;
 import com.nimbusds.openid.connect.claims.ClaimValueParser;
+import com.nimbusds.openid.connect.claims.ClaimWithLangTag;
 import com.nimbusds.openid.connect.claims.GenericClaim;
-import com.nimbusds.openid.connect.claims.StringClaimWithLangTag;
 import com.nimbusds.openid.connect.claims.UserID;
 import com.nimbusds.openid.connect.claims.UserInfo;
 
@@ -188,9 +189,9 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * The preferred address (optional).
+	 * The preferred address, with language tags (optional).
 	 */
-	private AddressClaims address = null;
+	private Map<LangTag, AddressClaims> addressEntries = null;
 	
 	
 	/**
@@ -780,24 +781,52 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Gets the preferred address. Corresponds to the {@code address} claim.
+	 * Adds the specified preferred address, with optional language tag.
+	 * Corresponds to the {@code address} claim.
 	 *
-	 * @return The preferred address, {@code null} if not specified.
+	 * @param address The preferred address, with optional language tag.
+	 *                {@code null} if not specified.
 	 */
-	public AddressClaims getAddress() {
+	public void addAddress(final AddressClaims address) {
 	
-		return address;
+		if (address == null)
+			return;
+		
+		if (addressEntries == null)
+			addressEntries = new HashMap<LangTag,AddressClaims>();
+		
+		addressEntries.put(address.getLangTag(), address);
 	}
 	
 	
 	/**
-	 * Sets the preferred address. Corresponds to the {@code address} claim.
+	 * Gets the preferred address with no language tag. Corresponds to the 
+	 * {@code address} claim.
 	 *
-	 * @param address The preferred address, {@code null} if not specified.
+	 * @return The preferred address with no language tag, {@code null} if 
+	 *         not specified.
 	 */
-	public void setAddress(final AddressClaims address) {
+	public AddressClaims getAddress() {
 	
-		this.address = address;
+		return getAddress(null);
+	}
+	
+	
+	/**
+	 * Gets the preferred address with the specified language tag. 
+	 * Corresponds to the {@code address} claim.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The preferred address, {@code null} if not specified.
+	 */
+	public AddressClaims getAddress(final LangTag langTag) {
+	
+		if (addressEntries == null)
+			return null;
+		
+		return addressEntries.get(langTag);
 	}
 	
 	
@@ -840,8 +869,8 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Puts the speicifed string claims with optional language tags into a
-	 * JSON object.
+	 * Puts the speicifed claims with optional language tags into a JSON 
+	 * object.
 	 *
 	 * <p>Example:
 	 * 
@@ -857,18 +886,18 @@ public class UserInfoClaims extends JSONObjectClaims {
 	 * @param o      The JSON object. May be {@code null}.
 	 * @param claims The claims. May be {@code null}.
 	 */
-	protected static void putIntoJSONObject(final JSONObject o, final Map<LangTag,? extends StringClaimWithLangTag> claims) {
+	protected static void putIntoJSONObject(final JSONObject o, final Map<LangTag,? extends ClaimWithLangTag> claims) {
 	
 		if (o == null || claims == null)
 			return;
 		
-		Iterator <? extends StringClaimWithLangTag> it = claims.values().iterator();
+		Iterator <? extends ClaimWithLangTag> it = claims.values().iterator();
 		
 		while (it.hasNext()) {
 		
-			StringClaimWithLangTag claim = it.next();
+			ClaimWithLangTag claim = it.next();
 			
-			o.put(claim.getClaimName(), claim.getClaimValue().toString());
+			o.put(claim.getClaimName(), claim.getClaimValue());
 		}
 	}
 	
@@ -922,8 +951,8 @@ public class UserInfoClaims extends JSONObjectClaims {
 		if (phoneNumber != null)
 			o.put("phone_number", phoneNumber.getClaimValue());
 		
-		if (address != null)
-			o.put("address", address.toJSONObject());
+		// Address object include language tag in name
+		putIntoJSONObject(o, addressEntries);
 		
 		if (updatedTime != null)
 			o.put("updated_time", updatedTime.getClaimValue());
@@ -947,198 +976,164 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 		UserID userID = new UserID();
 		ClaimValueParser.parse(jsonObject, userID);
-		jsonObject.remove(userID.getClaimName());
 		
 		UserInfoClaims uic = new UserInfoClaims(userID);
 		
-		
-		// Parse simple optional claims (language tagged ignored)
-		
-		UserInfo.Name name = new UserInfo.Name();
-		
-		if (jsonObject.containsKey(name.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, name);
-			jsonObject.remove(name.getClaimName());
-			uic.addName(name);
-		}
-		
-		
-		UserInfo.GivenName givenName = new UserInfo.GivenName();
-		
-		if (jsonObject.containsKey(givenName.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, givenName);
-			jsonObject.remove(givenName.getClaimName());
-			uic.addGivenName(givenName);
-		}
-		
-		
-		UserInfo.FamilyName familyName = new UserInfo.FamilyName();
-		
-		if (jsonObject.containsKey(familyName.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, familyName);
-			jsonObject.remove(familyName.getClaimName());
-			uic.addFamilyName(familyName);
-		}
-		
-		
-		UserInfo.MiddleName middleName = new UserInfo.MiddleName();
-		
-		if (jsonObject.containsKey(middleName.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, middleName);
-			jsonObject.remove(middleName.getClaimName());
-			uic.addMiddleName(middleName);
-		}
-		
-		
-		UserInfo.Nickname nickname = new UserInfo.Nickname();
-		
-		if (jsonObject.containsKey(nickname.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, nickname);
-			jsonObject.remove(nickname.getClaimName());
-			uic.addNickname(nickname);
-		}
-		
-		
-		UserInfo.Profile profile = new UserInfo.Profile();
-		
-		if (jsonObject.containsKey(profile.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, profile);
-			jsonObject.remove(profile.getClaimName());
-			uic.setProfile(profile);
-		}
-		
-		
-		UserInfo.Picture picture = new UserInfo.Picture();
-		
-		if (jsonObject.containsKey(picture.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, picture);
-			jsonObject.remove(picture.getClaimName());
-			uic.setPicture(picture);
-		}
-		
-		
-		UserInfo.Website website = new UserInfo.Website();
-		
-		if (jsonObject.containsKey(website.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, website);
-			jsonObject.remove(website.getClaimName());
-			uic.setWebsite(website);
-		}
-		
-		
-		UserInfo.Email email = new UserInfo.Email();
-		
-		if (jsonObject.containsKey(email.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, email);
-			jsonObject.remove(email.getClaimName());
-			uic.setEmail(email);
-		}
-		
-		
-		UserInfo.Verified verified = new UserInfo.Verified();
-		
-		if (jsonObject.containsKey(verified.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, verified);
-			jsonObject.remove(verified.getClaimName());
-			uic.setVerified(verified);
-		}
-		
-		
-		UserInfo.Gender gender = new UserInfo.Gender();
-		
-		if (jsonObject.containsKey(gender.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, gender);
-			jsonObject.remove(gender.getClaimName());
-			uic.setGender(gender);
-		}
-		
-		
-		UserInfo.Birthday birthday = new UserInfo.Birthday();
-		
-		if (jsonObject.containsKey(birthday.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, birthday);
-			jsonObject.remove(birthday.getClaimName());
-			uic.setBirthday(birthday);
-		}
-		
-		
-		UserInfo.Zoneinfo zoneinfo = new UserInfo.Zoneinfo();
-		
-		if (jsonObject.containsKey(zoneinfo.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, zoneinfo);
-			jsonObject.remove(zoneinfo.getClaimName());
-			uic.setZoneinfo(zoneinfo);
-		}
-		
-		
-		UserInfo.Locale locale = new UserInfo.Locale();
-		
-		if (jsonObject.containsKey(locale.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, locale);
-			jsonObject.remove(locale.getClaimName());
-			uic.setLocale(locale);
-		}
-		
-		
-		UserInfo.PhoneNumber phoneNumber = new UserInfo.PhoneNumber();
-		
-		if (jsonObject.containsKey(phoneNumber.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, phoneNumber);
-			jsonObject.remove(phoneNumber.getClaimName());
-			uic.setPhoneNumber(phoneNumber);
-		}
-		
-		
-		UserInfo.UpdatedTime updatedTime = new UserInfo.UpdatedTime();
-		
-		if (jsonObject.containsKey(updatedTime.getClaimName())) {
-			
-			ClaimValueParser.parse(jsonObject, updatedTime);
-			jsonObject.remove(updatedTime.getClaimName());
-			uic.setUpdatedTime(updatedTime);
-		}
-		
-		
-		// Parse composite address
-		
-		if (jsonObject.containsKey("address")) {
-		
-			JSONObject addressJSON = JSONObjectUtils.getJSONObject(jsonObject, "address");
-			AddressClaims address = AddressClaims.parse(addressJSON);
-			jsonObject.remove(address.getClaimName());
-			uic.setAddress(address);
-		}
-		
-		
-		// Add remaing claims as custom
-		
-		Iterator <Map.Entry<String,Object>> it = jsonObject.entrySet().iterator();
+		Iterator<String> it = jsonObject.keySet().iterator();
 		
 		while (it.hasNext()) {
 		
-			Map.Entry <String,Object> entry = it.next();
+			ClaimName claimName = ClaimName.parse(it.next());
 			
-			GenericClaim gc = new GenericClaim(entry.getKey());
-			gc.setClaimValue(entry.getValue());
+			final String base = claimName.getBase();
+			final LangTag langTag = claimName.getLangTag();
+
+			if (base.equals("user_id"))
+				continue; // ignore
 			
-			uic.addCustomClaim(gc);
-		}
+					
+			// Parse simple language tagged claims
+
+			if (base.equals("name")) {
+
+				UserInfo.Name name = new UserInfo.Name();
+				name.setLangTag(langTag);
+				name.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				uic.addName(name);
+			}
+			
+			else if (base.equals("given_name")) {
+			
+				UserInfo.GivenName givenName = new UserInfo.GivenName();
+				givenName.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				givenName.setLangTag(langTag);
+				uic.addGivenName(givenName);
+			}
+
+			else if (base.equals("family_name")) {
+
+				UserInfo.FamilyName familyName = new UserInfo.FamilyName();
+				familyName.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				familyName.setLangTag(langTag);
+				uic.addFamilyName(familyName);
+			}
+
+			else if (base.equals("middle_name")) {
+
+				UserInfo.MiddleName middleName = new UserInfo.MiddleName();
+				middleName.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				middleName.setLangTag(langTag);
+				uic.addMiddleName(middleName);
+			}
+
+			else if (base.equals("nickname")) {
+
+				UserInfo.Nickname nickname = new UserInfo.Nickname();
+				nickname.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				nickname.setLangTag(langTag);
+				uic.addNickname(nickname);
+			}
 		
+			
+			// Simple claims with no language tags
+		
+			else if (claimName.getName().equals("profile")) {
+
+				UserInfo.Profile profile = new UserInfo.Profile();
+				profile.setClaimValue(JSONObjectUtils.getURL(jsonObject, "profile"));
+				uic.setProfile(profile);
+			}
+
+			else if (claimName.getName().equals("picture")) {
+
+				UserInfo.Picture picture = new UserInfo.Picture();
+				picture.setClaimValue(JSONObjectUtils.getURL(jsonObject, "picture"));
+				uic.setPicture(picture);
+			}
+
+			else if (claimName.getName().equals("website")) {
+
+				UserInfo.Website website = new UserInfo.Website();
+				website.setClaimValue(JSONObjectUtils.getURL(jsonObject, "website"));
+				uic.setWebsite(website);
+			}
+
+			else if (claimName.getName().equals("email")) {
+
+				UserInfo.Email email = new UserInfo.Email();
+				email.setClaimValue(JSONObjectUtils.getEmail(jsonObject, "email"));
+				uic.setEmail(email);
+			}
+
+			else if (claimName.getName().equals("verified")) {
+
+				UserInfo.Verified verified = new UserInfo.Verified();
+				verified.setClaimValue(JSONObjectUtils.getBoolean(jsonObject, "verified"));
+				uic.setVerified(verified);
+			}
+
+			else if (claimName.getName().equals("gender")) {
+
+				UserInfo.Gender gender = new UserInfo.Gender();
+				gender.setClaimValue(JSONObjectUtils.getString(jsonObject, "gender"));
+				uic.setGender(gender);
+			}
+
+			else if (claimName.getName().equals("birthday")) {
+
+				UserInfo.Birthday birthday = new UserInfo.Birthday();
+				birthday.setClaimValue(JSONObjectUtils.getString(jsonObject, "birthday"));
+				uic.setBirthday(birthday);
+			}
+
+			else if (claimName.getName().equals("zoneinfo")) {
+
+				UserInfo.Zoneinfo zoneinfo = new UserInfo.Zoneinfo();
+				zoneinfo.setClaimValue(JSONObjectUtils.getString(jsonObject, "zoneinfo"));
+				uic.setZoneinfo(zoneinfo);
+			}
+
+			else if (claimName.getName().equals("locale")) {
+
+				UserInfo.Locale locale = new UserInfo.Locale();
+				locale.setClaimValue(JSONObjectUtils.getString(jsonObject, "locale"));
+				uic.setLocale(locale);
+			}
+
+			else if (claimName.getName().equals("phone_number")) {
+
+				UserInfo.PhoneNumber phoneNumber = new UserInfo.PhoneNumber();
+				phoneNumber.setClaimValue(JSONObjectUtils.getString(jsonObject, "phone_number"));
+				uic.setPhoneNumber(phoneNumber);
+			}
+
+			else if (claimName.getName().equals("updated_time")) {
+
+				UserInfo.UpdatedTime updatedTime = new UserInfo.UpdatedTime();
+				updatedTime.setClaimValue(JSONObjectUtils.getString(jsonObject, "updated_time"));
+				uic.setUpdatedTime(updatedTime);
+			}
+		
+		
+			// Parse composite address with optional top-level language tag
+			
+			else if (claimName.getBase().equals("address")) {
+			
+				JSONObject addressJSON = JSONObjectUtils.getJSONObject(jsonObject, claimName.getName());
+				AddressClaims address = AddressClaims.parse(addressJSON);
+				address.setLangTag(langTag);
+				
+				uic.addAddress(address);
+			}
+			
+			// We have a custom claim
+			
+			else {
+				GenericClaim gc = new GenericClaim(claimName.getName());
+				gc.setClaimValue(jsonObject.get(claimName.getName()));
+				uic.addCustomClaim(gc);
+			}
+		}
 		
 		return uic;
 	}

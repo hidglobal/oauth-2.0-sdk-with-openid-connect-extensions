@@ -16,6 +16,7 @@ import com.nimbusds.openid.connect.ParseException;
 
 import com.nimbusds.openid.connect.claims.Claim;
 import com.nimbusds.openid.connect.claims.ClaimValueParser;
+import com.nimbusds.openid.connect.claims.ClaimWithLangTag;
 import com.nimbusds.openid.connect.claims.GenericClaim;
 import com.nimbusds.openid.connect.claims.UserInfo;
 
@@ -24,6 +25,10 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 /**
  * UserInfo address claims, serialisable to a JSON object.
+ *
+ * <p>Note: Supports language tags only at the top level. Tagged address members
+ * are treated as {@link com.nimbusds.openid.connect.claims.GenericClaim 
+ * generic claim}s.
  *
  * <p>Example UserInfo address claims set:
  *
@@ -47,7 +52,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-23)
  */
-public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject> {
+public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<JSONObject> {
 
 
 	/**
@@ -157,15 +162,26 @@ public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject>
 	/**
 	 * @inheritDoc
 	 *
+	 * @return "address".
+	 */
+	public String getBaseClaimName() {
+	
+		return "address";
+	}
+	
+	
+	/**
+	 * @inheritDoc
+	 *
 	 * @return "address" or "address#lang-tag".
 	 */
 	public String getClaimName() {
 	
 		if (langTag == null)
-			return "address";
+			return getBaseClaimName();
 		
 		else
-			return "address#" + langTag;
+			return getBaseClaimName() + '#' + langTag;
 	}
 	
 	
@@ -208,9 +224,7 @@ public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject>
 	
 	
 	/**
-	 * Gets the language tag applied to the whole UserInfo claims set.
-	 *
-	 * @return The language tag, {@code null} if none.
+	 * @inheritDoc
 	 */
 	public LangTag getLangTag() {
 	
@@ -219,9 +233,7 @@ public class AddressClaims extends JSONObjectClaims implements Claim<JSONObject>
 	
 	
 	/**
-	 * Sets the language tag applied to the whole UserInfo claims set.
-	 *
-	 * @param langTag The language tag, {@code null} if none.
+	 * @inheritDoc
 	 */
 	public void setLangTag(final LangTag langTag) {
 	

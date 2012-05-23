@@ -11,7 +11,7 @@ import com.nimbusds.jwt.JWTException;
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
 
-import com.nimbusds.openid.connect.claims.UserInfoClaims;
+import com.nimbusds.openid.connect.claims.sets.UserInfoClaims;
 
 import com.nimbusds.openid.connect.http.CommonContentTypes;
 import com.nimbusds.openid.connect.http.HTTPResponse;
@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-23)
  */
 public class UserInfoResponse implements SuccessResponse {
 

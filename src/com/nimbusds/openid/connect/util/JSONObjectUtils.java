@@ -1,6 +1,12 @@
 package com.nimbusds.openid.connect.util;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.JSONValue;
@@ -14,7 +20,7 @@ import com.nimbusds.openid.connect.ParseException;
  * JSON object helper methods for parsing and typed retrieval of member values.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-23)
+ * @version $version$ (2012-05-23)
  */
 public class JSONObjectUtils {
 	
@@ -194,6 +200,57 @@ public class JSONObjectUtils {
 		throws ParseException {
 		
 		return getGeneric(o, key, String.class);
+	}
+	
+	
+	/**
+	 * Gets a string member of a JSON object as {@code java.net.URL}.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static URL getURL(final JSONObject o, final String key)
+		throws ParseException {
+		
+		try {
+			return new URL(getGeneric(o, key, String.class));
+			
+		} catch (MalformedURLException e) {
+		
+			throw new ParseException(e.getMessage(), e);
+		}
+	}
+	
+	
+	/**
+	 * Gets a string member of a JSON object as 
+	 * {@code javax.mail.internet.InternetAddress}.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static InternetAddress getEmail(final JSONObject o, final String key)
+		throws ParseException {
+		
+		try {
+			final boolean strict = true;
+			
+			return new InternetAddress(getGeneric(o, key, String.class), strict);
+			
+		} catch (AddressException e) {
+		
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 	
 	

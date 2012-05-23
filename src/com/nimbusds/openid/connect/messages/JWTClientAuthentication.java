@@ -15,8 +15,9 @@ import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
 
-import com.nimbusds.openid.connect.claims.ClientAuthenticationClaims;
 import com.nimbusds.openid.connect.claims.ClientID;
+
+import com.nimbusds.openid.connect.claims.sets.ClientAuthenticationClaims;
 
 import com.nimbusds.openid.connect.http.CommonContentTypes;
 import com.nimbusds.openid.connect.http.HTTPRequest;

@@ -12,7 +12,6 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
 
-import com.nimbusds.openid.connect.claims.AddressClaims;
 import com.nimbusds.openid.connect.claims.UserInfo.Address;
 import com.nimbusds.openid.connect.claims.UserInfo.Birthday;
 import com.nimbusds.openid.connect.claims.UserInfo.Email;
@@ -29,8 +28,10 @@ import com.nimbusds.openid.connect.claims.UserInfo.UpdatedTime;
 import com.nimbusds.openid.connect.claims.UserInfo.Verified;
 import com.nimbusds.openid.connect.claims.UserInfo.Website;
 import com.nimbusds.openid.connect.claims.UserInfo.Zoneinfo;
-import com.nimbusds.openid.connect.claims.UserInfoClaims;
 import com.nimbusds.openid.connect.claims.UserID;
+
+import com.nimbusds.openid.connect.claims.sets.AddressClaims;
+import com.nimbusds.openid.connect.claims.sets.UserInfoClaims;
 
 import com.nimbusds.openid.connect.http.CommonContentTypes;
 import com.nimbusds.openid.connect.http.HTTPResponse;
@@ -40,7 +41,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests UserInfo response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-22)
+ * @version $version$ (2012-05-23)
  */
 public class UserInfoResponseTest extends TestCase {
 	
@@ -166,7 +167,7 @@ public class UserInfoResponseTest extends TestCase {
 		country.setClaimValue("Wonderland");
 		address.setCountry(country);
 		
-		claims.setAddress(address);
+		claims.addAddress(address);
 		
 		System.out.println(claims.toJSONObject().toString());
 		
@@ -228,10 +229,12 @@ public class UserInfoResponseTest extends TestCase {
 		assertEquals(phoneNumber, claims.getPhoneNumber());
 		assertEquals(updatedTime, claims.getUpdatedTime());
 		
-		assertEquals(formatted, claims.getAddress().getFormatted());
-		assertEquals(streetAddress, claims.getAddress().getStreetAddress());
-		assertEquals(locality, claims.getAddress().getLocality());
-		assertEquals(postalCode, claims.getAddress().getPostalCode());
-		assertEquals(country, claims.getAddress().getCountry());
+		assertNull(claims.getAddress());
+		
+		assertEquals(formatted, claims.getAddress(BG_LANGTAG).getFormatted());
+		assertEquals(streetAddress, claims.getAddress(BG_LANGTAG).getStreetAddress());
+		assertEquals(locality, claims.getAddress(BG_LANGTAG).getLocality());
+		assertEquals(postalCode, claims.getAddress(BG_LANGTAG).getPostalCode());
+		assertEquals(country, claims.getAddress(BG_LANGTAG).getCountry());
 	}
 }

@@ -2,12 +2,21 @@ package com.nimbusds.openid.connect.claims;
 
 
 import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
 
 
 /**
  * The base abstract class for string-based claims with optional language tag
  * (RFC 5646).
+ *
+ * <p>Example claims with language tags:
+ *
+ * <pre>
+ * {
+ *   "family_name"            : "family name with no language tag",
+ *   "family_name#ja-Kana-JP" : "family name, in Japanese, Katakana script",
+ *   "family_name#ja-Hani-JP" : "family name, in Japanese, Kanji script",
+ * }
+ * </pre>
  *
  * <p>Related specifications:
  *
@@ -16,9 +25,9 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-05-23)
  */
-public abstract class StringClaimWithLangTag extends StringClaim {
+public abstract class StringClaimWithLangTag extends StringClaim implements ClaimWithLangTag<String> {
 
 	
 	/**
@@ -28,17 +37,13 @@ public abstract class StringClaimWithLangTag extends StringClaim {
 	
 	
 	/**
-	 * Gets the base claim name (without the language tag designation).
-	 *
-	 * @return The base claim name.
+	 * @inheritDoc
 	 */
 	public abstract String getBaseClaimName();
 	
 	
 	/**
-	 * Sets the language tag (RFC 5646).
-	 *
-	 * @param langTag The language tag, {@code null} if none.
+	 * @inheritDoc
 	 */
 	public void setLangTag(final LangTag langTag) {
 	
@@ -47,9 +52,7 @@ public abstract class StringClaimWithLangTag extends StringClaim {
 	
 	
 	/**
-	 * Gets the language tag (RFC 5646).
-	 *
-	 * @return The language tag, {@code null} if none.
+	 * @inheritDoc
 	 */
 	public LangTag getLangTag() {
 	

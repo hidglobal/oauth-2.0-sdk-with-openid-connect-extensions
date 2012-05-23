@@ -5,7 +5,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.openid.connect.ParseException;
 
-import com.nimbusds.openid.connect.claims.IDTokenClaims;
+import com.nimbusds.openid.connect.claims.sets.IDTokenClaims;
 
 import com.nimbusds.openid.connect.http.HTTPResponse;
 import com.nimbusds.openid.connect.http.CommonContentTypes;
@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-23)
  */
 public class CheckIDResponse implements SuccessResponse {
 

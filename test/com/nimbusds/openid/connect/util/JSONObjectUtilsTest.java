@@ -1,6 +1,10 @@
 package com.nimbusds.openid.connect.util;
 
 
+import java.net.URL;
+
+import javax.mail.internet.InternetAddress;
+
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -13,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests the JSON object utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-04-22)
+ * @version 0.2 (2012-05-23)
  */
 public class JSONObjectUtilsTest extends TestCase {
 	
@@ -28,6 +32,8 @@ public class JSONObjectUtilsTest extends TestCase {
 		o.put("float", 3.14f);
 		o.put("double", 3.1415d);
 		o.put("string", "Alice");
+		o.put("url", "http://server.example.com/cb/");
+		o.put("email", "alice@wonderland.net");
 		
 		JSONParser parser = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT);
 		
@@ -93,6 +99,8 @@ public class JSONObjectUtilsTest extends TestCase {
 			assertEquals(3.14f, JSONObjectUtils.getFloat(o, "float"));
 			assertEquals(3.1415d, JSONObjectUtils.getDouble(o, "double"));
 			assertEquals("Alice", JSONObjectUtils.getString(o, "string"));
+			assertEquals("http://server.example.com/cb/", JSONObjectUtils.getURL(o, "url").toString());
+			assertEquals("alice@wonderland.net", JSONObjectUtils.getEmail(o, "email").toString());
 			
 		} catch (ParseException e) {
 		

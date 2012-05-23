@@ -66,6 +66,7 @@
 			<formatter type="plain"/>
 			<test name="com.nimbusds.openid.connect.util.URLUtilsTest"/>
 			<test name="com.nimbusds.openid.connect.util.JSONObjectUtilsTest"/>
+			<test name="com.nimbusds.openid.connect.claims.ClaimNameTest"/>
 			<test name="com.nimbusds.openid.connect.messages.NonceTest"/>
 			<test name="com.nimbusds.openid.connect.messages.StateTest"/>
 			<test name="com.nimbusds.openid.connect.messages.DisplayTest"/>
