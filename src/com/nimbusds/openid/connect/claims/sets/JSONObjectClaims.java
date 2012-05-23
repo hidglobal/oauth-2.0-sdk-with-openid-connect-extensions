@@ -2,10 +2,14 @@ package com.nimbusds.openid.connect.claims.sets;
 
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.langtag.LangTag;
+
+import com.nimbusds.openid.connect.claims.ClaimWithLangTag;
 import com.nimbusds.openid.connect.claims.GenericClaim;
 
 
@@ -52,4 +56,38 @@ public abstract class JSONObjectClaims {
 	 *                                  with a reserved claim name.
 	 */
 	public abstract void addCustomClaim(final GenericClaim customClaim);
+	
+	
+	/**
+	 * Puts the speicifed claims with optional language tags into a JSON 
+	 * object.
+	 *
+	 * <p>Example:
+	 * 
+	 * <pre>
+	 * {
+	 *   "country"       : "USA",
+	 *   "country#en"    : "USA",
+	 *   "country#de_DE" : "Vereinigte Staaten",
+	 *   "country#fr_FR" : "Etats Unis"
+	 * }
+	 * </pre>
+	 *
+	 * @param o      The JSON object. May be {@code null}.
+	 * @param claims The claims. May be {@code null}.
+	 */
+	public static void putIntoJSONObject(final JSONObject o, final Map<LangTag,? extends ClaimWithLangTag> claims) {
+	
+		if (o == null || claims == null)
+			return;
+		
+		Iterator <? extends ClaimWithLangTag> it = claims.values().iterator();
+		
+		while (it.hasNext()) {
+		
+			ClaimWithLangTag claim = it.next();
+			
+			o.put(claim.getClaimName(), claim.getClaimValue());
+		}
+	}
 }

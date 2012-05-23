@@ -15,7 +15,7 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.openid.connect.ParseException;
 
 import com.nimbusds.openid.connect.claims.Claim;
-import com.nimbusds.openid.connect.claims.ClaimValueParser;
+import com.nimbusds.openid.connect.claims.ClaimName;
 import com.nimbusds.openid.connect.claims.ClaimWithLangTag;
 import com.nimbusds.openid.connect.claims.GenericClaim;
 import com.nimbusds.openid.connect.claims.UserInfo;
@@ -92,7 +92,7 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	 * The full mailing address, formatted for display or use with a mailing
 	 * label (optional).
 	 */
-	private UserInfo.Address.Formatted formatted = null;
+	private Map<LangTag, UserInfo.Address.Formatted> formattedEntries = null;
 	
 	
 	/**
@@ -100,31 +100,31 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	 * street name, PO BOX, and multi-line extended street address 
 	 * information (optional).
 	 */
-	private UserInfo.Address.StreetAddress streetAddress = null;
+	private Map<LangTag, UserInfo.Address.StreetAddress> streetAddressEntries = null;
 	
 	
 	/**
 	 * The city or locality component (optional).
 	 */
-	private UserInfo.Address.Locality locality = null;
+	private Map<LangTag, UserInfo.Address.Locality> localityEntries = null;
 	
 	
 	/**
 	 * The state, province, prefecture or region component (optional).
 	 */
-	private UserInfo.Address.Region region = null;
+	private Map<LangTag, UserInfo.Address.Region> regionEntries = null;
 	
 	
 	/**
 	 * The zip code or postal code component (optional).
 	 */
-	private UserInfo.Address.PostalCode postalCode = null;
+	private Map<LangTag, UserInfo.Address.PostalCode> postalCodeEntries = null;
 	
 	
 	/**
 	 * The country name component (optional).
 	 */
-	private UserInfo.Address.Country country = null;
+	private Map<LangTag, UserInfo.Address.Country> countryEntries = null;
 	
 	
 	/**
@@ -214,12 +214,14 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
 		
-		formatted = ac.getFormatted();
-		streetAddress = ac.getStreetAddress();
-		locality = ac.getLocality();
-		region = ac.getRegion();
-		postalCode = ac.getPostalCode();
-		country = ac.getCountry();
+		// Copy all fields except LangTag
+		this.formattedEntries = ac.formattedEntries;
+		this.streetAddressEntries = ac.streetAddressEntries;
+		this.localityEntries = ac.localityEntries;
+		this.regionEntries = ac.regionEntries;
+		this.postalCodeEntries = ac.postalCodeEntries;
+		this.countryEntries = ac.countryEntries;
+		this.customClaims = ac.customClaims;
 	}
 	
 	
@@ -242,29 +244,89 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	
 	
 	/**
-	 * Gets the full mailing address, formatted for display or use with a
-	 * mailing label. May contain newlines. Corresponds to the
+	 * Adds the specified full mailing address, formatted for display or use
+	 * with a mailing label. May contain newlines. Corresponds to the
 	 * {@code formatted} claim.
 	 *
-	 * @return The full mailing address, {@code null} if not specified.
+	 * @param formatted The full mailing address, with optional language 
+	 *                  tag. {@code null} if not specified.
 	 */
-	public UserInfo.Address.Formatted getFormatted() {
+	public void addFormatted(final UserInfo.Address.Formatted formatted) {
 	
-		return formatted;
+		if (formatted == null)
+			return;
+			
+		if (formattedEntries == null)
+			formattedEntries = new HashMap<LangTag,UserInfo.Address.Formatted>();
+		
+		formattedEntries.put(formatted.getLangTag(), formatted);
 	}
 	
 	
 	/**
-	 * Sets the full mailing address, formatted for display or use with a
-	 * mailing label. May contain newlines. Corresponds to the
+	 * Gets the full mailing address, formatted for display or use with a
+	 * mailing label. May contain newlines. Corresponds to the 
+	 * {@code formatted} claim, with no language tag.
+	 *
+	 * @return The full mailing address with no language tag, {@code null} 
+	 *         if not specified.
+	 */
+	public UserInfo.Address.Formatted getFormatted() {
+	
+		return getFormatted(null);
+	}
+	
+	
+	/**
+	 * Gets the full mailing address, formatted for display or use with a
+	 * mailing label. May contain newlines. Corresponds to the 
+	 * {@code formatted} claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The full mailing address, {@code null} if not specified.
+	 */
+	public UserInfo.Address.Formatted getFormatted(final LangTag langTag) {
+	
+		if (formattedEntries == null)
+			return null;
+		
+		return formattedEntries.get(langTag);
+	}
+	
+	
+	/**
+	 * Gets the full mailing address entries. Correspond to the 
 	 * {@code formatted} claim.
 	 *
-	 * @param formatted The full mailing address, {@code null} if not 
-	 *                  specified.
+	 * @return The full mailing address entries, {@code null} or empty map 
+	 * if none.
 	 */
-	public void setFormatted(final UserInfo.Address.Formatted formatted) {
+	public Map<LangTag,UserInfo.Address.Formatted> getFormattedEntries() {
 	
-		this.formatted = formatted;
+		return formattedEntries;
+	}
+	
+	
+	/**
+	 * Adds the specified full street address component, which may include 
+	 * house number, street name, PO BOX, and multi-line extended street 
+	 * address information. May contain newlines. Corresponds to the 
+	 * {@code street_address} claim.
+	 *
+	 * @param streetAddress The full street address component, with optional
+	 *                      language tag. {@code null} if not specified.
+	 */
+	public void addStreetAddress(final UserInfo.Address.StreetAddress streetAddress) {
+	
+		if (streetAddress == null)
+			return;
+			
+		if (streetAddressEntries == null)
+			streetAddressEntries = new HashMap<LangTag,UserInfo.Address.StreetAddress>();
+		
+		streetAddressEntries.put(streetAddress.getLangTag(), streetAddress);
 	}
 	
 	
@@ -272,132 +334,305 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	 * Gets the full street address component, which may include house 
 	 * number, street name, PO BOX, and multi-line extended street address 
 	 * information. May contain newlines. Corresponds to the 
-	 * {@code street_address} claim.
+	 * {@code street_address} claim, with no language tag.
 	 *
-	 * @return The full street address component, {@code null} if not
-	 *         specified.
+	 * @return The full street address component with no language tag, 
+	 *         {@code null} if not specified.
 	 */
 	public UserInfo.Address.StreetAddress getStreetAddress() {
 	
-		return streetAddress;
+		return getStreetAddress(null);
 	}
 	
 	
 	/**
-	 * Sets the full street address component, which may include house 
+	 * Gets the full street address component, which may include house 
 	 * number, street name, PO BOX, and multi-line extended street address 
 	 * information. May contain newlines. Corresponds to the 
+	 * {@code street_address} claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The full street address component, {@code null} if not 
+	 *         specified.
+	 */
+	public UserInfo.Address.StreetAddress getStreetAddress(final LangTag langTag) {
+	
+		if (streetAddressEntries == null)
+			return null;
+		
+		return streetAddressEntries.get(langTag);
+	}
+	
+	
+	/**
+	 * Gets the full street address component entries. Correspond to the 
 	 * {@code street_address} claim.
 	 *
-	 * @param streetAddress The full street address component, {@code null} 
-	 *                      if not specified.
+	 * @return The full street address component entries, {@code null} or 
+	 *         empty map if none.
 	 */
-	public void setStreetAddress(final UserInfo.Address.StreetAddress streetAddress) {
+	public Map<LangTag,UserInfo.Address.StreetAddress> getStreetAddressEntries() {
 	
-		this.streetAddress = streetAddress;
+		return streetAddressEntries;
+	}
+	
+	
+	/**
+	 * Adds the specified city or locality component. Corresponds to the 
+	 * {@code locality} claim.
+	 *
+	 * @param locality The city or locality component, with optional 
+	 *                 language tag. {@code null} if not specified.
+	 */
+	public void addLocality(final UserInfo.Address.Locality locality) {
+	
+		if (locality == null)
+			return;
+		
+		if (localityEntries == null)
+			localityEntries = new HashMap<LangTag,UserInfo.Address.Locality>();
+		
+		localityEntries.put(locality.getLangTag(), locality);
 	}
 	
 	
 	/**
 	 * Gets the city or locality component. Corresponds to the 
-	 * {@code locality} claim.
+	 * {@code locality} claim, with no language tag.
 	 *
-	 * @return The city or locality component, {@code null} if not
+	 * @return The city or locality component, {@code null} if not 
 	 *         specified.
 	 */
 	public UserInfo.Address.Locality getLocality() {
 	
-		return locality;
+		return getLocality(null);
 	}
 	
 	
 	/**
-	 * Sets the city or locality component. Corresponds to the 
+	 * Gets the city or locality component. Corresponds to the 
+	 * {@code locality} claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The city or locality component, {@code null} if not 
+	 *         specified.
+	 */
+	public UserInfo.Address.Locality getLocality(final LangTag langTag) {
+	
+		if (localityEntries == null)
+			return null;
+		
+		return localityEntries.get(langTag);
+	}
+	
+	
+	/**
+	 * Gets the city or locality component entries. Correspond to the 
 	 * {@code locality} claim.
 	 *
-	 * @param locality The city or locality component, {@code null} if not
-	 *                 specified.
+	 * @return The city or locality component entries, {@code null} or empty
+	 *         map if none.
 	 */
-	public void setLocality(final UserInfo.Address.Locality locality) {
+	public Map<LangTag,UserInfo.Address.Locality> getLocalityEntries() {
 	
-		this.locality = locality;
+		return localityEntries;
+	}
+	
+	
+	/**
+	 * Adds the specified state, province, prefecture or region component.
+	 * Corresponds to the {@code region} claim.
+	 *
+	 * @param region The state, province, prefecture or region component,
+	 *               with optional language tag. {@code null} if not 
+	 *               specified.
+	 */
+	public void addRegion(final UserInfo.Address.Region region) {
+	
+		if (region == null)
+			return;
+			
+		if (regionEntries == null)
+			regionEntries = new HashMap<LangTag,UserInfo.Address.Region>();
+		
+		regionEntries.put(region.getLangTag(), region);
 	}
 	
 	
 	/**
 	 * Gets the state, province, prefecture or region component. Corresponds
-	 * to the {@code region} claim.
+	 * to the {@code region} claim, with no language tag.
 	 *
-	 * @return The state, province, prefecture or region component;
-	 *         {@code null} if not specified.
+	 * @return The state, province, prefecture or region component with no
+	 *         language tag, {@code null} if not specified.
 	 */
 	public UserInfo.Address.Region getRegion() {
 	
-		return region;
+		return getRegion(null);
 	}
 	
 	
 	/**
-	 * Sets the state, province, prefecture or region component. Corresponds
-	 * to the {@code region} claim.
+	 * Gets the state, province, prefecture or region component. Corresponds
+	 * to the {@code region} claim, with an optional language tag.
 	 *
-	 * @param region The state, province, prefecture or region component;
-	 *               {@code null} if not specified.
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The state, province, prefecture or region component,
+	 *         {@code null} if not specified.
 	 */
-	public void setRegion(final UserInfo.Address.Region region) {
+	public UserInfo.Address.Region getRegion(final LangTag langTag) {
 	
-		this.region = region;
+		if (regionEntries == null)
+			return null;
+		
+		return regionEntries.get(langTag);
+	}
+	
+	
+	/**
+	 * Gets the state, province, prefecture or region component entries. 
+	 * Correspond to the {@code region} claim.
+	 *
+	 * @return The state, province, prefecture or region component entries,
+	 *         {@code null} or empty map if none.
+	 */
+	public Map<LangTag,UserInfo.Address.Region> getRegionEntries() {
+	
+		return regionEntries;
+	}
+	
+	
+	/**
+	 * Adds the specified zip code or postal code component. Corresponds to 
+	 * the {@code postal_code} claim.
+	 *
+	 * @param postalCode The zip code or postal code component, with 
+	 *                   optional language tag. {@code null} if not 
+	 *                   specified.
+	 */
+	public void addPostalCode(final UserInfo.Address.PostalCode postalCode) {
+	
+		if (postalCode == null)
+			return;
+		
+		if (postalCodeEntries == null)
+			postalCodeEntries = new HashMap<LangTag,UserInfo.Address.PostalCode>();
+		
+		postalCodeEntries.put(postalCode.getLangTag(), postalCode);
 	}
 	
 	
 	/**
 	 * Gets the zip code or postal code component. Corresponds to the
-	 * {@code postal_code} claim.
+	 * {@code postal_code} claim, with no language tag.
 	 *
-	 * @return The zip code or postal code component, {@code null} if not
+	 * @return The zip code or postal code component, {@code null} if not 
 	 *         specified.
 	 */
 	public UserInfo.Address.PostalCode getPostalCode() {
 	
-		return postalCode;
+		return getPostalCode(null);
 	}
 	
 	
 	/**
-	 * Sets the zip code or postal code component. Corresponds to the
+	 * Gets the zip code or postal code component. Corresponds to the
+	 * {@code postal_code} claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The zip code or postal code component, {@code null} if not 
+	 *         specified.
+	 */
+	public UserInfo.Address.PostalCode getPostalCode(final LangTag langTag) {
+	
+		if (postalCodeEntries == null)
+			return null;
+		
+		return postalCodeEntries.get(langTag);
+	}
+	
+	
+	/**
+	 * Gets the zip code or postal code component entries. Correspond to the
 	 * {@code postal_code} claim.
 	 *
-	 * @param postalCode The zip code or postal code component, {@code null}
-	 *                   if not specified.
+	 * @return The zip code or postal code component entries, {@code null} 
+	 *         or empty map if none.
 	 */
-	public void setPostalCode(final UserInfo.Address.PostalCode postalCode) {
+	public Map<LangTag,UserInfo.Address.PostalCode> getPostalCodeEntries() {
 	
-		this.postalCode = postalCode;
+		return postalCodeEntries;
+	}
+	
+	
+	/**
+	 * Adds the specified country name component. Corresponds to the 
+	 * {@code country} claim.
+	 *
+	 * @param country The country name component, with optional language 
+	 *                tag. {@code null} if not specified.
+	 */
+	public void addCountry(final UserInfo.Address.Country country) {
+	
+		if (country == null)
+			return;
+		
+		if (countryEntries == null)
+			countryEntries = new HashMap<LangTag,UserInfo.Address.Country>();
+		
+		countryEntries.put(country.getLangTag(), country);
 	}
 	
 	
 	/**
 	 * Gets the country name component. Corresponds to the {@code country}
-	 * claim.
+	 * claim, with no language tag.
 	 *
-	 * @return The country name component, {@code null} if not specified.
+	 * @return The country name component with no language tag, {@code null}
+	 *         if not specified.
 	 */
 	public UserInfo.Address.Country getCountry() {
 	
-		return country;
+		return getCountry(null);
 	}
 	
 	
 	/**
-	 * Sets the country name component. Corresponds to the {@code country}
-	 * claim.
+	 * Gets the country name component. Corresponds to the {@code country}
+	 * claim, with an optional language tag.
 	 *
-	 * @param country The country name component, {@code null} if not 
-	 *                specified.
+	 * @param langTag The language tag of the entry, {@code null} to get the
+	 *                untagged entry.
+	 *
+	 * @return The country name component, {@code null} if not specified.
 	 */
-	public void setCountry(final UserInfo.Address.Country country) {
+	public UserInfo.Address.Country getCountry(final LangTag langTag) {
 	
-		this.country = country;
+		if (countryEntries == null)
+			return null;
+		
+		return countryEntries.get(langTag);
+	}
+	
+	
+	/**
+	 * Gets the country name component entries. Correspond to the
+	 * {@code country} claim.
+	 *
+	 * @return The country name component entries, {@code null} or empty map
+	 *         if none.
+	 */
+	public Map<LangTag,UserInfo.Address.Country> getCountryEntries() {
+	
+		return countryEntries;
 	}
 	
 	
@@ -420,23 +655,12 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	
 		JSONObject o = new JSONObject();
 		
-		if (formatted != null)
-			o.put("formatted", formatted.getClaimValue());
-			
-		if (streetAddress != null)
-			o.put("street_address", streetAddress.getClaimValue());
-		
-		if (locality != null)
-			o.put("locality", locality.getClaimValue());
-		
-		if (region != null)
-			o.put("region", region.getClaimValue());
-		
-		if (postalCode != null)
-			o.put("postal_code", postalCode.getClaimValue());
-		
-		if (country != null)
-			o.put("country", country.getClaimValue());
+		JSONObjectClaims.putIntoJSONObject(o, formattedEntries);
+		JSONObjectClaims.putIntoJSONObject(o, streetAddressEntries);
+		JSONObjectClaims.putIntoJSONObject(o, localityEntries);
+		JSONObjectClaims.putIntoJSONObject(o, regionEntries);
+		JSONObjectClaims.putIntoJSONObject(o, postalCodeEntries);
+		JSONObjectClaims.putIntoJSONObject(o, countryEntries);
 		
 		return o;
 	}
@@ -457,82 +681,71 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 		
 		AddressClaims ac = new AddressClaims();
 		
-		// formatted
-		UserInfo.Address.Formatted formatted = new UserInfo.Address.Formatted();
-		
-		if (jsonObject.containsKey(formatted.getClaimName())) {
-		
-			ClaimValueParser.parse(jsonObject, formatted);
-			jsonObject.remove(formatted.getClaimName());
-			ac.setFormatted(formatted);
-		}
-		
-		// street_address
-		UserInfo.Address.StreetAddress streetAddress = new UserInfo.Address.StreetAddress();
-		
-		if (jsonObject.containsKey(streetAddress.getClaimName())) {
-		
-			ClaimValueParser.parse(jsonObject, streetAddress);
-			jsonObject.remove(streetAddress.getClaimName());
-			ac.setStreetAddress(streetAddress);
-		}
-		
-		// locality
-		UserInfo.Address.Locality locality = new UserInfo.Address.Locality();
-		
-		if (jsonObject.containsKey(locality.getClaimName())) {
-		
-			ClaimValueParser.parse(jsonObject, locality);
-			jsonObject.remove(locality.getClaimName());
-			ac.setLocality(locality);
-		}
-		
-		
-		// region
-		UserInfo.Address.Region region = new UserInfo.Address.Region();
-		
-		if (jsonObject.containsKey(region.getClaimName())) {
-		
-			ClaimValueParser.parse(jsonObject, region);
-			jsonObject.remove(region.getClaimName());
-			ac.setRegion(region);
-		}
-		
-		
-		// postal_code
-		UserInfo.Address.PostalCode postalCode = new UserInfo.Address.PostalCode();
-		
-		if (jsonObject.containsKey(postalCode.getClaimName())) {
-		
-			ClaimValueParser.parse(jsonObject, postalCode);
-			jsonObject.remove(postalCode.getClaimName());
-			ac.setPostalCode(postalCode);
-		}
-		
-		
-		// country
-		UserInfo.Address.Country country = new UserInfo.Address.Country();
-		
-		if (jsonObject.containsKey(country.getClaimName())) {
-		
-			ClaimValueParser.parse(jsonObject, country);
-			jsonObject.remove(country.getClaimName());
-			ac.setCountry(country);
-		}
-		
-		
-		// Add remaing claims as custom
-		
-		Iterator <Map.Entry<String,Object>> it = jsonObject.entrySet().iterator();
+		Iterator<String> it = jsonObject.keySet().iterator();
 		
 		while (it.hasNext()) {
 		
-			Map.Entry <String,Object> entry = it.next();
+			ClaimName claimName = ClaimName.parse(it.next());
 			
-			GenericClaim gc = new GenericClaim(entry.getKey());
-			gc.setClaimValue(entry.getValue());
+			final String base = claimName.getBase();
+			final LangTag langTag = claimName.getLangTag();
 			
-			ac.addCustomClaim(gc);
+			
+			if (base.equals("formatted")) {
+
+				UserInfo.Address.Formatted formatted = new UserInfo.Address.Formatted();
+				formatted.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				formatted.setLangTag(langTag);
+				ac.addFormatted(formatted);
+			}
+
+			else if (base.equals("street_address")) {
+				
+				UserInfo.Address.StreetAddress streetAddress = new UserInfo.Address.StreetAddress();
+				streetAddress.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				streetAddress.setLangTag(langTag);
+				ac.addStreetAddress(streetAddress);
+			}
+
+			else if (base.equals("locality")) {
+				
+				UserInfo.Address.Locality locality = new UserInfo.Address.Locality();
+				locality.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				locality.setLangTag(langTag);
+				ac.addLocality(locality);
+			}
+
+			else if (base.equals("region")) {
+
+				UserInfo.Address.Region region = new UserInfo.Address.Region();
+				region.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				region.setLangTag(langTag);
+				ac.addRegion(region);
+			}
+
+			else if (base.equals("postal_code")) {
+
+				UserInfo.Address.PostalCode postalCode = new UserInfo.Address.PostalCode();
+				postalCode.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				postalCode.setLangTag(langTag);
+				ac.addPostalCode(postalCode);
+			}
+
+			else if (base.equals("country")) {
+
+				UserInfo.Address.Country country = new UserInfo.Address.Country();
+				country.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				country.setLangTag(langTag);
+				ac.addCountry(country);
+			}
+		
+			else {
+				// Custom claim
+				
+				GenericClaim gc = new GenericClaim(claimName.getName());
+				gc.setClaimValue(jsonObject.get(claimName.getName()));
+				ac.addCustomClaim(gc);
+			}
 		}
 		
 		return ac;

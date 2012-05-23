@@ -149,23 +149,23 @@ public class UserInfoResponseTest extends TestCase {
 
 		Address.Formatted formatted = new Address.Formatted();
 		formatted.setClaimValue("Alice Wonderland\n36 Wonderland Str.\n1313 Wonder City\nWonderland");
-		address.setFormatted(formatted);
+		address.addFormatted(formatted);
 		
 		Address.StreetAddress streetAddress = new Address.StreetAddress();
 		streetAddress.setClaimValue("36 Wonderland Str.");
-		address.setStreetAddress(streetAddress);
+		address.addStreetAddress(streetAddress);
 		
 		Address.Locality locality = new Address.Locality();
 		locality.setClaimValue("Wonder City");
-		address.setLocality(locality);
+		address.addLocality(locality);
 		
 		Address.PostalCode postalCode = new Address.PostalCode();
 		postalCode.setClaimValue("1313");
-		address.setPostalCode(postalCode);
+		address.addPostalCode(postalCode);
 		
 		Address.Country country = new Address.Country();
 		country.setClaimValue("Wonderland");
-		address.setCountry(country);
+		address.addCountry(country);
 		
 		claims.addAddress(address);
 		

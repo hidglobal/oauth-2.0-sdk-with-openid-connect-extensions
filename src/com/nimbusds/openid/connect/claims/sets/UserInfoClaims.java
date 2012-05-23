@@ -869,40 +869,6 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Puts the speicifed claims with optional language tags into a JSON 
-	 * object.
-	 *
-	 * <p>Example:
-	 * 
-	 * <pre>
-	 * {
-	 *   "country"       : "USA",
-	 *   "country#en"    : "USA",
-	 *   "country#de_DE" : "Vereinigte Staaten",
-	 *   "country#fr_FR" : "Etats Unis"
-	 * }
-	 * </pre>
-	 *
-	 * @param o      The JSON object. May be {@code null}.
-	 * @param claims The claims. May be {@code null}.
-	 */
-	protected static void putIntoJSONObject(final JSONObject o, final Map<LangTag,? extends ClaimWithLangTag> claims) {
-	
-		if (o == null || claims == null)
-			return;
-		
-		Iterator <? extends ClaimWithLangTag> it = claims.values().iterator();
-		
-		while (it.hasNext()) {
-		
-			ClaimWithLangTag claim = it.next();
-			
-			o.put(claim.getClaimName(), claim.getClaimValue());
-		}
-	}
-	
-	
-	/**
 	 * @inheritDoc
 	 */
 	public JSONObject toJSONObject() {
@@ -911,15 +877,15 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 		o.put("user_id", userID.getClaimValue());
 		
-		putIntoJSONObject(o, nameEntries);
+		JSONObjectClaims.putIntoJSONObject(o, nameEntries);
 		
-		putIntoJSONObject(o, givenNameEntries);
+		JSONObjectClaims.putIntoJSONObject(o, givenNameEntries);
 		
-		putIntoJSONObject(o, familyNameEntries);
+		JSONObjectClaims.putIntoJSONObject(o, familyNameEntries);
 		
-		putIntoJSONObject(o, middleNameEntries);
+		JSONObjectClaims.putIntoJSONObject(o, middleNameEntries);
 		
-		putIntoJSONObject(o, nicknameEntries);
+		JSONObjectClaims.putIntoJSONObject(o, nicknameEntries);
 		
 		if (profile != null)
 			o.put("profile", profile.getClaimValue().toString());
@@ -952,7 +918,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 			o.put("phone_number", phoneNumber.getClaimValue());
 		
 		// Address object include language tag in name
-		putIntoJSONObject(o, addressEntries);
+		JSONObjectClaims.putIntoJSONObject(o, addressEntries);
 		
 		if (updatedTime != null)
 			o.put("updated_time", updatedTime.getClaimValue());
@@ -997,8 +963,8 @@ public class UserInfoClaims extends JSONObjectClaims {
 			if (base.equals("name")) {
 
 				UserInfo.Name name = new UserInfo.Name();
-				name.setLangTag(langTag);
 				name.setClaimValue(JSONObjectUtils.getString(jsonObject, claimName.getName()));
+				name.setLangTag(langTag);
 				uic.addName(name);
 			}
 			
