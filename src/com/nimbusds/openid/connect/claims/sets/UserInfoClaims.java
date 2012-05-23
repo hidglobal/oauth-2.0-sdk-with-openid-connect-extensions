@@ -873,7 +873,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	 */
 	public JSONObject toJSONObject() {
 	
-		JSONObject o = new JSONObject();
+		JSONObject o = super.toJSONObject();
 		
 		o.put("user_id", userID.getClaimValue());
 		

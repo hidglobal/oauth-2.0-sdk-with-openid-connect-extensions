@@ -445,7 +445,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 */
 	public JSONObject toJSONObject() {
 	
-		JSONObject o = new JSONObject();
+		JSONObject o = super.toJSONObject();
 		
 		o.put("iss", iss.getClaimValue());
 		o.put("user_id", userID.getClaimValue());

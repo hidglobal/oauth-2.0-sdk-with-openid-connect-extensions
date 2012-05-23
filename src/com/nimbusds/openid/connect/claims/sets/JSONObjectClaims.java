@@ -33,7 +33,22 @@ public abstract class JSONObjectClaims {
 	 *
 	 * @return The JSON object representation.
 	 */
-	public abstract JSONObject toJSONObject();
+	public JSONObject toJSONObject() {
+	
+		JSONObject o = new JSONObject();
+	
+		Iterator <Map.Entry<String,GenericClaim>> it = customClaims.entrySet().iterator();
+		
+		while (it.hasNext()) {
+		
+			Map.Entry<String,GenericClaim> entry = it.next();
+			
+			if (entry.getValue() != null)
+				o.put(entry.getKey(), entry.getValue().getClaimValue());
+		}
+		
+		return o;
+	}
 	
 	
 	/**

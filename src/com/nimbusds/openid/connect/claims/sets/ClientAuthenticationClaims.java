@@ -367,7 +367,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	 */
 	public JSONObject toJSONObject() {
 	
-		JSONObject o = new JSONObject();
+		JSONObject o = super.toJSONObject();
 		
 		o.put("iss", iss.getClaimValue());
 		o.put("prn", prn.getClaimValue());
