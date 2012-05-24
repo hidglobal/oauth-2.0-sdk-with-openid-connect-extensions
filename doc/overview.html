@@ -39,9 +39,42 @@
 			<li>Extensible ID token and UserInfo claim sets to
 			allow passing and processing of additional custom 
 			claims.</li>
-			<li>Full i18n and l10n support through Language Tags
-			(RFC 5646) via the Nimbus-LangTag library.</li>
+			<li>Full i18n support through Language Tags (RFC 5646) 
+			via the Nimbus-LangTag library.</li>
 			<li>Java Servlet integration.</li>
+		</ul>
+		
+		<p>Dependencies:</p>
+		
+		<ul>
+			<li>Mandatory packages:
+				<ul>
+					<li>Nimbus-JWT: Plain, signed and 
+					encrypted JSON Web Tokens (JWTs).</li>
+					<li>BouncyCastle.org: Handles crypto
+					operations for Nimbus-JWT.</li>
+					<li>JSON Smart: High-performance JSON
+					parsing and serialisation.</li>
+					<li>Apache Commons Codec: Provides 
+					Base64 and Base64URL encoding.</li>
+					<li>Apache Commons Lang: Provides 
+					string escaping and random string 
+					generation for OpenID Connect 
+					messages.</li>
+					<li>Nimbus-LangTag: Provides language 
+					tagging (RFC 5646) in UserInfo 
+					responses.</li>
+					<li>javax.mail: Provides parsing and
+					validation of email addresses.</li>					
+				</ul>
+			</li>
+			<li>Optional packages:
+				<ul>
+					<li>Servlet API 2.5+: For server-side
+					implementations running in a servlet
+					container.</li>
+				</ul>
+			</li>
 		</ul>
 	</body>
 
