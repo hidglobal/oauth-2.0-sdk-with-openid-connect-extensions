@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-05-24)
  */
 public class ResponseTypeSet extends HashSet<ResponseType> {
 
@@ -59,7 +59,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 		throws ParseException {
 	
 		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Couldn't parse response type: Null or empty string");
+			throw new ParseException("Null or empty string");
 	
 		ResponseTypeSet set = new ResponseTypeSet();
 		

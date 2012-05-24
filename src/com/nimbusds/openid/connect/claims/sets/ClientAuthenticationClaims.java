@@ -54,7 +54,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-05-24)
  */
 public class ClientAuthenticationClaims extends JSONObjectClaims {
 
@@ -188,7 +188,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	public void setIssuer(final Issuer iss) {
 	
 		if (iss == null)
-			throw new NullPointerException("The issuer must not be null");
+			throw new IllegalArgumentException("The issuer must not be null");
 		
 		this.iss = iss;
 	}
@@ -215,7 +215,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	public void setPrincipal(final Principal prn) {
 	
 		if (prn == null)
-			throw new NullPointerException("The principal must not be null");
+			throw new IllegalArgumentException("The principal must not be null");
 		
 		this.prn = prn;
 	}
@@ -242,7 +242,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	public void setAudience(final Audience aud) {
 	
 		if (aud == null)
-			throw new NullPointerException("The audience must not be null");
+			throw new IllegalArgumentException("The audience must not be null");
 			
 		this.aud = aud;
 	}
@@ -267,7 +267,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	public void setJWTID(final JWTID jti) {
 	
 		if (jti == null)
-			throw new NullPointerException("The JWT ID must not be null");
+			throw new IllegalArgumentException("The JWT ID must not be null");
 		
 		this.jti = jti;
 	}
@@ -292,7 +292,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	public void setExpirationTime(final ExpirationTime exp) {
 	
 		if (exp == null)
-			throw new NullPointerException("The expiration time must not be null");
+			throw new IllegalArgumentException("The expiration time must not be null");
 		
 		this.exp = exp;
 	}

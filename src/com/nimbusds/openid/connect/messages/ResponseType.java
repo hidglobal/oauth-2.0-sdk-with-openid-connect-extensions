@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-05-24)
  */
 public enum ResponseType {
 
@@ -62,7 +62,7 @@ public enum ResponseType {
 		throws ParseException {
 	
 		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Couldn't parse response type: Null or empty value");
+			throw new ParseException("Null or empty string");
 		
 		if (s.equals("code"))
 			return CODE;
@@ -74,6 +74,6 @@ public enum ResponseType {
 			return TOKEN;
 		
 		else
-			throw new ParseException("Couldn't parse response type: Unexpected response type: " + s);
+			throw new ParseException("Unknown response type: " + s);
 	}
 }

@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-05-24)
  */
 public class Prompt extends HashSet<Prompt.Type> {
 
@@ -88,7 +88,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 			throws ParseException {
 
 			if (s == null || s.trim().isEmpty())
-				throw new ParseException("Couldn't parse prompt type: Null or empty value");
+				throw new ParseException("Null or empty string");
 
 			if (s.equals("none"))
 				return NONE;
@@ -103,7 +103,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 				return SELECT_ACCOUNT;
 
 			else
-				throw new ParseException("Couldn't parse prompt type: Unexpected prompt type: " + s);
+				throw new ParseException("Unknown prompt type: " + s);
 		}
 	}
 	
@@ -176,7 +176,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 			prompt.add(Prompt.Type.parse(t));
 		
 		if (! prompt.isValid())
-			throw new ParseException("Couldn't parse prompt: Invalid set");
+			throw new ParseException("Invalid prompt set: " + s);
 		
 		return prompt;
 	}

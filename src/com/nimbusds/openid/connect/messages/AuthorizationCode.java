@@ -12,7 +12,7 @@ package com.nimbusds.openid.connect.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-25)
+ * @version $version$ (2012-05-24)
  */
 public class AuthorizationCode {
 

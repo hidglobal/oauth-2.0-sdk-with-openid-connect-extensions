@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-24)
  */
 public class AccessToken {
 
@@ -152,10 +152,10 @@ public class AccessToken {
 		String[] parts = header.split("\\s", 2);
 	
 		if (parts.length != 2)
-			throw new ParseException("Couldn't parse access token: Invalid HTTP Authorization header");
+			throw new ParseException("Invalid HTTP Authorization header");
 		
 		if (! parts[0].equals("Bearer"))
-			throw new ParseException("Couldn't parse access token: Token type must be Bearer");
+			throw new ParseException("Token type must be Bearer");
 		
 		return new AccessToken(parts[1]);
 	}

@@ -66,7 +66,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-03)
+ * @version $version$ (2012-05-24)
  */
 public class AuthorizationErrorResponse implements ErrorResponse {
 
@@ -169,12 +169,12 @@ public class AuthorizationErrorResponse implements ErrorResponse {
 					  final State state) {
 					  
 		if (redirectURI == null)
-			throw new NullPointerException("The redirect URI must not be null");
+			throw new IllegalArgumentException("The redirect URI must not be null");
 		
 		this.redirectURI = redirectURI;
 		
 		if (errorCode == null)
-			throw new NullPointerException("The error code must not be null");
+			throw new IllegalArgumentException("The error code must not be null");
 		
 		if (! legalErrorCodes.contains(errorCode))
 			throw new IllegalArgumentException("Illegal error code");

@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * Connect {@link com.nimbusds.openid.connect.messages.Request request message}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-22)
+ * @version $version$ (2012-05-24)
  */
 public class HTTPRequest {
 
@@ -78,7 +78,7 @@ public class HTTPRequest {
 	public HTTPRequest(final Method method) {
 	
 		if (method == null)
-			throw new NullPointerException("The HTTP method must not be null");
+			throw new IllegalArgumentException("The HTTP method must not be null");
 		
 		this.method = method;
 	}
@@ -89,7 +89,7 @@ public class HTTPRequest {
 	 *
 	 * @param sr The servlet request. Must not be {@code null}.
 	 *
-	 * @throws NullPointerException     If the servlet request is 
+	 * @throws IllegalArgumentException If the servlet request is 
 	 *                                  {@code null}.
 	 * @throws IllegalArgumentException The the servlet request method is
 	 *                                  not GET or POST, or the content type
@@ -101,7 +101,7 @@ public class HTTPRequest {
 		throws IOException {
 	
 		if (sr == null)
-			throw new NullPointerException("The HTTP servlet request must not be null");
+			throw new IllegalArgumentException("The HTTP servlet request must not be null");
 		
 		method = HTTPRequest.Method.valueOf(sr.getMethod().toUpperCase());
 		
@@ -163,7 +163,7 @@ public class HTTPRequest {
 	public void setMethod(final Method method) {
 	
 		if (method == null)
-			throw new NullPointerException("The HTTP method must not be null");
+			throw new IllegalArgumentException("The HTTP method must not be null");
 		
 		this.method = method;
 	}

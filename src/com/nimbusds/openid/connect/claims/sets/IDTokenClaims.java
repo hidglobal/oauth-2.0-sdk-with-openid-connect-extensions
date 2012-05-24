@@ -54,7 +54,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-05-24)
  */
 public class IDTokenClaims extends JSONObjectClaims {
 
@@ -201,7 +201,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	public void setIssuer(final Issuer iss) {
 	
 		if (iss == null)
-			throw new NullPointerException("The issuer must not be null");
+			throw new IllegalArgumentException("The issuer must not be null");
 		
 		this.iss = iss;
 	}
@@ -226,7 +226,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	public void setUserID(final UserID userID) {
 	
 		if (userID == null)
-			throw new NullPointerException("The user ID must not be null");
+			throw new IllegalArgumentException("The user ID must not be null");
 			
 		this.userID = userID;
 	}
@@ -251,7 +251,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	public void setAudience(final Audience aud) {
 	
 		if (aud == null)
-			throw new NullPointerException("The audience must not be null");
+			throw new IllegalArgumentException("The audience must not be null");
 			
 		this.aud = aud;
 	}
@@ -280,7 +280,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	public void setIssueTime(final IssueTime iat) {
 	
 		if (iat == null)
-			throw new NullPointerException("The issue time must not be null");
+			throw new IllegalArgumentException("The issue time must not be null");
 		
 		this.iat = iat;
 	}
@@ -305,7 +305,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	public void setNonce(final Nonce nonce) {
 	
 		if (nonce == null)
-			throw new NullPointerException("The nonce must not be null");
+			throw new IllegalArgumentException("The nonce must not be null");
 		
 		this.nonce = nonce;
 	}

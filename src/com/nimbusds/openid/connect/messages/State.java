@@ -15,7 +15,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-09)
+ * @version $version$ (2012-05-24)
  */
 public class State {
 
@@ -34,11 +34,8 @@ public class State {
 	 */
 	public State(final String value) {
 	
-		if (value == null)
-			throw new NullPointerException("The state value must not be null");
-			
-		if (value.trim().isEmpty())
-			throw new IllegalArgumentException("The state value must not be empty");
+		if (value == null || value.trim().isEmpty())
+			throw new IllegalArgumentException("Null or empty string");
 		
 		this.value = value;
 	}

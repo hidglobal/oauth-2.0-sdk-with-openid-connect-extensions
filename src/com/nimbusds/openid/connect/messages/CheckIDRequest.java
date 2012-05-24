@@ -42,7 +42,7 @@ import com.nimbusds.openid.connect.http.CommonContentTypes;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-24)
  */
 public class CheckIDRequest implements Request {
 	
@@ -69,7 +69,7 @@ public class CheckIDRequest implements Request {
 	public CheckIDRequest(final AccessToken accessToken) {
 	
 		if (accessToken == null)
-			throw new NullPointerException("The access token must not be null");
+			throw new IllegalArgumentException("The access token must not be null");
 	
 		this.accessToken = accessToken;
 	}
@@ -85,7 +85,7 @@ public class CheckIDRequest implements Request {
 	public CheckIDRequest(final JWT jwt) {
 	
 		if (jwt == null)
-			throw new NullPointerException("The JWT must not be null");
+			throw new IllegalArgumentException("The JWT must not be null");
 	
 		this.jwt = jwt;
 	}
@@ -155,7 +155,7 @@ public class CheckIDRequest implements Request {
 				
 			} catch (JWTException e) {
 			
-				throw new SerializeException("Couldn't serialize check ID request: " + e.getMessage(), e);
+				throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
 			}
 		}
 	

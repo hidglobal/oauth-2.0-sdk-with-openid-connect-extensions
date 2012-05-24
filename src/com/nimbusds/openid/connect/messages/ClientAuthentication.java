@@ -22,7 +22,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-05-24)
  */
 public abstract class ClientAuthentication {
 
@@ -89,7 +89,7 @@ public abstract class ClientAuthentication {
 	protected ClientAuthentication(final Method method) {
 	
 		if (method == null)
-			throw new NullPointerException("The method must not be null");
+			throw new IllegalArgumentException("The method must not be null");
 		
 		this.method = method;
 	}

@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-19)
+ * @version $version$ (2012-05-24)
  */
 public class AccessTokenResponse implements SuccessResponse {
 
@@ -83,7 +83,7 @@ public class AccessTokenResponse implements SuccessResponse {
 	                           final RefreshToken refreshToken) {
 				   
 		if (accessToken == null)
-			throw new NullPointerException("The access token must not be null");
+			throw new IllegalArgumentException("The access token must not be null");
 		
 		this.accessToken = accessToken;
 		

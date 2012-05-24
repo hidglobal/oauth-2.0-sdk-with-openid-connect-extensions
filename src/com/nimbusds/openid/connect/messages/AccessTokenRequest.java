@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-24)
  */
 public class AccessTokenRequest extends TokenRequest {
 	
@@ -86,12 +86,12 @@ public class AccessTokenRequest extends TokenRequest {
 		super(GrantType.AUTHORIZATION_CODE, clientAuth);
 		
 		if (code == null)
-			throw new NullPointerException("The authorization code must not be null");
+			throw new IllegalArgumentException("The authorization code must not be null");
 		
 		this.code = code;
 		
 		if (redirectURI == null)
-			throw new NullPointerException("The redirect URI must not be null");
+			throw new IllegalArgumentException("The redirect URI must not be null");
 		
 		this.redirectURI = redirectURI;
 	}

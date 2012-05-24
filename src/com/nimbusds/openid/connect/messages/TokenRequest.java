@@ -36,7 +36,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-24)
  */
 public abstract class TokenRequest implements Request {
 
@@ -62,7 +62,7 @@ public abstract class TokenRequest implements Request {
 	protected TokenRequest(final GrantType grantType, final ClientAuthentication clientAuth) {
 	
 		if (grantType == null)
-			throw new NullPointerException("The grant type must not be null");
+			throw new IllegalArgumentException("The grant type must not be null");
 		
 		this.grantType = grantType;
 		

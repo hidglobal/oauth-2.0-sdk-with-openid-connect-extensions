@@ -15,7 +15,7 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-05-24)
  */
 public class ClaimName {
 
@@ -41,7 +41,7 @@ public class ClaimName {
 	private ClaimName(final String base, final LangTag langTag) {
 	
 		if (base == null)
-			throw new NullPointerException("The claim name base must not be null");
+			throw new IllegalArgumentException("The base of the claim name must not be null");
 		
 		this.base = base;
 		

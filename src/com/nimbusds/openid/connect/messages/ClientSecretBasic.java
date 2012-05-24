@@ -31,7 +31,7 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-10)
+ * @version $version$ (2012-05-24)
  */
 public class ClientSecretBasic extends ClientAuthentication {
 
@@ -59,12 +59,12 @@ public class ClientSecretBasic extends ClientAuthentication {
 		super(ClientAuthentication.Method.CLIENT_SECRET_BASIC);
 	
 		if (clientID == null || clientID.getClaimValue() == null)
-			throw new NullPointerException("The client ID must not be null");
+			throw new IllegalArgumentException("The client ID must not be null");
 		
 		this.clientID = clientID;
 		
 		if (secret == null)
-			throw new NullPointerException("The client secret must not be null");
+			throw new IllegalArgumentException("The client secret must not be null");
 		
 		this.secret = secret;
 	}

@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-05-24)
  */
 public class UserInfoResponse implements SuccessResponse {
 
@@ -72,7 +72,7 @@ public class UserInfoResponse implements SuccessResponse {
 	public UserInfoResponse(final UserInfoClaims claims) {
 	
 		if (claims == null)
-			throw new NullPointerException("The claims must not be null");
+			throw new IllegalArgumentException("The claims must not be null");
 		
 		this.claims = claims;
 	}
@@ -87,7 +87,7 @@ public class UserInfoResponse implements SuccessResponse {
 	public UserInfoResponse(final JWT jwt) {
 	
 		if (jwt == null)
-			throw new NullPointerException("The claims JWT must not be null");
+			throw new IllegalArgumentException("The claims JWT must not be null");
 		
 		this.jwt = jwt;
 	}
@@ -156,7 +156,7 @@ public class UserInfoResponse implements SuccessResponse {
 				
 			} catch (JWTException e) {
 			
-				throw new SerializeException("Couldn't serialize UserInfo JWT claims: " + e.getMessage(), e);
+				throw new SerializeException("Couldn't serialize UserInfo claims JWT: " + e.getMessage(), e);
 			}
 		}
 		

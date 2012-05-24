@@ -56,7 +56,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-22)
+ * @version $version$ (2012-05-24)
  */
 public class TokenErrorResponse implements ErrorResponse {
 
@@ -121,7 +121,7 @@ public class TokenErrorResponse implements ErrorResponse {
 	public TokenErrorResponse(final ErrorCode errorCode, final URL errorURI) {
 	
 		if (errorCode == null)
-			throw new NullPointerException("The error code must not be null");
+			throw new IllegalArgumentException("The error code must not be null");
 		
 		if (! legalErrorCodes.contains(errorCode))
 			throw new IllegalArgumentException("Illegal error code");

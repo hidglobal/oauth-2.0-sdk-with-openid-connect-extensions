@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-22)
+ * @version $version$ (2012-05-24)
  */
 public class UserInfoRequest implements Request {
 
@@ -80,13 +80,13 @@ public class UserInfoRequest implements Request {
 	public UserInfoRequest(final HTTPRequest.Method httpMethod, final AccessToken accessToken) {
 	
 		if (httpMethod == null)
-			throw new NullPointerException("The HTTP method must not be null");
+			throw new IllegalArgumentException("The HTTP method must not be null");
 		
 		this.httpMethod = httpMethod;
 		
 		
 		if (accessToken == null)
-			throw new NullPointerException("The access token must not be null");
+			throw new IllegalArgumentException("The access token must not be null");
 		
 		this.accessToken = accessToken;
 	}
@@ -136,7 +136,7 @@ public class UserInfoRequest implements Request {
 				break;
 			
 			default:
-				throw new SerializeException("Couldn't serialize UserInfo request: Unexpected HTTP method: " + httpMethod);
+				throw new SerializeException("Unexpected HTTP method: " + httpMethod);
 		}
 		
 		return httpRequest;
@@ -167,17 +167,17 @@ public class UserInfoRequest implements Request {
 				String authzHeader = httpRequest.getAuthorization();
 				
 				if (authzHeader == null)
-					throw new ParseException("Couldn't parse UserInfo request: Missing HTTP Authorization header");
+					throw new ParseException("Missing HTTP Authorization header");
 				
 				accessToken = AccessToken.parse(authzHeader);
 				
 				String query = httpRequest.getQuery();
 				
 				if (query == null)
-					throw new ParseException("Couldn't parse UserInfo request: Missing query string");
+					throw new ParseException("Missing query string");
 				
 				if (query.indexOf("schema=openid") < 0)
-					throw new ParseException("Couldn't parse UserInfo request: Missing or unexpected schema parameter, must be \"openid\"");
+					throw new ParseException("Missing or unexpected schema parameter, must be \"openid\"");
 				
 				break;
 				
@@ -189,20 +189,20 @@ public class UserInfoRequest implements Request {
 				Map<String,String> params = httpRequest.getQueryParameters();	
 			
 				if (! params.containsKey("schema"))
-					throw new ParseException("Couldn't parse UserInfo request: Missing schema parameter");
+					throw new ParseException("Missing schema parameter");
 				
 				if ("openid".equals(params.get("schema")))
-					throw new ParseException("Couldn't parse UserInfo request: Unexpected schema parameter, must be \"openid\"");
+					throw new ParseException("Unexpected schema parameter, must be \"openid\"");
 			
 				if (! params.containsKey("access_token"))
-					throw new ParseException("Couldn't parse UserInfo request: Missing access_token parameter");
+					throw new ParseException("Missing access_token parameter");
 				
 				accessToken = new AccessToken(params.get("access_token"));
 			
 				break;
 			
 			default:
-				throw new ParseException("Couldn't parse UserInfo request: Unexpected HTTP method: " + httpMethod);
+				throw new ParseException("Unexpected HTTP method: " + httpMethod);
 		}
 	
 		return new UserInfoRequest(httpMethod, accessToken);

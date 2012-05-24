@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-04-24)
  */
 public enum Display {
 
@@ -98,6 +98,6 @@ public enum Display {
 			return WAP;
 			
 		else
-			throw new ParseException("Couldn't parse display type: Unexpected display type: " + s);
+			throw new ParseException("Unknown display type: " + s);
 	}
 }

@@ -12,7 +12,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Parser for {@link ScopeMember}s.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-05-24)
  */
 public class ScopeParser {
 
@@ -111,11 +111,11 @@ public class ScopeParser {
 			if (map.containsKey(t))
 				scope.add(map.get(t));
 			else
-				throw new ParseException("Couldn't parse scope: Unexpected scope member: " + t);
+				throw new ParseException("Unexpected scope member: " + t);
 		}
 		
 		if (! scope.isValid())
-			throw new ParseException("Couldn't parse scope: Missing \"openid\" scope member");
+			throw new ParseException("Invalid scope: Missing mandatory \"openid\" scope member");
 		
 		return scope;
 	}

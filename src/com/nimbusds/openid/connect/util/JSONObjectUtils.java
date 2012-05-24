@@ -20,7 +20,7 @@ import com.nimbusds.openid.connect.ParseException;
  * JSON object helper methods for parsing and typed retrieval of member values.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-05-24)
  */
 public class JSONObjectUtils {
 	
@@ -53,13 +53,13 @@ public class JSONObjectUtils {
 			
 		} catch (net.minidev.json.parser.ParseException e) {
 			
-			throw new ParseException("Invalid JSON", e);
+			throw new ParseException("Invalid JSON: " + e.getMessage(), e);
 		}
 		
 		if (o instanceof JSONObject)
 			return (JSONObject)o;
 		else
-			throw new ParseException("Invalid JSON object");
+			throw new ParseException("JSON entity is not an object");
 	}
 	
 	

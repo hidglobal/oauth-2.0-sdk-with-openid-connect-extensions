@@ -53,7 +53,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-18)
+ * @version $version$ (2012-05-24)
  */
 public class AuthorizationRequest implements Request {
 
@@ -227,7 +227,7 @@ public class AuthorizationRequest implements Request {
 	public void setResponseTypeSet(final ResponseTypeSet rts) {
 	
 		if (rts == null)
-			throw new NullPointerException("The response type set must not be null");
+			throw new IllegalArgumentException("The response type set must not be null");
 			
 		responseTypeSet = rts;
 	}
@@ -293,7 +293,7 @@ public class AuthorizationRequest implements Request {
 	public void setScope(final Scope scope) {
 	
 		if (scope == null)
-			throw new NullPointerException("The scope must not be null");
+			throw new IllegalArgumentException("The scope must not be null");
 		
 		this.scope = scope;
 	}
@@ -357,7 +357,7 @@ public class AuthorizationRequest implements Request {
 	public void setClientID(final ClientID clientID) {
 	
 		if (clientID == null)
-			throw new NullPointerException("The client ID must not be null");
+			throw new IllegalArgumentException("The client ID must not be null");
 			
 		this.clientID = clientID;
 	}
@@ -425,7 +425,7 @@ public class AuthorizationRequest implements Request {
 	public void setRedirectURI(final URL redirectURI) {
 	
 		if (redirectURI == null)
-			throw new NullPointerException("The redirect URI must not be null");
+			throw new IllegalArgumentException("The redirect URI must not be null");
 			
 		this.redirectURI = redirectURI;
 	}
@@ -485,7 +485,7 @@ public class AuthorizationRequest implements Request {
 	public void setNonce(final Nonce nonce) {
 	
 		if (nonce == null)
-			throw new NullPointerException("The nonce must not be null");
+			throw new IllegalArgumentException("The nonce must not be null");
 		
 		this.nonce = nonce;
 	}

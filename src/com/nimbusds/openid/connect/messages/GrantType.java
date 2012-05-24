@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-05-24)
  */
 public enum GrantType {
 
@@ -56,7 +56,7 @@ public enum GrantType {
 		throws ParseException {
 	
 		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Couldn't parse grant type: Null or empty string");
+			throw new ParseException("Null or empty string");
 		
 		if (s.equals("authorization_code"))
 			return AUTHORIZATION_CODE;
@@ -65,6 +65,6 @@ public enum GrantType {
 			return REFRESH_TOKEN;
 			
 		else
-			throw new ParseException("Couldn't parse grant type: Unexpected grant type: " + s);
+			throw new ParseException("Unknown grant type: " + s);
 	}
 }

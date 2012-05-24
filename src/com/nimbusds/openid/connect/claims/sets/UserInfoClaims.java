@@ -47,7 +47,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-05-24)
  */
 public class UserInfoClaims extends JSONObjectClaims {
 
@@ -233,7 +233,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	public void setUserID(final UserID userID) {
 	
 		if (userID == null)
-			throw new NullPointerException("The user ID must not be null");
+			throw new IllegalArgumentException("The user ID must not be null");
 		
 		this.userID = userID;
 	}

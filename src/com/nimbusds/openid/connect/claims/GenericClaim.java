@@ -6,7 +6,7 @@ package com.nimbusds.openid.connect.claims;
  * claim outside the typed claims used in OpenID Connect.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-21)
+ * @version $version$ (2012-05-24)
  */
 public class GenericClaim implements Claim<Object> {
 
@@ -37,7 +37,7 @@ public class GenericClaim implements Claim<Object> {
 	public GenericClaim(final String name) {
 	
 		if (name == null)
-			throw new NullPointerException("The claim name must not be null");
+			throw new IllegalArgumentException("The claim name must not be null");
 		
 		this.name = name;
 	}

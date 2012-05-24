@@ -38,7 +38,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-05-24)
  */
 public abstract class JWTClientAuthentication extends ClientAuthentication {
 
@@ -85,7 +85,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		super(ClientAuthentication.Method.CLIENT_SECRET_BASIC);
 	
 		if (clientAssertion == null)
-			throw new NullPointerException("The client assertion JWT must not be null");
+			throw new IllegalArgumentException("The client assertion JWT must not be null");
 			
 		this.clientAssertion = clientAssertion;
 		

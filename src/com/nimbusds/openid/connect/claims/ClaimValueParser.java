@@ -18,7 +18,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * Parses claim values from a JSON object containing a claims set.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-17)
+ * @version $version$ (2012-05-24)
  */
 public class ClaimValueParser {
 

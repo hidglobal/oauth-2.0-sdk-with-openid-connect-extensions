@@ -29,7 +29,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-13)
+ * @version $version$ (2012-05-24)
  */
 public class AuthorizationResponse implements SuccessResponse {
 
@@ -76,7 +76,7 @@ public class AuthorizationResponse implements SuccessResponse {
 	public AuthorizationResponse(final URL redirectURI) {
 	
 		if (redirectURI == null)
-			throw new NullPointerException("The redirect URI must not be null");
+			throw new IllegalArgumentException("The redirect URI must not be null");
 		
 		this.redirectURI = redirectURI;
 	}
@@ -361,7 +361,7 @@ public class AuthorizationResponse implements SuccessResponse {
 		throws ParseException {
 		
 		if (url == null)
-			throw new NullPointerException("The URL must not be null");
+			throw new IllegalArgumentException("The URL must not be null");
 		
 		String paramString = null;
 		

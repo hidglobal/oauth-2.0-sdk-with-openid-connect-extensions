@@ -37,7 +37,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-19)
+ * @version $version$ (2012-05-24)
  */
 public class RefreshTokenRequest extends TokenRequest {
 
@@ -70,7 +70,7 @@ public class RefreshTokenRequest extends TokenRequest {
 		super(GrantType.REFRESH_TOKEN, clientAuth);
 		
 		if (refreshToken == null)
-			throw new NullPointerException("The refresh token must not be null");
+			throw new IllegalArgumentException("The refresh token must not be null");
 		
 		this.refreshToken = refreshToken;
 	}
