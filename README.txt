@@ -48,8 +48,8 @@ The SDK JavaDocs are at http://nimbusds.com/files/openid-connect-sdk/javadoc/
 
 
 The Nimbus OpenID Connect SDK is licensed under GPL 2.0. Licences for 
-integration into commercial products and services are available for a small fee,
-please get in touch with us at http://nimbusds.com/contact.html
+integration into proprietary products and services are available for a small 
+fee, please get in touch with us at http://nimbusds.com/contact.html
 
 
 2012-05-29
