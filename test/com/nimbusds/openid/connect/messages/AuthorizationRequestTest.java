@@ -1,6 +1,9 @@
 package com.nimbusds.openid.connect.messages;
 
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -10,6 +13,7 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.openid.connect.ParseException;
+import com.nimbusds.openid.connect.SerializeException;
 
 import com.nimbusds.openid.connect.claims.ClientID;
 
@@ -18,9 +22,69 @@ import com.nimbusds.openid.connect.claims.ClientID;
  * Tests authorisation request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-03-25)
+ * @version 0.2 (2012-05-29)
  */
 public class AuthorizationRequestTest extends TestCase {
+	
+	
+	public void testSerializeSimple() {
+	
+		ResponseTypeSet rts = new ResponseTypeSet();
+		rts.add(ResponseType.CODE);
+		rts.add(ResponseType.ID_TOKEN);
+		
+		Scope scope = new Scope();
+		scope.add(StdScopeMember.OPENID);
+		
+		ClientID clientID = new ClientID();
+		clientID.setClaimValue("s6BhdRkqt3");
+		
+		URL redirectURI = null;
+		
+		try {
+			redirectURI = new URL("https://client.example.com/cb");
+		
+		} catch (MalformedURLException e) {
+		
+			fail(e.getMessage());
+		}
+		
+		Nonce nonce = new Nonce("n-0S6_WzA2Mj");
+		
+		AuthorizationRequest authReq = new AuthorizationRequest(
+			rts, scope, clientID, redirectURI, nonce);
+		
+		State state = new State("af0ifjsldkj");
+		authReq.setState(state);
+		
+		String queryString = null;
+		
+		try {
+			queryString = authReq.toQueryString();
+		
+		} catch (SerializeException e) {
+			
+			fail(e.getMessage());
+		}
+		
+		System.out.println(queryString);
+		
+		
+		assertEquals(2, authReq.getResponseTypeSet().size());
+		assertTrue(authReq.getResponseTypeSet().contains(ResponseType.CODE));
+		assertTrue(authReq.getResponseTypeSet().contains(ResponseType.ID_TOKEN));
+		
+		assertEquals(1, authReq.getScope().size());
+		assertTrue(authReq.getScope().contains(StdScopeMember.OPENID));
+		
+		assertEquals("s6BhdRkqt3", authReq.getClientID().getClaimValue());
+		
+		assertEquals("https://client.example.com/cb", authReq.getRedirectURI().toString());
+		
+		assertEquals("n-0S6_WzA2Mj", authReq.getNonce().toString());
+		
+		assertEquals("af0ifjsldkj", authReq.getState().toString());
+	}
 	
 	
 	public void testParseSimple() {

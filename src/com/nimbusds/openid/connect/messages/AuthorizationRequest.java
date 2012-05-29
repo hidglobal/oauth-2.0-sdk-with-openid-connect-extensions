@@ -4,9 +4,12 @@ package com.nimbusds.openid.connect.messages;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
+
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +56,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-05-29)
  */
 public class AuthorizationRequest implements Request {
 
@@ -83,9 +86,9 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * The nonce (required).
+	 * The nonce (conditionally required).
 	 */
-	private Nonce nonce = null;
+	private Nonce nonce;
 	
 	
 	/**
@@ -972,12 +975,111 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * @inheritDoc
+	 * Returns the URL query string for this authorisation request.
+	 *
+	 * <p>Note that the '?' character preceding the query string in an URL
+	 * is not included in the returned string.
+	 *
+	 * <p>Example URL query string:
+	 *
+	 * <pre>
+	 * response_type=token%20id_token
+	 * &client_id=s6BhdRkqt3
+	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &scope=openid%20profile
+	 * &state=af0ifjsldkj
+	 * &nonce=n-0S6_WzA2Mj
+	 * </pre>
+	 * 
+	 * @return The URL query string.
+	 *
+	 * @throws SerializeException If this authorisation request couldn't be
+	 *                            serialised to an URL query string.
+	 */
+	public String toQueryString()
+		throws SerializeException {
+		
+		Map <String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("response_type", responseTypeSet.toString());
+		params.put("client_id", clientID.getClaimValue());
+		params.put("scope", scope.toString());
+		params.put("redirect_uri", redirectURI.toString());
+		
+		if (nonce != null)
+			params.put("nonce", nonce.toString());
+		
+		if (state != null)
+			params.put("state", state.toString());
+		
+		if (display != null)
+			params.put("display", display.toString());
+		
+		if (prompt != null)
+			params.put("prompt", prompt.toString());
+		
+		
+		// Checks request exor request_uri done by setter methods
+		
+		if (requestObject != null) {
+		
+			try {
+				params.put("request", requestObject.serialize());
+				
+			} catch (JWTException e) {
+			
+				throw new SerializeException("Couldn't serialize request object: " + e.getMessage());
+			}
+		}
+		
+		if (requestURI != null)
+			params.put("request_uri", requestURI.toString());
+		
+		
+		return URLUtils.serializeParameters(params);
+	}
+	
+	
+	/**
+	 * Returns the matching HTTP request.
+	 *
+	 * @param method The HTTP request method. If {@code null} assumes the
+	 *               default HTTP GET.
+	 *
+	 * @return The HTTP request.
+	 *
+	 * @throws SerializeException If the OpenID Connect request message
+	 *                            couldn't be serialised to an HTTP request.
+	 */
+	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method) 
+		throws SerializeException {
+		
+		HTTPRequest httpRequest;
+		
+		if (method == null || method == HTTPRequest.Method.GET)
+			httpRequest = new HTTPRequest(HTTPRequest.Method.GET);
+		else
+			httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		
+		httpRequest.setQuery(toQueryString());
+		
+		return httpRequest;
+	}
+	
+	
+	/**
+	 * Returns the matching HTTP GET request.
+	 *
+	 * @return The HTTP request.
+	 *
+	 * @throws SerializeException If the OpenID Connect request message
+	 *                            couldn't be serialised to an HTTP GET 
+	 *                            request.
 	 */
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 	
-		return null;
+		return toHTTPRequest(HTTPRequest.Method.GET);
 	}
 	
 	
@@ -987,7 +1089,7 @@ public class AuthorizationRequest implements Request {
 	 * <p>Example URL query string:
 	 *
 	 * <pre>
-	 * ?response_type=token%20id_token
+	 * response_type=token%20id_token
 	 * &client_id=s6BhdRkqt3
 	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
 	 * &scope=openid%20profile
@@ -1147,7 +1249,8 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Parses an authorisation request from the specified HTTP request.
+	 * Parses an authorisation request from the specified HTTP GET or HTTP
+	 * POST request.
 	 *
 	 * <p>Example HTTP request (GET):
 	 *
