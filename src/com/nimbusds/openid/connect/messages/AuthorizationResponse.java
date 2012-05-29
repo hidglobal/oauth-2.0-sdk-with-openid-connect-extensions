@@ -348,6 +348,13 @@ public class AuthorizationResponse implements SuccessResponse {
 	 * Parses an authorisation response from the specified absolute or 
 	 * relative URL.
 	 *
+	 * <p>Use a relative URL if the host, port and path details are not
+	 * known:
+	 *
+	 * <pre>
+	 * AuthorizationResponse.parse(new URL("http://?code=Qcb0Orv1...&state=af0ifjsldkj"));
+	 * </pre>
+	 *
 	 * @param url The URL to parse. May be absolute or relative, with a
 	 *            fragment or query string containing the authorisation
 	 *            response parameters. Must not be {@code null}.

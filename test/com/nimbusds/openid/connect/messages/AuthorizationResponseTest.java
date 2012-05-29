@@ -19,12 +19,15 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests authorisation response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-18)
+ * @version 0.2 (2012-05-29)
  */
 public class AuthorizationResponseTest extends TestCase {
 	
 	
-	private static URL REDIRECT_URL = null;
+	private static URL ABS_REDIRECT_URL = null;
+	
+	
+	private static URL REL_REDIRECT_URL = null;
 	
 	
 	private static String ID_TOKEN_STRING = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9zZ" +
@@ -39,7 +42,9 @@ public class AuthorizationResponseTest extends TestCase {
 	public void setUp()
 		throws MalformedURLException, JWTException {
 		
-		REDIRECT_URL = new URL("https://client.example.com/cb");
+		ABS_REDIRECT_URL = new URL("https://client.example.com/cb");
+		
+		REL_REDIRECT_URL = new URL("https://");
 		
 		ID_TOKEN = JWT.parse(ID_TOKEN_STRING);
 	}
@@ -47,9 +52,9 @@ public class AuthorizationResponseTest extends TestCase {
 	
 	public void testConstructorMinimal() {
 	
-		AuthorizationResponse resp = new AuthorizationResponse(REDIRECT_URL);
+		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL);
 		
-		assertEquals(REDIRECT_URL.toString(), resp.getRedirectURI().toString());
+		assertEquals(ABS_REDIRECT_URL.toString(), resp.getRedirectURI().toString());
 		
 		ResponseTypeSet rts = resp.getResponseTypeSet();
 		assertEquals(0, rts.size());
@@ -78,7 +83,7 @@ public class AuthorizationResponseTest extends TestCase {
 	
 	public void testSerializeCode() {
 	
-		AuthorizationResponse resp = new AuthorizationResponse(REDIRECT_URL);
+		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL);
 		
 		AuthorizationCode code = new AuthorizationCode("Qcb0Orv1zh30vL1MPRsbm-diHiMwcLyZvn1arpZv-Jxf_11jnpEX3Tgfvk");
 		resp.setAuthorizationCode(code);
@@ -146,7 +151,7 @@ public class AuthorizationResponseTest extends TestCase {
 	
 	public void testSerializeTokenAndIDToken() {
 	
-		AuthorizationResponse resp = new AuthorizationResponse(REDIRECT_URL);
+		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL);
 		
 		AccessToken token = new AccessToken("jHkWEdUXMU1BwAsC4vtUsZwnNvTIxEl0z9K3vx5KF0Y");
 		resp.setAccessToken(token);
