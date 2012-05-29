@@ -5,7 +5,7 @@ Copyright (c) Nimbus Directory Services / Vladimir Dzhuvinov, 2012
 
 README
 
-The Nimbus OpenID Connect SDK for Java is your starting point for:
+The OpenID Connect SDK for Java is your starting point for:
 
 	* Developing Identity Provider (IdP) servers based on OpenID Connect:
 	
@@ -19,7 +19,7 @@ The Nimbus OpenID Connect SDK for Java is your starting point for:
 		- Parse and process requests at the OpenID Connect UserInfo 
 		  Endpoint, then generate the appropriate responses.
 	
-	* Developing OpenID Connect clients in Java:
+	* Developing OpenID Connect clients:
 	
 		- Compose requests to an OpenID Connect Authorization Endpoint
 		  and parse the responses;
