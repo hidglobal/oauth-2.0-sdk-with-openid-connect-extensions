@@ -1,7 +1,7 @@
-<project name="OpenID Connect / NimbusDS" default="dist" basedir=".">
+<project name="OpenID Connect / NimbusDS.com" default="dist" basedir=".">
 
 	<property name="version" value="1.0"/>
-	<property name="version-date" value="2012-05-23"/>
+	<property name="version-date" value="2012-05-29"/>
 	<property name="jarfile" value="nimbusds-openid-connect-${version}.jar"/>
 	
 	<path id="classpath.compile">
@@ -32,7 +32,6 @@
 		<copy todir="procsrc">
     			<fileset dir="src"/>
   		</copy>
-		
 		<!-- Indicate SDK version number and version date -->
 		<replace dir="procsrc" token="$version$" value="${version}">
 			<include name="**/*.java"/>
@@ -96,7 +95,7 @@
 			 destdir="javadoc"
 			 author="true"
 			 version="true"
-			 use="false"
+			 use="true"
 			 linksource="true"
 			 overview="doc/overview.html"
 			 windowtitle="OpenID Connect / NimbusDS"
@@ -109,14 +108,8 @@
 	</target>
 	
 	<target name="jar" depends="compile">
-		<jar destfile="${jarfile}" basedir="build" excludes="**/Test.class">
-			<zipfileset src="lib/json-smart-1.1.1.jar" includes="**/*.class"/>
-		</jar>
-	</target>
-	
-	<target name="jar-min" depends="compile">
 		<jar destfile="${jarfile}" basedir="build" excludes="**/Test.class"/>
-	</target>  
+	</target>
 	
 	<target name="dist" depends="clean,src,compile,compile-tests,junit,javadoc,jar">
 		<delete dir="build"/>

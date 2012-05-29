@@ -41,7 +41,7 @@ Additional features:
 
 
 
-This SDK version implements the OpenID Connect draft suite from 5 April 2012.
+This SDK version implements the OpenID Connect draft suite from 10 April 2012.
 
 
 The Nimbus OpenID Connect SDK is licensed under GPL 2.0. Licences for 
