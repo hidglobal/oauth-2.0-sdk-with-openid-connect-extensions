@@ -112,6 +112,7 @@
 	</target>
 	
 	<target name="dist" depends="clean,src,compile,compile-tests,junit,javadoc,jar">
+		<delete dir="procsrc"/>
 		<delete dir="build"/>
 		<delete>
 			<fileset dir="." includes="**/TEST-*"/>
