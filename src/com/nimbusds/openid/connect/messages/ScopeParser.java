@@ -9,16 +9,16 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * Parser for {@link ScopeMember}s.
+ * Parser for {@link ScopeToken}s.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-06-11)
  */
 public class ScopeParser {
 
 
 	/**
-	 * Parser instance for {@link StdScopeMember standard scope member}
+	 * Parser instance for {@link StdScopeToken standard scope tokens}
 	 * (thread-safe).
 	 */
 	protected static final ScopeParser STD_SCOPE_PARSER = new ScopeParser();
@@ -27,37 +27,37 @@ public class ScopeParser {
 	/**
 	 * Map of scope value strings to their corresponding object.
 	 */
-	private Map<String,ScopeMember> map = new HashMap<String,ScopeMember>();
+	private Map<String,ScopeToken> map = new HashMap<String,ScopeToken>();
 	
 	
 	/**
-	 * Creates a new parser for the {@link StdScopeMember standard scope
-	 * members}.
+	 * Creates a new parser for the {@link StdScopeToken standard scope
+	 * tokens}.
 	 */
 	public ScopeParser() {
 	
-		this(StdScopeMember.values());
+		this(StdScopeToken.values());
 	}
 	
 	
 	/**
-	 * Creates a new parser for the specified scope members.
+	 * Creates a new parser for the specified scope tokens.
 	 *
-	 * @param members The scope members to parse.
+	 * @param tokens The scope tokens to parse.
 	 */
-	public ScopeParser(final ScopeMember... members) {
+	public ScopeParser(final ScopeToken... tokens) {
 	
-		for (ScopeMember m: members)
-			map.put(m.toString(), m);
+		for (ScopeToken t: tokens)
+			map.put(t.toString(), t);
 	}
 	
 	
 	/**
-	 * Returns the scope members configured for parsing.
+	 * Returns the scope tokens configured for parsing.
 	 *
-	 * @return The scope members for parsing.
+	 * @return The scope tokens for parsing.
 	 */
-	public Collection<ScopeMember> getValues() {
+	public Collection<ScopeToken> getValues() {
 	
 		return map.values();
 	}
@@ -65,9 +65,9 @@ public class ScopeParser {
 	
 	/**
 	 * Parses a {@code Scope} from the specified string. Unexpected scope
-	 * members are ignored. For strict parsing see {@link #parseStrict}.
+	 * tokens are ignored. For strict parsing see {@link #parseStrict}.
 	 *
-	 * @param s A string containing one or more scope members delimited by 
+	 * @param s A string containing one or more scope tokens delimited by 
 	 *          space.
 	 *
 	 * @return The parsed scope.
@@ -91,13 +91,13 @@ public class ScopeParser {
 	/**
 	 * Parses a {@code Scope} from the specified string.
 	 *
-	 * @param s A string containing one or more scope members delimited by 
+	 * @param s A string containing one or more scope tokens delimited by 
 	 *          space.
 	 *
 	 * @return The parsed scope.
 	 *
-	 * @throws ParseException If an unexpected scope member is encountered
-	 *                        or a {@link StdScopeMember#OPENID} is missing.
+	 * @throws ParseException If an unexpected scope token is encountered
+	 *                        or a {@link StdScopeToken#OPENID} is missing.
 	 */
 	public Scope parseStrict(final String s)
 		throws ParseException {
@@ -111,11 +111,11 @@ public class ScopeParser {
 			if (map.containsKey(t))
 				scope.add(map.get(t));
 			else
-				throw new ParseException("Unexpected scope member: " + t);
+				throw new ParseException("Unexpected scope token: " + t);
 		}
 		
 		if (! scope.isValid())
-			throw new ParseException("Invalid scope: Missing mandatory \"openid\" scope member");
+			throw new ParseException("Invalid scope: Missing mandatory \"openid\" scope token");
 		
 		return scope;
 	}

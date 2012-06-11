@@ -2,7 +2,7 @@ package com.nimbusds.openid.connect.messages;
 
 
 /**
- * Enumeration of the standard {@link ScopeMember}s.
+ * Enumeration of the standard {@link ScopeToken}s.
  *
  * <p>Related specifications:
  *
@@ -11,44 +11,44 @@ package com.nimbusds.openid.connect.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-09)
+ * @version $version$ (2012-06-11)
  */
-public enum StdScopeMember implements ScopeMember {
+public enum StdScopeToken implements ScopeToken {
 
 
 	/**
 	 * Informs the authorisation server that the client is making an OpenID 
 	 * Connect request (REQUIRED).
 	 */
-	OPENID("openid", ScopeMember.Type.REQUIRED),
+	OPENID("openid", ScopeToken.Type.REQUIRED),
 	
 	
 	/**
 	 * Requests that access to the end-user's default profile claims at the 
 	 * UserInfo endpoint be granted by the issued access token.
 	 */
-	PROFILE("profile", ScopeMember.Type.OPTIONAL),
+	PROFILE("profile", ScopeToken.Type.OPTIONAL),
 	
 	
 	/**
 	 * Requests that access to the email and verified claims at the UserInfo
 	 * endpoint be granted by the issued access token.
 	 */
-	EMAIL("email", ScopeMember.Type.OPTIONAL),
+	EMAIL("email", ScopeToken.Type.OPTIONAL),
 	
 	
 	/**
 	 * Requests that access to address claim at the UserInfo endpoint be 
 	 * granted by the issued access token. 
 	 */
-	ADDRESS("address", ScopeMember.Type.OPTIONAL),
+	ADDRESS("address", ScopeToken.Type.OPTIONAL),
 	
 	
 	/**
 	 * Requests that access to the phone_number claim at the UserInfo 
 	 * endpoint be granted by the issued access token. 
 	 */
-	PHONE("phone", ScopeMember.Type.OPTIONAL);
+	PHONE("phone", ScopeToken.Type.OPTIONAL);
 
 
 	/**
@@ -60,16 +60,16 @@ public enum StdScopeMember implements ScopeMember {
 	/**
 	 * The requirement type.
 	 */
-	private ScopeMember.Type type;
+	private ScopeToken.Type type;
 	
 	
 	/**
-	 * Creates a new scope member.
+	 * Creates a new scope token.
 	 *
-	 * @param value The scope member as a string.
+	 * @param value The scope token as a string.
 	 * @param type  The requirement type.
 	 */
-	private StdScopeMember(final String value, final ScopeMember.Type type) {
+	private StdScopeToken(final String value, final ScopeToken.Type type) {
 	
 		this.value = value;
 		this.type = type;
@@ -88,7 +88,7 @@ public enum StdScopeMember implements ScopeMember {
 	/**
 	 * @inheritDoc
 	 */
-	public ScopeMember.Type getType() {
+	public ScopeToken.Type getType() {
 	
 		return type;
 	}

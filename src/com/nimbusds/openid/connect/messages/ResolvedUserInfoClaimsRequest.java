@@ -19,14 +19,14 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-23)
+ * @version $version$ (2012-06-11)
  */
 public class ResolvedUserInfoClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
 	 * Gets the default UserInfo claims request for the
-	 * {@link StdScopeMember#OPENID openid scope}.
+	 * {@link StdScopeToken#OPENID openid scope}.
 	 *
 	 * @return The UserInfo openid scope request.
 	 */
@@ -40,7 +40,7 @@ public class ResolvedUserInfoClaimsRequest extends ClaimsRequest {
 	
 	/**
 	 * Gets the default UserInfo claims request for the
-	 * {@link StdScopeMember#PROFILE profile scope}.
+	 * {@link StdScopeToken#PROFILE profile scope}.
 	 *
 	 * @return The UserInfo profile scope request.
 	 */
@@ -110,7 +110,7 @@ public class ResolvedUserInfoClaimsRequest extends ClaimsRequest {
 	
 	/**
 	 * Gets the default UserInfo claims request for the
-	 * {@link StdScopeMember#EMAIL email scope}.
+	 * {@link StdScopeToken#EMAIL email scope}.
 	 *
 	 * @return The UserInfo email scope request.
 	 */
@@ -132,7 +132,7 @@ public class ResolvedUserInfoClaimsRequest extends ClaimsRequest {
 	
 	/**
 	 * Gets the default UserInfo claims request for the
-	 * {@link StdScopeMember#ADDRESS address scope}.
+	 * {@link StdScopeToken#ADDRESS address scope}.
 	 *
 	 * @return The UserInfo address scope request.
 	 */
@@ -175,7 +175,7 @@ public class ResolvedUserInfoClaimsRequest extends ClaimsRequest {
 	
 	/**
 	 * Gets the default UserInfo claims request for the
-	 * {@link StdScopeMember#PHONE phone scope}.
+	 * {@link StdScopeToken#PHONE phone scope}.
 	 *
 	 * @return The UserInfo phone scope request.
 	 */
@@ -202,19 +202,19 @@ public class ResolvedUserInfoClaimsRequest extends ClaimsRequest {
 	
 		JSONObject claims = new JSONObject();
 		
-		if (scope.contains(StdScopeMember.OPENID))
+		if (scope.contains(StdScopeToken.OPENID))
 			claims.putAll(getClaimsRequestForOpenIDScope());
 			
-		if (scope.contains(StdScopeMember.PROFILE))
+		if (scope.contains(StdScopeToken.PROFILE))
 			claims.putAll(getClaimsRequestForProfileScope());
 		
-		if (scope.contains(StdScopeMember.EMAIL))
+		if (scope.contains(StdScopeToken.EMAIL))
 			claims.putAll(getClaimsRequestForEmailScope());
 			
-		if (scope.contains(StdScopeMember.PHONE))
+		if (scope.contains(StdScopeToken.PHONE))
 			claims.putAll(getClaimsRequestForPhoneScope());
 		
-		if (scope.contains(StdScopeMember.ADDRESS))
+		if (scope.contains(StdScopeToken.ADDRESS))
 			claims.putAll(getClaimsRequestForAddressScope());
 		
 		return claims;

@@ -17,9 +17,9 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-22)
+ * @version $version$ (2012-06-11)
  */
-public class Scope extends HashSet<ScopeMember> {
+public class Scope extends HashSet<ScopeToken> {
 
 	
 	/**
@@ -34,13 +34,13 @@ public class Scope extends HashSet<ScopeMember> {
 	/**
 	 * Checks if the scope is valid according to the OpenID Connect 
 	 * specification. This is done by examining if the scope contains an
-	 * {@link StdScopeMember#OPENID} instance.
+	 * {@link StdScopeToken#OPENID} instance.
 	 *
 	 * @return {@code true} if this scope if valid, else {@code false}.
 	 */
 	public boolean isValid() {
 	
-		if (contains(StdScopeMember.OPENID))
+		if (contains(StdScopeToken.OPENID))
 			return true;
 		else
 			return false;
@@ -57,7 +57,7 @@ public class Scope extends HashSet<ScopeMember> {
 	
 		StringBuilder sb = new StringBuilder();
 	
-		Iterator<ScopeMember> it = super.iterator();
+		Iterator<ScopeToken> it = super.iterator();
 		
 		while (it.hasNext()) {
 		
@@ -72,18 +72,18 @@ public class Scope extends HashSet<ScopeMember> {
 	
 	
 	/**
-	 * Parses the specified scope string containing {@link StdScopeMember 
-	 * standard scope members}.
+	 * Parses the specified scope string containing {@link StdScopeToken 
+	 * standard scope tokens}.
 	 *
 	 * <p>See {@link ScopeParser}.
 	 *
-	 * @param s A string containing one or more standard scope members 
+	 * @param s A string containing one or more standard scope tokens 
 	 *          delimited by space.
 	 *
 	 * @return The parsed scope.
 	 *
-	 * @throws ParseException If an unexpected scope member is encountered
-	 *                        or a {@link StdScopeMember#OPENID} is missing.
+	 * @throws ParseException If an unexpected scope token is encountered
+	 *                        or a {@link StdScopeToken#OPENID} is missing.
 	 */
 	public static Scope parseStrict(final String s)
 		throws ParseException {

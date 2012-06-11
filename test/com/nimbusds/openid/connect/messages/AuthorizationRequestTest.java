@@ -34,7 +34,7 @@ public class AuthorizationRequestTest extends TestCase {
 		rts.add(ResponseType.ID_TOKEN);
 		
 		Scope scope = new Scope();
-		scope.add(StdScopeMember.OPENID);
+		scope.add(StdScopeToken.OPENID);
 		
 		ClientID clientID = new ClientID();
 		clientID.setClaimValue("s6BhdRkqt3");
@@ -75,7 +75,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertTrue(authReq.getResponseTypeSet().contains(ResponseType.ID_TOKEN));
 		
 		assertEquals(1, authReq.getScope().size());
-		assertTrue(authReq.getScope().contains(StdScopeMember.OPENID));
+		assertTrue(authReq.getScope().contains(StdScopeToken.OPENID));
 		
 		assertEquals("s6BhdRkqt3", authReq.getClientID().getClaimValue());
 		
@@ -118,7 +118,7 @@ public class AuthorizationRequestTest extends TestCase {
 		
 		Scope scope = req.getScope();
 		assertNotNull(scope);
-		assertTrue(scope.contains(StdScopeMember.OPENID));
+		assertTrue(scope.contains(StdScopeToken.OPENID));
 		assertEquals(1, scope.size());
 		
 		assertEquals(new Nonce("n-0S6_WzA2Mj"), req.getNonce());
@@ -168,7 +168,7 @@ public class AuthorizationRequestTest extends TestCase {
 		
 		Scope scope = req.getScope();
 		assertNotNull(scope);
-		assertTrue(scope.contains(StdScopeMember.OPENID));
+		assertTrue(scope.contains(StdScopeToken.OPENID));
 		assertEquals(1, scope.size());
 		
 		assertEquals(new Nonce("n-0S6_WzA2Mj"), req.getNonce());
@@ -225,8 +225,8 @@ public class AuthorizationRequestTest extends TestCase {
 			// resolve scope
 			scope = req.getResolvedScope();
 			assertNotNull(scope);
-			assertTrue(scope.contains(StdScopeMember.OPENID));
-			assertTrue(scope.contains(StdScopeMember.PROFILE));
+			assertTrue(scope.contains(StdScopeToken.OPENID));
+			assertTrue(scope.contains(StdScopeToken.PROFILE));
 			assertEquals(2, scope.size());
 			
 			// resolve state
