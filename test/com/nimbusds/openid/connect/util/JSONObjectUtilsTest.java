@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests the JSON object utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-23)
+ * @version 0.2 (2012-09-22)
  */
 public class JSONObjectUtilsTest extends TestCase {
 	
@@ -81,6 +81,52 @@ public class JSONObjectUtilsTest extends TestCase {
 			
 			fail("Failed to raise exception");
 			
+		} catch (ParseException e) {
+		
+			// ok
+		}
+	}
+	
+	
+	public void testJSONObjectObjectParseExceptionNull() {
+	
+		try {
+			JSONObjectUtils.parseJSONObject(null);
+			
+			fail("Failed to raise exception");
+			
+		} catch (ParseException e) {
+		
+			fail("Parse exception not expected here");
+		
+		} catch (NullPointerException e) {
+		
+			// ok
+		}
+	}
+	
+	
+	public void testJSONObjectObjectParseExceptionEmptyString() {
+	
+		try {
+			JSONObjectUtils.parseJSONObject("");
+			
+			fail("Failed to raise exception");
+		
+		} catch (ParseException e) {
+		
+			// ok
+		}
+	}
+	
+	
+	public void testJSONObjectObjectParseExceptionWhitespaceString() {
+	
+		try {
+			JSONObjectUtils.parseJSONObject(" ");
+			
+			fail("Failed to raise exception");
+		
 		} catch (ParseException e) {
 		
 			// ok
