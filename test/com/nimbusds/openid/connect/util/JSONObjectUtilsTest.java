@@ -106,6 +106,20 @@ public class JSONObjectUtilsTest extends TestCase {
 	}
 	
 	
+	public void testJSONObjectObjectParseExceptionNullEntity() {
+	
+		try {
+			JSONObjectUtils.parseJSONObject("null");
+			
+			fail("Failed to raise exception");
+		
+		} catch (ParseException e) {
+		
+			// ok
+		}
+	}
+	
+	
 	public void testJSONObjectObjectParseExceptionEmptyString() {
 	
 		try {
