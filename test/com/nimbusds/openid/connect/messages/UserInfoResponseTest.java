@@ -25,7 +25,7 @@ import com.nimbusds.openid.connect.claims.UserInfo.Picture;
 import com.nimbusds.openid.connect.claims.UserInfo.PhoneNumber;
 import com.nimbusds.openid.connect.claims.UserInfo.Profile;
 import com.nimbusds.openid.connect.claims.UserInfo.UpdatedTime;
-import com.nimbusds.openid.connect.claims.UserInfo.Verified;
+import com.nimbusds.openid.connect.claims.UserInfo.EmailVerified;
 import com.nimbusds.openid.connect.claims.UserInfo.Website;
 import com.nimbusds.openid.connect.claims.UserInfo.Zoneinfo;
 import com.nimbusds.openid.connect.claims.UserID;
@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests UserInfo response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-10-08)
  */
 public class UserInfoResponseTest extends TestCase {
 	
@@ -116,9 +116,9 @@ public class UserInfoResponseTest extends TestCase {
 		email.setClaimValue(EMAIL);
 		claims.setEmail(email);
 		
-		Verified verified = new Verified();
+		EmailVerified verified = new EmailVerified();
 		verified.setClaimValue(true);
-		claims.setVerified(verified);
+		claims.setEmailVerified(verified);
 		
 		Gender gender = new Gender();
 		gender.setClaimValue(Gender.FEMALE);
@@ -219,7 +219,7 @@ public class UserInfoResponseTest extends TestCase {
 		assertEquals(picture, claims.getPicture());
 		assertEquals(website, claims.getWebsite());
 		assertEquals(email, claims.getEmail());
-		assertEquals(verified, claims.getVerified());
+		assertEquals(verified, claims.getEmailVerified());
 		
 		assertEquals(gender, claims.getGender());
 		assertEquals(birthday, claims.getBirthday());
