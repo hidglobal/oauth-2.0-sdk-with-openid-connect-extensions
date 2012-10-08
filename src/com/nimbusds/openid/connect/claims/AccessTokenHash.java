@@ -2,7 +2,7 @@ package com.nimbusds.openid.connect.claims;
 
 
 /**
- * Access token hash.
+ * Access token hash ({@code at_hash}).
  *
  * <p>Related specifications:
  *
@@ -11,7 +11,7 @@ package com.nimbusds.openid.connect.claims;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-14)
+ * @version $version$ (2012-10-08)
  */
 public class AccessTokenHash extends StringClaim {
 
@@ -21,6 +21,7 @@ public class AccessTokenHash extends StringClaim {
 	 *
 	 * @return "at_hash".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		return "at_hash";

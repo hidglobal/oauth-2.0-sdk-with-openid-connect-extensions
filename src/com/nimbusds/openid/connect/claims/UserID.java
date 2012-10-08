@@ -8,14 +8,21 @@ package com.nimbusds.openid.connect.claims;
  * <p>The user identifier cannot exceed {@link #MAX_LENGTH 255 ASCII characters}
  * in length.
  *
+ * <p>Example values:
+ *
+ * <pre>
+ * 24400320
+ * AItOawmwtWwcT0k51BayewNvutrJUqsvl6qs7A4
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1 and 2.4.2.
+ *     <li>OpenID Connect Messages 1.0, section 2.2.1 and 2.3.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-03-14)
+ * @version $version$ (2012-10-08)
  */
 public class UserID extends StringClaim {
 
@@ -27,7 +34,7 @@ public class UserID extends StringClaim {
 	
 	
 	/**
-	 * Enumerates the user identifier types.
+	 * Enumeration of the user identifier types.
 	 */
 	public static enum Type {
 	
@@ -45,8 +52,8 @@ public class UserID extends StringClaim {
 		
 		
 		/**
-		 * Returns the canonical string representation of this user 
-		 * identifier type.
+		 * Returns the string representation of this user identifier 
+		 * type.
 		 *
 		 * @return The string representation of this user identifier
 		 *         type.
@@ -86,6 +93,7 @@ public class UserID extends StringClaim {
 	 *
 	 * @return "user_id".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		return "user_id";

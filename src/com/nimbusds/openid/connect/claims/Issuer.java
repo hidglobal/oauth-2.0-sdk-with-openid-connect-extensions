@@ -1,11 +1,8 @@
 package com.nimbusds.openid.connect.claims;
 
 
-import java.net.URL;
-
-
 /**
- * Issuer identifier.
+ * Issuer identifier ({@code iss}).
  *
  * <p>The issuer identifier may be a URL or an arbitrary string.
  *
@@ -13,11 +10,11 @@ import java.net.URL;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.1 and 2.2.1.
- *     <li>draft-jones-oauth-jwt-bearer-04, section 3.
+ *     <li>draft-ietf-oauth-jwt-bearer-02, section 3.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-05)
+ * @version $version$ (2012-10-08)
  */
 public class Issuer extends StringClaim {
 
@@ -27,6 +24,7 @@ public class Issuer extends StringClaim {
 	 *
 	 * @return "iss".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		return "iss";

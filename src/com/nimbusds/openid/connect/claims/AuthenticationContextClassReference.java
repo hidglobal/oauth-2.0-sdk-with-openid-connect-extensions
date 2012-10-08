@@ -2,7 +2,7 @@ package com.nimbusds.openid.connect.claims;
 
 
 /**
- * Authentication Context Class Reference (ACR). It identifies the 
+ * Authentication Context Class Reference ({@code acr}). It identifies the 
  * authentication context, i.e. the information that the relying party may 
  * require before it makes an entitlements decision with respect to an 
  * authentication response. Such context may include, but is not limited to, the 
@@ -19,7 +19,7 @@ package com.nimbusds.openid.connect.claims;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-21)
+ * @version $version$ (2012-10-08)
  */
 public class AuthenticationContextClassReference extends StringClaim {
 
@@ -83,6 +83,7 @@ public class AuthenticationContextClassReference extends StringClaim {
 	 *
 	 * @return "acr".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		return "acr";

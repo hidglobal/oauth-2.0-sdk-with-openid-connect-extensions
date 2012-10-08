@@ -2,7 +2,7 @@ package com.nimbusds.openid.connect.claims;
 
 
 /**
- * Authentication time claim. The value is number of seconds from 
+ * Authentication time ({@code auth_time}). The value is number of seconds from
  * 1970-01-01T0:0:0Z as measured in UTC until the desired date/time.
  *
  * <p>This claim semantically corresponds to the OpenID 2.0 PAPE 
@@ -15,7 +15,7 @@ package com.nimbusds.openid.connect.claims;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-14)
+ * @version $version$ (2012-10-08)
  */
 public class AuthenticationTime extends TimeClaim {
 
@@ -25,6 +25,7 @@ public class AuthenticationTime extends TimeClaim {
 	 *
 	 * @return "auth_time".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		return "auth_time";
