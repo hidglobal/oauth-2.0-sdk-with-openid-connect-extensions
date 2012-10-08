@@ -26,8 +26,27 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * Connect {@link com.nimbusds.openid.connect.messages.Response response 
  * message}.
  *
+ * <p>Supported HTTP status codes:
+ *
+ * <ul>
+ *     <li>{@link #SC_OK HTTP 200 OK}
+ *     <li>{@link #SC_FOUND HTTP 302 Redirect}
+ *     <li>{@link #SC_BAD_REQUEST HTTP 400 Bad request}
+ *     <li>{@link #SC_UNAUTHORIZED HTTP 401 Unauthorized}
+ *     <li>{@link #SC_FORBIDDEN HTTP 403 Forbidden}
+ *
+ * <p>Supported response headers:
+ *
+ * <ul>
+ *     <li>Location
+ *     <li>Content-Type
+ *     <li>Cache-Control
+ *     <li>Pragma
+ *     <li>Www-Authenticate
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-22)
+ * @version $version$ (2012-10-08)
  */
 public class HTTPResponse {
 
@@ -205,7 +224,7 @@ public class HTTPResponse {
 	 * Ensures this HTTP response has a specified {@code Content-Type} 
 	 * header value.
 	 *
-	 * @throws ParseException if the {@code Content-Type} header is missing.
+	 * @throws ParseException If the {@code Content-Type} header is missing.
 	 */
 	public void ensureContentType()
 		throws ParseException {
@@ -302,6 +321,19 @@ public class HTTPResponse {
 	
 	
 	/**
+	 * Ensures this HTTP response has a specified content body.
+	 *
+	 * @throws ParseException If the content body is missing or empty.
+	 */
+	private void ensureContent()
+		throws ParseException {
+		
+		if (content == null || content.isEmpty())
+			throw new ParseException("Missing or empty HTTP response body");
+	}
+	
+	
+	/**
 	 * Gets the raw response content.
 	 *
 	 * @return The raw response content, {@code null} if none.
@@ -327,8 +359,7 @@ public class HTTPResponse {
 		
 		ensureContentType(CommonContentTypes.APPLICATION_JSON);
 		
-		if (content == null || content.isEmpty())
-			throw new ParseException("Missing or empty HTTP response body");
+		ensureContent();
 		
 		return JSONObjectUtils.parseJSONObject(content);
 	}
@@ -349,8 +380,7 @@ public class HTTPResponse {
 		
 		ensureContentType(CommonContentTypes.APPLICATION_JWT);
 		
-		if (content == null || content.isEmpty())
-			throw new ParseException("Missing or empty HTTP response body");
+		ensureContent();
 		
 		try {
 			return JWT.parse(content);

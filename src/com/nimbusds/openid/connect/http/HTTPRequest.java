@@ -22,6 +22,20 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * HTTP request with support for all parameters required to construct an OpenID 
  * Connect {@link com.nimbusds.openid.connect.messages.Request request message}.
  *
+ * <p>Supported HTTP methods:
+ *
+ * <ul>
+ *     <li>{@link Method#GET HTTP GET}
+ *     <li>{@link Method#POST HTTP POST}
+ * </ul>
+ *
+ * <p>Supported request headers:
+ *
+ * <ul>
+ *     <li>Content-Type
+ *     <li>Authorization
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-05-24)
  */
@@ -29,7 +43,7 @@ public class HTTPRequest {
 
 
 	/**
-	 * Enumerates the HTTP methods used in OpenID Connect requests.
+	 * Enumeration of the HTTP methods used in OpenID Connect requests.
 	 */
 	public static enum Method {
 	
@@ -53,13 +67,13 @@ public class HTTPRequest {
 	
 	
 	/**
-	 * The content type header value.
+	 * Specifies a {@code Content-Type} header value.
 	 */
 	private ContentType contentType = null;
 	
 	
 	/**
-	 * The authorisation header value.
+	 * Specifies an {@code Authorization} header value.
 	 */
 	private String authorization = null;
 	
