@@ -8,7 +8,7 @@ import javax.mail.internet.InternetAddress;
  * The base abstract class for email-based claims.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class EmailClaim implements Claim<InternetAddress> {
 
@@ -19,20 +19,14 @@ public abstract class EmailClaim implements Claim<InternetAddress> {
 	private InternetAddress value;
 	
 	
-	/**
-	 * @inheritDoc
-	 *
-	 * @return The claim value.
-	 */
+	@Override
 	public InternetAddress getClaimValue() {
 	
 		return value;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.EMAIL;
@@ -55,22 +49,14 @@ public abstract class EmailClaim implements Claim<InternetAddress> {
 	}
 	
 	
-	/**
-	 * Returns the string representation of this claim.
-	 *
-	 * @return The string representation.
-	 */
+	@Override
 	public String toString() {
 	
 		return this.getClaimName() + ": " + value.toString();
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();

@@ -5,7 +5,7 @@ package com.nimbusds.openid.connect.claims;
  * The base abstract class for boolean-based claims.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class BooleanClaim implements Claim<Boolean> {
 
@@ -16,20 +16,14 @@ public abstract class BooleanClaim implements Claim<Boolean> {
 	private Boolean value;
 	
 	
-	/**
-	 * @inheritDoc
-	 *
-	 * @return The claim value.
-	 */
+	@Override
 	public Boolean getClaimValue() {
 	
 		return value;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.BOOLEAN;
@@ -52,22 +46,14 @@ public abstract class BooleanClaim implements Claim<Boolean> {
 	}
 	
 	
-	/**
-	 * Returns the string representation of this claim.
-	 *
-	 * @return The string representation.
-	 */
+	@Override
 	public String toString() {
 	
 		return this.getClaimName() + ": " + value;
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();

@@ -3,29 +3,31 @@ package com.nimbusds.openid.connect.claims;
 
 
 /**
- * UserInfo claims.
+ * UserInfo claims. Implements all reserved claims returned at a UserInfo 
+ * endpoint.
  *
  * <p>Example UserInfo claims set:
  *
  * <pre>
  * {
- *   "user_id"     : "248289761001",
- *   "name"        : "Jane Doe",
- *   "given_name"  : "Jane",
- *   "family_name" : "Doe",
- *   "email"       : "janedoe@example.com",
- *   "picture"     : "http://example.com/janedoe/me.jpg"
+ *   "user_id"            : "248289761001",
+ *   "name"               : "Jane Doe",
+ *   "given_name"         : "Jane",
+ *   "family_name"        : "Doe",
+ *   "preferred_username" : "j.doe",
+ *   "email"              : "janedoe@example.com",
+ *   "picture"            : "http://example.com/janedoe/me.jpg"
  * }
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.2.
+ *     <li>OpenID Connect Messages 1.0, section 2.3.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-10-08)
  */
 public class UserInfo {
 
@@ -42,23 +44,10 @@ public class UserInfo {
 		 *
 		 * @return "name".
 		 */
+		@Override
 		public String getBaseClaimName() {
 		
 			return "name";
-		}
-		
-	
-		/**
-		 * @inheritDoc
-		 *
-		 * @return "name" or "name#lang-tag".
-		 */
-		public String getClaimName() {
-
-			if (langTag == null)
-				return "name";
-			else
-				return "name" + langTag;
 		}
 	}
 	
@@ -74,23 +63,10 @@ public class UserInfo {
 		 *
 		 * @return "given_name".
 		 */
+		@Override
 		public String getBaseClaimName() {
 		
 			return "given_name";
-		}
-		
-		
-		/**
-		 * @inheritDoc
-		 *
-		 * @return "given_name" or "given_name#lang-tag".
-		 */
-		public String getClaimName() {
-
-			if (langTag == null)
-				return "given_name";
-			else
-				return "given_name" + langTag.toString();
 		}
 	}
 	
@@ -106,23 +82,10 @@ public class UserInfo {
 		 *
 		 * @return "family_name".
 		 */
+		@Override
 		public String getBaseClaimName() {
 		
 			return "family_name";
-		}
-		
-		
-		/**
-		 * @inheritDoc
-		 *
-		 * @return "family_name" or "family_name#lang-tag".
-		 */
-		public String getClaimName() {
-
-			if (langTag == null)
-				return "family_name";
-			else
-				return "family_name" + langTag.toString();
 		}
 	}
 	
@@ -138,31 +101,18 @@ public class UserInfo {
 		 *
 		 * @return "middle_name".
 		 */
+		@Override
 		public String getBaseClaimName() {
 		
 			return "middle_name";
-		}
-		
-		
-		/**
-		 * @inheritDoc
-		 *
-		 * @return "middle_name" or "middle_name#lang-tag".
-		 */
-		public String getClaimName() {
-
-			if (langTag == null)
-				return "middle_name";
-			else
-				return "middle_name" + langTag.toString();
 		}
 	}
 	
 	
 	/**
 	 * Casual name of the end-user that may or may not be the same as the
-	 * given name. For instance, a nickname value of Mike might be 
-	 * returned alongside a given name value of Michael.
+	 * given name. For instance, a nickname value of "Mike" might be 
+	 * returned alongside a given name value of "Michael".
 	 */
 	public static class Nickname extends StringClaimWithLangTag {
 	
@@ -172,23 +122,33 @@ public class UserInfo {
 		 *
 		 * @return "nickname".
 		 */
+		@Override
 		public String getBaseClaimName() {
 		
 			return "nickname";
 		}
-		
+	}
+	
+	
+	/**
+	 * Shorthand name that the end-user wished to be referred to at the 
+	 * relying party, such as {@code janedoe} or {@code j.doe}. The value
+	 * may be any valid JSON string including special characters such as
+	 * {@code @}, {@code /} or whitespace. The value must not be relied upon
+	 * to be unique by the relying party.
+	 */
+	public static class PreferredUsername extends StringClaim {
+	
 		
 		/**
 		 * @inheritDoc
 		 *
-		 * @return "nickname" or "nickname#lang-tag".
+		 * @return "preferred_username".
 		 */
+		@Override
 		public String getClaimName() {
-
-			if (langTag == null)
-				return "nickname";
-			else
-				return "nickname" + langTag.toString();
+		
+			return "preferred_username";
 		}
 	}
 	
@@ -204,6 +164,7 @@ public class UserInfo {
 		 *
 		 * @return "profile".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "profile";
@@ -222,6 +183,7 @@ public class UserInfo {
 		 *
 		 * @return "picture".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "picture";
@@ -240,6 +202,7 @@ public class UserInfo {
 		 *
 		 * @return "website".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "website";
@@ -248,7 +211,8 @@ public class UserInfo {
 	
 	
 	/**
-	 * The end-user's preferred e-mail address.
+	 * The end-user's preferred e-mail address. The value must not be relied
+	 * upon to be unique by the relying party.
 	 */
 	public static class Email extends EmailClaim {
 	
@@ -258,6 +222,7 @@ public class UserInfo {
 		 *
 		 * @return "email".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "email";
@@ -277,15 +242,16 @@ public class UserInfo {
 		 *
 		 * @return "verified".
 		 */
+		@Override
 		public String getClaimName() {
 
-			return "verified";
+			return "email_verified";
 		}
 	}
 	
 	
 	/**
-	 * The end-user's gender: Values defined by this specification are 
+	 * The end-user's gender: Values defined by the specification are 
 	 * {@link #FEMALE} and {@link #MALE}. Other values may be used when 
 	 * neither of the defined values are applicable.
 	 */
@@ -309,6 +275,7 @@ public class UserInfo {
 		 *
 		 * @return "gender".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "gender";
@@ -328,6 +295,7 @@ public class UserInfo {
 		 *
 		 * @return "birthday".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "birthday";
@@ -355,7 +323,7 @@ public class UserInfo {
 	
 	
 	/**
-	 * The end-user locale.
+	 * The end-user's locale, represented as a language tag (RFC 5646).
 	 */
 	public static class Locale extends LangTagClaim {
 	
@@ -365,6 +333,7 @@ public class UserInfo {
 		 *
 		 * @return "locale".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "locale";
@@ -385,6 +354,7 @@ public class UserInfo {
 		 *
 		 * @return "phone_number".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "phone_number";
@@ -393,7 +363,8 @@ public class UserInfo {
 	
 	
 	/**
-	 * The end-user's preferred address. 
+	 * The end-user's preferred address. The serialised address claim is a
+	 * JSON object containing some or all of the members defined below.
 	 */
 	public static class Address {
 	
@@ -401,7 +372,7 @@ public class UserInfo {
 		/**
 		 * The full mailing address, formatted for display or use with a 
 		 * mailing label. This field may contain newlines. This is the 
-		 * primary sub-field for this field, for the purposes of sorting 
+		 * primary field for address claims, for the purposes of sorting 
 		 * and filtering. 
 		 */
 		public static class Formatted extends StringClaimWithLangTag {
@@ -412,23 +383,10 @@ public class UserInfo {
 			 *
 			 * @return "formatted".
 			 */
+			@Override
 			public String getBaseClaimName() {
 
 				return "formatted";
-			}
-			
-			
-			/**
-			 * @inheritDoc
-			 *
-			 * @return "formatted" or "formatted#lang-tag".
-			 */
-			public String getClaimName() {
-
-				if (langTag == null)
-					return "formatted";
-				else
-					return "formatted" + langTag.toString();
 			}
 		}
 		
@@ -446,23 +404,10 @@ public class UserInfo {
 			 *
 			 * @return "street_address".
 			 */
+			@Override
 			public String getBaseClaimName() {
 
 				return "street_address";
-			}
-			
-			
-			/**
-			 * @inheritDoc
-			 *
-			 * @return "street_address" or "street_address#lang-tag".
-			 */
-			public String getClaimName() {
-
-				if (langTag == null)
-					return "street_address";
-				else
-					return "street_address" + langTag.toString();
 			}
 		}
 		
@@ -478,23 +423,10 @@ public class UserInfo {
 			 *
 			 * @return "locality".
 			 */
+			@Override
 			public String getBaseClaimName() {
 
 				return "locality";
-			}
-			
-			
-			/**
-			 * @inheritDoc
-			 *
-			 * @return "locality" or "locality#lang-tag".
-			 */
-			public String getClaimName() {
-
-				if (langTag == null)
-					return "locality";
-				else
-					return "locality" + langTag.toString();
 			}
 		}
 		
@@ -510,23 +442,10 @@ public class UserInfo {
 			 *
 			 * @return "region".
 			 */
+			@Override
 			public String getBaseClaimName() {
 
 				return "region";
-			}
-			
-			
-			/**
-			 * @inheritDoc
-			 *
-			 * @return "region" or "region#lang-tag".
-			 */
-			public String getClaimName() {
-
-				if (langTag == null)
-					return "region";
-				else
-					return "region" + langTag.toString();
 			}
 		}
 		
@@ -542,23 +461,10 @@ public class UserInfo {
 			 *
 			 * @return "postal_code".
 			 */
+			@Override
 			public String getBaseClaimName() {
 
 				return "postal_code";
-			}
-			
-			
-			/**
-			 * @inheritDoc
-			 *
-			 * @return "postal_code" or "postal_code#lang-tag".
-			 */
-			public String getClaimName() {
-
-				if (langTag == null)
-					return "postal_code";
-				else
-					return "postal_code" + langTag.toString();
 			}
 		}
 		
@@ -574,23 +480,10 @@ public class UserInfo {
 			 *
 			 * @return "country".
 			 */
+			@Override
 			public String getBaseClaimName() {
 
 				return "country";
-			}
-			
-			
-			/**
-			 * @inheritDoc
-			 *
-			 * @return "country" or "country#lang-tag".
-			 */
-			public String getClaimName() {
-
-				if (langTag == null)
-					return "country";
-				else
-					return "country" + langTag.toString();
 			}
 		}
 	}
@@ -608,6 +501,7 @@ public class UserInfo {
 		 *
 		 * @return "updated_time".
 		 */
+		@Override
 		public String getClaimName() {
 
 			return "updated_time";

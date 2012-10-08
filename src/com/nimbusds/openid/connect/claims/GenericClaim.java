@@ -3,10 +3,10 @@ package com.nimbusds.openid.connect.claims;
 
 /**
  * Generic claim. It can be used to represent an arbitrary claim, e.g. a custom
- * claim outside the typed claims used in OpenID Connect.
+ * claim outside the typted claims used in OpenID Connect.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class GenericClaim implements Claim<Object> {
 
@@ -32,7 +32,7 @@ public class GenericClaim implements Claim<Object> {
 	/**
 	 * Creates a new generic claim with the specified name.
 	 *
-	 * @param name  The claim name. Must not be {@code null}.
+	 * @param name The claim name. Must not be {@code null}.
 	 */ 
 	public GenericClaim(final String name) {
 	
@@ -43,11 +43,7 @@ public class GenericClaim implements Claim<Object> {
 	}
 	
 	
-	/**
-	 * Gets the canonical claim name.
-	 *
-	 * @return The canonical claim name.
-	 */
+	@Override
 	public String getClaimName() {
 
 		return name;
@@ -80,6 +76,7 @@ public class GenericClaim implements Claim<Object> {
 	 * @return The claim value. If defined (not {@code null}) it matches the 
 	 *         type indicated by {@link #getClaimValueType}.
 	 */
+	@Override
 	public Object getClaimValue() {
 	
 		return value;
@@ -92,6 +89,7 @@ public class GenericClaim implements Claim<Object> {
 	 * @return The claim type, {@code null} if the claim value is not
 	 *         specified.
 	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return type;

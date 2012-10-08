@@ -10,13 +10,15 @@ import net.minidev.json.JSONObject;
 
 
 /**
- * Claim interface. A claim is a piece of information about an entity that a 
- * claims provider asserts about that entity.
+ * Claim. A a piece of information about an entity that a claims provider 
+ * asserts about that entity.
  *
- * <p>A claim has a canonical name and a value that serialises to a JSON 
- * boolean, string, number, array, object or null.
+ * <p>The claim is a name-value pair that serialises to a JSON boolean, string, 
+ * number, array, object or null. Implementations should also override the
+ * {@code equals(java.lang.Object)}, {@code hashCode()} and {@code toString()} 
+ * methods.
  *
- * <p>Claims are typically serialised into a JSON object:
+ * <p>Multiple claims are typically serialised into a JSON object:
  *
  * <pre>
  * {
@@ -35,8 +37,8 @@ public interface Claim<T> {
 
 	
 	/**
-	 * Enumeration of the underlying claim value JSON types. Intended to be
-	 * used in claim parsing.
+	 * Enumeration of the underlying claim value JSON types. Used in claim 
+	 * parsing.
 	 */
 	public static enum ValueType {
 	
@@ -153,9 +155,9 @@ public interface Claim<T> {
 	
 	
 	/**
-	 * Gets the canonical claim name.
+	 * Gets the claim name.
 	 *
-	 * @return The canonical claim name. Must not be {@code null}.
+	 * @return The claim name. Must not be {@code null}.
 	 */
 	public String getClaimName();
 	
@@ -176,7 +178,7 @@ public interface Claim<T> {
 	/**
 	 * Gets the JSON type of the claim value.
 	 *
-	 * @return The underlying JSON type of the claim value.
+	 * @return The JSON type of the claim value.
 	 */
 	public ValueType getClaimValueType();
 	

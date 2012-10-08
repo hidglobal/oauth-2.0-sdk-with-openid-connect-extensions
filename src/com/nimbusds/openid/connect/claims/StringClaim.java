@@ -9,7 +9,7 @@ import java.net.URL;
  * The base abstract class for string-based claims.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class StringClaim implements Claim<String> {
 
@@ -20,20 +20,14 @@ public abstract class StringClaim implements Claim<String> {
 	private String value;
 	
 	
-	/**
-	 * @inheritDoc
-	 *
-	 * @return The claim value.
-	 */
+	@Override
 	public String getClaimValue() {
 	
 		return value;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.STRING;
@@ -67,6 +61,7 @@ public abstract class StringClaim implements Claim<String> {
 	 * @throws IllegalArgumentException If the value is {@code null} or 
 	 *                                  empty string.
 	 */
+	@Override
 	public void setClaimValue(final String value) {
 	
 		if (value == null || value.trim().isEmpty())
@@ -76,22 +71,14 @@ public abstract class StringClaim implements Claim<String> {
 	}
 	
 	
-	/**
-	 * Returns the string representation of this claim.
-	 *
-	 * @return The string representation.
-	 */
+	@Override
 	public String toString() {
 	
 		return this.getClaimName() + ": " + value;
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();

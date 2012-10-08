@@ -11,7 +11,7 @@ import java.util.Date;
  * <p>See RFC 3339.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class TimeClaim extends LongClaim {
 	
@@ -36,6 +36,7 @@ public abstract class TimeClaim extends LongClaim {
 	 * @throws IllegalArgumentException If the value is {@code null} or 
 	 *                                  negative.
 	 */
+	@Override
 	public void setClaimValue(final Long value) {
 	
 		if (value == null || value < 0)

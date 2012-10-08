@@ -5,7 +5,7 @@ package com.nimbusds.openid.connect.claims;
  * The base abstract class for long integer based claims.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class LongClaim implements Claim<Long> {
 
@@ -16,20 +16,14 @@ public abstract class LongClaim implements Claim<Long> {
 	private Long value;
 	
 	
-	/**
-	 * @inheritDoc
-	 *
-	 * @return The value as long integer.
-	 */
+	@Override
 	public Long getClaimValue() {
 	
 		return value;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.LONG;
@@ -43,6 +37,7 @@ public abstract class LongClaim implements Claim<Long> {
 	 *
 	 * @throws IllegalArgumentException If the value is {@code null}.
 	 */
+	@Override
 	public void setClaimValue(final Long value) {
 	
 		if (value == null)
@@ -52,22 +47,14 @@ public abstract class LongClaim implements Claim<Long> {
 	}
 	
 	
-	/**
-	 * Returns the string representation of this claim.
-	 *
-	 * @return The string representation.
-	 */
+	@Override
 	public String toString() {
 	
 		return this.getClaimName() + ": " + value;
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();

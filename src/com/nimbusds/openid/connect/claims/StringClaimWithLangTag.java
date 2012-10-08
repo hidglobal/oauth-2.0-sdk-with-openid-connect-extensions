@@ -21,11 +21,11 @@ import com.nimbusds.langtag.LangTag;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>RFC 5646.
+ *     <li>RFC 5646
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-10-08)
  */
 public abstract class StringClaimWithLangTag extends StringClaim implements ClaimWithLangTag<String> {
 
@@ -36,24 +36,34 @@ public abstract class StringClaimWithLangTag extends StringClaim implements Clai
 	protected LangTag langTag = null;
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public abstract String getBaseClaimName();
 	
 	
 	/**
 	 * @inheritDoc
+	 *
+	 * @return The base claim name if no language tag is present, else the
+	 *         base claim name with the language tag appended.
 	 */
+	@Override
+	public String getClaimName() {
+
+		if (getLangTag() == null)
+			return getBaseClaimName();
+		else
+			return getBaseClaimName() + getLangTag().toString();
+	}
+	
+	
+	@Override
 	public void setLangTag(final LangTag langTag) {
 	
 		this.langTag = langTag;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public LangTag getLangTag() {
 	
 		return langTag;

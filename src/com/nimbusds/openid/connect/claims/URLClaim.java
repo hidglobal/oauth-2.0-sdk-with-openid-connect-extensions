@@ -8,7 +8,7 @@ import java.net.URL;
  * The base abstract class for URL-based claims.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class URLClaim implements Claim<URL> {
 
@@ -19,20 +19,14 @@ public abstract class URLClaim implements Claim<URL> {
 	private URL value;
 	
 	
-	/**
-	 * @inheritDoc
-	 *
-	 * @return The claim value.
-	 */
+	@Override
 	public URL getClaimValue() {
 	
 		return value;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.URL;
@@ -46,6 +40,7 @@ public abstract class URLClaim implements Claim<URL> {
 	 *
 	 * @throws IllegalArgumentException If the value is {@code null}.
 	 */
+	@Override
 	public void setClaimValue(final URL value) {
 	
 		if (value == null)
@@ -55,22 +50,14 @@ public abstract class URLClaim implements Claim<URL> {
 	}
 	
 	
-	/**
-	 * Returns the string representation of this claim.
-	 *
-	 * @return The string representation.
-	 */
+	@Override
 	public String toString() {
 	
 		return this.getClaimName() + ": " + value.toString();
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();
@@ -85,6 +72,7 @@ public abstract class URLClaim implements Claim<URL> {
 	 * @return {@code true} if the objects have the same claim name and 
 	 *         value, otherwise {@code false}.
 	 */
+	@Override
 	public boolean equals(final Object object) {
 	
 		return object instanceof URLClaim &&

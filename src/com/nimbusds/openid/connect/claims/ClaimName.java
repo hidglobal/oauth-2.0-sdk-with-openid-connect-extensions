@@ -15,7 +15,7 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class ClaimName {
 
@@ -93,6 +93,7 @@ public class ClaimName {
 	 *
 	 * @return The full claim name.
 	 */
+	@Override
 	public String toString() {
 	
 		return getName();
@@ -133,6 +134,4 @@ public class ClaimName {
 
 		return new ClaimName(base, langTag);
 	}
-
-
 }

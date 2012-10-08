@@ -11,11 +11,11 @@ import com.nimbusds.langtag.LangTagException;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>RFC 5646.
+ *     <li>RFC 5646
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-20)
+ * @version $version$ (2012-10-08)
  */
 public abstract class LangTagClaim implements Claim<String> {
 
@@ -26,20 +26,14 @@ public abstract class LangTagClaim implements Claim<String> {
 	private LangTag value;
 	
 	
-	/**
-	 * @inheritDoc
-	 *
-	 * @return The claim value.
-	 */
+	@Override
 	public String getClaimValue() {
 	
 		return value.toString();
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.STRING;
@@ -65,6 +59,7 @@ public abstract class LangTagClaim implements Claim<String> {
 	 * @throws IllegalArgumentException If the value is {@code null}, empty
 	 *                                  string or invalid language tag.
 	 */
+	@Override
 	public void setClaimValue(final String value) {
 	
 		if (value == null || value.trim().isEmpty())
@@ -96,22 +91,14 @@ public abstract class LangTagClaim implements Claim<String> {
 	}
 	
 	
-	/**
-	 * Returns the string representation of this claim.
-	 *
-	 * @return The string representation.
-	 */
+	@Override
 	public String toString() {
 	
 		return this.getClaimName() + ": " + value.toString();
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();
@@ -126,6 +113,7 @@ public abstract class LangTagClaim implements Claim<String> {
 	 * @return {@code true} if the objects have the same claim name and 
 	 *         value, otherwise {@code false}.
 	 */
+	@Override
 	public boolean equals(final Object object) {
 	
 		return object instanceof LangTagClaim &&

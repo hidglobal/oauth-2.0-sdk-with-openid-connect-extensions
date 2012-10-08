@@ -5,7 +5,7 @@ import com.nimbusds.langtag.LangTag;
 
 
 /**
- * Interface for claims with optional language tag (RFC 5646).
+ * Claim with an optional language tag (RFC 5646).
  *
  * <p>Example claims with language tags:
  *
@@ -20,7 +20,7 @@ import com.nimbusds.langtag.LangTag;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>RFC 5646.
+ *     <li>RFC 5646
  * </ul>
  *
  * @author Vladimir Dzhuvinov
