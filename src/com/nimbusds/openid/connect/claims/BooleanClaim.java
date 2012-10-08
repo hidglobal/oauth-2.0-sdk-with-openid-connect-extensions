@@ -47,9 +47,11 @@ public abstract class BooleanClaim implements Claim<Boolean> {
 	
 	
 	@Override
-	public String toString() {
+	public boolean equals(final Object object) {
 	
-		return this.getClaimName() + ": " + value;
+		return object instanceof BooleanClaim &&
+		       this.getClaimName().equals(((BooleanClaim)object).getClaimName()) &&
+		       this.getClaimValue().equals(((BooleanClaim)object).getClaimValue());
 	}
 	
 	
@@ -59,19 +61,10 @@ public abstract class BooleanClaim implements Claim<Boolean> {
 		return value.hashCode();
 	}
 	
-		
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same claim name and 
-	 *         value, otherwise {@code false}.
-	 */
-	public boolean equals(final Object object) {
 	
-		return object instanceof BooleanClaim &&
-		       this.getClaimName().equals(((BooleanClaim)object).getClaimName()) &&
-		       this.getClaimValue().equals(((BooleanClaim)object).getClaimValue());
+	@Override
+	public String toString() {
+	
+		return this.getClaimName() + ": " + value;
 	}
 }

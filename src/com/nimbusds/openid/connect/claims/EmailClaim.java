@@ -50,9 +50,11 @@ public abstract class EmailClaim implements Claim<InternetAddress> {
 	
 	
 	@Override
-	public String toString() {
+	public boolean equals(final Object object) {
 	
-		return this.getClaimName() + ": " + value.toString();
+		return object instanceof EmailClaim &&
+		       this.getClaimName().equals(((EmailClaim)object).getClaimName()) &&
+		       this.getClaimValue().equals(((EmailClaim)object).getClaimValue());
 	}
 	
 	
@@ -62,19 +64,10 @@ public abstract class EmailClaim implements Claim<InternetAddress> {
 		return value.hashCode();
 	}
 	
-		
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same claim name and 
-	 *         value, otherwise {@code false}.
-	 */
-	public boolean equals(final Object object) {
 	
-		return object instanceof EmailClaim &&
-		       this.getClaimName().equals(((EmailClaim)object).getClaimName()) &&
-		       this.getClaimValue().equals(((EmailClaim)object).getClaimValue());
+	@Override
+	public String toString() {
+	
+		return this.getClaimName() + ": " + value.toString();
 	}
 }

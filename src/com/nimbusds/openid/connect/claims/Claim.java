@@ -15,10 +15,9 @@ import net.minidev.json.JSONObject;
  *
  * <p>The claim is a name-value pair that serialises to a JSON boolean, string, 
  * number, array, object or null. Implementations should also override the
- * {@code equals(java.lang.Object)}, {@code hashCode()} and {@code toString()} 
- * methods.
+ * {@link #equals}, {@link #hashCode} and {@link #toString} methods.
  *
- * <p>Multiple claims are typically serialised into a JSON object:
+ * <p>Multiple claims forming a set are typically serialised into a JSON object:
  *
  * <pre>
  * {
@@ -197,4 +196,40 @@ public interface Claim<T> {
 	 *                                  type for the claim.
 	 */
 	public void setClaimValue(final T value);
+	
+	
+	/**
+	 * Overrides {@code Object.equals()}.
+	 *
+	 * @param object The object to compare to.
+	 *
+	 * @return {@code true} if the two objects are claims with the same name
+	 *         and value, otherwise {@code false}.
+	 */
+	@Override
+	public boolean equals(final Object object);
+	
+	
+	/**
+	 * Returns a hash code based on the claim value.
+	 *
+	 * @return Hash code based on the claim value.
+	 */
+	@Override
+	public int hashCode();
+	
+	
+	/**
+	 * Returns a string representation of the claim.
+	 *
+	 * <p>Format:
+	 *
+	 * <pre>
+	 * claim-name: claim-value
+	 * </pre>
+	 *
+	 * @return The string representation.
+	 */
+	@Override
+	public String toString();
 }

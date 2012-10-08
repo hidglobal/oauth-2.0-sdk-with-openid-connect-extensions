@@ -92,9 +92,11 @@ public abstract class LangTagClaim implements Claim<String> {
 	
 	
 	@Override
-	public String toString() {
+	public boolean equals(final Object object) {
 	
-		return this.getClaimName() + ": " + value.toString();
+		return object instanceof LangTagClaim &&
+		       this.getClaimName().equals(((LangTagClaim)object).getClaimName()) &&
+		       this.getClaimValue().equals(((LangTagClaim)object).getClaimValue());
 	}
 	
 	
@@ -104,20 +106,10 @@ public abstract class LangTagClaim implements Claim<String> {
 		return value.hashCode();
 	}
 	
-		
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same claim name and 
-	 *         value, otherwise {@code false}.
-	 */
-	@Override
-	public boolean equals(final Object object) {
 	
-		return object instanceof LangTagClaim &&
-		       this.getClaimName().equals(((LangTagClaim)object).getClaimName()) &&
-		       this.getClaimValue().equals(((LangTagClaim)object).getClaimValue());
+	@Override
+	public String toString() {
+	
+		return this.getClaimName() + ": " + value.toString();
 	}
 }

@@ -70,11 +70,13 @@ public abstract class StringClaim implements Claim<String> {
 		this.value = value;
 	}
 	
-	
+		
 	@Override
-	public String toString() {
+	public boolean equals(final Object object) {
 	
-		return this.getClaimName() + ": " + value;
+		return object instanceof StringClaim &&
+		       this.getClaimName().equals(((StringClaim)object).getClaimName()) &&
+		       this.getClaimValue().equals(((StringClaim)object).getClaimValue());
 	}
 	
 	
@@ -84,19 +86,10 @@ public abstract class StringClaim implements Claim<String> {
 		return value.hashCode();
 	}
 	
-		
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same claim name and 
-	 *         value, otherwise {@code false}.
-	 */
-	public boolean equals(final Object object) {
 	
-		return object instanceof StringClaim &&
-		       this.getClaimName().equals(((StringClaim)object).getClaimName()) &&
-		       this.getClaimValue().equals(((StringClaim)object).getClaimValue());
+	@Override
+	public String toString() {
+	
+		return this.getClaimName() + ": " + value;
 	}
 }
