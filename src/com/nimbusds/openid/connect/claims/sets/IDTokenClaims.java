@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.claims.sets;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +53,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class IDTokenClaims extends JSONObjectClaims {
 
@@ -69,10 +68,10 @@ public class IDTokenClaims extends JSONObjectClaims {
 		reservedClaimNames.add("iss");
 		reservedClaimNames.add("user_id");
 		reservedClaimNames.add("aud");
-		reservedClaimNames.add("nonce");
 		reservedClaimNames.add("exp");
 		reservedClaimNames.add("iat");
 		reservedClaimNames.add("acr");
+		reservedClaimNames.add("nonce");
 		reservedClaimNames.add("auth_time");
 		reservedClaimNames.add("at_hash");
 		reservedClaimNames.add("c_hash");
@@ -109,13 +108,6 @@ public class IDTokenClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Copy of the nonce parameter from the {@link AuthorizationRequest}
-	 * (required).
-	 */
-	private Nonce nonce;
-	
-	
-	/**
 	 * The expiration time on or after which the ID Token must not be 
 	 * accepted for processing (required). The value is number of seconds 
 	 * from 1970-01-01T0:0:0Z as measured in UTC until the desired 
@@ -136,6 +128,13 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 * The Authentication Context Class Reference (optional).
 	 */
 	private AuthenticationContextClassReference acr = null;
+	
+	
+	/**
+	 * Copy of the nonce parameter from the {@code AuthorizationRequest}
+	 * (required).
+	 */
+	private Nonce nonce;
 	
 	
 	/**
@@ -166,7 +165,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 * @param userID The user identifier. Must not be {@code null}.
 	 * @param aud    The audience. Must not be {@code null}.
 	 * @param iat    The issue time. Must not be {@code null}.
-	 * @param nonce  The nonce. Must not be {@code null}.
+	 * @param nonce  The nonce. If not required {@code null}.
 	 */
 	public IDTokenClaims(final Issuer iss, 
 	                     final UserID userID, 
@@ -287,31 +286,6 @@ public class IDTokenClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Gets the nonce. Corresponds to the {@code nonce} claim.
-	 *
-	 * @return The nonce.
-	 */
-	public Nonce getNonce() {
-	
-		return nonce;
-	}
-	
-	
-	/**
-	 * Sets the nonce. Corresponds to the {@code nonce} claim.
-	 *
-	 * @param nonce The nonce. Must not be {@code null}.
-	 */
-	public void setNonce(final Nonce nonce) {
-	
-		if (nonce == null)
-			throw new IllegalArgumentException("The nonce must not be null");
-		
-		this.nonce = nonce;
-	}
-	
-	
-	/**
 	 * Gets the Authentication Context Class Reference. Corresponds to the
 	 * optional {@code acr} claim.
 	 *
@@ -334,6 +308,28 @@ public class IDTokenClaims extends JSONObjectClaims {
 	public void setAuthenticationContextClassReference(final AuthenticationContextClassReference acr) {
 	
 		this.acr = acr;
+	}
+	
+	
+	/**
+	 * Gets the nonce. Corresponds to the {@code nonce} claim.
+	 *
+	 * @return The nonce. If not required {@code null}.
+	 */
+	public Nonce getNonce() {
+	
+		return nonce;
+	}
+	
+	
+	/**
+	 * Sets the nonce. Corresponds to the {@code nonce} claim.
+	 *
+	 * @param nonce The nonce. If not required {@code null}.
+	 */
+	public void setNonce(final Nonce nonce) {
+	
+		this.nonce = nonce;
 	}
 	
 	
@@ -428,9 +424,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void addCustomClaim(final GenericClaim customClaim) {
 	
 		if (reservedClaimNames.contains(customClaim.getClaimName()))
@@ -440,9 +434,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public JSONObject toJSONObject() {
 	
 		JSONObject o = super.toJSONObject();
@@ -550,12 +542,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 		
 		
 		// Add remaing claims as custom
-		
-		Iterator <Map.Entry<String,Object>> it = jsonObject.entrySet().iterator();
-		
-		while (it.hasNext()) {
-		
-			Map.Entry <String,Object> entry = it.next();
+		for (Map.Entry <String,Object> entry: jsonObject.entrySet()) {
 			
 			GenericClaim gc = new GenericClaim(entry.getKey());
 			gc.setClaimValue(entry.getValue());
