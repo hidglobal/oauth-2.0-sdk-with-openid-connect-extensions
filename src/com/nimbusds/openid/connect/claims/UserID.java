@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.claims;
 
 /**
  * A locally unique and never reassigned identifier for the end-user, which is
- * intended to be consumed by the client.
+ * intended to be consumed by the client ({@code user_id}).
  *
  * <p>The user identifier cannot exceed {@link #MAX_LENGTH 255 ASCII characters}
  * in length.
