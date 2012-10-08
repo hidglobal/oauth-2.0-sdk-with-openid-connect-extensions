@@ -15,7 +15,7 @@ import java.util.Map;
 
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
+import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.SignedJWT;
 
 import net.minidev.json.JSONObject;
@@ -56,7 +56,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-29)
+ * @version $version$ (2012-10-08)
  */
 public class AuthorizationRequest implements Request {
 
@@ -772,13 +772,13 @@ public class AuthorizationRequest implements Request {
 	 *
 	 * @return The downloaded JWT-encoded OpenID request object.
 	 *
-	 * @throws IOException  If the HTTP connection to the specified URL 
-	 *                      failed.
-	 * @throws JWTException If the content at the specified URL couldn't be
-	 *                      parsed to a valid JSON Web Token (JWT).
+	 * @throws IOException    If the HTTP connection to the specified URL 
+	 *                        failed.
+	 * @throws ParseException If the content at the specified URL couldn't be
+	 *                        parsed to a valid JSON Web Token (JWT).
 	 */
 	protected static JWT downloadRequestObject(final URL url)
-		throws IOException, JWTException {
+		throws IOException, ParseException {
 		
 		HttpURLConnection con = (HttpURLConnection)url.openConnection();
 		
@@ -800,7 +800,13 @@ public class AuthorizationRequest implements Request {
 		final int statusCode = con.getResponseCode();
 		final String statusMessage = con.getResponseMessage();
 		
-		return JWT.parse(sb.toString());
+		try {
+			return JWTParser.parse(sb.toString());
+			
+		} catch (java.text.ParseException e) {
+		
+			throw new ParseException("Couldn't parse JWT request object: " + e.getMessage(), e);
+		}
 	}
 	
 	
@@ -830,7 +836,7 @@ public class AuthorizationRequest implements Request {
 			
 				throw new ResolveException("Couldn't resolve request object: " + e.getMessage(), e);
 				
-			} catch (JWTException e) {
+			} catch (ParseException e) {
 			
 				throw new ResolveException("Couldn't resolve request object: " + e.getMessage(), e);
 			}
@@ -890,14 +896,20 @@ public class AuthorizationRequest implements Request {
 			JWT jwt = getResolvedRequestObject();
 			
 			if (jwt instanceof SignedJWT && 
-			    ((SignedJWT)jwt).getState() != SignedJWT.State.VERIFIED)
-				throw new ResolveException("The request object JWT is signed and must be verified first");
+			    ((SignedJWT)jwt).getState() != SignedJWT.State.VALIDATED)
+				throw new ResolveException("The request object JWT is signed and must be validated first");
 			
 			else if (jwt instanceof EncryptedJWT &&
 			         ((EncryptedJWT)jwt).getState() != EncryptedJWT.State.DECRYPTED)
 				throw new ResolveException("The request object JWT is encrypted and must be decrypted first");
 			
-			requestObjectJSON = jwt.getClaimsSet().toJSONObject();
+			try {
+				requestObjectJSON = jwt.getClaimsSet().toJSONObject();
+				
+			} catch (java.text.ParseException e) {
+			
+				throw new ResolveException("The request object JWT doesn't contain a valid JSON object claims set");
+			}
 			
 			if (requestObjectJSON == null)
 				throw new ResolveException("Invalid request object (JWT) JSON");
@@ -1026,7 +1038,7 @@ public class AuthorizationRequest implements Request {
 			try {
 				params.put("request", requestObject.serialize());
 				
-			} catch (JWTException e) {
+			} catch (IllegalStateException e) {
 			
 				throw new SerializeException("Couldn't serialize request object: " + e.getMessage());
 			}
@@ -1219,9 +1231,9 @@ public class AuthorizationRequest implements Request {
 		if (v != null && ! v.trim().isEmpty()) {
 		
 			try {
-				request.setRequestObject(JWT.parse(v));
+				request.setRequestObject(JWTParser.parse(v));
 				
-			} catch (JWTException e) {
+			} catch (java.text.ParseException e) {
 			
 				throw new ParseException("Invalid \"request\" parameter: " + e.getMessage(), e);
 			}

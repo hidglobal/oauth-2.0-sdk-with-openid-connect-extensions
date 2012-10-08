@@ -6,7 +6,6 @@ import javax.mail.internet.ContentType;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
 
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
@@ -46,7 +45,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class UserInfoResponse implements SuccessResponse {
 
@@ -154,7 +153,7 @@ public class UserInfoResponse implements SuccessResponse {
 			try {
 				content = jwt.serialize();
 				
-			} catch (JWTException e) {
+			} catch (IllegalStateException e) {
 			
 				throw new SerializeException("Couldn't serialize UserInfo claims JWT: " + e.getMessage(), e);
 			}

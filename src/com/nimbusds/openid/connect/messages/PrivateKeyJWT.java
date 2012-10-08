@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.nimbusds.jwt.JWA;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.openid.connect.ParseException;
@@ -56,7 +56,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-10-08)
  */
 public class PrivateKeyJWT extends JWTClientAuthentication {
 
@@ -68,17 +68,17 @@ public class PrivateKeyJWT extends JWTClientAuthentication {
 	 *
 	 * @return The set of supported JSON Web Algorithms (JWAs).
 	 */
-	public static Set<JWA> getSupportedJWAs() {
+	public static Set<JWSAlgorithm> getSupportedJWAs() {
 	
-		Set<JWA> supported = new HashSet<JWA>();
+		Set<JWSAlgorithm> supported = new HashSet<JWSAlgorithm>();
 		
-		supported.add(JWA.RS256);
-		supported.add(JWA.RS384);
-		supported.add(JWA.RS512);
+		supported.add(JWSAlgorithm.RS256);
+		supported.add(JWSAlgorithm.RS384);
+		supported.add(JWSAlgorithm.RS512);
 		
-		supported.add(JWA.ES256);
-		supported.add(JWA.ES384);
-		supported.add(JWA.ES512);
+		supported.add(JWSAlgorithm.ES256);
+		supported.add(JWSAlgorithm.ES384);
+		supported.add(JWSAlgorithm.ES512);
 		
 		return supported;
 	}
@@ -125,7 +125,7 @@ public class PrivateKeyJWT extends JWTClientAuthentication {
 		
 		ClientID clientID = JWTClientAuthentication.parseClientID(params);
 		
-		JWA alg = clientAssertion.getHeader().getAlgorithm();
+		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		
 		if (getSupportedJWAs().contains(alg))
 			throw new ParseException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, RS245, ES384 or ES512)");

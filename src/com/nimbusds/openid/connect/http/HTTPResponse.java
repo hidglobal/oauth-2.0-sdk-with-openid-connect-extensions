@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
+import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.openid.connect.ParseException;
 
@@ -383,9 +383,9 @@ public class HTTPResponse {
 		ensureContent();
 		
 		try {
-			return JWT.parse(content);
+			return JWTParser.parse(content);
 			
-		} catch (JWTException e) {
+		} catch (java.text.ParseException e) {
 		
 			throw new ParseException(e.getMessage(), e);
 		}

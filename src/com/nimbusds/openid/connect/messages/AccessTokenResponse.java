@@ -4,7 +4,7 @@ package com.nimbusds.openid.connect.messages;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
+import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class AccessTokenResponse implements SuccessResponse {
 
@@ -149,7 +149,7 @@ public class AccessTokenResponse implements SuccessResponse {
 			try {
 				o.put("id_token", idToken.serialize());
 
-			} catch (JWTException e) {
+			} catch (IllegalStateException e) {
 
 				throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
 			}
@@ -209,9 +209,9 @@ public class AccessTokenResponse implements SuccessResponse {
 		if (jsonObject.containsKey("id_token")) {
 			
 			try {
-				idToken = JWT.parse(JSONObjectUtils.getString(jsonObject, "id_token"));
+				idToken = JWTParser.parse(JSONObjectUtils.getString(jsonObject, "id_token"));
 				
-			} catch (JWTException e) {
+			} catch (java.text.ParseException e) {
 			
 				throw new ParseException("Couldn't parse ID token: " + e.getMessage(), e);
 			}

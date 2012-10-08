@@ -9,7 +9,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
+import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
@@ -29,7 +29,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class AuthorizationResponse implements SuccessResponse {
 
@@ -261,7 +261,7 @@ public class AuthorizationResponse implements SuccessResponse {
 				try {
 					sb.append(idToken.serialize());
 					
-				} catch (JWTException e) {
+				} catch (IllegalStateException e) {
 				
 					throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
 				
@@ -405,9 +405,9 @@ public class AuthorizationResponse implements SuccessResponse {
 			JWT idToken = null;
 			
 			try {
-				idToken.parse(params.get("id_token"));
+				idToken = JWTParser.parse(params.get("id_token"));
 				
-			} catch (JWTException e) {
+			} catch (java.text.ParseException e) {
 			
 				throw new ParseException("Invalid ID Token JWT: " + e.getMessage(), e);
 			}

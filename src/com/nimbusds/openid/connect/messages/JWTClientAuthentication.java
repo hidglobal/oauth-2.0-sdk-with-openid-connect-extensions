@@ -8,8 +8,7 @@ import javax.mail.internet.ContentType;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.jwt.JWA;
-import com.nimbusds.jwt.JWTException;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.openid.connect.ParseException;
@@ -38,7 +37,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public abstract class JWTClientAuthentication extends ClientAuthentication {
 
@@ -131,7 +130,15 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	public ClientAuthenticationClaims getClientAuthenticationClaims()
 		throws ParseException {
 	
-		JSONObject claimsSet = clientAssertion.getClaimsSet().toJSONObject();
+		JSONObject claimsSet = null;
+		
+		try {
+			claimsSet = clientAssertion.getClaimsSet().toJSONObject();
+			
+		} catch (java.text.ParseException e) {
+		
+			throw new ParseException("Couldn't retrieve JSON object from the client assertion JWT");
+		}
 		
 		if (claimsSet == null)
 			throw new ParseException("Couldn't retrieve JSON object from the client assertion JWT");
@@ -167,7 +174,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		try {
 			params.put("client_assertion", clientAssertion.serialize());
 		
-		} catch (JWTException e) {
+		} catch (IllegalStateException e) {
 		
 			throw new SerializeException("Couldn't serialize JWT to a client assertion string: " + e.getMessage(), e);
 		}	
@@ -181,9 +188,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void apply(final HTTPRequest httpRequest)
 		throws SerializeException {
 		
@@ -261,7 +266,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		try {
 			return SignedJWT.parse(clientAssertion);
 			
-		} catch (JWTException e) {
+		} catch (java.text.ParseException e) {
 		
 			throw new ParseException("Invalid \"client_assertion\" JWT: " + e.getMessage(), e);
 		}
@@ -318,7 +323,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		
 		Map<String,String> params = URLUtils.parseParameters(query);
 		
-		JWA alg = parseClientAssertion(params).getHeader().getAlgorithm();
+		JWSAlgorithm alg = parseClientAssertion(params).getHeader().getAlgorithm();
 			
 		if (ClientSecretJWT.getSupportedJWAs().contains(alg))
 			return ClientSecretJWT.parse(params);

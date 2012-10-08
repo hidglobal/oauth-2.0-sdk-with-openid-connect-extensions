@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.nimbusds.jwt.JWA;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.openid.connect.ParseException;
@@ -39,7 +39,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-10-08)
  */
 public class ClientSecretJWT extends JWTClientAuthentication {
 
@@ -51,13 +51,13 @@ public class ClientSecretJWT extends JWTClientAuthentication {
 	 *
 	 * @return The set of supported JSON Web Algorithms (JWAs).
 	 */
-	public static Set<JWA> getSupportedJWAs() {
+	public static Set<JWSAlgorithm> getSupportedJWAs() {
 	
-		Set<JWA> supported = new HashSet<JWA>();
+		Set<JWSAlgorithm> supported = new HashSet<JWSAlgorithm>();
 		
-		supported.add(JWA.HS256);
-		supported.add(JWA.HS384);
-		supported.add(JWA.HS512);
+		supported.add(JWSAlgorithm.HS256);
+		supported.add(JWSAlgorithm.HS384);
+		supported.add(JWSAlgorithm.HS512);
 		
 		return supported;
 	}
@@ -104,7 +104,7 @@ public class ClientSecretJWT extends JWTClientAuthentication {
 		
 		ClientID clientID = JWTClientAuthentication.parseClientID(params);
 		
-		JWA alg = clientAssertion.getHeader().getAlgorithm();
+		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		
 		if (getSupportedJWAs().contains(alg))
 			throw new ParseException("The client assertion JWT must be HMAC-signed (HS256, HS384 or HS512)");
