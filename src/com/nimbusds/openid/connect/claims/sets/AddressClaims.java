@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.claims.sets;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -30,27 +29,14 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * are treated as {@link com.nimbusds.openid.connect.claims.GenericClaim 
  * generic claim}s.
  *
- * <p>Example UserInfo address claims set:
- *
- * <pre>
- * {
- *   "user_id"     : "248289761001",
- *   "name"        : "Jane Doe",
- *   "given_name"  : "Jane",
- *   "family_name" : "Doe",
- *   "email"       : "janedoe@example.com",
- *   "picture"     : "http://example.com/janedoe/me.jpg"
- * }
- * </pre>
- *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.2.1.
+ *     <li>OpenID Connect Messages 1.0, section 2.3.2.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-10-08)
  */
 public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<JSONObject> {
 
@@ -150,9 +136,7 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public Claim.ValueType getClaimValueType() {
 	
 		return Claim.ValueType.OBJECT;
@@ -164,6 +148,7 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	 *
 	 * @return "address".
 	 */
+	@Override
 	public String getBaseClaimName() {
 	
 		return "address";
@@ -175,6 +160,7 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	 *
 	 * @return "address" or "address#lang-tag".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		if (langTag == null)
@@ -193,15 +179,14 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	 * @return The JSON object representation of this UserInfo address 
 	 *         claims set.
 	 */
+	@Override
 	public JSONObject getClaimValue() {
 	
 		return toJSONObject();
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void setClaimValue(final JSONObject o) {
 	
 		AddressClaims ac = null;
@@ -225,18 +210,14 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public LangTag getLangTag() {
 	
 		return langTag;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void setLangTag(final LangTag langTag) {
 	
 		this.langTag = langTag;
@@ -636,9 +617,7 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void addCustomClaim(final GenericClaim customClaim) {
 	
 		if (reservedClaimNames.contains(customClaim.getClaimName()))
@@ -648,9 +627,7 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public JSONObject toJSONObject() {
 	
 		JSONObject o = new JSONObject();
@@ -681,11 +658,9 @@ public class AddressClaims extends JSONObjectClaims implements ClaimWithLangTag<
 		
 		AddressClaims ac = new AddressClaims();
 		
-		Iterator<String> it = jsonObject.keySet().iterator();
+		for (String cn: jsonObject.keySet()) {
 		
-		while (it.hasNext()) {
-		
-			ClaimName claimName = ClaimName.parse(it.next());
+			ClaimName claimName = ClaimName.parse(cn);
 			
 			final String base = claimName.getBase();
 			final LangTag langTag = claimName.getLangTag();
