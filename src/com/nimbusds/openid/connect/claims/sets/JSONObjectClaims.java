@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.claims.sets;
 
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import net.minidev.json.JSONObject;
@@ -92,11 +91,7 @@ public abstract class JSONObjectClaims {
 		if (o == null || claims == null)
 			return;
 		
-		Iterator <? extends ClaimWithLangTag> it = claims.values().iterator();
-		
-		while (it.hasNext()) {
-		
-			ClaimWithLangTag claim = it.next();
+		for (ClaimWithLangTag claim: claims.values()) {
 			
 			o.put(claim.getClaimName(), claim.getClaimValue());
 		}
