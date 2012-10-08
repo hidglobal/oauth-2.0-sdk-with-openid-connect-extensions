@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.claims.sets;
 
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -50,11 +49,11 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>draft-jones-oauth-jwt-bearer-04
+ *     <li>draft-ietf-oauth-jwt-bearer-02
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class ClientAuthenticationClaims extends JSONObjectClaims {
 
@@ -350,9 +349,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void addCustomClaim(final GenericClaim customClaim) {
 	
 		if (reservedClaimNames.contains(customClaim.getClaimName()))
@@ -362,9 +359,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public JSONObject toJSONObject() {
 	
 		JSONObject o = super.toJSONObject();
@@ -450,11 +445,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 		
 		// Add remaing claims as custom
 		
-		Iterator <Map.Entry<String,Object>> it = jsonObject.entrySet().iterator();
-		
-		while (it.hasNext()) {
-		
-			Map.Entry <String,Object> entry = it.next();
+		for (Map.Entry <String,Object> entry: jsonObject.entrySet()) {
 			
 			GenericClaim gc = new GenericClaim(entry.getKey());
 			gc.setClaimValue(entry.getValue());
