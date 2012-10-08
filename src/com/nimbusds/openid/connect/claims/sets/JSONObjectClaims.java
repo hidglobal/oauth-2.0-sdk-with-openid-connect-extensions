@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.claims.GenericClaim;
  * Claims set serialisable to a JSON object.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ (2012-10-08)
  */
 public abstract class JSONObjectClaims {
 
@@ -37,11 +37,7 @@ public abstract class JSONObjectClaims {
 	
 		JSONObject o = new JSONObject();
 	
-		Iterator <Map.Entry<String,GenericClaim>> it = customClaims.entrySet().iterator();
-		
-		while (it.hasNext()) {
-		
-			Map.Entry<String,GenericClaim> entry = it.next();
+		for(Map.Entry<String,GenericClaim> entry: customClaims.entrySet()) {
 			
 			if (entry.getValue() != null)
 				o.put(entry.getKey(), entry.getValue().getClaimValue());

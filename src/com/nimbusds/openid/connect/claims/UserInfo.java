@@ -6,7 +6,8 @@ package com.nimbusds.openid.connect.claims;
  * UserInfo claims. Implements all reserved claims returned at a UserInfo 
  * endpoint.
  *
- * <p>Example UserInfo claims set:
+ * <p>Example {@link com.nimbusds.openid.connect.claims.sets.UserInfoClaims
+ * UserInfo claims set}:
  *
  * <pre>
  * {
@@ -237,7 +238,7 @@ public class UserInfo {
 	 * {@code true} if the end-user's e-mail address has been verified; 
 	 * otherwise {@code false} ({@code email_verified}).
 	 */
-	public static class Verified extends BooleanClaim {
+	public static class EmailVerified extends BooleanClaim {
 	
 	
 		/**

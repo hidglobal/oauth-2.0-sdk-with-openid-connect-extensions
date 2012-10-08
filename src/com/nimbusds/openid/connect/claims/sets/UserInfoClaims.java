@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.claims.sets;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -31,23 +30,24 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *
  * <pre>
  * {
- *   "user_id"     : "248289761001",
- *   "name"        : "Jane Doe",
- *   "given_name"  : "Jane",
- *   "family_name" : "Doe",
- *   "email"       : "janedoe@example.com",
- *   "picture"     : "http://example.com/janedoe/me.jpg"
+ *   "user_id"            : "248289761001",
+ *   "name"               : "Jane Doe",
+ *   "given_name"         : "Jane",
+ *   "family_name"        : "Doe",
+ *   "preferred_username" : "j.doe",
+ *   "email"              : "janedoe@example.com",
+ *   "picture"            : "http://example.com/janedoe/me.jpg"
  * }
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.2.
+ *     <li>OpenID Connect Messages 1.0, section 2.3.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-08)
  */
 public class UserInfoClaims extends JSONObjectClaims {
 
@@ -65,11 +65,12 @@ public class UserInfoClaims extends JSONObjectClaims {
 		reservedClaimNames.add("family_name");
 		reservedClaimNames.add("middle_name");
 		reservedClaimNames.add("nickname");
+		reservedClaimNames.add("preferred_username");
 		reservedClaimNames.add("profile");
 		reservedClaimNames.add("picture");
 		reservedClaimNames.add("website");
 		reservedClaimNames.add("email");
-		reservedClaimNames.add("verified");
+		reservedClaimNames.add("email_verified");
 		reservedClaimNames.add("gender");
 		reservedClaimNames.add("birthday");
 		reservedClaimNames.add("zoneinfo");
@@ -129,6 +130,12 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
+	 * The preferred username )optional).
+	 */
+	private UserInfo.PreferredUsername preferredUsername = null;
+	
+	
+	/**
 	 * The profile page URL (optional).
 	 */
 	private UserInfo.Profile profile = null;
@@ -155,7 +162,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	/**
 	 * The email verification status (optional).
 	 */
-	private UserInfo.Verified verified = null;
+	private UserInfo.EmailVerified emailVerified = null;
 	
 	
 	/**
@@ -201,8 +208,8 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Creates a new minimal UserInfo claims set. Use the setter methods for 
-	 * the optional claims.
+	 * Creates a new minimal UserInfo claims set. Any optional claims are
+	 * specified with the setter methods.
 	 *
 	 * @param userID The user identifier. Must not be {@code null}.
 	 */
@@ -551,6 +558,31 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
+	 * Gets the preferred username. Corresponds to the 
+	 * {@code preferred_username} claim.
+	 *
+	 * @return The preferred username, {@code null} if not specified.
+	 */
+	public UserInfo.PreferredUsername getPreferredUsername() {
+	
+		return preferredUsername;
+	}
+	
+	
+	/**
+	 * Sets the preferred username. Corresponds to the 
+	 * {@code preferred_username} claim.
+	 *
+	 * @param preferredUsername The preferred username, {@code null} if not 
+	 *                          specified.
+	 */
+	public void setPreferredUsername(final UserInfo.PreferredUsername preferredUsername) {
+	
+		this.preferredUsername = preferredUsername;
+	}
+	
+	
+	/**
 	 * Gets the profile page. Corresponds to the {@code profile} claim.
 	 *
 	 * @return The profile page, {@code null} if not specified.
@@ -643,26 +675,26 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	/**
 	 * Gets the email verification status. Corresponds to the 
-	 * {@code verified} claim.
+	 * {@code email_verified} claim.
 	 *
 	 * @return The email verification status, {@code null} if not specified.
 	 */
-	public UserInfo.Verified getVerified() {
+	public UserInfo.EmailVerified getEmailVerified() {
 	
-		return verified;
+		return emailVerified;
 	}
 	
 	
 	/**
 	 * Sets the email verification status. Corresponds to the
-	 * {@code verified} claim.
+	 * {@code email_verified} claim.
 	 *
-	 * @param verified The email verification status, {@code null} if not
-	 *                 specified.
+	 * @param emailVerified The email verification status, {@code null} if 
+	 *                      not specified.
 	 */
-	public void setVerified(final UserInfo.Verified verified) {
+	public void setEmailVerified(final UserInfo.EmailVerified emailVerified) {
 	
-		this.verified = verified;
+		this.emailVerified = emailVerified;
 	}
 	
 	
@@ -856,9 +888,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void addCustomClaim(final GenericClaim customClaim) {
 	
 		if (reservedClaimNames.contains(customClaim.getClaimName()))
@@ -868,9 +898,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public JSONObject toJSONObject() {
 	
 		JSONObject o = super.toJSONObject();
@@ -887,6 +915,9 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 		JSONObjectClaims.putIntoJSONObject(o, nicknameEntries);
 		
+		if (preferredUsername != null)
+			o.put("preferred_username", preferredUsername.getClaimValue());
+		
 		if (profile != null)
 			o.put("profile", profile.getClaimValue().toString());
 		
@@ -899,8 +930,8 @@ public class UserInfoClaims extends JSONObjectClaims {
 		if (email != null)
 			o.put("email", email.getClaimValue().toString());
 		
-		if (verified != null)
-			o.put("verified", verified.getClaimValue());
+		if (emailVerified != null)
+			o.put("email_verified", emailVerified.getClaimValue());
 		
 		if (gender != null)
 			o.put("gender", gender.getClaimValue());
@@ -945,11 +976,9 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 		UserInfoClaims uic = new UserInfoClaims(userID);
 		
-		Iterator<String> it = jsonObject.keySet().iterator();
+		for (String cn: jsonObject.keySet()) {
 		
-		while (it.hasNext()) {
-		
-			ClaimName claimName = ClaimName.parse(it.next());
+			ClaimName claimName = ClaimName.parse(cn);
 			
 			final String base = claimName.getBase();
 			final LangTag langTag = claimName.getLangTag();
@@ -1002,6 +1031,13 @@ public class UserInfoClaims extends JSONObjectClaims {
 		
 			
 			// Simple claims with no language tags
+			
+			else if (claimName.getName().equals("")) {
+			
+				UserInfo.PreferredUsername preferredUsername = new UserInfo.PreferredUsername();
+				preferredUsername.setClaimValue(JSONObjectUtils.getString(jsonObject, "preferred_username"));
+				uic.setPreferredUsername(preferredUsername);
+			}
 		
 			else if (claimName.getName().equals("profile")) {
 
@@ -1031,11 +1067,11 @@ public class UserInfoClaims extends JSONObjectClaims {
 				uic.setEmail(email);
 			}
 
-			else if (claimName.getName().equals("verified")) {
+			else if (claimName.getName().equals("email_verified")) {
 
-				UserInfo.Verified verified = new UserInfo.Verified();
-				verified.setClaimValue(JSONObjectUtils.getBoolean(jsonObject, "verified"));
-				uic.setVerified(verified);
+				UserInfo.EmailVerified verified = new UserInfo.EmailVerified();
+				verified.setClaimValue(JSONObjectUtils.getBoolean(jsonObject, "email_verified"));
+				uic.setEmailVerified(verified);
 			}
 
 			else if (claimName.getName().equals("gender")) {

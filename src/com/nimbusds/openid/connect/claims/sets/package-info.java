@@ -2,6 +2,6 @@
  * Claims sets used by OpenID Connect.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-23)
+ * @version $version$ ($version-date$)
  */
 package com.nimbusds.openid.connect.claims.sets;
