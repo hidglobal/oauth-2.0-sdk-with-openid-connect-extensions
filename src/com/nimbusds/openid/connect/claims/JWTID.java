@@ -2,17 +2,17 @@ package com.nimbusds.openid.connect.claims;
 
 
 /**
- * JSON Web Token (JWT) identifier (ID).
+ * JSON Web Token (JWT) identifier ({@code jti}).
  *
  * <p>Related specifications:
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>draft-jones-oauth-jwt-bearer-04, section 3.
+ *     <li>draft-ietf-oauth-jwt-bearer-02, section 3.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-05)
+ * @version $version$ (2012-10-08)
  */
 public class JWTID extends StringClaim {
 
@@ -22,6 +22,7 @@ public class JWTID extends StringClaim {
 	 *
 	 * @return "jti".
 	 */
+	@Override
 	public String getClaimName() {
 	
 		return "jti";
