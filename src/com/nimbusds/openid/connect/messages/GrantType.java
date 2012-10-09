@@ -46,12 +46,13 @@ public enum GrantType {
 	/**
 	 * Parses a grant type.
 	 *
-	 * @param s A canonical string representation of a grant type. Must not
-	 *          be {@code null}.
+	 * @param s The string identifier of a grant type. Must not be 
+	 *          {@code null}.
 	 *
-	 * @return The parsed grant type.
+	 * @return The grant type.
 	 *
-	 * @throws ParseException If the string doesn't match a grant type.
+	 * @throws ParseException If the string doesn't match a supported grant 
+	 *                        type.
 	 */
 	public static GrantType parse(final String s)
 		throws ParseException {
