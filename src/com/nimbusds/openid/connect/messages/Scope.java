@@ -62,10 +62,9 @@ public class Scope extends HashSet<ScopeToken> {
 	
 	
 	/**
-	 * Returns the canonical string representation of this scope. The scope
-	 * values are delimited by space.
+	 * Returns the string representation of this scope.
 	 *
-	 * @return The string representation of this scope.
+	 * @return The string representation.
 	 */
 	@Override
 	public String toString() {

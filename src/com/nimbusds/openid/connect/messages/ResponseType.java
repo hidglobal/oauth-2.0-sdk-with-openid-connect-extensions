@@ -38,9 +38,9 @@ public enum ResponseType {
 	
 	
 	/**
-	 * Returns the canonical name of this response type.
+	 * Returns the string identifier of this response type.
 	 *
-	 * @return The canonical name of this response type.
+	 * @return The string identifier.
 	 */
 	@Override
 	public String toString() {

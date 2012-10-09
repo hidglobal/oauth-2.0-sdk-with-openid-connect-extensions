@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-09)
  */
 public class Prompt extends HashSet<Prompt.Type> {
 
@@ -32,15 +32,15 @@ public class Prompt extends HashSet<Prompt.Type> {
 		 * The authorization server must not display any authentication 
 		 * or consent UI pages. An error is returned if the end user is 
 		 * not already authenticated or the client does not have 
-		 * pre-configured consent for the requested scopes. This can be 
-		 * used as a method to check for existing authentication and/or 
-		 * consent.
+		 * pre-configured consent for the requested {@link Scope}. This 
+		 * can be used as a method to check for existing authentication 
+		 * and/or consent.
 		 */
 		NONE,
 
 
 		/**
-		 * The authorisation server must prompt the end user for 
+		 * The authorisation server must prompt the end-user for 
 		 * reauthentication.
 		 */
 		LOGIN,
@@ -63,11 +63,11 @@ public class Prompt extends HashSet<Prompt.Type> {
 		
 		
 		/**
-		 * Returns the canonical string representation of this prompt
-		 * type.
+		 * Returns the string identifier of this prompt type.
 		 *
-		 * @return The canonical string representation.
+		 * @return The string identifier.
 		 */
+		@Override
 		public String toString() {
 		
 			return super.toString().toLowerCase();
@@ -79,7 +79,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 		 *
 		 * @param s The string to parse.
 		 *
-		 * @return The parsed prompt type.
+		 * @return The prompt type.
 		 *
 		 * @throws ParseException If the parsed string is {@code null} 
 		 *                        or doesn't match a prompt type.
@@ -88,7 +88,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 			throws ParseException {
 
 			if (s == null || s.trim().isEmpty())
-				throw new ParseException("Null or empty string");
+				throw new ParseException("Null or empty prompt type string");
 
 			if (s.equals("none"))
 				return NONE;
@@ -133,11 +133,12 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 	
 	/**
-	 * Returns the canonical string representation of this prompt set. The 
-	 * values are delimited by space.
+	 * Returns the string representation of this prompt set. The values are 
+	 * delimited by space.
 	 *
 	 * @return The string representation of this scope.
 	 */
+	@Override
 	public String toString() {
 	
 		StringBuilder sb = new StringBuilder();

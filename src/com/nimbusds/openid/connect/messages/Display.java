@@ -57,10 +57,9 @@ public enum Display {
 	
 	
 	/**
-	 * Returns the canonical string representation of this display type.
-	 * This is produced by converting the constant to lower case.
+	 * Returns the string identifier of this display type.
 	 *
-	 * @return The string representation of this display type. 
+	 * @return The string identifier. 
 	 */
 	@Override
 	public String toString() {

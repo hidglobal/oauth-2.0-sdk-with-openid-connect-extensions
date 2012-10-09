@@ -13,6 +13,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.nimbusds.jose.JOSEObject;
+import com.nimbusds.jose.JWEObject;
+import com.nimbusds.jose.JWSObject;
+
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
@@ -28,8 +32,6 @@ import com.nimbusds.openid.connect.claims.ClientID;
 import com.nimbusds.openid.connect.http.HTTPRequest;
 
 import com.nimbusds.openid.connect.util.URLUtils;
-
-
 
 
 /**
@@ -56,7 +58,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-10-09)
  */
 public class AuthorizationRequest implements Request {
 
@@ -86,9 +88,9 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * The nonce (conditionally required).
+	 * The nonce (required for implicit flow, optional for code flow).
 	 */
-	private Nonce nonce;
+	private Nonce nonce = null;
 	
 	
 	/**
@@ -111,9 +113,9 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * OpenID request object as JWT (optional).
+	 * OpenID request object as plain or signed JOSE object (optional).
 	 */
-	private JWT requestObject = null;
+	private JOSEObject requestObject = null;
 	
 	
 	/**
@@ -123,10 +125,18 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
+	 * An ID Token passed as a hint about the user's current or past 
+	 * authenticated session with the client. Should be present if
+	 * {@code prompt=none} is sent.
+	 */
+	private JWT idToken = null;
+	
+	
+	/**
 	 * The resolved request object, from {@link #requestObject} or 
 	 * downloaded from {@link #requestURI}.
 	 */
-	private JWT resolvedRequestObject = null;
+	private JOSEObject resolvedRequestObject = null;
 	
 	
 	/**
@@ -138,7 +148,7 @@ public class AuthorizationRequest implements Request {
 	
 	/**
 	 * Creates a new minimal authorisation request. Use the setter methods
-	 * for the optional request parameters.
+	 * to specify the optional request parameters.
 	 *
 	 * @param rts         The response type set. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
@@ -152,7 +162,7 @@ public class AuthorizationRequest implements Request {
 	 *                    {@code redirect_uri} parameter. Must not be 
 	 *                    {@code null}.
 	 * @param nonce       The nonce. Corresponds to the {@code nonce} 
-	 *                    parameter. Must not be {@code null}.
+	 *                    parameter. May be {@code null} for code flow.
 	 */
 	public AuthorizationRequest(final ResponseTypeSet rts,
 	                            final Scope scope,
@@ -237,7 +247,8 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Gets the request scope. Corresponds to the {@code scope} parameter.
+	 * Gets the UserInfo request scope. Corresponds to the {@code scope} 
+	 * parameter.
 	 *
 	 * @return The request scope.
 	 */
@@ -248,7 +259,7 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Gets the resolved scope.
+	 * Gets the resolved UserInfo scope.
 	 *
 	 * <p>The following precendence applies:
 	 *
@@ -289,14 +300,15 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Sets the request scope. Corresponds to the {@code scope} parameter.
+	 * Sets the UserInfo request scope. Corresponds to the {@code scope} 
+	 * parameter.
 	 *
 	 * @param scope The request scope. Must not be {@code null}.
 	 */
 	public void setScope(final Scope scope) {
 	
 		if (scope == null)
-			throw new IllegalArgumentException("The scope must not be null");
+			throw new IllegalArgumentException("The UserInfo scope must not be null");
 		
 		this.scope = scope;
 	}
@@ -483,13 +495,10 @@ public class AuthorizationRequest implements Request {
 	/**
 	 * Sets the nonce. Corresponds to the {@code nonce} parameter.
 	 *
-	 * @param nonce The nonce. Must not be {@code null}.
+	 * @param nonce The nonce. May be {@code null} for code flow.
 	 */
 	public void setNonce(final Nonce nonce) {
 	
-		if (nonce == null)
-			throw new IllegalArgumentException("The nonce must not be null");
-		
 		this.nonce = nonce;
 	}
 	
@@ -498,7 +507,7 @@ public class AuthorizationRequest implements Request {
 	 * Gets the state. Corresponds to the recommended {@code state} 
 	 * parameter.
 	 *
-	 * @return The state. {@code null} if not specified.
+	 * @return The state, {@code null} if not specified.
 	 */
 	public State getState() {
 	
@@ -545,7 +554,7 @@ public class AuthorizationRequest implements Request {
 	 * Sets the state. Corresponds to the recommended {@code state} 
 	 * parameter.
 	 *
-	 * @param state The state. {@code null} if not specified.
+	 * @param state The state, {@code null} if not specified.
 	 */
 	public void setState(final State state) {
 	
@@ -557,7 +566,7 @@ public class AuthorizationRequest implements Request {
 	 * Gets the requested display type. Corresponds to the optional
 	 * {@code display} parameter.
 	 *
-	 * @return The requested display type. {@code null} if not specified.
+	 * @return The requested display type, {@code null} if not specified.
 	 */
 	public Display getDisplay() {
 	
@@ -610,7 +619,7 @@ public class AuthorizationRequest implements Request {
 	 * Sets the requested display type. Corresponds to the optional
 	 * {@code display} parameter.
 	 *
-	 * @param display The requested display type. {@code null} if not 
+	 * @param display The requested display type, {@code null} if not 
 	 *                specified.
 	 */
 	public void setDisplay(final Display display) {
@@ -685,18 +694,18 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Gets the JSON Web Token (JWT) encoded OpenID request object.
+	 * Gets the JOSE-encoded OpenID request object.
 	 *
 	 * @return The request object, {@code null} if not specified.
 	 */
-	public JWT getRequestObject() {
+	public JOSEObject getRequestObject() {
 	
 		return requestObject;
 	}
 	
 	
 	/**
-	 * Sets the JSON Web Token (JWT) encoded OpenID request object.
+	 * Sets the JOSE-encoded OpenID request object.
 	 *
 	 * @param requestObject The request object, {@code null} if not 
 	 *                      specified.
@@ -704,7 +713,7 @@ public class AuthorizationRequest implements Request {
 	 * @throws IllegalStateException If an OpenID request object is already
 	 *                               specified by URI reference.
 	 */
-	public void setRequestObject(final JWT requestObject) {
+	public void setRequestObject(final JOSEObject requestObject) {
 	
 		if (requestURI != null)
 			throw new IllegalStateException("An OpenID request object is already specified by URI reference");
@@ -739,7 +748,7 @@ public class AuthorizationRequest implements Request {
 	public void setRequestObjectURI(final URL requestURI) {
 	
 		if (requestObject != null)
-			throw new IllegalStateException("An OpenID request object is already specified by a JWT");
+			throw new IllegalStateException("An OpenID request object is already specified by an inline JOSE object");
 	
 		this.requestURI = requestURI;
 		
@@ -766,18 +775,18 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Downloads a JWT-encoded OpenID request object at the specified URL.
+	 * Downloads a JOSE-encoded OpenID request object at the specified URL.
 	 *
 	 * @param url The request object URL. Must not be {@code null}.
 	 *
-	 * @return The downloaded JWT-encoded OpenID request object.
+	 * @return The downloaded JOSE-encoded OpenID request object.
 	 *
 	 * @throws IOException    If the HTTP connection to the specified URL 
 	 *                        failed.
 	 * @throws ParseException If the content at the specified URL couldn't be
 	 *                        parsed to a valid JSON Web Token (JWT).
 	 */
-	protected static JWT downloadRequestObject(final URL url)
+	protected static JOSEObject downloadRequestObject(final URL url)
 		throws IOException, ParseException {
 		
 		HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -801,11 +810,11 @@ public class AuthorizationRequest implements Request {
 		final String statusMessage = con.getResponseMessage();
 		
 		try {
-			return JWTParser.parse(sb.toString());
+			return JOSEObject.parse(sb.toString());
 			
 		} catch (java.text.ParseException e) {
 		
-			throw new ParseException("Couldn't parse JWT request object: " + e.getMessage(), e);
+			throw new ParseException("Couldn't parse JOSE request object: " + e.getMessage(), e);
 		}
 	}
 	
@@ -814,7 +823,7 @@ public class AuthorizationRequest implements Request {
 	 * Resolves the OpenID request object (if any).
 	 *
 	 * @throws ResolveException For a request object URI that couldn't be
-	 *                          resolved to a valid JWT.
+	 *                          resolved to a valid JOSE object.
 	 */
 	private void resolveRequestObject()
 		throws ResolveException {
@@ -864,7 +873,7 @@ public class AuthorizationRequest implements Request {
 	 * @throws ResolveException For a request object URI that couldn't be
 	 *                          resolved to a valid JWT.
 	 */
-	public JWT getResolvedRequestObject()
+	public JOSEObject getResolvedRequestObject()
 		throws ResolveException {
 	
 		if (! this.hasRequestObject())
@@ -893,34 +902,26 @@ public class AuthorizationRequest implements Request {
 		
 		if (requestObjectJSON == null) {
 		
-			JWT jwt = getResolvedRequestObject();
+			JOSEObject jose = getResolvedRequestObject();
 			
-			if (jwt instanceof SignedJWT && 
-			    ((SignedJWT)jwt).getState() != SignedJWT.State.VALIDATED)
-				throw new ResolveException("The request object JWT is signed and must be validated first");
+			if (jose instanceof JWSObject && ((JWSObject)jose).getState() != JWSObject.State.VALIDATED)
+				throw new ResolveException("The request object is signed (JWS) and must be validated first");
 			
-			else if (jwt instanceof EncryptedJWT &&
-			         ((EncryptedJWT)jwt).getState() != EncryptedJWT.State.DECRYPTED)
-				throw new ResolveException("The request object JWT is encrypted and must be decrypted first");
+			else if (jose instanceof JWEObject && ((JWEObject)jose).getState() != JWEObject.State.DECRYPTED)
+				throw new ResolveException("The request object is encrypted (JWE) and must be decrypted first");
 			
-			try {
-				requestObjectJSON = jwt.getClaimsSet().toJSONObject();
-				
-			} catch (java.text.ParseException e) {
-			
-				throw new ResolveException("The request object JWT doesn't contain a valid JSON object claims set");
-			}
+			requestObjectJSON = jose.getPayload().toJSONObject();
 			
 			if (requestObjectJSON == null)
-				throw new ResolveException("Invalid request object (JWT) JSON");
+				throw new ResolveException("The request object doesn't contain a valid JSON object");
 		}
 		
 		// Validate existence of mandatory response_type and scope
 		if (! requestObjectJSON.containsKey("response_type"))
-			throw new ResolveException("Missing \"response_type\" parameter in the request object (JWT)");
+			throw new ResolveException("Missing \"response_type\" parameter in the request object");
 		
 		if (! requestObjectJSON.containsKey("scope"))
-			throw new ResolveException("Missing \"scope\" parameter in the request object (JWT)");
+			throw new ResolveException("Missing \"scope\" parameter in the request object");
 		
 		return requestObjectJSON;
 	}
@@ -1088,6 +1089,7 @@ public class AuthorizationRequest implements Request {
 	 *                            couldn't be serialised to an HTTP GET 
 	 *                            request.
 	 */
+	@Override
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 	
@@ -1231,7 +1233,7 @@ public class AuthorizationRequest implements Request {
 		if (v != null && ! v.trim().isEmpty()) {
 		
 			try {
-				request.setRequestObject(JWTParser.parse(v));
+				request.setRequestObject(JOSEObject.parse(v));
 				
 			} catch (java.text.ParseException e) {
 			

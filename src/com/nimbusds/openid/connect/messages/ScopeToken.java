@@ -33,7 +33,7 @@ public interface ScopeToken {
 	/**
 	 * Returns the string identifier of the scope token.
 	 *
-	 * @return The string identifier of the scope token.
+	 * @return The string identifier.
 	 */
 	@Override
 	public String toString();
@@ -42,7 +42,7 @@ public interface ScopeToken {
 	/**
 	 * Returns the requirement type of the scope token.
 	 *
-	 * @return The requirement type of the scope token.
+	 * @return The requirement type.
 	 */
 	public Type getType();
 }

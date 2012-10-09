@@ -90,7 +90,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	 * code token id_token
 	 * </pre>
 	 *
-	 * @return Space-delimited string representing the authorisation 
+	 * @return Space delimited string representing the authorisation 
 	 *         response types.
 	 */
 	public String toString() {
