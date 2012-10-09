@@ -34,6 +34,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *     <li>{@link #SC_BAD_REQUEST HTTP 400 Bad request}
  *     <li>{@link #SC_UNAUTHORIZED HTTP 401 Unauthorized}
  *     <li>{@link #SC_FORBIDDEN HTTP 403 Forbidden}
+ * </ul>
  *
  * <p>Supported response headers:
  *
