@@ -11,42 +11,49 @@ package com.nimbusds.openid.connect.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-06-11)
+ * @version $version$ (2012-10-09)
  */
 public enum StdScopeToken implements ScopeToken {
 
 
 	/**
 	 * Informs the authorisation server that the client is making an OpenID 
-	 * Connect request (REQUIRED).
+	 * Connect request (REQUIRED). This scope tokens requests access to 
+	 * the {@code user_id} claim. 
 	 */
 	OPENID("openid", ScopeToken.Type.REQUIRED),
 	
 	
 	/**
 	 * Requests that access to the end-user's default profile claims at the 
-	 * UserInfo endpoint be granted by the issued access token.
+	 * UserInfo endpoint be granted by the issued access token. These claims
+	 * are: {@code name}, {@code family_name}, {@code given_name}, 
+	 * {@code middle_name}, {@code nickname}, {@code preferred_username}, 
+	 * {@code profile}, {@code picture}, {@code website}, {@code gender}, 
+	 * {@code birthday}, {@code zoneinfo}, {@code locale}, and 
+	 * {@code updated_time}. 
 	 */
 	PROFILE("profile", ScopeToken.Type.OPTIONAL),
 	
 	
 	/**
-	 * Requests that access to the email and verified claims at the UserInfo
-	 * endpoint be granted by the issued access token.
+	 * Requests that access to the {@code email} and {@code email_verified}
+	 * claims at the UserInfo endpoint be granted by the issued access 
+	 * token.
 	 */
 	EMAIL("email", ScopeToken.Type.OPTIONAL),
 	
 	
 	/**
-	 * Requests that access to address claim at the UserInfo endpoint be 
-	 * granted by the issued access token. 
+	 * Requests that access to {@code address} claim at the UserInfo 
+	 * endpoint be granted by the issued access token. 
 	 */
 	ADDRESS("address", ScopeToken.Type.OPTIONAL),
 	
 	
 	/**
-	 * Requests that access to the phone_number claim at the UserInfo 
-	 * endpoint be granted by the issued access token. 
+	 * Requests that access to the {@code phone_number} claim at the 
+	 * UserInfo endpoint be granted by the issued access token. 
 	 */
 	PHONE("phone", ScopeToken.Type.OPTIONAL);
 
@@ -76,18 +83,14 @@ public enum StdScopeToken implements ScopeToken {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public String toString() {
 	
 		return value;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public ScopeToken.Type getType() {
 	
 		return type;

@@ -8,7 +8,9 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * UserInfo {@link AuthorizationRequest authorisation request} scope.
+ * UserInfo {@link AuthorizationRequest authorisation request} scope. Specifies
+ * an additive list of voluntary claims that are returned from the UserInfo 
+ * endpoint.
  *
  * <p>Related specifications:
  *
@@ -17,17 +19,29 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-06-11)
+ * @version $version$ (2012-10-09)
  */
 public class Scope extends HashSet<ScopeToken> {
 
 	
 	/**
-	 * Creates a new empty authorisation request scope.
+	 * Creates a new empty UserInfo authorisation request scope.
 	 */
 	public Scope() {
 	
 		// Nothing to do
+	}
+	
+	
+	/**
+	 * Creates a new UserInfo authorisation request scope with the minimum
+	 * required {@link StdScopeToken#OPENID openid} token.
+	 */
+	public static Scope createMinimal() {
+	
+		Scope scope = new Scope();
+		scope.add(StdScopeToken.OPENID);
+		return scope;
 	}
 	
 	
@@ -53,6 +67,7 @@ public class Scope extends HashSet<ScopeToken> {
 	 *
 	 * @return The string representation of this scope.
 	 */
+	@Override
 	public String toString() {
 	
 		StringBuilder sb = new StringBuilder();

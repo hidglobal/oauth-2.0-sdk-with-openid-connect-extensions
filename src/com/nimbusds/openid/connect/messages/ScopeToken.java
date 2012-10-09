@@ -5,7 +5,7 @@ package com.nimbusds.openid.connect.messages;
  * A token in the {@link Scope} parameter of an {@link AuthorizationRequest}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-06-11)
+ * @version $version$ (2012-10-09)
  */
 public interface ScopeToken {
 
@@ -35,6 +35,7 @@ public interface ScopeToken {
 	 *
 	 * @return The string identifier of the scope token.
 	 */
+	@Override
 	public String toString();
 	
 	
