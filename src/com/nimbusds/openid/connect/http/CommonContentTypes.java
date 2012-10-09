@@ -8,9 +8,9 @@ import javax.mail.internet.ContentType;
  * Common content types used in OpenID Connect.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-18)
+ * @version $version$ (2012-10-09)
  */
-public class CommonContentTypes {
+public interface CommonContentTypes {
 
 
 	/**
@@ -29,13 +29,4 @@ public class CommonContentTypes {
 	 * Content type {@code application/x-www-form-urlencoded}.
 	 */
 	public static final ContentType APPLICATION_URLENCODED = new ContentType("application", "x-www-form-urlencoded", null);
-	
-	
-	/**
-	 * Prevents instantiation.
-	 */
-	private CommonContentTypes() {
-	
-		// Nothing to do
-	}
 }
