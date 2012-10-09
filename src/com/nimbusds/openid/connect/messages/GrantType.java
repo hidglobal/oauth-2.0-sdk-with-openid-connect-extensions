@@ -10,11 +10,11 @@ import com.nimbusds.openid.connect.ParseException;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>draft-ietf-oauth-v2-26
+ *     <li>draft-ietf-oauth-v2-31
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-09)
  */
 public enum GrantType {
 
@@ -32,10 +32,11 @@ public enum GrantType {
 	
 	
 	/**
-	 * Returns the canonical string representation of this grant type.
+	 * Returns the string identifier of this grant type.
 	 *
-	 * @return The canonical string representation.
+	 * @return The string identifier.
 	 */
+	@Override
 	public String toString() {
 	
 		return super.toString().toLowerCase();
@@ -56,7 +57,7 @@ public enum GrantType {
 		throws ParseException {
 	
 		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Null or empty string");
+			throw new ParseException("Null or empty grant type string");
 		
 		if (s.equals("authorization_code"))
 			return AUTHORIZATION_CODE;
