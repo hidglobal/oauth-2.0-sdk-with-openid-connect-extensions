@@ -5,7 +5,7 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * Enumeration the types of display for authentication and consent UIs.
+ * Enumeration of the types of display for authentication and consent UIs.
  *
  * <p>Related specifications:
  *
