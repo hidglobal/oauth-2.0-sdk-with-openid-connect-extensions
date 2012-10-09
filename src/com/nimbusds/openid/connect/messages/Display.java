@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-24)
+ * @version $version$ (2012-10-09)
  */
 public enum Display {
 
@@ -62,6 +62,7 @@ public enum Display {
 	 *
 	 * @return The string representation of this display type. 
 	 */
+	@Override
 	public String toString() {
 	
 		return super.toString().toLowerCase();
