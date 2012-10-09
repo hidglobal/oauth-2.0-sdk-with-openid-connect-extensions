@@ -5,7 +5,7 @@ package com.nimbusds.openid.connect.messages;
  * Enumeration of the application types in the context of OpenID Connect.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-03-13)
+ * @version $version$ (2012-10-09)
  */
 public enum ApplicationType {
 
@@ -23,11 +23,11 @@ public enum ApplicationType {
 	
 	
 	/**
-	 * Returns the canonical string representation of this application 
-	 * type.
+	 * Returns the string identifier of this application type.
 	 *
-	 * @return The string representation of this application type.
+	 * @return The string identifier.
 	 */
+	@Override
 	public String toString() {
 	
 		return super.toString().toLowerCase();
