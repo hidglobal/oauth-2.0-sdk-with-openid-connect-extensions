@@ -10,11 +10,11 @@ import com.nimbusds.openid.connect.ParseException;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Standard 1.0, section 2.2.1.
+ *     <li>OpenID Connect Standard 1.0, section 2.3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-09)
  */
 public enum ResponseType {
 
@@ -42,6 +42,7 @@ public enum ResponseType {
 	 *
 	 * @return The canonical name of this response type.
 	 */
+	@Override
 	public String toString() {
 	
 		return super.toString().toLowerCase();
@@ -53,7 +54,7 @@ public enum ResponseType {
 	 *
 	 * @param s The string to parse.
 	 *
-	 * @return The parsed individual response type.
+	 * @return The individual response type.
 	 *
 	 * @throws ParseException If the parsed string doesn't match an 
 	 *                        individual response type.
@@ -62,7 +63,7 @@ public enum ResponseType {
 		throws ParseException {
 	
 		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Null or empty string");
+			throw new ParseException("Null or empty response type string");
 		
 		if (s.equals("code"))
 			return CODE;

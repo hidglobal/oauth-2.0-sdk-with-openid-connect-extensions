@@ -13,11 +13,11 @@ import com.nimbusds.openid.connect.ParseException;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Standard 1.0, section 2.2.1.
+ *     <li>OpenID Connect Standard 1.0, section 2.3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-09)
  */
 public class ResponseTypeSet extends HashSet<ResponseType> {
 
@@ -34,23 +34,24 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	/**
 	 * Parses a set of authorisation response types.
 	 *
-	 * <p>OpenID Connect specifies the following string vectors but this 
-	 * method will allow other orders as well to accommodate sloppy 
-	 * serialisers:
+	 * <p>OpenID Connect specifies the following string vectors, however 
+	 * this method allows for other orders as well in order to accommodate 
+	 * sloppy serialisers:
 	 *
 	 * <pre>
 	 * code
-	 * token
+	 * code id_token
 	 * id_token
-	 * id_token token
+	 * token
+	 * token id_token
 	 * code token
-	 * code id_token token
+	 * code token id_token
 	 * </pre>
 	 *
-	 * @param s Space-delimited list of one or more individual authorisation
-	 *          response types.
+	 * @param s Space-delimited list of one or more authorisation response 
+	 *          types.
 	 *
-	 * @return The parsed authorisation response types set.
+	 * @return The authorisation response types set.
 	 *
 	 * @throws ParseException If the parsed string is {@code null}, empty or
 	 *                        contains an invalid response type name.
@@ -59,7 +60,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 		throws ParseException {
 	
 		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Null or empty string");
+			throw new ParseException("Null or empty response type set string");
 	
 		ResponseTypeSet set = new ResponseTypeSet();
 		
@@ -81,11 +82,12 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	 *
 	 * <pre>
 	 * code
-	 * token
+	 * code id_token
 	 * id_token
-	 * id_token token
+	 * token
+	 * token id_token
 	 * code token
-	 * code id_token token
+	 * code token id_token
 	 * </pre>
 	 *
 	 * @return Space-delimited string representing the authorisation 
@@ -100,20 +102,20 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 			sb.append("code");
 		}
 		
-		if (contains(ResponseType.ID_TOKEN)) {
-		
-			if (sb.length() > 0)
-				sb.append(" id_token");
-			else
-				sb.append("id_token");
-		}
-		
 		if (contains(ResponseType.TOKEN)) {
 		
 			if (sb.length() > 0)
 				sb.append(" token");
 			else
 				sb.append("token");
+		}
+		
+		if (contains(ResponseType.ID_TOKEN)) {
+		
+			if (sb.length() > 0)
+				sb.append(" id_token");
+			else
+				sb.append("id_token");
 		}
 	
 		return sb.toString();
