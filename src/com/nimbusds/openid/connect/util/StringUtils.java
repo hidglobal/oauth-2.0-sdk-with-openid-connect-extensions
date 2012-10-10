@@ -11,20 +11,20 @@ public class StringUtils {
 
 
 	/**
-	 * Returns {@code true} if the specified string is not {@code null} and
-	 * contains non-whitespace characters.
+	 * Returns {@code true} if the specified string is {@code null} or
+	 * contains whitespace characters only.
 	 *
 	 * @param s The string to check. May be {@code null}.
 	 *
-	 * @return {@code true} if the string is not {@code null} and contains
-	 *         non-whitespace characters, else {@code false}.
+	 * @return {@code true} if the string is {@code null} or contains
+	 *         whitespace characters only, else {@code false}.
 	 */
-	public static boolean isDefined(final String s) {
+	public static boolean isUndefined(final String s) {
 	
 		if (s == null || s.trim().isEmpty())
-			return false;
-		else
 			return true;
+		else
+			return false;
 	}
 	
 	
