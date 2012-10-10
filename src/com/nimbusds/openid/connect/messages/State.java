@@ -3,10 +3,13 @@ package com.nimbusds.openid.connect.messages;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import com.nimbusds.openid.connect.util.StringUtils;
+
 
 /**
  * Opaque value used to maintain state between a request and a callback. Also
- * serves as a protection against XSRF attacks.
+ * serves as a protection against XSRF attacks, among other uses. This class is
+ * immutable.
  *
  * <p>Related specifications:
  *
@@ -15,37 +18,38 @@ import org.apache.commons.lang3.RandomStringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-10)
  */
-public class State {
+public final class State {
 
 
 	/**
-	 * The state string.
+	 * The state value.
 	 */
-	private String value;
+	private final String value;
 	
 	
 	/**
-	 * Creates a new state value.
+	 * Creates a new state.
 	 *
 	 * @param value The state value, must not be {@code null} or empty 
 	 *              string.
 	 */
 	public State(final String value) {
 	
-		if (value == null || value.trim().isEmpty())
-			throw new IllegalArgumentException("Null or empty string");
+		if (StringUtils.isUndefined(value))
+			throw new IllegalArgumentException("Null or empty state value");
 		
 		this.value = value;
 	}
 	
 	
 	/**
-	 * Returns the string representation of this state value.
+	 * Returns the string representation of this state.
 	 *
 	 * @return The string representation.
 	 */
+	@Override
 	public String toString() {
 	
 		return value;
@@ -57,6 +61,7 @@ public class State {
 	 *
 	 * @return The object hash code.
 	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();
@@ -71,6 +76,7 @@ public class State {
 	 * @return {@code true} if the objects have the same value, otherwise
 	 *         {@code false}.
 	 */
+	@Override
 	public boolean equals(final Object object) {
 	
 		return object instanceof State && this.toString().equals(object.toString());
@@ -84,7 +90,7 @@ public class State {
 	 *
 	 * @param count The number of characters.
 	 *
-	 * @return A new random state value.
+	 * @return A new random state.
 	 */
 	public static State generate(final int count) {
 	
@@ -95,10 +101,28 @@ public class State {
 	/**
 	 * Generates a random state value with 8 alphanumeric characters.
 	 *
-	 * @return A new random state value.
+	 * @return A new random state.
 	 */
 	public static State generate() {
 	
 		return new State(RandomStringUtils.randomAlphanumeric(8));
+	}
+	
+	
+	/**
+	 * Parses a state from the specified string.
+	 *
+	 * @param s The string to parse, {@code null} or empty if no state is
+	 *          specified.
+	 *
+	 * @return The state, {@code null} if the parsed string was {@code null}
+	 *         or empty.
+	 */
+	public static State parse(final String s) {
+	
+		if (StringUtils.isUndefined(s))
+			return null;
+		
+		return new State(s);
 	}
 }
