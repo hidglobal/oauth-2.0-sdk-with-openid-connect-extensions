@@ -2,9 +2,6 @@ package com.nimbusds.openid.connect.messages;
 
 
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,10 +13,10 @@ import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * The base abstract class for resolved ID Token and UserInfo claim requests.
+ * The base abstract class for ID Token and UserInfo claim requests.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-13)
+ * @version $version$ (2012-10-10)
  */
 public abstract class ClaimsRequest {
 
@@ -107,11 +104,7 @@ public abstract class ClaimsRequest {
 	
 		Set<String> requiredClaims = new HashSet<String>();
 	
-		Iterator <Map.Entry<String,Object>> it = claims.entrySet().iterator();
-		
-		while (it.hasNext()) {
-		
-			Map.Entry<String,Object> claimEntry = it.next();
+		for (Map.Entry<String,Object> claimEntry: claims.entrySet()) {
 		
 			if (claimEntry.getValue() == null) {
 			
@@ -139,11 +132,7 @@ public abstract class ClaimsRequest {
 	
 		Set<String> optionalClaims = new HashSet<String>();
 		
-		Iterator <Map.Entry<String,Object>> it = claims.entrySet().iterator();
-		
-		while (it.hasNext()) {
-		
-			Map.Entry<String,Object> claimEntry = it.next();
+		for (Map.Entry<String,Object> claimEntry: claims.entrySet()) {
 			
 			if (claimEntry.getValue() != null && claimEntry.getValue() instanceof JSONObject) {
 			
