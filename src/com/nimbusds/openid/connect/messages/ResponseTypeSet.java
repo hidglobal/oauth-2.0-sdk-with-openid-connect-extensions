@@ -8,7 +8,15 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * Set of {@link ResponseType}s.
+ * Set of authorisation {@link ResponseType}s.
+ *
+ * <p>Provides helper methods to determine if the OpenID Connect protocol flow 
+ * implied by the response type set is implicit flow or code flow:
+ *
+ * <ul>
+ *     <li>{@link #impliesImplicitFlow}
+ *     <li>{@link #impliesCodeFlow}
+ * </ul>
  *
  * <p>Related specifications:
  *
@@ -17,7 +25,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2012-10-10)
  */
 public class ResponseTypeSet extends HashSet<ResponseType> {
 
@@ -70,6 +78,39 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 			set.add(ResponseType.parse(t));
 		
 		return set;
+	}
+	
+	
+	/**
+	 * Returns {@code true} if this reponse type set implies a code flow.
+	 * This is determined by checking for the presence of {@code code} in
+	 * the response type set.
+	 *
+	 * @return {@code true} if a code flow is implied, else {@code false}.
+	 */
+	public boolean impliesCodeFlow() {
+	
+		if (this.contains(ResponseType.CODE))
+			return true;
+		else
+			return false;
+	}
+	
+	
+	/**
+	 * Returns {@code true} if this reponse type set implies an implicit 
+	 * flow. This is determined by checking for the absence of {@code code}
+	 * in the response type set.
+	 *
+	 * @return {@code true} if an implicit flow is implied, else 
+	 *         {@code false}.
+	 */
+	public boolean impliesImplicitFlow() {
+	
+		if (! this.contains(ResponseType.CODE))
+			return true;
+		else
+			return false;
 	}
 	
 	
