@@ -72,7 +72,7 @@ public enum Display {
 	 * Parses a display type.
 	 *
 	 * @param s The string to parse. If the string is {@code null} or empty
-	 *          the {@code #getDefault} display type will be returned.
+	 *          the {@link #getDefault} display type will be returned.
 	 *
 	 * @return The parsed display type.
 	 *
