@@ -3,10 +3,12 @@ package com.nimbusds.openid.connect.messages;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import com.nimbusds.openid.connect.util.StringUtils;
+
 
 /**
- * A random, unique string value to associate a user-session with an ID Token
- * and to mitigate replay attacks.
+ * Nonce. This is a random, unique string value to associate a user-session with
+ * an ID Token and to mitigate replay attacks. This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -15,15 +17,15 @@ import org.apache.commons.lang3.RandomStringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-10)
  */
-public class Nonce {
+public final class Nonce {
 
 
 	/**
-	 * The nonce string.
+	 * The nonce value.
 	 */
-	private String value;
+	private final String value;
 	
 	
 	/**
@@ -34,9 +36,8 @@ public class Nonce {
 	 */
 	public Nonce(final String value) {
 	
-		if (value == null || value.trim().isEmpty())
-			throw new IllegalArgumentException("Null or empty string");
-		
+		if (StringUtils.isUndefined(value))
+			throw new IllegalArgumentException("Null or empty nonce value");
 		
 		this.value = value;
 	}
@@ -47,6 +48,7 @@ public class Nonce {
 	 *
 	 * @return The string representation.
 	 */
+	@Override
 	public String toString() {
 	
 		return value;
@@ -58,6 +60,7 @@ public class Nonce {
 	 *
 	 * @return The object hash code.
 	 */
+	@Override
 	public int hashCode() {
 	
 		return value.hashCode();
@@ -72,6 +75,7 @@ public class Nonce {
 	 * @return {@code true} if the objects have the same value, otherwise
 	 *         {@code false}.
 	 */
+	@Override
 	public boolean equals(final Object object) {
 	
 		return object instanceof Nonce && this.toString().equals(object.toString());
@@ -101,5 +105,23 @@ public class Nonce {
 	public static Nonce generate() {
 	
 		return new Nonce(RandomStringUtils.randomAlphanumeric(8));
+	}
+	
+	
+	/**
+	 * Parses a nonce from the specified string.
+	 *
+	 * @param s The string to parse, {@code null} or empty if no nonce is
+	 *          specified.
+	 *
+	 * @return The nonce, {@code null} if the parsed string was {@code null}
+	 *         or empty.
+	 */
+	public static Nonce parse(final String s) {
+	
+		if (StringUtils.isUndefined(s))
+			return null;
+		
+		return new Nonce(s);
 	}
 }
