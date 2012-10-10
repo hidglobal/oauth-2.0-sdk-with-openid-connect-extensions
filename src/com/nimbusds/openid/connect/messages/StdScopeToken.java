@@ -1,6 +1,14 @@
 package com.nimbusds.openid.connect.messages;
 
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import net.minidev.json.JSONObject;
+
+
 /**
  * Enumeration of the standard {@link ScopeToken}s.
  *
@@ -11,17 +19,17 @@ package com.nimbusds.openid.connect.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2012-10-10)
  */
 public enum StdScopeToken implements ScopeToken {
-
-
+	
+	 
 	/**
 	 * Informs the authorisation server that the client is making an OpenID 
 	 * Connect request (REQUIRED). This scope tokens requests access to 
 	 * the {@code user_id} claim. 
 	 */
-	OPENID("openid", ScopeToken.Type.REQUIRED),
+	OPENID("openid", ScopeToken.Type.REQUIRED, new String[]{"user_id"}),
 	
 	
 	/**
@@ -33,7 +41,20 @@ public enum StdScopeToken implements ScopeToken {
 	 * {@code birthday}, {@code zoneinfo}, {@code locale}, and 
 	 * {@code updated_time}. 
 	 */
-	PROFILE("profile", ScopeToken.Type.OPTIONAL),
+	PROFILE("profile", ScopeToken.Type.OPTIONAL, new String[]{"name",
+	                                                          "family_name",
+								  "given_name",
+								  "middle_name",
+								  "nickname",
+								  "preferred_username",
+								  "profile",
+								  "picture",
+								  "website",
+								  "gender",
+								  "birthday",
+								  "zoneinfo",
+								  "locale",
+								  "updated_time"}),
 	
 	
 	/**
@@ -41,45 +62,62 @@ public enum StdScopeToken implements ScopeToken {
 	 * claims at the UserInfo endpoint be granted by the issued access 
 	 * token.
 	 */
-	EMAIL("email", ScopeToken.Type.OPTIONAL),
+	EMAIL("email", ScopeToken.Type.OPTIONAL, new String[]{"email", "email_verified"}),
 	
 	
 	/**
 	 * Requests that access to {@code address} claim at the UserInfo 
 	 * endpoint be granted by the issued access token. 
 	 */
-	ADDRESS("address", ScopeToken.Type.OPTIONAL),
+	ADDRESS("address", ScopeToken.Type.OPTIONAL, new String[]{"formatted",
+	                                                          "street_address",
+								  "locality",
+								  "region",
+								  "postal_code",
+								  "country"}),
 	
 	
 	/**
 	 * Requests that access to the {@code phone_number} claim at the 
 	 * UserInfo endpoint be granted by the issued access token. 
 	 */
-	PHONE("phone", ScopeToken.Type.OPTIONAL);
+	PHONE("phone", ScopeToken.Type.OPTIONAL, new String[]{"phone_number"});
 
 
 	/**
 	 * The actual value.
 	 */
-	private String value;
+	private final String value;
 	
 	
 	/**
 	 * The requirement type.
 	 */
-	private ScopeToken.Type type;
+	private final ScopeToken.Type type;
+	
+	
+	/**
+	 * The names of the associated claims.
+	 */
+	private final Set<String> claims;
 	
 	
 	/**
 	 * Creates a new scope token.
 	 *
-	 * @param value The scope token as a string.
-	 * @param type  The requirement type.
+	 * @param value  The scope token as a string. Must not be {@code null}.
+	 * @param type   The requirement type. Must not be {@code null}.
+	 * @param claims The names of the associated claims. Must not be
+	 *               {@code null}.
 	 */
-	private StdScopeToken(final String value, final ScopeToken.Type type) {
+	private StdScopeToken(final String value, 
+	                      final ScopeToken.Type type,
+			      final String[] claims) {
 	
 		this.value = value;
 		this.type = type;
+		
+		this.claims = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(claims)));
 	}
 	
 	
@@ -94,5 +132,36 @@ public enum StdScopeToken implements ScopeToken {
 	public ScopeToken.Type getType() {
 	
 		return type;
+	}
+	
+	
+	@Override
+	public Set<String> getClaims() {
+	
+		return claims;
+	}
+	
+	
+	@Override
+	public JSONObject getClaimsRequestJSONObject() {
+	
+		JSONObject req = new JSONObject();
+		
+		for (String claim: claims) {
+		
+			if (type == ScopeToken.Type.REQUIRED) {
+			
+				// Essential (applies to OPENID - user_id only)
+				JSONObject details = new JSONObject();
+				details.put("essential", true);
+				req.put(claim, details);
+			}
+			else {
+				// Voluntary
+				req.put(claim, null);
+			}
+		}
+		
+		return req;
 	}
 }

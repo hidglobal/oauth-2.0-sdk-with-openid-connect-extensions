@@ -1,11 +1,16 @@
 package com.nimbusds.openid.connect.messages;
 
 
+import java.util.Set;
+
+import net.minidev.json.JSONObject;
+
+
 /**
  * A token in the {@link Scope} parameter of an {@link AuthorizationRequest}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2012-10-10)
  */
 public interface ScopeToken {
 
@@ -45,4 +50,20 @@ public interface ScopeToken {
 	 * @return The requirement type.
 	 */
 	public Type getType();
+	
+	
+	/**
+	 * Returns the names of the associated claims.
+	 *
+	 * @return The names of the associated claims.
+	 */
+	public Set<String> getClaims();
+	
+	
+	/**
+	 * Gets a default claims request JSON object for the scope token.
+	 *
+	 * @return The default claims request JSON object.
+	 */
+	public JSONObject getClaimsRequestJSONObject();
 }

@@ -5,15 +5,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-
-import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * The base abstract class for ID Token and UserInfo claim requests.
+ * The base abstract class for resolved ID Token and UserInfo claim requests.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-10)
@@ -22,72 +18,25 @@ public abstract class ClaimsRequest {
 
 
 	/**
-	 * The requested claims.
+	 * The resolved requested claims.
 	 */
 	protected JSONObject claims;
 	
 	
 	/**
-	 * Optional array of requested locales, by order of preference.
-	 */
-	protected LangTag[] preferredLocales;
-	
-	
-	/**
-	 * Parses a preferred locales array, by order of preference.
-	 *
-	 * @param object The JSON object to parse, any locales must be specified
-	 *               as language tags (RFC 5646) in a JSON array named 
-	 *               "preferred_locales".
-	 *
-	 * @return The preferred locales array, {@code null} if not specified.
-	 *
-	 * @throws LangTagException If an invalid language tag is encountered.
-	 */
-	protected static LangTag[] parsePreferredLocales(final JSONObject object)
-		throws LangTagException {
-		
-		LangTag[] preferredLocales = null;
-		
-		if (object.containsKey("preferred_locales") &&
-		    object.get("preferred_locales") instanceof JSONArray) {
-
-			JSONArray locales = (JSONArray)object.get("preferred_locales");
-
-			// Compose list of preferred locales   
-			preferredLocales = new LangTag[locales.size()];
-
-			for (int i=0; i < locales.size(); i++) {
-			
-				Object item = locales.get(i);
-				
-				if (! (item instanceof String))
-					throw new LangTagException("Invalid language tag at position " + i);
-
-				preferredLocales[i] = LangTag.parse((String)item);
-			}
-		}
-		
-		return preferredLocales;
-	}
-	
-	
-	/**
-	 * Creates a new claims request instance. The {@link #claims} is set to
-	 * a new empty JSON object, {@link #preferredLocales} to {@code null}.
+	 * Creates a new claims request. The {@link #claims} field is set to
+	 * a new empty JSON object.
 	 */
 	protected ClaimsRequest() {
 	
 		claims = new JSONObject();
-		
-		preferredLocales = null;
 	}
 	
 	
 	/**
 	 * Gets the resolved claims JSON object.
 	 *
-	 * @return The resolved claims object.
+	 * @return The resolved claims JSON object.
 	 */
 	public JSONObject getClaimsObject() {
 	
@@ -96,76 +45,91 @@ public abstract class ClaimsRequest {
 	
 	
 	/**
-	 * Gets the resolved required claims.
+	 * Gets the names of the requested essential claims. Claims marked as 
+	 * essential by the client are required to ensure a smooth authorisation
+	 * for the specified task requested by the end-user.
 	 *
-	 * @return The names of the required claims.
+	 * @return The names of the requested essential claims.
 	 */
-	public Set<String> getRequiredClaims() {
+	public Set<String> getEssentialClaimNames() {
 	
-		Set<String> requiredClaims = new HashSet<String>();
+		Set<String> essentialClaims = new HashSet<String>();
 	
+		// Claims marked as essential must have a JSON object value
+		// with an "essential" property set to "true"
 		for (Map.Entry<String,Object> claimEntry: claims.entrySet()) {
 		
-			if (claimEntry.getValue() == null) {
+			Object value = claimEntry.getValue();
 			
-				requiredClaims.add(claimEntry.getKey());
-			}	
-			else if (claimEntry.getValue() instanceof JSONObject) {
+			if (value == null || !(value instanceof JSONObject))
+				continue;
 			
-				JSONObject claimDetails = (JSONObject)claimEntry.getValue();
+			JSONObject claimDetails = (JSONObject)value;
+			
+			if (claimDetails.get("essential") == null ||
+			    !(claimDetails.get("essential") instanceof Boolean))
+				continue;
 				
-				if (! claimDetails.containsKey("optional"))
-					requiredClaims.add(claimEntry.getKey());
-			}
+			boolean claimIsEssential = (Boolean)claimDetails.get("essential");
+			
+			if (claimIsEssential)
+				essentialClaims.add(claimEntry.getKey());
 		}
 	
-		return requiredClaims;
+		return essentialClaims;
 	}
 	
 	
 	/**
-	 * Gets the resolved optional claims.
+	 * Gets the names of the requested voluntary claims. Claims that are 
+	 * marked as voluntary by the client or are assumed as such by default, 
+	 * are requested by the client to perform non-essential tasks offered to
+	 * the end-user.
 	 *
-	 * @return The names of the optional claims.
+	 * @return The names of the requested volunatry claims.
 	 */
-	public Set<String> getOptionalClaims() {
+	public Set<String> getVoluntaryClaimNames() {
 	
-		Set<String> optionalClaims = new HashSet<String>();
+		Set<String> voluntaryClaims = new HashSet<String>();
 		
+		// Claims with a value of null or a JSON object value
+		// with an "essential" property set to "false"
 		for (Map.Entry<String,Object> claimEntry: claims.entrySet()) {
 			
-			if (claimEntry.getValue() != null && claimEntry.getValue() instanceof JSONObject) {
+			Object value = claimEntry.getValue();
 			
-				JSONObject claimDetails = (JSONObject)claimEntry.getValue();
-				
-				if (claimDetails.containsKey("optional"))
-					optionalClaims.add(claimEntry.getKey());
+			if (value == null || !(value instanceof JSONObject)) {
+			
+				voluntaryClaims.add(claimEntry.getKey());
+				continue;
 			}
+			
+			JSONObject claimDetails = (JSONObject)value;
+			
+			if (claimDetails.get("essential") == null ||
+			    !(claimDetails.get("essential") instanceof Boolean)) {
+			    
+			    	voluntaryClaims.add(claimEntry.getKey());
+				continue;
+			}
+				
+			boolean claimIsEssential = (Boolean)claimDetails.get("essential");
+			
+			if (! claimIsEssential)
+				voluntaryClaims.add(claimEntry.getKey());
 		}
 		
-		return optionalClaims;
+		return voluntaryClaims;
 	}
 	
 	
 	/**
-	 * Gets all resolved requested claims (required and optional).
+	 * Gets the names of all requested claims (essential and voluntary).
 	 *
-	 * @return The names of all claims (required and optional).
+	 * @return The names of all claims (essential and voluntary).
 	 */
-	public Set<String> getClaims() {
+	public Set<String> getClaimNames() {
 	
 		return claims.keySet();
-	}
-	
-	
-	/**
-	 * Gets the preferred locales.
-	 *
-	 * @return The preferred locales, by order of preference, {@code null}
-	 *         if none.
-	 */
-	public LangTag[] getPreferredLocales() {
-	
-		return preferredLocales;
 	}
 }

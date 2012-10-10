@@ -11,18 +11,18 @@ import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * The resolved ID Token claims request.
+ * Resolved ID Token claims request.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-25)
+ * @version $version$ (2012-10-10)
  */
-public class ResolvedIDTokenClaimsRequest extends ClaimsRequest {
+public class IDTokenClaimsRequest extends ClaimsRequest {
 
 
 	/**
@@ -32,20 +32,35 @@ public class ResolvedIDTokenClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
-	 * Gets the default ID Token claims request.
+	 * Gets a default ID Token claims request.
 	 *
-	 * @return The default ID Token claims request.
+	 * @return A default ID Token claims request.
 	 */
 	public static JSONObject getDefaultClaimsRequest() {
 	
 		JSONObject defaultClaims = new JSONObject();
 		
-		defaultClaims.put("iss", null);
-		defaultClaims.put("user_id", null);
-		defaultClaims.put("aud", null);
-		defaultClaims.put("exp", null);
-		defaultClaims.put("iat", null);
-		defaultClaims.put("nonce", null);
+		JSONObject details = new JSONObject();
+		details.put("essential", true);
+		defaultClaims.put("iss", details);
+		
+		details = new JSONObject();
+		details.put("essential", true);
+		defaultClaims.put("user_id", details);
+		
+		details = new JSONObject();
+		details.put("essential", true);
+		defaultClaims.put("aud", details);
+		
+		details = new JSONObject();
+		details.put("essential", true);
+		defaultClaims.put("exp", details);
+		
+		details = new JSONObject();
+		details.put("essential", true);
+		defaultClaims.put("iat", details);
+		
+		// Nonce is conditinally required, skip
 		
 		return defaultClaims;
 	}
@@ -54,13 +69,16 @@ public class ResolvedIDTokenClaimsRequest extends ClaimsRequest {
 	/**
 	 * Creates a new resolved ID Token claims request.
 	 *
-	 * @param idTokenObject The IDToken object from the optional OpenID
-	 *                      request object. {@code null} if not specified.
+	 * @param idTokenObject The {@code id_token} JSON object from the 
+	 *                      optional OpenID request object. Obtained from 
+	 *                      the decoded {@code request} or 
+	 *                      {@code request_uri} authorisation request 
+	 *                      parameter. {@code null} if not specified.
 	 *
 	 * @throws ResolveException If the ID Token claims request couldn't be
 	 *                          resolved.
 	 */
-	public ResolvedIDTokenClaimsRequest(final JSONObject idTokenObject)
+	public IDTokenClaimsRequest(final JSONObject idTokenObject)
 		throws ResolveException {
 	
 		claims.putAll(getDefaultClaimsRequest());
@@ -74,14 +92,6 @@ public class ResolvedIDTokenClaimsRequest extends ClaimsRequest {
 				JSONObject additionalClaims = (JSONObject)idTokenObject.get("claims");
 
 				claims.putAll(additionalClaims);
-			}
-			
-			try {
-				preferredLocales = ClaimsRequest.parsePreferredLocales(idTokenObject);
-				
-			} catch (LangTagException e) {
-			
-				throw new ResolveException("Couldn't parse preferred locales: " + e.getMessage(), e);
 			}
 			
 			
