@@ -6,6 +6,8 @@ import java.util.Iterator;
 
 import com.nimbusds.openid.connect.ParseException;
 
+import com.nimbusds.openid.connect.util.StringUtils;
+
 
 /**
  * Prompts for end-user reauthentication and consent.
@@ -17,7 +19,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2012-10-10)
  */
 public class Prompt extends HashSet<Prompt.Type> {
 
@@ -160,14 +162,20 @@ public class Prompt extends HashSet<Prompt.Type> {
 	/**
 	 * Parses a prompt set from the specified string.
 	 *
-	 * @param s The string to parse, must contain one or more 
-	 *          non-conflicting space-delimited prompt types.
+	 * @param s The string to parse, with one or more non-conflicting space
+	 *          delimited prompt types. May be {@code null}.
+	 *
+	 * @return The prompt set, {@code null} if the parsed string was 
+	 *         {@code null} or empty.
 	 *
 	 * @throws ParseException If the string couldn't be parsed to a valid
 	 *                        prompt set.
 	 */
 	public static Prompt parse(final String s)
 		throws ParseException {
+	
+		if (StringUtils.isUndefined(s))
+			return null;
 	
 		Prompt prompt = new Prompt();
 		

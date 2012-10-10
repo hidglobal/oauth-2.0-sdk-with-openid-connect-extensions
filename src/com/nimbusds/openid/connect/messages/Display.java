@@ -3,6 +3,8 @@ package com.nimbusds.openid.connect.messages;
 
 import com.nimbusds.openid.connect.ParseException;
 
+import com.nimbusds.openid.connect.util.StringUtils;
+
 
 /**
  * Enumeration of the types of display for authentication and consent UIs.
@@ -14,7 +16,7 @@ import com.nimbusds.openid.connect.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2012-10-10)
  */
 public enum Display {
 
@@ -82,7 +84,7 @@ public enum Display {
 	public static Display parse(final String s)
 		throws ParseException {
 	
-		if (s == null || s.trim().isEmpty())
+		if (StringUtils.isUndefined(s))
 			return getDefault();
 		
 		if (s.equals("page"))
