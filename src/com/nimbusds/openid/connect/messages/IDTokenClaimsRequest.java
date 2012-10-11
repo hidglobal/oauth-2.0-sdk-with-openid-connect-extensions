@@ -1,8 +1,12 @@
 package com.nimbusds.openid.connect.messages;
 
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -11,16 +15,25 @@ import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * Resolved ID Token claims request.
+ * Resolved ID Token claims request. Specifies the claims to return with the
+ * ID Token. These are determined from the following:
+ *
+ * <ul>
+ *     <li>The {@link ResponseTypeSet} passed with the {@code response_type}
+ *         parameter of the original {@link AuthorizationRequest}.
+ *     <li>The optional OpenID Connect request object passed with the
+ *         {@code request} or {@code request_uri} parameter of the original
+ *         {@link AuthorizationRequest}.
+ * </ul>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.2.
+ *     <li>OpenID Connect Messages 1.0, sections 2.1.1 and 2.1.2.1.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
+ * @version $version$ (2012-10-11)
  */
 public class IDTokenClaimsRequest extends ClaimsRequest {
 
@@ -32,43 +45,46 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
-	 * Gets a default ID Token claims request.
+	 * Resolves the required ID Token claims.
 	 *
-	 * @return A default ID Token claims request.
+	 * @param rts The response type set. Obtained from the 
+	 *            {@code response_type} authorisation request parameter.
+	 *            Must not be {@code null}.
+	 *
+	 * @return The names of the resolved required ID Token claims, as a
+	 *         read-only set.
 	 */
-	public static JSONObject getDefaultClaimsRequest() {
+	public static Set<String> resolveRequiredClaims(final ResponseTypeSet rts) {
 	
-		JSONObject defaultClaims = new JSONObject();
+		Set<String> claims = new HashSet<String>();
 		
-		JSONObject details = new JSONObject();
-		details.put("essential", true);
-		defaultClaims.put("iss", details);
+		claims.add("iss");
+		claims.add("user_id");
+		claims.add("aud");
+		claims.add("exp");
+		claims.add("iat");
 		
-		details = new JSONObject();
-		details.put("essential", true);
-		defaultClaims.put("user_id", details);
+		// Conditionally required claims
 		
-		details = new JSONObject();
-		details.put("essential", true);
-		defaultClaims.put("aud", details);
+		if (rts.impliesImplicitFlow())
+			claims.add("nonce");
 		
-		details = new JSONObject();
-		details.put("essential", true);
-		defaultClaims.put("exp", details);
+		if (rts.impliesImplicitFlow() && rts.contains(ResponseType.TOKEN))
+			claims.add("at_hash");
 		
-		details = new JSONObject();
-		details.put("essential", true);
-		defaultClaims.put("iat", details);
+		if (rts.impliesImplicitFlow() && rts.contains(ResponseType.CODE))
+			claims.add("c_hash");
 		
-		// Nonce is conditinally required, skip
-		
-		return defaultClaims;
+		return Collections.unmodifiableSet(claims);
 	}
 	
 	
 	/**
 	 * Creates a new resolved ID Token claims request.
 	 *
+	 * @param rts           The response type set. Obtained from the 
+	 *                      {@code response_type} authorisation request 
+	 *                      parameter. Must not be {@code null}.
 	 * @param idTokenObject The {@code id_token} JSON object from the 
 	 *                      optional OpenID request object. Obtained from 
 	 *                      the decoded {@code request} or 
@@ -78,20 +94,21 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 * @throws ResolveException If the ID Token claims request couldn't be
 	 *                          resolved.
 	 */
-	public IDTokenClaimsRequest(final JSONObject idTokenObject)
+	public IDTokenClaimsRequest(final ResponseTypeSet rts, final JSONObject idTokenObject)
 		throws ResolveException {
 	
-		claims.putAll(getDefaultClaimsRequest());
+		// Set required claims
+		requiredClaims.addAll(resolveRequiredClaims(rts));
 		
 		if (idTokenObject != null) {
 		
 			if (idTokenObject.containsKey("claims") &&
 		            idTokenObject.get("claims") instanceof JSONObject) {
 		
-				// Merge claims
+				// Add claims
 				JSONObject additionalClaims = (JSONObject)idTokenObject.get("claims");
 
-				claims.putAll(additionalClaims);
+				requestedClaims.putAll(additionalClaims);
 			}
 			
 			
@@ -114,12 +131,13 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 *
 	 * @return The required user ID, {@code null} if not specified.
 	 *
-	 * @throws ResolveException
+	 * @throws ResolveException If the required user ID couldn't be
+	 *                          correctly resolved.
 	 */
 	public String getUserID()
 		throws ResolveException {
 	
-		Object uidObject = claims.get("user_id");
+		Object uidObject = requestedClaims.get("user_id");
 		
 		if (uidObject == null)
 			return null;
@@ -151,12 +169,13 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 *
 	 * @return The required ACRs, {@code null} if not specified.
 	 *
-	 * @throws ResolveException
+	 * @throws ResolveException If the required ACRs couldn't be correctly
+	 *                          resolved.
 	 */
 	public String[] getAuthenticationContextClassReference()
 		throws ResolveException {
 	
-		Object acrObject = claims.get("acr");
+		Object acrObject = requestedClaims.get("acr");
 		
 		if (acrObject == null)
 			return null;

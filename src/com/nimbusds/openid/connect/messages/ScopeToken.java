@@ -7,7 +7,7 @@ import net.minidev.json.JSONObject;
 
 
 /**
- * A token in the {@link Scope} parameter of an {@link AuthorizationRequest}.
+ * Token in the {@link Scope} parameter of an {@link AuthorizationRequest}.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-10)

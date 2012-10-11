@@ -9,9 +9,21 @@ import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * Resolved UserInfo claims request. It is determined by listing the default
- * claims for the specified UserInfo {@link Scope} and then merging the UserInfo 
- * claims from the optional OpenID request object.
+ * Resolved UserInfo claims request. Specifies the claims to return at the
+ * UserInfo endpoint. These are determined from the following:
+ *
+ * <ul>
+ *     <li>The {@link Scope} passed with the {@code scope} parameter of the
+ *         original {@link AuthorizationRequest}.
+ *     <li>The optional OpenID Connect request object passed with the
+ *         {@code request} or {@code request_uri} parameter of the original
+ *         {@link AuthorizationRequest}.
+ * </ul>
+ *
+ * <p>The final UserInfo claims request is determined by listing the
+ * {@link #getClaimsObjectForScope default claims} for the specified UserInfo 
+ * {@link Scope} and then merging the UserInfo claims from the optional OpenID 
+ * Connect request object.
  *
  * <p>Related specifications:
  *
@@ -20,7 +32,7 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
+ * @version $version$ (2012-10-11)
  */
 public class UserInfoClaimsRequest extends ClaimsRequest {
 	
@@ -32,18 +44,18 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
-	 * Gets the default claims for the specified UserInfo scope.
+	 * Gets the default claims request JSON object for the specified 
+	 * UserInfo scope.
 	 *
-	 * @param scope The UserInfo scope. Must not be {@code null}.
+	 * @param scope The UserInfo scope. Must include an 
+	 *              {@link StdScopeToken#OPENID openid} scope token and must
+	 *              not be {@code null}.
 	 *
-	 * @return The matching UserInfo claims request.
+	 * @return The matching UserInfo claims request JSON object.
 	 */
-	public static JSONObject getClaimsRequestForScope(final Scope scope) {
+	public static JSONObject getClaimsObjectForScope(final Scope scope) {
 	
 		JSONObject claims = new JSONObject();
-		
-		if (scope.contains(StdScopeToken.OPENID))
-			claims.putAll(StdScopeToken.OPENID.getClaimsRequestJSONObject());
 			
 		if (scope.contains(StdScopeToken.PROFILE))
 			claims.putAll(StdScopeToken.PROFILE.getClaimsRequestJSONObject());
@@ -127,9 +139,14 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 	public UserInfoClaimsRequest(final Scope scope, final JSONObject userInfoObject)
 		throws ResolveException {
 		
-		// Resolve scope to claims
-		claims.putAll(getClaimsRequestForScope(scope));
+		// Set required claims
+		requiredClaims.addAll(StdScopeToken.OPENID.getClaims());
+		
+		
+		// Resolve requested scope to claims
+		requestedClaims.putAll(getClaimsObjectForScope(scope));
 	
+		// Request object with userinfo member present?
 		if (userInfoObject != null) {
 		
 			if (userInfoObject.containsKey("claims") &&
@@ -138,7 +155,7 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 				// Merge claims
 				JSONObject additionalClaims = (JSONObject)userInfoObject.get("claims");
 
-				claims.putAll(additionalClaims);
+				requestedClaims.putAll(additionalClaims);
 			}
 			
 			try {
