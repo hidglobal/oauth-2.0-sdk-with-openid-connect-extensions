@@ -23,7 +23,10 @@ public interface RequestObjectRetriever {
 	 * Downloads a JOSE-encoded OpenID Connect request object at the 
 	 * specified URL.
 	 *
-	 * @param url The request object URL. Must not be {@code null}.
+	 * @param url The URL of the OpenID Connect request object. Must not be 
+	 *            {@code null}.
+	 *
+	 * @return The downloaded JOSE-encoded OpenID Connect request object.
 	 *
 	 * @throws IOException    If the HTTP connection to the specified URL 
 	 *                        failed.
