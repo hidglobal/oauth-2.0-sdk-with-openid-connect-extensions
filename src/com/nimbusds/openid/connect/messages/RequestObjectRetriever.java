@@ -11,7 +11,7 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * Retriever of OpenID Connect request objects referenced by URL.
+ * Retriever of OpenID Connect request objects passed by URL reference.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-11)
