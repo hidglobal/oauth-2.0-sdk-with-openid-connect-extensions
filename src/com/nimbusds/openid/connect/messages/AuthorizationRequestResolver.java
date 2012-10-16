@@ -21,10 +21,17 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 
 /**
- * Authorisation request resolver.
+ * Authorisation request resolver. Takes in a raw {@link AuthorizationRequest}
+ * and if an OpenID Connect request object is present applies it to derive the
+ * final authorisation request parameters, ID Token and UserInfo claims.
+ *
+ * <p>To process OpenID Connect request objects the resolver must be supplied 
+ * with a {@link RequestObjectRetriever retriever} for remote requests objects
+ * and a {@link RequestObjectDecoder decoder} to handle their JOSE decoding and
+ * JWS validation and/or JWE decryption.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-15)
+ * @version $version$ (2012-10-16)
  */
 public class AuthorizationRequestResolver {
 
@@ -46,7 +53,9 @@ public class AuthorizationRequestResolver {
 	 * {@link DefaultRequestObjectRetriever default OpenID Connect request 
 	 * object retriever}.
 	 *
-	 * @param decoder
+	 * @param decoder A configured JOSE decoder and JWS validator/JWE 
+	 *                decryptor for the optional OpenID Connect request
+	 *                objects. Must not be {@code null}.
 	 */
 	public AuthorizationRequestResolver(final RequestObjectDecoder decoder) {
 	
@@ -57,8 +66,12 @@ public class AuthorizationRequestResolver {
 	/**
 	 * Creates a new authorisation request resolver.
 	 *
-	 * @param retriever
-	 * @param decoder
+	 * @param retriever A configured retriever for optional OpenID Connect
+	 *                  request objects passed by URI reference. Must not be
+	 *                  {@code null}.
+	 * @param decoder   A configured JOSE decoder and JWS validator/JWE 
+	 *                  decryptor for the optional OpenID Connect request
+	 *                  objects. Must not be {@code null}.
 	 */
 	public AuthorizationRequestResolver(final RequestObjectRetriever retriever,
 	                                    final RequestObjectDecoder decoder) {
@@ -69,12 +82,22 @@ public class AuthorizationRequestResolver {
 	}
 	
 	
+	/**
+	 * Gets the configured OpenID Connect request object retriever.
+	 *
+	 * @return The request object retriever.
+	 */
 	public RequestObjectRetriever getRequestObjectRetriever() {
 	
 		return retriever;
 	}
 	
 	
+	/**
+	 * Gets the configured OpenID Connect request object decoder.
+	 *
+	 * @return The request object decoder.
+	 */
 	public RequestObjectDecoder getRequestObjectDecoder() {
 	
 		return decoder;
@@ -82,7 +105,7 @@ public class AuthorizationRequestResolver {
 	
 	
 	/**
-	 * Downloads an OpenID Connect request object at the specified URL.
+	 * Downloads an OpenID Connect request object from the specified URL.
 	 *
 	 * @param url The URL of the OpenID Connect request object. Must not be
 	 *            {@code null}.
@@ -110,6 +133,19 @@ public class AuthorizationRequestResolver {
 	}
 	
 	
+	/**
+	 * JOSE decodes and JWS validates and/or JWE decrypts the specified
+	 * OpenID Connect request object.
+	 *
+	 * @param joseObject The JOSE object to decode. Must not be 
+	 *                   {@code null}.
+	 *
+	 * @return The JSON object representing the OpenID Connect request 
+	 *         object.
+	 *
+	 * @throws ResolveException If JOSE decoding, JWS validation or JWE
+	 *                          decryption failed.
+	 */
 	private JSONObject decodeRequestObject(final JOSEObject joseObject)
 		throws ResolveException {
 		
@@ -118,7 +154,7 @@ public class AuthorizationRequestResolver {
 				
 		} catch (JOSEException e) {
 		
-			throw new ResolveException("Couldn't decode/verify OpenID Connect request object: " + e.getMessage(), e);
+			throw new ResolveException("Couldn't decode/verify JOSE encoded OpenID Connect request object: " + e.getMessage(), e);
 		}
 	}
 	
@@ -143,7 +179,7 @@ public class AuthorizationRequestResolver {
 	
 		ResponseTypeSet rts = request.getResponseTypeSet();
 		
-		if (requestObject != null && requestObject.containsKey("response_type")) {
+		if (JSONObjectUtils.containsKey(requestObject, "response_type")) {
 		
 			ResponseTypeSet rtsCopy = null;
 			
@@ -154,11 +190,11 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"response_type\" parameter in request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"response_type\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 			
 			if (! rts.containsAll(rtsCopy))
-				throw new ResolveException("Mismatched \"response_type\" parameter in request object");
+				throw new ResolveException("Mismatched \"response_type\" parameter in OpenID Connect request object");
 		}
 		
 		return rts;
@@ -185,7 +221,7 @@ public class AuthorizationRequestResolver {
 		
 		Scope scope = request.getScope();
 		
-		if (requestObject != null && requestObject.containsKey("scope")) {
+		if (JSONObjectUtils.containsKey(requestObject, "scope")) {
 		
 			Scope scopeCopy = null;
 			
@@ -196,11 +232,11 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"scope\" parameter in request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"scope\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 			
 			if (! scope.containsAll(scopeCopy))
-				throw new ResolveException("Mismatched \"scope\" parameter in request object");
+				throw new ResolveException("Mismatched \"scope\" parameter in OpenID Connect request object");
 		}
 		
 		return scope;
@@ -227,7 +263,7 @@ public class AuthorizationRequestResolver {
 		
 		ClientID clientID = request.getClientID();
 		
-		if (requestObject != null && requestObject.containsKey("client_id")) {
+		if (JSONObjectUtils.containsKey(requestObject, "client_id")) {
 		
 			ClientID clientIDCopy = new ClientID();
 			
@@ -238,11 +274,11 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"client_id\" parameter in request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"client_id\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 			
 			if (! clientID.equals(clientIDCopy))
-				throw new ResolveException("Mismatched \"client_id\" parameter in request object");
+				throw new ResolveException("Mismatched \"client_id\" parameter in OpenID Connect request object");
 		}
 		
 		return clientID;
@@ -269,7 +305,7 @@ public class AuthorizationRequestResolver {
 		
 		URL url = request.getRedirectURI();
 		
-		if (requestObject != null && requestObject.containsKey("redirect_uri")) {
+		if (JSONObjectUtils.containsKey(requestObject, "redirect_uri")) {
 		
 			URL urlCopy = null;
 			
@@ -278,11 +314,11 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"redirect_uri\" parameter in request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"redirect_uri\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 			
 			if (! url.equals(urlCopy))
-				throw new ResolveException("Mismatched \"redirect_uri\" parameter in request object");
+				throw new ResolveException("Mismatched \"redirect_uri\" parameter in OpenID Connect request object");
 		}
 		
 		return url;
@@ -309,7 +345,7 @@ public class AuthorizationRequestResolver {
 		
 		Nonce nonce = request.getNonce();
 		
-		if (requestObject != null && requestObject.containsKey("nonce")) {
+		if (JSONObjectUtils.containsKey(requestObject, "nonce")) {
 		
 			Nonce nonceCopy = null;
 			
@@ -318,14 +354,14 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"nonce\" parameter in request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"nonce\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 			
 			if (nonce == null)
 				nonce = nonceCopy;
 			
 			else if (! nonce.equals(nonceCopy))
-				throw new ResolveException("Mismatched \"nonce\" parameter in request object");
+				throw new ResolveException("Mismatched \"nonce\" parameter in OpenID Connect request object");
 		}
 		
 		return nonce;
@@ -352,7 +388,7 @@ public class AuthorizationRequestResolver {
 		
 		State state = request.getState();
 		
-		if (requestObject != null && requestObject.containsKey("state")) {
+		if (JSONObjectUtils.containsKey(requestObject, "state")) {
 		
 			State stateCopy = null;
 			
@@ -361,14 +397,14 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"state\" parameter in request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"state\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 			
 			if (state == null)
 				state = stateCopy;
 			
 			else if (! state.equals(stateCopy))
-				throw new ResolveException("Mismatched \"state\" parameter in request object");
+				throw new ResolveException("Mismatched \"state\" parameter in OpenID Connect request object");
 		}
 		
 		return state;
@@ -395,7 +431,7 @@ public class AuthorizationRequestResolver {
 		
 		Display display = request.getDisplay();
 	        	       
-		if (requestObject != null && requestObject.containsKey("display")) {
+		if (JSONObjectUtils.containsKey(requestObject, "display")) {
 
 		       Display displayCopy = null;
 
@@ -404,14 +440,14 @@ public class AuthorizationRequestResolver {
 
 		       } catch (ParseException e) {
 
-			       throw new ResolveException("Invalid \"display\" parameter in request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"display\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 		       }
 
 		       if (display == null)
 			       display = displayCopy;
 
 		       else if (! display.equals(displayCopy))
-			       throw new ResolveException("Mismatched \"display\" parameter in request object");
+			       throw new ResolveException("Mismatched \"display\" parameter in OpenID Connect request object");
 		}
 
 		return display;
@@ -438,7 +474,7 @@ public class AuthorizationRequestResolver {
 		
 		Prompt prompt = request.getPrompt();
 	        	       
-		if (requestObject != null && requestObject.containsKey("prompt")) {
+		if (JSONObjectUtils.containsKey(requestObject, "prompt")) {
 
 		       Prompt promptCopy = null;
 
@@ -447,14 +483,14 @@ public class AuthorizationRequestResolver {
 
 		       } catch (ParseException e) {
 
-			       throw new ResolveException("Invalid \"prompt\" parameter in request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"prompt\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 		       }
 
 		       if (prompt == null)
 			       prompt = promptCopy;
 
 		       else if (! prompt.equals(promptCopy))
-			       throw new ResolveException("Mismatched \"prompt\" parameter in request object");
+			       throw new ResolveException("Mismatched \"prompt\" parameter in OpenID Connect request object");
 		}
 
 		return prompt;
@@ -481,7 +517,7 @@ public class AuthorizationRequestResolver {
 		
 		JWT idTokenHint = request.getIDTokenHint();
 	        	       
-		if (requestObject != null && requestObject.containsKey("id_token_hint")) {
+		if (JSONObjectUtils.containsKey(requestObject, "id_token_hint")) {
 
 			JWT idTokenHintCopy = null;
 
@@ -490,18 +526,18 @@ public class AuthorizationRequestResolver {
 
 			} catch (ParseException e) {
 
-			       throw new ResolveException("Invalid \"id_token_hint\" parameter in request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"id_token_hint\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 
 			} catch (java.text.ParseException e) {
 
-			       throw new ResolveException("Invalid \"id_token_hint\" parameter in request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"id_token_hint\" parameter in OpenID Connect request object: " + e.getMessage(), e);
 			}
 
 			if (idTokenHint == null)
 			       idTokenHint = idTokenHintCopy;
 
 			else if (! idTokenHint.equals(idTokenHintCopy))
-			       throw new ResolveException("Mismatched \"id_token_hint\" parameter in request object");
+			       throw new ResolveException("Mismatched \"id_token_hint\" parameter in OpenID Connect request object");
 		}
 
 		return idTokenHint;
@@ -509,9 +545,17 @@ public class AuthorizationRequestResolver {
 	
 	
 	/**
-	 *
+	 * Resolves an authorisation request.
 	 * 
-	 * @param request
+	 * @param request The authorisation request to resolve. Must not be 
+	 *                {@code null}.
+	 *
+	 * @return The resolved requested authorisation parameters, ID Token and 
+	 *         UserInfo claims.
+	 *
+	 * @throws ResolveException If the authorisation request couldn't be 
+	 *                          resolved due to an invalid OpenID Connect
+	 *                          request object.
 	 */
 	public ResolvedAuthorizationRequest resolve(final AuthorizationRequest request)
 		throws ResolveException {
@@ -519,6 +563,8 @@ public class AuthorizationRequestResolver {
 		JSONObject requestObject = null;
 		
 		if (request.hasRequestObject()) {
+		
+			// Fetch + decode the request object
 		
 			JOSEObject encodedRequestObject = null;
 		
@@ -547,11 +593,43 @@ public class AuthorizationRequestResolver {
 		JWT idTokenHint = resolveIDTokenHint(request, requestObject);
 		
 		
-		// Resolve claims
+		// Resolve requested ID Token claims
+		JSONObject idTokenObject = null;
 		
-		// IDTokenClaimsRequest idTokenClaimsRequest = new IDTokenClaimsRequest(rts);
+		if (JSONObjectUtils.containsKey(requestObject, "id_token")) {
+		
+			try {
+				idTokenObject = JSONObjectUtils.getJSONObject(requestObject, "id_token");
+				
+			} catch (ParseException e) {
+			
+				throw new ResolveException("Invalid \"id_token\" member in OpenID Connect request object: " + e.getMessage(), e);
+			}
+		}
+		
+		IDTokenClaimsRequest idTokenClaimsRequest = new IDTokenClaimsRequest(rts, idTokenObject);
 		
 		
-		return null;
+		
+		// Resolve requested UserInfo claims
+		JSONObject userInfoObject = null;
+		
+		if (JSONObjectUtils.containsKey(requestObject, "userinfo")) {
+		
+			try {
+				userInfoObject = JSONObjectUtils.getJSONObject(requestObject, "userinfo");
+				
+			} catch (ParseException e) {
+			
+				throw new ResolveException("Invalid \"userinfo\" member in OpenID Connect request object: " + e.getMessage(), e);
+			}
+		}
+		
+		UserInfoClaimsRequest userInfoClaimsRequest = new UserInfoClaimsRequest(scope, userInfoObject);
+		
+		
+		return new ResolvedAuthorizationRequest(rts, clientID, redirectURI,
+		                                        nonce, state, display, prompt, idTokenHint,
+							idTokenClaimsRequest, userInfoClaimsRequest);
 	}
 }

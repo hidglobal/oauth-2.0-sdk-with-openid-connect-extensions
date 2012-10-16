@@ -20,9 +20,28 @@ import com.nimbusds.openid.connect.ParseException;
  * JSON object helper methods for parsing and typed retrieval of member values.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-16)
  */
 public class JSONObjectUtils {
+	
+	
+	/**
+	 * Returns {@code true} if the JSON object is defined and contains the 
+	 * specified key.
+	 *
+	 * @param jsonObject The JSON object to check. May be {@code null}.
+	 * @param key        The key to check. Must not be {@code null}.
+	 *
+	 * @return {@code true} if the JSON object is defined and contains the
+	 *         specified key, else {@code false}.
+	 */
+	public static boolean containsKey(final JSONObject jsonObject, final String key) {
+	
+		if (jsonObject != null && jsonObject.containsKey(key))
+			return true;
+		else 
+			return false;
+	}
 	
 	
 	/**
