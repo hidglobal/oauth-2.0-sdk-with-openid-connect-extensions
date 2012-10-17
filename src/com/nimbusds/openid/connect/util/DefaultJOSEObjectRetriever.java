@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.messages;
+package com.nimbusds.openid.connect.util;
 
 
 import java.io.BufferedReader;
@@ -14,10 +14,10 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * The default retriever of OpenID Connect request objects referenced by URL. 
- * Caching header directives are not honoured. This class is thread-safe.
+ * The default retriever of JOSE objects referenced by URL. Caching header 
+ * directives are not honoured. This class is thread-safe.
  *
- * <p>Depending on network condition retrieval of remote OpenID Connect request
+ * <p>Depending on network condition, retrieval of remote OpenID Connect request
  * objects may slow authorisation request processing significantly to affect 
  * smooth user experience. It is therefore recommended to set HTTP connect and
  * read timeouts.
@@ -25,7 +25,7 @@ import com.nimbusds.openid.connect.ParseException;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-17)
  */
-public class DefaultRequestObjectRetriever implements RequestObjectRetriever {
+public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 
 
 	/**
@@ -47,24 +47,24 @@ public class DefaultRequestObjectRetriever implements RequestObjectRetriever {
 	
 	
 	/**
-	 * Creates a new retriever of OpenID Connect request objects. The HTTP
-	 * connect and read timeouts are set to zero (none).
+	 * Creates a new retriever of JOSE objects. The HTTP connect and read 
+	 * timeouts are set to zero (none).
 	 */
-	public DefaultRequestObjectRetriever() {
+	public DefaultJOSEObjectRetriever() {
 	
 		this(0, 0);	
 	}
 	
 	
 	/**
-	 * Creates a new retriever of OpenID Connect request objects.
+	 * Creates a new retriever of JOSE objects.
 	 *
 	 * @param connectTimeout The HTTP connects timeout, in milliseconds, 
 	 *                       zero for none. Must not be negative.
 	 * @param readTimeout    The HTTP read timeout, in milliseconds, zero 
 	 *                       for none. Must not be negative.
 	 */
-	public DefaultRequestObjectRetriever(final int connectTimeout, final int readTimeout) {
+	public DefaultJOSEObjectRetriever(final int connectTimeout, final int readTimeout) {
 	
 		setConnectTimeout(connectTimeout);
 		setReadTimeout(readTimeout);
@@ -126,7 +126,7 @@ public class DefaultRequestObjectRetriever implements RequestObjectRetriever {
 	
 	
 	@Override	
-	public JOSEObject downloadRequestObject(final URL url)
+	public JOSEObject downloadJOSEObject(final URL url)
 		throws IOException, ParseException {
 		
 		HttpURLConnection con = (HttpURLConnection)url.openConnection();
@@ -156,7 +156,7 @@ public class DefaultRequestObjectRetriever implements RequestObjectRetriever {
 			
 		} catch (java.text.ParseException e) {
 		
-			throw new ParseException("Couldn't parse JOSE request object: " + e.getMessage(), e);
+			throw new ParseException("Couldn't parse JOSE object: " + e.getMessage(), e);
 		}
 	}
 }

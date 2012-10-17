@@ -1,11 +1,9 @@
-package com.nimbusds.openid.connect.messages;
+package com.nimbusds.openid.connect.util;
 
 
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
-
-import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jose.JOSEException;
@@ -22,8 +20,7 @@ import com.nimbusds.jose.PlainObject;
 
 
 /**
- * The default decoder of JOSE-encoded OpenID Connect request objects. This 
- * class is thread-safe.
+ * The default decoder of JOSE objects. This class is thread-safe.
  *
  * <p>Supports:
  *
@@ -34,12 +31,11 @@ import com.nimbusds.jose.PlainObject;
  * </ul>
  *
  * <p>Not supported: JWS-signed and then JWE-encrypted (nested) objects.
- * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-17)
  */
-public class DefaultRequestObjectDecoder implements RequestObjectDecoder {
+public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 
 
 	/**
@@ -55,20 +51,19 @@ public class DefaultRequestObjectDecoder implements RequestObjectDecoder {
 	
 	
 	/**
-	 * Creates a new decoder of JOSE-encoded OpenID Connect request objects.
-	 * It must be configured by adding one ore more JWS validators and/or
-	 * JWE decrypters.
+	 * Creates a new decoder of JOSE objects. It must then be configured by 
+	 * adding one ore more JWS validators and/or JWE decrypters.
 	 */
-	public DefaultRequestObjectDecoder() {
+	public DefaultJOSEObjectDecoder() {
 	
 		// Nothing to do
 	}
 	
 	
 	/**
-	 * Adds the specified JWS validator for decoding signed OpenID Connect
-	 * request objects. Its accepted JWS algorithms should match the ones
-	 * used to secure the expected OpenID Connect request objects.
+	 * Adds the specified JWS validator for decoding signed JOSE objects.
+	 * The JWS algorithms accepted by the validator should match the ones 
+	 * used to secure the expected JOSE objects.
 	 *
 	 * @param validator The JWS validator to add. Must be ready to validate
 	 *                  signed JOSE objects and not {@code null}.
@@ -94,9 +89,9 @@ public class DefaultRequestObjectDecoder implements RequestObjectDecoder {
 	
 	
 	/**
-	 * Adds the specified JWE decrypter for decoding encrypted OpenID 
-	 * Connect request objects. Its accepted JWE algorithms should match the
-	 * ones used to secure the expected OpenID Connect request objects.
+	 * Adds the specified JWE decrypter for decoding encrypted JOSE objects.
+	 * The JWE algorithms accepted by the decrypter should match the ones
+	 * used to secure the expected JOSE objects.
 	 *
 	 * @param decrypter The JWE decrypter to add. Must be ready to decrypt
 	 *                  encrypted JOSE objects and not {@code null}.
@@ -179,36 +174,30 @@ public class DefaultRequestObjectDecoder implements RequestObjectDecoder {
 
 
 	@Override
-	public JSONObject decodeRequestObject(final JOSEObject requestObject)
+	public Payload decodeJOSEObject(final JOSEObject joseObject)
 		throws JOSEException {
 		
-		Payload payload = null;
+		if (joseObject instanceof PlainObject) {
 		
-		if (requestObject instanceof PlainObject) {
-		
-			PlainObject plainObject = (PlainObject)requestObject;
+			PlainObject plainObject = (PlainObject)joseObject;
 			
-			payload = plainObject.getPayload();
+			return plainObject.getPayload();
 		}
-		else if (requestObject instanceof JWSObject) {
+		else if (joseObject instanceof JWSObject) {
 		
-			JWSObject jwsObject = (JWSObject)requestObject;
+			JWSObject jwsObject = (JWSObject)joseObject;
+			
+			return validate(jwsObject);
 		}
-		else if (requestObject instanceof JWEObject) {
+		else if (joseObject instanceof JWEObject) {
 		
-			JWEObject jweObject = (JWEObject)requestObject;
+			JWEObject jweObject = (JWEObject)joseObject;
+			
+			return decrypt(jweObject);
 		}
 		else {
 		
-			throw new JOSEException("Unexpected JOSE object type: " + requestObject.getClass());
+			throw new JOSEException("Unexpected JOSE object type: " + joseObject.getClass());
 		}
-			
-		
-		JSONObject jsonObject = payload.toJSONObject();
-		
-		if (jsonObject == null)
-			throw new JOSEException("The decoded JOSE object payload is not a JSON object");
-		
-		return jsonObject;
 	}
 }

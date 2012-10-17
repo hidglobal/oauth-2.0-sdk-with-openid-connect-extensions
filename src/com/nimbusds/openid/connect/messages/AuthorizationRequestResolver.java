@@ -9,6 +9,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObject;
+import com.nimbusds.jose.Payload;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
@@ -17,6 +18,9 @@ import com.nimbusds.openid.connect.ParseException;
 
 import com.nimbusds.openid.connect.claims.ClientID;
 
+import com.nimbusds.openid.connect.util.DefaultJOSEObjectRetriever;
+import com.nimbusds.openid.connect.util.JOSEObjectDecoder;
+import com.nimbusds.openid.connect.util.JOSEObjectRetriever;
 import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 
@@ -26,40 +30,41 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * final authorisation request parameters, ID Token and UserInfo claims.
  *
  * <p>To process OpenID Connect request objects the resolver must be supplied 
- * with a {@link RequestObjectRetriever retriever} for remote requests objects
- * and a {@link RequestObjectDecoder decoder} to handle their JOSE decoding and
- * JWS validation and/or JWE decryption.
+ * with a {@link com.nimbusds.openid.connect.util.JOSEObjectRetriever retriever} 
+ * for remote JOSE objects and a 
+ * {@link com.nimbusds.openid.connect.util.JOSEObjectDecoder decoder} to handle 
+ * their JOSE decoding and JWS validation and/or JWE decryption.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-16)
+ * @version $version$ (2012-10-17)
  */
 public class AuthorizationRequestResolver {
 
 
 	/**
-	 * Retriever for OpenID Connect request objects passed as URL.
+	 * Retriever for JOSE objects passed as URL.
 	 */
-	private RequestObjectRetriever retriever;
+	private JOSEObjectRetriever retriever;
 	
 	
 	/**
-	 * Decoder for JOSE-encoded OpenID Connect request objects.
+	 * Decoder for JOSE objects.
 	 */
-	private RequestObjectDecoder decoder;
+	private JOSEObjectDecoder decoder;
 	
 	
 	/**
 	 * Creates a new authorisation request resolver with a 
-	 * {@link DefaultRequestObjectRetriever default OpenID Connect request 
-	 * object retriever}.
+	 * {@link com.nimbusds.openid.connect.util.DefaultJOSEObjectRetriever
+	 * default JOSE object retriever}.
 	 *
 	 * @param decoder A configured JOSE decoder and JWS validator/JWE 
 	 *                decryptor for the optional OpenID Connect request
 	 *                objects. Must not be {@code null}.
 	 */
-	public AuthorizationRequestResolver(final RequestObjectDecoder decoder) {
+	public AuthorizationRequestResolver(final JOSEObjectDecoder decoder) {
 	
-		this(new DefaultRequestObjectRetriever(), decoder);
+		this(new DefaultJOSEObjectRetriever(), decoder);
 	}
 	
 	
@@ -73,32 +78,31 @@ public class AuthorizationRequestResolver {
 	 *                  decryptor for the optional OpenID Connect request
 	 *                  objects. Must not be {@code null}.
 	 */
-	public AuthorizationRequestResolver(final RequestObjectRetriever retriever,
-	                                    final RequestObjectDecoder decoder) {
+	public AuthorizationRequestResolver(final JOSEObjectRetriever retriever,
+	                                    final JOSEObjectDecoder decoder) {
 					     
 		this.retriever = retriever;
-		
 		this.decoder = decoder;
 	}
 	
 	
 	/**
-	 * Gets the configured OpenID Connect request object retriever.
+	 * Gets the configured JOSE object retriever.
 	 *
-	 * @return The request object retriever.
+	 * @return The JOSE object retriever.
 	 */
-	public RequestObjectRetriever getRequestObjectRetriever() {
+	public JOSEObjectRetriever getJOSEObjectRetriever() {
 	
 		return retriever;
 	}
 	
 	
 	/**
-	 * Gets the configured OpenID Connect request object decoder.
+	 * Gets the configured JOSE object decoder.
 	 *
-	 * @return The request object decoder.
+	 * @return The JOSE object decoder.
 	 */
-	public RequestObjectDecoder getRequestObjectDecoder() {
+	public JOSEObjectDecoder getJOSEObjectDecoder() {
 	
 		return decoder;
 	}
@@ -120,7 +124,7 @@ public class AuthorizationRequestResolver {
 		throws ResolveException {
 	
 		try {
-			return retriever.downloadRequestObject(url);
+			return retriever.downloadJOSEObject(url);
 			
 		} catch (IOException e) {
 
@@ -149,13 +153,22 @@ public class AuthorizationRequestResolver {
 	private JSONObject decodeRequestObject(final JOSEObject joseObject)
 		throws ResolveException {
 		
+		Payload payload = null;
+		
 		try {
-			return decoder.decodeRequestObject(joseObject);
+			payload = decoder.decodeJOSEObject(joseObject);
 				
 		} catch (JOSEException e) {
 		
 			throw new ResolveException("Couldn't decode/verify JOSE encoded OpenID Connect request object: " + e.getMessage(), e);
 		}
+		
+		JSONObject jsonObject = payload.toJSONObject();
+		
+		if (jsonObject == null)
+			throw new ResolveException("JOSE object payload not a valid JSON object");
+		
+		return jsonObject;
 	}
 	
 	

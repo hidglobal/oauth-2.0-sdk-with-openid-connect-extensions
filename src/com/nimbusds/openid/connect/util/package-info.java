@@ -1,5 +1,5 @@
 /**
- * Utility classes.
+ * Utility interfaces and classes.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ ($version-date$)
