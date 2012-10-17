@@ -6,8 +6,6 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jose.JOSEException;
 
-import com.nimbusds.openid.connect.ParseException;
-
 
 /**
  * Decoder of JOSE-encoded OpenID Connect request objects. If the request
