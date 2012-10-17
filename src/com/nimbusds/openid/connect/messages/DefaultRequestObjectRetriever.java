@@ -14,8 +14,8 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * Simple retriever of OpenID Connect request objects referenced by URL. This
- * class is thread safe.
+ * The default retriever of OpenID Connect request objects referenced by URL. 
+ * Caching header directives are not honoured. This class is thread-safe.
  *
  * <p>Depending on network condition retrieval of remote OpenID Connect request
  * objects may slow authorisation request processing significantly to affect 
