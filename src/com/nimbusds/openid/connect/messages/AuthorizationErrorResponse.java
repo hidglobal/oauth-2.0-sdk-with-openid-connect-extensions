@@ -21,7 +21,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 
 /**
- * Authorisation error response.
+ * Authorisation error response. This class is immutable.
  *
  * <p>Legal error codes:
  *
@@ -62,11 +62,11 @@ import com.nimbusds.openid.connect.util.URLUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.4.
- *     <li>draft-ietf-oauth-v2-26, section 4.1.2.1 and 4.2.2.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 4.1.2.1 and 4.2.2.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-21)
  */
 public class AuthorizationErrorResponse implements ErrorResponse {
 
@@ -112,33 +112,33 @@ public class AuthorizationErrorResponse implements ErrorResponse {
 	/**
 	 * The redirect URI.
 	 */
-	private URL redirectURI;
+	private final URL redirectURI;
 	
 	 
 	/**
 	 * The error code.
 	 */
-	private ErrorCode errorCode;
+	private final ErrorCode errorCode;
 	
 	
 	/**
 	 * The URL of a web page that includes additional information about the
 	 * error.
 	 */
-	private URL errorURI = null;
+	private final URL errorURI;
 	
 	
 	/**
 	 * The response type set, used to determine redirect URL composition. If
 	 * unknown {@code null}.
 	 */
-	private ResponseTypeSet responseTypeSet;
+	private final ResponseTypeSet responseTypeSet;
 	
 	
 	/**
 	 * The state parameter to be echoed back to the client.
 	 */
-	private State state = null;
+	private final State state;
 	
 	
 	/**
@@ -201,18 +201,14 @@ public class AuthorizationErrorResponse implements ErrorResponse {
 	}
 	
 
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public ErrorCode getErrorCode() {
 	
 		return errorCode;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public URL getErrorURI() {
 	
 		return errorURI;
@@ -293,9 +289,7 @@ public class AuthorizationErrorResponse implements ErrorResponse {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
 	
