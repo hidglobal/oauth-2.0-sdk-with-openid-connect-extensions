@@ -57,15 +57,15 @@ public class AuthorizationResponse implements SuccessResponse {
 	
 	
 	/**
-	 * The UserInfo access token, if requested.
-	 */
-	private AccessToken accessToken = null;
-	
-	
-	/**
 	 * The ID token, if requested.
 	 */
 	private JWT idToken = null;
+	
+	
+	/**
+	 * The UserInfo access token, if requested.
+	 */
+	private AccessToken accessToken = null;
 	
 	
 	/**
@@ -148,29 +148,6 @@ public class AuthorizationResponse implements SuccessResponse {
 	
 	
 	/**
-	 * Sets the requested UserInfo access token.
-	 *
-	 * @param accessToken The UserInfo access token, {@code null} if not 
-	 *                    requested.
-	 */
-	public void setAccessToken(final AccessToken accessToken) {
-	
-		this.accessToken = accessToken;
-	}
-	
-	
-	/**
-	 * Gets the requested UserInfo access token.
-	 *
-	 * @return The UserInfo access token, {@code null} if not requested.
-	 */
-	public AccessToken getAccessToken() {
-	
-		return accessToken;
-	}
-	
-	
-	/**
 	 * Sets the requested ID token.
 	 *
 	 * @param idToken The ID token (ready for output), {@code null} if not 
@@ -191,6 +168,29 @@ public class AuthorizationResponse implements SuccessResponse {
 	public JWT getIDToken() {
 	
 		return idToken;
+	}
+	
+	
+	/**
+	 * Sets the requested UserInfo access token.
+	 *
+	 * @param accessToken The UserInfo access token, {@code null} if not 
+	 *                    requested.
+	 */
+	public void setAccessToken(final AccessToken accessToken) {
+	
+		this.accessToken = accessToken;
+	}
+	
+	
+	/**
+	 * Gets the requested UserInfo access token.
+	 *
+	 * @return The UserInfo access token, {@code null} if not requested.
+	 */
+	public AccessToken getAccessToken() {
+	
+		return accessToken;
 	}
 	
 	
