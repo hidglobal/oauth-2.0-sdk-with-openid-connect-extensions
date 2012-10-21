@@ -29,21 +29,21 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-10-21)
  */
 public class AuthorizationResponse implements SuccessResponse {
 
 
 	/**
-	 * The redirecton URI.
+	 * The redirect URI.
 	 */
-	private URL redirectURI;
+	private final URL redirectURI;
 	
 	
 	/**
 	 * The authorisation code, if requested.
 	 */
-	private AuthorizationCode code;
+	private AuthorizationCode code = null;
 	
 	
 	/**
