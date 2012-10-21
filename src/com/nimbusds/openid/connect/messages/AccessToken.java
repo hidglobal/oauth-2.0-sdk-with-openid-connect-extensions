@@ -5,16 +5,17 @@ import com.nimbusds.openid.connect.ParseException;
 
 
 /**
- * OAuth 2.0 access token. Supports only {@link #TYPE bearer type} tokens.
+ * OAuth 2.0 access token. Supports only {@link #TYPE bearer type} tokens. This
+ * class is immutable.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>draft-ietf-oauth-v2-26, section 1.4 and section 4.2.2.
+ *     <li>OAuth 2.0 (RFC 6749), section 1.4 and section 4.2.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-21)
  */
 public class AccessToken {
 
@@ -28,7 +29,7 @@ public class AccessToken {
 	/**
 	 * The access token value.
 	 */
-	private String value;
+	private final String value;
 	
 	
 	/**
@@ -44,7 +45,8 @@ public class AccessToken {
 	
 	
 	/**
-	 * Creates a new minimal OAuth 2.0 access token.
+	 * Creates a new minimal OAuth 2.0 access token. The optional expiration
+	 * and scope are left undefined.
 	 *
 	 * @param value The access token value. Must not be {@code null} or
 	 *              empty string.
@@ -54,10 +56,28 @@ public class AccessToken {
 	 */
 	public AccessToken(final String value) {
 	
+		this(value, -1l, null);
+	}
+	
+	
+	/**
+	 * Creates a new OAuth 2.0 access token.
+	 *
+	 * @param value The access token value. Must not be {@code null} or
+	 *              empty string.
+	 * @param exp   The expiration in seconds, -1 if not specified.
+	 * @param scope The scope, {@code null} if not specified.
+	 */
+	public AccessToken(final String value, final long exp, final Scope scope) {
+	
 		if (value == null || value.trim().isEmpty())
 			throw new IllegalArgumentException("The access token value must not be null or empty string");
 			
 		this.value = value;
+		
+		this.exp = exp;
+		
+		this.scope = scope;
 	}
 	
 	
@@ -84,17 +104,6 @@ public class AccessToken {
 	
 	
 	/**
-	 * Sets the optional expiration time.
-	 *
-	 * @param exp The expiration in seconds, -1 if not specified.
-	 */
-	public void setExpiration(final long exp) {
-	
-		this.exp = exp;
-	}
-	
-	
-	/**
 	 * Gets the optional scope.
 	 *
 	 * @return The scope, {@code null} if not specified.
@@ -106,18 +115,7 @@ public class AccessToken {
 	
 	
 	/**
-	 * Sets the optional scope.
-	 *
-	 * @param scope The scope, {@code null} if not specified.
-	 */
-	public void setScope(final Scope scope) {
-	
-		this.scope = scope;
-	}
-	
-	
-	/**
-	 * Returns the HTTP Authorization header for this access token.
+	 * Returns the HTTP Authorization header value for this access token.
 	 *
 	 * <p>Example:
 	 *
@@ -125,7 +123,7 @@ public class AccessToken {
 	 * Authorization: Bearer eyJhbGciOiJIUzI1NiJ9
 	 * </pre>
 	 *
-	 * @return The HTTP Authorization header for this access token.
+	 * @return The HTTP Authorization header value for this access token.
 	 */
 	public String toAuthorizationHeader(){
 	
