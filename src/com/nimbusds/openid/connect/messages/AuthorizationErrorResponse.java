@@ -68,7 +68,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-21)
  */
-public class AuthorizationErrorResponse implements ErrorResponse {
+public final class AuthorizationErrorResponse implements ErrorResponse {
 
 
 	/**
