@@ -20,7 +20,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 
 /**
- * Authorisation response.
+ * Authorisation response. This class is immutable.
  *
  * <p>Example HTTP response:
  *
@@ -53,42 +53,58 @@ public class AuthorizationResponse implements SuccessResponse {
 	/**
 	 * The authorisation code, if requested.
 	 */
-	private AuthorizationCode code = null;
+	private final AuthorizationCode code;
 	
 	
 	/**
 	 * The ID token, if requested.
 	 */
-	private JWT idToken = null;
+	private final JWT idToken;
 	
 	
 	/**
 	 * The UserInfo access token, if requested.
 	 */
-	private AccessToken accessToken = null;
+	private final AccessToken accessToken;
 	
 	
 	/**
 	 * Optional state, to be echoed back to the client.
 	 */
-	private State state = null;
+	private final State state;
 	
 	
 	/**
-	 * Creates a new authorisation response. It must then be set with the
-	 * requested {@link #setAuthorizationCode code}, 
-	 * {@link #setAccessToken UserInfo access token} and / or 
-	 * {@link #setIDToken ID token}.
+	 * Creates a new authorisation response.
 	 *
 	 * @param redirectURI The requested redirect URI. Must not be 
 	 *                    {@code null}.
+	 * @param code        The authorisation code, {@code null} if not 
+	 *                    requested.
+	 * @param idToken     The ID token (ready for output), {@code null} if 
+	 *                    not requested.
+	 * @param accessToken The UserInfo access token, {@code null} if not 
+	 *                    requested.
+	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthorizationResponse(final URL redirectURI) {
+	public AuthorizationResponse(final URL redirectURI,
+	                             final AuthorizationCode code,
+				     final JWT idToken,
+				     final AccessToken accessToken,
+				     final State state) {
 	
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirect URI must not be null");
 		
 		this.redirectURI = redirectURI;
+		
+		this.code = code;
+		
+		this.idToken = idToken;
+		
+		this.accessToken = accessToken;
+		
+		this.state = state;
 	}
 	
 	
@@ -126,17 +142,6 @@ public class AuthorizationResponse implements SuccessResponse {
 	
 	
 	/**
-	 * Sets the requested authorisation code.
-	 *
-	 * @param code The authorisation code, {@code null} if not requested.
-	 */
-	public void setAuthorizationCode(final AuthorizationCode code) {
-	
-		this.code = code;
-	}
-	
-	
-	/**
 	 * Gets the requested authorisation code.
 	 *
 	 * @return The authorisation code, {@code null} if not requested.
@@ -144,18 +149,6 @@ public class AuthorizationResponse implements SuccessResponse {
 	public AuthorizationCode getAuthorizationCode() {
 	
 		return code;
-	}
-	
-	
-	/**
-	 * Sets the requested ID token.
-	 *
-	 * @param idToken The ID token (ready for output), {@code null} if not 
-	 *                requested.
-	 */
-	public void setIDToken(final JWT idToken) {
-	
-		this.idToken = idToken;
 	}
 	
 	
@@ -172,18 +165,6 @@ public class AuthorizationResponse implements SuccessResponse {
 	
 	
 	/**
-	 * Sets the requested UserInfo access token.
-	 *
-	 * @param accessToken The UserInfo access token, {@code null} if not 
-	 *                    requested.
-	 */
-	public void setAccessToken(final AccessToken accessToken) {
-	
-		this.accessToken = accessToken;
-	}
-	
-	
-	/**
 	 * Gets the requested UserInfo access token.
 	 *
 	 * @return The UserInfo access token, {@code null} if not requested.
@@ -191,18 +172,6 @@ public class AuthorizationResponse implements SuccessResponse {
 	public AccessToken getAccessToken() {
 	
 		return accessToken;
-	}
-	
-	
-	/**
-	 * Sets the optional state, if requested to be echoed back to the 
-	 * client.
-	 *
-	 * @param state The state, {@code null} if not requested.
-	 */
-	public void setState(final State state) {
-	
-		this.state = state;
 	}
 	
 	
@@ -404,16 +373,20 @@ public class AuthorizationResponse implements SuccessResponse {
 		if (params == null)
 			throw new ParseException("Missing or invalid authorization response parameters");
 		
-		AuthorizationResponse response = new AuthorizationResponse(url);
 		
 		// Parse code parameter
+		
+		AuthorizationCode code = null;
+		
 		if (params.get("code") != null)
-			response.setAuthorizationCode(new AuthorizationCode(params.get("code")));
+			code = new AuthorizationCode(params.get("code"));
+		
 		
 		// Parse id_token parameter
-		if (params.get("id_token") != null) {
 		
-			JWT idToken = null;
+		JWT idToken = null;
+		
+		if (params.get("id_token") != null) {
 			
 			try {
 				idToken = JWTParser.parse(params.get("id_token"));
@@ -422,11 +395,13 @@ public class AuthorizationResponse implements SuccessResponse {
 			
 				throw new ParseException("Invalid ID Token JWT: " + e.getMessage(), e);
 			}
-			
-			response.setIDToken(idToken);
 		}
 		
+		
 		// Parse access_token parameters
+		
+		AccessToken accessToken = null;
+		
 		if (params.get("access_token") != null) {
 		
 			String accessTokenValue = params.get("access_token");
@@ -457,18 +432,19 @@ public class AuthorizationResponse implements SuccessResponse {
 				}
 			}
 			
-			AccessToken accessToken = new AccessToken(accessTokenValue, exp, scope);
-			
-			response.setAccessToken(accessToken);
+			accessToken = new AccessToken(accessTokenValue, exp, scope);
 		}
 		
 		
 		// Parse state parameter
+		
+		State state = null;
+		
 		if (params.get("state") != null) {
 		
-			response.setState(new State(params.get("state")));
+			state = new State(params.get("state"));
 		}
 		
-		return response;
+		return new AuthorizationResponse(url, code, idToken, accessToken, state);
 	}
 }
