@@ -343,6 +343,7 @@ public class AuthorizationResponse implements SuccessResponse {
 	 * @throws SerializeException If the response couldn't be serialised to
 	 *                            an HTTP response.
 	 */
+	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
 	
