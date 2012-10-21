@@ -26,9 +26,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 
 /**
- * Authorisation request.
- *
- * <p>This class is not thread-safe.
+ * Authorisation request. This class is immutable.
  *
  * <p>Example HTTP request:
  *

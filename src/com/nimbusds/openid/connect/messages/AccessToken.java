@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-21)
  */
-public class AccessToken {
+public final class AccessToken {
 
 	
 	/**

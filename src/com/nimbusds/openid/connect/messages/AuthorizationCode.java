@@ -3,24 +3,24 @@ package com.nimbusds.openid.connect.messages;
 
 
 /**
- * OAuth 2.0 authorisation code.
+ * OAuth 2.0 authorisation code. This class is immutable.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>draft-ietf-oauth-v2-26, section 1.3.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 1.3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-21)
  */
-public class AuthorizationCode {
+public final class AuthorizationCode {
 
 
 	/**
 	 * The code value.
 	 */
-	private String value;
+	private final String value;
 	
 	
 	/**
@@ -59,6 +59,7 @@ public class AuthorizationCode {
 	 *
 	 * @return The authorisation code value.
 	 */
+	@Override
 	public String toString() {
 	
 		return value;

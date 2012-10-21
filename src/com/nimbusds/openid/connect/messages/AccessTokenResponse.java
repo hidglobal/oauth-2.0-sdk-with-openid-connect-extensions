@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-10-21)
  */
 public class AccessTokenResponse implements SuccessResponse {
 
@@ -198,10 +198,15 @@ public class AccessTokenResponse implements SuccessResponse {
 		if (! tokenType.equals(AccessToken.TYPE))
 			throw new ParseException("The access token type must be \"" + AccessToken.TYPE + "\"");
 		
-		AccessToken accessToken = new AccessToken(JSONObjectUtils.getString(jsonObject, "access_token"));
+		String accessTokenValue = JSONObjectUtils.getString(jsonObject, "access_token");
+		
+		long exp = -1;
 		
 		if (jsonObject.containsKey("expires_in"))
-			accessToken.setExpiration(JSONObjectUtils.getInt(jsonObject, "expires_in"));
+			exp = JSONObjectUtils.getInt(jsonObject, "expires_in");
+		
+		
+		AccessToken accessToken = new AccessToken(accessTokenValue, exp, null);
 		
 		
 		JWT idToken = null;

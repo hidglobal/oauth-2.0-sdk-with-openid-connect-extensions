@@ -22,10 +22,20 @@ import com.nimbusds.openid.connect.util.URLUtils;
 /**
  * Authorisation response.
  *
+ * <p>Example HTTP response:
+ *
+ * <pre>
+ * HTTP/1.1 302 Found
+ * Location: https://client.example.org/cb?
+ * code=Qcb0Orv1zh30vL1MPRsbm-diHiMwcLyZvn1arpZv-Jxf_11jnpEX3Tgfvk
+ * &state=af0ifjsldkj
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.3.
+ *     <li>OpenID Connect Standard 1.0, section 2.3.5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -418,12 +428,12 @@ public class AuthorizationResponse implements SuccessResponse {
 		// Parse access_token parameters
 		if (params.get("access_token") != null) {
 		
-			AccessToken accessToken = new AccessToken(params.get("access_token"));
+			String accessTokenValue = params.get("access_token");
+		
+			long exp = -1;
 			
 			if (params.get("expires_in") != null) {
-			
-				long exp = -1;
-			
+				
 				try {
 					exp = new Long(params.get("expires_in"));
 					
@@ -431,20 +441,22 @@ public class AuthorizationResponse implements SuccessResponse {
 				
 					throw new ParseException("Invalid expiration time: " + e.getMessage(), e);
 				}
-				
-				accessToken.setExpiration(exp);
 			}
+			
+			Scope scope = null;
 			
 			if (params.get("scope") != null) {
 			
 				try {
-					accessToken.setScope(Scope.parseStrict(params.get("scope")));
+					scope = Scope.parseStrict(params.get("scope"));
 					
 				} catch (ParseException e) {
 				
 					throw new ParseException("Invalid UserInfo scope: " + e.getMessage(), e);
 				}
 			}
+			
+			AccessToken accessToken = new AccessToken(accessTokenValue, exp, scope);
 			
 			response.setAccessToken(accessToken);
 		}
