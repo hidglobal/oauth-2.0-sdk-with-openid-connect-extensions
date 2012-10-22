@@ -7,7 +7,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
+import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests authorisation response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-29)
+ * @version $version$ (2012-10-22)
  */
 public class AuthorizationResponseTest extends TestCase {
 	
@@ -40,19 +40,19 @@ public class AuthorizationResponseTest extends TestCase {
 	
 	
 	public void setUp()
-		throws MalformedURLException, JWTException {
+		throws MalformedURLException, java.text.ParseException {
 		
 		ABS_REDIRECT_URL = new URL("https://client.example.com/cb");
 		
 		REL_REDIRECT_URL = new URL("https://");
 		
-		ID_TOKEN = JWT.parse(ID_TOKEN_STRING);
+		ID_TOKEN = JWTParser.parse(ID_TOKEN_STRING);
 	}
 	
 	
 	public void testConstructorMinimal() {
 	
-		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL);
+		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL, null, null, null, null);
 		
 		assertEquals(ABS_REDIRECT_URL.toString(), resp.getRedirectURI().toString());
 		
@@ -82,14 +82,12 @@ public class AuthorizationResponseTest extends TestCase {
 	
 	
 	public void testSerializeCode() {
-	
-		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL);
 		
 		AuthorizationCode code = new AuthorizationCode("Qcb0Orv1zh30vL1MPRsbm-diHiMwcLyZvn1arpZv-Jxf_11jnpEX3Tgfvk");
-		resp.setAuthorizationCode(code);
 		
 		State state = new State("af0ifjsldkj");
-		resp.setState(state);
+		
+		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL, code, null, null, state);
 		
 		
 		ResponseTypeSet rts = resp.getResponseTypeSet();
@@ -150,16 +148,12 @@ public class AuthorizationResponseTest extends TestCase {
 	
 	
 	public void testSerializeTokenAndIDToken() {
-	
-		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL);
 		
 		AccessToken token = new AccessToken("jHkWEdUXMU1BwAsC4vtUsZwnNvTIxEl0z9K3vx5KF0Y");
-		resp.setAccessToken(token);
-		
-		resp.setIDToken(ID_TOKEN);
 				
 		State state = new State("af0ifjsldkj");
-		resp.setState(state);
+		
+		AuthorizationResponse resp = new AuthorizationResponse(ABS_REDIRECT_URL, null, ID_TOKEN, token, state);
 		
 		
 		ResponseTypeSet rts = resp.getResponseTypeSet();
