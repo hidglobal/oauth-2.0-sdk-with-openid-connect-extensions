@@ -82,7 +82,13 @@ public class AccessTokenResponseTest extends TestCase {
 			fail(e.getMessage());
 		}
 		
-		System.out.println(idToken.getClaimsSet().toJSONObject().toString());
+		try {
+			System.out.println(idToken.getClaimsSet().toJSONObject().toString());
+			
+		} catch (Exception e) {
+		
+			fail(e.getMessage());
+		}
 		
 		RefreshToken refreshToken = atr.getRefreshToken();
 		assertEquals(refreshTokenString, refreshToken.getValue());

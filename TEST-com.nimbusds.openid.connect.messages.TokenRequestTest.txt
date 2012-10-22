@@ -1,0 +1,11 @@
+Testsuite: com.nimbusds.openid.connect.messages.TokenRequestTest
+Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.03 sec
+------------- Standard Output ---------------
+Access Token request: Client ID: s6BhdRkqt3
+Access Token request: Client secret: gX1fBat3bV
+Access Token request: Client ID: s6BhdRkqt3
+Access Token request: Client secret: gX1fBat3bV
+------------- ---------------- ---------------
+
+Testcase: testAccessTokenRequestWithBasicSecret took 0.028 sec
+Testcase: testRefreshTokenRequestWithBasicSecret took 0.002 sec

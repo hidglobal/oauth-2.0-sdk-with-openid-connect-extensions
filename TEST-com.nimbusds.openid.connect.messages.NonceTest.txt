@@ -1,0 +1,9 @@
+Testsuite: com.nimbusds.openid.connect.messages.NonceTest
+Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.005 sec
+------------- Standard Output ---------------
+Random nonce (default size): Ca0eXh9v
+Random nonce (16 chars): ZbAeezNZQxJBPPyL
+------------- ---------------- ---------------
+
+Testcase: testGeneration took 0.003 sec
+Testcase: testGenerationVarLength took 0.001 sec

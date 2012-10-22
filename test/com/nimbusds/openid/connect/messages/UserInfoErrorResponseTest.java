@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests UserInfo error response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-03)
+ * @version $version$ (2012-10-22)
  */
 public class UserInfoErrorResponseTest extends TestCase {
 	
@@ -123,9 +123,10 @@ public class UserInfoErrorResponseTest extends TestCase {
 		new UserInfoErrorResponse(null, ErrorCode.INVALID_REQUEST, null);
 		new UserInfoErrorResponse(null, ErrorCode.INVALID_TOKEN, null);
 		new UserInfoErrorResponse(null, ErrorCode.INSUFFICIENT_SCOPE, null);
+		new UserInfoErrorResponse(null, ErrorCode.INVALID_SCHEMA, null);
 		
 		try {
-			new UserInfoErrorResponse(null, ErrorCode.INVALID_SCHEMA, null);
+			new UserInfoErrorResponse(null, ErrorCode.ACCESS_DENIED, null);
 			
 			fail("Failed to raise exception");
 			
@@ -143,7 +144,8 @@ public class UserInfoErrorResponseTest extends TestCase {
 		assertTrue(codes.contains(ErrorCode.INVALID_REQUEST));
 		assertTrue(codes.contains(ErrorCode.INVALID_TOKEN));
 		assertTrue(codes.contains(ErrorCode.INSUFFICIENT_SCOPE));
+		assertTrue(codes.contains(ErrorCode.INVALID_SCHEMA));
 		
-		assertEquals(3, codes.size());
+		assertEquals(4, codes.size());
 	}
 }

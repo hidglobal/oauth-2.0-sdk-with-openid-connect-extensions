@@ -13,7 +13,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests request type parsing and serialisation.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-03-23)
+ * @version $version$ (2012-10-22)
  */
 public class ResponseTypeSetTest extends TestCase {
 	
@@ -37,6 +37,9 @@ public class ResponseTypeSetTest extends TestCase {
 		
 		// order is important
 		assertEquals("code id_token", out);
+		
+		assertTrue(set.impliesCodeFlow());
+		assertFalse(set.impliesImplicitFlow());
 	}
 	
 	
@@ -51,6 +54,9 @@ public class ResponseTypeSetTest extends TestCase {
 		
 		// order is important
 		assertEquals("code token", out);
+		
+		assertTrue(set.impliesCodeFlow());
+		assertFalse(set.impliesImplicitFlow());
 	}
 	
 	
@@ -64,7 +70,10 @@ public class ResponseTypeSetTest extends TestCase {
 		String out = set.toString();
 		
 		// order is important
-		assertEquals("id_token token", out);
+		assertEquals("token id_token", out);
+		
+		assertFalse(set.impliesCodeFlow());
+		assertTrue(set.impliesImplicitFlow());
 	}
 	
 	
@@ -79,7 +88,10 @@ public class ResponseTypeSetTest extends TestCase {
 		String out = set.toString();
 		
 		// order is important
-		assertEquals("code id_token token", out);
+		assertEquals("code token id_token", out);
+		
+		assertTrue(set.impliesCodeFlow());
+		assertFalse(set.impliesImplicitFlow());
 	}
 	
 	

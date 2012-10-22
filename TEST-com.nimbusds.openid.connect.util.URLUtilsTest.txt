@@ -1,0 +1,10 @@
+Testsuite: com.nimbusds.openid.connect.util.URLUtilsTest
+Tests run: 7, Failures: 0, Errors: 0, Time elapsed: 0.014 sec
+
+Testcase: testGetBaseURLSame took 0.002 sec
+Testcase: testGetBaseURLTrim took 0 sec
+Testcase: testJavaURLDecoder took 0.001 sec
+Testcase: testSerializeParameters took 0.001 sec
+Testcase: testSerializeParametersNull took 0 sec
+Testcase: testParseParameters took 0.002 sec
+Testcase: testParseParametersNull took 0 sec

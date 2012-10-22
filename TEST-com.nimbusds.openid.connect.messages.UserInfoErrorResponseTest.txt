@@ -1,0 +1,14 @@
+Testsuite: com.nimbusds.openid.connect.messages.UserInfoErrorResponseTest
+Tests run: 4, Failures: 0, Errors: 1, Time elapsed: 0.036 sec
+
+Testcase: testConstructorForObservingLegalErrorCodes took 0.005 sec
+	Caused an ERROR
+Illegal error code
+java.lang.IllegalArgumentException: Illegal error code
+	at com.nimbusds.openid.connect.messages.OAuthBearerTokenErrorResponse.<init>(Unknown Source)
+	at com.nimbusds.openid.connect.messages.UserInfoErrorResponse.<init>(Unknown Source)
+	at com.nimbusds.openid.connect.messages.UserInfoErrorResponseTest.testConstructorForObservingLegalErrorCodes(Unknown Source)
+
+Testcase: testLegalErrorCodesGetter took 0.001 sec
+Testcase: testConstuctorMinimal took 0.028 sec
+Testcase: testConstuctorFull took 0.001 sec
