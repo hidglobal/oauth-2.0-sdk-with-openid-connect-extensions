@@ -6,7 +6,6 @@ import junit.framework.TestCase;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTException;
 
 import com.nimbusds.openid.connect.ParseException;
 import com.nimbusds.openid.connect.SerializeException;
@@ -19,7 +18,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests access token response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-19)
+ * @version $version$ (2012-10-22)
  */
 public class AccessTokenResponseTest extends TestCase {
 	
@@ -78,7 +77,7 @@ public class AccessTokenResponseTest extends TestCase {
 			serializedJWT = idToken.serialize();
 			// assertEquals(idTokenString, serializedJWT);
 			
-		} catch (JWTException e) {
+		} catch (IllegalStateException e) {
 			
 			fail(e.getMessage());
 		}
