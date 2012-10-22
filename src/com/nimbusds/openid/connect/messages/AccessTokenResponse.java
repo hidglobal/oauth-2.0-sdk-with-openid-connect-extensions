@@ -16,7 +16,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 
 /**
- * Access token response.
+ * Access token response. This class is immutable.
  *
  * <p>Example HTTP response:
  *
@@ -31,10 +31,15 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *   "token_type"    : "Bearer",
  *   "refresh_token" : "8xLOxBtZp8",
  *   "expires_in"    : 3600,
- *   "id_token"      : "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOl
- * wvXC9zZXJ2ZXIuZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMjQ4Mjg5NzYxMDAxIiwiYXVkIj
- * oiaHR0cDpcL1wvY2xpZW50LmV4YW1wbGUuY29tIiwiZXhwIjoxMzExMjgxOTcwfQ.eDesUD0
- * vzDH3T1G3liaTNOrfaeWYjuRCEPNXVtaazNQ"
+ *   "id_token"      : "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9zZXJ2Z
+ *    XIuZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMjQ4Mjg5NzYxMDAxIiwiYXVkIjoic
+ *    zZCaGRSa3F0MyIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxMzExMjgxO
+ *    TcwLCJpYXQiOjEzMTEyODA5NzB9.RgXxzppVvn1EjUiV3LIZ19SyhdyREe_2jJjW
+ *    5EC8XjNuJfe7Dte8YxRXxssJ67N8MT9mvOI3HOHm4whNx5FCyemyCGyTLHODCeAr
+ *    _id029-4JP0KWySoan1jmT7vbGHhu89-l9MTdaEvu7pNZO7DHGwqnMWRe8hdG7jU
+ *    ES4w4ReQTygKwXVVOaiGoeUrv6cZdbyOnpGlRlHaiOsv_xMunNVJtn5dLz-0zZwV
+ *    ftKVpFuc1pGaVsyZsOtkT32E4c6MDHeCvIDlR5ESC0ct8BLvGJDB5954MjCR4_X2
+ *    GAEHonKw4NF8wTmUFvhslYXmjRNFs21Byjn3jNb7lSa3MBfVsw"
  * }
  * </pre>
  *
@@ -42,31 +47,32 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.3.
- *     <li>draft-ietf-oauth-v2-26, section 4.1.4 and 5.1.
+ *     <li>OpenID Connect Standard 1.0, section 3.1.2.
+ *     <li>OAuth 2.0 (RFC 6749), sections 4.1.4 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-21)
+ * @version $version$ (2012-10-22)
  */
-public class AccessTokenResponse implements SuccessResponse {
+public final class AccessTokenResponse implements SuccessResponse {
 
 
 	/**
 	 * The access token.
 	 */
-	private AccessToken accessToken;
+	private final AccessToken accessToken;
 	
 	
 	/**
 	 * Optional ID Token serialised to a JWT.
 	 */
-	private JWT idToken = null;
+	private final JWT idToken;
 	
 	
 	/**
 	 * Optional refresh token.
 	 */
-	private RefreshToken refreshToken = null;
+	private final RefreshToken refreshToken;
 	
 	
 	/**
@@ -128,6 +134,18 @@ public class AccessTokenResponse implements SuccessResponse {
 	/**
 	 * Returns the JSON object representing this access token response.
 	 *
+	 * <p>Example JSON object:
+	 *
+	 * <pre>
+	 * {
+	 *   "access_token" : "SlAV32hkKG",
+	 *   "token_type"   : "Bearer",
+	 *   "refresh_token": "8xLOxBtZp8",
+	 *   "expires_in"   : 3600,
+	 *   "id_token"     : "eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso"
+	 * }
+	 * </pre>
+	 *
 	 * @return The JSON object.
 	 *
 	 * @throws SerializeException If this access token response couldn't be
@@ -162,9 +180,7 @@ public class AccessTokenResponse implements SuccessResponse {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
 	
