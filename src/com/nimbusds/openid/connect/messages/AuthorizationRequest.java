@@ -48,9 +48,9 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
+ * @version $version$ (2012-10-22)
  */
-public class AuthorizationRequest implements Request {
+public final class AuthorizationRequest implements Request {
 
 
 	/**
