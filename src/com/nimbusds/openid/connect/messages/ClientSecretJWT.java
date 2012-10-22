@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.messages;
 
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,8 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 /**
  * Client secret JWT authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#CLIENT_SECRET_JWT}.
+ * {@link ClientAuthentication.Method#CLIENT_SECRET_JWT}. This class is 
+ * immutable.
  *
  * <p>Supported signature JSON Web Algorithms (JWAs) by this implementation:
  *
@@ -34,14 +36,15 @@ import com.nimbusds.openid.connect.util.URLUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>draft-ietf-oauth-assertions-03
- *     <li>draft-jones-oauth-jwt-bearer-04
+ *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-06)
+ *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
+ *         (draft-ietf-oauth-jwt-bearer-02).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-10-22)
  */
-public class ClientSecretJWT extends JWTClientAuthentication {
+public final class ClientSecretJWT extends JWTClientAuthentication {
 
 
 	/**
@@ -59,7 +62,7 @@ public class ClientSecretJWT extends JWTClientAuthentication {
 		supported.add(JWSAlgorithm.HS384);
 		supported.add(JWSAlgorithm.HS512);
 		
-		return supported;
+		return Collections.unmodifiableSet(supported);
 	}
 	
 	 

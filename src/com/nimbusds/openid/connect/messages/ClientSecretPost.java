@@ -23,30 +23,32 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 /**
  * Client secret post authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#CLIENT_SECRET_POST}.
+ * {@link ClientAuthentication.Method#CLIENT_SECRET_POST}. This class is
+ * immutable.
  *
  * <p>Related specifications:
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 3.2.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
-public class ClientSecretPost extends ClientAuthentication {
+public final class ClientSecretPost extends ClientAuthentication {
 
 
 	/**
 	 * The client ID.
 	 */
-	private ClientID clientID;
+	private final ClientID clientID;
 	
 	
 	/**
 	 * The client secret.
 	 */
-	private String secret;
+	private final String secret;
 	
 	
 	/**
@@ -119,9 +121,7 @@ public class ClientSecretPost extends ClientAuthentication {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void apply(final HTTPRequest httpRequest)
 		throws SerializeException {
 	

@@ -32,12 +32,13 @@ import com.nimbusds.openid.connect.util.URLUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>draft-ietf-oauth-assertions-03
- *     <li>draft-jones-oauth-jwt-bearer-04
+ *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-06)
+ *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
+ *         (draft-ietf-oauth-jwt-bearer-02).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-10-22)
  */
 public abstract class JWTClientAuthentication extends ClientAuthentication {
 
@@ -54,14 +55,14 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 * The client assertion, corresponding to the {@link client_assertion}
 	 * parameter. The assertion is in the form of a signed JWT.
 	 */
-	private SignedJWT clientAssertion;
+	private final SignedJWT clientAssertion;
 	
 	
 	/**
 	 * Optional client identifier, corresponding to the {@link client_id}
 	 * parameter.
 	 */
-	private ClientID clientID = null;
+	private final ClientID clientID;
 	
 	
 	/**

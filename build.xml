@@ -1,7 +1,7 @@
 <project name="OpenID Connect SDK / NimbusDS.com" default="dist" basedir=".">
 
 	<property name="version" value="1.2"/>
-	<property name="version-date" value="2012-10-21"/>
+	<property name="version-date" value="2012-10-22"/>
 	<property name="jarfile" value="openid-connect-sdk-${version}.jar"/>
 	
 	<path id="classpath.compile">

@@ -14,7 +14,8 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
 
 /**
  * Client secret basic authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#CLIENT_SECRET_BASIC}.
+ * {@link ClientAuthentication.Method#CLIENT_SECRET_BASIC}. This class is
+ * immutable.
  *
  * <p>Example HTTP Authorization header (for client identifier "Aladdin" and
  * password "open sesame"):
@@ -27,25 +28,27 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>RFC 2617.
+ *     <li>OAuth 2.0 (RFC 6749), section 3.2.1.
+ *     <li>HTTP Authentication: Basic and Digest Access Authentication 
+ *         (RFC 2617).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
-public class ClientSecretBasic extends ClientAuthentication {
+public final class ClientSecretBasic extends ClientAuthentication {
 
 
 	/**
 	 * The client ID.
 	 */
-	private ClientID clientID;
+	private final ClientID clientID;
 	
 	
 	/**
 	 * The client secret.
 	 */
-	private String secret;
+	private final String secret;
 	
 	
 	/**
@@ -129,9 +132,7 @@ public class ClientSecretBasic extends ClientAuthentication {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public void apply(final HTTPRequest httpRequest) {
 	
 		httpRequest.setAuthorization(toHTTPAuthorizationHeader());
