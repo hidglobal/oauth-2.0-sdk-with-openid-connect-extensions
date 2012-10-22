@@ -3,6 +3,10 @@ package com.nimbusds.openid.connect.messages;
 
 import java.net.URL;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.nimbusds.openid.connect.ParseException;
 
 import com.nimbusds.openid.connect.http.HTTPResponse;
@@ -19,6 +23,10 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  *             <li>{@link ErrorCode#INVALID_REQUEST}
  *             <li>{@link ErrorCode#INVALID_TOKEN}
  *             <li>{@link ErrorCode#INSUFFICIENT_SCOPE}
+ *          </ul>
+ *     <li>OpenID Connect specific error:
+ *         <ul>
+ *             <li>{@link ErrorCode#INVALID_SCHEMA}
  *         </ul>
  * </ul>
  *
@@ -45,6 +53,22 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  */
 public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 
+
+	/**
+	 * Gets the legal error codes for a UserInfo error response.
+	 *
+	 * @return The legal error codes, as a read-only set.
+	 */
+	public static Set<ErrorCode> getLegalErrorCodes() {
+	
+		Set<ErrorCode> bearerErrorCodes = OAuthBearerTokenErrorResponse.getLegalErrorCodes();
+		
+		Set<ErrorCode> codes = new HashSet<ErrorCode>(bearerErrorCodes);
+		codes.add(ErrorCode.INVALID_SCHEMA);
+		
+		return Collections.unmodifiableSet(codes);
+	}
+	
 
 	/**
 	 * Creates a new UserInfo error response.

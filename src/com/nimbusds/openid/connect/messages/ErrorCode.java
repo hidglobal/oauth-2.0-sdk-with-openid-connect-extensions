@@ -6,7 +6,7 @@ package com.nimbusds.openid.connect.messages;
  * Enumeration of OpenID Connect error codes.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-02)
+ * @version $version$ (2012-10-22)
  */
 public enum ErrorCode {
 
@@ -214,7 +214,7 @@ public enum ErrorCode {
 	/**
 	 * The error description.
 	 */
-	private String description;
+	private final String description;
 	
 	
 	/**
