@@ -62,6 +62,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.4.
+ *     <li>OpenID Connection Standard 1.0, section 2.3.5.2.
  *     <li>OAuth 2.0 (RFC 6749), section 4.1.2.1 and 4.2.2.1.
  * </ul>
  *

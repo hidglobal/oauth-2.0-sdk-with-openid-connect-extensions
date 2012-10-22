@@ -38,6 +38,7 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.4.1.
+ *     <li>OpenID Connect Standard 1.0, section 4.1.
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
  *         (draft-ietf-oauth-jwt-bearer-02), section 2.
  * </ul>

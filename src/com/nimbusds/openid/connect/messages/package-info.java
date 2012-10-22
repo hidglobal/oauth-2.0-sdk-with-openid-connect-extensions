@@ -5,14 +5,29 @@
  * Connect endpoints:
  *
  * <ul>
- *     <li>Authorisation endpoint.
- *     <li>Token endpoint.
- *     <li>Check ID endpoint.
- *     <li>UserInfo endpoint.
+ *     <li>Authorisation endpoint:
+ *         <ul>
+ *             <li>{@link com.nimbusds.openid.connect.messages.AuthorizationRequest}
+ *             <li>{@link com.nimbusds.openid.connect.messages.AuthorizationResponse}
+ *             <li>{@link com.nimbusds.openid.connect.messages.AuthorizationErrorResponse}
+ *         </ul>
+ *     <li>Token endpoint:
+ *         <ul>
+ *             <li>{@link com.nimbusds.openid.connect.messages.AccessTokenRequest}
+ *             <li>{@link com.nimbusds.openid.connect.messages.RefreshTokenRequest}
+ *             <li>{@link com.nimbusds.openid.connect.messages.AccessTokenResponse}
+ *             <li>{@link com.nimbusds.openid.connect.messages.TokenErrorResponse}
+ *         </ul>
+ *     <li>UserInfo endpoint:
+ *         <ul>
+ *             <li>{@link com.nimbusds.openid.connect.messages.UserInfoRequest}
+ *             <li>{@link com.nimbusds.openid.connect.messages.UserInfoResponse}
+ *             <li>{@link com.nimbusds.openid.connect.messages.UserInfoErrorResponse}
+ *         </ul>
  * </ul>
  *
- * <p>Future versions may add support for the optinal dynamic client 
- * registration endpoint.
+ * <p>Future versions may add support for the optional dynamic client 
+ * registration endpoint and session management.
  * 
  * @author Vladimir Dzhuvinov
  * @version $version$ ($version-date$)
