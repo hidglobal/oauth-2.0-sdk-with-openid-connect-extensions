@@ -15,7 +15,7 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 /**
  * Refresh token request to the Token endpoint. Used to refresh an 
- * {@code AccessToken access token}. This class is immutable.
+ * {@link AccessToken access token}. This class is immutable.
  *
  * <p>Note that the optional scope parameter is not supported.
  *
