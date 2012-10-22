@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests the JSON object utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-09-22)
+ * @version $version$ (2012-09-22)
  */
 public class JSONObjectUtilsTest extends TestCase {
 	

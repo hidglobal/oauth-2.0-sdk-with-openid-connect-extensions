@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  * Tests access and refresh token request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-19)
+ * @version $version$ (2012-05-19)
  */
 public class TokenRequestTest extends TestCase {
 	

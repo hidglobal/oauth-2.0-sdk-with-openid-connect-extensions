@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests scope parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-06-11)
+ * @version $version$ (2012-06-11)
  */
 public class ScopeParserTest extends TestCase {
 	

@@ -11,7 +11,7 @@ import com.nimbusds.langtag.LangTagException;
  * Tests claim name parsing into name base and optional language tag.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-23)
+ * @version $version$ (2012-05-23)
  */
 public class ClaimNameTest extends TestCase {
 

@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  * Tests the URL utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-07)
+ * @version $version$ (2012-05-07)
  */
 public class URLUtilsTest extends TestCase {
 	

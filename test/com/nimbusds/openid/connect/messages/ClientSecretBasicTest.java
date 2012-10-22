@@ -12,7 +12,7 @@ import com.nimbusds.openid.connect.claims.ClientID;
  * Tests client secret basic authentication.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-10)
+ * @version $version$ (2012-05-10)
  */
 public class ClientSecretBasicTest extends TestCase {
 

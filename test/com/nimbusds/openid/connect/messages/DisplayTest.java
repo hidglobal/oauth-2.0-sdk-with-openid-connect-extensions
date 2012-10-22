@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests display type parsing and default value.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-03-23)
+ * @version $version$ (2012-03-23)
  */
 public class DisplayTest extends TestCase {
 	

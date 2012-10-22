@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.ParseException;
  * Tests prompt names and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-03-23)
+ * @version $version$ (2012-03-23)
  */
 public class PromptTest extends TestCase {
 	

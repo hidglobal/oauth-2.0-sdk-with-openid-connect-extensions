@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * Tests UserInfo error response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version 0.2 (2012-05-03)
+ * @version $version$ (2012-05-03)
  */
 public class UserInfoErrorResponseTest extends TestCase {
 	
