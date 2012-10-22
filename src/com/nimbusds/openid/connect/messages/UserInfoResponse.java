@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 
 /**
- * UserInfo response.
+ * UserInfo response. This class is immutable.
  *
  * <p>The UserInfo claims may be passed as a plain JSON object or as a plain, 
  * signed or encrypted JSON Web Token (JWT). Use the appropriate constructor for
@@ -29,12 +29,13 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *
  * <pre>
  * {
- *   "user_id"     : "248289761001",
- *   "name"        : "Jane Doe",
- *   "given_name"  : "Jane",
- *   "family_name" : "Doe",
- *   "email"       : "janedoe@example.com",
- *   "picture"     : "http://example.com/janedoe/me.jpg"
+ *   "user_id"            : "248289761001",
+ *   "name"               : "Jane Doe",
+ *   "given_name"         : "Jane",
+ *   "family_name"        : "Doe",
+ *   "preferred_username" : "j.doe",
+ *   "email"              : "janedoe@example.com",
+ *   "picture"            : "http://example.com/janedoe/me.jpg"
  * }
  * </pre>
  *
@@ -42,24 +43,25 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.4.2.
+ *     <li>OpenID Connect Standard 1.0, section 4.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-10-22)
  */
-public class UserInfoResponse implements SuccessResponse {
+public final class UserInfoResponse implements SuccessResponse {
 
 
 	/**
 	 * The UserInfo claims, as plain JSON object.
 	 */
-	private UserInfoClaims claims;
+	private final UserInfoClaims claims;
 	
 	
 	/**
 	 * The UserInfo claims, as plain, signed or encrypted JWT.
 	 */
-	private JWT jwt;
+	private final JWT jwt;
 	
 	
 	/**
@@ -74,6 +76,8 @@ public class UserInfoResponse implements SuccessResponse {
 			throw new IllegalArgumentException("The claims must not be null");
 		
 		this.claims = claims;
+		
+		this.jwt = null;
 	}
 	
 	
@@ -89,6 +93,8 @@ public class UserInfoResponse implements SuccessResponse {
 			throw new IllegalArgumentException("The claims JWT must not be null");
 		
 		this.jwt = jwt;
+		
+		this.claims = null;
 	}
 	
 	
@@ -133,9 +139,7 @@ public class UserInfoResponse implements SuccessResponse {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
 	
