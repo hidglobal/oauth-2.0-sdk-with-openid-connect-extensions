@@ -1,10 +1,10 @@
 Testsuite: com.nimbusds.openid.connect.messages.DisplayTest
 Tests run: 7, Failures: 0, Errors: 0, Time elapsed: 0.003 sec
 
-Testcase: testDefault took 0.001 sec
-Testcase: testDefaultParseNull took 0.001 sec
+Testcase: testDefault took 0 sec
+Testcase: testDefaultParseNull took 0 sec
 Testcase: testDefaultParseEmptyString took 0 sec
 Testcase: testParsePage took 0 sec
-Testcase: testParsePopup took 0.001 sec
+Testcase: testParsePopup took 0 sec
 Testcase: testParseTouch took 0 sec
 Testcase: testParseWap took 0 sec
