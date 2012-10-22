@@ -20,7 +20,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
 /**
  * OAuth 2.0 Bearer Token error response.
  *
- * <p>Legal error codes:
+ * <p>Standard error codes (may be extended with application specific codes):
  *
  * <ul>
  *     <li>OAuth 2.0 errors:
@@ -55,16 +55,17 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 
 
 	/**
-	 * The legal error codes for an OAuth 2.0 Bearer Token error response.
+	 * The standard error codes for an OAuth 2.0 Bearer Token error 
+	 * response.
 	 */
-	private static final Set<ErrorCode> legalErrorCodes = new HashSet<ErrorCode>();
+	private static final Set<ErrorCode> standardErrorCodes = new HashSet<ErrorCode>();
 	
 	
 	static {
 		// OAuth 2.0 errors
-		legalErrorCodes.add(ErrorCode.INVALID_REQUEST);
-		legalErrorCodes.add(ErrorCode.INVALID_TOKEN);
-		legalErrorCodes.add(ErrorCode.INSUFFICIENT_SCOPE);
+		standardErrorCodes.add(ErrorCode.INVALID_REQUEST);
+		standardErrorCodes.add(ErrorCode.INVALID_TOKEN);
+		standardErrorCodes.add(ErrorCode.INSUFFICIENT_SCOPE);
 	}
 	
 	
@@ -90,14 +91,14 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	
 	
 	/**
-	 * Gets the legal error codes for an OAuth 2.0 Bear Token error 
+	 * Gets the standard error codes for an OAuth 2.0 Bear Token error 
 	 * response.
 	 *
-	 * @return The legal error codes, as a read-only set.
+	 * @return The standard error codes, as a read-only set.
 	 */
-	public static Set<ErrorCode> getLegalErrorCodes() {
+	public static Set<ErrorCode> getStandardErrorCodes() {
 	
-		return Collections.unmodifiableSet(legalErrorCodes);
+		return Collections.unmodifiableSet(standardErrorCodes);
 	}
 	
 	
@@ -125,26 +126,17 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	 * Creates a new OAuth 2.0 Bearer Token error response.
 	 *
 	 * @param realm     The bearer realm. May be {@code null}.
-	 * @param errorCode The error code. Must match one of the 
-	 *                  {@link #getLegalErrorCodes legal error codes} for
-	 *                  an OAuth 2.0 Bear Token error response. It may be
-	 *                  {@code null} if the client didn't provide any 
-	 *                  authentication information in the original request.
+	 * @param errorCode The error code. It may be {@code null} if the client 
+	 *                  didn't provide any authentication information in the
+	 *                  original request.
 	 * @param errorURI  Optional URI of a web page that includes information
 	 *                  about the error, {@code null} if not specified.
-	 *
-	 * @throws IllegalArgumentException If the specified error code is not
-	 *                                  legal for an OAuth 2.0 Bear Token
-	 *                                  error response.
 	 */
 	protected OAuthBearerTokenErrorResponse(final String realm, 
 	                                        final ErrorCode errorCode,
 						final URL errorURI) {
 	
 		this.realm = realm;
-		
-		if (errorCode != null && ! legalErrorCodes.contains(errorCode))
-			throw new IllegalArgumentException("Illegal error code");
 			
 		this.errorCode = errorCode;
 		
@@ -195,8 +187,9 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 		
 		else if (errorCode == ErrorCode.INSUFFICIENT_SCOPE)
 			httpResponse = new HTTPResponse(HTTPResponse.SC_FORBIDDEN); // 403
+		
 		else
-			throw new AssertionError("Illegal error code: " + errorCode);
+			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400 - revise on spec update
 		
 		
 		// Compose the WWW-Authenticate header
@@ -311,9 +304,6 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 				throw new ParseException("Invalid error URI: " + m.group(1), e);
 			}
 		}
-		
-		if (! getLegalErrorCodes().contains(errorCode))
-			throw new ParseException("Illegal OAuth 2.0 Bearer Token response error code: " + errorCode.getCode());
 		
 		return new OAuthBearerTokenErrorResponse(realm, errorCode, errorURI);
 	}

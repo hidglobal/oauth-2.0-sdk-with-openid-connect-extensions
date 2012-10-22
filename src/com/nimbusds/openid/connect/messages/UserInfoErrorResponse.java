@@ -61,12 +61,25 @@ public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 	 */
 	public static Set<ErrorCode> getLegalErrorCodes() {
 	
-		Set<ErrorCode> bearerErrorCodes = OAuthBearerTokenErrorResponse.getLegalErrorCodes();
+		Set<ErrorCode> bearerErrorCodes = OAuthBearerTokenErrorResponse.getStandardErrorCodes();
 		
 		Set<ErrorCode> codes = new HashSet<ErrorCode>(bearerErrorCodes);
 		codes.add(ErrorCode.INVALID_SCHEMA);
 		
 		return Collections.unmodifiableSet(codes);
+	}
+	
+	
+	/**
+	 * Gets the standard error codes for a UserInfo error response.
+	 *
+	 * @see #getLegalErrorCodes
+	 *
+	 * @return The standard error codes, as a read-only set.
+	 */
+	public static Set<ErrorCode> getStandardErrorCodes() {
+	
+		return getLegalErrorCodes();
 	}
 	
 
@@ -75,21 +88,23 @@ public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 	 *
 	 * @param realm     The bearer realm. May be {@code null}.
 	 * @param errorCode The error code. Must match one of the legal error 
-	 *                  codes for an OAuth 2.0 Bear Token error response. It
-	 *                  may be {@code null} if the client didn't provide any 
+	 *                  codes for a UserInfo error response. It may be 
+	 *                  {@code null} if the client didn't provide any 
 	 *                  authentication information in the original request.
 	 * @param errorURI  Optional URI of a web page that includes information
 	 *                  about the error, {@code null} if not specified.
 	 *
 	 * @throws IllegalArgumentException If the specified error code is not
-	 *                                  legal for an OAuth 2.0 Bear Token
-	 *                                  error response.
+	 *                                  legal for a UserInfo error response.
 	 */
 	public UserInfoErrorResponse(final String realm, 
 	                             final ErrorCode errorCode,
 				     final URL errorURI) {
 				    
 		super(realm, errorCode, errorURI);
+		
+		if (errorCode != null && ! getLegalErrorCodes().contains(errorCode))
+			throw new IllegalArgumentException("Illegal UserInfo response error code: " + errorCode.getCode());
 	}
 	
 	
@@ -106,6 +121,9 @@ public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 		throws ParseException {
 		
 		OAuthBearerTokenErrorResponse r = OAuthBearerTokenErrorResponse.parse(httpResponse);
+		
+		if (r.getErrorCode() != null && ! getLegalErrorCodes().contains(r.getErrorCode()))
+			throw new ParseException("Illegal UserInfo response error code: " + r.getErrorCode().getCode());
 		
 		return new UserInfoErrorResponse(r.getRealm(), r.getErrorCode(), r.getErrorURI());
 	}
