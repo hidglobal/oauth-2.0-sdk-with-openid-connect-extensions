@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.ParseException;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>draft-ietf-oauth-v2-31
+ *     <li>OAuth 2.0 (RFC 6749).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
