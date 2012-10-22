@@ -1,9 +1,9 @@
 Testsuite: com.nimbusds.openid.connect.messages.AuthorizationRequestTest
-Tests run: 3, Failures: 0, Errors: 0, Time elapsed: 0.07 sec
+Tests run: 3, Failures: 0, Errors: 0, Time elapsed: 0.063 sec
 ------------- Standard Output ---------------
 response_type=code+id_token&client_id=s6BhdRkqt3&scope=openid&redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb&nonce=n-0S6_WzA2Mj&state=af0ifjsldkj
 ------------- ---------------- ---------------
 
-Testcase: testSerializeSimple took 0.018 sec
+Testcase: testSerializeSimple took 0.013 sec
 Testcase: testParseSimple took 0.004 sec
-Testcase: testParseWithRequestObject took 0.048 sec
+Testcase: testParseWithRequestObject took 0.045 sec

@@ -1,9 +1,9 @@
 Testsuite: com.nimbusds.openid.connect.messages.ScopeParserTest
-Tests run: 6, Failures: 0, Errors: 0, Time elapsed: 0.005 sec
+Tests run: 6, Failures: 0, Errors: 0, Time elapsed: 0.006 sec
 
 Testcase: testParseStdAllGood took 0.004 sec
 Testcase: testParseStdSelectedGood took 0 sec
 Testcase: testParseStrictStdSelectedGood took 0 sec
-Testcase: testParseStrictStdSelectedBad took 0.001 sec
+Testcase: testParseStrictStdSelectedBad took 0 sec
 Testcase: testParseStdSelectedBadWithException took 0 sec
-Testcase: testParseStrictMissingOpenID took 0 sec
+Testcase: testParseStrictMissingOpenID took 0.001 sec

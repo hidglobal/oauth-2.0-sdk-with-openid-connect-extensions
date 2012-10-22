@@ -1,11 +1,11 @@
 Testsuite: com.nimbusds.openid.connect.messages.ResponseTypeSetTest
-Tests run: 8, Failures: 0, Errors: 0, Time elapsed: 0.003 sec
+Tests run: 8, Failures: 0, Errors: 0, Time elapsed: 0.004 sec
 
 Testcase: testConstantNames took 0.001 sec
 Testcase: testSerialization1 took 0.001 sec
-Testcase: testSerialization2 took 0 sec
-Testcase: testSerialization3 took 0.001 sec
+Testcase: testSerialization2 took 0.001 sec
+Testcase: testSerialization3 took 0 sec
 Testcase: testSerialization4 took 0 sec
 Testcase: testSetParsing1 took 0 sec
 Testcase: testSetParsing2 took 0 sec
-Testcase: testSetParseException took 0 sec
+Testcase: testSetParseException took 0.001 sec

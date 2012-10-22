@@ -1,6 +1,6 @@
 Testsuite: com.nimbusds.openid.connect.messages.PromptTest
-Tests run: 3, Failures: 0, Errors: 0, Time elapsed: 0.004 sec
+Tests run: 3, Failures: 0, Errors: 0, Time elapsed: 0.003 sec
 
 Testcase: testNames took 0.001 sec
 Testcase: testValidityChecking took 0.001 sec
-Testcase: testParse took 0.002 sec
+Testcase: testParse took 0.001 sec

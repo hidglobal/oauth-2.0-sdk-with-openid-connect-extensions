@@ -1,7 +1,7 @@
 Testsuite: com.nimbusds.openid.connect.messages.UserInfoResponseTest
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.637 sec
+Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.552 sec
 ------------- Standard Output ---------------
 {"zoneinfo":"Europe\/Sofia","birthday":"31\/12\/2012","phone_number":"+359 (32) 100200","nickname":"Alice","website":"http:\/\/wonderland.net\/blog\/alice","email_verified":true,"locale":"bg-BG","address#bg-BG":{"formatted":"Alice Wonderland\n36 Wonderland Str.\n1313 Wonder City\nWonderland","postal_code":"1313","locality":"Wonder City","street_address":"36 Wonderland Str.","country":"Wonderland"},"given_name":"Alice","updated_time":"2011-01-03T23:58:42+0000","picture":"http:\/\/wonderland.net\/userinfo\/alice.jpg","email":"alice@wonderland.net","name":"Alice","family_name":"Wonderland","gender":"female","user_id":"alice","profile":"http:\/\/wonderland.net\/userinfo\/alice"}
 ------------- ---------------- ---------------
 
-Testcase: testCreateSerializeAndParse took 0.637 sec
+Testcase: testCreateSerializeAndParse took 0.551 sec

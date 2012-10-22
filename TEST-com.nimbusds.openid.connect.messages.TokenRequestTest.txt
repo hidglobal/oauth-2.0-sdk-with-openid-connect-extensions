@@ -7,5 +7,5 @@ Access Token request: Client ID: s6BhdRkqt3
 Access Token request: Client secret: gX1fBat3bV
 ------------- ---------------- ---------------
 
-Testcase: testAccessTokenRequestWithBasicSecret took 0.028 sec
-Testcase: testRefreshTokenRequestWithBasicSecret took 0.002 sec
+Testcase: testAccessTokenRequestWithBasicSecret took 0.027 sec
+Testcase: testRefreshTokenRequestWithBasicSecret took 0.003 sec
