@@ -26,7 +26,8 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 
 /**
- * Authorisation request. This class is immutable.
+ * Authorisation request. Used to authenticate an end-user and request her 
+ * authorisation to release information to the client. This class is immutable.
  *
  * <p>Example HTTP request:
  *

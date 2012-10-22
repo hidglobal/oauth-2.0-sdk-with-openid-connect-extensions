@@ -13,7 +13,8 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
 
 
 /**
- * UserInfo request.
+ * UserInfo request. Used to retrieve claims about the end-user. This class is
+ * immutable.
  *
  * <p>Example HTTP GET request:
  *
@@ -37,25 +38,26 @@ import com.nimbusds.openid.connect.http.HTTPRequest;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.4.1.
- *     <li>draft-ietf-oauth-v2-bearer-19, section 2.
+ *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
+ *         (draft-ietf-oauth-jwt-bearer-02), section 2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
-public class UserInfoRequest implements Request {
+public final class UserInfoRequest implements Request {
 
 
 	/**
 	 * The HTTP method.
 	 */
-	private HTTPRequest.Method httpMethod;
+	private final HTTPRequest.Method httpMethod;
 	 
 	 
 	/**
 	 * The UserInfo access token.
 	 */
-	private AccessToken accessToken;
+	private final AccessToken accessToken;
 	
 	
 	/**
@@ -114,9 +116,7 @@ public class UserInfoRequest implements Request {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 	
