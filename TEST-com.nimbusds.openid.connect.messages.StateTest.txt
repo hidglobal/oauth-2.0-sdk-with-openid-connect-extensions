@@ -1,9 +1,0 @@
-Testsuite: com.nimbusds.openid.connect.messages.StateTest
-Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.005 sec
-------------- Standard Output ---------------
-Random state (default size): XVPMH8k0
-Random state (16 chars): xc2UHwls7u7pagUy
-------------- ---------------- ---------------
-
-Testcase: testGeneration took 0.004 sec
-Testcase: testGenerationVarLength took 0.001 sec

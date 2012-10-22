@@ -1,7 +1,0 @@
-Testsuite: com.nimbusds.openid.connect.messages.AccessTokenResponseTest
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.087 sec
-------------- Standard Output ---------------
-{"exp":1311281970,"aud":"http:\/\/client.example.com","iss":"http:\/\/server.example.com","user_id":"248289761001"}
-------------- ---------------- ---------------
-
-Testcase: testAccessTokenResponseWithIDToken took 0.087 sec

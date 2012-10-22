@@ -1,8 +1,0 @@
-Testsuite: com.nimbusds.openid.connect.messages.AuthorizationResponseTest
-Tests run: 5, Failures: 0, Errors: 0, Time elapsed: 0.077 sec
-
-Testcase: testConstructorMinimal took 0.061 sec
-Testcase: testSerializeCode took 0.004 sec
-Testcase: testParseCode took 0.001 sec
-Testcase: testSerializeTokenAndIDToken took 0.009 sec
-Testcase: testParseTokenAndIDToken took 0.001 sec
