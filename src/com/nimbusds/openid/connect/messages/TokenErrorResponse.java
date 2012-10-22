@@ -3,6 +3,7 @@ package com.nimbusds.openid.connect.messages;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +20,7 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
 
 
 /**
- * OAuth 2.0 Access Token error response.
+ * OAuth 2.0 Access Token error response. This class is immutable.
  *
  * <p>Legal error codes:
  *
@@ -52,19 +53,19 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.4.
- *     <li>draft-ietf-oauth-v2-26, section 5.2.
+ *     <li>OAuth 2.0 (RFC 6749), section 5.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
-public class TokenErrorResponse implements ErrorResponse {
+public final class TokenErrorResponse implements ErrorResponse {
 
 
 	/**
 	 * The legal error codes for an OAuth 2.0 Access Token error response.
 	 */
-	private static Set<ErrorCode> legalErrorCodes = new HashSet<ErrorCode>();
+	private static final Set<ErrorCode> legalErrorCodes = new HashSet<ErrorCode>();
 	
 	
 	static {
@@ -93,14 +94,14 @@ public class TokenErrorResponse implements ErrorResponse {
 	/**
 	 * The error code.
 	 */
-	private ErrorCode errorCode;
+	private final ErrorCode errorCode;
 	
 	
 	/**
 	 * The URL of a web page that includes additional information about the
 	 * error.
 	 */
-	private URL errorURI = null;
+	private final URL errorURI;
 	
 	
 	/**
@@ -132,18 +133,14 @@ public class TokenErrorResponse implements ErrorResponse {
 	}
 	
 
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public ErrorCode getErrorCode() {
 	
 		return errorCode;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public URL getErrorURI() {
 	
 		return errorURI;
@@ -168,9 +165,7 @@ public class TokenErrorResponse implements ErrorResponse {
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
 		
