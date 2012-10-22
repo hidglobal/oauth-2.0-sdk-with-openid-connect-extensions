@@ -35,6 +35,8 @@ import com.nimbusds.openid.connect.util.JSONObjectUtils;
  * {@link com.nimbusds.openid.connect.util.JOSEObjectDecoder decoder} to handle 
  * their JOSE decoding and JWS validation and/or JWE decryption.
  *
+ * <p>This class is thread-safe.
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2012-10-17)
  */
@@ -44,13 +46,13 @@ public class AuthorizationRequestResolver {
 	/**
 	 * Retriever for JOSE objects passed as URL.
 	 */
-	private JOSEObjectRetriever retriever;
+	private final JOSEObjectRetriever retriever;
 	
 	
 	/**
 	 * Decoder for JOSE objects.
 	 */
-	private JOSEObjectDecoder decoder;
+	private final JOSEObjectDecoder decoder;
 	
 	
 	/**
