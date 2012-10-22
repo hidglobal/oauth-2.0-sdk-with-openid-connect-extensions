@@ -9,12 +9,12 @@ import com.nimbusds.openid.connect.claims.ClientID;
 
 
 /**
- * Resolved authorisation request.
+ * Resolved authorisation request. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-14)
+ * @version $version$ (2012-10-22)
  */
-public class ResolvedAuthorizationRequest {
+public final class ResolvedAuthorizationRequest {
 
 
 	/**
