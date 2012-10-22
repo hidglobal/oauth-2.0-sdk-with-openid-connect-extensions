@@ -14,7 +14,8 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 
 /**
- * Refresh token request to the Token endpoint.
+ * Refresh token request to the Token endpoint. Used to refresh an 
+ * {@code AccessToken access token}. This class is immutable.
  *
  * <p>Note that the optional scope parameter is not supported.
  *
@@ -33,19 +34,19 @@ import com.nimbusds.openid.connect.util.URLUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.2.
- *     <li>draft-ietf-oauth-v2-26, section 6.
+ *     <li>OAuth 2.0 (RFC 6749), section 6.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
-public class RefreshTokenRequest extends TokenRequest {
+public final class RefreshTokenRequest extends TokenRequest {
 
 
 	/**
 	 * The refresh token.
 	 */
-	private RefreshToken refreshToken;
+	private final RefreshToken refreshToken;
 	
 	
 	/**
@@ -95,6 +96,7 @@ public class RefreshTokenRequest extends TokenRequest {
 	 * @throws SerializeException If this refresh token request couldn't be 
 	 *                            serialised to an HTTP request.
 	 */
+	@Override
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 		

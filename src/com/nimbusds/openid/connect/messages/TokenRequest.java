@@ -21,22 +21,22 @@ import com.nimbusds.openid.connect.util.URLUtils;
  * <pre>
  * POST /token HTTP/1.1
  * Host: server.example.com
+ * Content-Type: application/x-www-form-urlencoded
  * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
- * Content-Type: application/x-www-form-urlencoded;charset=UTF-8
- *
+ * 
  * grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
- * &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+ * &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.2.
- *     <li>draft-ietf-oauth-v2-26
+ *     <li>OAuth 2.0 (RFV 6749).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
 public abstract class TokenRequest implements Request {
 
@@ -44,13 +44,13 @@ public abstract class TokenRequest implements Request {
 	/**
 	 * The grant type.
 	 */
-	private GrantType grantType;
+	private final GrantType grantType;
 	
 	
 	/**
 	 * The client authentication, {@code null} if none.
 	 */
-	private ClientAuthentication clientAuth;
+	private final ClientAuthentication clientAuth;
 	
 	
 	/**

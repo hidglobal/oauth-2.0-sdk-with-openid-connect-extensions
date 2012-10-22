@@ -17,50 +17,52 @@ import com.nimbusds.openid.connect.util.URLUtils;
 
 
 /**
- * Access token request to the Token endpoint.
+ * Access token request to the Token endpoint. Used to obtain an 
+ * {@link AccessToken access token}, {@link RefreshToken refresh token} or an
+ * {@link com.nimbusds.openid.connect.claims.sets.IDTokenClaims ID token}. This 
+ * class is immutable.
  *
- * <p>Example HTTP request (with private key JWT client authentication):
+ * <p>Example HTTP request, with {@link ClientSecretBasic client secret basic
+ * authentication}:
  *
  * <pre>
  * POST /token HTTP/1.1
  * Host: server.example.com
  * Content-Type: application/x-www-form-urlencoded
+ * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
  * 
- * grant_type=authorization_code&
- * code=i1WsRn1uB1&
- * client_id=s6BhdRkqt3&
- * client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&
- * client_assertion=PHNhbWxwOl...[omitted for brevity]...ZT
+ * grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
+ * &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.2.
- *     <li>draft-ietf-oauth-v2-26, section 4.1.3.
+ *     <li>OpenID Connect Standard 1.0, section 3.1.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 4.1.3.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-10-22)
  */
-public class AccessTokenRequest extends TokenRequest {
+public final class AccessTokenRequest extends TokenRequest {
 	
 	
 	/**
 	 * The authorisation code received from the authorisation server.
 	 */
-	private AuthorizationCode code;
+	private final AuthorizationCode code;
 	
 	
 	/**
 	 * The redirect URI.
 	 */
-	private URL redirectURI;
+	private final URL redirectURI;
 	
 	
 	/**
-	 * Creates a new unauthenticated access token request with the specified
-	 * parameters.
+	 * Creates a new unauthenticated access token request.
 	 *
 	 * @param code        The authorisation code received from the 
 	 *                    authorisation server. Must not be {@code null}.
@@ -73,15 +75,15 @@ public class AccessTokenRequest extends TokenRequest {
 	
 	
 	/**
-	 * Creates a new authenticated access token request with the specified
-	 * parameters.
+	 * Creates a new authenticated access token request.
 	 *
 	 * @param code        The authorisation code received from the 
 	 *                    authorisation server. Must not be {@code null}.
 	 * @param redirectURI The redirect URI. Must not be {@code null}.
 	 * @param clientAuth  The client authentication, {@code null} if none.
 	 */
-	public AccessTokenRequest(final AuthorizationCode code, final URL redirectURI, final ClientAuthentication clientAuth) {
+	public AccessTokenRequest(final AuthorizationCode code, final URL redirectURI, 
+	                          final ClientAuthentication clientAuth) {
 	
 		super(GrantType.AUTHORIZATION_CODE, clientAuth);
 		
@@ -127,6 +129,7 @@ public class AccessTokenRequest extends TokenRequest {
 	 * @throws SerializeException If this access token request couldn't be 
 	 *                            serialised to an HTTP request.
 	 */
+	@Override
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 		
