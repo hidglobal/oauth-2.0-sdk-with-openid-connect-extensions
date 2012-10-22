@@ -43,12 +43,13 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.3 and 2.4.3.
- *     <li>draft-ietf-oauth-v2-bearer-19, section 3.1.
+ *     <li>OpenID Connect Messages 1.0, sections 2.3.3 and 2.4.3.
+ *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage
+ *         (draft-ietf-oauth-v2-bearer-23), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-03)
+ * @version $version$ (2012-10-22)
  */
 public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 
@@ -103,21 +104,21 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	/**
 	 * The authenticating realm, {@code null} if not specified.
 	 */
-	private String realm;
+	private final String realm;
 	
 	
 	/**
 	 * The error code, {@code null} if the client didn't provide any 
 	 * authentication information in the original request.
 	 */
-	private ErrorCode errorCode = null;
+	private final ErrorCode errorCode;
 	
 	
 	/**
 	 * Optional URL of a web page that includes additional information about
 	 * the error.
 	 */
-	private URL errorURI = null;
+	private final URL errorURI;
 	
 	
 	/**
@@ -162,27 +163,21 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	}
 	
 
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public ErrorCode getErrorCode() {
 	
 		return errorCode;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public URL getErrorURI() {
 	
 		return errorURI;
 	}
 	
 	
-	/**
-	 * @inheritDoc
-	 */
+	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
 	

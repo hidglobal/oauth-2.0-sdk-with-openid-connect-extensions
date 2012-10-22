@@ -9,7 +9,7 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
 
 
 /**
- * UserInfo error response.
+ * UserInfo error response. This class is immutable.
  *
  * <p>Legal error codes:
  *
@@ -34,14 +34,16 @@ import com.nimbusds.openid.connect.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.3.
- *     <li>draft-ietf-oauth-v2-bearer-19, section 3.1.
+ *     <li>OpenID Connect Messages 1.0, section 2.3.3.
+ *     <li>OpenID Connect Standard 1.0, section 4.3.
+ *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage
+ *         (draft-ietf-oauth-v2-bearer-23), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-03)
+ * @version $version$ (2012-10-22)
  */
-public class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
+public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 
 
 	/**
