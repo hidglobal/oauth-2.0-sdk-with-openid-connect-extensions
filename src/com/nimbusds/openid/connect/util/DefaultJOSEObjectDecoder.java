@@ -14,7 +14,7 @@ import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeaderFilter;
 import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.JWSValidator;
+import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.PlainObject;
 
@@ -33,15 +33,15 @@ import com.nimbusds.jose.PlainObject;
  * <p>Not supported: JWS-signed and then JWE-encrypted (nested) objects.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-17)
+ * @version $version$ (2012-10-24)
  */
 public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 
 
 	/**
-	 * Thread-safe map of configured JWS validators.
+	 * Thread-safe map of configured JWS verifiers.
 	 */
-	private final Map<JWSAlgorithm,JWSValidator> jwsValidators = new Hashtable<JWSAlgorithm,JWSValidator>();
+	private final Map<JWSAlgorithm,JWSVerifier> jwsVerifiers = new Hashtable<JWSAlgorithm,JWSVerifier>();
 	
 	
 	/**
@@ -52,7 +52,7 @@ public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 	
 	/**
 	 * Creates a new decoder of JOSE objects. It must then be configured by 
-	 * adding one ore more JWS validators and/or JWE decrypters.
+	 * adding one ore more JWS verifiers and/or JWE decrypters.
 	 */
 	public DefaultJOSEObjectDecoder() {
 	
@@ -61,30 +61,30 @@ public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 	
 	
 	/**
-	 * Adds the specified JWS validator for decoding signed JOSE objects.
-	 * The JWS algorithms accepted by the validator should match the ones 
+	 * Adds the specified JWS verifier for decoding signed JOSE objects.
+	 * The JWS algorithms accepted by the verifier should match the ones 
 	 * used to secure the expected JOSE objects.
 	 *
-	 * @param validator The JWS validator to add. Must be ready to validate
-	 *                  signed JOSE objects and not {@code null}.
+	 * @param verifier The JWS verifier to add. Must be ready to verify
+	 *                 signed JOSE objects and not {@code null}.
 	 */
-	public void addJWSValidator(final JWSValidator validator) {
+	public void addJWSVerifier(final JWSVerifier verifier) {
 	
-		JWSHeaderFilter filter = validator.getJWSHeaderFilter();
+		JWSHeaderFilter filter = verifier.getJWSHeaderFilter();
 		 
 		for (JWSAlgorithm alg: filter.getAcceptedAlgorithms())
-			jwsValidators.put(alg, validator);
+			jwsVerifiers.put(alg, verifier);
 	}
 	
 	
 	/**
-	 * Gets the JWS validators.
+	 * Gets the JWS verifiers.
 	 *
-	 * @return The JWS validators, empty collection if none.
+	 * @return The JWS verifiers, empty collection if none.
 	 */
-	public Collection<JWSValidator> getJWSValidators() {
+	public Collection<JWSVerifier> getJWSVerifiers() {
 	
-		return jwsValidators.values();
+		return jwsVerifiers.values();
 	}
 	
 	
@@ -117,30 +117,30 @@ public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 	
 	
 	/**
-	 * Validates a JWS object by calling the matching validator for its
-	 * algorithm.
+	 * Verifiers a JWS object signature by calling the matching verifier 
+	 * for its algorithm.
 	 *
-	 * @param jwsObject The JWS object to validate. Must not be {@code null}.
+	 * @param jwsObject The JWS object to verify. Must not be {@code null}.
 	 *
 	 * @return The JWS payload.
 	 *
-	 * @throws JOSEException If no matching JWS validator was found, the 
-	 *                       signature is invalid or validation failed.
+	 * @throws JOSEException If no matching JWS verifier was found, the 
+	 *                       signature is bad or verification failed.
 	 */
-	private Payload validate(final JWSObject jwsObject)
+	private Payload verify(final JWSObject jwsObject)
 		throws JOSEException {
 		
 		JWSAlgorithm alg = jwsObject.getHeader().getAlgorithm();
 		
-		JWSValidator validator = jwsValidators.get(alg);
+		JWSVerifier verifier = jwsVerifiers.get(alg);
 		
-		if (validator == null)
+		if (verifier == null)
 			throw new JOSEException("Unsupported JWS algorithm: " + alg);
 		
-		boolean valid = jwsObject.validate(validator);
+		boolean verified = jwsObject.verify(verifier);
 		
-		if (! valid)
-			throw new JOSEException("Invalid JWS signature");
+		if (! verified)
+			throw new JOSEException("Bad JWS signature");
 		
 		return jwsObject.getPayload();
 	}
@@ -154,7 +154,7 @@ public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 	 *
 	 * @return The JWE cleartext.
 	 *
-	 * @throws JOSEException If not matching JWE validator was found or if
+	 * @throws JOSEException If not matching JWE decrypter was found or if
 	 *                       decryption failed.
 	 */
 	private Payload decrypt(final JWEObject jweObject)
@@ -187,7 +187,7 @@ public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 		
 			JWSObject jwsObject = (JWSObject)joseObject;
 			
-			return validate(jwsObject);
+			return verify(jwsObject);
 		}
 		else if (joseObject instanceof JWEObject) {
 		
