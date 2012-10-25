@@ -7,7 +7,7 @@ README
 
 The OpenID Connect SDK for Java is your starting point for:
 
-	* Developing Identity Provider (IdP) servers based on OpenID Connect:
+	* Developing OpenID Provider (OP) servers:
 	
 		- Parse and process requests at the OpenID Connect Authorisation
 		  Endpoint, then generate the appropriate responses with an ID 
@@ -19,7 +19,7 @@ The OpenID Connect SDK for Java is your starting point for:
 		- Parse and process requests at the OpenID Connect UserInfo 
 		  Endpoint, then generate the appropriate responses.
 	
-	* Developing OpenID Connect clients:
+	* Developing OpenID Connect relying parties (RP):
 	
 		- Compose requests to an OpenID Connect Authorization Endpoint
 		  and parse the responses;
@@ -34,24 +34,24 @@ The OpenID Connect SDK for Java is your starting point for:
 Additional features:
 
 	* Process plain, signed and encrypted JSON Web Tokens (JWTs) through the
-	  Nimbus-JWT library.
+	  Nimbus-JOSE+WT library.
 
 	* Full UserInfo i10n support through the Nimbus Language Tags (RFC 5646)
 	  library.
 
 
 
-This SDK version implements the OpenID Connect draft suite from 10 April 2012.
+This SDK version implements the OpenID Connect draft suite from 23 June 2012.
 
 
 The SDK JavaDocs are at http://nimbusds.com/files/openid-connect-sdk/javadoc/
 
 
 The Nimbus OpenID Connect SDK is licensed under GPL 2.0. Licences for 
-integration into proprietary products and services are available for a small 
-fee, please get in touch with us at http://nimbusds.com/contact.html
+integration into proprietary products and services are available for fee, 
+please get in touch with us at http://nimbusds.com/contact.html
 
 
-2012-05-29
+2012-10-25
 
 [eof]
