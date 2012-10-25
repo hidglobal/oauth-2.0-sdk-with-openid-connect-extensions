@@ -1,7 +1,7 @@
 <project name="OpenID Connect SDK / NimbusDS.com" default="dist" basedir=".">
 
 	<property name="version" value="1.1"/>
-	<property name="version-date" value="2012-10-24"/>
+	<property name="version-date" value="2012-10-25"/>
 	<property name="jarfile" value="openid-connect-sdk-${version}.jar"/>
 	
 	<path id="classpath.compile">
@@ -63,27 +63,27 @@
 		<junit showoutput="true">
 			<classpath refid="classpath.runtime"/>
 			<formatter type="plain"/>
-			<test name="com.nimbusds.openid.connect.util.URLUtilsTest"/>
-			<test name="com.nimbusds.openid.connect.util.JSONObjectUtilsTest"/>
-			<test name="com.nimbusds.openid.connect.claims.ClaimNameTest"/>
-			<test name="com.nimbusds.openid.connect.messages.NonceTest"/>
-			<test name="com.nimbusds.openid.connect.messages.StateTest"/>
-			<test name="com.nimbusds.openid.connect.messages.DisplayTest"/>
-			<test name="com.nimbusds.openid.connect.messages.PromptTest"/>
-			<test name="com.nimbusds.openid.connect.messages.ResponseTypeSetTest"/>
-			<test name="com.nimbusds.openid.connect.messages.ScopeParserTest"/>
-			<test name="com.nimbusds.openid.connect.messages.AuthorizationRequestTest"/>
-			<test name="com.nimbusds.openid.connect.messages.AuthorizationRequestResolverTest"/>
-			<test name="com.nimbusds.openid.connect.messages.AuthorizationResponseTest"/>
-			<test name="com.nimbusds.openid.connect.messages.AuthorizationErrorResponseTest"/>
-			<test name="com.nimbusds.openid.connect.messages.ClientSecretBasicTest"/>
-			<test name="com.nimbusds.openid.connect.messages.TokenRequestTest"/>
-			<test name="com.nimbusds.openid.connect.messages.AccessTokenTest"/>
-			<test name="com.nimbusds.openid.connect.messages.AccessTokenResponseTest"/>
-			<test name="com.nimbusds.openid.connect.messages.TokenErrorResponseTest"/>
-			<test name="com.nimbusds.openid.connect.messages.UserInfoRequestTest"/>
-			<test name="com.nimbusds.openid.connect.messages.UserInfoResponseTest"/>
-			<test name="com.nimbusds.openid.connect.messages.UserInfoErrorResponseTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.util.URLUtilsTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.util.JSONObjectUtilsTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.claims.ClaimNameTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.NonceTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.StateTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.DisplayTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.PromptTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.ResponseTypeSetTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.ScopeParserTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationRequestTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationRequestResolverTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationResponseTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationErrorResponseTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.ClientSecretBasicTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.TokenRequestTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.AccessTokenTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.AccessTokenResponseTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.TokenErrorResponseTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.UserInfoRequestTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.UserInfoResponseTest"/>
+			<test name="com.nimbusds.openid.connect.sdk.messages.UserInfoErrorResponseTest"/>
 		</junit>
 	</target>
 	
