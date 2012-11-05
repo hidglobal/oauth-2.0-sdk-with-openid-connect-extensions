@@ -12,7 +12,7 @@ package com.nimbusds.openid.connect.sdk.claims;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0
- *     <li>draft-ietf-oauth-v2-31, section 2.2.
+ *     <li>OAuth 2.0 (RFC 6749), section 2.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
