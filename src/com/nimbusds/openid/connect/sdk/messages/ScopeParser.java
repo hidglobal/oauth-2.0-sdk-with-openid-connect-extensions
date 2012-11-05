@@ -9,17 +9,16 @@ import com.nimbusds.openid.connect.sdk.ParseException;
 
 
 /**
- * Parser for {@link ScopeToken}s.
+ * Parser for {@link ScopeToken}s. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-06-11)
+ * @version $version$ (2012-11-05)
  */
 public class ScopeParser {
 
 
 	/**
-	 * Parser instance for {@link StdScopeToken standard scope tokens}
-	 * (thread-safe).
+	 * Parser instance for standard scope tokens (thread-safe).
 	 */
 	protected static final ScopeParser STD_SCOPE_PARSER = new ScopeParser();
 	
@@ -31,12 +30,25 @@ public class ScopeParser {
 	
 	
 	/**
-	 * Creates a new parser for the {@link StdScopeToken standard scope
-	 * tokens}.
+	 * Creates a new parser for standard scope tokens.
+	 *
+	 * <p>Supports all standard OpenID Connect scope tokens:
+	 *
+	 * <ul>
+	 *     <li>ScopeToken#OPENID,
+	 *     <li>ScopeToken#PROFILE
+	 *     <li>ScopeToken#EMAIL
+	 *     <li>ScopeToken#ADDRESS
+	 *     <li>ScopeToken#PHONE
+	 * </ul>
 	 */
 	public ScopeParser() {
 	
-		this(StdScopeToken.values());
+		this(ScopeToken.OPENID,
+		     ScopeToken.PROFILE,
+		     ScopeToken.EMAIL,
+		     ScopeToken.ADDRESS,
+		     ScopeToken.PHONE);
 	}
 	
 	
@@ -97,7 +109,7 @@ public class ScopeParser {
 	 * @return The parsed scope.
 	 *
 	 * @throws ParseException If an unexpected scope token is encountered
-	 *                        or a {@link StdScopeToken#OPENID} is missing.
+	 *                        or a {@link ScopeToken#OPENID} is missing.
 	 */
 	public Scope parseStrict(final String s)
 		throws ParseException {

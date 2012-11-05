@@ -32,7 +32,7 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-11)
+ * @version $version$ (2012-11-05)
  */
 public class UserInfoClaimsRequest extends ClaimsRequest {
 	
@@ -48,7 +48,7 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 	 * UserInfo scope.
 	 *
 	 * @param scope The UserInfo scope. Must include an 
-	 *              {@link StdScopeToken#OPENID openid} scope token and must
+	 *              {@link ScopeToken#OPENID openid} scope token and must
 	 *              not be {@code null}.
 	 *
 	 * @return The matching UserInfo claims request JSON object.
@@ -57,20 +57,20 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 	
 		JSONObject claims = new JSONObject();
 			
-		if (scope.contains(StdScopeToken.PROFILE))
-			claims.putAll(StdScopeToken.PROFILE.getClaimsRequestJSONObject());
+		if (scope.contains(ScopeToken.PROFILE))
+			claims.putAll(ScopeToken.PROFILE.getClaimsRequestJSONObject());
 		
-		if (scope.contains(StdScopeToken.EMAIL))
-			claims.putAll(StdScopeToken.EMAIL.getClaimsRequestJSONObject());
+		if (scope.contains(ScopeToken.EMAIL))
+			claims.putAll(ScopeToken.EMAIL.getClaimsRequestJSONObject());
 			
-		if (scope.contains(StdScopeToken.PHONE))
-			claims.putAll(StdScopeToken.PHONE.getClaimsRequestJSONObject());
+		if (scope.contains(ScopeToken.PHONE))
+			claims.putAll(ScopeToken.PHONE.getClaimsRequestJSONObject());
 		
-		if (scope.contains(StdScopeToken.ADDRESS)) {
+		if (scope.contains(ScopeToken.ADDRESS)) {
 			
 			// Nested!
 			JSONObject address = new JSONObject();
-			address.put("address", StdScopeToken.ADDRESS.getClaimsRequestJSONObject());
+			address.put("address", ScopeToken.ADDRESS.getClaimsRequestJSONObject());
 		
 			claims.putAll(address);
 		}
@@ -140,7 +140,7 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 		throws ResolveException {
 		
 		// Set required claims
-		requiredClaims.addAll(StdScopeToken.OPENID.getClaims());
+		requiredClaims.addAll(ScopeToken.OPENID.getClaims());
 		
 		
 		// Resolve requested scope to claims

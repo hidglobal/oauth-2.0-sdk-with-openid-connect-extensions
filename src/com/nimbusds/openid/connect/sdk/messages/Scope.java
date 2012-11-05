@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2012-11-05)
  */
 public class Scope extends HashSet<ScopeToken> {
 
@@ -35,12 +35,12 @@ public class Scope extends HashSet<ScopeToken> {
 	
 	/**
 	 * Creates a new UserInfo authorisation request scope with the minimum
-	 * required {@link StdScopeToken#OPENID openid} token.
+	 * required {@link ScopeToken#OPENID openid} token.
 	 */
 	public static Scope createMinimal() {
 	
 		Scope scope = new Scope();
-		scope.add(StdScopeToken.OPENID);
+		scope.add(ScopeToken.OPENID);
 		return scope;
 	}
 	
@@ -48,13 +48,13 @@ public class Scope extends HashSet<ScopeToken> {
 	/**
 	 * Checks if the scope is valid according to the OpenID Connect 
 	 * specification. This is done by examining if the scope contains an
-	 * {@link StdScopeToken#OPENID} instance.
+	 * {@link ScopeToken#OPENID} instance.
 	 *
 	 * @return {@code true} if this scope if valid, else {@code false}.
 	 */
 	public boolean isValid() {
 	
-		if (contains(StdScopeToken.OPENID))
+		if (contains(ScopeToken.OPENID))
 			return true;
 		else
 			return false;
@@ -86,8 +86,7 @@ public class Scope extends HashSet<ScopeToken> {
 	
 	
 	/**
-	 * Parses the specified scope string containing {@link StdScopeToken 
-	 * standard scope tokens}.
+	 * Parses the specified scope string containing standard scope tokens.
 	 *
 	 * <p>See {@link ScopeParser}.
 	 *
@@ -97,7 +96,7 @@ public class Scope extends HashSet<ScopeToken> {
 	 * @return The parsed scope.
 	 *
 	 * @throws ParseException If an unexpected scope token is encountered
-	 *                        or a {@link StdScopeToken#OPENID} is missing.
+	 *                        or a {@link ScopeToken#OPENID} is missing.
 	 */
 	public static Scope parseStrict(final String s)
 		throws ParseException {
