@@ -42,7 +42,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-05)
  */
 public final class ClientSecretJWT extends JWTClientAuthentication {
 
@@ -78,7 +78,7 @@ public final class ClientSecretJWT extends JWTClientAuthentication {
 	 */
 	public ClientSecretJWT(final SignedJWT clientAssertion, final ClientID clientID) {
 	
-		super(ClientAuthentication.Method.CLIENT_SECRET_JWT, clientAssertion, clientID);
+		super(ClientAuthenticationMethod.CLIENT_SECRET_JWT, clientAssertion, clientID);
 	}
 	
 	

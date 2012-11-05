@@ -22,62 +22,15 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-05)
  */
 public abstract class ClientAuthentication {
-
-
-	/**
-	 * Enumeration of the OpenID Connect client authentication methods.
-	 */
-	public static enum Method {
-	
-	
-		/**
-		 * Clients that have received a {@code client_secret} value from the 
-		 * authorisation server, authenticate with the authorisation server in 
-		 * accordance with section 3.2.1 of OAuth 2.0 using HTTP Basic 
-		 * authentication scheme. This is the default if no method has been
-		 * registered for the client.
-		 */
-		CLIENT_SECRET_BASIC,
-
-
-		/**
-		 * Clients that have received a {@code client_secret} value from the 
-		 * authorisation server, authenticate with the authorisation server in 
-		 * accordance with section 3.2.1 of OAuth 2.0 by including the client 
-		 * credentials in the request body.
-		 */
-		CLIENT_SECRET_POST,
-
-
-		/**
-		 * Clients that have received a {@code client_secret} value from the 
-		 * authorisation server, create a JWT using an HMAC SHA algorithm, such 
-		 * as HMAC SHA-256. The HMAC (Hash-based Message Authentication Code) is
-		 * calculated using the value of {@code client_secret} as the shared 
-		 * key. The client authenticates in accordance with section 2.2 of (JWT) 
-		 * Bearer Token Profiles and OAuth 2.0 Assertion Profile. 
-		 */
-		CLIENT_SECRET_JWT,
-
-
-		/**
-		 * Clients that have registered a public key sign a JWT using the RSA 
-		 * algorithm if a RSA key was registered or the ECDSA algorithm if an 
-		 * Elliptic Curve key was registered (see JWA for the algorithm 
-		 * identifiers). The client authenticates in accordance with section 2.2
-		 * of (JWT) Bearer Token Profiles and OAuth 2.0 Assertion Profile.
-		 */
-		PRIVATE_KEY_JWT;
-	}
 	
 	
 	/**
 	 * The client authentication method.
 	 */
-	private final Method method;
+	private final ClientAuthenticationMethod method;
 	
 	
 	/**
@@ -86,7 +39,7 @@ public abstract class ClientAuthentication {
 	 * @param method The client authentication method. Must not be 
 	 *               {@code null}.
 	 */
-	protected ClientAuthentication(final Method method) {
+	protected ClientAuthentication(final ClientAuthenticationMethod method) {
 	
 		if (method == null)
 			throw new IllegalArgumentException("The client authentication method must not be null");
@@ -100,7 +53,7 @@ public abstract class ClientAuthentication {
 	 *
 	 * @return The client authentication method.
 	 */
-	public Method getMethod() {
+	public ClientAuthenticationMethod getMethod() {
 	
 		return method;
 	}
@@ -108,8 +61,9 @@ public abstract class ClientAuthentication {
 	
 	/**
 	 * Parses the specified HTTP request for a supported client 
-	 * authentication (see {@link Method}). This method is intended to aid 
-	 * parsing of authenticated {@link TokenRequest}s.
+	 * authentication (see {@link StdClientAuthenticationMethod}). This 
+	 * method is intended to aid parsing of authenticated 
+	 * {@link TokenRequest}s.
 	 *
 	 * @param httpRequest The HTTP request to parse. Must not be 
 	 *                    {@code null}.

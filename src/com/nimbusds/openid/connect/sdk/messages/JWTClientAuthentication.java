@@ -38,7 +38,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-05)
  */
 public abstract class JWTClientAuthentication extends ClientAuthentication {
 
@@ -78,11 +78,11 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 *                        the {@code client_id} parameter. {@code null}
 	 *                        if not specified.
 	 */
-	protected JWTClientAuthentication(final ClientAuthentication.Method method, 
+	protected JWTClientAuthentication(final ClientAuthenticationMethod method, 
 	                                  final SignedJWT clientAssertion,
 					  final ClientID clientID) {
 	
-		super(ClientAuthentication.Method.CLIENT_SECRET_BASIC);
+		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
 	
 		if (clientAssertion == null)
 			throw new IllegalArgumentException("The client assertion JWT must not be null");
