@@ -21,7 +21,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
 
 /**
  * Client secret JWT authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#CLIENT_SECRET_JWT}. This class is 
+ * {@link ClientAuthenticationMethod#CLIENT_SECRET_JWT}. This class is 
  * immutable.
  *
  * <p>Supported signature JSON Web Algorithms (JWAs) by this implementation:

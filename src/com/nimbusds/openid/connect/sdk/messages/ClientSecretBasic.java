@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
 
 /**
  * Client secret basic authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#CLIENT_SECRET_BASIC}. This class is
+ * {@link ClientAuthenticationMethod#CLIENT_SECRET_BASIC}. This class is
  * immutable.
  *
  * <p>Example HTTP Authorization header (for client identifier "Aladdin" and

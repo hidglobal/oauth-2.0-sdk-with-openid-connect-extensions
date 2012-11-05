@@ -21,7 +21,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
 
 /**
  * Private key JWT authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#PRIVATE_KEY_JWT}. This class is immutable.
+ * {@link ClientAuthenticationMethod#PRIVATE_KEY_JWT}. This class is immutable.
  *
  * <p>Supported signature JSON Web Algorithms (JWAs) by this implementation:
  *

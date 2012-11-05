@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
 
 /**
  * Client secret post authentication at the Token endpoint. Implements
- * {@link ClientAuthentication.Method#CLIENT_SECRET_POST}. This class is
+ * {@link ClientAuthenticationMethod#CLIENT_SECRET_POST}. This class is
  * immutable.
  *
  * <p>Related specifications:

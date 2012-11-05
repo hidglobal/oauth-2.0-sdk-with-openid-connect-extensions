@@ -61,9 +61,8 @@ public abstract class ClientAuthentication {
 	
 	/**
 	 * Parses the specified HTTP request for a supported client 
-	 * authentication (see {@link StdClientAuthenticationMethod}). This 
-	 * method is intended to aid parsing of authenticated 
-	 * {@link TokenRequest}s.
+	 * authentication (see {@link ClientAuthenticationMethod}). This method
+	 * is intended to aid parsing of authenticated {@link TokenRequest}s.
 	 *
 	 * @param httpRequest The HTTP request to parse. Must not be 
 	 *                    {@code null}.
