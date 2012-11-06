@@ -12,7 +12,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
  * Tests client secret basic authentication.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-10)
+ * @version $version$ (2012-11-06)
  */
 public class ClientSecretBasicTest extends TestCase {
 
@@ -27,7 +27,7 @@ public class ClientSecretBasicTest extends TestCase {
 		
 		ClientSecretBasic csb = new ClientSecretBasic(clientID, pw);
 		
-		assertEquals(ClientAuthentication.Method.CLIENT_SECRET_BASIC, csb.getMethod());
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, csb.getMethod());
 		
 		assertEquals(id, csb.getClientID().getClaimValue());
 		assertEquals(pw, csb.getClientSecret());

@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * Tests scope parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-06-11)
+ * @version $version$ (2012-11-06)
  */
 public class ScopeParserTest extends TestCase {
 	
@@ -27,11 +27,11 @@ public class ScopeParserTest extends TestCase {
 		
 		assertTrue(scope.isValid());
 	
-		assertTrue(scope.contains(StdScopeToken.OPENID));
-		assertTrue(scope.contains(StdScopeToken.PROFILE));
-		assertTrue(scope.contains(StdScopeToken.EMAIL));
-		assertTrue(scope.contains(StdScopeToken.ADDRESS));
-		assertTrue(scope.contains(StdScopeToken.PHONE));
+		assertTrue(scope.contains(ScopeToken.OPENID));
+		assertTrue(scope.contains(ScopeToken.PROFILE));
+		assertTrue(scope.contains(ScopeToken.EMAIL));
+		assertTrue(scope.contains(ScopeToken.ADDRESS));
+		assertTrue(scope.contains(ScopeToken.PHONE));
 	}
 	
 	
@@ -47,9 +47,9 @@ public class ScopeParserTest extends TestCase {
 		
 		assertTrue(scope.isValid());
 	
-		assertTrue(scope.contains(StdScopeToken.OPENID));
-		assertTrue(scope.contains(StdScopeToken.EMAIL));
-		assertTrue(scope.contains(StdScopeToken.PHONE));
+		assertTrue(scope.contains(ScopeToken.OPENID));
+		assertTrue(scope.contains(ScopeToken.EMAIL));
+		assertTrue(scope.contains(ScopeToken.PHONE));
 	}
 	
 	
@@ -73,9 +73,9 @@ public class ScopeParserTest extends TestCase {
 		
 		assertTrue(scope.isValid());
 	
-		assertTrue(scope.contains(StdScopeToken.OPENID));
-		assertTrue(scope.contains(StdScopeToken.EMAIL));
-		assertTrue(scope.contains(StdScopeToken.PHONE));
+		assertTrue(scope.contains(ScopeToken.OPENID));
+		assertTrue(scope.contains(ScopeToken.EMAIL));
+		assertTrue(scope.contains(ScopeToken.PHONE));
 	}
 	
 	
@@ -91,9 +91,9 @@ public class ScopeParserTest extends TestCase {
 		
 		assertTrue(scope.isValid());
 	
-		assertTrue(scope.contains(StdScopeToken.OPENID));
-		assertTrue(scope.contains(StdScopeToken.EMAIL));
-		assertTrue(scope.contains(StdScopeToken.PHONE));
+		assertTrue(scope.contains(ScopeToken.OPENID));
+		assertTrue(scope.contains(ScopeToken.EMAIL));
+		assertTrue(scope.contains(ScopeToken.PHONE));
 	}
 	
 	

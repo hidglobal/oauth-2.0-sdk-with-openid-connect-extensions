@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
  * Tests access and refresh token request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-19)
+ * @version $version$ (2012-11-06)
  */
 public class TokenRequestTest extends TestCase {
 	
@@ -48,7 +48,7 @@ public class TokenRequestTest extends TestCase {
 		
 		assertEquals(GrantType.AUTHORIZATION_CODE, tr.getGrantType());
 		assertTrue(tr.getClientAuthentication() instanceof ClientSecretBasic);
-		assertEquals(ClientAuthentication.Method.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
 		
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 	
@@ -109,7 +109,7 @@ public class TokenRequestTest extends TestCase {
 		
 		assertEquals(GrantType.REFRESH_TOKEN, tr.getGrantType());
 		assertTrue(tr.getClientAuthentication() instanceof ClientSecretBasic);
-		assertEquals(ClientAuthentication.Method.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
 		
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 	

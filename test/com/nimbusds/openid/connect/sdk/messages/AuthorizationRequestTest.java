@@ -21,7 +21,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
  * Tests authorisation request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-06)
  */
 public class AuthorizationRequestTest extends TestCase {
 	
@@ -33,7 +33,7 @@ public class AuthorizationRequestTest extends TestCase {
 		rts.add(ResponseType.ID_TOKEN);
 		
 		Scope scope = new Scope();
-		scope.add(StdScopeToken.OPENID);
+		scope.add(ScopeToken.OPENID);
 		
 		ClientID clientID = new ClientID();
 		clientID.setClaimValue("s6BhdRkqt3");
@@ -74,7 +74,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertTrue(authReq.getResponseTypeSet().contains(ResponseType.ID_TOKEN));
 		
 		assertEquals(1, authReq.getScope().size());
-		assertTrue(authReq.getScope().contains(StdScopeToken.OPENID));
+		assertTrue(authReq.getScope().contains(ScopeToken.OPENID));
 		
 		assertEquals("s6BhdRkqt3", authReq.getClientID().getClaimValue());
 		
@@ -117,7 +117,7 @@ public class AuthorizationRequestTest extends TestCase {
 		
 		Scope scope = req.getScope();
 		assertNotNull(scope);
-		assertTrue(scope.contains(StdScopeToken.OPENID));
+		assertTrue(scope.contains(ScopeToken.OPENID));
 		assertEquals(1, scope.size());
 		
 		assertEquals(new Nonce("n-0S6_WzA2Mj"), req.getNonce());
@@ -173,7 +173,7 @@ public class AuthorizationRequestTest extends TestCase {
 		
 		Scope scope = req.getScope();
 		assertNotNull(scope);
-		assertTrue(scope.contains(StdScopeToken.OPENID));
+		assertTrue(scope.contains(ScopeToken.OPENID));
 		assertEquals(1, scope.size());
 		
 		assertEquals(new Nonce("n-0S6_WzA2Mj"), req.getNonce());
