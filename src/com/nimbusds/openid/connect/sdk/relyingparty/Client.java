@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.sdk.relyingparty;
 
 import java.net.URL;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.messages.ClientAuthenticationMethod;
  * OpenID Connect client details.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-07)
  */
 public class Client {
 
@@ -32,12 +32,18 @@ public class Client {
 	 * The registered client ID.
 	 */
 	private ClientID clientID;
+	
+	
+	/**
+	 * Redirect URIs.
+	 */
+	private Set<URL> redirectURIs;
 
 
 	/**
 	 * Administrator contacts for the client.
 	 */
-	private InternetAddress[] contacts;
+	private List<InternetAddress> contacts;
 
 
 	/**
@@ -62,12 +68,6 @@ public class Client {
 	 * The client application policy for use of end-user data.
 	 */
 	private URL privacyPolicyURL;
-
-
-	/**
-	 * Redirect URIs.
-	 */
-	private Set<URL> redirectURIs;
 
 
 	/**
@@ -193,12 +193,16 @@ public class Client {
 	/** 
 	 * Creates a new OpenID Connect client details instance.
 	 *
-	 * @param clientID The client ID. Must not be {@code null}.
+	 * @param clientID The client ID. Must have a defined valued and must 
+	 *                 not be {@code null}.
 	 */
 	public Client(final ClientID clientID) {
 
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
+
+		if (clientID.getClaimValue() == null)
+			throw new IllegalArgumentException("The client ID must have a defined value");
 
 		this.clientID = clientID;
 	}
@@ -213,6 +217,29 @@ public class Client {
 
 		return clientID;
 	}
+	
+	
+	/**
+	 * Gets the redirect URIs for the client.
+	 *
+	 * @return The redirect URIs for the client, {@code null} if none.
+	 */
+	public Set<URL> getRedirectURIs() {
+	
+		return redirectURIs;
+	}
+	
+	
+	/**
+	 * Sets the redirect URIs for the client.
+	 *
+	 * @param redirectURIs The redirect URIs for the client, {@code null} if
+	 *                     none.
+	 */
+	public void setRedirectURIs(final Set<URL> redirectURIs) {
+	
+		this.redirectURIs = redirectURIs;
+	}
 
 
 	/**
@@ -221,7 +248,7 @@ public class Client {
 	 * @return The administrator contacts for the client, {@code null} if
 	 *         none.
 	 */
-	public InternetAddress[] getContacts() {
+	public List<InternetAddress> getContacts() {
 
 		return contacts;
 	}
@@ -233,7 +260,7 @@ public class Client {
 	 * @param contacts The administrator contacts for the client, 
 	 *                 {@code null} if none.
 	 */
-	public void setContacts(final InternetAddress[] contacts) {
+	public void setContacts(final List<InternetAddress> contacts) {
 
 		this.contacts = contacts;
 	}
