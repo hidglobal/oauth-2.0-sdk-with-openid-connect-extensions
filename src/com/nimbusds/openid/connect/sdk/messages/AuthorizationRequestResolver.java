@@ -38,7 +38,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <p>This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-17)
+ * @version $version$ (2012-11-08)
  */
 public class AuthorizationRequestResolver {
 
@@ -451,7 +451,7 @@ public class AuthorizationRequestResolver {
 		       Display displayCopy = null;
 
 		       try {
-			       display = Display.parse(JSONObjectUtils.getString(requestObject, "display"));
+			       displayCopy = Display.parse(JSONObjectUtils.getString(requestObject, "display"));
 
 		       } catch (ParseException e) {
 
@@ -464,6 +464,9 @@ public class AuthorizationRequestResolver {
 		       else if (! display.equals(displayCopy))
 			       throw new ResolveException("Mismatched \"display\" parameter in OpenID Connect request object");
 		}
+
+		if (display == null)
+			display = Display.getDefault();
 
 		return display;
 	}
@@ -494,7 +497,7 @@ public class AuthorizationRequestResolver {
 		       Prompt promptCopy = null;
 
 		       try {
-			       prompt = Prompt.parse(JSONObjectUtils.getString(requestObject, "prompt"));
+			       promptCopy = Prompt.parse(JSONObjectUtils.getString(requestObject, "prompt"));
 
 		       } catch (ParseException e) {
 

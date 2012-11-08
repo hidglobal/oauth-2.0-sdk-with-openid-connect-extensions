@@ -7,7 +7,8 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
 
 
 /**
- * Enumeration of the types of display for authentication and consent UIs.
+ * Enumeration of the types of display for authentication and consent UIs. This
+ * class is immutable.
  *
  * <p>Related specifications:
  *

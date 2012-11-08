@@ -12,7 +12,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
  * Resolved authorisation request. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-08)
  */
 public final class ResolvedAuthorizationRequest {
 
@@ -49,7 +49,7 @@ public final class ResolvedAuthorizationRequest {
 	
 	
 	/**
-	 * The requested display type (optional).
+	 * The requested display type (optional, with default value).
 	 */
 	private final Display display;
 	
@@ -99,11 +99,11 @@ public final class ResolvedAuthorizationRequest {
 	 *                       {@code state} parameter. {@code null} if not 
 	 *                       specified.
 	 * @param display        The requested display type. Corresponds to the 
-	 *                       optional {@code display} parameter. 
-	 *                       {@code null} if not specified.
+	 *                       optional {@code display} parameter which has a
+	 *                       default value. Must not be {@code null}.
 	 * @param prompt         The requested prompt. Corresponds to the 
-	 *                       optional {@code prompt} parameter. {@code null}
-	 *                       if not specified.
+	 *                       optional {@code prompt} parameter. 
+	 *                       {@code null} if not specified.
 	 * @param idTokenHint    The ID Token hint. Corresponds to the optinal 
 	 *                       {@code id_token_hint} parameter. {@code null}
 	 *                       if not specified.
@@ -142,6 +142,9 @@ public final class ResolvedAuthorizationRequest {
 		
 		this.state = state;
 		
+		if (display == null)
+			throw new IllegalArgumentException("The display must not be null");
+
 		this.display = display;
 		
 		this.prompt = prompt;
@@ -218,9 +221,9 @@ public final class ResolvedAuthorizationRequest {
 	
 	/**
 	 * Gets the requested display type. Corresponds to the optional
-	 * {@code display} parameter.
+	 * {@code display} parameter which has a default value.
 	 *
-	 * @return The requested display type, {@code null} if not specified.
+	 * @return The requested display type.
 	 */
 	public Display getDisplay() {
 	
