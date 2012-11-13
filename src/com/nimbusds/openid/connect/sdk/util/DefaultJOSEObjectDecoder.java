@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
 
+import net.jcip.annotations.ThreadSafe;
+
 import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -33,8 +35,9 @@ import com.nimbusds.jose.PlainObject;
  * <p>Not supported: JWS-signed and then JWE-encrypted (nested) objects.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-24)
+ * @version $version$ (2012-11-13)
  */
+@ThreadSafe
 public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 
 

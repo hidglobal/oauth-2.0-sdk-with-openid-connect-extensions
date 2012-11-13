@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import net.jcip.annotations.ThreadSafe;
+
 import com.nimbusds.jose.JOSEObject;
 
 import com.nimbusds.openid.connect.sdk.ParseException;
@@ -23,8 +25,9 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * read timeouts.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-17)
+ * @version $version$ (2012-11-13)
  */
+@ThreadSafe
 public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 
 
