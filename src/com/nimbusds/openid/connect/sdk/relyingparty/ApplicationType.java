@@ -20,4 +20,16 @@ public enum ApplicationType {
 	 * Web application.
 	 */
 	WEB;
+
+
+	/**
+	 * Returns the string identifier of this application type.
+	 *
+	 * @return The string identifier.
+	 */
+	@Override
+	public String toString() {
+	
+		return super.toString().toLowerCase();
+	}
 }

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.mail.internet.ContentType;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.commons.codec.binary.Base64;
 
 import com.nimbusds.openid.connect.sdk.ParseException;
@@ -34,8 +36,9 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class ClientSecretPost extends ClientAuthentication {
 
 

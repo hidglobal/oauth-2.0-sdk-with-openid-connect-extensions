@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.openid.connect.sdk.ParseException;
@@ -58,8 +60,9 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class TokenErrorResponse implements ErrorResponse {
 
 

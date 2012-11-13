@@ -3,6 +3,8 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import java.io.UnsupportedEncodingException;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.commons.codec.binary.Base64;
 
 import com.nimbusds.openid.connect.sdk.ParseException;
@@ -34,8 +36,9 @@ import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
 
 

@@ -3,11 +3,14 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -18,7 +21,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 
 
 /**
- * OAuth 2.0 Bearer Token error response.
+ * OAuth 2.0 Bearer Token error response. This class is immutable.
  *
  * <p>Standard error codes (may be extended with application specific codes):
  *
@@ -49,8 +52,9 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 
 

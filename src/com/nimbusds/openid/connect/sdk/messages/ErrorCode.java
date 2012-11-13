@@ -1,7 +1,6 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
-
 /**
  * Enumeration of OpenID Connect error codes.
  *

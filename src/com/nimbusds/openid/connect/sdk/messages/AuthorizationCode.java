@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import net.jcip.annotations.Immutable;
+
 
 /**
  * OAuth 2.0 authorisation code. This class is immutable.
@@ -12,8 +14,9 @@ package com.nimbusds.openid.connect.sdk.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-21)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class AuthorizationCode {
 
 

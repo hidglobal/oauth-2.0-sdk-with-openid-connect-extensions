@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 
@@ -12,8 +14,9 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * Parser for {@link ScopeToken}s. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class ScopeParser {
 
 
@@ -26,7 +29,7 @@ public class ScopeParser {
 	/**
 	 * Map of scope value strings to their corresponding object.
 	 */
-	private Map<String,ScopeToken> map = new HashMap<String,ScopeToken>();
+	private final Map<String,ScopeToken> map = new HashMap<String,ScopeToken>();
 	
 	
 	/**

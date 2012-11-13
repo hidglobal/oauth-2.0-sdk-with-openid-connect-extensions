@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.mail.internet.ContentType;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.SerializeException;
 
@@ -44,8 +46,9 @@ import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class UserInfoRequest implements Request {
 
 

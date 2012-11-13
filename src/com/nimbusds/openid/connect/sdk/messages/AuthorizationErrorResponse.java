@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.SerializeException;
 
@@ -67,8 +69,9 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-21)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class AuthorizationErrorResponse implements ErrorResponse {
 
 

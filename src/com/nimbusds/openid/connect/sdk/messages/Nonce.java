@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.commons.lang3.RandomStringUtils;
 
 import com.nimbusds.openid.connect.sdk.util.StringUtils;
@@ -17,8 +19,9 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class Nonce {
 
 

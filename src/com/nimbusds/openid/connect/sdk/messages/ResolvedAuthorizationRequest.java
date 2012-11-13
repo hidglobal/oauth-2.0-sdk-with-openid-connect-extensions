@@ -3,6 +3,8 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import java.net.URL;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.jwt.JWT;
 
 import com.nimbusds.openid.connect.sdk.claims.ClientID;
@@ -12,8 +14,9 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
  * Resolved authorisation request. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-08)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class ResolvedAuthorizationRequest {
 
 

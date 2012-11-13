@@ -4,13 +4,16 @@ package com.nimbusds.openid.connect.sdk.messages;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 import com.nimbusds.openid.connect.sdk.util.StringUtils;
 
 
 /**
- * Prompts for end-user reauthentication and consent.
+ * Prompts for end-user reauthentication and consent. This class is not
+ * thread-safe.
  *
  * <p>Related specifications:
  *
@@ -19,8 +22,9 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
+ * @version $version$ (2012-11-13)
  */
+@NotThreadSafe
 public class Prompt extends HashSet<Prompt.Type> {
 
 

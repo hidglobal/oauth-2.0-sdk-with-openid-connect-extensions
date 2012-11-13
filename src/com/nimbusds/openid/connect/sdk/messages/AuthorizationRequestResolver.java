@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import java.net.URL;
 
+import net.jcip.annotations.ThreadSafe;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JOSEException;
@@ -38,8 +40,9 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <p>This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-08)
+ * @version $version$ (2012-11-13)
  */
+@ThreadSafe
 public class AuthorizationRequestResolver {
 
 

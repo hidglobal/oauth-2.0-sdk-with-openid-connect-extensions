@@ -4,11 +4,13 @@ package com.nimbusds.openid.connect.sdk.messages;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 
 /**
- * Set of authorisation {@link ResponseType}s.
+ * Set of authorisation {@link ResponseType}s. This class is not thread-safe.
  *
  * <p>Provides helper methods to determine if the OpenID Connect protocol flow 
  * implied by the response type set is implicit flow or code flow:
@@ -25,8 +27,9 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
+ * @version $version$ (2012-11-13)
  */
+@NotThreadSafe
 public class ResponseTypeSet extends HashSet<ResponseType> {
 
 

@@ -6,11 +6,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 import net.minidev.json.JSONObject;
 
 
 /**
  * Token in the {@link Scope} parameter of an {@link AuthorizationRequest}.
+ * This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -19,8 +22,9 @@ import net.minidev.json.JSONObject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class ScopeToken {
 
 

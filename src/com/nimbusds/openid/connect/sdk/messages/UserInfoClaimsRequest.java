@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import net.jcip.annotations.Immutable;
+
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -25,6 +27,8 @@ import com.nimbusds.langtag.LangTagException;
  * {@link Scope} and then merging the UserInfo claims from the optional OpenID 
  * Connect request object.
  *
+ * <p>This class is immutable.
+ *
  * <p>Related specifications:
  *
  * <ul>
@@ -32,8 +36,9 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class UserInfoClaimsRequest extends ClaimsRequest {
 	
 	

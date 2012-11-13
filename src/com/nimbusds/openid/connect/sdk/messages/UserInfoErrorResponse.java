@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
@@ -49,8 +51,9 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 
 

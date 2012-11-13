@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 
@@ -15,8 +17,9 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class AccessToken {
 
 	
@@ -35,13 +38,13 @@ public final class AccessToken {
 	/**
 	 * Optional expiration, in seconds.
 	 */
-	private long exp = -1l;
+	private final long exp;
 	
 	
 	/**
 	 * Optional scope.
 	 */
-	private Scope scope = null;
+	private final Scope scope;
 	
 	
 	/**

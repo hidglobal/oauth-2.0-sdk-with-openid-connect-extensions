@@ -1,8 +1,11 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import net.jcip.annotations.Immutable;
+
+
 /**
- * Client authentication method at the Token endpoint.
+ * Client authentication method at the Token endpoint. This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -11,8 +14,9 @@ package com.nimbusds.openid.connect.sdk.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class ClientAuthenticationMethod {
 
 
@@ -72,7 +76,7 @@ public class ClientAuthenticationMethod {
 	/**
 	 * The method name.
 	 */
-	private String name;
+	private final String name;
 
 
 	/**

@@ -4,13 +4,15 @@ package com.nimbusds.openid.connect.sdk.messages;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import net.jcip.annotations.NotThreadSafe;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 
 /**
  * UserInfo {@link AuthorizationRequest authorisation request} scope. Specifies
  * an additive list of voluntary claims that are returned from the UserInfo 
- * endpoint.
+ * endpoint. This class is not thread-safe.
  *
  * <p>Related specifications:
  *
@@ -19,8 +21,9 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2012-11-13)
  */
+@NotThreadSafe
 public class Scope extends HashSet<ScopeToken> {
 
 	

@@ -1,8 +1,11 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import net.jcip.annotations.Immutable;
+
+
 /**
- * OAuth 2.0 refresh token.
+ * OAuth 2.0 refresh token. This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -11,15 +14,16 @@ package com.nimbusds.openid.connect.sdk.messages;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class RefreshToken {
 
 
 	/**
 	 * The refresh token value.
 	 */
-	private String value;
+	private final String value;
 	
 	
 	/**

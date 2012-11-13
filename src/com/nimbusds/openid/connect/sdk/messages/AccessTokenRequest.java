@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.SerializeException;
 
@@ -44,8 +46,9 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class AccessTokenRequest extends TokenRequest {
 	
 	
@@ -82,7 +85,8 @@ public final class AccessTokenRequest extends TokenRequest {
 	 * @param redirectURI The redirect URI. Must not be {@code null}.
 	 * @param clientAuth  The client authentication, {@code null} if none.
 	 */
-	public AccessTokenRequest(final AuthorizationCode code, final URL redirectURI, 
+	public AccessTokenRequest(final AuthorizationCode code, 
+		                  final URL redirectURI, 
 	                          final ClientAuthentication clientAuth) {
 	
 		super(GrantType.AUTHORIZATION_CODE, clientAuth);
@@ -121,14 +125,6 @@ public final class AccessTokenRequest extends TokenRequest {
 	}
 	
 	
-	/**
-	 * Returns the HTTP request for this access token request.
-	 *
-	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If this access token request couldn't be 
-	 *                            serialised to an HTTP request.
-	 */
 	@Override
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {

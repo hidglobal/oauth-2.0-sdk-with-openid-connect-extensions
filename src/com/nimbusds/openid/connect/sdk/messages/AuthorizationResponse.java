@@ -8,6 +8,8 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Map;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
@@ -39,8 +41,9 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-21)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public class AuthorizationResponse implements SuccessResponse {
 
 
