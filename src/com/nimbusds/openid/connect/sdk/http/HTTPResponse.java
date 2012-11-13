@@ -10,6 +10,8 @@ import javax.mail.internet.ContentType;
 
 import javax.servlet.http.HttpServletResponse;
 
+import net.jcip.annotations.ThreadSafe;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
@@ -24,7 +26,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
 /**
  * HTTP response with support for all parameters required to construct an OpenID
  * Connect {@link com.nimbusds.openid.connect.sdk.messages.Response response 
- * message}.
+ * message}. This class is thread-safe.
  *
  * <p>Supported HTTP status codes:
  *
@@ -47,8 +49,9 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-11-13)
  */
+@ThreadSafe
 public class HTTPResponse {
 
 	

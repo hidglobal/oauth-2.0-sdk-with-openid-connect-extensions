@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import javax.mail.internet.ContentType;
 
+import net.jcip.annotations.ThreadSafe;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
 
 import com.nimbusds.openid.connect.sdk.util.ContentTypeUtils;
@@ -21,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
 /**
  * HTTP request with support for all parameters required to construct an OpenID 
  * Connect {@link com.nimbusds.openid.connect.sdk.messages.Request request 
- * message}.
+ * message}. This class is thread-safe.
  *
  * <p>Supported HTTP methods:
  *
@@ -38,8 +40,9 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-24)
+ * @version $version$ (2012-11-13)
  */
+@ThreadSafe
 public class HTTPRequest {
 
 
@@ -57,7 +60,7 @@ public class HTTPRequest {
 		/**
 		 * HTTP POST.
 		 */
-		POST;
+		POST
 	}
 	
 	
