@@ -1,13 +1,13 @@
 <html>
 	<head>
 		<!-- Overview for SDK JavaDocs -->
-		<title>OpenID Connect SDK / NimbusDS</title>
+		<title>OpenID Connect 1.0 SDK / NimbusDS</title>
 	</head>
 	
 	<body>
-		<h3>OpenID Connect client/server SDK for Java</h3>
+		<h3>OpenID Connect 1.0 client/server SDK for Java</h3>
 		
-		<p>OpenID Connect is a suite of lightweight specifications 
+		<p>OpenID Connect 1.0 is a suite of lightweight specifications 
 		for providing and consuming identity information on the web. It
 		allows for clients of all types including browser-based, mobile,
 		and JavaScript clients, to request and receive information about 
@@ -19,28 +19,27 @@
 		
 		<p>This SDK allows the creation of concrete OpenID Connect 
 		client and server (IdP) implementations. It is based on the
-		draft specification from 10 April 2012.</p>
+		draft specification from 23 June 2012.</p>
 		
 		<p>Supported OpenID Connect endpoints:</p>
 		
 		<ul>
 			<li>Authorisation endpoint.</li>
 			<li>Token endpoint.</li>
-			<li>Check ID endpoint (to be obsoleted in the next 
-			draft).</li>
 			<li>UserInfo endpoint.</li>
 		</ul>
 			
 		<p>Features:</p>
 		
 		<ul>
-			<li>Support for plain, signed and encrypted JSON Web
-			Tokens (JWT) via the Nimbus-JWT library.</li>
+			<li>Support for plain, signed and encrypted OpenID 
+			request objects and JSON Web Tokens (JWT) via the 
+			Nimbus JOSE+JWT library.</li>
 			<li>Extensible ID token and UserInfo claim sets to
 			allow passing and processing of additional custom 
 			claims.</li>
-			<li>Full i18n support through Language Tags (RFC 5646) 
-			via the Nimbus-LangTag library.</li>
+			<li>Full i18n Language Tags (RFC 5646) support via the
+			Nimbus-LangTag library.</li>
 			<li>Java Servlet integration.</li>
 		</ul>
 		
@@ -49,10 +48,9 @@
 		<ul>
 			<li>Mandatory packages:
 				<ul>
-					<li>Nimbus-JWT: Plain, signed and 
-					encrypted JSON Web Tokens (JWTs).</li>
-					<li>BouncyCastle.org: Handles crypto
-					operations for Nimbus-JWT.</li>
+					<li>Nimbus-JOSE+JWT: Plain, signed and 
+					encrypted objects and JSON Web Tokens 
+					(JWTs).</li>
 					<li>JSON Smart: High-performance JSON
 					parsing and serialisation.</li>
 					<li>Apache Commons Codec: Provides 
@@ -70,6 +68,9 @@
 			</li>
 			<li>Optional packages:
 				<ul>
+					<li>BouncyCastle.org: Handles specific 
+					crypto operations for 
+					Nimbus-JOSE+JWT.</li>
 					<li>Servlet API 2.5+: For server-side
 					implementations running in a servlet
 					container.</li>
