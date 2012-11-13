@@ -7,6 +7,8 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.jose.JOSEObject;
 
 import com.nimbusds.jwt.JWT;
@@ -49,8 +51,9 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-13)
  */
+@Immutable
 public final class AuthorizationRequest implements Request {
 
 
@@ -256,6 +259,9 @@ public final class AuthorizationRequest implements Request {
 		
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
+
+		if (clientID.getClaimValue() == null)
+			throw new IllegalArgumentException("The client ID value must be defined");
 			
 		this.clientID = clientID;
 		
@@ -340,6 +346,9 @@ public final class AuthorizationRequest implements Request {
 		
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
+
+		if (clientID.getClaimValue() == null)
+			throw new IllegalArgumentException("The client ID value must be defined");
 			
 		this.clientID = clientID;
 		
@@ -364,7 +373,6 @@ public final class AuthorizationRequest implements Request {
 		this.requestURI = requestURI;
 		this.idTokenHint = idTokenHint;
 	}
-	
 	
 	
 	/**
