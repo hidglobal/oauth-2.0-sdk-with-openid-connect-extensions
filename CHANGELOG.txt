@@ -6,10 +6,11 @@ version 1.0 (2012-05-29)
 	* JSON support through the JSON Smart library.
 
 
-version 1.1 (2012-11-06)
+version 1.1 (2012-11-14)
 	* Updates message classes to the latest OpenID Connect Messages draft 12
 	  from 2012-07-23.
 	* Refactors and extends authorisation request processing.
 	* Refactors and extends scope token representation.
 	* Hardens thread-safety of message classes.
+	* Adds JCIP annotations.
 	* Upgrades Nimbus-JOSE+JWT JAR to 2.2.
