@@ -16,8 +16,8 @@ import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * Resolved ID Token claims request. Specifies the claims to return with the
- * ID Token. These are determined from the following:
+ * Resolved ID Token claims request. Specifies the claims to return with the ID
+ * Token. These are determined from the following:
  *
  * <ul>
  *     <li>The {@link ResponseTypeSet} passed with the {@code response_type}
@@ -114,7 +114,6 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 
 				requestedClaims.putAll(additionalClaims);
 			}
-			
 			
 			// Parse max_age
 			if (idTokenObject.get("max_age") != null &&

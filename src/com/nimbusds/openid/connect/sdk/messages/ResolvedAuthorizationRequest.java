@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
  * Resolved authorisation request. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-14)
  */
 @Immutable
 public final class ResolvedAuthorizationRequest {
@@ -72,13 +72,13 @@ public final class ResolvedAuthorizationRequest {
 	
 	
 	/**
-	 * The resolved ID Token claims request.
+	 * The resolved ID Token claims request (optional).
 	 */
 	private final IDTokenClaimsRequest idTokenClaimsRequest;
 	
 	
 	/**
-	 * The resolved UserInfo claims request.
+	 * The resolved UserInfo claims request (optional).
 	 */
 	private final UserInfoClaimsRequest userInfoClaimsRequest;
 	
@@ -110,9 +110,10 @@ public final class ResolvedAuthorizationRequest {
 	 * @param idTokenHint    The ID Token hint. Corresponds to the optinal 
 	 *                       {@code id_token_hint} parameter. {@code null}
 	 *                       if not specified.
-	 * @param idTokenClaims  The resolved ID Token claims request. Must not 
-	 *                       be {@code null}.
-	 * @param userInfoClaims The resolved UserInfo claims request.
+	 * @param idTokenClaims  The resolved ID Token claims request. If
+	 *                       {@code null} an ID Token is not requested.
+	 * @param userInfoClaims The resolved UserInfo claims request. If
+	 *                       {@code null} UserInfo is not requested.
 	 */
 	public ResolvedAuthorizationRequest(final ResponseTypeSet rts,
 	                                    final ClientID clientID,
@@ -153,9 +154,6 @@ public final class ResolvedAuthorizationRequest {
 		this.prompt = prompt;
 		
 		this.idTokenHint = idTokenHint;
-		
-		if (idTokenClaims == null)
-			throw new IllegalArgumentException("The resolved ID Token claims request must not be null");
 		
 		this.idTokenClaimsRequest = idTokenClaims;
 		
@@ -261,7 +259,8 @@ public final class ResolvedAuthorizationRequest {
 	/**
 	 * Gets the resolved ID Token claims request.
 	 *
-	 * @return The ID Token claims request.
+	 * @return The ID Token claims request, {@code null} if an ID Token is
+	 *         not requested.
 	 */
 	public IDTokenClaimsRequest getIDTokenClaimsRequest() {
 	
@@ -272,7 +271,8 @@ public final class ResolvedAuthorizationRequest {
 	/**
 	 * Gets the resolved UserInfo claims request.
 	 *
-	 * @return The UserInfo claims request.
+	 * @return The UserInfo claims request, {@code null} if UserInfo is not
+	 *         requested.
 	 */
 	public UserInfoClaimsRequest getUserInfoClaimsRequest() {
 	

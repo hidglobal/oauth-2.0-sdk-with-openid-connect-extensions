@@ -40,7 +40,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <p>This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-14)
  */
 @ThreadSafe
 public class AuthorizationRequestResolver {
@@ -85,7 +85,7 @@ public class AuthorizationRequestResolver {
 	 */
 	public AuthorizationRequestResolver(final JOSEObjectRetriever retriever,
 	                                    final JOSEObjectDecoder decoder) {
-					     
+		
 		this.retriever = retriever;
 		this.decoder = decoder;
 	}
@@ -304,7 +304,7 @@ public class AuthorizationRequestResolver {
 	
 	
 	/**
-	 * Resolves the redirect URI.
+	 * Resolves the redirection URI.
 	 *
 	 * @param request       The original authorisation request. Must not be 
 	 *                      {@code null}.
@@ -437,7 +437,7 @@ public class AuthorizationRequestResolver {
 	 * @param requestObject The decoded OpenID Connect request object, 
 	 *                      {@code null} if not specified.
 	 *
-	 * @return The resolved display, {@code null} if not specified.
+	 * @return The resolved display (the default value if not specified).
 	 *
 	 * @throws ResolveException If the OpenID Connect request object 
 	 *                          contains an invalid instance or mismatching
@@ -563,6 +563,91 @@ public class AuthorizationRequestResolver {
 
 		return idTokenHint;
 	}
+
+
+	/**
+	 * Resolves the ID token claims request.
+	 *
+	 * @param rts           The resolved response type set. Must not be 
+	 *                      {@code null}.
+	 * @param requestObject The decoded OpenID Connect request object, 
+	 *                      {@code null} if not specified.
+	 *
+	 * @return The resolved ID token claims request, {@code null} if an
+	 *         ID token is not requested.
+	 *
+	 * @throws ResolveException If the OpenID Connect request object 
+	 *                          contains an invalid instance or mismatching
+	 *                          copy of the parameter to resolve.
+	 */
+	private static IDTokenClaimsRequest resolveIDTokenClaimsRequest(final ResponseTypeSet rts,
+		                                                        final JSONObject requestObject)
+		throws ResolveException {
+
+		// ID token requested?
+		if (! rts.contains(ResponseType.CODE) && ! rts.contains(ResponseType.ID_TOKEN))
+			return null;
+
+		// Resolve requested ID token claims
+		JSONObject idTokenObject = null;
+		
+		if (JSONObjectUtils.containsKey(requestObject, "id_token")) {
+		
+			try {
+				idTokenObject = JSONObjectUtils.getJSONObject(requestObject, "id_token");
+				
+			} catch (ParseException e) {
+			
+				throw new ResolveException("Invalid \"id_token\" member in OpenID Connect request object: " + e.getMessage(), e);
+			}
+		}
+		
+		return new IDTokenClaimsRequest(rts, idTokenObject);
+	}
+
+
+	/**
+	 * Resolves the UserInfo claims request.
+	 *
+	 * @param rts           The resolved response type set. Must not be 
+	 *                      {@code null}.
+	 * @param scope         The resolved UserInfo request scope. Must not 
+	 *                      be {@code null}.
+	 * @param requestObject The decoded OpenID Connect request object, 
+	 *                      {@code null} if not specified.
+	 *
+	 * @return The resolved UserInfo claims request, {@code null} if a
+	 *         UserInfo response is not requested.
+	 *
+	 * @throws ResolveException If the OpenID Connect request object 
+	 *                          contains an invalid instance or mismatching
+	 *                          copy of the parameter to resolve.
+	 */
+	private static UserInfoClaimsRequest resolveUserInfoClaimsRequest(final ResponseTypeSet rts,
+		                                                          final Scope scope,
+		                                                          final JSONObject requestObject)
+		throws ResolveException {
+
+		// UserInfo requested?
+		if (! rts.contains(ResponseType.CODE) && ! rts.contains(ResponseType.TOKEN))
+			return null;
+
+		// Resolve requested UserInfo claims
+		JSONObject userInfoObject = null;
+		
+		if (JSONObjectUtils.containsKey(requestObject, "userinfo")) {
+		
+			try {
+				userInfoObject = JSONObjectUtils.getJSONObject(requestObject, "userinfo");
+				
+			} catch (ParseException e) {
+			
+				throw new ResolveException("Invalid \"userinfo\" member in OpenID Connect request object: " + e.getMessage(), e);
+			}
+		}
+		
+		return new UserInfoClaimsRequest(scope, userInfoObject);
+	}
 	
 	
 	/**
@@ -614,40 +699,12 @@ public class AuthorizationRequestResolver {
 		JWT idTokenHint = resolveIDTokenHint(request, requestObject);
 		
 		
-		// Resolve requested ID Token claims
-		JSONObject idTokenObject = null;
-		
-		if (JSONObjectUtils.containsKey(requestObject, "id_token")) {
-		
-			try {
-				idTokenObject = JSONObjectUtils.getJSONObject(requestObject, "id_token");
-				
-			} catch (ParseException e) {
-			
-				throw new ResolveException("Invalid \"id_token\" member in OpenID Connect request object: " + e.getMessage(), e);
-			}
-		}
-		
-		IDTokenClaimsRequest idTokenClaimsRequest = new IDTokenClaimsRequest(rts, idTokenObject);
-		
-		
-		
-		// Resolve requested UserInfo claims
-		JSONObject userInfoObject = null;
-		
-		if (JSONObjectUtils.containsKey(requestObject, "userinfo")) {
-		
-			try {
-				userInfoObject = JSONObjectUtils.getJSONObject(requestObject, "userinfo");
-				
-			} catch (ParseException e) {
-			
-				throw new ResolveException("Invalid \"userinfo\" member in OpenID Connect request object: " + e.getMessage(), e);
-			}
-		}
-		
-		UserInfoClaimsRequest userInfoClaimsRequest = new UserInfoClaimsRequest(scope, userInfoObject);
-		
+		// Resolve requested ID Token claims, may be null
+		IDTokenClaimsRequest idTokenClaimsRequest = resolveIDTokenClaimsRequest(rts, requestObject);
+
+		// Resolve requested UserInfo claims, may be null
+		UserInfoClaimsRequest userInfoClaimsRequest = resolveUserInfoClaimsRequest(rts, scope, requestObject);
+
 		
 		return new ResolvedAuthorizationRequest(rts, clientID, redirectURI,
 		                                        nonce, state, display, prompt, idTokenHint,

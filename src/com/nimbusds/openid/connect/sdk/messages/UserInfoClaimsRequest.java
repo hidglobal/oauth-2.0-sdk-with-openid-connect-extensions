@@ -36,7 +36,7 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-14)
  */
 @Immutable
 public class UserInfoClaimsRequest extends ClaimsRequest {
@@ -146,7 +146,6 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 		
 		// Set required claims
 		requiredClaims.addAll(ScopeToken.OPENID.getClaims());
-		
 		
 		// Resolve requested scope to claims
 		requestedClaims.putAll(getClaimsObjectForScope(scope));
