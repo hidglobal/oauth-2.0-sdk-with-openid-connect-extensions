@@ -51,7 +51,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-15)
  */
 @Immutable
 public final class AuthorizationRequest implements Request {
@@ -676,7 +676,8 @@ public final class AuthorizationRequest implements Request {
 		v = params.get("response_type");
 		
 		if (StringUtils.isUndefined(v))
-			throw new ParseException("Missing \"response_type\" parameter");
+			throw new ParseException("Missing \"response_type\" parameter", 
+				                 ErrorCode.INVALID_REQUEST);
 		
 		ResponseTypeSet rts = null;
 		
@@ -685,13 +686,15 @@ public final class AuthorizationRequest implements Request {
 		
 		} catch (ParseException e) {
 			
-			throw new ParseException("Invalid \"response_type\" parameter: " + e.getMessage(), e);
+			throw new ParseException("Invalid \"response_type\" parameter: " + e.getMessage(), 
+				                 ErrorCode.UNSUPPORTED_RESPONSE_TYPE, e);
 		}
 			
 		v = params.get("scope");
 		
 		if (StringUtils.isUndefined(v))
-			throw new ParseException("Missing \"scope\" parameter");
+			throw new ParseException("Missing \"scope\" parameter", 
+				                 ErrorCode.INVALID_REQUEST);
 		
 		Scope scope = null;
 		
@@ -700,14 +703,16 @@ public final class AuthorizationRequest implements Request {
 			
 		} catch (ParseException e) {
 		
-			throw new ParseException("Invalid \"scope\" parameter: " + e.getMessage(), e);
+			throw new ParseException("Invalid \"scope\" parameter: " + e.getMessage(), 
+				                 ErrorCode.INVALID_SCOPE, e);
 		}
 		
 		
 		v = params.get("client_id");
 		
 		if (StringUtils.isUndefined(v))
-			throw new ParseException("Missing \"client_id\" parameter");
+			throw new ParseException("Missing \"client_id\" parameter", 
+				                 ErrorCode.INVALID_REQUEST);
 		
 		ClientID clientID = new ClientID();
 		clientID.setClaimValue(v);
@@ -716,7 +721,8 @@ public final class AuthorizationRequest implements Request {
 		v = params.get("redirect_uri");
 		
 		if (StringUtils.isUndefined(v))
-			throw new ParseException("Missing \"redirect_uri\" parameter");
+			throw new ParseException("Missing \"redirect_uri\" parameter",
+				                 ErrorCode.INVALID_REQUEST);
 			
 		URL redirectURI = null;
 		
@@ -725,7 +731,8 @@ public final class AuthorizationRequest implements Request {
 			
 		} catch (MalformedURLException e) {
 		
-			throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), e);
+			throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
+				                 ErrorCode.INVALID_REQUEST, e);
 		}
 		
 		
@@ -733,7 +740,8 @@ public final class AuthorizationRequest implements Request {
 		
 		// Nonce required in implicit flow
 		if (rts.impliesImplicitFlow() && nonce == null)
-			throw new ParseException("Missing \"nonce\" parameter");
+			throw new ParseException("Missing \"nonce\" parameter",
+				                 ErrorCode.INVALID_REQUEST);
 		
 		
 		// Optional params
@@ -748,7 +756,8 @@ public final class AuthorizationRequest implements Request {
 
 		} catch (ParseException e) {
 
-			throw new ParseException("Invalid \"display\" parameter: " + e.getMessage(), e);
+			throw new ParseException("Invalid \"display\" parameter: " + e.getMessage(), 
+				                 ErrorCode.INVALID_REQUEST, e);
 		}
 		
 		
@@ -759,7 +768,8 @@ public final class AuthorizationRequest implements Request {
 				
 		} catch (ParseException e) {
 			
-			throw new ParseException("Invalid \"prompt\" parameter: " + e.getMessage(), e);
+			throw new ParseException("Invalid \"prompt\" parameter: " + e.getMessage(), 
+				                 ErrorCode.INVALID_REQUEST, e);
 		}
 		
 		
@@ -774,7 +784,8 @@ public final class AuthorizationRequest implements Request {
 				
 			} catch (java.text.ParseException e) {
 			
-				throw new ParseException("Invalid \"request\" parameter: " + e.getMessage(), e);
+				throw new ParseException("Invalid \"request\" parameter: " + e.getMessage(), 
+					                 ErrorCode.INVALID_OPENID_REQUEST_OBJECT, e);
 			}
 		}
 		
@@ -787,14 +798,16 @@ public final class AuthorizationRequest implements Request {
 	
 			// request_object and request_uri must not be defined at the same time
 			if (requestObj != null)
-				throw new ParseException("Invalid request: Found mutually exclusive \"request_object\" and \"request_uri\" parameters");
+				throw new ParseException("Invalid request: Found mutually exclusive \"request_object\" and \"request_uri\" parameters",
+					                 ErrorCode.INVALID_REQUEST);
 	
 			try {
 				requestURI = new URL(v);
 		
 			} catch (MalformedURLException e) {
 			
-				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), e);
+				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
+					                 ErrorCode.INVALID_REQUEST, e);
 			}
 		}
 		
@@ -810,7 +823,8 @@ public final class AuthorizationRequest implements Request {
 				
 			} catch (java.text.ParseException e) {
 		
-				throw new ParseException("Invalid \"id_token_hint\" parameter: " + e.getMessage(), e);
+				throw new ParseException("Invalid \"id_token_hint\" parameter: " + e.getMessage(), 
+					                 ErrorCode.INVALID_REQUEST, e);
 			}
 		}
 		
