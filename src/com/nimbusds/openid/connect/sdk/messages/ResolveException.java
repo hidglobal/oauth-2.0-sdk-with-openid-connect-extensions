@@ -8,7 +8,7 @@ import com.nimbusds.openid.connect.sdk.OpenIDConnectException;
  * Resolve exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-04-23)
+ * @version $version$ (2012-11-15)
  */
 public class ResolveException extends OpenIDConnectException {
 
@@ -20,7 +20,7 @@ public class ResolveException extends OpenIDConnectException {
 	 */
 	public ResolveException(final String message) {
 	
-		super(message);
+		this(message, null, null);
 	}
 	
 	
@@ -32,6 +32,34 @@ public class ResolveException extends OpenIDConnectException {
 	 */
 	public ResolveException(final String message, final Throwable cause) {
 	
-		super(message, cause);
+		this(message, null, cause);
+	}
+
+
+	/**
+	 * Creates a new resolve exception.
+	 *
+	 * @param message   The exception message.
+	 * @param errorCode Associated OpenID Connect error code.
+	 */
+	public ResolveException(final String message, 
+		                final ErrorCode errorCode) {
+	
+		this(message, errorCode, null);
+	}
+
+
+	/**
+	 * Creates a new resolve exception.
+	 *
+	 * @param message   The exception message.
+	 * @param errorCode Associated OpenID Connect error code.
+	 * @param cause     The exception cause.
+	 */
+	public ResolveException(final String message, 
+		                final ErrorCode errorCode,
+		                final Throwable cause) {
+	
+		super(message, errorCode, cause);
 	}
 }
