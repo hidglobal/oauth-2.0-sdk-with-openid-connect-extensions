@@ -40,7 +40,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <p>This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-14)
+ * @version $version$ (2012-11-15)
  */
 @ThreadSafe
 public class AuthorizationRequestResolver {
@@ -133,11 +133,13 @@ public class AuthorizationRequestResolver {
 			
 		} catch (IOException e) {
 
-			throw new ResolveException("Couldn't download OpenID Connect request object: " + e.getMessage(), e);
+			throw new ResolveException("Couldn't download OpenID Connect request object: " + e.getMessage(), 
+				                   ErrorCode.INVALID_REQUEST_URI, e);
 
 		} catch (ParseException e) {
 
-			throw new ResolveException("Couldn't parse downloaded OpenID Connect request object: " + e.getMessage(), e);
+			throw new ResolveException("Couldn't parse downloaded OpenID Connect request object: " + e.getMessage(), 
+				                   ErrorCode.INVALID_REQUEST_URI, e);
 		}
 	}
 	
@@ -165,13 +167,15 @@ public class AuthorizationRequestResolver {
 				
 		} catch (JOSEException e) {
 		
-			throw new ResolveException("Couldn't decode/verify JOSE encoded OpenID Connect request object: " + e.getMessage(), e);
+			throw new ResolveException("Couldn't decode/verify JOSE encoded OpenID Connect request object: " + e.getMessage(), 
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT, e);
 		}
 		
 		JSONObject jsonObject = payload.toJSONObject();
 		
 		if (jsonObject == null)
-			throw new ResolveException("JOSE object payload not a valid JSON object");
+			throw new ResolveException("JOSE object payload not a valid JSON object",
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 		
 		return jsonObject;
 	}
@@ -208,11 +212,13 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"response_type\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"response_type\" parameter in OpenID Connect request object: " + e.getMessage(), 
+					                   ErrorCode.INVALID_REQUEST, e);
 			}
 			
 			if (! rts.containsAll(rtsCopy))
-				throw new ResolveException("Mismatched \"response_type\" parameter in OpenID Connect request object");
+				throw new ResolveException("Mismatched \"response_type\" parameter in OpenID Connect request object",
+					                   ErrorCode.INVALID_REQUEST);
 		}
 		
 		return rts;
@@ -250,11 +256,13 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"scope\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"scope\" parameter in OpenID Connect request object: " + e.getMessage(), 
+				                           ErrorCode.INVALID_SCOPE, e);
 			}
 			
 			if (! scope.containsAll(scopeCopy))
-				throw new ResolveException("Mismatched \"scope\" parameter in OpenID Connect request object");
+				throw new ResolveException("Mismatched \"scope\" parameter in OpenID Connect request object",
+					                   ErrorCode.INVALID_REQUEST);
 		}
 		
 		return scope;
@@ -292,11 +300,13 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"client_id\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"client_id\" parameter in OpenID Connect request object: " + e.getMessage(), 
+					                   ErrorCode.INVALID_REQUEST, e);
 			}
 			
 			if (! clientID.equals(clientIDCopy))
-				throw new ResolveException("Mismatched \"client_id\" parameter in OpenID Connect request object");
+				throw new ResolveException("Mismatched \"client_id\" parameter in OpenID Connect request object",
+					                   ErrorCode.INVALID_REQUEST);
 		}
 		
 		return clientID;
@@ -332,11 +342,13 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"redirect_uri\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"redirect_uri\" parameter in OpenID Connect request object: " + e.getMessage(), 
+					                   ErrorCode.INVALID_REQUEST, e);
 			}
 			
 			if (! url.equals(urlCopy))
-				throw new ResolveException("Mismatched \"redirect_uri\" parameter in OpenID Connect request object");
+				throw new ResolveException("Mismatched \"redirect_uri\" parameter in OpenID Connect request object",
+					                   ErrorCode.INVALID_REQUEST);
 		}
 		
 		return url;
@@ -372,14 +384,16 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"nonce\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"nonce\" parameter in OpenID Connect request object: " + e.getMessage(), 
+					                   ErrorCode.INVALID_REQUEST, e);
 			}
 			
 			if (nonce == null)
 				nonce = nonceCopy;
 			
 			else if (! nonce.equals(nonceCopy))
-				throw new ResolveException("Mismatched \"nonce\" parameter in OpenID Connect request object");
+				throw new ResolveException("Mismatched \"nonce\" parameter in OpenID Connect request object",
+					                   ErrorCode.INVALID_REQUEST);
 		}
 		
 		return nonce;
@@ -415,14 +429,16 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"state\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"state\" parameter in OpenID Connect request object: " + e.getMessage(), 
+					                   ErrorCode.INVALID_REQUEST, e);
 			}
 			
 			if (state == null)
 				state = stateCopy;
 			
 			else if (! state.equals(stateCopy))
-				throw new ResolveException("Mismatched \"state\" parameter in OpenID Connect request object");
+				throw new ResolveException("Mismatched \"state\" parameter in OpenID Connect request object",
+					                   ErrorCode.INVALID_REQUEST);
 		}
 		
 		return state;
@@ -458,14 +474,16 @@ public class AuthorizationRequestResolver {
 
 		       } catch (ParseException e) {
 
-			       throw new ResolveException("Invalid \"display\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"display\" parameter in OpenID Connect request object: " + e.getMessage(), 
+			                                  ErrorCode.INVALID_REQUEST, e);
 		       }
 
 		       if (display == null)
 			       display = displayCopy;
 
 		       else if (! display.equals(displayCopy))
-			       throw new ResolveException("Mismatched \"display\" parameter in OpenID Connect request object");
+			       throw new ResolveException("Mismatched \"display\" parameter in OpenID Connect request object",
+			       	                          ErrorCode.INVALID_REQUEST);
 		}
 
 		if (display == null)
@@ -504,14 +522,16 @@ public class AuthorizationRequestResolver {
 
 		       } catch (ParseException e) {
 
-			       throw new ResolveException("Invalid \"prompt\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"prompt\" parameter in OpenID Connect request object: " + e.getMessage(),
+			                                  ErrorCode.INVALID_REQUEST, e);
 		       }
 
 		       if (prompt == null)
 			       prompt = promptCopy;
 
 		       else if (! prompt.equals(promptCopy))
-			       throw new ResolveException("Mismatched \"prompt\" parameter in OpenID Connect request object");
+			       throw new ResolveException("Mismatched \"prompt\" parameter in OpenID Connect request object",
+			       	                          ErrorCode.INVALID_REQUEST);
 		}
 
 		return prompt;
@@ -547,18 +567,21 @@ public class AuthorizationRequestResolver {
 
 			} catch (ParseException e) {
 
-			       throw new ResolveException("Invalid \"id_token_hint\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"id_token_hint\" parameter in OpenID Connect request object: " + e.getMessage(),
+			                                  ErrorCode.INVALID_REQUEST, e);
 
 			} catch (java.text.ParseException e) {
 
-			       throw new ResolveException("Invalid \"id_token_hint\" parameter in OpenID Connect request object: " + e.getMessage(), e);
+			       throw new ResolveException("Invalid \"id_token_hint\" parameter in OpenID Connect request object: " + e.getMessage(),
+			                                  ErrorCode.INVALID_REQUEST, e);
 			}
 
 			if (idTokenHint == null)
 			       idTokenHint = idTokenHintCopy;
 
 			else if (! idTokenHint.equals(idTokenHintCopy))
-			       throw new ResolveException("Mismatched \"id_token_hint\" parameter in OpenID Connect request object");
+			       throw new ResolveException("Mismatched \"id_token_hint\" parameter in OpenID Connect request object",
+			       	                          ErrorCode.INVALID_REQUEST);
 		}
 
 		return idTokenHint;
@@ -598,7 +621,8 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"id_token\" member in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"id_token\" member in OpenID Connect request object: " + e.getMessage(),
+				                           ErrorCode.INVALID_OPENID_REQUEST_OBJECT, e);
 			}
 		}
 		
@@ -642,7 +666,8 @@ public class AuthorizationRequestResolver {
 				
 			} catch (ParseException e) {
 			
-				throw new ResolveException("Invalid \"userinfo\" member in OpenID Connect request object: " + e.getMessage(), e);
+				throw new ResolveException("Invalid \"userinfo\" member in OpenID Connect request object: " + e.getMessage(),
+				                           ErrorCode.INVALID_OPENID_REQUEST_OBJECT, e);
 			}
 		}
 		
