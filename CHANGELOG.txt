@@ -8,9 +8,10 @@ version 1.0 (2012-05-29)
 
 version 1.1 (2012-11-14)
 	* Updates message classes to the latest OpenID Connect Messages draft 12
-	  from 2012-07-23.
+	  from 2012-06-23.
 	* Refactors and extends authorisation request processing.
 	* Refactors and extends scope token representation.
+	* Improves OpenID Connect / OAuth 2.0 error code reporting.
 	* Hardens thread-safety of message classes.
 	* Adds JCIP annotations.
 	* Upgrades Nimbus-JOSE+JWT JAR to 2.2.
