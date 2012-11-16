@@ -36,14 +36,15 @@ import com.nimbusds.langtag.LangTagException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-16)
  */
 @Immutable
 public class IDTokenClaimsRequest extends ClaimsRequest {
 
 
 	/**
-	 * The maximum authentication age, in seconds. -1 if not specified.
+	 * The maximum required authentication age, in seconds; -1 if not 
+	 * specified.
 	 */
 	private int maxAge = -1;
 	
@@ -137,7 +138,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 * @throws ResolveException If the required user ID couldn't be
 	 *                          correctly resolved.
 	 */
-	public String getUserID()
+	public String getRequiredUserID()
 		throws ResolveException {
 	
 		Object uidObject = requestedClaims.get("user_id");
@@ -146,7 +147,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			return null;
 			
 		if (! (uidObject instanceof JSONObject))
-			throw new ResolveException("Unexpected \"user_id\" type, must be a JSON object");
+			throw new ResolveException("Unexpected \"user_id\" type, must be a JSON object",
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 			
 		Object uidValue = ((JSONObject)uidObject).get("value");
 		
@@ -154,7 +156,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			return null;
 
 		if (! (uidValue instanceof String))
-			throw new ResolveException("Unexpected \"value\" type, must be a JSON string");
+			throw new ResolveException("Unexpected \"value\" type, must be a JSON string",
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 			
 		return (String)uidValue;
 	}
@@ -175,7 +178,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 * @throws ResolveException If the required ACRs couldn't be correctly
 	 *                          resolved.
 	 */
-	public String[] getAuthenticationContextClassReference()
+	public String[] getRequiredAuthenticationContextClassReferences()
 		throws ResolveException {
 	
 		Object acrObject = requestedClaims.get("acr");
@@ -184,7 +187,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			return null;
 			
 		if (! (acrObject instanceof JSONObject))
-			throw new ResolveException("Unexpected \"acr\" type, must be a JSON object");
+			throw new ResolveException("Unexpected \"acr\" type, must be a JSON object",
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 	
 		Object acrValues = ((JSONObject)acrObject).get("values");
 		
@@ -192,7 +196,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			return null;
 			
 		if (! (acrValues instanceof JSONArray))
-			throw new ResolveException("Unexpected \"acr\" values type, must be a JSON array");
+			throw new ResolveException("Unexpected \"acr\" values type, must be a JSON array",
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 	
 		int numElements = ((List)acrValues).size();
 	
@@ -201,7 +206,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 		for (int i=0; i < numElements; i++) {
 		
 			if (! (((List)acrValues).get(i) instanceof String))
-				throw new ResolveException("Unexpected ACR value, must be a JSON string");
+				throw new ResolveException("Unexpected ACR value, must be a JSON string",
+					                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 			
 			acr[i] = (String)((List)acrValues).get(i);
 		}
@@ -211,12 +217,12 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
-	 * Gets the expected max authentication age (shorthand method).
+	 * Gets the required max authentication age (shorthand method).
 	 *
-	 * @return The maximum authentication age, in seconds. -1 if not 
+	 * @return The maximum authentication age, in seconds; -1 if not 
 	 *         specified.
 	 */
-	public int getMaxAge()
+	public int getRequiredMaxAge()
 		throws ResolveException {
 	
 		return maxAge;
