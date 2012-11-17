@@ -12,7 +12,7 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
-import com.nimbusds.openid.connect.sdk.claims.AuthenticationContextClassReference;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClientID;
 import com.nimbusds.openid.connect.sdk.claims.UserID;
 
@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.messages.ClientAuthenticationMethod;
  * OpenID Connect client details.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-07)
+ * @version $version$ (2012-11-17)
  */
 public class Client {
 
@@ -187,7 +187,7 @@ public class Client {
 	/**
 	 * The default Authentication Context Class Reference (ACR).
 	 */
-	private AuthenticationContextClassReference defaultACR;
+	private ACR defaultACR;
 
 
 	/** 
@@ -771,7 +771,7 @@ public class Client {
 	 *
 	 * @return The default ACR, {@code null} if not specified.
 	 */
-	public AuthenticationContextClassReference getDefaultACR() {
+	public ACR getDefaultACR() {
 
 		return defaultACR;
 	}
@@ -782,9 +782,8 @@ public class Client {
 	 *
 	 * @param defaultACR The default ACR, {@code null} if not specified.
 	 */
-	public void setDefaultACR(final AuthenticationContextClassReference defaultACR) {
+	public void setDefaultACR(final ACR defaultACR) {
 
 		this.defaultACR = defaultACR;
 	}
-
 }

@@ -14,7 +14,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTagException;
 
-import com.nimbusds.openid.connect.sdk.claims.AuthenticationContextClassReference;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.UserID;
 
 
@@ -186,7 +186,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 * @throws ResolveException If the required ACRs couldn't be correctly
 	 *                          resolved.
 	 */
-	public AuthenticationContextClassReference[] getRequiredAuthenticationContextClassReferences()
+	public ACR[] getRequiredACRs()
 		throws ResolveException {
 	
 		Object acrObject = requestedClaims.get("acr");
@@ -209,8 +209,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	
 		int numElements = ((List)acrValues).size();
 	
-		AuthenticationContextClassReference[] acr = 
-			new AuthenticationContextClassReference[numElements];
+		ACR[] acr = 
+			new ACR[numElements];
 		
 		for (int i=0; i < numElements; i++) {
 		
@@ -218,7 +218,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 				throw new ResolveException("Unexpected ACR value, must be a JSON string",
 					                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 			
-			acr[i] = new AuthenticationContextClassReference();
+			acr[i] = new ACR();
 			acr[i].setClaimValue((String)((List)acrValues).get(i));
 		}
 		

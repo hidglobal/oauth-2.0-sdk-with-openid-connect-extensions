@@ -5,8 +5,8 @@ package com.nimbusds.openid.connect.sdk.claims;
  * Authentication Context Class Reference ({@code acr}). It identifies the 
  * authentication context, i.e. the information that the relying party may 
  * require before it makes an entitlements decision with respect to an 
- * authentication response. Such context may include, but is not limited to, the 
- * actual authentication method used or level of assurance such as 
+ * authentication response. Such context may include, but is not limited to, 
+ * the actual authentication method used or level of assurance such as 
  * ITU-T X.1254 | ISO/IEC 29115 entity authentication assurance level.
  *
  * <p>The ACR is represented by a string or an URL string.
@@ -19,46 +19,46 @@ package com.nimbusds.openid.connect.sdk.claims;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-11-17)
  */
-public class AuthenticationContextClassReference extends StringClaim {
+public class ACR extends StringClaim {
 
 
 	/**
 	 * ACR level 0.
 	 */
-	public static final AuthenticationContextClassReference LEVEL_ZERO = new AuthenticationContextClassReference("0");
+	public static final ACR LEVEL_ZERO = new ACR("0");
 
 
 	/**
 	 * ACR level 1.
 	 */
-	public static final AuthenticationContextClassReference LEVEL_ONE = new AuthenticationContextClassReference("1");
+	public static final ACR LEVEL_ONE = new ACR("1");
 
 
 	/**
 	 * ACR level 2.
 	 */
-	public static final AuthenticationContextClassReference LEVEL_TWO = new AuthenticationContextClassReference("2");
+	public static final ACR LEVEL_TWO = new ACR("2");
 
 
 	/**
 	 * ACR level 3.
 	 */
-	public static final AuthenticationContextClassReference LEVEL_THREE = new AuthenticationContextClassReference("3");
+	public static final ACR LEVEL_THREE = new ACR("3");
 
 
 	/**
 	 * ACR level 4.
 	 */
-	public static final AuthenticationContextClassReference LEVEL_FOUR = new AuthenticationContextClassReference("4");
+	public static final ACR LEVEL_FOUR = new ACR("4");
 
 
 	/**
 	 * Creates a new unspecified Authentication Context Class Reference 
 	 * (ACR).
 	 */
-	public AuthenticationContextClassReference() {
+	public ACR() {
 	
 		super();
 	}
@@ -70,7 +70,7 @@ public class AuthenticationContextClassReference extends StringClaim {
 	 *
 	 * @param value The ACR value. Must not be {@code null}.
 	 */
-	private AuthenticationContextClassReference(final String value) {
+	private ACR(final String value) {
 	
 		super();
 		

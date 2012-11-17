@@ -13,7 +13,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
 
 import com.nimbusds.openid.connect.sdk.claims.AccessTokenHash;
 import com.nimbusds.openid.connect.sdk.claims.Audience;
-import com.nimbusds.openid.connect.sdk.claims.AuthenticationContextClassReference;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.AuthenticationTime;
 import com.nimbusds.openid.connect.sdk.claims.Claim;
 import com.nimbusds.openid.connect.sdk.claims.ClaimValueParser;
@@ -53,7 +53,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2012-11-17)
  */
 public class IDTokenClaims extends JSONObjectClaims {
 
@@ -127,7 +127,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	/**
 	 * The Authentication Context Class Reference (optional).
 	 */
-	private AuthenticationContextClassReference acr = null;
+	private ACR acr = null;
 	
 	
 	/**
@@ -292,7 +292,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 * @return The Authentication Context Class Reference, {@code null} if
 	 *         not specified.
 	 */
-	public AuthenticationContextClassReference getAuthenticationContextClassReference() {
+	public ACR getACR() {
 	
 		return acr;
 	}
@@ -305,7 +305,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 * @param acr The Authentication Context Class Reference, {@code null}
 	 *            if not specified.
 	 */
-	public void setAuthenticationContextClassReference(final AuthenticationContextClassReference acr) {
+	public void setACR(final ACR acr) {
 	
 		this.acr = acr;
 	}
@@ -501,13 +501,13 @@ public class IDTokenClaims extends JSONObjectClaims {
 		
 		// Get optional ID token claims
 		
-		AuthenticationContextClassReference acr = new AuthenticationContextClassReference();
+		ACR acr = new ACR();
 		
 		if (jsonObject.containsKey(acr.getClaimName())) {
 			
 			ClaimValueParser.parse(jsonObject, acr);
 			jsonObject.remove(acr.getClaimName());
-			idTokenClaims.setAuthenticationContextClassReference(acr);
+			idTokenClaims.setACR(acr);
 		}
 		
 		
