@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-19)
  */
 @Immutable
 public final class AccessToken {
@@ -59,7 +59,7 @@ public final class AccessToken {
 	 */
 	public AccessToken(final String value) {
 	
-		this(value, -1l, null);
+		this(value, 0l, null);
 	}
 	
 	
@@ -68,7 +68,7 @@ public final class AccessToken {
 	 *
 	 * @param value The access token value. Must not be {@code null} or
 	 *              empty string.
-	 * @param exp   The expiration in seconds, -1 if not specified.
+	 * @param exp   The expiration in seconds, 0 if not specified.
 	 * @param scope The scope, {@code null} if not specified.
 	 */
 	public AccessToken(final String value, final long exp, final Scope scope) {
@@ -98,7 +98,7 @@ public final class AccessToken {
 	/**
 	 * Gets the optional expiration.
 	 *
-	 * @return The expiration in seconds, -1 if not specified.
+	 * @return The expiration in seconds, 0 if not specified.
 	 */
 	public long getExpiration() {
 	

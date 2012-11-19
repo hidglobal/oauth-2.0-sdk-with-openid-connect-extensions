@@ -54,7 +54,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-19)
  */
 @Immutable
 public final class AccessTokenResponse implements SuccessResponse {
@@ -219,10 +219,10 @@ public final class AccessTokenResponse implements SuccessResponse {
 		
 		String accessTokenValue = JSONObjectUtils.getString(jsonObject, "access_token");
 		
-		long exp = -1;
+		long exp = 0;
 		
 		if (jsonObject.containsKey("expires_in"))
-			exp = JSONObjectUtils.getInt(jsonObject, "expires_in");
+			exp = JSONObjectUtils.getLong(jsonObject, "expires_in");
 		
 		
 		AccessToken accessToken = new AccessToken(accessTokenValue, exp, null);

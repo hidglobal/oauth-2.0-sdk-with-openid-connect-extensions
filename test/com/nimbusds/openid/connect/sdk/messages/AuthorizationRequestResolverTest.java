@@ -13,7 +13,7 @@ import com.nimbusds.openid.connect.sdk.util.JOSEObjectRetriever;
  * Tests the authorisation request resolver.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-17)
+ * @version $version$ (2012-11-19)
  */
 public class AuthorizationRequestResolverTest extends TestCase {
 
@@ -90,7 +90,7 @@ public class AuthorizationRequestResolverTest extends TestCase {
 
 		assertNull(idToken.getRequiredUserID());
 		assertNull(idToken.getRequiredACRs());
-		assertEquals(-1, idToken.getRequiredMaxAge());
+		assertEquals(0, idToken.getRequiredMaxAge());
 
 
 		// UserInfo claims
@@ -103,6 +103,5 @@ public class AuthorizationRequestResolverTest extends TestCase {
 		assertNull(resolvedRequest.getPrompt());
 
 		assertNull(resolvedRequest.getIDTokenHint());
-
 	}
 }

@@ -39,17 +39,17 @@ import com.nimbusds.openid.connect.sdk.claims.UserID;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-17)
+ * @version $version$ (2012-11-19)
  */
 @Immutable
 public class IDTokenClaimsRequest extends ClaimsRequest {
 
 
 	/**
-	 * The maximum required authentication age, in seconds; -1 if not 
+	 * The maximum required authentication age, in seconds; 0 if not 
 	 * specified.
 	 */
-	private int maxAge = -1;
+	private int maxAge = 0;
 	
 	
 	/**
@@ -229,7 +229,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	/**
 	 * Gets the required max authentication age (shorthand method).
 	 *
-	 * @return The maximum authentication age, in seconds; -1 if not 
+	 * @return The maximum authentication age, in seconds; 0 if not 
 	 *         specified.
 	 */
 	public int getRequiredMaxAge()

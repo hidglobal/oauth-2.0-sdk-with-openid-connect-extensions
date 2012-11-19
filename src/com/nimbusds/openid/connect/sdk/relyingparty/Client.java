@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.messages.ClientAuthenticationMethod;
  * OpenID Connect client details.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-17)
+ * @version $version$ (2012-11-19)
  */
 public class Client {
 
@@ -172,9 +172,9 @@ public class Client {
 
 
 	/**
-	 * The default max authentication age, in seconds. If not specified -1.
+	 * The default max authentication age, in seconds. If not specified 0.
 	 */
-	private int defaultMaxAge = -1;
+	private int defaultMaxAge = 0;
 
 
 	/**
@@ -720,7 +720,7 @@ public class Client {
 	 * Gets the default max authentication age.
 	 *
 	 * @return The default max authentication age, in seconds. If not
-	 *         specified -1.
+	 *         specified 0.
 	 */
 	public int getDefaultMaxAge() {
 
@@ -732,7 +732,7 @@ public class Client {
 	 * Sets the default max authentication age.
 	 *
 	 * @param defaultMaxAge The default max authentication age, in seconds.
-	 *                      If not specified -1.
+	 *                      If not specified 0.
 	 */
 	public void setDefaultMaxAge(final int defaultMaxAge) {
 

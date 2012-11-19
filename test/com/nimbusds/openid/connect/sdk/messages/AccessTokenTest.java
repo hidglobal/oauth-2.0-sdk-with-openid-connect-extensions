@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * Tests the access token class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-11-19)
  */
 public class AccessTokenTest extends TestCase {
 
@@ -20,7 +20,7 @@ public class AccessTokenTest extends TestCase {
 		AccessToken token = new AccessToken("abc");
 		
 		assertEquals("abc", token.getValue());
-		assertEquals(-1l, token.getExpiration());
+		assertEquals(0l, token.getExpiration());
 		assertNull(token.getScope());
 		
 		assertEquals("Bearer abc", token.toAuthorizationHeader());
@@ -52,7 +52,7 @@ public class AccessTokenTest extends TestCase {
 		}
 		
 		assertEquals("abc", token.getValue());
-		assertEquals(-1l, token.getExpiration());
+		assertEquals(0l, token.getExpiration());
 		assertNull(token.getScope());
 	}
 	
