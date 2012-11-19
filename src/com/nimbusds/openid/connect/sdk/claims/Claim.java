@@ -30,11 +30,29 @@ import net.minidev.json.JSONObject;
  * </pre>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-16)
+ * @version $version$ (2012-11-19)
  */
 public interface Claim<T> {
 
 	
+	/**
+	 * Enumeration of the claim requirement types.
+	 */
+	public static enum Requirement {
+
+		/**
+		 * Essential claim.
+		 */
+		ESSENTIAL,
+
+
+		/**
+		 * Voluntary claim.
+		 */
+		VOLUNTARY
+	}
+
+
 	/**
 	 * Enumeration of the underlying claim value JSON types. Used in claim 
 	 * parsing.
