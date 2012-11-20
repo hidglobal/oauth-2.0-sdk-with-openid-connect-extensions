@@ -15,6 +15,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.langtag.LangTagException;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
+import com.nimbusds.openid.connect.sdk.claims.Claim;
 import com.nimbusds.openid.connect.sdk.claims.UserID;
 
 
@@ -39,7 +40,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserID;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-19)
+ * @version $version$ (2012-11-20)
  */
 @Immutable
 public class IDTokenClaimsRequest extends ClaimsRequest {
@@ -172,7 +173,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
-	 * Gets the required Authentication Context Class References (ACRs) 
+	 * Gets the requested Authentication Context Class References (ACRs) 
 	 * (shorthand method).
 	 *
 	 * <p>Example claim structure:
@@ -181,12 +182,12 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 * { "acr": {"values":["2","http://id.incommon.org/assurance/bronze"]}, ... }
 	 * </pre>
 	 *
-	 * @return The required ACRs, {@code null} if not specified.
+	 * @return The requested ACRs, {@code null} if not specified.
 	 *
 	 * @throws ResolveException If the required ACRs couldn't be correctly
 	 *                          resolved.
 	 */
-	public ACR[] getRequiredACRs()
+	public ACRRequest getRequestedACRs()
 		throws ResolveException {
 	
 		Object acrObject = requestedClaims.get("acr");
@@ -198,7 +199,9 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			throw new ResolveException("Unexpected \"acr\" type, must be a JSON object",
 				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 	
+		
 		Object acrValues = ((JSONObject)acrObject).get("values");
+		Object essentialValue = ((JSONObject)acrObject).get("essential");
 		
 		if (acrValues == null)
 			return null;
@@ -207,10 +210,16 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			throw new ResolveException("Unexpected \"acr\" values type, must be a JSON array",
 				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
 	
+		Claim.Requirement req = Claim.Requirement.VOLUNTARY;
+
+		if (essentialValue != null && essentialValue instanceof Boolean &&
+		    (Boolean)essentialValue)
+			req = Claim.Requirement.ESSENTIAL;
+
+
 		int numElements = ((List)acrValues).size();
 	
-		ACR[] acr = 
-			new ACR[numElements];
+		ACR[] acr = new ACR[numElements];
 		
 		for (int i=0; i < numElements; i++) {
 		
@@ -222,7 +231,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			acr[i].setClaimValue((String)((List)acrValues).get(i));
 		}
 		
-		return acr;
+		return new ACRRequest(req, acr);
 	}
 	
 	

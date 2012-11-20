@@ -17,7 +17,8 @@ import net.minidev.json.JSONObject;
  * number, array, object or null. Implementations should also override the
  * {@link #equals}, {@link #hashCode} and {@link #toString} methods.
  *
- * <p>Multiple claims forming a set are typically serialised into a JSON object:
+ * <p>Multiple claims forming a set are typically serialised into a JSON 
+ * object:
  *
  * <pre>
  * {
