@@ -26,7 +26,8 @@ public class ClaimValueParser {
 	/**
 	 * Parses a claim value from the specified JSON object. Supports all 
 	 * {@link Claim.ValueType claim JSON data types} except
-	 * {@link Claim.ValueType#ARRAY array} and {@link Claim.ValueType#OBJECT object}.
+	 * {@link Claim.ValueType#ARRAY array} and 
+	 * {@link Claim.ValueType#OBJECT object}.
 	 *
 	 *
 	 * @param o     The JSON object containing a member representing the
