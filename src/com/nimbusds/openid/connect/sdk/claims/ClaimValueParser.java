@@ -25,7 +25,7 @@ public class ClaimValueParser {
 	
 	/**
 	 * Parses a claim value from the specified JSON object. Supports all 
-	 * {@link Claim.ValueType claim JSON data types} expect
+	 * {@link Claim.ValueType claim JSON data types} except
 	 * {@link Claim.ValueType#ARRAY array} and {@link Claim.ValueType#OBJECT object}.
 	 *
 	 *
