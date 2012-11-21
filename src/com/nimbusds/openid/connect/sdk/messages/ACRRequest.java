@@ -11,7 +11,7 @@ import com.nimbusds.openid.connect.sdk.claims.Claim;
  * Authentication Context Class Reference (ACR) request.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-20)
+ * @version $version$ (2012-11-21)
  */
 @Immutable 
 public class ACRRequest {
@@ -24,19 +24,19 @@ public class ACRRequest {
 
 
 	/**
-	 * The requested ACR levels.
+	 * The requested ACR values.
 	 */
-	private final ACR[] levels;
+	private final ACR[] values;
 
 
 	/**
 	 * Creates a new Authentication Context Class Reference (ACR) request.
 	 *
 	 * @param requirement The claim requirement. Must not be {@code null}.
-	 * @param levels      The requested ACR levels, in order of preference.
+	 * @param values      The requested ACR values, in order of preference.
 	 *                    Must not be {@code null}.
 	 */
-	public ACRRequest(final Claim.Requirement requirement, final ACR[] levels) {
+	public ACRRequest(final Claim.Requirement requirement, final ACR[] values) {
 
 		if (requirement == null)
 			throw new IllegalArgumentException("The ACR claim requirement must not be null");
@@ -44,10 +44,10 @@ public class ACRRequest {
 		this.requirement = requirement;
 
 
-		if (levels == null)
-			throw new IllegalArgumentException("The requested ACR levels must not be null");
+		if (values == null)
+			throw new IllegalArgumentException("The requested ACR values must not be null");
 
-		this.levels = levels;
+		this.values = values;
 	}
 	
 
@@ -63,12 +63,12 @@ public class ACRRequest {
 
 
 	/**
-	 * Gets the requested ACR levels.
+	 * Gets the requested ACR values.
 	 *
-	 * @return The requested ACR levels, in order of preference.
+	 * @return The requested ACR values, in order of preference.
 	 */
-	public ACR[] getLevels() {
+	public ACR[] getValues() {
 
-		return levels;
+		return values;
 	}
 }
