@@ -3,7 +3,11 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.nimbusds.openid.connect.sdk.ParseException;
+
+import com.nimbusds.openid.connect.sdk.util.StringUtils;
 
 
 /**
@@ -17,7 +21,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-19)
+ * @version $version$ (2012-11-21)
  */
 @Immutable
 public final class AccessToken {
@@ -73,7 +77,7 @@ public final class AccessToken {
 	 */
 	public AccessToken(final String value, final long exp, final Scope scope) {
 	
-		if (value == null || value.trim().isEmpty())
+		if (StringUtils.isUndefined(value))
 			throw new IllegalArgumentException("The access token value must not be null or empty string");
 			
 		this.value = value;
@@ -132,6 +136,47 @@ public final class AccessToken {
 	
 		return "Bearer " + value;
 	}
+
+
+	/**
+	 * Gets the string representation of this access token.
+	 *
+	 * <p> See {@link #getValue}.
+	 *
+	 * @return The access token value.
+	 */
+	@Override
+	public String toString() {
+	
+		return value;
+	}
+
+
+	/**
+	 * Overrides {@code Object.hashCode()}.
+	 *
+	 * @return The object hash code.
+	 */
+	@Override
+	public int hashCode() {
+	
+		return value.hashCode();
+	}
+	
+	
+	/**
+	 * Overrides {@code Object.equals()}.
+	 *
+	 * @param object The object to compare to.
+	 *
+	 * @return {@code true} if the objects have the same value, otherwise
+	 *         {@code false}.
+	 */
+	@Override
+	public boolean equals(final Object object) {
+	
+		return object instanceof AccessToken && this.toString().equals(object.toString());
+	}
 	
 	
 	/**
@@ -165,5 +210,45 @@ public final class AccessToken {
 		
 			throw new ParseException(e.getMessage());
 		}
+	}
+
+
+	/**
+	 * Generates a random OAuth 2.0 access token with the specified number 
+	 * of alphanumeric characters.
+	 *
+	 * @param count The number of characters.
+	 * @param exp   The expiration in seconds, 0 if not specified.
+	 * @param scope The scope, {@code null} if not specified.
+	 */
+	public static AccessToken generate(final int count, final long exp, final Scope scope) {
+
+		return new AccessToken(RandomStringUtils.randomAlphanumeric(count), exp, scope);
+	}
+
+
+	/**
+	 * Generates a random minimal OAuth 2.0 access token with the specified 
+	 * number of alphanumeric characters.
+	 *
+	 * @param count The number of characters.
+	 *
+	 * @return A new random access token.
+	 */
+	public static AccessToken generate(final int count) {
+	
+		return generate(count, 0l, null);
+	}
+	
+	
+	/**
+	 * Generates a random minimal OAuth 2.0 access token code with 8 
+	 * alphanumeric characters.
+	 *
+	 * @return A new random access token.
+	 */
+	public static AccessToken generate() {
+	
+		return generate(8);
 	}
 }

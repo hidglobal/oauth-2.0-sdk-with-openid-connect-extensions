@@ -3,6 +3,10 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
+import com.nimbusds.openid.connect.sdk.util.StringUtils;
+
 
 /**
  * OAuth 2.0 authorisation code. This class is immutable.
@@ -14,7 +18,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-21)
  */
 @Immutable
 public final class AuthorizationCode {
@@ -37,7 +41,7 @@ public final class AuthorizationCode {
 	 */
 	public AuthorizationCode(final String value) {
 	
-		if (value == null || value.trim().isEmpty())
+		if (StringUtils.isUndefined(value))
 			throw new IllegalArgumentException("The authorization code value must not be null or empty string");
 		
 		this.value = value;
@@ -66,5 +70,58 @@ public final class AuthorizationCode {
 	public String toString() {
 	
 		return value;
+	}
+
+
+	/**
+	 * Overrides {@code Object.hashCode()}.
+	 *
+	 * @return The object hash code.
+	 */
+	@Override
+	public int hashCode() {
+	
+		return value.hashCode();
+	}
+	
+	
+	/**
+	 * Overrides {@code Object.equals()}.
+	 *
+	 * @param object The object to compare to.
+	 *
+	 * @return {@code true} if the objects have the same value, otherwise
+	 *         {@code false}.
+	 */
+	@Override
+	public boolean equals(final Object object) {
+	
+		return object instanceof AuthorizationCode && this.toString().equals(object.toString());
+	}
+
+
+	/**
+	 * Generates a random authorisation code with the specified number of 
+	 * alphanumeric characters.
+	 *
+	 * @param count The number of characters.
+	 *
+	 * @return A new random authorisation code.
+	 */
+	public static AuthorizationCode generate(final int count) {
+	
+		return new AuthorizationCode(RandomStringUtils.randomAlphanumeric(count));
+	}
+	
+	
+	/**
+	 * Generates a random authorisation code with 8 alphanumeric 
+	 * characters.
+	 *
+	 * @return A new random authorisation code.
+	 */
+	public static AuthorizationCode generate() {
+	
+		return generate(8);
 	}
 }
