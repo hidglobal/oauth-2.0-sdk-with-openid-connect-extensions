@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-21)
  */
 @Immutable
 public final class State {
@@ -107,7 +107,7 @@ public final class State {
 	 */
 	public static State generate() {
 	
-		return new State(RandomStringUtils.randomAlphanumeric(8));
+		return generate(8);
 	}
 	
 	

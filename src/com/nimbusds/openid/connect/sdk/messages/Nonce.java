@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-11-21)
  */
 @Immutable
 public final class Nonce {
@@ -107,7 +107,7 @@ public final class Nonce {
 	 */
 	public static Nonce generate() {
 	
-		return new Nonce(RandomStringUtils.randomAlphanumeric(8));
+		return generate(8);
 	}
 	
 	
