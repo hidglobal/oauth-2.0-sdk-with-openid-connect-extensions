@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import java.net.URL;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +42,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserID;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-20)
+ * @version $version$ (2012-11-27)
  */
 @Immutable
 public class IDTokenClaimsRequest extends ClaimsRequest {
@@ -51,6 +53,18 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 * specified.
 	 */
 	private int maxAge = 0;
+
+
+	/**
+	 * The redirection URI.
+	 */
+	private final URL redirectURI;
+
+
+	/**
+	 * Optional state parameter.
+	 */
+	private final State state;
 	
 	
 	/**
@@ -99,11 +113,17 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	 *                      the decoded {@code request} or 
 	 *                      {@code request_uri} authorisation request 
 	 *                      parameter. {@code null} if not specified.
+	 * @param redirectURI   The redirection URI, must not be {@code null}.
+	 * @param state         Optional state parameter, {@code null} if not
+	 *                      specified.
 	 *
 	 * @throws ResolveException If the ID Token claims request couldn't be
 	 *                          resolved.
 	 */
-	public IDTokenClaimsRequest(final ResponseTypeSet rts, final JSONObject idTokenObject)
+	public IDTokenClaimsRequest(final ResponseTypeSet rts, 
+		                    final JSONObject idTokenObject,
+		                    final URL redirectURI,
+		                    final State state)
 		throws ResolveException {
 	
 		// Set required claims
@@ -125,6 +145,10 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			    idTokenObject.get("max_age") instanceof Number)
 			    	maxAge = ((Number)idTokenObject.get("max_age")).intValue();
 		}
+
+		this.redirectURI = redirectURI;
+
+		this.state = state;
 	}
 	
 	
@@ -152,7 +176,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			
 		if (! (uidObject instanceof JSONObject))
 			throw new ResolveException("Unexpected \"user_id\" type, must be a JSON object",
-				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
+				                   redirectURI, state, null);
 			
 		Object uidValue = ((JSONObject)uidObject).get("value");
 		
@@ -161,7 +186,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 
 		if (! (uidValue instanceof String))
 			throw new ResolveException("Unexpected \"value\" type, must be a JSON string",
-				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
+				                   redirectURI, state, null);
 			
 		
 		UserID userID = new UserID();
@@ -197,7 +223,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			
 		if (! (acrObject instanceof JSONObject))
 			throw new ResolveException("Unexpected \"acr\" type, must be a JSON object",
-				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
+				                   redirectURI, state, null);
 	
 		
 		Object acrValues = ((JSONObject)acrObject).get("values");
@@ -208,7 +235,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 			
 		if (! (acrValues instanceof JSONArray))
 			throw new ResolveException("Unexpected \"acr\" values type, must be a JSON array",
-				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
+				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
+				                   redirectURI, state, null);
 	
 		Claim.Requirement req = Claim.Requirement.VOLUNTARY;
 
@@ -225,7 +253,8 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 		
 			if (! (((List)acrValues).get(i) instanceof String))
 				throw new ResolveException("Unexpected ACR value, must be a JSON string",
-					                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT);
+					                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
+					                   redirectURI, state, null);
 			
 			acr[i] = new ACR();
 			acr[i].setClaimValue((String)((List)acrValues).get(i));
