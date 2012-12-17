@@ -3,7 +3,10 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import java.net.URL;
 
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
@@ -20,35 +23,14 @@ import com.nimbusds.openid.connect.sdk.claims.UserID;
 
 import com.nimbusds.openid.connect.sdk.relyingparty.ApplicationType;
 
+import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
 import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
+
+import com.nimbusds.openid.connect.sdk.util.URLUtils;
 
 
 /**
  * The base class for client registration requests.
- *
- * <p>Example HTTP request:
- *
- * <pre>
- * POST /connect/register HTTP/1.1
- * Accept: application/x-www-form-urlencoded
- * Host: server.example.com
- * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJ ... fQ.8Gj_-sj ... _X
- * 
- * type=client_associate
- * &application_type=web
- * &redirect_uris=https://client.example.org/callback
- *     %20https://client.example.org/callback2
- * &application_name=My%20Example%20
- * &application_name%23ja-Hani-JP=
- * &logo_url=https://client.example.org/logo.png
- * &user_id_type=pairwise
- * &sector_identifier_url=
- *     https://othercompany.com/file_of_redirect_uris_for_our_sites.js
- * &token_endpoint_auth_type=client_secret_basic
- * &jwk_url=https://client.example.org/my_rsa_public_key.jwk
- * &userinfo_encrypted_response_alg=RSA1_5
- * &userinfo_encrypted_response_enc=A128CBC+HS256
- * </pre>
  *
  * <p>Related specifications:
  *
@@ -243,6 +225,59 @@ public abstract class ClientRegistrationRequest implements Request {
 
 
 	/**
+	 * Creates a new client registration request.
+	 *
+	 * @param type         The client registration type. Must not be 
+	 *                     {@code null}.
+	 * @param redirectURIs The client redirect URIs. The set must not be
+	 *                     {@code null} and must include at least one URL.
+	 */
+	protected ClientRegistrationRequest(final ClientRegistrationType type,
+		                            final Set<URL> redirectURIs) {
+
+		if (type == null)
+			throw new IllegalArgumentException("The client registration type must not be null");
+
+		this.type = type;
+
+
+		if (redirectURIs == null)
+			throw new IllegalArgumentException("The redirect URIs must not be null");
+
+		if (redirectURIs.isEmpty())
+			throw new IllegalArgumentException("At least one redirect URI must be specified");
+
+		this.redirectURIs = redirectURIs;
+	}
+
+
+	/**
+	 * Creates a new client registration request.
+	 *
+	 * @param type        The client registration type. Must not be 
+	 *                    {@code null}.
+	 * @param redirectURI The client redirect URI. Must not be 
+	 *                    {@code null}.
+	 */
+	protected ClientRegistrationRequest(final ClientRegistrationType type,
+		                            final URL redirectURI) {
+
+		if (type == null)
+			throw new IllegalArgumentException("The client registration type must not be null");
+
+		this.type = type;
+
+
+		if (redirectURI == null)
+			throw new IllegalArgumentException("The redirect URI must not be null");
+
+		redirectURIs = new HashSet<URL>();
+
+		redirectURIs.add(redirectURI);
+	}
+
+
+	/**
 	 * Gets the client registration type. Corresponds to the {@code type}
 	 * parameter.
 	 *
@@ -292,19 +327,6 @@ public abstract class ClientRegistrationRequest implements Request {
 
 
 	/**
-	 * Sets the redirect URIs for the client. Corresponds to the
-	 * {@code redirect_uris} parameter.
-	 *
-	 * @param redirectURIs The redirect URIs for the client, {@code null} 
-	 *                     if none.
-	 */
-	public void setRedirectURIs(final Set<URL> redirectURIs) {
-	
-		this.redirectURIs = redirectURIs;
-	}
-
-
-	/**
 	 * Gets the client application type. Corresponds to the
 	 * {@code application_type} parameter.
 	 *
@@ -313,7 +335,10 @@ public abstract class ClientRegistrationRequest implements Request {
 	 */
 	public ApplicationType getApplicationType() {
 
-		return applicationType;
+		if (applicationType == null)
+			return ApplicationType.WEB;
+		else
+			return applicationType;
 	}
 
 
@@ -931,6 +956,152 @@ public abstract class ClientRegistrationRequest implements Request {
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 	
-		return null;
+		Map <String,String> params = new LinkedHashMap<String,String>();
+
+		params.put("type", type.toString());
+
+
+		if (accessToken != null)
+			params.put("access_token", accessToken.getValue());
+
+
+		StringBuilder urisBuf = new StringBuilder();
+
+		for (URL url: redirectURIs) {
+
+			if (urisBuf.length() > 0)
+				urisBuf.append(' ');
+
+			urisBuf.append(url.toString());
+		}
+
+		params.put("redirect_uris", urisBuf.toString());
+
+
+		params.put("application_type", applicationType.toString());
+
+
+		if (contacts != null && ! contacts.isEmpty()) {
+
+			StringBuilder emailBuf = new StringBuilder();
+
+			for (InternetAddress email: contacts) {
+
+				if (emailBuf.length() > 0)
+					emailBuf.append(' ');
+
+				emailBuf.append(email.getAddress());
+			}
+
+			params.put("contacts", emailBuf.toString());
+		}
+
+
+		if (applicationName != null)
+			params.put("application_name", applicationName);
+
+
+		if (applicationLogoURL != null)
+			params.put("logo_url", applicationLogoURL.toString());
+
+
+		if (privacyPolicyURL != null)
+			params.put("policy_url", privacyPolicyURL.toString());
+
+
+		if (userIDType != null)
+			params.put("user_id_type", userIDType.toString());
+
+
+		if (sectorIDURL != null)
+			params.put("sector_identifier_url", sectorIDURL.toString());
+
+
+		if (tokenEndpointAuthMethod != null)
+			params.put("token_endpoint_auth_type", tokenEndpointAuthMethod.toString());
+
+
+		if (jwkURL != null)
+			params.put("jwk_url", jwkURL.toString());
+
+
+		if (encryptionJWKURL != null)
+			params.put("jwk_encryption_url", encryptionJWKURL.toString());
+
+
+		if (x509URL != null)
+			params.put("x509_url", x509URL.toString());
+
+
+		if (encryptionX509URL != null)
+			params.put("x509_encryption_url", encryptionX509URL.toString());
+
+
+		if (requestObjectJWSAlg != null)
+			params.put("request_object_signing_alg", requestObjectJWSAlg.toString());
+
+
+		if (idTokenJWSAlg != null)
+			params.put("id_token_signed_response_alg", idTokenJWSAlg.toString());
+
+
+		if (idTokenJWEAlg != null)
+			params.put("id_token_encrypted_response_alg", idTokenJWEAlg.toString());
+
+
+		if (idTokenJWEEnc != null)
+			params.put("id_token_encrypted_response_enc", idTokenJWEEnc.toString());
+
+
+		if (userInfoJWSAlg != null)
+			params.put("userinfo_signed_response_alg", userInfoJWSAlg.toString());
+
+
+		if (userInfoJWEAlg != null)
+			params.put("userinfo_encrypted_response_alg", userInfoJWEAlg.toString());
+
+
+		if (userInfoJWEEnc != null)
+			params.put("userinfo_encrypted_response_enc", userInfoJWEEnc.toString());
+
+
+		if (defaultMaxAge > 0)
+			params.put("default_max_age", new Integer(defaultMaxAge).toString());
+
+
+		if (requireAuthTime)
+			params.put("require_auth_time", new Boolean(requireAuthTime).toString());
+
+
+		if (defaultACR != null)
+			params.put("default_acr", defaultACR.toString());
+
+
+
+		if (originURIs != null && ! originURIs.isEmpty()) {
+
+			StringBuilder originBuf = new StringBuilder();
+
+			for (URL origin: originURIs) {
+
+				if (originBuf.length() > 0)
+					originBuf.append(' ');
+
+				originBuf.append(origin.toString());
+			}
+
+			params.put("javascript_origin_uris", originBuf.toString());
+		}
+
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+
+		String requestBody = URLUtils.serializeParameters(params);
+
+		httpRequest.setQuery(requestBody);
+
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		return httpRequest;
 	}
 }
