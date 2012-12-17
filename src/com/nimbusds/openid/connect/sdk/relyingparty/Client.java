@@ -22,8 +22,14 @@ import com.nimbusds.openid.connect.sdk.messages.ClientAuthenticationMethod;
 /**
  * OpenID Connect client details.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.1.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-19)
+ * @version $version$ (2012-12-17)
  */
 public class Client {
 
@@ -31,7 +37,7 @@ public class Client {
 	/**
 	 * The registered client ID.
 	 */
-	private ClientID clientID;
+	private final ClientID clientID;
 	
 	
 	/**
@@ -91,7 +97,7 @@ public class Client {
 	/**
 	 * URL for the client's JSON Web Key (JWK) that is used in signing 
 	 * Token endpoint requests and OpenID request objects. If
-	 * {@link #encryptionJWKURL} if not provided, also used to encrypt the
+	 * {@link #encryptionJWKURL} is not provided, also used to encrypt the
 	 * ID Token and UserInfo endpoint responses to the client.
 	 */
 	private URL jwkURL;
@@ -190,6 +196,12 @@ public class Client {
 	private ACR defaultACR;
 
 
+	/**
+	 * Client JavaScript origin URIs.
+	 */
+	private Set<URL> originURIs;
+
+
 	/** 
 	 * Creates a new OpenID Connect client details instance.
 	 *
@@ -233,8 +245,8 @@ public class Client {
 	/**
 	 * Sets the redirect URIs for the client.
 	 *
-	 * @param redirectURIs The redirect URIs for the client, {@code null} if
-	 *                     none.
+	 * @param redirectURIs The redirect URIs for the client, {@code null} 
+	 *                     if none.
 	 */
 	public void setRedirectURIs(final Set<URL> redirectURIs) {
 	
@@ -785,5 +797,28 @@ public class Client {
 	public void setDefaultACR(final ACR defaultACR) {
 
 		this.defaultACR = defaultACR;
+	}
+
+
+	/**
+	 * Gets the client JavaScript origin URIs.
+	 *
+	 * @return The client origin URIs, {@code null}	if none specified.
+	 */
+	public Set<URL> getOriginURIs() {
+
+		return originURIs;
+	}
+
+
+	/**
+	 * Sets the client JavaScript origin URIs.
+	 *
+	 * @param originURIs The client origin URIs, {@code null} if not
+	 *                   specified.
+	 */
+	public void setOriginURIs(final Set<URL> originURIs) {
+
+		this.originURIs = originURIs;
 	}
 }
