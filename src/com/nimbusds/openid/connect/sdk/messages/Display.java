@@ -62,7 +62,7 @@ public enum Display {
 	/**
 	 * Returns the string identifier of this display type.
 	 *
-	 * @return The string identifier. 
+	 * @return The string identifier.
 	 */
 	@Override
 	public String toString() {
