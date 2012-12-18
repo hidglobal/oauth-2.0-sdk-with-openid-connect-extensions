@@ -1,14 +1,17 @@
 package com.nimbusds.openid.connect.sdk.messages;
 
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -1169,21 +1172,392 @@ public abstract class ClientRegistrationRequest implements Request {
 	 */
 	public static ClientRegistrationRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
-	
+
+		if (! httpRequest.getMethod().equals(HTTPRequest.Method.POST)) 
+			throw new ParseException("Invalid client registration request, must be sent by HTTP POST",
+				                 ErrorCode.INVALID_REQUEST);
+
+		if (httpRequest.getQuery() == null)
+			throw new ParseException("Missing client registration parameters",
+				                 ErrorCode.INVALID_REQUEST);
+		
+
+		// Decode and parse POST parameters
 		Map <String,String> params = URLUtils.parseParameters(httpRequest.getQuery());
 		
 		String v = null;
 		
+
 		// Mandatory params
 
-		v = params.get("type");
+		ClientRegistrationType type = null;
+
+		try {
+			type = parseEnum("type", ClientRegistrationType.class, params);
+
+		} catch (ParseException e) {
+
+			throw new ParseException("Invalid \"type\" parameter", ErrorCode.INVALID_TYPE);
+		}
+
+
+		if (type == null)
+			throw new ParseException("Missing \"type\" parameter", ErrorCode.INVALID_TYPE);
+
+
+		v = params.get("redirect_uris");
 		
 		if (StringUtils.isUndefined(v))
-			throw new ParseException("Missing \"type\" parameter",
-				                 ErrorCode.INVALID_REQUEST);
-			
-		URL redirectURI = null;
+			throw new ParseException("Missing \"redirect_uris\" parameter", ErrorCode.INVALID_REDIRECT_URI);
+		
+		
+		Set<URL> redirectURIs = new HashSet<URL>();
 
-		return null;
+		for (String uriString: v.split(" ")) {
+
+			try {
+				redirectURIs.add(new URL(uriString));
+
+			} catch (MalformedURLException e) {
+
+				throw new ParseException("Invalid \"redirect_uris\" parameter: " +
+					                  e.getMessage(),
+					                  ErrorCode.INVALID_REDIRECT_URI);
+			}
+		}
+
+
+		ClientRegistrationRequest req = null;
+
+		switch (type) {
+
+			case CLIENT_ASSOCIATE:
+				req = new ClientAssociateRequest(redirectURIs);
+				break;
+
+			case ROTATE_SECRET:
+				// TBD
+				break;
+
+			case CLIENT_UPDATE:
+				req = new ClientUpdateRequest(redirectURIs);
+
+				break;
+
+			default:
+				throw new ParseException("Invalid \"type\" parameter", ErrorCode.INVALID_TYPE);
+		}
+
+
+		// Optional params
+
+		if (httpRequest.getAuthorization() != null) {
+
+			// Access token in header
+
+			String authzHeader = httpRequest.getAuthorization();
+
+			if (! authzHeader.startsWith("Bearer "))
+				throw new ParseException("OAuth 2.0 Bearer Token authorization required",
+					                 ErrorCode.INVALID_REQUEST);
+
+			AccessToken accessToken = new AccessToken(authzHeader.substring("Bearer".length()));
+
+			req.setAccessToken(accessToken);
+		}
+		else if (StringUtils.isDefined(params.get("access_token"))) {
+
+			// Access token inlined
+
+			req.setAccessToken(new AccessToken(params.get("access_token")));
+		}
+
+
+		req.setApplicationType(parseEnum("application_type", ApplicationType.class, params));
+
+
+		req.setContacts(parseEmailList("contacts", params));
+
+
+		req.setApplicationName(params.get("application_name"));
+
+
+		req.setApplicationLogoURL(parseURL("logo_url", params));
+
+
+		req.setPrivacyPolicyURL(parseURL("policy_url", params));
+
+
+		req.setUserIDType(parseEnum("user_id_type", UserID.Type.class, params));
+
+
+		req.setSectorIDURL(parseURL("sector_identifier_url", params));
+
+
+		v = params.get("token_endpoint_auth_type");
+
+		if (StringUtils.isDefined(v))
+			req.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(v));
+
+
+		req.setJWKURL(parseURL("jwk_url", params));
+
+
+		req.setEncrytionJWKURL(parseURL("jwk_encryption_url", params));
+
+
+		req.setX509URL(parseURL("x509_url", params));
+
+
+		req.setEncryptionX509URL(parseURL("x509_encryption_url", params));
+
+
+		v = params.get("request_object_signing_alg");
+
+		if (StringUtils.isDefined(v))
+			req.setRequestObjectJWSAlgorithm(JWSAlgorithm.parse(v));
+
+
+		v = params.get("id_token_signed_response_alg");
+
+		if (StringUtils.isDefined(v))
+			req.setIDTokenJWSAlgorithm(JWSAlgorithm.parse(v));
+
+
+		v = params.get("id_token_encrypted_response_alg");
+
+		if (StringUtils.isDefined(v))
+			req.setIDTokenJWEAlgorithm(JWEAlgorithm.parse(v));
+
+
+		v = params.get("id_token_encrypted_response_enc");
+
+		if (StringUtils.isDefined(v))
+			req.setIDTokenJWEEncryptionMethod(EncryptionMethod.parse(v));
+
+
+		v = params.get("userinfo_signed_response_alg");
+
+		if (StringUtils.isDefined(v))
+			req.setUserInfoJWSAlgorithm(JWSAlgorithm.parse(v));
+
+
+		v = params.get("userinfo_encrypted_response_alg");
+
+		if (StringUtils.isDefined(v))
+			req.setUserInfoJWEAlgorithm(JWEAlgorithm.parse(v));
+
+
+		v = params.get("userinfo_encrypted_response_enc");
+
+		if (StringUtils.isDefined(v))
+			req.setUserInfoJWEEncryptionMethod(EncryptionMethod.parse(v));
+
+
+		req.setDefaultMaxAge(parsePositiveInt("default_max_age", params));
+
+
+		v = params.get("require_auth_time");
+
+		if (StringUtils.isDefined(v)) {
+
+			if (v.equals("true"))
+				req.requireAuthTime(true);
+
+			else if (v.equals("false"))
+				req.requireAuthTime(false);
+
+			else 
+				throw new ParseException("Invalid \"require_auth_time\" parameter, must be true or false",
+				                         ErrorCode.INVALID_CONFIGURATION_PARAMETER);
+		}
+
+
+		v = params.get("default_acr");
+
+		if (StringUtils.isDefined(v)) {
+
+			ACR acr = new ACR();
+			acr.setClaimValue(v);
+
+			req.setDefaultACR(acr);
+		}
+
+		
+		v = params.get("javascript_origin_uris");
+
+		if (StringUtils.isDefined(v)) {
+
+			Set<URL> originURIs = new HashSet<URL>();
+
+			for (String uriString: v.split(" ")) {
+
+				try {
+					originURIs.add(new URL(uriString));
+
+				} catch (MalformedURLException e) {
+
+					throw new ParseException("Invalid \"javascript_origin_uris\" parameter: " +
+					                         e.getMessage(),
+					                         ErrorCode.INVALID_REDIRECT_URI);
+				}
+			}
+
+			req.setOriginURIs(originURIs);
+		}
+
+		return req;
+	}
+
+
+	/**
+	 * Parses an enumerated configuration parameter.
+	 *
+	 * @param name       The parameter name. The corresponding parameter 
+	 *                   value must match (case ignore) an enumeration
+	 *                   constant or be undefined ({@code null}). The
+	 *                   parameter name itself must not be {@code null}.
+	 * @param enumClass  The enumeration class. Must not be {@code null}.
+	 * @param params     The parameter map. Must not be {@code null}.
+	 *
+	 * @return The matching enumeration constant, {@code null} if the
+	 *         parameter is not specified.
+	 *
+	 * @throws ParseException On a invalid enumeration value.
+	 */
+	private static <T extends Enum<T>> T parseEnum(final String name, 
+		                                       final Class<T> enumClass, 
+		                                       final Map<String,String> params)
+		throws ParseException {
+
+		String value = params.get(name);
+
+		if (StringUtils.isUndefined(value))
+			return null;
+
+		for (T en: enumClass.getEnumConstants()) {
+			       
+			if (en.toString().equalsIgnoreCase(value))
+				return en;
+		}
+
+		throw new ParseException("Invalid \"" + name + "\" parameter",
+			                 ErrorCode.INVALID_CONFIGURATION_PARAMETER);
+	}
+
+
+	/**
+	 * Parses an URL configuration parameter.
+	 *
+	 * @param name   The parameter name. The corresponding parameter value 
+	 *               must be an URL or undefined ({@code null}). The  
+	 *               parameter name itself must not be {@code null}.
+	 * @param params The parameter map. Must not be {@code null}.
+	 *
+	 * @return The parsed URL, {@code null} if the parameter is not
+	 *         specified.
+	 *
+	 * @throws ParseException On a invalid URL syntax.
+	 */
+	private static URL parseURL(final String name, final Map<String,String> params)
+		throws ParseException {
+
+		String value = params.get(name);
+
+		if (StringUtils.isUndefined(value))
+			return null;
+
+		try {
+			return new URL(value);
+
+		} catch (MalformedURLException e) {
+
+			throw new ParseException("Invalid \"" + name + "\" parameter: " + e.getMessage(),
+				                 ErrorCode.INVALID_CONFIGURATION_PARAMETER);
+		}
+	}
+
+
+	/**
+	 * Parses an integer (positive value) configuration parameter.
+	 *
+	 * @param name   The parameter name. The corresponding parameter value 
+	 *               must be a positive integer or undefined 
+	 *               ({@code null}). The  parameter name itself must not be
+	 *               {@code null}.
+	 * @param params The parameter map. Must not be {@code null}.
+	 *
+	 * @return The parsed positive integer, zero if the parameter is not
+	 *         specified.
+	 *
+	 * @throws ParseException On a invalid integer syntax or non-positive
+	 *                        value.
+	 */
+	private static int parsePositiveInt(final String name, final Map<String,String> params)
+		throws ParseException {
+
+		String value = params.get(name);
+
+		if (StringUtils.isUndefined(value))
+			return 0;
+
+		int intValue = 0;
+
+		try {
+			intValue = Integer.parseInt(value);
+
+		} catch (NumberFormatException e) {
+
+			throw new ParseException("Invalid \"" + name + "\" parameter: " + 
+					         e.getMessage(),
+					         ErrorCode.INVALID_CONFIGURATION_PARAMETER);
+		}
+
+		if (intValue < 1)
+			throw new ParseException("Invalid \"" + name + "\" parameter: Must be positive integer",
+				                 ErrorCode.INVALID_CONFIGURATION_PARAMETER);
+	
+		return intValue;
+	}
+
+
+	/**
+	 * Parses an email list configuration parameter.
+	 *
+	 * @param name   The parameter name. The corresponding parameter value 
+	 *               must be a list or one or more space delimited
+	 *               email addresses, or undefined ({@code null}). The  
+	 *               parameter name itself must not be {@code null}.
+	 * @param params The parameter map. Must not be {@code null}.
+	 *
+	 * @return The parsed email list, {@code null} if the parameter is not
+	 *         specified.
+	 *
+	 * @throws ParseException On a invalid email syntax.
+	 */
+	private static List<InternetAddress> parseEmailList(final String name, final Map<String,String> params)
+		throws ParseException {
+
+		String value = params.get(name);
+
+		if (StringUtils.isUndefined(value))
+			return null;
+
+		List<InternetAddress> emailList = new LinkedList<InternetAddress>();
+
+		for (String emailString: value.split(" ")) {
+
+			try {
+				emailList.add(new InternetAddress(emailString));
+
+			} catch (AddressException e) {
+
+				throw new ParseException("Invalid \"" + name + "\" parameter: " +
+						         e.getMessage(),
+						         ErrorCode.INVALID_CONFIGURATION_PARAMETER);
+			}
+		}
+
+		return emailList;
 	}
 }
