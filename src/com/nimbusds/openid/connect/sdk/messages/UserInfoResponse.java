@@ -68,8 +68,8 @@ public final class UserInfoResponse implements SuccessResponse {
 	
 	
 	/**
-	 * Creates a new UserInfo response where the claims are specified as
-	 * plain JSON.
+	 * Creates a new UserInfo response where the claims are specified in a
+	 * plain JSON object.
 	 *
 	 * @param claims The UserInfo claims. Must not be {@code null}.
 	 */
