@@ -7,6 +7,19 @@ import net.jcip.annotations.Immutable;
 /**
  * Client authentication method at the Token endpoint. This class is immutable.
  *
+ * <p>Constants are provided for the four standard client authentication
+ * methods:
+ *
+ * <ul>
+ *     <li>{@link #CLIENT_SECRET_BASIC} (default)
+ *     <li>{@link #CLIENT_SECRET_POST}
+ *     <li>{@link #CLIENT_SECRET_JWT}
+ *     <li>{@link #PRIVATE_KEY_JWT}
+ * </ul>
+ *
+ * <p>To define a custom client authentication method use the provided 
+ * constructor.
+ *
  * <p>Related specifications:
  *
  * <ul>
