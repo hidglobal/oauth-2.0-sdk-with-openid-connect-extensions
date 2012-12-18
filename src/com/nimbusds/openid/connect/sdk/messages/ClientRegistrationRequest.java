@@ -40,7 +40,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-12-17)
+ * @version $version$ (2012-12-18)
  */
 public abstract class ClientRegistrationRequest implements Request {
 
@@ -942,10 +942,11 @@ public abstract class ClientRegistrationRequest implements Request {
 
 		this.originURIs = originURIs;
 	}
-	
-	
+
+
 	/**
-	 * Returns the matching HTTP POST request.
+	 * Returns the matching HTTP POST request. If an access token is
+	 * specified it will be inlined in the HTTP request body.
 	 *
 	 * @return The HTTP request.
 	 *
@@ -956,13 +957,34 @@ public abstract class ClientRegistrationRequest implements Request {
 	@Override
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
+
+		return toHTTPRequest(true);
+	}
+	
+	
+	/**
+	 * Returns the matching HTTP POST request.
+	 *
+	 * @param inlineAccessToken If {@code true} the access token will be
+	 *                          inlined in the HTTP request body, else it
+	 *                          will be included as an OAuth 2.0 Bearer
+	 *                          Token in the HTTP Authorization header.
+	 *
+	 * @return The HTTP request.
+	 *
+	 * @throws SerializeException If the OpenID Connect request message
+	 *                            couldn't be serialised to an HTTP POST 
+	 *                            request.
+	 */
+	public HTTPRequest toHTTPRequest(final boolean inlineAccessToken)
+		throws SerializeException {
 	
 		Map <String,String> params = new LinkedHashMap<String,String>();
 
 		params.put("type", type.toString());
 
 
-		if (accessToken != null)
+		if (inlineAccessToken && accessToken != null)
 			params.put("access_token", accessToken.getValue());
 
 
@@ -1100,6 +1122,9 @@ public abstract class ClientRegistrationRequest implements Request {
 		String requestBody = URLUtils.serializeParameters(params);
 
 		httpRequest.setQuery(requestBody);
+
+		if (! inlineAccessToken && accessToken != null)
+			httpRequest.setAuthorization("Bearer " + accessToken.getValue());
 
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
