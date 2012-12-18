@@ -5,7 +5,7 @@ package com.nimbusds.openid.connect.sdk.messages;
  * Enumeration of OpenID Connect error codes.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2012-12-18)
  */
 public enum ErrorCode {
 
@@ -57,13 +57,14 @@ public enum ErrorCode {
 	 * due to a temporary overloading or maintenance of the server.
 	 */
 	TEMPORARILY_UNAVAILABLE("The authorization server is temporarily unavailable"),
+
 	
 	// Client registration
 	
 	/**
 	 * The value of {@code type} is invalid or not supported.
 	 */
-	INVALID_TYPE("Invalid or unsupported type value"),
+	INVALID_TYPE("Invalid or unsupported client registration type"),
 	
 	
 	/**
@@ -73,8 +74,9 @@ public enum ErrorCode {
 	
 	
 	/**
-	 * The {@code client_secret} provided for a {@code client_update} is not
-	 * valid for the provided {@code client_id}.
+	 * The {@code client_secret} provided for a {@code client_update} or
+	 * {@code secret_rotate} is not valid for the provided 
+	 * {@code client_id}.
 	 */
 	INVALID_CLIENT_SECRET("Invalid client secret"),
 	
@@ -88,8 +90,8 @@ public enum ErrorCode {
 	// Authorisation
 	
 	/**
-	 * The {@code redirect_uri} in the {@link AuthorizationRequest} does not
-	 * match any of the client's pre-registered {@code redirect_uri}s. 
+	 * The {@code redirect_uri} in the {@link AuthorizationRequest} does 
+	 * not match any of the client's pre-registered {@code redirect_uri}s. 
 	 */
 	INVALID_REDIRECT_URI("Invalid redirect URI"),
 	
@@ -181,8 +183,7 @@ public enum ErrorCode {
 	UNSUPPORTED_GRANT_TYPE("Unsupported grant type"),
 	
 	
-	
-	// Check ID, OAuth Bearer, seciton 3.1
+	// OAuth Bearer, seciton 3.1
 	
 	/**
 	 * The access token provided is expired, revoked, malformed, or invalid
