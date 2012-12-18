@@ -6,7 +6,7 @@ package com.nimbusds.openid.connect.sdk.messages;
  * types.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-12-17)
+ * @version $version$ (2012-12-18)
  */
 public enum ClientRegistrationType {
 
@@ -15,6 +15,12 @@ public enum ClientRegistrationType {
 	 * New registration.
 	 */
 	CLIENT_ASSOCIATE,
+
+
+	/**
+	 * Rotate client secret.
+	 */
+	ROTATE_SECRET,
 	
 	
 	/**
