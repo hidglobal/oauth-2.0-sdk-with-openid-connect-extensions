@@ -13,6 +13,8 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
 import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
 import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 
+import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
+
 
 /**
  * Client update response. This class is immutable.
@@ -69,5 +71,32 @@ public final class ClientUpdateResponse extends ClientRegistrationResponse {
 		httpResponse.setContent(json.toString());
 	
 		return httpResponse;
+	}
+
+
+	/**
+	 * Parses a client update response from the specified HTTP response.
+	 *
+	 * @param httpResponse The HTTP response. Must not be {@code null}.
+	 *
+	 * @return The client update response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a 
+	 *                        valid client update response.
+	 */
+	public static ClientUpdateResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+		
+		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
+		
+		httpResponse.ensureContentType(CommonContentTypes.APPLICATION_JSON);
+
+		JSONObject json = httpResponse.getContentAsJSONObject();
+
+		ClientID clientID = new ClientID();
+
+		clientID.setClaimValue(JSONObjectUtils.getString(json, "client_id"));
+		
+		return new ClientUpdateResponse(clientID);
 	}
 }

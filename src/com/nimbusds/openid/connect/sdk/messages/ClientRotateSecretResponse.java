@@ -7,6 +7,8 @@ import com.nimbusds.openid.connect.sdk.ParseException;
 
 import com.nimbusds.openid.connect.sdk.claims.ClientID;
 
+import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
+
 
 /**
  * Client rotate secret response. This class is immutable.
@@ -70,5 +72,29 @@ public final class ClientRotateSecretResponse extends ClientRegistrationAccessTo
 		                          final long expiresAt) {
 
 		super(clientID, accessToken, clientSecret, expiresAt);
+	}
+
+
+	/**
+	 * Parses a client rotate secret response from the specified HTTP 
+	 * response.
+	 *
+	 * @param httpResponse The HTTP response. Must not be {@code null}.
+	 *
+	 * @return The client rotate secret response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a 
+	 *                        valid client rotate secret response.
+	 */
+	public static ClientRotateSecretResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+
+		ClientRegistrationAccessTokenResponse response = 
+			ClientRegistrationAccessTokenResponse.parse(httpResponse);
+
+		return new ClientRotateSecretResponse(response.getClientID(),
+			                              response.getRegistrationAccessToken(),
+			                              response.getClientSecret(),
+			                              response.getClientSecretExpirationTime());
 	}
 }

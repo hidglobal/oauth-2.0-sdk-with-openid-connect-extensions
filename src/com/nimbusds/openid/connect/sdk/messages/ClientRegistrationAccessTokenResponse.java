@@ -11,6 +11,8 @@ import com.nimbusds.openid.connect.sdk.claims.ClientID;
 import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
 import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 
+import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
+
 
 /**
  * The base class for client associate and rotate secret responses.
@@ -162,5 +164,46 @@ public class ClientRegistrationAccessTokenResponse extends ClientRegistrationRes
 		httpResponse.setContent(json.toString());
 	
 		return httpResponse;
+	}
+
+
+	/**
+	 * Parses a client registration access token response from the 
+	 * specified HTTP response.
+	 *
+	 * @param httpResponse The HTTP response. Must not be {@code null}.
+	 *
+	 * @return The client registration access token response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a 
+	 *                        valid client registration access token 
+	 *                        response.
+	 */
+	public static ClientRegistrationAccessTokenResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+		
+		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
+		
+		httpResponse.ensureContentType(CommonContentTypes.APPLICATION_JSON);
+
+		JSONObject json = httpResponse.getContentAsJSONObject();
+
+		ClientID clientID = new ClientID();
+
+		clientID.setClaimValue(JSONObjectUtils.getString(json, "client_id"));
+
+		AccessToken accessToken = new AccessToken(JSONObjectUtils.getString(json, "registration_access_token"));
+
+		String clientSecret = null;
+
+		if (JSONObjectUtils.containsKey(json, "client_secret"))
+			clientSecret = JSONObjectUtils.getString(json, "client_secret");
+
+		long expiresAt = 0l;
+
+		if (JSONObjectUtils.containsKey(json, "expires_at"))
+			expiresAt = JSONObjectUtils.getLong(json, "expires_at");
+		
+		return new ClientRegistrationAccessTokenResponse(clientID, accessToken, clientSecret, expiresAt);
 	}
 }

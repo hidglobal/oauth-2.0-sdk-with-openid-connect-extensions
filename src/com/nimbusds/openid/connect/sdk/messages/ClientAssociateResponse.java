@@ -7,6 +7,8 @@ import com.nimbusds.openid.connect.sdk.ParseException;
 
 import com.nimbusds.openid.connect.sdk.claims.ClientID;
 
+import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
+
 
 /**
  * Client associate response. This class is immutable.
@@ -70,5 +72,28 @@ public final class ClientAssociateResponse extends ClientRegistrationAccessToken
 		                       final long expiresAt) {
 
 		super(clientID, accessToken, clientSecret, expiresAt);
+	}
+
+
+	/**
+	 * Parses a client associate response from the specified HTTP response.
+	 *
+	 * @param httpResponse The HTTP response. Must not be {@code null}.
+	 *
+	 * @return The client associate response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a 
+	 *                        valid client associate response.
+	 */
+	public static ClientAssociateResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+
+		ClientRegistrationAccessTokenResponse response = 
+			ClientRegistrationAccessTokenResponse.parse(httpResponse);
+
+		return new ClientAssociateResponse(response.getClientID(),
+			                           response.getRegistrationAccessToken(),
+			                           response.getClientSecret(),
+			                           response.getClientSecretExpirationTime());
 	}
 }
