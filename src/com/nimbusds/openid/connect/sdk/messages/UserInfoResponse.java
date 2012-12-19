@@ -24,8 +24,8 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * UserInfo response. This class is immutable.
  *
  * <p>The UserInfo claims may be passed as a plain JSON object or as a plain, 
- * signed or encrypted JSON Web Token (JWT). Use the appropriate constructor for
- * that.
+ * signed or encrypted JSON Web Token (JWT). Use the appropriate constructor
+ * for that.
  *
  * <p>Example JSON object representing a UserInfo response:
  *
@@ -162,7 +162,8 @@ public final class UserInfoResponse implements SuccessResponse {
 				
 			} catch (IllegalStateException e) {
 			
-				throw new SerializeException("Couldn't serialize UserInfo claims JWT: " + e.getMessage(), e);
+				throw new SerializeException("Couldn't serialize UserInfo claims JWT: " + 
+					                     e.getMessage(), e);
 			}
 		}
 		
@@ -203,7 +204,8 @@ public final class UserInfoResponse implements SuccessResponse {
 				
 			} catch (ParseException e) {
 				
-				throw new ParseException("Couldn't parse UserInfo claims: " + e.getMessage(), e);
+				throw new ParseException("Couldn't parse UserInfo claims: " + 
+					                 e.getMessage(), e);
 			}
 			
 			response = new UserInfoResponse(claims);
@@ -217,7 +219,8 @@ public final class UserInfoResponse implements SuccessResponse {
 				
 			} catch (ParseException e) {
 			
-				throw new ParseException("Couldn't parse UserInfo claims JWT: " + e.getMessage(), e);
+				throw new ParseException("Couldn't parse UserInfo claims JWT: " + 
+					                 e.getMessage(), e);
 			}
 			
 			response = new UserInfoResponse(jwt);
