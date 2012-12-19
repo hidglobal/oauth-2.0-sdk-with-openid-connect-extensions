@@ -43,7 +43,7 @@ public abstract class ClientRegistrationResponse implements SuccessResponse {
 
 
 	/**
-	 * Gets the client ID.
+	 * Gets the client ID. Corresponds to the {@code client_id} parameter.
 	 *
 	 * @return The client ID.
 	 */

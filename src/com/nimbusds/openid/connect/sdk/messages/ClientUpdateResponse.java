@@ -15,7 +15,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 
 
 /**
- * Client update responses. This class is immutable.
+ * Client update response. This class is immutable.
  *
  * <p>Example HTTP response:
  *
