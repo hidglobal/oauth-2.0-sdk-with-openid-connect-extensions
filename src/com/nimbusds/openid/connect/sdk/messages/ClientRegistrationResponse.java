@@ -22,7 +22,7 @@ public abstract class ClientRegistrationResponse implements SuccessResponse {
 	/**
 	 * The client ID.
 	 */
-	private ClientID clientID;
+	private final ClientID clientID;
 
 
 	/**
@@ -34,6 +34,9 @@ public abstract class ClientRegistrationResponse implements SuccessResponse {
 
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
+
+		if (clientID.getClaimValue() == null)
+			throw new IllegalArgumentException("The client ID value must be defined");
 
 		this.clientID = clientID;
 	}
