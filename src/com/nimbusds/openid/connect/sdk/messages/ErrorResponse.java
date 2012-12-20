@@ -23,8 +23,8 @@ public interface ErrorResponse extends Response {
 	
 	
 	/**
-	 * Returns an optional URI of a human-readable web page with information
-	 * about the error.
+	 * Returns an optional URI of a human-readable web page with 
+	 * additional information about the error.
 	 *
 	 * @return The error page URI, {@code null} if not specified.
 	 */
