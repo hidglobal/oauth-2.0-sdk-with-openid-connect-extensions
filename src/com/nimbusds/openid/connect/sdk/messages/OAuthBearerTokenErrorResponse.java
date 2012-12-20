@@ -23,15 +23,12 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 /**
  * OAuth 2.0 Bearer Token error response. This class is immutable.
  *
- * <p>Standard error codes (may be extended with application specific codes):
+ * <p>Allowed error codes:
  *
  * <ul>
- *     <li>OAuth 2.0 errors:
- *         <ul>
- *             <li>{@link ErrorCode#INVALID_REQUEST}
- *             <li>{@link ErrorCode#INVALID_TOKEN}
- *             <li>{@link ErrorCode#INSUFFICIENT_SCOPE}
- *         </ul>
+ *     <li>{@link ErrorCode#INVALID_REQUEST}
+ *     <li>{@link ErrorCode#INVALID_TOKEN}
+ *     <li>{@link ErrorCode#INSUFFICIENT_SCOPE}
  * </ul>
  *
  * <p>Example HTTP response:
@@ -46,30 +43,27 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, sections 2.3.3 and 2.4.3.
- *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage
- *         (draft-ietf-oauth-v2-bearer-23), section 3.1.
+ *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 
+ *         6750, section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-12-20)
  */
 @Immutable
 public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 
 
 	/**
-	 * The standard error codes for an OAuth 2.0 Bearer Token error 
-	 * response.
+	 * The error codes for an OAuth 2.0 Bearer Token error response.
 	 */
-	private static final Set<ErrorCode> standardErrorCodes = new HashSet<ErrorCode>();
+	private static final Set<ErrorCode> errorCodes = new HashSet<ErrorCode>();
 	
 	
 	static {
-		// OAuth 2.0 errors
-		standardErrorCodes.add(ErrorCode.INVALID_REQUEST);
-		standardErrorCodes.add(ErrorCode.INVALID_TOKEN);
-		standardErrorCodes.add(ErrorCode.INSUFFICIENT_SCOPE);
+		errorCodes.add(ErrorCode.INVALID_REQUEST);
+		errorCodes.add(ErrorCode.INVALID_TOKEN);
+		errorCodes.add(ErrorCode.INSUFFICIENT_SCOPE);
 	}
 	
 	
@@ -95,14 +89,13 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	
 	
 	/**
-	 * Gets the standard error codes for an OAuth 2.0 Bear Token error 
-	 * response.
+	 * Gets the error codes for an OAuth 2.0 Bear Token error response.
 	 *
-	 * @return The standard error codes, as a read-only set.
+	 * @return The error codes, as a read-only set.
 	 */
-	public static Set<ErrorCode> getStandardErrorCodes() {
+	public static Set<ErrorCode> getErrorCodes() {
 	
-		return Collections.unmodifiableSet(standardErrorCodes);
+		return Collections.unmodifiableSet(errorCodes);
 	}
 	
 	
@@ -120,8 +113,8 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	
 	
 	/**
-	 * Optional URL of a web page that includes additional information about
-	 * the error.
+	 * Optional URL of a web page that includes additional information 
+	 * about the error, {@code null} if not specified.
 	 */
 	private final URL errorURI;
 	
@@ -130,20 +123,19 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	 * Creates a new OAuth 2.0 Bearer Token error response.
 	 *
 	 * @param realm     The bearer realm. May be {@code null}.
-	 * @param errorCode The error code. It may be {@code null} if the client 
-	 *                  didn't provide any authentication information in the
+	 * @param errorCode The error code, {@code null} if the client didn't 
+	 *                  provide any authentication information in the
 	 *                  original request.
-	 * @param errorURI  Optional URI of a web page that includes information
-	 *                  about the error, {@code null} if not specified.
+	 * @param errorURI  Optional URI of a web page that includes additional
+	 *                  information about the error, {@code null} if not 
+	 *                  specified.
 	 */
 	protected OAuthBearerTokenErrorResponse(final String realm, 
 	                                        final ErrorCode errorCode,
 						final URL errorURI) {
 	
 		this.realm = realm;
-			
 		this.errorCode = errorCode;
-		
 		this.errorURI = errorURI;
 	}
 	
@@ -193,7 +185,7 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 			httpResponse = new HTTPResponse(HTTPResponse.SC_FORBIDDEN); // 403
 		
 		else
-			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400 - revise on spec update
+			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400
 		
 		
 		// Compose the WWW-Authenticate header
@@ -258,17 +250,18 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	public static OAuthBearerTokenErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		final String wwwAuth = httpResponse.getWWWAuthenticate();
+		// We must have a WWW-Authenticate header set to Bearer .*
+		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
 		if (wwwAuth == null)
 			throw new ParseException("Missing HTTP WWW-Authenticate header");
 		
 		if (! wwwAuth.regionMatches(true, 0, "Bearer", 0, "Bearer".length()))
-			throw new ParseException("OAuth 2.0 scheme must be Bearer");
+			throw new ParseException("WWW-Authenticate scheme must be OAuth 2.0 Bearer");
 		
 		Matcher m = null;
 		
-		// Parse realm
+		// Parse optional realm
 		m = realmPattern.matcher(wwwAuth);
 		
 		String realm = null;
@@ -277,23 +270,23 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 			realm = m.group(1);
 		
 		
-		// Parse error code
+		// Parse optional error code
 		m = errorPattern.matcher(wwwAuth);
-		
-		if (! m.find())
-			throw new ParseException("Missing or invalid error parameter in HTTP WWW-Authenticate header");
-		
+
 		ErrorCode errorCode = null;
 		
-		try {
-			errorCode = ErrorCode.valueOf(m.group(1).toUpperCase());
+		if (m.find()) {
+		
+			try {
+				errorCode = ErrorCode.valueOf(m.group(1).toUpperCase());
 
-		} catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException e) {
 
-			throw new ParseException("Invalid error code: " + m.group(1));
+				throw new ParseException("Invalid error code: " + m.group(1));
+			}
 		}
 		
-		// Parse error URI
+		// Parse optional error URI
 		m = errorURIPattern.matcher(wwwAuth);
 		
 		URL errorURI = null;
