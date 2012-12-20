@@ -17,16 +17,16 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 /**
  * UserInfo error response. This class is immutable.
  *
- * <p>Legal error codes:
+ * <p>Error codes:
  *
  * <ul>
- *     <li>OAuth 2.0 errors:
+ *     <li>OAuth 2.0 Bearer Token errors:
  *         <ul>
  *             <li>{@link ErrorCode#INVALID_REQUEST}
  *             <li>{@link ErrorCode#INVALID_TOKEN}
  *             <li>{@link ErrorCode#INSUFFICIENT_SCOPE}
  *          </ul>
- *     <li>OpenID Connect specific error:
+ *     <li>OpenID Connect specific errors:
  *         <ul>
  *             <li>{@link ErrorCode#INVALID_SCHEMA}
  *         </ul>
@@ -46,12 +46,12 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.3.3.
  *     <li>OpenID Connect Standard 1.0, section 4.3.
- *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage
- *         (draft-ietf-oauth-v2-bearer-23), section 3.1.
+ *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 
+ *         6750), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2012-12-20)
  */
 @Immutable
 public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
@@ -64,25 +64,12 @@ public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 	 */
 	public static Set<ErrorCode> getLegalErrorCodes() {
 	
-		Set<ErrorCode> bearerErrorCodes = OAuthBearerTokenErrorResponse.getStandardErrorCodes();
+		Set<ErrorCode> bearerErrorCodes = OAuthBearerTokenErrorResponse.getLegalErrorCodes();
 		
 		Set<ErrorCode> codes = new HashSet<ErrorCode>(bearerErrorCodes);
 		codes.add(ErrorCode.INVALID_SCHEMA);
 		
 		return Collections.unmodifiableSet(codes);
-	}
-	
-	
-	/**
-	 * Gets the standard error codes for a UserInfo error response.
-	 *
-	 * @see #getLegalErrorCodes
-	 *
-	 * @return The standard error codes, as a read-only set.
-	 */
-	public static Set<ErrorCode> getStandardErrorCodes() {
-	
-		return getLegalErrorCodes();
 	}
 	
 
@@ -94,11 +81,13 @@ public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 	 *                  codes for a UserInfo error response. It may be 
 	 *                  {@code null} if the client didn't provide any 
 	 *                  authentication information in the original request.
-	 * @param errorURI  Optional URI of a web page that includes information
-	 *                  about the error, {@code null} if not specified.
+	 * @param errorURI  Optional URI of a web page that includes additional
+	 *                  information about the error, {@code null} if not 
+	 *                  specified.
 	 *
 	 * @throws IllegalArgumentException If the specified error code is not
-	 *                                  legal for a UserInfo error response.
+	 *                                  legal for a UserInfo error 
+	 *                                  response.
 	 */
 	public UserInfoErrorResponse(final String realm, 
 	                             final ErrorCode errorCode,
@@ -107,7 +96,8 @@ public final class UserInfoErrorResponse extends OAuthBearerTokenErrorResponse {
 		super(realm, errorCode, errorURI);
 		
 		if (errorCode != null && ! getLegalErrorCodes().contains(errorCode))
-			throw new IllegalArgumentException("Illegal UserInfo response error code: " + errorCode.getCode());
+			throw new IllegalArgumentException("Illegal UserInfo response error code: " + 
+				                           errorCode.getCode());
 	}
 	
 	
