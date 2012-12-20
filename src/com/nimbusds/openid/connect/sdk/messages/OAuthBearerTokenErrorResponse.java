@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
 /**
  * OAuth 2.0 Bearer Token error response. This class is immutable.
  *
- * <p>Error codes:
+ * <p>Legal error codes:
  *
  * <ul>
  *     <li>{@link ErrorCode#INVALID_REQUEST}
@@ -94,7 +94,7 @@ public class OAuthBearerTokenErrorResponse implements ErrorResponse {
 	 *
 	 * @return The legal error codes, as a read-only set.
 	 */
-	public static Set<ErrorCode> geLegalErrorCodes() {
+	public static Set<ErrorCode> getLegalErrorCodes() {
 	
 		return Collections.unmodifiableSet(errorCodes);
 	}
