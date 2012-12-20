@@ -44,7 +44,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  *
  * <ul>
  *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 
- *         6750, section 3.1.
+ *         6750), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
