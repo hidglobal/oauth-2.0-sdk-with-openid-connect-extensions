@@ -18,15 +18,15 @@ import com.nimbusds.openid.connect.sdk.claims.Issuer;
 import com.nimbusds.openid.connect.sdk.claims.IssueTime;
 import com.nimbusds.openid.connect.sdk.claims.JWTID;
 import com.nimbusds.openid.connect.sdk.claims.NotBeforeTime;
-import com.nimbusds.openid.connect.sdk.claims.Principal;
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 
 import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
 
 
 /**
  * Client authentication claims, serialisable to a JSON object. Used for 
- * {@link com.nimbusds.openid.connect.sdk.messages.ClientSecretJWT client secret 
- * JWT} and {@link com.nimbusds.openid.connect.sdk.messages.PrivateKeyJWT 
+ * {@link com.nimbusds.openid.connect.sdk.messages.ClientSecretJWT client 
+ * secret JWT} and {@link com.nimbusds.openid.connect.sdk.messages.PrivateKeyJWT 
  * private key JWT} authentication at the Token endpoint.
  *
  * <p>Note that OpenID Connect mandates the use the {@code jti} claim, see
@@ -37,7 +37,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <pre>
  * {
  *   "iss" : "http://client.example.com",
- *   "prn" : "http://client.example.com",
+ *   "sub" : "http://client.example.com",
  *   "aud" : "http://server.example.com",
  *   "jti" : "d396036d-c4d9-40d8-8e98-f7e8327002d9",
  *   "exp" : 1311281970,
@@ -49,11 +49,11 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>draft-ietf-oauth-jwt-bearer-02
+ *     <li>draft-ietf-oauth-jwt-bearer-04
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2013-01-11)
  */
 public class ClientAuthenticationClaims extends JSONObjectClaims {
 
@@ -66,7 +66,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	
 	static {
 		reservedClaimNames.add("iss");
-		reservedClaimNames.add("prn");
+		reservedClaimNames.add("sub");
 		reservedClaimNames.add("aud");
 		reservedClaimNames.add("jti");
 		reservedClaimNames.add("exp");
@@ -94,9 +94,9 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * The principal (required).
+	 * The subject (required).
 	 */
-	private Principal prn;
+	private Subject sub;
 	
 	
 	/**
@@ -143,7 +143,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	 *
 	 * @param iss The issuer. Must contain the {@code client_id} of the
 	 *            OAuth client. Must not be {@code null}.
-	 * @param prn The principal. Must contain the {@code client_id} of the
+	 * @param sub The subject. Must contain the {@code client_id} of the
 	 *            OAuth client. Must not be {@code null}.
 	 * @param aud The audience, typically the URL of the authorisation 
 	 *            server's token endpoint. Must not be {@code null}.
@@ -153,13 +153,13 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	 * @param exp The expiration time. Must not be {@code null}.
 	 */
 	public ClientAuthenticationClaims(final Issuer iss, 
-	                                  final Principal prn, 
+	                                  final Subject sub, 
 					  final Audience aud,
 					  final JWTID jti,
 					  final ExpirationTime exp) {
 
 		setIssuer(iss);
-		setPrincipal(prn);
+		setSubject(sub);
 		setAudience(aud);
 		setJWTID(jti);
 		setExpirationTime(exp);
@@ -194,29 +194,29 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Gets the principal. Corresponds to the {@code prn} claim.
+	 * Gets the subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The principal. Contains the {@code client_id} of the OAuth 
+	 * @return The subject. Contains the {@code client_id} of the OAuth 
 	 *         client.
 	 */
-	public Principal getPrincipal() {
+	public Subject getSubject() {
 	
-		return prn;
+		return sub;
 	}
 	
 	
 	/**
-	 * Sets the principal. Corresponds to the {@code prn} claim.
+	 * Sets the subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @param prn The principal. Must contain the {@code client_id} of the
+	 * @param sub The subject. Must contain the {@code client_id} of the
 	 *            OAuth client. Must not be {@code null}.
 	 */
-	public void setPrincipal(final Principal prn) {
+	public void setSubject(final Subject sub) {
 	
-		if (prn == null)
-			throw new IllegalArgumentException("The principal must not be null");
+		if (sub == null)
+			throw new IllegalArgumentException("The subject must not be null");
 		
-		this.prn = prn;
+		this.sub = sub;
 	}
 	
 	
@@ -365,7 +365,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 		JSONObject o = super.toJSONObject();
 		
 		o.put("iss", iss.getClaimValue());
-		o.put("prn", prn.getClaimValue());
+		o.put("sub", sub.getClaimValue());
 		o.put("aud", aud.getClaimValue());
 		o.put("jti", jti.getClaimValue());
 		o.put("exp", exp.getClaimValue());
@@ -400,9 +400,9 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 		ClaimValueParser.parse(jsonObject, iss);
 		jsonObject.remove(iss.getClaimName());
 		
-		Principal prn = new Principal();
-		ClaimValueParser.parse(jsonObject, prn);
-		jsonObject.remove(prn.getClaimName());
+		Subject sub = new Subject();
+		ClaimValueParser.parse(jsonObject, sub);
+		jsonObject.remove(sub.getClaimName());
 		
 		Audience aud = new Audience();
 		ClaimValueParser.parse(jsonObject, aud);
@@ -418,7 +418,7 @@ public class ClientAuthenticationClaims extends JSONObjectClaims {
 		
 		
 		ClientAuthenticationClaims clientAuthClaims = 
-			new ClientAuthenticationClaims(iss, prn, aud, jti, exp);
+			new ClientAuthenticationClaims(iss, sub, aud, jti, exp);
 		
 		
 		// Get optional iat claim
