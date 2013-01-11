@@ -6,7 +6,8 @@ import com.nimbusds.langtag.LangTagException;
 
 
 /**
- * Parser for claim names with optional language tag (RFC 5646).
+ * Claim name with optional language tag (RFC 5646). Use the static 
+ * {@link #parse} method to create a new instance.
  *
  * <p>Related specifications:
  *
