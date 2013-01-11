@@ -108,19 +108,21 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * URL for the client's JSON Web Key (JWK) that is used in signing 
-	 * Token endpoint requests and OpenID request objects )optional). If
-	 * {@link #encryptionJWKURL} is not provided, also used to encrypt the
-	 * ID Token and UserInfo endpoint responses to the client.
+	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
+	 * are used in signing Token endpoint requests and OpenID request 
+	 * objects (optional). If {@link #encryptionJWKSetURL} is not provided,
+	 * also used to encrypt the ID Token and UserInfo endpoint responses 
+	 * to the client.
 	 */
-	private URL jwkURL = null;
+	private URL jwkSetURL = null;
 
 
 	/**
-	 * URL for the client's JSON Web Key (JWK) that is used to encrypt the
-	 * ID Token and UserInfo endpoint responses to the client (optional).
+	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
+	 * are used to encrypt the ID Token and UserInfo endpoint responses to 
+	 * the client (optional).
 	 */
-	private URL encryptionJWKURL = null;
+	private URL encryptionJWKSetURL = null;
 
 
 	/**
@@ -501,59 +503,61 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the URL for the client's JSON Web Key (JWK) that is used in 
-	 * signing Token endpoint requests and OpenID request objects. If
-	 * {@link #getEncryptionJWKURL} if not provided, also used to encrypt 
-	 * the ID Token and UserInfo endpoint responses to the client.
-	 * Corresponds to the {@code jwk_url} parameter.
+	 * Gets the URL for the client's JSON Web Key (JWK) set containing
+	 * key(s) that are used in signing Token endpoint requests and OpenID 
+	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided, 
+	 * also used to encrypt the ID Token and UserInfo endpoint responses to
+	 * the client. Corresponds to the {@code jwk_url} parameter.
 	 *
-	 * @return The JWK URL, {@code null} if not specified.
+	 * @return The JWK set URL, {@code null} if not specified.
 	 */
-	public URL getJWKURL() {
+	public URL getJWKSetURL() {
 
-		return jwkURL;
+		return jwkSetURL;
 	}
 
 
 	/**
-	 * Sets the URL for the client's JSON Web Key (JWK) that is used in 
-	 * signing Token endpoint requests and OpenID request objects. If
-	 * {@link #getEncryptionJWKURL} if not provided, also used to encrypt 
-	 * the ID Token and UserInfo endpoint responses to the client.
-	 * Corresponds to the {@code jwk_url} parameter.
+	 * Sets the URL for the client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used in signing Token endpoint requests and OpenID 
+	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided, 
+	 * also used to encrypt the ID Token and UserInfo endpoint responses to 
+	 * the client. Corresponds to the {@code jwk_url} parameter.
 	 *
-	 * @param jwkURL The JWK URL, {@code null} if not specified.
+	 * @param jwkSetURL The JWK set URL, {@code null} if not specified.
 	 */
-	public void setJWKURL(final URL jwkURL) {
+	public void setJWKSetURL(final URL jwkSetURL) {
 
-		this.jwkURL = jwkURL;
+		this.jwkSetURL = jwkSetURL;
 	}
 
 
 	/**
-	 * Gets the URL for the client's JSON Web Key (JWK) that is used to 
-	 * encrypt the ID Token and UserInfo endpoint responses to the client.
-	 * Corresponds to the {@code jwk_encryption_url} parameter.
+	 * Gets the URL for the client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used to encrypt the ID Token and UserInfo endpoint 
+	 * responses to the client. Corresponds to the 
+	 * {@code jwk_encryption_url} parameter.
 	 *
-	 * @return The encryption JWK URL, {@code null} if not specified.
+	 * @return The encryption JWK set URL, {@code null} if not specified.
 	 */
-	public URL getEncryptionJWKURL() {
+	public URL getEncryptionJWKSetURL() {
 
-		return encryptionJWKURL;
+		return encryptionJWKSetURL;
 	}
 
 
 	/**
-	 * Sets the URL for the client's JSON Web Key (JWK) that is used to 
-	 * encrypt the ID Token and UserInfo endpoint responses to the client.
-	 * Corresponds to the {@code jwk_encryption_url} parameter.
+	 * Sets the URL for the client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used to encrypt the ID Token and UserInfo endpoint 
+	 * responses to the client. Corresponds to the 
+	 * {@code jwk_encryption_url} parameter.
 	 *
-	 * @param encryptionJWKURL The encryption JWK URL, {@code null} if not 
-	 *                         specified.
+	 * @param encryptionJWKSetURL The encryption JWK set URL, {@code null} 
+	 *                            if not specified.
 	 */
-	public void setEncrytionJWKURL(final URL encryptionJWKURL) {
+	public void setEncrytionJWKSetURL(final URL encryptionJWKSetURL) {
 
-		this.encryptionJWKURL = encryptionJWKURL;
+		this.encryptionJWKSetURL = encryptionJWKSetURL;
 	}
 
 
@@ -1010,12 +1014,12 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			params.put("token_endpoint_auth_type", tokenEndpointAuthMethod.toString());
 
 
-		if (jwkURL != null)
-			params.put("jwk_url", jwkURL.toString());
+		if (jwkSetURL != null)
+			params.put("jwk_url", jwkSetURL.toString());
 
 
-		if (encryptionJWKURL != null)
-			params.put("jwk_encryption_url", encryptionJWKURL.toString());
+		if (encryptionJWKSetURL != null)
+			params.put("jwk_encryption_url", encryptionJWKSetURL.toString());
 
 
 		if (x509URL != null)
@@ -1259,10 +1263,10 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			req.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(v));
 
 
-		req.setJWKURL(parseURL("jwk_url", params));
+		req.setJWKSetURL(parseURL("jwk_url", params));
 
 
-		req.setEncrytionJWKURL(parseURL("jwk_encryption_url", params));
+		req.setEncrytionJWKSetURL(parseURL("jwk_encryption_url", params));
 
 
 		req.setX509URL(parseURL("x509_url", params));
