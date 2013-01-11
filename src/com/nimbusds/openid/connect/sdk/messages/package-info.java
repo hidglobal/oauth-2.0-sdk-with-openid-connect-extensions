@@ -24,6 +24,16 @@
  *             <li>{@link com.nimbusds.openid.connect.sdk.messages.UserInfoResponse}
  *             <li>{@link com.nimbusds.openid.connect.sdk.messages.UserInfoErrorResponse}
  *         </ul>
+ *     <li>Client registration endpoint:
+ *         <ul>
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientAssociateRequest}
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientAssociateResponse}
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientUpdateRequest}
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientUpdateResponse}
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientRotateSecretRequest}
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientRotateSecretResponse}
+ *             <li>{@link com.nimbusds.openid.connect.sdk.messages.ClientRegistrationErrorResponse}
+ *         </ul>
  * </ul>
  *
  * <p>Future versions may add support for the optional dynamic client 
