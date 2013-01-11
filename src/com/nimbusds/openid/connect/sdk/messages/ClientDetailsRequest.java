@@ -88,6 +88,12 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
+	 * The client application terms of service URL (optional).
+	 */
+	private URL termsOfServiceURL = null;
+
+
+	/**
 	 * The subject identifier type for responses to this client (optional).
 	 */
 	private Subject.Type subjectType = null;
@@ -422,6 +428,31 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	public void setPrivacyPolicyURL(final URL privacyPolicyURL) {
 
 		this.privacyPolicyURL = privacyPolicyURL;
+	}
+
+
+	/**
+	 * Gets the client application terms of service. Corresponds to the
+	 * {@code tos_url} parameter.
+	 *
+	 * @return The terms of service URL, {@code null} if not specified.
+	 */
+	public URL getTermsOfServiceURL() {
+
+		return termsOfServiceURL;
+	}
+
+
+	/**
+	 * Sets the client application terms of service. Corresponds to the
+	 * {@code tos_url} parameter.
+	 *
+	 * @param termsOfServiceURL The terms of service URL, {@code null} if 
+	 *                          not specified.
+	 */
+	public void setTermsOfServiceURL(final URL termsOfServiceURL) {
+
+		this.termsOfServiceURL = termsOfServiceURL;
 	}
 
 
@@ -1002,6 +1033,10 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			params.put("policy_url", privacyPolicyURL.toString());
 
 
+		if (termsOfServiceURL != null)
+			params.put("tos_url", termsOfServiceURL.toString());
+
+
 		if (subjectType != null)
 			params.put("subject_type", subjectType.toString());
 
@@ -1249,6 +1284,9 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 		req.setPrivacyPolicyURL(parseURL("policy_url", params));
+
+		
+		req.setTermsOfServiceURL(parseURL(("tos_url"), params));
 
 
 		req.setSubjectType(parseEnum("subject_type", Subject.Type.class, params));

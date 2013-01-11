@@ -77,6 +77,12 @@ public class Client {
 
 
 	/**
+	 * The client terms of service.
+	 */
+	private URL termsOfServiceURL;
+
+
+	/**
 	 * The subject identifier type for responses to this client.
 	 */
 	private Subject.Type subjectType;
@@ -369,6 +375,29 @@ public class Client {
 	public void setPrivacyPolicyURL(final URL privacyPolicyURL) {
 
 		this.privacyPolicyURL = privacyPolicyURL;
+	}
+
+
+	/**
+	 * Gets the client application terms of service.
+	 *
+	 * @return The terms of service URL, {@code null} if not specified.
+	 */
+	public URL getTermsOfServiceURL() {
+
+		return termsOfServiceURL;
+	}
+
+
+	/**
+	 * Sets the client application terms of service.
+	 *
+	 * @param termsOfServiceURL The terms of service URL, {@code null} if
+	 *                          not specified.
+	 */
+	public void setTermsOfServiceURL(final URL termsOfServiceURL) {
+
+		this.termsOfServiceURL = termsOfServiceURL;
 	}
 
 
