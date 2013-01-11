@@ -4,9 +4,10 @@ package com.nimbusds.openid.connect.sdk.claims;
 /**
  * OAuth 2.0 client identifier ({@code client_id}).
  *
- * <p>The client identifier may be a URL or an arbitrary string.
+ * <p>The client identifier can be a URL or an arbitrary string.
  *
- * <p>See also {@link Issuer}, {@link Audience} and {@link Principal}.
+ * <p>See also {@link AuthorizedParty}, {@link Issuer}, {@link Subject} and
+ * {@link Audience}.
  *
  * <p>Related specifications:
  *

@@ -2,12 +2,17 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 
 /**
- * Subject identifier ({@code sub}). This is a locally unique and never 
- * reassigned identifier within the issuer for the end-user, intended to be 
- * consumed by the client.
+ * Subject identifier ({@code sub}). 
  *
- * <p>The subject identifier cannot exceed {@link #MAX_LENGTH 255 ASCII 
- * characters} in length.
+ * <p>In the context of an ID Token or UserInfo response this is a locally 
+ * unique and never reassigned identifier within the issuer for the end-user, 
+ * intended to be consumed by the client. The subject identifier cannot exceed 
+ * {@link #MAX_LENGTH 255 ASCII characters} in length.
+ *
+ * <p>In the context of a client authentication claim set this is the
+ * {@link ClientID client identifier}.
+ *
+ * <p>See also {@link ClientID}.
  *
  * <p>Example values:
  *

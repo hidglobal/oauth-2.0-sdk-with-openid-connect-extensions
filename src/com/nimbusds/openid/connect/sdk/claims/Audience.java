@@ -5,6 +5,10 @@ package com.nimbusds.openid.connect.sdk.claims;
  * Intended audience ({@code aud}). This is typically a {@link ClientID client 
  * identifier} or an authorisation server identifier.
  *
+ * <p>The client identifier can be a URL or an arbitrary string.
+ *
+ * <p>See also {@link ClientID}.
+ *
  * <p>Related specifications:
  *
  * <ul>
