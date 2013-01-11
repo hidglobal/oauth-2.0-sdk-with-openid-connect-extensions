@@ -18,7 +18,7 @@ import net.minidev.json.JSONObject;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.
+ *     <li>OpenID Connect Messages 1.0, section 2.1.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -50,11 +50,11 @@ public class ScopeToken {
 
 	/**
 	 * Informs the authorisation server that the client is making an OpenID 
-	 * Connect request (REQUIRED). This scope tokens requests access to 
-	 * the {@code user_id} claim. 
+	 * Connect request (REQUIRED). This scope token requests access to the
+	 * {@code sub} claim. 
 	 */
 	public static final ScopeToken OPENID =
-		new ScopeToken("openid", ScopeToken.Type.REQUIRED, new String[]{"user_id"});
+		new ScopeToken("openid", ScopeToken.Type.REQUIRED, new String[]{"sub"});
 	
 	
 	/**
@@ -200,7 +200,7 @@ public class ScopeToken {
 		
 			if (type == ScopeToken.Type.REQUIRED) {
 			
-				// Essential (applies to OPENID - user_id only)
+				// Essential (applies to OPENID - sub only)
 				JSONObject details = new JSONObject();
 				details.put("essential", true);
 				req.put(claim, details);

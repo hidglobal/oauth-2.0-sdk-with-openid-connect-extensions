@@ -22,11 +22,13 @@ import net.minidev.json.JSONObject;
  *
  * <pre>
  * {
- *   "user_id"  : 123456789,
- *   "name"     : "Alice Wonderland",
- *   "email"    : "alice@wonderland.net",
- *   "verified" : true,
- *   "locales"  : ["en", "en-GB"],
+ *   "sub"                : "248289761001",
+ *   "name"               : "Jane Doe",
+ *   "given_name"         : "Jane",
+ *   "family_name"        : "Doe",
+ *   "preferred_username" : "j.doe",
+ *   "email"              : "janedoe@example.com",
+ *   "picture"            : "http://example.com/janedoe/me.jpg"
  * }
  * </pre>
  *

@@ -11,7 +11,7 @@ package com.nimbusds.openid.connect.sdk.claims;
  *
  * <pre>
  * {
- *   "user_id"            : "248289761001",
+ *   "sub"                : "248289761001",
  *   "name"               : "Jane Doe",
  *   "given_name"         : "Jane",
  *   "family_name"        : "Doe",
