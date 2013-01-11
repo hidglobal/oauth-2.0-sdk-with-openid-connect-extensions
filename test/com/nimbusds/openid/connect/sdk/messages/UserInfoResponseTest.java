@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.sdk.SerializeException;
 
 import com.nimbusds.openid.connect.sdk.claims.Subject;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Address;
-import com.nimbusds.openid.connect.sdk.claims.UserInfo.Birthday;
+import com.nimbusds.openid.connect.sdk.claims.UserInfo.Birthdate;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Email;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.FamilyName;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Gender;
@@ -124,9 +124,9 @@ public class UserInfoResponseTest extends TestCase {
 		gender.setClaimValue(Gender.FEMALE);
 		claims.setGender(gender);
 		
-		Birthday birthday = new Birthday();
-		birthday.setClaimValue("31/12/2012");
-		claims.setBirthday(birthday);
+		Birthdate birthdate = new Birthdate();
+		birthdate.setClaimValue("2012-12-31");
+		claims.setBirthdate(birthdate);
 		
 		Zoneinfo zoneinfo = new Zoneinfo();
 		zoneinfo.setClaimValue("Europe/Sofia");
@@ -222,7 +222,7 @@ public class UserInfoResponseTest extends TestCase {
 		assertEquals(verified, claims.getEmailVerified());
 		
 		assertEquals(gender, claims.getGender());
-		assertEquals(birthday, claims.getBirthday());
+		assertEquals(birthdate, claims.getBirthdate());
 		
 		assertEquals(zoneinfo, claims.getZoneinfo());
 		assertEquals(locale, claims.getLocale());

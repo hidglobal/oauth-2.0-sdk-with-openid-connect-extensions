@@ -172,9 +172,9 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * The birthday (optional).
+	 * The date of birth (optional).
 	 */
-	private UserInfo.Birthday birthday = null;
+	private UserInfo.Birthdate birthdate = null;
 	
 	
 	/**
@@ -719,24 +719,24 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Gets the birthday. Corresponds to the {@code birthday} claim.
+	 * Gets the date of birth. Corresponds to the {@code birthdate} claim.
 	 *
-	 * @return The birthday, {@code null} if not specified.
+	 * @return The date of birth, {@code null} if not specified.
 	 */
-	public UserInfo.Birthday getBirthday() {
+	public UserInfo.Birthdate getBirthdate() {
 	
-		return birthday;
+		return birthdate;
 	}
 	
 	
 	/**
-	 * Sets the birthday. Corresponds to the {@code birthday} claim.
+	 * Sets the date of birth. Corresponds to the {@code birthdate} claim.
 	 *
-	 * @param birthday The birthday, {@code null} if not specified.
+	 * @param birthdate The date of birth, {@code null} if not specified.
 	 */
-	public void setBirthday(final UserInfo.Birthday birthday) {
+	public void setBirthdate(final UserInfo.Birthdate birthdate) {
 	
-		this.birthday = birthday;
+		this.birthdate = birthdate;
 	}
 	
 	
@@ -934,8 +934,8 @@ public class UserInfoClaims extends JSONObjectClaims {
 		if (gender != null)
 			o.put("gender", gender.getClaimValue());
 		
-		if (birthday != null)
-			o.put("birthday", birthday.getClaimValue());
+		if (birthdate != null)
+			o.put("birthdate", birthdate.getClaimValue());
 			
 		if (zoneinfo != null)
 			o.put("zoneinfo", zoneinfo.getClaimValue());
@@ -1079,11 +1079,11 @@ public class UserInfoClaims extends JSONObjectClaims {
 				uic.setGender(gender);
 			}
 
-			else if (claimName.getName().equals("birthday")) {
+			else if (claimName.getName().equals("birthdate")) {
 
-				UserInfo.Birthday birthday = new UserInfo.Birthday();
-				birthday.setClaimValue(JSONObjectUtils.getString(jsonObject, "birthday"));
-				uic.setBirthday(birthday);
+				UserInfo.Birthdate birthdate = new UserInfo.Birthdate();
+				birthdate.setClaimValue(JSONObjectUtils.getString(jsonObject, "birthdate"));
+				uic.setBirthdate(birthdate);
 			}
 
 			else if (claimName.getName().equals("zoneinfo")) {

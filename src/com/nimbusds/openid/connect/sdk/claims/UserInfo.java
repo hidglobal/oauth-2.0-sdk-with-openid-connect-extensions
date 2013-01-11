@@ -28,7 +28,7 @@ package com.nimbusds.openid.connect.sdk.claims;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2013-01-11)
  */
 public class UserInfo {
 
@@ -288,22 +288,23 @@ public class UserInfo {
 	
 	
 	/**
-	 * The end-user's birthday, represented as a date string in MM/DD/YYYY 
-	 * format ({@code birthday}). The year may be 0000, indicating that it 
-	 * is omitted.
+	 * The end-user's date of birth ({@code birthdate}), represented as an 
+	 * ISO 8601:2004 YYYY-MM-DD format. The year MAY be 9999, indicating 
+	 * that it is omitted. To represent only the year, YYYY format is 
+	 * allowed.
 	 */
-	public static class Birthday extends StringClaim {
+	public static class Birthdate extends StringClaim {
 	
 	
 		/**
 		 * @inheritDoc
 		 *
-		 * @return "birthday".
+		 * @return "birthdate".
 		 */
 		@Override
 		public String getClaimName() {
 
-			return "birthday";
+			return "birthdate";
 		}
 	}
 	

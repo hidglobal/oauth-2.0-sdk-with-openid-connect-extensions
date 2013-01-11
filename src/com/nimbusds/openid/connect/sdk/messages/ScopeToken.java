@@ -22,7 +22,7 @@ import net.minidev.json.JSONObject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-11)
  */
 @Immutable
 public class ScopeToken {
@@ -63,7 +63,7 @@ public class ScopeToken {
 	 * are: {@code name}, {@code family_name}, {@code given_name}, 
 	 * {@code middle_name}, {@code nickname}, {@code preferred_username}, 
 	 * {@code profile}, {@code picture}, {@code website}, {@code gender}, 
-	 * {@code birthday}, {@code zoneinfo}, {@code locale}, and 
+	 * {@code birthdate}, {@code zoneinfo}, {@code locale}, and 
 	 * {@code updated_time}. 
 	 */
 	public static final ScopeToken PROFILE =
@@ -77,7 +77,7 @@ public class ScopeToken {
 	                                               "picture",
 	                                               "website",
 	                                               "gender",
-	                                               "birthday",
+	                                               "birthdate",
 	                                               "zoneinfo",
 	                                               "locale",
 	                                               "updated_time"});
