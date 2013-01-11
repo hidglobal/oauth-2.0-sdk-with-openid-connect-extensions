@@ -73,11 +73,11 @@ public class Client {
 	/**
 	 * The client application policy for use of end-user data.
 	 */
-	private URL privacyPolicyURL;
+	private URL policyURL;
 
 
 	/**
-	 * The client terms of service.
+	 * The client application terms of service.
 	 */
 	private URL termsOfServiceURL;
 
@@ -358,23 +358,22 @@ public class Client {
 	/**
 	 * Gets the client application policy for use of end-user data.
 	 *
-	 * @return The privacy policy URL, {@code null} if not specified.
+	 * @return The policy URL, {@code null} if not specified.
 	 */
-	public URL getPrivacyPolicyURL() {
+	public URL getPolicyURL() {
 
-		return privacyPolicyURL;
+		return policyURL;
 	}
 
 
 	/**
 	 * Sets the client application policy for use of end-user data.
 	 *
-	 * @param privacyPolicyURL The privacy policy URL, {@code null} if not 
-	 *                         specified.
+	 * @param policyURL The policy URL, {@code null} if not specified.
 	 */
-	public void setPrivacyPolicyURL(final URL privacyPolicyURL) {
+	public void setPolicyURL(final URL policyURL) {
 
-		this.privacyPolicyURL = privacyPolicyURL;
+		this.policyURL = policyURL;
 	}
 
 

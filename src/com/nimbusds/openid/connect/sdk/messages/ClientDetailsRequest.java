@@ -84,7 +84,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 * The client application policy URL for use of end-user data 
 	 * (optional).
 	 */
-	private URL privacyPolicyURL = null;
+	private URL policyURL = null;
 
 
 	/**
@@ -410,11 +410,11 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 * Gets the client application policy for use of end-user data.
 	 * Corresponds to the {@code policy_url} parameter.
 	 *
-	 * @return The privacy policy URL, {@code null} if not specified.
+	 * @return The policy URL, {@code null} if not specified.
 	 */
-	public URL getPrivacyPolicyURL() {
+	public URL getPolicyURL() {
 
-		return privacyPolicyURL;
+		return policyURL;
 	}
 
 
@@ -422,12 +422,11 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 * Sets the client application policy for use of end-user data.
 	 * Corresponds to the {@code policy_url} parameter.
 	 *
-	 * @param privacyPolicyURL The privacy policy URL, {@code null} if not 
-	 *                         specified.
+	 * @param policyURL The policy URL, {@code null} if not specified.
 	 */
-	public void setPrivacyPolicyURL(final URL privacyPolicyURL) {
+	public void setPolicyURL(final URL policyURL) {
 
-		this.privacyPolicyURL = privacyPolicyURL;
+		this.policyURL = policyURL;
 	}
 
 
@@ -1029,8 +1028,8 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			params.put("logo_url", applicationLogoURL.toString());
 
 
-		if (privacyPolicyURL != null)
-			params.put("policy_url", privacyPolicyURL.toString());
+		if (policyURL != null)
+			params.put("policy_url", policyURL.toString());
 
 
 		if (termsOfServiceURL != null)
@@ -1283,9 +1282,9 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 		req.setApplicationLogoURL(parseURL("logo_url", params));
 
 
-		req.setPrivacyPolicyURL(parseURL("policy_url", params));
+		req.setPolicyURL(parseURL("policy_url", params));
 
-		
+
 		req.setTermsOfServiceURL(parseURL(("tos_url"), params));
 
 
