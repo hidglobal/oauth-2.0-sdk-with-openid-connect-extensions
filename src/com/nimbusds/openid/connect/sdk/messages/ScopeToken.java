@@ -114,6 +114,15 @@ public class ScopeToken {
 
 
 	/**
+	 * Requests that an OAuth 2.0 refresh token be issued that can be used
+	 * to obtain an access token that grants access the end-user's UserInfo
+	 * endpoint even when the user is not present (not logged in).
+	 */
+	public static final ScopeToken OFFLINE_ACCESS =
+		new ScopeToken("offline_access", null);
+
+
+	/**
 	 * The actual value.
 	 */
 	private final String value;
@@ -126,7 +135,7 @@ public class ScopeToken {
 	
 	
 	/**
-	 * The names of the associated claims.
+	 * The names of the associated claims, {@code null} if not applicable.
 	 */
 	private final Set<String> claims;
 
@@ -136,8 +145,8 @@ public class ScopeToken {
 	 *
 	 * @param value  The scope token as a string. Must not be {@code null}.
 	 * @param type   The requirement type. Must not be {@code null}.
-	 * @param claims The names of the associated claims. Must not be
-	 *               {@code null}.
+	 * @param claims The names of the associated claims, {@code null} if
+	 *               not applicable.
 	 */
 	private ScopeToken(final String value, 
 		           final ScopeToken.Type type,
@@ -146,7 +155,11 @@ public class ScopeToken {
 		this.value = value;
 		this.type = type;
 		
-		this.claims = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(claims)));
+		if (claims != null)
+			this.claims = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(claims)));
+
+		else
+			this.claims = null;
 	}
 
 
@@ -179,7 +192,8 @@ public class ScopeToken {
 	/**
 	 * Returns the names of the associated claims.
 	 *
-	 * @return The names of the associated claims.
+	 * @return The names of the associated claims, {@code null} if not
+	 *         applicable.
 	 */
 	public Set<String> getClaims() {
 
@@ -190,7 +204,8 @@ public class ScopeToken {
 	/**
 	 * Gets a default claims request JSON object for the scope token.
 	 *
-	 * @return The default claims request JSON object.
+	 * @return The default claims request JSON object, {@code null} if not
+	 *         applicable.
 	 */
 	public JSONObject getClaimsRequestJSONObject() {
 
