@@ -95,19 +95,20 @@ public class Client {
 
 
 	/**
-	 * URL for the client's JSON Web Key (JWK) that is used in signing 
-	 * Token endpoint requests and OpenID request objects. If
-	 * {@link #encryptionJWKURL} is not provided, also used to encrypt the
-	 * ID Token and UserInfo endpoint responses to the client.
+	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
+	 * are used in signing Token endpoint requests and OpenID request 
+	 * objects. If {@link #encryptionJWKURL} is not provided, also used to 
+	 * encrypt the ID Token and UserInfo endpoint responses to the client.
 	 */
-	private URL jwkURL;
+	private URL jwkSetURL;
 
 
 	/**
-	 * URL for the client's JSON Web Key (JWK) that is used to encrypt the
-	 * ID Token and UserInfo endpoint responses to the client.
+	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
+	 * are used to encrypt the ID Token and UserInfo endpoint responses to 
+	 * the client.
 	 */
-	private URL encryptionJWKURL;
+	private URL encryptionJWKSetURL;
 
 
 	/**
@@ -443,55 +444,59 @@ public class Client {
 
 
 	/**
-	 * Gets the URL for the client's JSON Web Key (JWK) that is used in 
-	 * signing Token endpoint requests and OpenID request objects. If
-	 * {@link #getEncryptionJWKURL} if not provided, also used to encrypt 
-	 * the ID Token and UserInfo endpoint responses to the client.
+	 * Gets the URL for the client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used in signing Token endpoint requests and OpenID 
+	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided, 
+	 * also used to encrypt the ID Token and UserInfo endpoint responses to 
+	 * the client.
 	 *
-	 * @return The JWK URL, {@code null} if not specified.
+	 * @return The JWK set URL, {@code null} if not specified.
 	 */
-	public URL getJWKURL() {
+	public URL getJWKSetURL() {
 
-		return jwkURL;
+		return jwkSetURL;
 	}
 
 
 	/**
-	 * Sets the URL for the client's JSON Web Key (JWK) that is used in 
-	 * signing Token endpoint requests and OpenID request objects. If
-	 * {@link #getEncryptionJWKURL} if not provided, also used to encrypt 
-	 * the ID Token and UserInfo endpoint responses to the client.
+	 * Sets the URL for the client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used in signing Token endpoint requests and OpenID 
+	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided,
+	 * also used to encrypt the ID Token and UserInfo endpoint responses to
+	 * the client.
 	 *
-	 * @param jwkURL The JWK URL, {@code null} if not specified.
+	 * @param jwkSetURL The JWK set URL, {@code null} if not specified.
 	 */
-	public void setJWKURL(final URL jwkURL) {
+	public void setJWKSetURL(final URL jwkSetURL) {
 
-		this.jwkURL = jwkURL;
+		this.jwkSetURL = jwkSetURL;
 	}
 
 
 	/**
-	 * Gets the URL for the client's JSON Web Key (JWK) that is used to 
-	 * encrypt the ID Token and UserInfo endpoint responses to the client.
+	 * Gets the URL for the client's JSON Web Key (JWK) set containing
+	 * key(s) that ares used to encrypt the ID Token and UserInfo endpoint 
+	 * responses to the client.
 	 *
-	 * @return The encryption JWK URL, {@code null} if not specified.
+	 * @return The encryption JWK set URL, {@code null} if not specified.
 	 */
-	public URL getEncryptionJWKURL() {
+	public URL getEncryptionJWKSetURL() {
 
-		return encryptionJWKURL;
+		return encryptionJWKSetURL;
 	}
 
 
 	/**
-	 * Sets the URL for the client's JSON Web Key (JWK) that is used to 
-	 * encrypt the ID Token and UserInfo endpoint responses to the client.
+	 * Sets the URL for the client's JSON Web Key (JWK) set containing
+	 * key(s) that are used to encrypt the ID Token and UserInfo endpoint 
+	 * responses to the client.
 	 *
-	 * @param encryptionJWKURL The encryption JWK URL, {@code null} if not 
-	 *                         specified.
+	 * @param encryptionJWKSetURL The encryption JWK set URL, {@code null} 
+	 *                            if not specified.
 	 */
-	public void setEncrytionJWKURL(final URL encryptionJWKURL) {
+	public void setEncrytionJWKSetURL(final URL encryptionJWKSetURL) {
 
-		this.encryptionJWKURL = encryptionJWKURL;
+		this.encryptionJWKSetURL = encryptionJWKSetURL;
 	}
 
 
