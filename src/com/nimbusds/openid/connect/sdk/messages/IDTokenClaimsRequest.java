@@ -18,7 +18,7 @@ import com.nimbusds.langtag.LangTagException;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.Claim;
-import com.nimbusds.openid.connect.sdk.claims.UserID;
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 
 
 /**
@@ -38,11 +38,11 @@ import com.nimbusds.openid.connect.sdk.claims.UserID;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, sections 2.1.1 and 2.1.2.1.2.
+ *     <li>OpenID Connect Messages 1.0, sections 2.1.2 and 2.1.2.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-27)
+ * @version $version$ (2013-01-11)
  */
 @Immutable
 public class IDTokenClaimsRequest extends ClaimsRequest {
@@ -82,7 +82,7 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 		Set<String> claims = new HashSet<String>();
 		
 		claims.add("iss");
-		claims.add("user_id");
+		claims.add("sub");
 		claims.add("aud");
 		claims.add("exp");
 		claims.add("iat");
@@ -153,48 +153,48 @@ public class IDTokenClaimsRequest extends ClaimsRequest {
 	
 	
 	/**
-	 * Gets the required user ID (shorthand method).
+	 * Gets the required subject (shorthand method).
 	 *
 	 * <p>Example claim structure:
 	 *
 	 * <pre>
-	 * { "user_id": {"value":"248289761001"}, ... }
+	 * { "sub": {"value":"248289761001"}, ... }
 	 * </pre>
 	 *
-	 * @return The required user ID, {@code null} if not specified.
+	 * @return The required subject, {@code null} if not specified.
 	 *
-	 * @throws ResolveException If the required user ID couldn't be
+	 * @throws ResolveException If the required subject couldn't be
 	 *                          correctly resolved.
 	 */
-	public UserID getRequiredUserID()
+	public Subject getRequiredSubject()
 		throws ResolveException {
 	
-		Object uidObject = requestedClaims.get("user_id");
+		Object subjectObject = requestedClaims.get("sub");
 		
-		if (uidObject == null)
+		if (subjectObject == null)
 			return null;
 			
-		if (! (uidObject instanceof JSONObject))
-			throw new ResolveException("Unexpected \"user_id\" type, must be a JSON object",
+		if (! (subjectObject instanceof JSONObject))
+			throw new ResolveException("Unexpected \"sub\" type, must be a JSON object",
 				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
 				                   redirectURI, state, null);
 			
-		Object uidValue = ((JSONObject)uidObject).get("value");
+		Object subValue = ((JSONObject)subjectObject).get("value");
 		
-		if (uidValue == null)
+		if (subValue == null)
 			return null;
 
-		if (! (uidValue instanceof String))
+		if (! (subValue instanceof String))
 			throw new ResolveException("Unexpected \"value\" type, must be a JSON string",
 				                   ErrorCode.INVALID_OPENID_REQUEST_OBJECT,
 				                   redirectURI, state, null);
 			
 		
-		UserID userID = new UserID();
+		Subject sub = new Subject();
 
-		userID.setClaimValue((String)uidValue);
+		sub.setClaimValue((String)subValue);
 
-		return userID;
+		return sub;
 	}
 	
 	

@@ -2,11 +2,12 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 
 /**
- * A locally unique and never reassigned identifier for the end-user, which is
- * intended to be consumed by the client ({@code user_id}).
+ * Subject identifier ({@code sub}). This is a locally unique and never 
+ * reassigned identifier within the issuer for the end-user, intended to be 
+ * consumed by the client.
  *
- * <p>The user identifier cannot exceed {@link #MAX_LENGTH 255 ASCII characters}
- * in length.
+ * <p>The subject identifier cannot exceed {@link #MAX_LENGTH 255 ASCII 
+ * characters} in length.
  *
  * <p>Example values:
  *
@@ -18,23 +19,23 @@ package com.nimbusds.openid.connect.sdk.claims;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1 and 2.3.2.
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.1 and 2.4.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2013-01-11)
  */
-public class UserID extends StringClaim {
+public class Subject extends StringClaim {
 
 
 	/**
-	 * The maximum user identifier length.
+	 * The maximum subject identifier length.
 	 */
 	public static final int MAX_LENGTH = 255;
 	
 	
 	/**
-	 * Enumeration of the user identifier types.
+	 * Enumeration of the subject identifier types.
 	 */
 	public static enum Type {
 	
@@ -52,10 +53,10 @@ public class UserID extends StringClaim {
 		
 		
 		/**
-		 * Returns the string representation of this user identifier 
+		 * Returns the string representation of this subject identifier 
 		 * type.
 		 *
-		 * @return The string representation of this user identifier
+		 * @return The string representation of this subject identifier
 		 *         type.
 		 */
 		public String toString() {
@@ -66,7 +67,8 @@ public class UserID extends StringClaim {
 	
 	
 	/**
-	 * Checks if the specified string represents a legal user identifier.
+	 * Checks if the specified string represents a legal subject
+	 * identifier.
 	 *
 	 * @return value The string to check.
 	 *
@@ -91,23 +93,23 @@ public class UserID extends StringClaim {
 	/**
 	 * @inheritDoc
 	 *
-	 * @return "user_id".
+	 * @return "sub".
 	 */
 	@Override
 	public String getClaimName() {
 	
-		return "user_id";
+		return "sub";
 	}
 	
 	
 	/**
-	 * Checks if the claim value represents a legal user identifier.
+	 * Checks if the claim value represents a legal subject identifier.
 	 *
-	 * @return {@code true} if the value is less than 256 characters length;
-	 *         else {@code false}.
+	 * @return {@code true} if the value is less than 256 characters 
+	 *         length, else {@code false}.
 	 */
 	public boolean isLegal() {
 	
-		return UserID.isLegal(this.getClaimValue());
+		return Subject.isLegal(this.getClaimValue());
 	}
 }

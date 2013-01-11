@@ -14,7 +14,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClientID;
-import com.nimbusds.openid.connect.sdk.claims.UserID;
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 
 import com.nimbusds.openid.connect.sdk.messages.ClientAuthenticationMethod;
 
@@ -29,7 +29,7 @@ import com.nimbusds.openid.connect.sdk.messages.ClientAuthenticationMethod;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-12-17)
+ * @version $version$ (2013-01-11)
  */
 public class Client {
 
@@ -77,9 +77,9 @@ public class Client {
 
 
 	/**
-	 * The user ID type for responses to this client.
+	 * The subject identifier type for responses to this client.
 	 */
-	private UserID.Type userIDType;
+	private Subject.Type subjectType;
 
 
 	/**
@@ -372,24 +372,25 @@ public class Client {
 
 
 	/**
-	 * Gets the user ID type for responses to this client.
+	 * Gets the subject identifier type for responses to this client.
 	 *
-	 * @return The user ID type, {@code null} if not specified.
+	 * @return The subject identifier type, {@code null} if not specified.
 	 */
-	public UserID.Type getUserIDType() {
+	public Subject.Type getSubjectType() {
 
-		return userIDType;
+		return subjectType;
 	}
 
 
 	/**
-	 * Sets the user ID type for responses to this client.
+	 * Sets the subject identifier type for responses to this client.
 	 *
-	 * @param userIDType The user ID type, {@code null} if not specified.
+	 * @param subjectType The subject identifier type, {@code null} if not 
+	 *                    specified.
 	 */
-	public void setUserIDType(final UserID.Type userIDType) {
+	public void setSubjectType(final Subject.Type subjectType) {
 
-		this.userIDType = userIDType;
+		this.subjectType = subjectType;
 	}
 
 

@@ -12,6 +12,7 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.openid.connect.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.SerializeException;
 
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Address;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Birthday;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Email;
@@ -28,7 +29,6 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo.UpdatedTime;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.EmailVerified;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Website;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo.Zoneinfo;
-import com.nimbusds.openid.connect.sdk.claims.UserID;
 
 import com.nimbusds.openid.connect.sdk.claims.sets.AddressClaims;
 import com.nimbusds.openid.connect.sdk.claims.sets.UserInfoClaims;
@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  * Tests UserInfo response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2013-01-11)
  */
 public class UserInfoResponseTest extends TestCase {
 	
@@ -79,10 +79,10 @@ public class UserInfoResponseTest extends TestCase {
 	
 	public void testCreateSerializeAndParse() {
 	
-		UserID userID = new UserID();
-		userID.setClaimValue("alice");
+		Subject sub = new Subject();
+		sub.setClaimValue("alice");
 		
-		UserInfoClaims claims = new UserInfoClaims(userID);
+		UserInfoClaims claims = new UserInfoClaims(sub);
 		
 		Name name = new Name();
 		name.setClaimValue("Alice");
@@ -208,7 +208,7 @@ public class UserInfoResponseTest extends TestCase {
 				
 		claims = uir.getUserInfoClaims();
 
-		assertEquals(userID, claims.getUserID());
+		assertEquals(sub, claims.getSubject());
 		
 		assertEquals(name, claims.getName());
 		assertEquals(givenName, claims.getGivenName());

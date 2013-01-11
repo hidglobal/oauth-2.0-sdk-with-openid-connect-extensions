@@ -23,7 +23,7 @@ import com.nimbusds.openid.connect.sdk.claims.GenericClaim;
 import com.nimbusds.openid.connect.sdk.claims.Issuer;
 import com.nimbusds.openid.connect.sdk.claims.IssueTime;
 import com.nimbusds.openid.connect.sdk.claims.NotBeforeTime;
-import com.nimbusds.openid.connect.sdk.claims.UserID;
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 
 import com.nimbusds.openid.connect.sdk.messages.Nonce;
 
@@ -37,23 +37,23 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  *
  * <pre>
  * {
- *   "iss"     : "http://server.example.com",
- *   "user_id" : "248289761001",
- *   "aud"     : "s6BhdRkqt3",
- *   "nonce"   : "n-0S6_WzA2Mj",
- *   "exp"     : 1311281970,
- *   "iat"     : 1311280970
+ *   "iss"   : "http://server.example.com",
+ *   "sub"   : "248289761001",
+ *   "aud"   : "s6BhdRkqt3",
+ *   "nonce" : "n-0S6_WzA2Mj",
+ *   "exp"   : 1311281970,
+ *   "iat"   : 1311280970
  * }
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-17)
+ * @version $version$ (2013-01-11)
  */
 public class IDTokenClaims extends JSONObjectClaims {
 
@@ -66,7 +66,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 	
 	static {
 		reservedClaimNames.add("iss");
-		reservedClaimNames.add("user_id");
+		reservedClaimNames.add("sub");
 		reservedClaimNames.add("aud");
 		reservedClaimNames.add("exp");
 		reservedClaimNames.add("iat");
@@ -96,9 +96,9 @@ public class IDTokenClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * The user ID (required).
+	 * The subject (required).
 	 */
-	private UserID userID;
+	private Subject sub;
 	
 	
 	/**
@@ -161,20 +161,20 @@ public class IDTokenClaims extends JSONObjectClaims {
 	 * Creates a new minimal ID token. Use the setter methods for the 
 	 * optional claims.
 	 *
-	 * @param iss    The issuer. Must not be {@code null}.
-	 * @param userID The user identifier. Must not be {@code null}.
-	 * @param aud    The audience. Must not be {@code null}.
-	 * @param iat    The issue time. Must not be {@code null}.
-	 * @param nonce  The nonce. If not required {@code null}.
+	 * @param iss   The issuer. Must not be {@code null}.
+	 * @param sub   The subject. Must not be {@code null}.
+	 * @param aud   The audience. Must not be {@code null}.
+	 * @param iat   The issue time. Must not be {@code null}.
+	 * @param nonce The nonce. If not required {@code null}.
 	 */
 	public IDTokenClaims(final Issuer iss, 
-	                     final UserID userID, 
+	                     final Subject sub, 
 		             final Audience aud,
 	                     final IssueTime iat, 
 		             final Nonce nonce) {
 
 		setIssuer(iss);
-		setUserID(userID);
+		setSubject(sub);
 		setAudience(aud);
 		setIssueTime(iat);
 		setNonce(nonce);
@@ -207,27 +207,27 @@ public class IDTokenClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * Gets the user identifier. Corresponds to the {@code user_id} claim.
+	 * Gets the subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The user identifier.
+	 * @return The subject.
 	 */
-	public UserID getUserID() {
+	public Subject getSubject() {
 	
-		return userID;
+		return sub;
 	}
 	
 	
 	/**
-	 * Sets the user identifier. Corresponds to the {@code user_id} claim.
+	 * Sets the subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @param userID The user identifier. Must not be {@code null}.
+	 * @param sub The subject. Must not be {@code null}.
 	 */
-	public void setUserID(final UserID userID) {
+	public void setSubject(final Subject sub) {
 	
-		if (userID == null)
-			throw new IllegalArgumentException("The user ID must not be null");
+		if (sub == null)
+			throw new IllegalArgumentException("The subject must not be null");
 			
-		this.userID = userID;
+		this.sub = sub;
 	}
 	
 	
@@ -440,7 +440,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 		JSONObject o = super.toJSONObject();
 		
 		o.put("iss", iss.getClaimValue());
-		o.put("user_id", userID.getClaimValue());
+		o.put("sub", sub.getClaimValue());
 		o.put("aud", aud.getClaimValue());
 		o.put("exp", exp.getClaimValue());
 		o.put("iat", iat.getClaimValue());
@@ -482,9 +482,9 @@ public class IDTokenClaims extends JSONObjectClaims {
 		ClaimValueParser.parse(jsonObject, iss);
 		jsonObject.remove(iss.getClaimName());
 		
-		UserID userID = new UserID();
-		ClaimValueParser.parse(jsonObject, userID);
-		jsonObject.remove(userID.getClaimName());
+		Subject sub = new Subject();
+		ClaimValueParser.parse(jsonObject, sub);
+		jsonObject.remove(sub.getClaimName());
 		
 		Audience aud = new Audience();
 		ClaimValueParser.parse(jsonObject, aud);
@@ -496,7 +496,7 @@ public class IDTokenClaims extends JSONObjectClaims {
 		
 		Nonce nonce = new Nonce(JSONObjectUtils.getString(jsonObject, "nonce"));
 		
-		IDTokenClaims idTokenClaims = new IDTokenClaims(iss, userID, aud, iat, nonce);
+		IDTokenClaims idTokenClaims = new IDTokenClaims(iss, sub, aud, iat, nonce);
 		
 		
 		// Get optional ID token claims

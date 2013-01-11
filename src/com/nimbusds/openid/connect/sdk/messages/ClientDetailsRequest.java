@@ -22,7 +22,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
 import com.nimbusds.openid.connect.sdk.SerializeException;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
-import com.nimbusds.openid.connect.sdk.claims.UserID;
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 
 import com.nimbusds.openid.connect.sdk.relyingparty.ApplicationType;
 
@@ -43,7 +43,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-12-18)
+ * @version $version$ (2013-01-11)
  */
 public class ClientDetailsRequest extends ClientRegistrationRequest {
 
@@ -88,9 +88,9 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * The user ID type for responses to this client (optional).
+	 * The subject identifier type for responses to this client (optional).
 	 */
-	private UserID.Type userIDType = null;
+	private Subject.Type subjectType = null;
 
 
 	/**
@@ -424,26 +424,27 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the user ID type for responses to the client. Corresponds to
-	 * the {@code user_id_type} parameter.
+	 * Gets the subject identifier type for responses to the client. 
+	 * Corresponds to the {@code subject_type} parameter.
 	 *
-	 * @return The user ID type, {@code null} if not specified.
+	 * @return The subject identifier type, {@code null} if not specified.
 	 */
-	public UserID.Type getUserIDType() {
+	public Subject.Type getSubjectType() {
 
-		return userIDType;
+		return subjectType;
 	}
 
 
 	/**
-	 * Sets the user ID type for responses to this client. Corresponds to
-	 * the {@code user_id_type} parameter.
+	 * Sets the user identifier type for responses to this client. 
+	 * Corresponds to the {@code subject_type} parameter.
 	 *
-	 * @param userIDType The user ID type, {@code null} if not specified.
+	 * @param subjectType The subject identifier type, {@code null} if not 
+	 *                    specified.
 	 */
-	public void setUserIDType(final UserID.Type userIDType) {
+	public void setSubjectType(final Subject.Type subjectType) {
 
-		this.userIDType = userIDType;
+		this.subjectType = subjectType;
 	}
 
 
@@ -997,8 +998,8 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			params.put("policy_url", privacyPolicyURL.toString());
 
 
-		if (userIDType != null)
-			params.put("user_id_type", userIDType.toString());
+		if (subjectType != null)
+			params.put("subject_type", subjectType.toString());
 
 
 		if (sectorIDURL != null)
@@ -1246,7 +1247,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 		req.setPrivacyPolicyURL(parseURL("policy_url", params));
 
 
-		req.setUserIDType(parseEnum("user_id_type", UserID.Type.class, params));
+		req.setSubjectType(parseEnum("subject_type", Subject.Type.class, params));
 
 
 		req.setSectorIDURL(parseURL("sector_identifier_url", params));

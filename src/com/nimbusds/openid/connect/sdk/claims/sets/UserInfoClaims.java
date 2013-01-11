@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimName;
 import com.nimbusds.openid.connect.sdk.claims.ClaimValueParser;
 import com.nimbusds.openid.connect.sdk.claims.ClaimWithLangTag;
 import com.nimbusds.openid.connect.sdk.claims.GenericClaim;
-import com.nimbusds.openid.connect.sdk.claims.UserID;
+import com.nimbusds.openid.connect.sdk.claims.Subject;
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
@@ -30,7 +30,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  *
  * <pre>
  * {
- *   "user_id"            : "248289761001",
+ *   "sub"                : "248289761001",
  *   "name"               : "Jane Doe",
  *   "given_name"         : "Jane",
  *   "family_name"        : "Doe",
@@ -43,11 +43,11 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.2.
+ *     <li>OpenID Connect Messages 1.0, section 2.4.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-08)
+ * @version $version$ (2013-01-11)
  */
 public class UserInfoClaims extends JSONObjectClaims {
 
@@ -59,7 +59,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	static {
-		reservedClaimNames.add("user_id");
+		reservedClaimNames.add("sub");
 		reservedClaimNames.add("name");
 		reservedClaimNames.add("given_name");
 		reservedClaimNames.add("family_name");
@@ -72,7 +72,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 		reservedClaimNames.add("email");
 		reservedClaimNames.add("email_verified");
 		reservedClaimNames.add("gender");
-		reservedClaimNames.add("birthday");
+		reservedClaimNames.add("birthdate");
 		reservedClaimNames.add("zoneinfo");
 		reservedClaimNames.add("locale");
 		reservedClaimNames.add("phone_number");
@@ -94,9 +94,9 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 	
 	/**
-	 * The user ID (required).
+	 * The subject (required).
 	 */
-	private UserID userID;
+	private Subject sub;
 	
 	
 	/**
@@ -211,38 +211,36 @@ public class UserInfoClaims extends JSONObjectClaims {
 	 * Creates a new minimal UserInfo claims set. Any optional claims are
 	 * specified with the setter methods.
 	 *
-	 * @param userID The user identifier. Must not be {@code null}.
+	 * @param sub The subject. Must not be {@code null}.
 	 */
-	public UserInfoClaims(final UserID userID) {
+	public UserInfoClaims(final Subject sub) {
 	
-		setUserID(userID);
+		setSubject(sub);
 	}
 	
 	
 	/**
-	 * Gets the mandatory user identifier. Corresponds to the 
-	 * {@code user_id} claim.
+	 * Gets the mandatory subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The user identifier.
+	 * @return The subject.
 	 */
-	public UserID getUserID() {
+	public Subject getSubject() {
 	
-		return userID;
+		return sub;
 	}
 	
 	
 	/**
-	 * Sets the mandatory user identifier. Corresponds to the
-	 * {@code user_id} claim.
+	 * Sets the mandatory subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @param userID The user identifier. Must not be {@code null}.
+	 * @param sub The subject. Must not be {@code null}.
 	 */
-	public void setUserID(final UserID userID) {
+	public void setSubject(final Subject sub) {
 	
-		if (userID == null)
-			throw new IllegalArgumentException("The user ID must not be null");
+		if (sub == null)
+			throw new IllegalArgumentException("The subject must not be null");
 		
-		this.userID = userID;
+		this.sub = sub;
 	}
 	
 	
@@ -903,7 +901,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 	
 		JSONObject o = super.toJSONObject();
 		
-		o.put("user_id", userID.getClaimValue());
+		o.put("sub", sub.getClaimValue());
 		
 		JSONObjectClaims.putIntoJSONObject(o, nameEntries);
 		
@@ -971,10 +969,10 @@ public class UserInfoClaims extends JSONObjectClaims {
 	public static UserInfoClaims parse(final JSONObject jsonObject)
 		throws ParseException {
 		
-		UserID userID = new UserID();
-		ClaimValueParser.parse(jsonObject, userID);
+		Subject sub = new Subject();
+		ClaimValueParser.parse(jsonObject, sub);
 		
-		UserInfoClaims uic = new UserInfoClaims(userID);
+		UserInfoClaims uic = new UserInfoClaims(sub);
 		
 		for (String cn: jsonObject.keySet()) {
 		
@@ -983,7 +981,7 @@ public class UserInfoClaims extends JSONObjectClaims {
 			final String base = claimName.getBase();
 			final LangTag langTag = claimName.getLangTag();
 
-			if (base.equals("user_id"))
+			if (base.equals("sub"))
 				continue; // ignore
 			
 					
