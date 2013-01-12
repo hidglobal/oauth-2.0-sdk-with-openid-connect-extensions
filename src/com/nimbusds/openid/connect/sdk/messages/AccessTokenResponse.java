@@ -54,7 +54,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-19)
+ * @version $version$ (2013-01-12)
  */
 @Immutable
 public final class AccessTokenResponse implements SuccessResponse {
@@ -162,8 +162,8 @@ public final class AccessTokenResponse implements SuccessResponse {
 		o.put("access_token", accessToken.getValue());
 		o.put("token_type", AccessToken.TYPE);
 		
-		if (accessToken.getExpiration() > 0)
-			o.put("expires_in", accessToken.getExpiration());
+		if (accessToken.getLifetime() > 0)
+			o.put("expires_in", accessToken.getLifetime());
 		
 		if (idToken != null) {
 			

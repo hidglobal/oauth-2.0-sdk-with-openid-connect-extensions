@@ -10,7 +10,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * Tests the access token class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-21)
+ * @version $version$ (2013-01-12)
  */
 public class AccessTokenTest extends TestCase {
 
@@ -20,7 +20,7 @@ public class AccessTokenTest extends TestCase {
 		AccessToken token = new AccessToken("abc");
 		
 		assertEquals("abc", token.getValue());
-		assertEquals(0l, token.getExpiration());
+		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 		
 		assertEquals("Bearer abc", token.toAuthorizationHeader());
@@ -29,12 +29,12 @@ public class AccessTokenTest extends TestCase {
 
 	public void testGenerate() {
 
-		AccessToken token = AccessToken.generate(12);
+		AccessToken token = new AccessToken(12);
 
 		assertNotNull(token);
 
 		assertEquals(12, token.getValue().length());
-		assertEquals(0l, token.getExpiration());
+		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
 		System.out.println(token.toAuthorizationHeader());
@@ -43,12 +43,12 @@ public class AccessTokenTest extends TestCase {
 
 	public void testGenerateDefault() {
 
-		AccessToken token = AccessToken.generate();
+		AccessToken token = new AccessToken();
 
 		assertNotNull(token);
 
-		assertEquals(8, token.getValue().length());
-		assertEquals(0l, token.getExpiration());
+		assertEquals(32, token.getValue().length());
+		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
 		System.out.println(token.toAuthorizationHeader());
@@ -60,7 +60,7 @@ public class AccessTokenTest extends TestCase {
 		AccessToken token = new AccessToken("abc", 1500, Scope.createMinimal());
 		
 		assertEquals("abc", token.getValue());
-		assertEquals(1500l, token.getExpiration());
+		assertEquals(1500l, token.getLifetime());
 		assertTrue(token.getScope().containsAll(Scope.createMinimal()));
 		
 		assertEquals("Bearer abc", token.toAuthorizationHeader());
@@ -80,7 +80,7 @@ public class AccessTokenTest extends TestCase {
 		}
 		
 		assertEquals("abc", token.getValue());
-		assertEquals(0l, token.getExpiration());
+		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 	}
 	

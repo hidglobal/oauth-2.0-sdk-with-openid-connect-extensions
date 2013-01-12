@@ -10,60 +10,63 @@ import net.jcip.annotations.Immutable;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>draft-ietf-oauth-v2-26, section 1.5.
+ *     <li>OAuth 2.0 (RFC 6749), section 1.5.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-12)
  */
 @Immutable
-public class RefreshToken {
+public final class RefreshToken extends Token {
 
 
 	/**
-	 * The refresh token value.
+	 * Creates a new OAuth 2.0 refresh token with a randomly generated 
+	 * value. The value will be made up of 32 mixed-case alphanumeric ASCII
+	 * characters.
 	 */
-	private final String value;
+	public RefreshToken() {
 	
-	
+		this(32);
+	}	
+
+
 	/**
-	 * Creates a new refresh token.
+	 * Creates a new OAuth 2.0 refresh token with a randomly generated 
+	 * value of the specified length. The value will be made up of 
+	 * mixed-case alphanumeric ASCII characters.
+	 *
+	 * @param length The number of characters. Must be a positive integer.
+	 */
+	public RefreshToken(final int length) {
+	
+		super(length);
+	}
+
+
+	/**
+	 * Creates a new OAuth 2.0 refresh token with the specified value.
 	 *
 	 * @param value The refresh token value. Must not be {@code null} or 
 	 *              empty string.
-	 *
-	 * @throws IllegalArgumentException If the refresh token value is 
-	 *                                  {@code null} or empty string.
 	 */
 	public RefreshToken(final String value) {
 	
-		if (value == null || value.trim().isEmpty())
-			throw new IllegalArgumentException("The refresh token value must not be null or empty string");
-		
-		this.value = value;
+		super(value);
 	}
-	
-	
+
+
 	/**
-	 * Gets the value of this refresh token.
+	 * Overrides {@code Object.equals()}.
 	 *
-	 * @return The value.
+	 * @param object The object to compare to.
+	 *
+	 * @return {@code true} if the objects have the same value, otherwise
+	 *         {@code false}.
 	 */
-	public String getValue() {
+	@Override
+	public boolean equals(final Object object) {
 	
-		return value;
-	}
-	
-	
-	/**
-	 * Gets the string representation of this refresh token.
-	 *
-	 * <p>See {@link #getValue}.
-	 *
-	 * @return The refresh token value.
-	 */
-	public String toString() {
-	
-		return value;
+		return object instanceof RefreshToken && this.toString().equals(object.toString());
 	}
 }

@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-19)
+ * @version $version$ (2013-01-12)
  */
 @Immutable
 public class AuthorizationResponse implements SuccessResponse {
@@ -262,7 +262,7 @@ public class AuthorizationResponse implements SuccessResponse {
 				sb.append("&token_type=");
 				sb.append(AccessToken.TYPE);
 				
-				final long exp = accessToken.getExpiration();
+				final long exp = accessToken.getLifetime();
 				
 				if (exp > 0) {
 					sb.append("&expires_in=");

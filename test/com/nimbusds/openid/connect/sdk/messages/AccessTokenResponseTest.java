@@ -18,7 +18,7 @@ import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
  * Tests access token response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2013-01-12)
  */
 public class AccessTokenResponseTest extends TestCase {
 	
@@ -65,7 +65,7 @@ public class AccessTokenResponseTest extends TestCase {
 		
 		AccessToken accessToken = atr.getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
-		assertEquals(exp, accessToken.getExpiration());
+		assertEquals(exp, accessToken.getLifetime());
 		assertNull(accessToken.getScope());
 		
 		JWT idToken = atr.getIDToken();

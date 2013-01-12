@@ -3,11 +3,7 @@ package com.nimbusds.openid.connect.sdk.messages;
 
 import net.jcip.annotations.Immutable;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import com.nimbusds.openid.connect.sdk.ParseException;
-
-import com.nimbusds.openid.connect.sdk.util.StringUtils;
 
 
 /**
@@ -17,14 +13,14 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), section 1.4 and section 4.2.2.
+ *     <li>OAuth 2.0 (RFC 6749), section 1.4.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-21)
+ * @version $version$ (2013-01-12)
  */
 @Immutable
-public final class AccessToken {
+public final class AccessToken extends Token {
 
 	
 	/**
@@ -34,32 +30,81 @@ public final class AccessToken {
 	
 	
 	/**
-	 * The access token value.
+	 * Optional lifetime, in seconds.
 	 */
-	private final String value;
-	
-	
-	/**
-	 * Optional expiration, in seconds.
-	 */
-	private final long exp;
+	private final long lifetime;
 	
 	
 	/**
 	 * Optional scope.
 	 */
 	private final Scope scope;
+
+
+	/**
+	 * Creates a new minimal OAuth 2.0 access token with a randomly 
+	 * generated value. The value will be made up of 32 mixed-case 
+	 * alphanumeric ASCII characters. The optional lifetime and scope are 
+	 * left undefined.
+	 */
+	public AccessToken() {
+	
+		this(32);
+	}	
+
+
+	/**
+	 * Creates a new minimal OAuth 2.0 access token with a randomly 
+	 * generated value of the specified length. The value will be made up 
+	 * of mixed-case alphanumeric ASCII characters. The optional lifetime 
+	 * and scope are left undefined.
+	 *
+	 * @param length The number of characters. Must be a positive integer.
+	 */
+	public AccessToken(final int length) {
+	
+		this(length, 0l, null);
+	}
+
+
+	/**
+	 * Creates a new OAuth 2.0 access token with a randomly generated value
+	 * and the specified optional lifetime and scope. The value will be 
+	 * made up of 32 mixed-case alphanumeric ASCII characters.
+	 *
+	 * @param lifetime The lifetime in seconds, 0 if not specified.
+	 * @param scope    The scope, {@code null} if not specified.
+	 */
+	public AccessToken(final long lifetime, final Scope scope) {
+	
+		this(32, lifetime, scope);
+	}
+
+
+	/**
+	 * Creates a new OAuth 2.0 access token with a randomly generated value
+	 * of the specified length and optional lifetime and scope. The value 
+	 * will be made up of mixed-case alphanumeric ASCII characters.
+	 *
+	 * @param length   The number of characters. Must be a positive 
+	 *                 integer.
+	 * @param lifetime The lifetime in seconds, 0 if not specified.
+	 * @param scope    The scope, {@code null} if not specified.
+	 */
+	public AccessToken(final int length, final long lifetime, final Scope scope) {
+	
+		super(length);
+		this.lifetime = lifetime;
+		this.scope = scope;
+	}
 	
 	
 	/**
-	 * Creates a new minimal OAuth 2.0 access token. The optional expiration
-	 * and scope are left undefined.
+	 * Creates a new minimal OAuth 2.0 access token with the specified
+	 * value. The optional lifetime and scope are left undefined.
 	 *
 	 * @param value The access token value. Must not be {@code null} or
 	 *              empty string.
-	 *
-	 * @throws IllegalArgumentException If the access token value is
-	 *                                  {@code null} or empty string.
 	 */
 	public AccessToken(final String value) {
 	
@@ -68,50 +113,35 @@ public final class AccessToken {
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 access token.
+	 * Creates a new OAuth 2.0 access token with the specified value and
+	 * optional lifetime and scope.
 	 *
-	 * @param value The access token value. Must not be {@code null} or
-	 *              empty string.
-	 * @param exp   The expiration in seconds, 0 if not specified.
-	 * @param scope The scope, {@code null} if not specified.
+	 * @param value    The access token value. Must not be {@code null} or
+	 *                 empty string.
+	 * @param lifetime The lifetime in seconds, 0 if not specified.
+	 * @param scope    The scope, {@code null} if not specified.
 	 */
-	public AccessToken(final String value, final long exp, final Scope scope) {
+	public AccessToken(final String value, final long lifetime, final Scope scope) {
 	
-		if (StringUtils.isUndefined(value))
-			throw new IllegalArgumentException("The access token value must not be null or empty string");
-			
-		this.value = value;
-		
-		this.exp = exp;
-		
+		super(value);
+		this.lifetime = lifetime;
 		this.scope = scope;
 	}
-	
+
 	
 	/**
-	 * Gets the value of this access token.
+	 * Gets the lifetime of this access token.
 	 *
-	 * @return The value.
+	 * @return The lifetime in seconds, 0 if not specified.
 	 */
-	public String getValue() {
+	public long getLifetime() {
 	
-		return value;
+		return lifetime;
 	}
 	
 	
 	/**
-	 * Gets the optional expiration.
-	 *
-	 * @return The expiration in seconds, 0 if not specified.
-	 */
-	public long getExpiration() {
-	
-		return exp;
-	}
-	
-	
-	/**
-	 * Gets the optional scope.
+	 * Gets the scope of this access token.
 	 *
 	 * @return The scope, {@code null} if not specified.
 	 */
@@ -134,33 +164,7 @@ public final class AccessToken {
 	 */
 	public String toAuthorizationHeader(){
 	
-		return "Bearer " + value;
-	}
-
-
-	/**
-	 * Gets the string representation of this access token.
-	 *
-	 * <p> See {@link #getValue}.
-	 *
-	 * @return The access token value.
-	 */
-	@Override
-	public String toString() {
-	
-		return value;
-	}
-
-
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
-	@Override
-	public int hashCode() {
-	
-		return value.hashCode();
+		return "Bearer " + getValue();
 	}
 	
 	
@@ -210,45 +214,5 @@ public final class AccessToken {
 		
 			throw new ParseException(e.getMessage());
 		}
-	}
-
-
-	/**
-	 * Generates a random OAuth 2.0 access token with the specified number 
-	 * of alphanumeric characters.
-	 *
-	 * @param count The number of characters.
-	 * @param exp   The expiration in seconds, 0 if not specified.
-	 * @param scope The scope, {@code null} if not specified.
-	 */
-	public static AccessToken generate(final int count, final long exp, final Scope scope) {
-
-		return new AccessToken(RandomStringUtils.randomAlphanumeric(count), exp, scope);
-	}
-
-
-	/**
-	 * Generates a random minimal OAuth 2.0 access token with the specified 
-	 * number of alphanumeric characters.
-	 *
-	 * @param count The number of characters.
-	 *
-	 * @return A new random access token.
-	 */
-	public static AccessToken generate(final int count) {
-	
-		return generate(count, 0l, null);
-	}
-	
-	
-	/**
-	 * Generates a random minimal OAuth 2.0 access token code with 8 
-	 * alphanumeric characters.
-	 *
-	 * @return A new random access token.
-	 */
-	public static AccessToken generate() {
-	
-		return generate(8);
 	}
 }
