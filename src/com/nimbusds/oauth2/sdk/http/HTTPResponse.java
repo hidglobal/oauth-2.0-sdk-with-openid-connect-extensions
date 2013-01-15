@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.http;
+package com.nimbusds.oauth2.sdk.http;
 
 
 import java.io.IOException;
@@ -17,16 +17,16 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ParseException;
 
-import com.nimbusds.openid.connect.sdk.util.ContentTypeUtils;
-import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
+import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * HTTP response with support for all parameters required to construct an OpenID
- * Connect {@link com.nimbusds.openid.connect.sdk.messages.Response response 
- * message}. This class is thread-safe.
+ * HTTP response with support for all parameters required to construct an OAuth
+ * 2.0 {@link com.nimbusds.oauth2.sdk.Response response message}. This class is
+ * thread-safe.
  *
  * <p>Supported HTTP status codes:
  *
@@ -49,7 +49,7 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-14)
  */
 @ThreadSafe
 public class HTTPResponse {
@@ -91,7 +91,7 @@ public class HTTPResponse {
 	/**
 	 * The HTTP status code.
 	 */
-	private int statusCode;
+	private final int statusCode;
 	
 	
 	/**
@@ -149,17 +149,6 @@ public class HTTPResponse {
 	public int getStatusCode() {
 	
 		return statusCode;
-	}
-	
-	
-	/**
-	 * Sets the HTTP status code.
-	 *
-	 * @param statusCode The HTTP status code.
-	 */
-	public void setStatusCode(final int statusCode) {
-	
-		this.statusCode = statusCode;
 	}
 	
 	

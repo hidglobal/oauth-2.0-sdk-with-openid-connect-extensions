@@ -1,14 +1,15 @@
-package com.nimbusds.openid.connect.sdk.http;
+package com.nimbusds.oauth2.sdk.http;
 
 
 import javax.mail.internet.ContentType;
 
 
 /**
- * Common content types used in OpenID Connect.
+ * Common content types used in the OAuth 2.0 protocol and implementing 
+ * applications.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2013-01-14)
  */
 public interface CommonContentTypes {
 

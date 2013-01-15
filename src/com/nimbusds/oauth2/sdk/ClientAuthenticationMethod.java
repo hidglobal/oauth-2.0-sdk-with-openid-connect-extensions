@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import net.jcip.annotations.Immutable;
@@ -7,8 +7,7 @@ import net.jcip.annotations.Immutable;
 /**
  * Client authentication method at the Token endpoint. This class is immutable.
  *
- * <p>Constants are provided for the four standard client authentication
- * methods:
+ * <p>Constants are provided for four client authentication methods:
  *
  * <ul>
  *     <li>{@link #CLIENT_SECRET_BASIC} (default)
@@ -17,20 +16,21 @@ import net.jcip.annotations.Immutable;
  *     <li>{@link #PRIVATE_KEY_JWT}
  * </ul>
  *
- * <p>To define a custom client authentication method use the provided 
- * constructor.
+ * <p>Use the constructor to define a custom client authentication method.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 2.3.
+ *     <li>draft-ietf-oauth-assertions-09, sections 4.2 and 6.1.
+ *     <li>draft-ietf-oauth-jwt-bearer-04
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
-public class ClientAuthenticationMethod {
+public final class ClientAuthenticationMethod extends Identifier {
 
 
 	/**
@@ -87,71 +87,22 @@ public class ClientAuthenticationMethod {
 
 
 	/**
-	 * The method name.
-	 */
-	private final String name;
-
-
-	/**
-	 * Creates a new client authentication method.
+	 * Creates a new client authentication method with the specified value.
 	 *
-	 * @param name The method name. Must not be {@code null}.
+	 * @param value The authentication method value. Must not be 
+	 *              {@code null} or empty string.
 	 */
-	public ClientAuthenticationMethod(final String name) {
+	public ClientAuthenticationMethod(final String value) {
 
-		if (name == null)
-			throw new IllegalArgumentException("The method name must not be null");
-
-		this.name = name;
+		super(value);
 	}
 
 
-	/**
-	 * Gets the name of the client authentication method.
-	 *
-	 * @return The method name.
-	 */
-	public String getName() {
-
-		return name;
-	}
-
-
-	/**
-	 * @see #getName
-	 */
-	@Override
-	public String toString() {
-
-		return name;
-	}
-
-
-	/**
-	 * Returns a hash code based on the method name.
-	 *
-	 * @return Hash code based on the method name.
-	 */
-	@Override
-	public int hashCode() {
-
-		return name.hashCode();
-	}
-
-
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the two objects are client authentication
-	 *         methods with the same name, otherwise {@code false}.
-	 */
 	@Override
 	public boolean equals(final Object object) {
-
-		return object != null &&
-		       object instanceof ClientAuthenticationMethod &&
-		       this.getName().equals(((ClientAuthenticationMethod)object).getName());
+	
+		return object != null && 
+		       object instanceof ClientAuthenticationMethod && 
+		       this.toString().equals(object.toString());
 	}
 }

@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.util;
 
 
 import java.net.MalformedURLException;
@@ -13,7 +13,7 @@ import net.minidev.json.JSONValue;
 
 import net.minidev.json.parser.JSONParser;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
@@ -288,6 +288,32 @@ public class JSONObjectUtils {
 		throws ParseException {
 		
 		return getGeneric(o, key, JSONArray.class);
+	}
+
+
+	/**
+	 * Gets a string array member of a JSON object.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static String[] getStringArray(final JSONObject o, final String key)
+		throws ParseException {
+
+		JSONArray jsonArray = getJSONArray(o, key);
+
+		try {
+			return jsonArray.toArray(new String[0]);
+
+		} catch (ArrayStoreException e) {
+
+			throw new ParseException("JSON object member with key \"" + key + "\" is not an array of strings");
+		}
 	}
 	
 	

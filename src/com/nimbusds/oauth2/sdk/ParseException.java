@@ -1,19 +1,16 @@
-package com.nimbusds.openid.connect.sdk;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.net.URL;
-
-import com.nimbusds.openid.connect.sdk.messages.ErrorCode;
-import com.nimbusds.openid.connect.sdk.messages.State;
 
 
 /**
  * Parse exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-27)
+ * @version $version$ (2013-01-15)
  */
-public class ParseException extends OpenIDConnectException {
+public class ParseException extends OAuth2Exception {
 
 
 	/**
@@ -43,13 +40,13 @@ public class ParseException extends OpenIDConnectException {
 	 * Creates a new parse exception. Implies a HTTP status code
 	 * {@link #HTTP_SC_BAD_REQUEST 400}.
 	 *
-	 * @param message   The exception message.
-	 * @param errorCode Associated OpenID Connect error code.
+	 * @param message The exception message. May be {@code null}.
+	 * @param error   The associated OAuth 2.0 error, {@code null} if not
+	 *                specified.
 	 */
-	public ParseException(final String message, 
-		              final ErrorCode errorCode) {
+	public ParseException(final String message, final OAuth2Error error) {
 	
-		this(message, errorCode, null);
+		this(message, error, null);
 	}
 
 
@@ -57,16 +54,16 @@ public class ParseException extends OpenIDConnectException {
 	 * Creates a new parse exception. Implies a HTTP status code
 	 * {@link #HTTP_SC_BAD_REQUEST 400}.
 	 *
-	 * @param message   The exception message. May be {@code null}.
-	 * @param errorCode The associated OpenID Connect / OAuth 2.0 error 
-	 *                  code, {@code null} if not specified.
-	 * @param cause     The exception cause, {@code null} if not specified.
+	 * @param message The exception message. May be {@code null}.
+	 * @param error   The associated OAuth 2.0 error, {@code null} if not
+	 *                specified.
+	 * @param cause   The exception cause, {@code null} if not specified.
 	 */
 	public ParseException(final String message, 
-		              final ErrorCode errorCode,
+		              final OAuth2Error error,
 		              final Throwable cause) {
 	
-		super(message, errorCode, cause);
+		super(message, error, cause);
 	}
 
 
@@ -75,8 +72,8 @@ public class ParseException extends OpenIDConnectException {
 	 * {@link #HTTP_SC_FOUND 302}.
 	 *
 	 * @param message     The exception message. May be {@code null}.
-	 * @param errorCode   The associated OpenID Connect / OAuth 2.0 
-	 *                    error code, {@code null} if not specified.
+	 * @param error       The associated OAuth 2.0 error, {@code null} if
+	 *                    not specified.
 	 * @param redirectURI The associated redirection URI, must not be 
 	 *                    {@code null}.
 	 * @param state       The optional associated state parameter, 
@@ -85,11 +82,11 @@ public class ParseException extends OpenIDConnectException {
 	 *                    specified.
 	 */
 	public ParseException(final String message, 
-		              final ErrorCode errorCode,
+		              final OAuth2Error error,
 		              final URL redirectURI,
 		              final State state,
 		              final Throwable cause) {
 
-		super(message, errorCode, redirectURI, state, cause);
+		super(message, error, redirectURI, state, cause);
 	}
 }

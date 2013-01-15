@@ -1,18 +1,17 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.util.HashSet;
-import java.util.Set;
 
 import net.jcip.annotations.NotThreadSafe;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
  * Set of authorisation {@link ResponseType}s. This class is not thread-safe.
  *
- * <p>Provides helper methods to determine if the OpenID Connect protocol flow 
+ * <p>Provides helper methods to determine if the OAuth 2.0 protocol flow 
  * implied by the response type set is implicit flow or code flow:
  *
  * <ul>
@@ -23,11 +22,11 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Standard 1.0, section 2.3.1.
+ *     <li>OAuth 2.0 (RFC 6749), sections 3.1.1 and 4.1.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-15)
  */
 @NotThreadSafe
 public class ResponseTypeSet extends HashSet<ResponseType> {
@@ -45,9 +44,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	/**
 	 * Parses a set of authorisation response types.
 	 *
-	 * <p>OpenID Connect specifies the following string vectors, however 
-	 * this method allows for other orders as well in order to accommodate 
-	 * sloppy serialisers:
+	 * <p>Example response type sets:
 	 *
 	 * <pre>
 	 * code
@@ -64,13 +61,13 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	 *
 	 * @return The authorisation response types set.
 	 *
-	 * @throws ParseException If the parsed string is {@code null}, empty or
-	 *                        contains an invalid response type name.
+	 * @throws ParseException If the parsed string is {@code null} or 
+	 *                        empty.
 	 */
 	public static ResponseTypeSet parse(final String s)
 		throws ParseException {
 	
-		if (s == null || s.trim().isEmpty())
+		if (StringUtils.isUndefined(s))
 			throw new ParseException("Null or empty response type set string");
 	
 		ResponseTypeSet set = new ResponseTypeSet();
@@ -78,7 +75,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 		String[] tokens = s.split("\\s+");
 		
 		for (String t: tokens)
-			set.add(ResponseType.parse(t));
+			set.add(new ResponseType(t));
 		
 		return set;
 	}
@@ -118,11 +115,10 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	
 	
 	/**
-	 * Returns the canonical string representation of this set of 
-	 * authorisation response types.
+	 * Returns the string representation of this set of authorisation 
+	 * response types.
 	 *
-	 * <p>The serialised set is guaranteed to have one of the following
-	 * orders (to conform with the OpenID Connect spec):
+	 * <p>Example response type sets:
 	 *
 	 * <pre>
 	 * code
@@ -140,28 +136,15 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	public String toString() {
 	
 		StringBuilder sb = new StringBuilder();
-		
-		if (contains(ResponseType.CODE)) {
-		
-			sb.append("code");
-		}
-		
-		if (contains(ResponseType.TOKEN)) {
-		
+
+		for (ResponseType rt: this) {
+
 			if (sb.length() > 0)
-				sb.append(" token");
-			else
-				sb.append("token");
+				sb.append(' ');
+
+			sb.append(rt.getValue());
 		}
-		
-		if (contains(ResponseType.ID_TOKEN)) {
-		
-			if (sb.length() > 0)
-				sb.append(" id_token");
-			else
-				sb.append("id_token");
-		}
-	
+
 		return sb.toString();
 	}
 }

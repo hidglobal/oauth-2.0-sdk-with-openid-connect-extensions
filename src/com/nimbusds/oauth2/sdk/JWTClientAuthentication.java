@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.util.HashMap;
@@ -11,17 +11,10 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
-import com.nimbusds.openid.connect.sdk.claims.ClientID;
-
-import com.nimbusds.openid.connect.sdk.claims.sets.ClientAuthenticationClaims;
-
-import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
-
-import com.nimbusds.openid.connect.sdk.util.URLUtils;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
@@ -31,14 +24,13 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-06)
+ *     <li>OAuth 2.0 (RFC 6749), section-3.2.1.
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-02).
+ *         (draft-ietf-oauth-jwt-bearer-04)
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2013-01-15)
  */
 public abstract class JWTClientAuthentication extends ClientAuthentication {
 
@@ -48,7 +40,8 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 * {@code client_assertion_type} parameter. This is a URN string set to
 	 * "urn:ietf:params:oauth:client-assertion-type:jwt-bearer".
 	 */
-	public static final String CLIENT_ASSERTION_TYPE = "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
+	public static final String CLIENT_ASSERTION_TYPE = 
+		"urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
 	
 
 	/**
@@ -82,7 +75,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	                                  final SignedJWT clientAssertion,
 					  final ClientID clientID) {
 	
-		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+		super(method);
 	
 		if (clientAssertion == null)
 			throw new IllegalArgumentException("The client assertion JWT must not be null");
@@ -128,13 +121,13 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 *                        doesn't contain a valid client authentication
 	 *                        claims set.
 	 */
-	public ClientAuthenticationClaims getClientAuthenticationClaims()
+	public ClientAuthenticationClaimsSet getClientAuthenticationClaims()
 		throws ParseException {
 	
 		JSONObject claimsSet = null;
 		
 		try {
-			claimsSet = clientAssertion.getClaimsSet().toJSONObject();
+			claimsSet = clientAssertion.getJWTClaimsSet().toJSONObject();
 			
 		} catch (java.text.ParseException e) {
 		
@@ -144,7 +137,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		if (claimsSet == null)
 			throw new ParseException("Couldn't retrieve JSON object from the client assertion JWT");
 		
-		return ClientAuthenticationClaims.parse(claimsSet);
+		return ClientAuthenticationClaimsSet.parse(claimsSet);
 	}
 	
 	
@@ -183,7 +176,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		params.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
 		
 		if (clientID != null)
-			params.put("client_id", clientID.getClaimValue());
+			params.put("client_id", clientID.getValue());
 		
 		return params;
 	}
@@ -288,14 +281,13 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 */
 	protected static ClientID parseClientID(final Map<String,String> params) {
 		
-		final String clientIDString = params.get("client_id");
-		
+		String clientIDString = params.get("client_id");
+
 		if (clientIDString == null)
 			return null;
-		
-		ClientID clientID = new ClientID();
-		clientID.setClaimValue(clientIDString);
-		return clientID;
+
+		else
+			return new ClientID(clientIDString);
 	}
 	
 	

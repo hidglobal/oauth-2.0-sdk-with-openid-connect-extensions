@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.util.Collections;
@@ -11,14 +11,10 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
-import com.nimbusds.openid.connect.sdk.claims.ClientID;
-
-import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
-
-import com.nimbusds.openid.connect.sdk.util.URLUtils;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
@@ -53,14 +49,13 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1.
  *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-06)
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
  *         (draft-ietf-oauth-jwt-bearer-02).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-14)
  */
 @Immutable
 public final class PrivateKeyJWT extends JWTClientAuthentication {

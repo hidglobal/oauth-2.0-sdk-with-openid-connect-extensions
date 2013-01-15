@@ -1,16 +1,14 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
-import com.nimbusds.openid.connect.sdk.SerializeException;
-
-import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * Interface for OpenID Connect response messages.
+ * Interface for an OAuth 2.0 response message.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2013-01-14)
  */
 public interface Response extends Message {
 
@@ -20,7 +18,7 @@ public interface Response extends Message {
 	 *
 	 * @return The HTTP response.
 	 *
-	 * @throws SerializeException If the OpenID Connect response message
+	 * @throws SerializeException If the OAuth 2.0 response message
 	 *                            couldn't be serialised to an HTTP 
 	 *                            response.
 	 */

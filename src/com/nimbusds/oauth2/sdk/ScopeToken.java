@@ -1,38 +1,24 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
-import net.minidev.json.JSONObject;
-
 
 /**
- * Token in the {@link Scope} parameter of an {@link AuthorizationRequest}.
- * This class is immutable.
- *
- * <p>Related specifications:
- *
- * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
- * </ul>
+ * Authorisation {@link Scope} token. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-11)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
-public class ScopeToken {
+public final class ScopeToken extends Identifier {
 
 
 	/**
-	 * Enumeration of the {@link ScopeToken scope token} requirement 
-	 * types.
+	 * Enumeration of the {@link ScopeToken scope token} requirements 
+	 * for matching authorisation requests.
 	 */
-	public static enum Type {
+	public static enum Requirement {
 	
 		/**
 		 * The token must be present in the {@link Scope} parameter.
@@ -49,219 +35,49 @@ public class ScopeToken {
 
 
 	/**
-	 * Informs the authorisation server that the client is making an OpenID 
-	 * Connect request (REQUIRED). This scope token requests access to the
-	 * {@code sub} claim. 
+	 * Optional requirement.
 	 */
-	public static final ScopeToken OPENID =
-		new ScopeToken("openid", ScopeToken.Type.REQUIRED, new String[]{"sub"});
-	
-	
-	/**
-	 * Requests that access to the end-user's default profile claims at the 
-	 * UserInfo endpoint be granted by the issued access token. These claims
-	 * are: {@code name}, {@code family_name}, {@code given_name}, 
-	 * {@code middle_name}, {@code nickname}, {@code preferred_username}, 
-	 * {@code profile}, {@code picture}, {@code website}, {@code gender}, 
-	 * {@code birthdate}, {@code zoneinfo}, {@code locale}, and 
-	 * {@code updated_time}. 
-	 */
-	public static final ScopeToken PROFILE =
-		new ScopeToken("profile", new String[]{"name",
-	                                               "family_name",
-	                                               "given_name",
-	                                               "middle_name",
-	                                               "nickname",
-	                                               "preferred_username",
-	                                               "profile",
-	                                               "picture",
-	                                               "website",
-	                                               "gender",
-	                                               "birthdate",
-	                                               "zoneinfo",
-	                                               "locale",
-	                                               "updated_time"});
-	
-	
-	/**
-	 * Requests that access to the {@code email} and {@code email_verified}
-	 * claims at the UserInfo endpoint be granted by the issued access 
-	 * token.
-	 */
-	public static final ScopeToken EMAIL =
-		new ScopeToken("email", new String[]{"email", "email_verified"});
-	
-	
-	/**
-	 * Requests that access to {@code address} claim at the UserInfo 
-	 * endpoint be granted by the issued access token. 
-	 */
-	public static final ScopeToken ADDRESS =
-		new ScopeToken("address", new String[]{"formatted",
-	                                               "street_address",
-	                                               "locality",
-	                                               "region",
-	                                               "postal_code",
-	                                               "country"});
-	
-	
-	/**
-	 * Requests that access to the {@code phone_number} claim at the 
-	 * UserInfo endpoint be granted by the issued access token. 
-	 */
-	public static final ScopeToken PHONE =
-		new ScopeToken("phone", new String[]{"phone_number"});
-
-
-	/**
-	 * Requests that an OAuth 2.0 refresh token be issued that can be used
-	 * to obtain an access token that grants access the end-user's UserInfo
-	 * endpoint even when the user is not present (not logged in).
-	 */
-	public static final ScopeToken OFFLINE_ACCESS =
-		new ScopeToken("offline_access", null);
-
-
-	/**
-	 * The actual value.
-	 */
-	private final String value;
-	
-	
-	/**
-	 * The requirement type.
-	 */
-	private final ScopeToken.Type type;
-	
-	
-	/**
-	 * The names of the associated claims, {@code null} if not applicable.
-	 */
-	private final Set<String> claims;
+	private final ScopeToken.Requirement requirement;
 
 
 	/**
 	 * Creates a new scope token.
 	 *
-	 * @param value  The scope token as a string. Must not be {@code null}.
-	 * @param type   The requirement type. Must not be {@code null}.
-	 * @param claims The names of the associated claims, {@code null} if
-	 *               not applicable.
+	 * @param value       The scope token value. Must not be {@code null}
+	 *                    or empty string.
+	 * @param requirement The requirement, {@code null} if not specified.
 	 */
-	private ScopeToken(final String value, 
-		           final ScopeToken.Type type,
-	                   final String[] claims) {
+	private ScopeToken(final String value, final ScopeToken.Requirement requirement) {
 	
-		this.value = value;
-		this.type = type;
-		
-		if (claims != null)
-			this.claims = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(claims)));
+		super(value);
 
-		else
-			this.claims = null;
+		this.requirement = requirement;
 	}
 
 
 	/**
-	 * Creates a new scope token. The requirement type is set to
-	 * {@link ScopeToken.Requirement#OPTIONAL optional}.
+	 * Creates a new scope token. The requirement is not specified.
 	 *
-	 * @param value  The scope token as a string. Must not be {@code null}.
-	 * @param claims The names of the associated claims. Must not be
-	 *               {@code null}.
+	 * @param value The scope token value. Must not be {@code null} or
+	 *              empty string.
 	 */
-	private ScopeToken(final String value, 
-		           final String[] claims) {
+	public ScopeToken(final String value) {
 	
-		this(value, ScopeToken.Type.OPTIONAL, claims);
+		this(value, null);
 	}
 
 		
 	/**
-	 * Returns the requirement type of the scope token.
+	 * Gets the requirement of this scope token.
 	 *
-	 * @return The requirement type.
+	 * @return The requirement, {@code null} if not specified.
 	 */
-	public Type getType() {
+	public Requirement getRequirement() {
 
-		return type;
-	}
-	
-	
-	/**
-	 * Returns the names of the associated claims.
-	 *
-	 * @return The names of the associated claims, {@code null} if not
-	 *         applicable.
-	 */
-	public Set<String> getClaims() {
-
-		return claims;
-	}
-	
-	
-	/**
-	 * Gets a default claims request JSON object for the scope token.
-	 *
-	 * @return The default claims request JSON object, {@code null} if not
-	 *         applicable.
-	 */
-	public JSONObject getClaimsRequestJSONObject() {
-
-		JSONObject req = new JSONObject();
-		
-		for (String claim: claims) {
-		
-			if (type == ScopeToken.Type.REQUIRED) {
-			
-				// Essential (applies to OPENID - sub only)
-				JSONObject details = new JSONObject();
-				details.put("essential", true);
-				req.put(claim, details);
-			}
-			else {
-				// Voluntary
-				req.put(claim, null);
-			}
-		}
-		
-		return req;
+		return requirement;
 	}
 
 
-	/**
-	 * Returns the string identifier of the scope token.
-	 *
-	 * @return The string identifier.
-	 */
-	@Override
-	public String toString() {
-
-		return value;
-	}
-
-
-	/**
-	 * Returns a hash code based on the scope token value.
-	 *
-	 * @return Hash code based on the scope token value.
-	 */
-	@Override
-	public int hashCode() {
-
-		return value.hashCode();
-	}
-
-
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the two objects are scope tokens with the
-	 *         same value, otherwise {@code false}.
-	 */
 	@Override
 	public boolean equals(final Object object) {
 

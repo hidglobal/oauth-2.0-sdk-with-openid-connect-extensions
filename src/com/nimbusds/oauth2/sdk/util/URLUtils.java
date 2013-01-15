@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.util;
 
 
 import java.io.UnsupportedEncodingException;
@@ -25,7 +25,7 @@ public class URLUtils {
 
 	
 	/**
-	 * The default charset.
+	 * The default character set.
 	 */
 	public static final String CHARSET = "utf-8";
 	
@@ -36,8 +36,8 @@ public class URLUtils {
 	 *
 	 * @param url The URL. May be {@code null}.
 	 *
-	 * @return The base part of the URL, {@code null} if the original URL is
-	 *         {@code null} or doesn't specify a protocol.
+	 * @return The base part of the URL, {@code null} if the original URL 
+	 *         is {@code null} or doesn't specify a protocol.
 	 */
 	public static URL getBaseURL(final URL url) {
 	
@@ -65,12 +65,10 @@ public class URLUtils {
 	 * <p>Example query string:
 	 *
 	 * <pre>
-	 * response_type=code%20id_token
-	 * &client_id=s6BhdRkqt3
-	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
-	 * &scope=openid
-	 * &nonce=n-0S6_WzA2Mj
-	 * &state=af0ifjsldkj
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
 	 * <p>The opposite method is {@link #parseParameters}.
@@ -129,12 +127,10 @@ public class URLUtils {
 	 * <p>Example query string:
 	 *
 	 * <pre>
-	 * response_type=code%20id_token
-	 * &client_id=s6BhdRkqt3
-	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
-	 * &scope=openid
-	 * &nonce=n-0S6_WzA2Mj
-	 * &state=af0ifjsldkj
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
 	 * <p>The opposite method {@link #serializeParameters}.

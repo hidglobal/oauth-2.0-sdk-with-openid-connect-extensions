@@ -1,14 +1,12 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.util.Map;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
-import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
-
-import com.nimbusds.openid.connect.sdk.util.URLUtils;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
@@ -24,19 +22,19 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * Content-Type: application/x-www-form-urlencoded
  * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
  * 
- * grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA
- * &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
+ * grant_type=authorization_code
+ * &amp;code=SplxlOBeZQQYbYS6WxSbIA
+ * &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.2.
- *     <li>OAuth 2.0 (RFV 6749).
+ *     <li>OAuth 2.0 (RFC 6749).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-22)
+ * @version $version$ (2014-01-15)
  */
 public abstract class TokenRequest implements Request {
 
@@ -120,18 +118,15 @@ public abstract class TokenRequest implements Request {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter");
 		
-		GrantType grantType = GrantType.parse(grantTypeString);
+		GrantType grantType = new GrantType(grantTypeString);
 		
-		switch (grantType) {
+		if (grantType.equals(GrantType.AUTHORIZATION_CODE))
+			return AccessTokenRequest.parse(httpRequest);
+
+		else if (grantType.equals(GrantType.REFRESH_TOKEN))
+			return RefreshTokenRequest.parse(httpRequest);
 		
-			case AUTHORIZATION_CODE:
-				return AccessTokenRequest.parse(httpRequest);
-			
-			case REFRESH_TOKEN:
-				return RefreshTokenRequest.parse(httpRequest);
-			
-			default:
-				throw new ParseException("Unsupported \"grant_type\": " + grantType);
-		}
+		else
+			throw new ParseException("Unsupported \"grant_type\": " + grantType);
 	}
 }

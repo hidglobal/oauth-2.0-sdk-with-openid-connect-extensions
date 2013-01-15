@@ -1,16 +1,14 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
-import com.nimbusds.openid.connect.sdk.SerializeException;
-
-import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 
 /**
- * Interface for OpenID Connect request messages.
+ * Interface for an OAuth 2.0 request message.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2013-01-15)
  */
 public interface Request extends Message {
 
@@ -20,8 +18,8 @@ public interface Request extends Message {
 	 *
 	 * @return The HTTP request.
 	 *
-	 * @throws SerializeException If the OpenID Connect request message
-	 *                            couldn't be serialised to an HTTP request.
+	 * @throws SerializeException If the OAuth 2.0 request message couldn't
+	 *                            be serialised to an HTTP request.
 	 */
 	public HTTPRequest toHTTPRequest() throws SerializeException;
 }

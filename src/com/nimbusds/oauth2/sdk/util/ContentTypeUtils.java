@@ -1,9 +1,9 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.util;
 
 
 import javax.mail.internet.ContentType;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
@@ -16,9 +16,10 @@ public class ContentTypeUtils {
 
 
 	/**
-	 * Ensures the content type of an HTTP header matches an expected value. 
-	 * Note that this method compares only the primary type and subtype; any 
-	 * content type parameters, such as {@code charset}, are ignored.
+	 * Ensures the content type of an HTTP header matches an expected 
+	 * value. Note that this method compares only the primary type and 
+	 * subtype; any content type parameters, such as {@code charset}, are 
+	 * ignored.
 	 *
 	 * @param expected The expected content type. Must not be {@code null}.
 	 * @param found    The found content type. May be {@code null}.

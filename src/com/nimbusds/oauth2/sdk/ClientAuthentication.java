@@ -1,15 +1,12 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.util.Map;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
-import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
-
-import com.nimbusds.openid.connect.sdk.util.URLUtils;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
@@ -18,11 +15,11 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 2.3.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2013-01-14)
  */
 public abstract class ClientAuthentication {
 	
@@ -67,11 +64,11 @@ public abstract class ClientAuthentication {
 	 * @param httpRequest The HTTP request to parse. Must not be 
 	 *                    {@code null}.
 	 *
-	 * @return The client authentication method, {@code null} if none or the
-	 *         method is not supported.
+	 * @return The client authentication method, {@code null} if none or 
+	 *         the method is not supported.
 	 *
-	 * @throws ParseException If the inferred client authentication couldn't
-	 *                        be parsed.
+	 * @throws ParseException If the inferred client authentication 
+	 *                        couldn't be parsed.
 	 */
 	public static ClientAuthentication parse(final HTTPRequest httpRequest)
 		throws ParseException {
@@ -117,5 +114,6 @@ public abstract class ClientAuthentication {
 	 * @throws SerializeException If the client authentication parameters
 	 *                            couldn't be applied to the HTTP request.
 	 */
-	public abstract void apply(final HTTPRequest httpRequest) throws SerializeException;
+	public abstract void apply(final HTTPRequest httpRequest) 
+		throws SerializeException;
 }

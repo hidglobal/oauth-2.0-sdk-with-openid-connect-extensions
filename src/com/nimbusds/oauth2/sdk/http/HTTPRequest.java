@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.http;
+package com.nimbusds.oauth2.sdk.http;
 
 
 import java.io.BufferedReader;
@@ -14,16 +14,16 @@ import javax.mail.internet.ContentType;
 
 import net.jcip.annotations.ThreadSafe;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ParseException;
 
-import com.nimbusds.openid.connect.sdk.util.ContentTypeUtils;
-import com.nimbusds.openid.connect.sdk.util.URLUtils;
+import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * HTTP request with support for all parameters required to construct an OpenID 
- * Connect {@link com.nimbusds.openid.connect.sdk.messages.Request request 
- * message}. This class is thread-safe.
+ * HTTP request with support for all parameters required to construct an OAuth
+ * 2.0 {@link com.nimbusds.oauth2.sdk.Request request message}. This class is 
+ * thread-safe.
  *
  * <p>Supported HTTP methods:
  *
@@ -40,14 +40,14 @@ import com.nimbusds.openid.connect.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-14)
  */
 @ThreadSafe
 public class HTTPRequest {
 
 
 	/**
-	 * Enumeration of the HTTP methods used in OpenID Connect requests.
+	 * Enumeration of the HTTP methods used in OAuth 2.0 requests.
 	 */
 	public static enum Method {
 	
@@ -67,7 +67,7 @@ public class HTTPRequest {
 	/**
 	 * The request method.
 	 */
-	private Method method;
+	private final Method method;
 	
 	
 	/**
@@ -107,8 +107,6 @@ public class HTTPRequest {
 	 *
 	 * @param sr The servlet request. Must not be {@code null}.
 	 *
-	 * @throws IllegalArgumentException If the servlet request is 
-	 *                                  {@code null}.
 	 * @throws IllegalArgumentException The the servlet request method is
 	 *                                  not GET or POST, or the content type
 	 *                                  header value couldn't be parsed.
@@ -118,9 +116,6 @@ public class HTTPRequest {
 	public HTTPRequest(final HttpServletRequest sr)
 		throws IOException {
 	
-		if (sr == null)
-			throw new IllegalArgumentException("The HTTP servlet request must not be null");
-		
 		method = HTTPRequest.Method.valueOf(sr.getMethod().toUpperCase());
 		
 		String ct = sr.getContentType();
@@ -174,20 +169,6 @@ public class HTTPRequest {
 	
 	
 	/**
-	 * Sets the request method.
-	 *
-	 * @param method The request method. Must not be {@code null}.
-	 */
-	public void setMethod(final Method method) {
-	
-		if (method == null)
-			throw new IllegalArgumentException("The HTTP method must not be null");
-		
-		this.method = method;
-	}
-	
-	
-	/**
 	 * Ensures this HTTP request has the specified method.
 	 *
 	 * @param expectedMethod The expected method. Must not be {@code null}.
@@ -198,7 +179,7 @@ public class HTTPRequest {
 		throws ParseException {
 		
 		if (method != expectedMethod)
-			throw new ParseException("The HTTP request method must be POST");
+			throw new ParseException("The HTTP request method must be " + expectedMethod);
 	}
 	
 	
@@ -256,7 +237,8 @@ public class HTTPRequest {
 	 * Ensures this HTTP request has a specified {@code Content-Type} 
 	 * header value.
 	 *
-	 * @throws ParseException if the {@code Content-Type} header is missing.
+	 * @throws ParseException If the {@code Content-Type} header is 
+	 *                        missing.
 	 */
 	public void ensureContentType()
 		throws ParseException {
@@ -319,12 +301,10 @@ public class HTTPRequest {
 	 * <p>Example query string:
 	 *
 	 * <pre>
-	 * response_type=code%20id_token
-	 * &client_id=s6BhdRkqt3
-	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
-	 * &scope=openid
-	 * &nonce=n-0S6_WzA2Mj
-	 * &state=af0ifjsldkj
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
 	 * @return For HTTP GET requests the URL query string, for HTTP POST 
@@ -346,12 +326,10 @@ public class HTTPRequest {
 	 * <p>Example query string:
 	 *
 	 * <pre>
-	 * response_type=code%20id_token
-	 * &client_id=s6BhdRkqt3
-	 * &redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
-	 * &scope=openid
-	 * &nonce=n-0S6_WzA2Mj
-	 * &state=af0ifjsldkj
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
 	 * @param query For HTTP GET requests the URL query string, for HTTP 

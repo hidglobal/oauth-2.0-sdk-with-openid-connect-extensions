@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.io.UnsupportedEncodingException;
@@ -7,11 +7,7 @@ import net.jcip.annotations.Immutable;
 
 import org.apache.commons.codec.binary.Base64;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
-
-import com.nimbusds.openid.connect.sdk.claims.ClientID;
-
-import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 
 /**
@@ -29,14 +25,13 @@ import com.nimbusds.openid.connect.sdk.http.HTTPRequest;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.1.
- *     <li>OAuth 2.0 (RFC 6749), section 3.2.1.
+ *     <li>OAuth 2.0 (RFC 6749), section 2.3.1.
  *     <li>HTTP Authentication: Basic and Digest Access Authentication 
  *         (RFC 2617).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
@@ -64,7 +59,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	
 		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
 	
-		if (clientID == null || clientID.getClaimValue() == null)
+		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
 		
 		this.clientID = clientID;
@@ -115,9 +110,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 */
 	public String toHTTPAuthorizationHeader() {
 	
-		StringBuilder sb = new StringBuilder();
-		
-		sb.append(clientID.getClaimValue());
+		StringBuilder sb = new StringBuilder(clientID.toString());
 		sb.append(':');
 		sb.append(secret);
 		
@@ -181,9 +174,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 		if (credentials.length != 2)
 			throw new ParseException("Missing credentials delimiter \":\"");
 		
-		ClientID clientID = new ClientID();
-		clientID.setClaimValue(credentials[0]);
-		
+		ClientID clientID = new ClientID(credentials[0]);
 		String secret = credentials[1];
 		
 		return new ClientSecretBasic(clientID, secret);

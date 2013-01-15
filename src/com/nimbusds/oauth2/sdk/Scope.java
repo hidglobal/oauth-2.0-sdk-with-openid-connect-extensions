@@ -1,66 +1,27 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.util.HashSet;
-import java.util.Iterator;
 
 import net.jcip.annotations.NotThreadSafe;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
-
 
 /**
- * UserInfo {@link AuthorizationRequest authorisation request} scope. Specifies
- * an additive list of voluntary claims that are returned from the UserInfo 
- * endpoint. This class is not thread-safe.
- *
- * <p>Related specifications:
- *
- * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.
- * </ul>
+ * Authorisation scope. This class is not thread-safe.
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-15)
  */
 @NotThreadSafe
 public class Scope extends HashSet<ScopeToken> {
 
 	
 	/**
-	 * Creates a new empty UserInfo authorisation request scope.
+	 * Creates a new empty authorisation scope.
 	 */
 	public Scope() {
 	
 		// Nothing to do
-	}
-	
-	
-	/**
-	 * Creates a new UserInfo authorisation request scope with the minimum
-	 * required {@link ScopeToken#OPENID openid} token.
-	 */
-	public static Scope createMinimal() {
-	
-		Scope scope = new Scope();
-		scope.add(ScopeToken.OPENID);
-		return scope;
-	}
-	
-	
-	/**
-	 * Checks if the scope is valid according to the OpenID Connect 
-	 * specification. This is done by examining if the scope contains an
-	 * {@link ScopeToken#OPENID} instance.
-	 *
-	 * @return {@code true} if this scope if valid, else {@code false}.
-	 */
-	public boolean isValid() {
-	
-		if (contains(ScopeToken.OPENID))
-			return true;
-		else
-			return false;
 	}
 	
 	
@@ -74,36 +35,32 @@ public class Scope extends HashSet<ScopeToken> {
 	
 		StringBuilder sb = new StringBuilder();
 	
-		Iterator<ScopeToken> it = super.iterator();
+		for (ScopeToken token: this) {
+
+			if (sb.length() > 0)
+				sb.append(' ');
 		
-		while (it.hasNext()) {
-		
-			sb.append(it.next().toString());
-			
-			if (it.hasNext())
-				sb.append(" ");
+			sb.append(token.toString());
 		}
 	
 		return sb.toString();
 	}
-	
-	
+
+
 	/**
-	 * Parses the specified scope string containing standard scope tokens.
+	 * Parses a scope from the specified string representation.
 	 *
-	 * <p>See {@link ScopeParser}.
-	 *
-	 * @param s A string containing one or more standard scope tokens 
-	 *          delimited by space.
-	 *
-	 * @return The parsed scope.
-	 *
-	 * @throws ParseException If an unexpected scope token is encountered
-	 *                        or a {@link ScopeToken#OPENID} is missing.
+	 * @param s The scope string. Must not be {@code null}.
 	 */
-	public static Scope parseStrict(final String s)
-		throws ParseException {
-	
-		return ScopeParser.STD_SCOPE_PARSER.parseStrict(s);
+	public static Scope parse(final String s) {
+
+		Scope scope = new Scope();
+
+		String[] tokens = s.split("\\s+");
+
+		for (String t: tokens)
+			scope.add(new ScopeToken(t));
+
+		return scope;
 	}
 }

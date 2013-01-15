@@ -1,16 +1,13 @@
-package com.nimbusds.openid.connect.sdk;
-
-
-import com.nimbusds.openid.connect.sdk.messages.ErrorCode;
+package com.nimbusds.oauth2.sdk;
 
 
 /**
  * Serialization exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-27)
+ * @version $version$ (2013-01-14)
  */
-public class SerializeException extends OpenIDConnectException {
+public class SerializeException extends OAuth2Exception {
 
 
 	/**

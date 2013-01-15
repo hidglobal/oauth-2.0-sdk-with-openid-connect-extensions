@@ -1,72 +1,60 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import net.jcip.annotations.Immutable;
 
 
 /**
- * Enumeration of the OAuth 2.0 grant types used by OpenID Connect.
- *
- * <p>Related specifications:
- *
- * <ul>
- *     <li>OAuth 2.0 (RFC 6749).
- * </ul>
+ * OAuth 2.0 authorisation grant type. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-09)
+ * @version $version$ (2013-01-15)
  */
-public enum GrantType {
+@Immutable
+public final class GrantType extends Identifier {
 
 	
 	/**
 	 * Authorisation code.
 	 */
-	AUTHORIZATION_CODE,
+	public static final GrantType AUTHORIZATION_CODE = new GrantType("authorization_code");
 	
 	
 	/**
 	 * Refresh token.
 	 */
-	REFRESH_TOKEN;
-	
-	
+	public static final GrantType REFRESH_TOKEN = new GrantType("refresh_token");
+
+
 	/**
-	 * Returns the string identifier of this grant type.
-	 *
-	 * @return The string identifier.
+	 * Password.
 	 */
-	@Override
-	public String toString() {
-	
-		return super.toString().toLowerCase();
+	public static final GrantType PASSWORD = new GrantType("password");
+
+
+	/**
+	 * Client credentials.
+	 */
+	public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials");
+
+
+	/**
+	 * Creates a new OAuth 2.0 grant type with the specified value.
+	 *
+	 * @param value The grant type value. Must not be {@code null} or 
+	 *              empty string.
+	 */
+	public GrantType(final String value) {
+
+		super(value);
 	}
+
+
+	@Override
+	public boolean equals(final Object object) {
 	
-	
-	/**
-	 * Parses a grant type.
-	 *
-	 * @param s The string identifier of a grant type. Must not be 
-	 *          {@code null}.
-	 *
-	 * @return The grant type.
-	 *
-	 * @throws ParseException If the string doesn't match a supported grant 
-	 *                        type.
-	 */
-	public static GrantType parse(final String s)
-		throws ParseException {
-	
-		if (s == null || s.trim().isEmpty())
-			throw new ParseException("Null or empty grant type string");
-		
-		if (s.equals("authorization_code"))
-			return AUTHORIZATION_CODE;
-			
-		else if (s.equals("refresh_token"))
-			return REFRESH_TOKEN;
-			
-		else
-			throw new ParseException("Unknown grant type: " + s);
+		return object != null && 
+		       object instanceof GrantType && 
+		       this.toString().equals(object.toString());
 	}
 }

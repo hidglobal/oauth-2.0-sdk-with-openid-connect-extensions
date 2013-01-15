@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.net.MalformedURLException;
@@ -12,29 +12,26 @@ import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
-import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
-
-import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OAuth 2.0 Access Token error response. This class is immutable.
+ * OAuth 2.0 Token error response. This class is immutable.
  *
  * <p>Legal error codes:
  *
  * <ul>
  *     <li>OAuth 2.0 errors:
  *         <ul>
- *             <li>{@link ErrorCode#INVALID_REQUEST}
- *             <li>{@link ErrorCode#INVALID_CLIENT}
- *             <li>{@link ErrorCode#INVALID_GRANT}
- *             <li>{@link ErrorCode#UNAUTHORIZED_CLIENT}
- *             <li>{@link ErrorCode#UNSUPPORTED_GRANT_TYPE}
- *             <li>{@link ErrorCode#INVALID_SCOPE}
+ *             <li>{@link OAuth2Error#INVALID_REQUEST}
+ *             <li>{@link OAuth2Error#INVALID_CLIENT}
+ *             <li>{@link OAuth2Error#INVALID_GRANT}
+ *             <li>{@link OAuth2Error#UNAUTHORIZED_CLIENT}
+ *             <li>{@link OAuth2Error#UNSUPPORTED_GRANT_TYPE}
+ *             <li>{@link OAuth2Error#INVALID_SCOPE}
  *         </ul>
  * </ul>
  *
@@ -54,100 +51,75 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.4.
- *     <li>OpenID Connect Standard 1.0, section 3.1.3.
  *     <li>OAuth 2.0 (RFC 6749), section 5.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
 public final class TokenErrorResponse implements ErrorResponse {
 
 
 	/**
-	 * The legal error codes for an OAuth 2.0 Access Token error response.
+	 * The legal errors for an OAuth 2.0 Access Token error response.
 	 */
-	private static final Set<ErrorCode> legalErrorCodes = new HashSet<ErrorCode>();
+	private static final Set<OAuth2Error> legalErrors = new HashSet<OAuth2Error>();
 	
 	
 	static {
-		// OAuth 2.0 errors
-		legalErrorCodes.add(ErrorCode.INVALID_REQUEST);
-		legalErrorCodes.add(ErrorCode.INVALID_CLIENT);
-		legalErrorCodes.add(ErrorCode.INVALID_GRANT);
-		legalErrorCodes.add(ErrorCode.UNAUTHORIZED_CLIENT);
-		legalErrorCodes.add(ErrorCode.UNSUPPORTED_GRANT_TYPE);
-		legalErrorCodes.add(ErrorCode.INVALID_SCOPE);
+		legalErrors.add(OAuth2Error.INVALID_REQUEST);
+		legalErrors.add(OAuth2Error.INVALID_CLIENT);
+		legalErrors.add(OAuth2Error.INVALID_GRANT);
+		legalErrors.add(OAuth2Error.UNAUTHORIZED_CLIENT);
+		legalErrors.add(OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+		legalErrors.add(OAuth2Error.INVALID_SCOPE);
 	}
 	
 	
 	/**
-	 * Gets the legal error codes for an OAuth 2.0 Access Token error 
-	 * response.
+	 * Gets the legal OAuth 2.0 errors for an Access Token error response.
 	 *
-	 * @return The legal error codes, as a read-only set.
+	 * @return The legal errors, as a read-only set.
 	 */
-	public static Set<ErrorCode> getLegalErrorCodes() {
+	public static Set<OAuth2Error> getLegalErrors() {
 	
-		return Collections.unmodifiableSet(legalErrorCodes);
+		return Collections.unmodifiableSet(legalErrors);
 	}
 	
 	
 	/**
-	 * The error code.
+	 * The error.
 	 */
-	private final ErrorCode errorCode;
-	
-	
-	/**
-	 * The URL of a web page that includes additional information about the
-	 * error.
-	 */
-	private final URL errorURI;
+	private final OAuth2Error error;
 	
 	
 	/**
 	 * Creates a new OAuth 2.0 Access Token error response.
 	 *
-	 * @param errorCode   The error code. Must match one of the 
-	 *                    {@link #getLegalErrorCodes legal error codes} for
-	 *                    an authorisation error response and must not be 
-	 *                    {@code null}.
-	 * @param errorURI    Optional URI of a web page that includes 
-	 *                    information about the error, {@code null} if not
-	 *                    specified.
+	 * @param error The OAuth 2.0 error. Must match one of the 
+	 *              {@link #getLegalErrors legal errors} for a token error
+	 *              response and must not be {@code null}.
 	 *
 	 * @throws IllegalArgumentException If the specified error code is not
-	 *                                  legal for an authorisation error 
-	 *                                  response.
+	 *                                  legal for a token error response.
 	 */
-	public TokenErrorResponse(final ErrorCode errorCode, final URL errorURI) {
+	public TokenErrorResponse(final OAuth2Error error) {
 	
-		if (errorCode == null)
-			throw new IllegalArgumentException("The error code must not be null");
+		if (error == null)
+			throw new IllegalArgumentException("The OAuth 2.0 error must not be null");
 		
-		if (! legalErrorCodes.contains(errorCode))
-			throw new IllegalArgumentException("Illegal error code");
+		if (! legalErrors.contains(error))
+			throw new IllegalArgumentException("Illegal OAuth 2.0 error");
 			
-		this.errorCode = errorCode;
-		
-		this.errorURI = errorURI;
+		this.error = error;
 	}
 	
 
 	@Override
-	public ErrorCode getErrorCode() {
+	public OAuth2Error getError() {
 	
-		return errorCode;
-	}
-	
-	
-	@Override
-	public URL getErrorURI() {
-	
-		return errorURI;
+		return error;
 	}
 	
 	
@@ -159,11 +131,14 @@ public final class TokenErrorResponse implements ErrorResponse {
 	public JSONObject toJSONObject() {
 	
 		JSONObject o = new JSONObject();
-		o.put("error", errorCode.getCode());
-		o.put("error_description", errorCode.getDescription());
+
+		o.put("error", error.getValue());
+
+		if (error.getDescription() != null)
+			o.put("error_description", error.getDescription());
 		
-		if (errorURI != null)
-			o.put("error_uri", errorURI.toString());
+		if (error.getURI() != null)
+			o.put("error_uri", error.getURI().toString());
 		
 		return o;
 	}
@@ -204,34 +179,40 @@ public final class TokenErrorResponse implements ErrorResponse {
 		
 		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
 		
-		String errorCodeString = null;
-		ErrorCode errorCode = null;
-		URL errorURI = null;
+		OAuth2Error error = null;
 		
 		try {
-			errorCodeString = JSONObjectUtils.getString(jsonObject, "error");
-			errorCode = ErrorCode.valueOf(errorCodeString.toUpperCase());
-			
+			// Parse code
+			String code = JSONObjectUtils.getString(jsonObject, "error");
+
+			// Parse description
+			String description = null;
+
+			if (jsonObject.containsKey("error_description"))
+				description = JSONObjectUtils.getString(jsonObject, "error_description");
+
+			// Parse URI
+			URL uri = null;
+
 			if (jsonObject.containsKey("error_uri"))
-				errorURI = new URL(JSONObjectUtils.getString(jsonObject, "error_uri"));
+				uri = new URL(JSONObjectUtils.getString(jsonObject, "error_uri"));
+
+
+			error = new OAuth2Error(code, description, uri);
 			
 		} catch (ParseException e) {
 		
 			throw new ParseException("Missing or invalid token error response parameter: " + e.getMessage(), e);
 			
-		} catch (IllegalArgumentException e) {
-		
-			throw new ParseException("Invalid error code: " + errorCodeString, e);
-		
 		} catch (MalformedURLException e) {
 		
 			throw new ParseException("Invalid error URI: " + e.getMessage(), e);
 		}
 		
 		
-		if (! getLegalErrorCodes().contains(errorCode))
-			throw new ParseException("Illegal token response error code: " + errorCode.getCode());
+		if (! getLegalErrors().contains(error))
+			throw new ParseException("Illegal token response error code: " + error.getValue());
 		
-		return new TokenErrorResponse(errorCode, errorURI);
+		return new TokenErrorResponse(error);
 	}
 }

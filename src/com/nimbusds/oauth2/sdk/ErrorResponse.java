@@ -1,32 +1,22 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import java.net.URL;
 
 
 /**
- * Interface for OpenID Connect error response messages.
+ * Interface for an OAuth 2.0 error response message.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
+ * @version $version$ (2013-01-15)
  */
 public interface ErrorResponse extends Response {
 
 
 	/**
-	 * Gets the error code and description associated with the error 
-	 * response.
+	 * Gets the OAuth 2.0 error associated with the error response.
 	 *
-	 * @return The error code.
+	 * @return The error.
 	 */
-	public ErrorCode getErrorCode();
-	
-	
-	/**
-	 * Returns an optional URI of a human-readable web page with 
-	 * additional information about the error.
-	 *
-	 * @return The error page URI, {@code null} if not specified.
-	 */
-	public URL getErrorURI();
+	public OAuth2Error getError();
 }

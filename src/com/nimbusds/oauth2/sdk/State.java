@@ -1,10 +1,8 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 import net.jcip.annotations.Immutable;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
-import com.nimbusds.openid.connect.sdk.util.StringUtils;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -12,102 +10,54 @@ import com.nimbusds.openid.connect.sdk.util.StringUtils;
  * serves as a protection against XSRF attacks, among other uses. This class is
  * immutable.
  *
- * <p>Related specifications:
- *
- * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.
- * </ul>
- *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-21)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
-public final class State {
+public final class State extends Identifier {
 
 
 	/**
-	 * The state value.
-	 */
-	private final String value;
-	
-	
-	/**
-	 * Creates a new state.
+	 * Creates a new state with the specified value.
 	 *
-	 * @param value The state value, must not be {@code null} or empty 
+	 * @param value The state value. Must not be {@code null} or empty 
 	 *              string.
 	 */
 	public State(final String value) {
 	
-		if (StringUtils.isUndefined(value))
-			throw new IllegalArgumentException("Null or empty state value");
-		
-		this.value = value;
+		super(value);
+	}
+
+
+	/**
+	 * Creates a new state with a randomly generated value of the specified
+	 * length. The value will be made up of mixed-case alphanumeric ASCII 
+	 * characters.
+	 *
+	 * @param length The number of characters. Must be a positive integer.
+	 */
+	public State(final int length) {
+	
+		super(length);
 	}
 	
 	
 	/**
-	 * Returns the string representation of this state.
-	 *
-	 * @return The string representation.
+	 * Creates a new state with a randomly generated value. The value will
+	 * be made up of 32 mixed-case alphanumeric ASCII characters.
 	 */
-	@Override
-	public String toString() {
-	
-		return value;
+	public State() {
+
+		super();
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
-	@Override
-	public int hashCode() {
-	
-		return value.hashCode();
-	}
-	
-	
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same value, otherwise
-	 *         {@code false}.
-	 */
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object instanceof State && this.toString().equals(object.toString());
-	}
-	
-	
-	
-	/**
-	 * Generates a random state value with the specified number of 
-	 * alphanumeric characters.
-	 *
-	 * @param count The number of characters.
-	 *
-	 * @return A new random state.
-	 */
-	public static State generate(final int count) {
-	
-		return new State(RandomStringUtils.randomAlphanumeric(count));
-	}
-	
-	
-	/**
-	 * Generates a random state value with 8 alphanumeric characters.
-	 *
-	 * @return A new random state.
-	 */
-	public static State generate() {
-	
-		return generate(8);
+		return object != null && 
+		       object instanceof State && 
+		       this.toString().equals(object.toString());
 	}
 	
 	
@@ -117,8 +67,8 @@ public final class State {
 	 * @param s The string to parse, {@code null} or empty if no state is
 	 *          specified.
 	 *
-	 * @return The state, {@code null} if the parsed string was {@code null}
-	 *         or empty.
+	 * @return The state, {@code null} if the parsed string was 
+	 *         {@code null} or empty.
 	 */
 	public static State parse(final String s) {
 	

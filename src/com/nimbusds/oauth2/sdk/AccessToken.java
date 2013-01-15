@@ -1,9 +1,7 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import net.jcip.annotations.Immutable;
-
-import com.nimbusds.openid.connect.sdk.ParseException;
 
 
 /**
@@ -17,7 +15,7 @@ import com.nimbusds.openid.connect.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-12)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
 public final class AccessToken extends Token {
@@ -168,18 +166,12 @@ public final class AccessToken extends Token {
 	}
 	
 	
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same value, otherwise
-	 *         {@code false}.
-	 */
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object instanceof AccessToken && this.toString().equals(object.toString());
+		return object != null && 
+		       object instanceof AccessToken && 
+		       this.toString().equals(object.toString());
 	}
 	
 	

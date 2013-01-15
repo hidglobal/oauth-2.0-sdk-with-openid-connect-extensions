@@ -1,20 +1,14 @@
-package com.nimbusds.openid.connect.sdk.messages;
+package com.nimbusds.oauth2.sdk;
 
 
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.SerializeException;
-
-import com.nimbusds.openid.connect.sdk.http.CommonContentTypes;
-import com.nimbusds.openid.connect.sdk.http.HTTPResponse;
-
-import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -24,52 +18,36 @@ import com.nimbusds.openid.connect.sdk.util.JSONObjectUtils;
  *
  * <pre>
  * HTTP/1.1 200 OK
- * Content-Type: application/json
+ * Content-Type: application/json;charset=UTF-8
  * Cache-Control: no-store
  * Pragma: no-cache
- * 
+ *
  * {
- *   "access_token"  : "SlAV32hkKG",
- *   "token_type"    : "Bearer",
- *   "refresh_token" : "8xLOxBtZp8",
- *   "expires_in"    : 3600,
- *   "id_token"      : "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9zZXJ2Z
- *    XIuZXhhbXBsZS5jb20iLCJ1c2VyX2lkIjoiMjQ4Mjg5NzYxMDAxIiwiYXVkIjoic
- *    zZCaGRSa3F0MyIsIm5vbmNlIjoibi0wUzZfV3pBMk1qIiwiZXhwIjoxMzExMjgxO
- *    TcwLCJpYXQiOjEzMTEyODA5NzB9.RgXxzppVvn1EjUiV3LIZ19SyhdyREe_2jJjW
- *    5EC8XjNuJfe7Dte8YxRXxssJ67N8MT9mvOI3HOHm4whNx5FCyemyCGyTLHODCeAr
- *    _id029-4JP0KWySoan1jmT7vbGHhu89-l9MTdaEvu7pNZO7DHGwqnMWRe8hdG7jU
- *    ES4w4ReQTygKwXVVOaiGoeUrv6cZdbyOnpGlRlHaiOsv_xMunNVJtn5dLz-0zZwV
- *    ftKVpFuc1pGaVsyZsOtkT32E4c6MDHeCvIDlR5ESC0ct8BLvGJDB5954MjCR4_X2
- *    GAEHonKw4NF8wTmUFvhslYXmjRNFs21Byjn3jNb7lSa3MBfVsw"
+ *   "access_token"      : "2YotnFZFEjr1zCsicMWpAA",
+ *   "token_type"        : "example",
+ *   "expires_in"        : 3600,
+ *   "refresh_token"     : "tGzv3JOkF0XG5Qx2TlKWIA",
+ *   "example_parameter" : "example_value"
  * }
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.3.
- *     <li>OpenID Connect Standard 1.0, section 3.1.2.
- *     <li>OAuth 2.0 (RFC 6749), sections 4.1.4 and 5.1.
+ *     <li>OAuth 2.0 (RFC 6749), sections 4.1.4, 4.3.3,  4.4.3 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-12)
+ * @version $version$ (2013-01-15)
  */
 @Immutable
-public final class AccessTokenResponse implements SuccessResponse {
+public class AccessTokenResponse implements SuccessResponse {
 
 
 	/**
 	 * The access token.
 	 */
 	private final AccessToken accessToken;
-	
-	
-	/**
-	 * Optional ID Token serialised to a JWT.
-	 */
-	private final JWT idToken;
 	
 	
 	/**
@@ -82,13 +60,9 @@ public final class AccessTokenResponse implements SuccessResponse {
 	 * Creates a new access token response.
 	 *
 	 * @param accessToken  The access token. Must not be {@code null}.
-	 * @param idToken      The ID token. Must be {@code null} if the
-	 *                     request grant type was not 
-	 *                     {@link GrantType#AUTHORIZATION_CODE}.
 	 * @param refreshToken Optional refresh token, {@code null} if none.
 	 */
 	public AccessTokenResponse(final AccessToken accessToken,
-	                           final JWT idToken,
 	                           final RefreshToken refreshToken) {
 				   
 		if (accessToken == null)
@@ -96,7 +70,6 @@ public final class AccessTokenResponse implements SuccessResponse {
 		
 		this.accessToken = accessToken;
 		
-		this.idToken = idToken;
 		this.refreshToken = refreshToken;
 	}
 	
@@ -109,17 +82,6 @@ public final class AccessTokenResponse implements SuccessResponse {
 	public AccessToken getAccessToken() {
 	
 		return accessToken;
-	}
-	
-	
-	/**
-	 * Gets the ID token.
-	 *
-	 * @return The ID token, {@code null} if none.
-	 */
-	public JWT getIDToken() {
-	
-		return idToken;
 	}
 	
 	
@@ -144,8 +106,7 @@ public final class AccessTokenResponse implements SuccessResponse {
 	 *   "access_token" : "SlAV32hkKG",
 	 *   "token_type"   : "Bearer",
 	 *   "refresh_token": "8xLOxBtZp8",
-	 *   "expires_in"   : 3600,
-	 *   "id_token"     : "eyJ0 ... NiJ9.eyJ1c ... I6IjIifX0.DeWt4Qu ... ZXso"
+	 *   "expires_in"   : 3600
 	 * }
 	 * </pre>
 	 *
@@ -164,17 +125,6 @@ public final class AccessTokenResponse implements SuccessResponse {
 		
 		if (accessToken.getLifetime() > 0)
 			o.put("expires_in", accessToken.getLifetime());
-		
-		if (idToken != null) {
-			
-			try {
-				o.put("id_token", idToken.serialize());
-
-			} catch (IllegalStateException e) {
-
-				throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
-			}
-		}
 		
 		if (refreshToken != null)
 			o.put("refresh_token", refreshToken.getValue());
@@ -228,26 +178,12 @@ public final class AccessTokenResponse implements SuccessResponse {
 		AccessToken accessToken = new AccessToken(accessTokenValue, exp, null);
 		
 		
-		JWT idToken = null;
-		
-		if (jsonObject.containsKey("id_token")) {
-			
-			try {
-				idToken = JWTParser.parse(JSONObjectUtils.getString(jsonObject, "id_token"));
-				
-			} catch (java.text.ParseException e) {
-			
-				throw new ParseException("Couldn't parse ID token: " + e.getMessage(), e);
-			}
-		}
-		
-		
 		RefreshToken refreshToken = null;
 		
 		if (jsonObject.containsKey("refresh_token"))
 			refreshToken = new RefreshToken(JSONObjectUtils.getString(jsonObject, "refresh_token"));
 		
-		return new AccessTokenResponse(accessToken, idToken, refreshToken);
+		return new AccessTokenResponse(accessToken, refreshToken);
 	}
 	
 	
