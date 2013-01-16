@@ -30,11 +30,11 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749).
+ *     <li>OAuth 2.0 (RFC 6749), sections 4.1.3, .
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-16)
+ * @version $version$ (2013-01-16)
  */
 public abstract class TokenRequest implements OAuth2Request {
 
