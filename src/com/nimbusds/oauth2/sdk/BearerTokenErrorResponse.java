@@ -45,10 +45,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-16)
  */
 @Immutable
-public class BearerTokenErrorResponse implements ErrorResponse {
+public class BearerTokenErrorResponse implements OAuth2ErrorResponse {
 
 
 	/**
@@ -261,44 +261,44 @@ public class BearerTokenErrorResponse implements ErrorResponse {
 			realm = m.group(1);
 		
 		
-		// Parse optional error code
-		m = errorPattern.matcher(wwwAuth);
-
-		String errorCode = null;
-		
-		if (m.find())
-			errorCode = m.group(1);
-		
-
-		// Parse optional error description
-		m = errorDescriptionPattern.matcher(wwwAuth);
-
-		String errorDescription = null;
-
-		if (m.find())
-			errorDescription = m.group(1);
-
-		
-		// Parse optional error URI
-		m = errorURIPattern.matcher(wwwAuth);
-		
-		URL errorURI = null;
-		
-		if (m.find()) {
-		
-			try {
-				errorURI = new URL(m.group(1));
-				
-			} catch (MalformedURLException e) {
-			
-				throw new ParseException("Invalid error URI: " + m.group(1), e);
-			}
-		}
-
+		// Parse optional error 
 		OAuth2Error error = null;
 
-		if (errorCode != null)
+		m = errorPattern.matcher(wwwAuth);
+
+		
+		if (m.find()) {
+
+			String errorCode = m.group(1);
+
+			// Parse optional error description
+			m = errorDescriptionPattern.matcher(wwwAuth);
+
+			String errorDescription = null;
+
+			if (m.find())
+				errorDescription = m.group(1);
+
+			
+			// Parse optional error URI
+			m = errorURIPattern.matcher(wwwAuth);
+			
+			URL errorURI = null;
+			
+			if (m.find()) {
+			
+				try {
+					errorURI = new URL(m.group(1));
+					
+				} catch (MalformedURLException e) {
+				
+					throw new ParseException("Invalid error URI: " + m.group(1), e);
+				}
+			}
+
 			error = new OAuth2Error(errorCode, errorDescription, errorURI);
+		}
+			
 		
 		return new BearerTokenErrorResponse(realm, error);
 	}

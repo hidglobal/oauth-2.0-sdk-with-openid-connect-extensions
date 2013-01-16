@@ -5,12 +5,12 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * Interface for an OAuth 2.0 response message.
+ * OAuth 2.0 response message.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-14)
  */
-public interface Response extends Message {
+public interface OAuth2Response extends OAuth2Message {
 
 	
 	/**
@@ -22,7 +22,8 @@ public interface Response extends Message {
 	 *                            couldn't be serialised to an HTTP 
 	 *                            response.
 	 */
-	public HTTPResponse toHTTPResponse() throws SerializeException;
+	public HTTPResponse toHTTPResponse() 
+		throws SerializeException;
 }
 
 

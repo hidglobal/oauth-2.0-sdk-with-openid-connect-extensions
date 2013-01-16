@@ -5,12 +5,12 @@ import java.net.URL;
 
 
 /**
- * Interface for an OAuth 2.0 error response message.
+ * OAuth 2.0 error response message.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-16)
  */
-public interface ErrorResponse extends Response {
+public interface OAuth2ErrorResponse extends OAuth2Response {
 
 
 	/**

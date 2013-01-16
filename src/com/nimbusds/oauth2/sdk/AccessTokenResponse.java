@@ -38,10 +38,10 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-16)
  */
 @Immutable
-public class AccessTokenResponse implements SuccessResponse {
+public class AccessTokenResponse implements OAuth2SuccessResponse {
 
 
 	/**

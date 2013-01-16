@@ -34,9 +34,9 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-15)
+ * @version $version$ (2014-01-16)
  */
-public abstract class TokenRequest implements Request {
+public abstract class TokenRequest implements OAuth2Request {
 
 
 	/**
