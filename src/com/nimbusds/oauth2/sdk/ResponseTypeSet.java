@@ -44,7 +44,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	/**
 	 * Parses a set of authorisation response types.
 	 *
-	 * <p>Example response type sets:
+	 * <p>Example serialised response type sets:
 	 *
 	 * <pre>
 	 * code
@@ -118,7 +118,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	 * Returns the string representation of this set of authorisation 
 	 * response types.
 	 *
-	 * <p>Example response type sets:
+	 * <p>Example serialised response type sets:
 	 *
 	 * <pre>
 	 * code

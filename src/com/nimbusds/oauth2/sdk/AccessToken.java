@@ -12,6 +12,7 @@ import net.jcip.annotations.Immutable;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 1.4.
+ *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750).
  * </ul>
  *
  * @author Vladimir Dzhuvinov

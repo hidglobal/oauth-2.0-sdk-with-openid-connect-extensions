@@ -18,12 +18,12 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * Authorisation request. Used to authenticate an end-user and request his /
- * her authorisation to release information to the client. This class is 
- * immutable.
+ * Authorisation request. Used to authenticate an end-user and request the
+ * end-user's consent to grant the client access to a protected resource. 
+ * This class is immutable.
  *
- * <p>Extending classes may define additional parameters and parameter
- * requirements.
+ * <p>Extending classes may define additional parameters as well as enforce
+ * tighter requirements on the base parameters.
  *
  * <p>Example HTTP request:
  *
@@ -38,7 +38,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), sections 4.1.1, 4.2.1.
+ *     <li>OAuth 2.0 (RFC 6749), sections 4.1.1 and 4.2.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -225,8 +225,8 @@ public class AuthorizationRequest implements OAuth2Request {
 	/**
 	 * Returns the matching HTTP request.
 	 *
-	 * @param method The HTTP request method. If {@code null} assumes the
-	 *               default HTTP GET.
+	 * @param method The HTTP request method which can be GET or POST. Must
+	 *               not be {@code null}.
 	 *
 	 * @return The HTTP request.
 	 *
@@ -239,7 +239,7 @@ public class AuthorizationRequest implements OAuth2Request {
 		
 		HTTPRequest httpRequest;
 		
-		if (method == null || method == HTTPRequest.Method.GET)
+		if (method.equals(HTTPRequest.Method.GET))
 			httpRequest = new HTTPRequest(HTTPRequest.Method.GET);
 		else
 			httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
@@ -347,10 +347,8 @@ public class AuthorizationRequest implements OAuth2Request {
 
 		Scope scope = null;
 		
-		if (StringUtils.isDefined(v)) {
-
+		if (StringUtils.isDefined(v))
 			scope = Scope.parse(v);
-		}
 
 
 		return new AuthorizationRequest(rts, clientID, redirectURI, scope, state);

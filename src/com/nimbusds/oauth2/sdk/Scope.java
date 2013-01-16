@@ -8,6 +8,12 @@ import net.jcip.annotations.NotThreadSafe;
 
 /**
  * Authorisation scope. This class is not thread-safe.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OAuth 2.0 (RFC 6749), section 3.3.
+ * </ul>
  * 
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-15)
@@ -26,7 +32,8 @@ public class Scope extends HashSet<ScopeToken> {
 	
 	
 	/**
-	 * Returns the string representation of this scope.
+	 * Returns the string representation of this scope. The scope tokens
+	 * can be serialised in any order.
 	 *
 	 * @return The string representation.
 	 */
@@ -50,9 +57,14 @@ public class Scope extends HashSet<ScopeToken> {
 	/**
 	 * Parses a scope from the specified string representation.
 	 *
-	 * @param s The scope string. Must not be {@code null}.
+	 * @param s The scope string, {@code null} if not specified.
+	 *
+	 * @return The scope, {@code null} if not specified.
 	 */
 	public static Scope parse(final String s) {
+
+		if (s == null)
+			return null;
 
 		Scope scope = new Scope();
 
