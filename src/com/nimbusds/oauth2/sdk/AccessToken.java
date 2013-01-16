@@ -1,31 +1,28 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import net.jcip.annotations.Immutable;
+import net.minidev.json.JSONObject;
 
 
 /**
- * OAuth 2.0 access token. Supports only {@link #TYPE bearer type} tokens. This
- * class is immutable.
+ * The base abstract class for OAuth 2.0 access tokens.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), section 1.4.
- *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750).
+ *     <li>OAuth 2.0 (RFC 6749), sections 1.4 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-16)
  */
-@Immutable
-public final class AccessToken extends Token {
+public abstract class AccessToken extends Token {
 
 	
 	/**
-	 * The token type, set to "Bearer" (OAuth.Bearer).
+	 * The access token type.
 	 */
-	public static final String TYPE = "Bearer";
+	public final AccessTokenType type;
 	
 	
 	/**
@@ -45,11 +42,13 @@ public final class AccessToken extends Token {
 	 * generated value. The value will be made up of 32 mixed-case 
 	 * alphanumeric ASCII characters. The optional lifetime and scope are 
 	 * left undefined.
+	 *
+	 * @param type The access token type. Must not be {@code null}.
 	 */
-	public AccessToken() {
+	public AccessToken(final AccessTokenType type) {
 	
-		this(32);
-	}	
+		this(type, 32);
+	}
 
 
 	/**
@@ -58,11 +57,12 @@ public final class AccessToken extends Token {
 	 * of mixed-case alphanumeric ASCII characters. The optional lifetime 
 	 * and scope are left undefined.
 	 *
+	 * @param type   The access token type. Must not be {@code null}.
 	 * @param length The number of characters. Must be a positive integer.
 	 */
-	public AccessToken(final int length) {
+	public AccessToken(final AccessTokenType type, final int length) {
 	
-		this(length, 0l, null);
+		this(type, length, 0l, null);
 	}
 
 
@@ -71,12 +71,15 @@ public final class AccessToken extends Token {
 	 * and the specified optional lifetime and scope. The value will be 
 	 * made up of 32 mixed-case alphanumeric ASCII characters.
 	 *
+	 * @param type     The access token type. Must not be {@code null}.
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
 	 * @param scope    The scope, {@code null} if not specified.
 	 */
-	public AccessToken(final long lifetime, final Scope scope) {
+	public AccessToken(final AccessTokenType type,
+		           final long lifetime, 
+		           final Scope scope) {
 	
-		this(32, lifetime, scope);
+		this(type, 32, lifetime, scope);
 	}
 
 
@@ -85,14 +88,24 @@ public final class AccessToken extends Token {
 	 * of the specified length and optional lifetime and scope. The value 
 	 * will be made up of mixed-case alphanumeric ASCII characters.
 	 *
+	 * @param type     The access token type. Must not be {@code null}.
 	 * @param length   The number of characters. Must be a positive 
 	 *                 integer.
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
 	 * @param scope    The scope, {@code null} if not specified.
 	 */
-	public AccessToken(final int length, final long lifetime, final Scope scope) {
+	public AccessToken(final AccessTokenType type, 
+		           final int length, 
+		           final long lifetime, 
+		           final Scope scope) {
 	
 		super(length);
+
+		if (type == null)
+			throw new IllegalArgumentException("The access token type must not be null");
+
+		this.type = type;
+
 		this.lifetime = lifetime;
 		this.scope = scope;
 	}
@@ -102,12 +115,13 @@ public final class AccessToken extends Token {
 	 * Creates a new minimal OAuth 2.0 access token with the specified
 	 * value. The optional lifetime and scope are left undefined.
 	 *
+	 * @param type  The access token type. Must not be {@code null}.
 	 * @param value The access token value. Must not be {@code null} or
 	 *              empty string.
 	 */
-	public AccessToken(final String value) {
+	public AccessToken(final AccessTokenType type, final String value) {
 	
-		this(value, 0l, null);
+		this(type, value, 0l, null);
 	}
 	
 	
@@ -115,16 +129,37 @@ public final class AccessToken extends Token {
 	 * Creates a new OAuth 2.0 access token with the specified value and
 	 * optional lifetime and scope.
 	 *
+	 * @param type     The access token type. Must not be {@code null}.
 	 * @param value    The access token value. Must not be {@code null} or
 	 *                 empty string.
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
 	 * @param scope    The scope, {@code null} if not specified.
 	 */
-	public AccessToken(final String value, final long lifetime, final Scope scope) {
+	public AccessToken(final AccessTokenType type, 
+		           final String value, 
+		           final long lifetime, 
+		           final Scope scope) {
 	
 		super(value);
+
+		if (type == null)
+			throw new IllegalArgumentException("The access token type must not be null");
+
+		this.type = type;
+
 		this.lifetime = lifetime;
 		this.scope = scope;
+	}
+
+
+	/**
+	 * Gets the access token type.
+	 *
+	 * @return The access token type.
+	 */
+	public AccessTokenType getType() {
+
+		return type;
 	}
 
 	
@@ -148,37 +183,56 @@ public final class AccessToken extends Token {
 	
 		return scope;
 	}
+
+
+	@Override
+	public JSONObject toJSONObject() {
+
+		JSONObject o = new JSONObject();
+
+		o.put("access_token", getValue());
+		o.put("token_type", getType());
+		
+		if (getLifetime() > 0)
+			o.put("expires_in", getLifetime());
+
+		if (getScope() != null)
+			o.put("scope", scope.toString());
+		
+		return o;
+	}
 	
 	
 	/**
 	 * Returns the HTTP Authorization header value for this access token.
 	 *
-	 * <p>Example:
-	 *
-	 * <pre>
-	 * Authorization: Bearer eyJhbGciOiJIUzI1NiJ9
-	 * </pre>
-	 *
-	 * @return The HTTP Authorization header value for this access token.
+	 * @return The HTTP Authorization header.
 	 */
-	public String toAuthorizationHeader(){
-	
-		return "Bearer " + getValue();
-	}
-	
-	
-	@Override
-	public boolean equals(final Object object) {
-	
-		return object != null && 
-		       object instanceof AccessToken && 
-		       this.toString().equals(object.toString());
+	public abstract String toAuthorizationHeader();
+
+
+	/**
+	 * Parses an access token from a JSON object access token response.
+	 * Only bearer access tokens are supported.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be 
+	 *                   {@code null}.
+	 *
+	 * @return The access token.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to a
+	 *                        valid access token.
+	 */
+	public static AccessToken parse(final JSONObject jsonObject)
+		throws ParseException {
+
+		return BearerAccessToken.parse(jsonObject);
 	}
 	
 	
 	/**
-	 * Parses an HTTP Authorization header for an access token of 
-	 * {@link #TYPE type Bearer}.
+	 * Parses an HTTP Authorization header for an access token. Only
+	 * bearer access token are supported.
 	 *
 	 * @param header The HTTP Authorization header value to parse. Must not
 	 *               be {@code null}.
@@ -186,26 +240,11 @@ public final class AccessToken extends Token {
 	 * @return The access token.
 	 *
 	 * @throws ParseException If the HTTP Authorization header value 
-	 *                        couldn't be parsed to a valid access token of
-	 *                        type Bearer.
+	 *                        couldn't be parsed to a valid access token.
 	 */
 	public static AccessToken parse(final String header)
 		throws ParseException {
 	
-		String[] parts = header.split("\\s", 2);
-	
-		if (parts.length != 2)
-			throw new ParseException("Invalid HTTP Authorization header value");
-		
-		if (! parts[0].equals("Bearer"))
-			throw new ParseException("Token type must be \"Bearer\"");
-		
-		try {
-			return new AccessToken(parts[1]);
-			
-		} catch (IllegalArgumentException e) {
-		
-			throw new ParseException(e.getMessage());
-		}
+		return BearerAccessToken.parse(header);
 	}
 }

@@ -3,6 +3,10 @@ package com.nimbusds.oauth2.sdk;
 
 import net.jcip.annotations.Immutable;
 
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+
 
 /**
  * OAuth 2.0 refresh token. This class is immutable.
@@ -14,7 +18,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-16)
  */
 @Immutable
 public final class RefreshToken extends Token {
@@ -53,6 +57,41 @@ public final class RefreshToken extends Token {
 	public RefreshToken(final String value) {
 	
 		super(value);
+	}
+
+
+	@Override
+	public JSONObject toJSONObject() {
+
+		JSONObject o = new JSONObject();
+
+		o.put("refresh_token", getValue());
+		
+		return o;
+	}
+
+
+	/**
+	 * Parses a refresh token from a JSON object access token response.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be 
+	 *                   {@code null}.
+	 *
+	 * @return The refresh token, {@code null} if not found.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to a
+	 *                        valid refresh token.
+	 */
+	public static RefreshToken parse(final JSONObject jsonObject)
+		throws ParseException {
+
+		// Parse value
+		if (! jsonObject.containsKey("refresh_token"))
+			return null;
+
+		String value = JSONObjectUtils.getString(jsonObject, "refresh_token");
+
+		return new RefreshToken(value);
 	}
 
 

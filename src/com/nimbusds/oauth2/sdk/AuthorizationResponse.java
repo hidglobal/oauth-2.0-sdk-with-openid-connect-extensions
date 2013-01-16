@@ -12,6 +12,8 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import net.minidev.json.JSONObject;
+
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 import com.nimbusds.oauth2.sdk.util.URLUtils;
@@ -242,28 +244,26 @@ public class AuthorizationResponse implements OAuth2SuccessResponse {
 			
 			if (accessToken != null) {
 			
-				if (delimit)
-					sb.append('&');
-				
-				delimit = true;
-			
-				sb.append("access_token=");
-				sb.append(URLEncoder.encode(accessToken.getValue(), "utf-8"));
-				sb.append("&token_type=");
-				sb.append(AccessToken.TYPE);
-				
-				long exp = accessToken.getLifetime();
-				
-				if (exp > 0) {
-					sb.append("&expires_in=");
-					sb.append(exp);
-				}
-				
-				Scope scope = accessToken.getScope();
-				
-				if (scope != null) {
-					sb.append("&scope=");
-					sb.append(URLEncoder.encode(scope.toString(), "utf-8"));
+				for (Map.Entry<String,Object> entry: accessToken.toJSONObject().entrySet()) {
+
+					if (delimit)
+						sb.append('&');
+
+					delimit = true;
+
+					sb.append(entry.getKey());
+					sb.append('=');
+
+					Object value = entry.getValue();
+
+					if (value == null)
+						break;
+
+					else if (value instanceof String)
+						sb.append(URLEncoder.encode((String)value, "utf-8"));
+
+					else
+						sb.append(value.toString());
 				}
 			}
 			
@@ -380,25 +380,12 @@ public class AuthorizationResponse implements OAuth2SuccessResponse {
 		AccessToken accessToken = null;
 		
 		if (params.get("access_token") != null) {
-		
-			String accessTokenValue = params.get("access_token");
-		
-			long lifetime = 0l;
-			
-			if (params.get("expires_in") != null) {
-				
-				try {
-					lifetime = new Long(params.get("expires_in"));
-					
-				} catch (NumberFormatException e) {
-				
-					throw new ParseException("Invalid expiration time: " + e.getMessage(), e);
-				}
-			}
-			
-			Scope scope = Scope.parse(params.get("scope"));
-			
-			accessToken = new AccessToken(accessTokenValue, lifetime, scope);
+
+			JSONObject jsonObject = new JSONObject();
+
+			jsonObject.putAll(params);
+
+			accessToken = AccessToken.parse(jsonObject);
 		}
 		
 		

@@ -8,8 +8,6 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-
 
 /**
  * Access token response. This class is immutable.
@@ -118,16 +116,10 @@ public class AccessTokenResponse implements OAuth2SuccessResponse {
 	public JSONObject toJSONObject()
 		throws SerializeException {
 	
-		JSONObject o = new JSONObject();
-		
-		o.put("access_token", accessToken.getValue());
-		o.put("token_type", AccessToken.TYPE);
-		
-		if (accessToken.getLifetime() > 0)
-			o.put("expires_in", accessToken.getLifetime());
-		
+		JSONObject o = accessToken.toJSONObject();
+
 		if (refreshToken != null)
-			o.put("refresh_token", refreshToken.getValue());
+			o.putAll(refreshToken.toJSONObject());
 		
 		return o;
 	}
@@ -162,26 +154,9 @@ public class AccessTokenResponse implements OAuth2SuccessResponse {
 	public static AccessTokenResponse parse(final JSONObject jsonObject)
 		throws ParseException {
 		
-		String tokenType = JSONObjectUtils.getString(jsonObject, "token_type");
+		AccessToken accessToken = AccessToken.parse(jsonObject);
 		
-		if (! tokenType.equals(AccessToken.TYPE))
-			throw new ParseException("The access token type must be \"" + AccessToken.TYPE + "\"");
-		
-		String accessTokenValue = JSONObjectUtils.getString(jsonObject, "access_token");
-		
-		long exp = 0;
-		
-		if (jsonObject.containsKey("expires_in"))
-			exp = JSONObjectUtils.getLong(jsonObject, "expires_in");
-		
-		
-		AccessToken accessToken = new AccessToken(accessTokenValue, exp, null);
-		
-		
-		RefreshToken refreshToken = null;
-		
-		if (jsonObject.containsKey("refresh_token"))
-			refreshToken = new RefreshToken(JSONObjectUtils.getString(jsonObject, "refresh_token"));
+		RefreshToken refreshToken = RefreshToken.parse(jsonObject);
 		
 		return new AccessTokenResponse(accessToken, refreshToken);
 	}

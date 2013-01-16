@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import net.minidev.json.JSONObject;
+
+
 /**
  * The base abstract class for OAuth 2.0 access and refresh tokens.
  * 
@@ -11,7 +14,7 @@ package com.nimbusds.oauth2.sdk;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-15)
+ * @version $version$ (2014-01-16)
  */
 public abstract class Token extends Identifier {
 
@@ -49,4 +52,25 @@ public abstract class Token extends Identifier {
 	
 		super();
 	}
+
+
+	/**
+	 * Returns the token parameters as a JSON object, as required for the
+	 * composition of an access token response. See OAuth 2.0 (RFC 6749), 
+	 * section 5.1.
+	 *
+	 * <p>Example:
+	 *
+	 * <pre>
+	 * {
+	 *   "access_token"      : "2YotnFZFEjr1zCsicMWpAA",
+	 *   "token_type"        : "example",
+	 *   "expires_in"        : 3600,
+	 *   "example_parameter" : "example_value"
+	 * }
+	 * </pre>
+	 *
+	 * @return The token parameters as a JSON object.
+	 */
+	public abstract JSONObject toJSONObject();
 }
