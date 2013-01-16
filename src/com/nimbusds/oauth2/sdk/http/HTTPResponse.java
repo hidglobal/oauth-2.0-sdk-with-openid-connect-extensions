@@ -24,9 +24,9 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * HTTP response with support for all parameters required to construct an OAuth
- * 2.0 {@link com.nimbusds.oauth2.sdk.Response response message}. This class is
- * thread-safe.
+ * HTTP response with support for all parameters required to construct an 
+ * {@link com.nimbusds.oauth2.sdk.OAuth2Response OAuth 2.0 response message}. 
+ * This class is thread-safe.
  *
  * <p>Supported HTTP status codes:
  *

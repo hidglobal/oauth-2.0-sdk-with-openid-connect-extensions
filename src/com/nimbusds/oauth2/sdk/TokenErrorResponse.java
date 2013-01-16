@@ -80,7 +80,7 @@ public class TokenErrorResponse implements OAuth2ErrorResponse {
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getLegalErrors() {
+	public static Set<OAuth2Error> getStandardErrors() {
 	
 		return Collections.unmodifiableSet(stdErrors);
 	}
