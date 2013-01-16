@@ -21,18 +21,15 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 /**
  * OAuth 2.0 Token error response. This class is immutable.
  *
- * <p>Legal error codes:
+ * <p>Standard token errors:
  *
  * <ul>
- *     <li>OAuth 2.0 errors:
- *         <ul>
- *             <li>{@link OAuth2Error#INVALID_REQUEST}
- *             <li>{@link OAuth2Error#INVALID_CLIENT}
- *             <li>{@link OAuth2Error#INVALID_GRANT}
- *             <li>{@link OAuth2Error#UNAUTHORIZED_CLIENT}
- *             <li>{@link OAuth2Error#UNSUPPORTED_GRANT_TYPE}
- *             <li>{@link OAuth2Error#INVALID_SCOPE}
- *         </ul>
+ *     <li>{@link OAuth2Error#INVALID_REQUEST}
+ *     <li>{@link OAuth2Error#INVALID_CLIENT}
+ *     <li>{@link OAuth2Error#INVALID_GRANT}
+ *     <li>{@link OAuth2Error#UNAUTHORIZED_CLIENT}
+ *     <li>{@link OAuth2Error#UNSUPPORTED_GRANT_TYPE}
+ *     <li>{@link OAuth2Error#INVALID_SCOPE}
  * </ul>
  *
  * <p>Example HTTP response:
@@ -58,33 +55,34 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * @version $version$ (2013-01-16)
  */
 @Immutable
-public final class TokenErrorResponse implements OAuth2ErrorResponse {
+public class TokenErrorResponse implements OAuth2ErrorResponse {
 
 
 	/**
-	 * The legal errors for an OAuth 2.0 Access Token error response.
+	 * The standard OAuth 2.0 errors for an Access Token error response.
 	 */
-	private static final Set<OAuth2Error> legalErrors = new HashSet<OAuth2Error>();
+	private static final Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>();
 	
 	
 	static {
-		legalErrors.add(OAuth2Error.INVALID_REQUEST);
-		legalErrors.add(OAuth2Error.INVALID_CLIENT);
-		legalErrors.add(OAuth2Error.INVALID_GRANT);
-		legalErrors.add(OAuth2Error.UNAUTHORIZED_CLIENT);
-		legalErrors.add(OAuth2Error.UNSUPPORTED_GRANT_TYPE);
-		legalErrors.add(OAuth2Error.INVALID_SCOPE);
+		stdErrors.add(OAuth2Error.INVALID_REQUEST);
+		stdErrors.add(OAuth2Error.INVALID_CLIENT);
+		stdErrors.add(OAuth2Error.INVALID_GRANT);
+		stdErrors.add(OAuth2Error.UNAUTHORIZED_CLIENT);
+		stdErrors.add(OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+		stdErrors.add(OAuth2Error.INVALID_SCOPE);
 	}
 	
 	
 	/**
-	 * Gets the legal OAuth 2.0 errors for an Access Token error response.
+	 * Gets the standard OAuth 2.0 errors for an Access Token error 
+	 * response.
 	 *
-	 * @return The legal errors, as a read-only set.
+	 * @return The standard errors, as a read-only set.
 	 */
 	public static Set<OAuth2Error> getLegalErrors() {
 	
-		return Collections.unmodifiableSet(legalErrors);
+		return Collections.unmodifiableSet(stdErrors);
 	}
 	
 	
@@ -97,20 +95,14 @@ public final class TokenErrorResponse implements OAuth2ErrorResponse {
 	/**
 	 * Creates a new OAuth 2.0 Access Token error response.
 	 *
-	 * @param error The OAuth 2.0 error. Must match one of the 
-	 *              {@link #getLegalErrors legal errors} for a token error
-	 *              response and must not be {@code null}.
-	 *
-	 * @throws IllegalArgumentException If the specified error code is not
-	 *                                  legal for a token error response.
+	 * @param error The OAuth 2.0 error. Should match one of the 
+	 *              {@link #getStandardErrors standard errors} for a token 
+	 *              error response. Must not be {@code null}.
 	 */
 	public TokenErrorResponse(final OAuth2Error error) {
 	
 		if (error == null)
 			throw new IllegalArgumentException("The OAuth 2.0 error must not be null");
-		
-		if (! legalErrors.contains(error))
-			throw new IllegalArgumentException("Illegal OAuth 2.0 error");
 			
 		this.error = error;
 	}
@@ -208,10 +200,6 @@ public final class TokenErrorResponse implements OAuth2ErrorResponse {
 		
 			throw new ParseException("Invalid error URI: " + e.getMessage(), e);
 		}
-		
-		
-		if (! getLegalErrors().contains(error))
-			throw new ParseException("Illegal token response error code: " + error.getValue());
 		
 		return new TokenErrorResponse(error);
 	}

@@ -5,7 +5,8 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * OAuth 2.0 authorisation code. This class is immutable.
+ * OAuth 2.0 authorisation code. A maximum authorization code lifetime of 10 
+ * minutes is recommended. This class is immutable.
  *
  * <p>Related specifications:
  *
