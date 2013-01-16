@@ -26,7 +26,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
  * Content-Type: application/x-www-form-urlencoded;charset=UTF-8
  *
- * grant_type=refresh_token&refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
+ * grant_type=refresh_token&amp;refresh_token=tGzv3JOkF0XG5Qx2TlKWIA
  * </pre>
  *
  * <p>Related specifications:
@@ -36,7 +36,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-14)
+ * @version $version$ (2013-01-16)
  */
 @Immutable
 public final class RefreshTokenRequest extends TokenRequest {
@@ -65,7 +65,8 @@ public final class RefreshTokenRequest extends TokenRequest {
 	 * @param refreshToken The refresh token. Must not be {@code null}.
 	 * @param clientAuth   The client authentication, {@code null} if none.
 	 */
-	public RefreshTokenRequest(final RefreshToken refreshToken, final ClientAuthentication clientAuth) {
+	public RefreshTokenRequest(final RefreshToken refreshToken, 
+		                   final ClientAuthentication clientAuth) {
 	
 		super(GrantType.REFRESH_TOKEN, clientAuth);
 		
@@ -105,7 +106,7 @@ public final class RefreshTokenRequest extends TokenRequest {
 		
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("grant_type", getGrantType().toString());
-		params.put("refresh_token", refreshToken.toString());
+		params.put("refresh_token", refreshToken.getValue());
 		
 		httpRequest.setQuery(URLUtils.serializeParameters(params));
 		
@@ -140,17 +141,19 @@ public final class RefreshTokenRequest extends TokenRequest {
 		
 		
 		// Parse grant type
-		final String grantTypeString = params.get("grant_type");
+		String grantTypeString = params.get("grant_type");
 		
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter");
+
+		GrantType grantType = new GrantType(grantTypeString);
 			
-		if (! grantTypeString.equals(GrantType.REFRESH_TOKEN.toString()))
+		if (! grantType.equals(GrantType.REFRESH_TOKEN))
 			throw new ParseException("Invalid \"grant_type\" parameter: " + grantTypeString);
 		
 		
 		// Parse refresh token
-		final String tokenString = params.get("refresh_token");
+		String tokenString = params.get("refresh_token");
 		
 		if (tokenString == null)
 			throw new ParseException("Missing \"refresh_token\" parameter");
