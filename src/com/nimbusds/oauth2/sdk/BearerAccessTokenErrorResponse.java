@@ -18,9 +18,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * Bearer Token error response. This class is immutable.
+ * Bearer access token error response. Used to indicate that access to a
+ * resource protected by a Bearer access token is denied.
  *
- * <p>Legal error codes:
+ * <p>Standard bearer access token errors:
  *
  * <ul>
  *     <li>{@link OAuth2Error#INVALID_REQUEST}
@@ -40,27 +41,27 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 
- *         6750), section 3.1.
+ *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-17)
  */
 @Immutable
-public class BearerTokenErrorResponse implements OAuth2ErrorResponse {
+public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
 
 
 	/**
-	 * The legal errors for an OAuth 2.0 Bearer Token error response.
+	 * The standard OAuth 2.0 errors for a Bearer access token error 
+	 * response.
 	 */
-	private static final Set<OAuth2Error> legalErrors = new HashSet<OAuth2Error>();
+	private static final Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>();
 	
 	
 	static {
-		legalErrors.add(OAuth2Error.INVALID_REQUEST);
-		legalErrors.add(OAuth2Error.INVALID_TOKEN);
-		legalErrors.add(OAuth2Error.INSUFFICIENT_SCOPE);
+		stdErrors.add(OAuth2Error.INVALID_REQUEST);
+		stdErrors.add(OAuth2Error.INVALID_TOKEN);
+		stdErrors.add(OAuth2Error.INSUFFICIENT_SCOPE);
 	}
 	
 	
@@ -93,13 +94,14 @@ public class BearerTokenErrorResponse implements OAuth2ErrorResponse {
 	
 	
 	/**
-	 * Gets the legal OAuth 2.0 errors for a Bear Token error response.
+	 * Gets the standard OAuth 2.0 errors for a Bearer access token error 
+	 * response.
 	 *
-	 * @return The legal errors, as a read-only set.
+	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getLegalErrors() {
+	public static Set<OAuth2Error> getStandardErrors() {
 	
-		return Collections.unmodifiableSet(legalErrors);
+		return Collections.unmodifiableSet(stdErrors);
 	}
 	
 	
@@ -117,16 +119,20 @@ public class BearerTokenErrorResponse implements OAuth2ErrorResponse {
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 Bearer Token error response.
+	 * Creates a new Bearer access token error response.
 	 *
 	 * @param realm The bearer realm. May be {@code null}.
-	 * @param error The OAuth 2.0 error, {@code null} if the client didn't 
-	 *              provide any authentication information in the original 
-	 *              request.
+	 * @param error The OAuth 2.0 error. Should match one of the 
+	 *              {@link #getStandardErrors standard errors} for a bearer 
+	 *              access token error response. Should be {@code null} if 
+	 *              the client didn't provide any authentication 
+	 *              information in the original request.
 	 */
-	protected BearerTokenErrorResponse(final String realm, final OAuth2Error error) {
+	protected BearerAccessTokenErrorResponse(final String realm, 
+		                                 final OAuth2Error error) {
 	
 		this.realm = realm;
+
 		this.error = error;
 	}
 	
@@ -224,29 +230,23 @@ public class BearerTokenErrorResponse implements OAuth2ErrorResponse {
 		
 		return httpResponse;
 	}
-	
-	
+
+
 	/**
-	 * Parses an OAuth 2.0 Bearer Token error response.
+	 * Parses a Bearer access token error response from the specified HTTP
+	 * response WWW-Authenticate header.
 	 *
-	 * <p>Note: The HTTP status code is not checked for matching the error
-	 * code semantics.
+	 * @param wwwAuth The WWW-Authenticate header value to parse. Must not 
+	 *                be {@code null}.
 	 *
-	 * @param httpResponse The HTTP response to parse. Must not be 
-	 *                     {@code null}.
-	 *
-	 * @throws ParseException If the HTTP response cannot be parsed to a 
-	 *                        valid OAuth 2.0 Bearer Token error response.
+	 * @throws ParseException If the WWW-Authenticate header value couldn't 
+	 *                        be parsed to a valid Bearer access token 
+	 *                        error response.
 	 */
-	public static BearerTokenErrorResponse parse(final HTTPResponse httpResponse)
+	public static BearerAccessTokenErrorResponse parse(final String wwwAuth)
 		throws ParseException {
-		
+
 		// We must have a WWW-Authenticate header set to Bearer .*
-		String wwwAuth = httpResponse.getWWWAuthenticate();
-		
-		if (wwwAuth == null)
-			throw new ParseException("Missing HTTP WWW-Authenticate header");
-		
 		if (! wwwAuth.regionMatches(true, 0, "Bearer", 0, "Bearer".length()))
 			throw new ParseException("WWW-Authenticate scheme must be OAuth 2.0 Bearer");
 		
@@ -300,6 +300,31 @@ public class BearerTokenErrorResponse implements OAuth2ErrorResponse {
 		}
 			
 		
-		return new BearerTokenErrorResponse(realm, error);
+		return new BearerAccessTokenErrorResponse(realm, error);
+	}
+	
+	
+	/**
+	 * Parses a Bearer access token error response from the specified HTTP
+	 * response.
+	 *
+	 * <p>Note: The HTTP status code is not checked for matching the error
+	 * code semantics.
+	 *
+	 * @param httpResponse The HTTP response to parse. Must not be 
+	 *                     {@code null}.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a 
+	 *                        valid Bearer access token error response.
+	 */
+	public static BearerAccessTokenErrorResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+		
+		String wwwAuth = httpResponse.getWWWAuthenticate();
+		
+		if (wwwAuth == null)
+			throw new ParseException("Missing HTTP WWW-Authenticate header");
+
+		return parse(wwwAuth);
 	}
 }
