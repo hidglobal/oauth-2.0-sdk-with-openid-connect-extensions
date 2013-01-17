@@ -55,7 +55,9 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * @version $version$ (2013-01-16)
  */
 @Immutable
-public class AuthorizationErrorResponse implements OAuth2ErrorResponse {
+public class AuthorizationErrorResponse
+	extends AuthorizationResponse
+	implements OAuth2ErrorResponse {
 
 
 	/**

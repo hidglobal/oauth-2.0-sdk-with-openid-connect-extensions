@@ -52,10 +52,12 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-17)
  */
 @Immutable
-public class TokenErrorResponse implements OAuth2ErrorResponse {
+public class TokenErrorResponse 
+	extends TokenResponse
+	implements OAuth2ErrorResponse {
 
 
 	/**
