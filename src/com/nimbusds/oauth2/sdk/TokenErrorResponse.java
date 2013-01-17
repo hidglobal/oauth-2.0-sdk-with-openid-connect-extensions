@@ -161,8 +161,8 @@ public class TokenErrorResponse
 	 * @param httpResponse The HTTP response to parse. Must not be 
 	 *                     {@code null}.
 	 *
-	 * @throws ParseException If the HTTP response cannot be parsed to a 
-	 *                        valid OAuth 2.0 Token Error response.
+	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 *                        OAuth 2.0 Token Error response.
 	 */
 	public static TokenErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {

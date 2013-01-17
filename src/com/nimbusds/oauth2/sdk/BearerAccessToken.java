@@ -149,7 +149,7 @@ public final class BearerAccessToken extends AccessToken {
 	 * @return The bearer access token.
 	 *
 	 * @throws ParseException If the JSON object couldn't be parsed to a
-	 *                        valid bearer access token.
+	 *                        bearer access token.
 	 */
 	public static BearerAccessToken parse(final JSONObject jsonObject)
 		throws ParseException {
@@ -192,8 +192,7 @@ public final class BearerAccessToken extends AccessToken {
 	 * @return The bearer access token.
 	 *
 	 * @throws ParseException If the HTTP Authorization header value 
-	 *                        couldn't be parsed to a valid bearer access 
-	 *                        token.
+	 *                        couldn't be parsed to a bearer access token.
 	 */
 	public static BearerAccessToken parse(final String header)
 		throws ParseException {

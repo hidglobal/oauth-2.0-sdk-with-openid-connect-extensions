@@ -283,8 +283,8 @@ public class AuthorizationRequest implements OAuth2Request {
 	 *
 	 * @return The parsed authorisation request.
 	 *
-	 * @throws ParseException If the query string couldn't be parsed to a 
-	 *                        valid authorisation request.
+	 * @throws ParseException If the query string couldn't be parsed to an 
+	 *                        authorisation request.
 	 */
 	public static AuthorizationRequest parse(final String query)
 		throws ParseException {
@@ -373,8 +373,8 @@ public class AuthorizationRequest implements OAuth2Request {
 	 *
 	 * @return The authorisation request.
 	 *
-	 * @throws ParseException If the HTTP request couldn't be parsed to a 
-	 *                        valid authorisation request.
+	 * @throws ParseException If the HTTP request couldn't be parsed to an 
+	 *                        authorisation request.
 	 */
 	public static AuthorizationRequest parse(final HTTPRequest httpRequest) 
 		throws ParseException {

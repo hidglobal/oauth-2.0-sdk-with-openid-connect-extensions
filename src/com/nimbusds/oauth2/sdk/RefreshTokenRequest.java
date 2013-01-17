@@ -125,7 +125,7 @@ public final class RefreshTokenRequest extends TokenRequest {
 	 * @return The refresh token request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
-	 *                        valid refresh token request.
+	 *                        refresh token request.
 	 */
 	public static RefreshTokenRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {

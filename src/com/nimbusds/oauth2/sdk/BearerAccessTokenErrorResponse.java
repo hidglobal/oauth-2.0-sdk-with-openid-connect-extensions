@@ -240,8 +240,8 @@ public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
 	 *                be {@code null}.
 	 *
 	 * @throws ParseException If the WWW-Authenticate header value couldn't 
-	 *                        be parsed to a valid Bearer access token 
-	 *                        error response.
+	 *                        be parsed to a Bearer access token error 
+	 *                        response.
 	 */
 	public static BearerAccessTokenErrorResponse parse(final String wwwAuth)
 		throws ParseException {
@@ -315,7 +315,7 @@ public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
 	 *                     {@code null}.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to a 
-	 *                        valid Bearer access token error response.
+	 *                        Bearer access token error response.
 	 */
 	public static BearerAccessTokenErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {

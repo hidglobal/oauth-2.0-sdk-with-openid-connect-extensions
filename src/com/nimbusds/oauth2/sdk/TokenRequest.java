@@ -98,7 +98,7 @@ public abstract class TokenRequest implements OAuth2Request {
 	 * @return The token request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
-	 *                        valid token request.
+	 *                        token request.
 	 */
 	public static TokenRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {

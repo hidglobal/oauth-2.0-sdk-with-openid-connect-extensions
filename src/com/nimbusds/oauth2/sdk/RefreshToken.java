@@ -80,7 +80,7 @@ public final class RefreshToken extends Token {
 	 * @return The refresh token, {@code null} if not found.
 	 *
 	 * @throws ParseException If the JSON object couldn't be parsed to a
-	 *                        valid refresh token.
+	 *                        refresh token.
 	 */
 	public static RefreshToken parse(final JSONObject jsonObject)
 		throws ParseException {

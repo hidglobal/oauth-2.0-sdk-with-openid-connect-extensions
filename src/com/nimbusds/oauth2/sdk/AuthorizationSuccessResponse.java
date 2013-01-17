@@ -339,8 +339,8 @@ public class AuthorizationSuccessResponse
 	 *
 	 * @return The authorisation success response.
 	 *
-	 * @throws ParseException If no valid authorisation response parameters
-	 *                        were found in the URL.
+	 * @throws ParseException If no authorisation response parameters were
+	 *                        found in the URL.
 	 */
 	public static AuthorizationSuccessResponse parse(final URL url)
 		throws ParseException {

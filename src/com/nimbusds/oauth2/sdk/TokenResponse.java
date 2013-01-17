@@ -30,7 +30,7 @@ public abstract class TokenResponse implements OAuth2Response {
 	 * @return The access token or token error response.
 	 *
 	 * @throws ParseException If the JSON object couldn't be parsed to a
-	 *                        valid token response.
+	 *                        token response.
 	 */
 	public static TokenResponse parse(JSONObject jsonObject)
 		throws ParseException{
@@ -47,7 +47,7 @@ public abstract class TokenResponse implements OAuth2Response {
 	 * @return The access token or token error response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to a 
-	 *                        valid token response.
+	 *                        token response.
 	 */
 	public static TokenResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {

@@ -93,7 +93,7 @@ public final class ClientSecretJWT extends JWTClientAuthentication {
 	 * @return The client secret JSON Web Token (JWT) authentication.
 	 *
 	 * @throws ParseException If the parameters map couldn't be parsed to a 
-	 *                        valid client secret JSON Web Token (JWT) 
+	 *                        client secret JSON Web Token (JWT) 
 	 *                        authentication.
 	 */
 	public static ClientSecretJWT parse(final Map<String,String> params)
@@ -127,8 +127,8 @@ public final class ClientSecretJWT extends JWTClientAuthentication {
 	 *
 	 * @return The client secret JSON Web Token (JWT) authentication.
 	 *
-	 * @throws ParseException If the parameters string couldn't be parsed to
-	 *                        a valid client secret JSON Web Token (JWT) 
+	 * @throws ParseException If the parameters string couldn't be parsed 
+	 *                        to a client secret JSON Web Token (JWT) 
 	 *                        authentication.
 	 */
 	public static ClientSecretJWT parse(final String paramsString)
@@ -155,7 +155,7 @@ public final class ClientSecretJWT extends JWTClientAuthentication {
 	 * @return The client secret JSON Web Token (JWT) authentication.
 	 *
 	 * @throws ParseException If the HTTP request header couldn't be parsed
-	 *                        to a valid client secret JSON Web Token (JWT) 
+	 *                        to a client secret JSON Web Token (JWT) 
 	 *                        authentication.
 	 */
 	public static ClientSecretJWT parse(final HTTPRequest httpRequest)

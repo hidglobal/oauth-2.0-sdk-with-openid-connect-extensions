@@ -220,8 +220,8 @@ public abstract class AccessToken extends Token {
 	 *
 	 * @return The access token.
 	 *
-	 * @throws ParseException If the JSON object couldn't be parsed to a
-	 *                        valid access token.
+	 * @throws ParseException If the JSON object couldn't be parsed to an
+	 *                        access token.
 	 */
 	public static AccessToken parse(final JSONObject jsonObject)
 		throws ParseException {
@@ -240,7 +240,7 @@ public abstract class AccessToken extends Token {
 	 * @return The access token.
 	 *
 	 * @throws ParseException If the HTTP Authorization header value 
-	 *                        couldn't be parsed to a valid access token.
+	 *                        couldn't be parsed to an access token.
 	 */
 	public static AccessToken parse(final String header)
 		throws ParseException {

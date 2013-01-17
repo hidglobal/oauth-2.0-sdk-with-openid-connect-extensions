@@ -155,7 +155,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	 * @return The client secret post authentication.
 	 *
 	 * @throws ParseException If the parameters map couldn't be parsed to a 
-	 *                        valid client secret post authentication.
+	 *                        client secret post authentication.
 	 */
 	public static ClientSecretPost parse(final Map<String,String> params)
 		throws ParseException {
@@ -186,7 +186,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	 * @return The client secret post authentication.
 	 *
 	 * @throws ParseException If the parameters string couldn't be parsed to
-	 *                        a valid client secret post authentication.
+	 *                        a client secret post authentication.
 	 */
 	public static ClientSecretPost parse(final String paramsString)
 		throws ParseException {

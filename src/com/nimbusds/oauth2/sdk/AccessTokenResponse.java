@@ -150,8 +150,8 @@ public class AccessTokenResponse
 	 *
 	 * @return The access token response.
 	 *
-	 * @throws ParseException If the JSON object couldn't be parsed to a
-	 *                        valid access token response.
+	 * @throws ParseException If the JSON object couldn't be parsed to an
+	 *                        access token response.
 	 */
 	public static AccessTokenResponse parse(final JSONObject jsonObject)
 		throws ParseException {
@@ -171,8 +171,8 @@ public class AccessTokenResponse
 	 *
 	 * @return The access token response.
 	 *
-	 * @throws ParseException If the HTTP response couldn't be parsed to a 
-	 *                        valid access token response.
+	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 *                        access token response.
 	 */
 	public static AccessTokenResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {

@@ -113,7 +113,7 @@ public final class PrivateKeyJWT extends JWTClientAuthentication {
 	 * @return The private key JSON Web Token (JWT) authentication.
 	 *
 	 * @throws ParseException If the parameters map couldn't be parsed to a 
-	 *                        valid private key JSON Web Token (JWT) 
+	 *                        private key JSON Web Token (JWT) 
 	 *                        authentication.
 	 */
 	public static PrivateKeyJWT parse(final Map<String,String> params)
@@ -147,8 +147,8 @@ public final class PrivateKeyJWT extends JWTClientAuthentication {
 	 *
 	 * @return The private key JSON Web Token (JWT) authentication.
 	 *
-	 * @throws ParseException If the parameters string couldn't be parsed to
-	 *                        a valid private key JSON Web Token (JWT) 
+	 * @throws ParseException If the parameters string couldn't be parsed 
+	 *                        to a private key JSON Web Token (JWT) 
 	 *                        authentication.
 	 */
 	public static PrivateKeyJWT parse(final String paramsString)
@@ -175,7 +175,7 @@ public final class PrivateKeyJWT extends JWTClientAuthentication {
 	 * @return The private key JSON Web Token (JWT) authentication.
 	 *
 	 * @throws ParseException If the HTTP request header couldn't be parsed
-	 *                        to a valid private key JSON Web Token (JWT) 
+	 *                        to a private key JSON Web Token (JWT) 
 	 *                        authentication.
 	 */
 	public static PrivateKeyJWT parse(final HTTPRequest httpRequest)

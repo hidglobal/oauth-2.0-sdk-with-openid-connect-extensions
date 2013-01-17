@@ -118,7 +118,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 * @return The client authentication claims.
 	 *
 	 * @throws ParseException If the client assertion JSON Web Token (JWT)
-	 *                        doesn't contain a valid client authentication
+	 *                        doesn't contain a client authentication
 	 *                        claims set.
 	 */
 	public ClientAuthenticationClaimsSet getClientAuthenticationClaims()

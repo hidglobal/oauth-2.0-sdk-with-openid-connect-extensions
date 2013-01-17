@@ -365,8 +365,8 @@ public final class AccessTokenRequest extends TokenRequest {
 	 *
 	 * @return The access token request.
 	 *
-	 * @throws ParseException If the HTTP request couldn't be parsed to a 
-	 *                        valid access token request.
+	 * @throws ParseException If the HTTP request couldn't be parsed to an 
+	 *                        access token request.
 	 */
 	public static AccessTokenRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {

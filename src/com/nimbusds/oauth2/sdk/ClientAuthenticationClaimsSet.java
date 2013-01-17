@@ -343,7 +343,7 @@ public class ClientAuthenticationClaimsSet {
 	 *
 	 * @return The client authentication claims set.
 	 *
-	 * @throws ParseException If the JSON object cannot be parsed to a 
+	 * @throws ParseException If the JSON object couldn't be parsed to a 
 	 *                        client authentication claims set.
 	 */
 	public static ClientAuthenticationClaimsSet parse(final JSONObject jsonObject)
@@ -408,7 +408,7 @@ public class ClientAuthenticationClaimsSet {
 	 *
 	 * @return The client authentication claims set.
 	 *
-	 * @throws ParseException If the JWT claims set cannot be parsed to a 
+	 * @throws ParseException If the JWT claims set couldn't be parsed to a 
 	 *                        client authentication claims set.
 	 */
 	public static ClientAuthenticationClaimsSet parse(final ReadOnlyJWTClaimsSet jwtClaimsSet)

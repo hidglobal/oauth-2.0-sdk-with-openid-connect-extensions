@@ -144,8 +144,8 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 *
 	 * @return The client secret basic authentication.
 	 *
-	 * @throws ParseException If the header couldn't be parsed to a valid
-	 *                        client secret basic authentication.
+	 * @throws ParseException If the header couldn't be parsed to a client
+	 *                        secret basic authentication.
 	 */
 	public static ClientSecretBasic parse(final String header)
 		throws ParseException {
@@ -192,7 +192,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 * @return The client secret basic authentication.
 	 *
 	 * @throws ParseException If the HTTP Authorization header couldn't be 
-	 *                        parsed to a valid client secret basic 
+	 *                        parsed to a client secret basic 
 	 *                        authentication.
 	 */
 	public static ClientSecretBasic parse(final HTTPRequest httpRequest)

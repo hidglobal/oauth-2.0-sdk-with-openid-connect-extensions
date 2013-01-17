@@ -29,8 +29,8 @@ public abstract class AuthorizationResponse implements OAuth2Response {
 	 *
 	 * @return The authorisation success or error response.
 	 *
-	 * @throws ParseException If no valid authorisation response parameters
-	 *                        were found in the URL.
+	 * @throws ParseException If no authorisation response parameters were
+	 *                        found in the URL.
 	 */
 	public static AuthorizationResponse parse(final URL url)
 		throws ParseException {
