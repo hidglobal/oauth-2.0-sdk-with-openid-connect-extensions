@@ -1,8 +1,6 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.io.UnsupportedEncodingException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
