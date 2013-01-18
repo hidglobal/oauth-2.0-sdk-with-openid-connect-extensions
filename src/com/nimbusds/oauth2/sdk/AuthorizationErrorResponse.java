@@ -5,9 +5,9 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -43,8 +43,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * HTTP/1.1 302 Found
  * Location: https://client.example.com/cb?
  * error=invalid_request
- * &error_description=the%20request%20is%20not%20valid%20or%20malformed
- * &state=af0ifjsldkj
+ * &amp;error_description=the%20request%20is%20not%20valid%20or%20malformed
+ * &amp;state=af0ifjsldkj
  * </pre>
  *
  * <p>Related specifications:
@@ -54,7 +54,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
 public class AuthorizationErrorResponse
@@ -92,12 +92,6 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * The redirect URI.
-	 */
-	private final URL redirectURI;
-	
-	 
-	/**
 	 * The error.
 	 */
 	private final OAuth2Error error;
@@ -111,15 +105,9 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * The optional state parameter to be echoed back to the client.
-	 */
-	private final State state;
-	
-	
-	/**
 	 * Creates a new authorisation error response.
 	 *
-	 * @param redirectURI The redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param error       The OAuth 2.0 error. Should match one of the 
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    authorisation error response. Must not be 
@@ -127,22 +115,14 @@ public class AuthorizationErrorResponse
 	 * @param rts         The response type set, used to determine the
 	 *                    redirect URL composition. If unknown
 	 *                    {@code null}.
-	 * @param state       The state parameter to be echoed back to the 
-	 *                    client, {@code null} if not specified.
-	 *
-	 * @throws IllegalArgumentException If the specified error is not legal
-	 *                                  for an authorisation error 
-	 *                                  response.
+	 * @param state       The state, {@code null} if not requested.
 	 */
 	public AuthorizationErrorResponse(final URL redirectURI,
 	                                  final OAuth2Error error,
 					  final ResponseTypeSet rts,
 					  final State state) {
 					  
-		if (redirectURI == null)
-			throw new IllegalArgumentException("The redirect URI must not be null");
-		
-		this.redirectURI = redirectURI;
+		super(redirectURI, state);
 		
 		if (error == null)
 			throw new IllegalArgumentException("The error code must not be null");
@@ -150,20 +130,6 @@ public class AuthorizationErrorResponse
 		this.error = error;
 		
 		this.rts = rts;
-		
-		this.state = state;
-	}
-	
-	
-	/**
-	 * Gets the base redirect URI.
-	 *
-	 * @return The base redirect URI (without the appended error response 
-	 *         parameters).
-	 */
-	public URL getRedirectURI() {
-	
-		return redirectURI;
 	}
 	
 
@@ -183,61 +149,40 @@ public class AuthorizationErrorResponse
 	
 		return rts;
 	}
-	
-	
-	/**
-	 * Gets the state parameter to be echoed back to the client.
-	 *
-	 * @return The state, {@code null} if not specified.
-	 */
-	public State getState() {
-	
-		return state;
+
+
+	@Override
+	public Map<String,String> toParameters() {
+
+		Map<String,String> params = new HashMap<String,String>();
+
+		params.put("error", error.getValue());
+
+		if (error.getDescription() != null)
+			params.put("error_description", error.getDescription());
+
+		if (error.getURI() != null)
+			params.put("error_uri", error.getURI().toString());
+
+		if (getState() != null)
+			params.put("state", getState().getValue());
+
+		return params;
 	}
 	
 	
-	/**
-	 * Returns the redirect URL with the appended error response 
-	 * parameters.
-	 *
-	 * @return The redirect URL with the appended error response 
-	 *         parameters.
-	 *
-	 * @throws SerializeException If the redirect URL couldn't be composed.
-	 */
-	public URL toURL()
+	@Override
+	public URL toURI()
 		throws SerializeException {
 		
-		StringBuilder sb = new StringBuilder(redirectURI.toString());
+		StringBuilder sb = new StringBuilder(getRedirectURI().toString());
 		
 		if (rts == null || rts.contains(ResponseType.TOKEN))
 			sb.append("#");
 		else
 			sb.append("?");
-		
-		try {
-			sb.append("error=");
-			sb.append(URLEncoder.encode(error.getValue(), "utf-8"));
 
-			if (error.getDescription() != null) {
-				sb.append("&error_description=");
-				sb.append(URLEncoder.encode(error.getDescription(), "utf-8"));
-			}
-			
-			if (error.getURI() != null) {
-				sb.append("&error_uri=");
-				sb.append(URLEncoder.encode(error.getURI().toString(), "utf-8"));
-			}
-
-			if (state != null) {
-				sb.append("&state=");
-				sb.append(URLEncoder.encode(state.toString(), "utf-8"));
-			}
-			
-		} catch (UnsupportedEncodingException e) {
-		
-			throw new SerializeException("Couldn't serialize redirect URL: " + e.getMessage(), e);
-		}
+		sb.append(URLUtils.serializeParameters(toParameters()));
 		
 		try {
 			return new URL(sb.toString());
@@ -247,43 +192,24 @@ public class AuthorizationErrorResponse
 			throw new SerializeException("Couldn't serialize redirect URL: " + e.getMessage(), e);
 		}
 	}
-	
-	
-	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
-	
-		HTTPResponse response = new HTTPResponse(HTTPResponse.SC_FOUND);
-		
-		response.setLocation(toURL());
-		
-		return response;
-	}
-	
-	
+
+
 	/**
 	 * Parses an authorisation error response.
 	 *
-	 * @param url The redirect URL to parse. Must not be {@code null}.
+	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param params      The response parameters to parse. Must not be 
+	 *                    {@code null}.
 	 *
-	 * @throws ParseException If the redirect URL couldn't be parsed to an
+	 * @return The authorisation error response.
+	 *
+	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation error response.
 	 */
-	public static AuthorizationErrorResponse parse(final URL url)
+	public static AuthorizationErrorResponse parse(final URL redirectURI, 
+		                                       final Map<String,String> params)
 		throws ParseException {
-		
-		Map<String,String> params = null;
-		
-		if (url.getRef() != null)
-			params = URLUtils.parseParameters(url.getRef());
 
-		else if (url.getQuery() != null)
-			params = URLUtils.parseParameters(url.getQuery());
-
-		else
-			throw new ParseException("Missing URL reference or query string");
-
-				
 		// Parse the error
 		if (StringUtils.isUndefined(params.get("error")))
 			throw new ParseException("Missing error code");
@@ -315,15 +241,66 @@ public class AuthorizationErrorResponse
 		// State
 		State state = State.parse(params.get("state"));
 		
-		return new AuthorizationErrorResponse(URLUtils.getBaseURL(url), error, null, state);
+		return new AuthorizationErrorResponse(redirectURI, error, null, state);
 	}
 	
 	
 	/**
 	 * Parses an authorisation error response.
 	 *
+	 * <p>Example URI:
+	 *
+	 * <pre>
+	 * https://client.example.com/cb?
+	 * error=invalid_request
+	 * &amp;error_description=the%20request%20is%20not%20valid%20or%20malformed
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param uri The URI to parse. Can be absolute or relative. Must not 
+	 *            be {@code null}.
+	 *
+	 * @return The authorisation error response.
+	 *
+	 * @throws ParseException If the redirect URI couldn't be parsed to an
+	 *                        authorisation error response.
+	 */
+	public static AuthorizationErrorResponse parse(final URL uri)
+		throws ParseException {
+		
+		Map<String,String> params = null;
+		
+		if (uri.getRef() != null)
+			params = URLUtils.parseParameters(uri.getRef());
+
+		else if (uri.getQuery() != null)
+			params = URLUtils.parseParameters(uri.getQuery());
+
+		else
+			throw new ParseException("Missing URL fragment or query string");
+
+		
+		return parse(URLUtils.getBaseURL(uri), params);
+	}
+	
+	
+	/**
+	 * Parses an authorisation error response.
+	 *
+	 * <p>Example HTTP response:
+	 *
+	 * <pre>
+	 * HTTP/1.1 302 Found
+	 * Location: https://client.example.com/cb?
+	 * error=invalid_request
+	 * &amp;error_description=the%20request%20is%20not%20valid%20or%20malformed
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
 	 * @param httpResponse The HTTP response to parse. Must not be 
 	 *                     {@code null}.
+	 *
+	 * @return The authorisation error response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to an 
 	 *                        authorisation error response.
@@ -332,7 +309,8 @@ public class AuthorizationErrorResponse
 		throws ParseException {
 		
 		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)
-			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + httpResponse.getStatusCode());
+			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + 
+			                         httpResponse.getStatusCode());
 		
 		URL location = httpResponse.getLocation();
 		

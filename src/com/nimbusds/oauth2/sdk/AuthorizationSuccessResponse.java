@@ -5,8 +5,6 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +30,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * <pre>
  * HTTP/1.1 302 Found
- * https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
+ * Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
  * </pre>
  *
  * <p>Related specifications:
@@ -48,12 +46,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 public class AuthorizationSuccessResponse 
 	extends AuthorizationResponse 
 	implements OAuth2SuccessResponse {
-
-
-	/**
-	 * The redirect URI.
-	 */
-	private final URL redirectURI;
 	
 	
 	/**
@@ -66,20 +58,13 @@ public class AuthorizationSuccessResponse
 	 * The access token, if requested.
 	 */
 	private final AccessToken accessToken;
-	
-	
-	/**
-	 * Optional state, to be echoed back to the client.
-	 */
-	private final State state;
 
 
 	/**
 	 * Creates a new authorisation success response in the code flow 
 	 * (authorisation code grant).
 	 *
-	 * @param redirectURI The requested redirect URI. Must not be 
-	 *                    {@code null}.
+	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param code        The authorisation code. Must not be {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
@@ -98,8 +83,7 @@ public class AuthorizationSuccessResponse
 	 * Creates a new authorisation success response in the implicit flow 
 	 * (implicit grant).
 	 *
-	 * @param redirectURI The requested redirect URI. Must not be 
-	 *                    {@code null}.
+	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param accessToken The access token. Must not be {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
@@ -117,8 +101,7 @@ public class AuthorizationSuccessResponse
 	/**
 	 * Creates a new authorisation success response.
 	 *
-	 * @param redirectURI The requested redirect URI. Must not be 
-	 *                    {@code null}.
+	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param code        The authorisation code, {@code null} if not 
 	 *                    requested.
 	 * @param accessToken The access token, {@code null} if not requested.
@@ -129,27 +112,11 @@ public class AuthorizationSuccessResponse
 				            final AccessToken accessToken,
 				            final State state) {
 	
-		if (redirectURI == null)
-			throw new IllegalArgumentException("The redirect URI must not be null");
-		
-		this.redirectURI = redirectURI;
+		super(redirectURI, state);
 		
 		this.code = code;
 		
 		this.accessToken = accessToken;
-		
-		this.state = state;
-	}
-	
-	
-	/**
-	 * Gets the requested redirect URI.
-	 *
-	 * @return The requested redirect URI.
-	 */
-	public URL getRedirectURI() {
-	
-		return redirectURI;
 	}
 	
 	
@@ -192,36 +159,12 @@ public class AuthorizationSuccessResponse
 	
 		return accessToken;
 	}
-	
-	
-	/**
-	 * Gets the optional state.
-	 *
-	 * @return The state, {@code null} if not requested.
-	 */
-	public State getState() {
-	
-		return state;
-	}
 
 
-	/**
-	 * Returns the parameters of this authorisation success response.
-	 *
-	 * <p>Example:
-	 *
-	 * <pre>
-	 * access_token = 2YotnFZFEjr1zCsicMWpAA
-	 * state = xyz
-	 * token_type = example
-	 * expires_in = 3600
-	 * </pre>
-	 *
-	 * @return The parameters as a map.
-	 */
-	public Map<String,Object> toParameters() {
+	@Override
+	public Map<String,String> toParameters() {
 
-		Map<String,Object> params = new HashMap<String,Object>();
+		Map<String,String> params = new HashMap<String,String>();
 
 		if (code != null)
 			params.put("code", code.getValue());
@@ -230,44 +173,31 @@ public class AuthorizationSuccessResponse
 			
 			for (Map.Entry<String,Object> entry: accessToken.toJSONObject().entrySet()) {
 
-				params.put(entry.getKey(), entry.getValue());
+				params.put(entry.getKey(), entry.getValue().toString());
 			}
 		}
 			
-		if (state != null)
-			params.put("state", state.getValue());
+		if (getState() != null)
+			params.put("state", getState().getValue());
 
 		return params;
 	}
 	
 	
 	/**
-	 * Returns the URL representation (redirect URI + fragment / query 
-	 * string) of this authorisation success response.
-	 *
-	 * <p>Example:
-	 *
-	 * <pre>
-	 * http://example.com/cb#access_token=2YotnFZFEjr1zCsicMWpAA
-	 * &amp;state=xyz
-	 * &amp;token_type=example
-	 * &amp;expires_in=3600
-	 * </pre>
-	 *
-	 * @return The URL representation of this authorisation response.
+	 * {@inheritDoc}
 	 *
 	 * @throws IllegalStateException If there is no authorisation code or 
 	 *                               access token to serialise.
-	 * @throws SerializeException    If this response couldn't be 
-	 *                               serialised to a URL.
 	 */
-	public URL toURL()
+	@Override
+	public URL toURI()
 		throws SerializeException {
 	
 		if (code == null && accessToken == null)
 			throw new IllegalStateException("Missing code or access token");
 	
-		StringBuilder sb = new StringBuilder(redirectURI.toString());
+		StringBuilder sb = new StringBuilder(getRedirectURI().toString());
 		
 		// Fragment or query string?
 		if (accessToken != null)
@@ -275,122 +205,36 @@ public class AuthorizationSuccessResponse
 		else
 			sb.append('?');
 		
+		
+		sb.append(URLUtils.serializeParameters(toParameters()));
+
+
 		try {
-			boolean delimit = false;
-
-			for (Map.Entry<String,Object> param: toParameters) {
-
-				if (delimit)
-					sb.append('&');
-
-				delimit = true;
-
-				sb.append(param.getKey());
-				sb.append('=');
-
-				Object value = entry.getValue();
-
-				if (value == null)
-					break;
-
-				else if (value instanceof String)
-					sb.append(URLEncoder.encode((String)value, "utf-8"));
-
-				else
-					sb.append(value.toString());
-			}
-			
 			return new URL(sb.toString());
-		
-		} catch (UnsupportedEncodingException e) {
-		
-			// UTF-8 should always be supported
-			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
 			
 		} catch (MalformedURLException e) {
 		
 			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
 		}
 	}
-	
-	
+
+
 	/**
-	 * Returns the HTTP response for this authorisation success response.
+	 * Parses an authorisation success response.
 	 *
-	 * <p>Example:
-	 *
-	 * <pre>
-	 * HTTP/1.1 302 Found
-	 * Location: http://example.com/cb#access_token=2YotnFZFEjr1zCsicMWpAA
-	 * &amp;state=xyz
-	 * &amp;token_type=example
-	 * &amp;expires_in=3600
-	 * </pre>
-	 *
-	 * @return The HTTP response matching this authorisation response.
-	 *
-	 * @throws SerializeException If the response couldn't be serialised to
-	 *                            an HTTP response.
-	 */
-	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
-	
-		HTTPResponse response = new HTTPResponse(HTTPResponse.SC_FOUND);
-		
-		response.setLocation(toURL());
-		
-		return response;
-	}
-	
-	
-	/**
-	 * Parses an authorisation success response from the specified absolute
-	 * or relative URL.
-	 *
-	 * <p>Use a relative URL if the host, port and path details are not
-	 * known:
-	 *
-	 * <pre>
-	 * AuthorizationSuccessResponse.parse(new URL("http://?code=Qcb0Orv1...&state=af0ifjsldkj"));
-	 * </pre>
-	 *
-	 * @param url The URL to parse. May be absolute or relative, with a
-	 *            fragment or query string containing the authorisation
-	 *            response parameters. Must not be {@code null}.
+	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param params      The response parameters to parse. Must not be 
+	 *                    {@code null}.
 	 *
 	 * @return The authorisation success response.
 	 *
-	 * @throws ParseException If no authorisation response parameters were
-	 *                        found in the URL.
+	 * @throws ParseException If the parameters couldn't be parsed to an
+	 *                        authorisation success response.
 	 */
-	public static AuthorizationSuccessResponse parse(final URL url)
+	public static AuthorizationSuccessResponse parse(final URL redirectURI, 
+		                                         final Map<String,String> params)
 		throws ParseException {
-		
-		String paramString = null;
-		
-		try {
-			if (url.getQuery() != null)
-				paramString = URLDecoder.decode(url.getQuery(), "utf-8");
-				
-			else if (url.getRef() != null)
-				paramString = URLDecoder.decode(url.getRef(), "utf-8");
-			else
-				throw new ParseException("Missing authorization response parameters");
-			
-		} catch (UnsupportedEncodingException e) {
-		
-			// UTF-8 should always be supported
-			throw new ParseException("Couldn't decode URL: " + e.getMessage(), e);
-		}
-			
-		
-		Map<String,String> params = URLUtils.parseParameters(paramString);
-		
-		if (params == null)
-			throw new ParseException("Missing or invalid authorization response parameters");
-		
-		
+	
 		// Parse code parameter
 		
 		AuthorizationCode code = null;
@@ -415,7 +259,83 @@ public class AuthorizationSuccessResponse
 		
 		// Parse optional state parameter
 		State state = State.parse(params.get("state"));
+
 		
-		return new AuthorizationSuccessResponse(url, code, accessToken, state);
+		return new AuthorizationSuccessResponse(redirectURI, code, accessToken, state);
+	}
+	
+	
+	/**
+	 * Parses an authorisation success response.
+	 *
+	 * <p>Example URI:
+	 *
+	 * <pre>
+	 * https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
+	 * </pre>
+	 *
+	 * @param uri The URI to parse. Can be absolute or relative, with a
+	 *            fragment or query string containing the authorisation
+	 *            response parameters. Must not be {@code null}.
+	 *
+	 * @return The authorisation success response.
+	 *
+	 * @throws ParseException If the redirect URI couldn't be parsed to an
+	 *                        authorisation success response.
+	 */
+	public static AuthorizationSuccessResponse parse(final URL uri)
+		throws ParseException {
+		
+		String paramString = null;
+		
+		if (uri.getQuery() != null)
+			paramString = uri.getQuery();
+				
+		else if (uri.getRef() != null)
+			paramString = uri.getRef();
+		
+		else
+			throw new ParseException("Missing authorization response parameters");
+		
+		Map<String,String> params = URLUtils.parseParameters(paramString);
+
+		if (params == null)
+			throw new ParseException("Missing or invalid authorization response parameters");
+
+		return parse(URLUtils.getBaseURL(uri), params);
+	}
+
+
+	/**
+	 * Parses an authorisation success response.
+	 *
+	 * <p>Example HTTP response:
+	 *
+	 * <pre>
+	 * HTTP/1.1 302 Found
+	 * Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
+	 * </pre>
+	 *
+	 * @param httpResponse The HTTP response to parse. Must not be 
+	 *                     {@code null}.
+	 *
+	 * @return The authorisation success response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 *                        authorisation success response.
+	 */
+	public static AuthorizationSuccessResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+		
+		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)
+			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + 
+			                         httpResponse.getStatusCode());
+		
+		URL location = httpResponse.getLocation();
+		
+		if (location == null)
+			throw new ParseException("Missing redirect URL / HTTP Location header");
+		
+		return parse(location);
 	}
 }
