@@ -72,116 +72,6 @@ public final class OAuth2Error extends Identifier {
 	 */
 	public static final OAuth2Error TEMPORARILY_UNAVAILABLE =
 		new OAuth2Error("temporarily_unavailable", "The authorization server is temporarily unavailable");
-
-	
-	// Client registration
-	
-	/**
-	 * The value of {@code type} is invalid or not supported.
-	 */
-	public static final OAuth2Error INVALID_TYPE =
-		new OAuth2Error("invalid_type", "Invalid or unsupported client registration type");
-	
-	
-	/**
-	 * The value of {@code client_id} is invalid. 
-	 */
-	public static final OAuth2Error INVALID_CLIENT_ID =
-		new OAuth2Error("invalid_client_id", "Invalid client identifier");
-	
-	
-	/**
-	 * The {@code client_secret} provided for a {@code client_update} or
-	 * {@code secret_rotate} is not valid for the provided 
-	 * {@code client_id}.
-	 */
-	public static final OAuth2Error INVALID_CLIENT_SECRET =
-		new OAuth2Error("invalid_client_secret", "Invalid client secret");
-	
-	
-	/**
-	 * The value of one of the configuration parameters is invalid.
-	 */
-	public static final OAuth2Error INVALID_CONFIGURATION_PARAMETER =
-		new OAuth2Error("invalid_configuration_parameter", "Invalid configuration parameter");
-	
-	
-	// Authorisation
-	
-	/**
-	 * The {@code redirect_uri} in the {@link AuthorizationRequest} does 
-	 * not match any of the client's pre-registered {@code redirect_uri}s. 
-	 */
-	public static final OAuth2Error INVALID_REDIRECT_URI =
-		new OAuth2Error("invalid_redirect_uri", "Invalid redirect URI");
-	
-	
-	/**
-	 * The authorisation server requires end-user authentication. This error 
-	 * may be returned when the prompt parameter in the 
-	 * {@link AuthorizationRequest} is set to {@link Prompt.Type#NONE} to 
-	 * request that the authorisation server should not display any user 
-	 * interfaces to the end-user, but the {@link AuthorizationRequest} 
-	 * cannot be completed without displaying a user interface for user 
-	 * authentication.
-	 */
-	public static final OAuth2Error LOGIN_REQUIRED =
-		new OAuth2Error("LOGIN_REQUIRED", "Login required");
-	
-	
-	/**
-	 * The end-user is required to select a session at the authorisation 
-	 * server. The end-user may be authenticated at the authorisation server
-	 * with different associated accounts, but the end-user did not select a 
-	 * session. This error may be returned when the prompt parameter in the 
-	 * {@link AuthorizationRequest} is set to {@link Prompt.Type#NONE} to 
-	 * request that the authorisation server should not display any user 
-	 * interfaces to the end-user, but the {@link AuthorizationRequest} 
-	 * cannot be completed without displaying a user interface to prompt for
-	 * a session to use.
-	 */
-	public static final OAuth2Error SESSION_SELECTION_REQUIRED =
-		new OAuth2Error("SESSION_SELECTION_REQUIRED", "Session selection required");
-	
-	
-	/**
-	 * The authorisation server requires end-user consent. This error may be
-	 * returned when the prompt parameter in the {@link AuthorizationRequest}
-	 * is set to {@link Prompt.Type#NONE} to request that the authorisation 
-	 * server should not display any user interfaces to the end-user, but the 
-	 * {@link AuthorizationRequest} cannot be completed without displaying a 
-	 * user interface for end-user consent.
-	 */
-	public static final OAuth2Error CONSENT_REQUIRED =
-		new OAuth2Error("CONSENT_REQUIRED", "Consent required");
-	
-	
-	/**
-	 * The {@code request_uri} in the {@link AuthorizationRequest} returns 
-	 * an error or invalid data.
-	 */
-	public static final OAuth2Error INVALID_REQUEST_URI =
-		new OAuth2Error("INVALID_REQUEST_URI", "Invalid request URI");
-	
-
-	/**
-	 * The authorisation server requires end-user interaction of some form 
-	 * to proceed. This error may be returned when the {@link Prompt} 
-	 * parameter in the {@link AuthorizationRequest} is set to 
-	 * {@link Prompt.Type#NONE none} to request that the authorisation 
-	 * server should not display any user interfaces to the end-user, but 
-	 * the {@link AuthorizationRequest} cannot be completed without 
-	 * displaying a user interface for end-user interaction.
-	 */
-	public static final OAuth2Error INTERACTION_REQUIRED =
-		new OAuth2Error("INTERACTION_REQUIRED", "User interaction required");
-	
-	
-	/**
-	 * The request parameter contains an invalid OpenID Request Object.
-	 */
-	public static final OAuth2Error INVALID_OPENID_REQUEST_OBJECT =
-		new OAuth2Error("INVALID_OPENID_REQUEST_OBJECT", "Invalid OpenID request object");
 	
 	
 	// Token, Base OAuth 2.0 authorisation errors, section 5.2
@@ -212,7 +102,7 @@ public final class OAuth2Error extends Identifier {
 		new OAuth2Error("UNSUPPORTED_GRANT_TYPE", "Unsupported grant type");
 	
 	
-	// OAuth Bearer, seciton 3.1
+	// OAuth Bearer, section 3.1
 	
 	/**
 	 * The access token provided is expired, revoked, malformed, or invalid
@@ -232,15 +122,6 @@ public final class OAuth2Error extends Identifier {
 	 */
 	public static final OAuth2Error INSUFFICIENT_SCOPE =
 		new OAuth2Error("INSUFFICIENT_SCOPE", "Insufficient scope");
-	
-	
-	// UserInfo
-	
-	/**
-	 * The requested schema is invalid or unsupported.
-	 */
-	public static final OAuth2Error INVALID_SCHEMA =
-		new OAuth2Error("INVALID_SCHEMA", "Invalid or unsupported schema");
 	
 	
 	/**
