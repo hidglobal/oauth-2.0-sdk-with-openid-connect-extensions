@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.util.Collections;
@@ -13,16 +13,23 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+
+import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.id.JWTID;
+import com.nimbusds.oauth2.sdk.id.Subject;
+
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * Client authentication claims set, serialisable to a JSON object and JWT 
+ * JWT client authentication claims set, serialisable to a JSON object and JWT 
  * claims set. This class is immutable.
  *
- * <p>Used for {@link com.nimbusds.oauth2.sdk.ClientSecretJWT client secret 
- * JWT} and {@link com.nimbusds.oauth2.sdk.PrivateKeyJWT private key JWT} 
- * authentication at the Token endpoint.
+ * <p>Used for {@link ClientSecretJWT client secret JWT} and 
+ * {@link PrivateKeyJWT private key JWT} authentication at the Token endpoint.
  *
  * <p>Example client authentication claims set:
  *
@@ -46,9 +53,9 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-18)
  */
-public class ClientAuthenticationClaimsSet {
+public class JWTAuthenticationClaimsSet {
 
 
 	/**
@@ -133,7 +140,7 @@ public class ClientAuthenticationClaimsSet {
 	
 	
 	/**
-	 * Creates a new client authentication claims set.
+	 * Creates a new JWT client authentication claims set.
 	 *
 	 * @param clientID The client identifier. Used to specify the issuer 
 	 *                 and the subject. Must not be {@code null}.
@@ -149,12 +156,12 @@ public class ClientAuthenticationClaimsSet {
 	 * @param jti      Unique identifier for the JWT, {@code null} if
 	 *                 not specified.
 	 */
-	public ClientAuthenticationClaimsSet(final ClientID clientID,
-					     final Audience aud,
-					     final Date exp,
-					     final Date nbf,
-					     final Date iat,
-					     final JWTID jti) {
+	public JWTAuthenticationClaimsSet(final ClientID clientID,
+					  final Audience aud,
+					  final Date exp,
+					  final Date nbf,
+					  final Date iat,
+					  final JWTID jti) {
 
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
@@ -276,8 +283,8 @@ public class ClientAuthenticationClaimsSet {
 	
 	
 	/**
-	 * Returns a JSON object representation of this client authentication
-	 * claims set.
+	 * Returns a JSON object representation of this JWT client 
+	 * authentication claims set.
 	 *
 	 * @return The JSON object.
 	 */
@@ -336,8 +343,8 @@ public class ClientAuthenticationClaimsSet {
 	
 	
 	/**
-	 * Parses a client authentication claims set from the specified JSON 
-	 * object.
+	 * Parses a JWT client authentication claims set from the specified 
+	 * JSON object.
 	 *
 	 * @param jsonObject The JSON object. Must not be {@code null}.
 	 *
@@ -346,7 +353,7 @@ public class ClientAuthenticationClaimsSet {
 	 * @throws ParseException If the JSON object couldn't be parsed to a 
 	 *                        client authentication claims set.
 	 */
-	public static ClientAuthenticationClaimsSet parse(final JSONObject jsonObject)
+	public static JWTAuthenticationClaimsSet parse(final JSONObject jsonObject)
 		throws ParseException {
 		
 		// Parse required claims
@@ -396,12 +403,12 @@ public class ClientAuthenticationClaimsSet {
 
 		ClientID clientID = new ClientID(iss.getValue());
 
-		return new ClientAuthenticationClaimsSet(clientID, aud, exp, nbf, iat, jti);
+		return new JWTAuthenticationClaimsSet(clientID, aud, exp, nbf, iat, jti);
 	}
 
 
 	/**
-	 * Parses a client authentication claims set from the specified JWT 
+	 * Parses a JWT client authentication claims set from the specified JWT 
 	 * claims set.
 	 *
 	 * @param jwtClaimsSet The JWT claims set. Must not be {@code null}.
@@ -411,7 +418,7 @@ public class ClientAuthenticationClaimsSet {
 	 * @throws ParseException If the JWT claims set couldn't be parsed to a 
 	 *                        client authentication claims set.
 	 */
-	public static ClientAuthenticationClaimsSet parse(final ReadOnlyJWTClaimsSet jwtClaimsSet)
+	public static JWTAuthenticationClaimsSet parse(final ReadOnlyJWTClaimsSet jwtClaimsSet)
 		throws ParseException {
 		
 		return parse(jwtClaimsSet.toJSONObject());

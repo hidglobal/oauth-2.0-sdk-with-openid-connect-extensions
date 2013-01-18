@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.util.Collections;
@@ -9,7 +9,12 @@ import java.util.Set;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JWSAlgorithm;
+
 import com.nimbusds.jwt.SignedJWT;
+
+import com.nimbusds.oauth2.sdk.ParseException;
+
+import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -39,10 +44,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-14)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
-public final class ClientSecretJWT extends JWTClientAuthentication {
+public final class ClientSecretJWT extends JWTAuthentication {
 
 
 	/**
@@ -99,11 +104,11 @@ public final class ClientSecretJWT extends JWTClientAuthentication {
 	public static ClientSecretJWT parse(final Map<String,String> params)
 		throws ParseException {
 	
-		JWTClientAuthentication.ensureClientAssertionType(params);
+		JWTAuthentication.ensureClientAssertionType(params);
 		
-		SignedJWT clientAssertion = JWTClientAuthentication.parseClientAssertion(params);
+		SignedJWT clientAssertion = JWTAuthentication.parseClientAssertion(params);
 		
-		ClientID clientID = JWTClientAuthentication.parseClientID(params);
+		ClientID clientID = JWTAuthentication.parseClientID(params);
 		
 		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		

@@ -3,9 +3,11 @@ package com.nimbusds.oauth2.sdk;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
- * OAuth 2.0 authorisation grant type. This class is immutable.
+ * Authorisation grant type. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-15)

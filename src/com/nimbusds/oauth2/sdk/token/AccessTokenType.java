@@ -1,11 +1,13 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.token;
 
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
- * OAuth 2.0 access token type. This class is immutable.
+ * Access token type. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-16)
@@ -28,7 +30,7 @@ public final class AccessTokenType extends Identifier {
 
 
 	/**
-	 * Creates a new OAuth 2.0 access token type with the specified value.
+	 * Creates a new access token type with the specified value.
 	 *
 	 * @param value The access token type value. Must not be {@code null} 
 	 *              or empty string.

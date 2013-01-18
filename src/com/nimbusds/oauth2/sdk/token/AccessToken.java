@@ -1,11 +1,14 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.token;
 
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.Scope;
+
 
 /**
- * The base abstract class for OAuth 2.0 access tokens.
+ * The base abstract class for access tokens.
  *
  * <p>Related specifications:
  *
@@ -38,10 +41,9 @@ public abstract class AccessToken extends Token {
 
 
 	/**
-	 * Creates a new minimal OAuth 2.0 access token with a randomly 
-	 * generated value. The value will be made up of 32 mixed-case 
-	 * alphanumeric ASCII characters. The optional lifetime and scope are 
-	 * left undefined.
+	 * Creates a new minimal access token with a randomly generated value. 
+	 * The value will be made up of 32 mixed-case alphanumeric ASCII 
+	 * characters. The optional lifetime and scope are left undefined.
 	 *
 	 * @param type The access token type. Must not be {@code null}.
 	 */
@@ -52,10 +54,10 @@ public abstract class AccessToken extends Token {
 
 
 	/**
-	 * Creates a new minimal OAuth 2.0 access token with a randomly 
-	 * generated value of the specified length. The value will be made up 
-	 * of mixed-case alphanumeric ASCII characters. The optional lifetime 
-	 * and scope are left undefined.
+	 * Creates a new minimal access token with a randomly generated value
+	 * of the specified length. The value will be made up of mixed-case 
+	 * alphanumeric ASCII characters. The optional lifetime and scope are 
+	 * left undefined.
 	 *
 	 * @param type   The access token type. Must not be {@code null}.
 	 * @param length The number of characters. Must be a positive integer.
@@ -67,9 +69,9 @@ public abstract class AccessToken extends Token {
 
 
 	/**
-	 * Creates a new OAuth 2.0 access token with a randomly generated value
-	 * and the specified optional lifetime and scope. The value will be 
-	 * made up of 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new access token with a randomly generated value and the 
+	 * specified optional lifetime and scope. The value will be made up of
+	 * 32 mixed-case alphanumeric ASCII characters.
 	 *
 	 * @param type     The access token type. Must not be {@code null}.
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
@@ -84,9 +86,9 @@ public abstract class AccessToken extends Token {
 
 
 	/**
-	 * Creates a new OAuth 2.0 access token with a randomly generated value
-	 * of the specified length and optional lifetime and scope. The value 
-	 * will be made up of mixed-case alphanumeric ASCII characters.
+	 * Creates a new access token with a randomly generated value of the 
+	 * specified length and optional lifetime and scope. The value will be 
+	 * made up of mixed-case alphanumeric ASCII characters.
 	 *
 	 * @param type     The access token type. Must not be {@code null}.
 	 * @param length   The number of characters. Must be a positive 
@@ -112,8 +114,8 @@ public abstract class AccessToken extends Token {
 	
 	
 	/**
-	 * Creates a new minimal OAuth 2.0 access token with the specified
-	 * value. The optional lifetime and scope are left undefined.
+	 * Creates a new minimal access token with the specified value. The 
+	 * optional lifetime and scope are left undefined.
 	 *
 	 * @param type  The access token type. Must not be {@code null}.
 	 * @param value The access token value. Must not be {@code null} or
@@ -126,8 +128,8 @@ public abstract class AccessToken extends Token {
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 access token with the specified value and
-	 * optional lifetime and scope.
+	 * Creates a new access token with the specified value and optional 
+	 * lifetime and scope.
 	 *
 	 * @param type     The access token type. Must not be {@code null}.
 	 * @param value    The access token value. Must not be {@code null} or

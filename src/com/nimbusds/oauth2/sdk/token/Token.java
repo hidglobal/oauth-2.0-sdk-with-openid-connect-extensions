@@ -1,11 +1,13 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.token;
 
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
- * The base abstract class for OAuth 2.0 access and refresh tokens.
+ * The base abstract class for access and refresh tokens.
  * 
  * <p>Related specifications:
  *
@@ -14,7 +16,7 @@ import net.minidev.json.JSONObject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-16)
+ * @version $version$ (2014-01-18)
  */
 public abstract class Token extends Identifier {
 

@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk;
 
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 

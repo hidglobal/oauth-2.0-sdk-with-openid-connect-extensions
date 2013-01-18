@@ -1,50 +1,56 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.id;
 
 
 import net.jcip.annotations.Immutable;
 
 
 /**
- * Issuer identifier. This class is immutable.
+ * Client identifier. This class is immutable.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OAuth 2.0 (RFC 6749), section 2.2.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-15)
  */
 @Immutable
-public final class Issuer extends Identifier {
+public final class ClientID extends Identifier {
 
 
 	/**
-	 * Creates a new issuer identifier with the specified value.
+	 * Creates a new client identifier with the specified value.
 	 *
-	 * @param value The issuer identifier value. Must not be {@code null}
+	 * @param value The client identifier value. Must not be {@code null}
 	 *              or empty string.
 	 */
-	public Issuer(final String value) {
+	public ClientID(final String value) {
 
 		super(value);
 	}
 
 
 	/**
-	 * Creates a new issuer identifier with a randomly generated value of 
+	 * Creates a new client identifier with a randomly generated value of 
 	 * the specified length. The value will be made up of mixed-case 
 	 * alphanumeric ASCII characters.
 	 *
 	 * @param length The number of characters. Must be a positive integer.
 	 */
-	public Issuer(final int length) {
+	public ClientID(final int length) {
 	
 		super(length);
 	}
 	
 	
 	/**
-	 * Creates a new issuer identifier with a randomly generated value. The
+	 * Creates a new client identifier with a randomly generated value. The
 	 * value will be made up of 32 mixed-case alphanumeric ASCII 
 	 * characters.
 	 */
-	public Issuer() {
+	public ClientID() {
 
 		super();
 	}
@@ -54,7 +60,7 @@ public final class Issuer extends Identifier {
 	public boolean equals(final Object object) {
 	
 		return object != null && 
-		       object instanceof Issuer && 
+		       object instanceof ClientID && 
 		       this.toString().equals(object.toString());
 	}
 }

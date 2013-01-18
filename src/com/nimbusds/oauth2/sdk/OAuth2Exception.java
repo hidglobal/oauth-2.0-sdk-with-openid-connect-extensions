@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URL;
 
+import com.nimbusds.oauth2.sdk.id.State;
+
 
 /**
  * General OAuth 2.0 exception.

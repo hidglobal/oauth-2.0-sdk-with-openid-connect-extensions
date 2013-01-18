@@ -14,6 +14,8 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.id.State;
+
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;

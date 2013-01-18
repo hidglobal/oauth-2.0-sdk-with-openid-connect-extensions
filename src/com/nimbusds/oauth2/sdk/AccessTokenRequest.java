@@ -9,6 +9,10 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+
+import com.nimbusds.oauth2.sdk.id.ClientID;
+
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
@@ -17,9 +21,9 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Access token request to the Token endpoint. Used to obtain an 
- * {@link AccessToken access token} and an optional 
- * {@link RefreshToken refresh token} from the authorisation server. This class
- * is immutable.
+ * {@link com.nimbusds.oauth2.sdk.token.AccessToken access token} and an 
+ * optional {@link com.nimbusds.oauth2.sdk.token.RefreshToken refresh token} 
+ * from the authorisation server. This class is immutable.
  *
  * <p>Supported authorisation grant types:
  *
@@ -29,7 +33,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>{@link GrantType#CLIENT_CREDENTIALS Client credentials}
  * </ul>
  *
- * <p>Example HTTP request, with {@link ClientSecretBasic client secret basic}
+ * <p>Example HTTP request, with 
+ * {@link com.nimbusds.oauth2.sdk.auth.ClientSecretBasic client secret basic}
  * authentication:
  *
  * <pre>

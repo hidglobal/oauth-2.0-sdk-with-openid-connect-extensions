@@ -14,6 +14,10 @@ import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.oauth2.sdk.id.State;
+
+import com.nimbusds.oauth2.sdk.token.AccessToken;
+
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 import com.nimbusds.oauth2.sdk.util.URLUtils;

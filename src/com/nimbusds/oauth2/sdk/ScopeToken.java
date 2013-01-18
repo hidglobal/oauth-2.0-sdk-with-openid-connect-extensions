@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
  * Authorisation {@link Scope} token. This class is immutable.
@@ -16,7 +18,7 @@ public final class ScopeToken extends Identifier {
 
 	/**
 	 * Enumeration of the {@link ScopeToken scope token} requirements 
-	 * for matching authorisation requests.
+	 * for application-specific authorisation requests.
 	 */
 	public static enum Requirement {
 	

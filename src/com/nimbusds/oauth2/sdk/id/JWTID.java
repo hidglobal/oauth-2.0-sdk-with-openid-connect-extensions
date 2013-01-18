@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.id;
 
 
 import net.jcip.annotations.Immutable;

@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.io.UnsupportedEncodingException;
@@ -6,6 +6,10 @@ import java.io.UnsupportedEncodingException;
 import net.jcip.annotations.Immutable;
 
 import org.apache.commons.codec.binary.Base64;
+
+import com.nimbusds.oauth2.sdk.ParseException;
+
+import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 

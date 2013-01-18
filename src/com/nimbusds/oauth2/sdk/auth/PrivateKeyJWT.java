@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.util.Collections;
@@ -10,6 +10,10 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
+
+import com.nimbusds.oauth2.sdk.ParseException;
+
+import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -32,7 +36,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>ES512
  * </ul>
  *
- * <p>Example {@link TokenRequest} with private key JWT authentication:
+ * <p>Example {@link com.nimbusds.oauth2.sdk.TokenRequest} with private key JWT
+ * authentication:
  *
  * <pre>
  * POST /token HTTP/1.1
@@ -58,7 +63,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * @version $version$ (2013-01-14)
  */
 @Immutable
-public final class PrivateKeyJWT extends JWTClientAuthentication {
+public final class PrivateKeyJWT extends JWTAuthentication {
 
 
 	/**
@@ -119,11 +124,11 @@ public final class PrivateKeyJWT extends JWTClientAuthentication {
 	public static PrivateKeyJWT parse(final Map<String,String> params)
 		throws ParseException {
 	
-		JWTClientAuthentication.ensureClientAssertionType(params);
+		JWTAuthentication.ensureClientAssertionType(params);
 		
-		SignedJWT clientAssertion = JWTClientAuthentication.parseClientAssertion(params);
+		SignedJWT clientAssertion = JWTAuthentication.parseClientAssertion(params);
 		
-		ClientID clientID = JWTClientAuthentication.parseClientID(params);
+		ClientID clientID = JWTAuthentication.parseClientID(params);
 		
 		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		

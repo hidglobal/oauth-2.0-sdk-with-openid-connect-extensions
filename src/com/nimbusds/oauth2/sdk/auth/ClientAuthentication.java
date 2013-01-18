@@ -1,7 +1,10 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.util.Map;
+
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.SerializeException;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -19,7 +22,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-14)
+ * @version $version$ (2013-01-18)
  */
 public abstract class ClientAuthentication {
 	
@@ -59,7 +62,8 @@ public abstract class ClientAuthentication {
 	/**
 	 * Parses the specified HTTP request for a supported client 
 	 * authentication (see {@link ClientAuthenticationMethod}). This method
-	 * is intended to aid parsing of authenticated {@link TokenRequest}s.
+	 * is intended to aid parsing of authenticated 
+	 * {@link com.nimbusds.oauth2.sdk.TokenRequest}s.
 	 *
 	 * @param httpRequest The HTTP request to parse. Must not be 
 	 *                    {@code null}.
@@ -98,7 +102,7 @@ public abstract class ClientAuthentication {
 		
 		// Do we have a signed JWT assertion?
 		if (params.containsKey("client_assertion") && params.containsKey("client_assertion_type"))
-			return JWTClientAuthentication.parse(httpRequest);
+			return JWTAuthentication.parse(httpRequest);
 		else
 			return null;
 	}

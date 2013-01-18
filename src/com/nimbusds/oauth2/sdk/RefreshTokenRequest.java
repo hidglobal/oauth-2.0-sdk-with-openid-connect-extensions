@@ -6,6 +6,10 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+
+import com.nimbusds.oauth2.sdk.token.RefreshToken;
+
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
@@ -14,7 +18,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Refresh token request to the Token endpoint. Used to refresh an 
- * {@link AccessToken access token}. This class is immutable.
+ * {@link com.nimbusds.oauth2.sdk.token.AccessToken access token}. This class 
+ * is immutable.
  *
  * <p>Note that the optional scope parameter is not supported.
  *

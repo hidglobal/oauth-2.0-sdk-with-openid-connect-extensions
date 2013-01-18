@@ -1,15 +1,18 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.token;
 
 
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.Scope;
+
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OAuth 2.0 bearer access token. This class is immutable.
+ * Bearer access token. This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -19,17 +22,16 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
 public final class BearerAccessToken extends AccessToken {
 
 	
 	/**
-	 * Creates a new minimal OAuth 2.0 bearer access token with a randomly 
-	 * generated value. The value will be made up of 32 mixed-case 
-	 * alphanumeric ASCII characters. The optional lifetime and scope are 
-	 * left undefined.
+	 * Creates a new minimal bearer access token with a randomly generated
+	 * value. The value will be made up of 32 mixed-case alphanumeric ASCII
+	 * characters. The optional lifetime and scope are left undefined.
 	 */
 	public BearerAccessToken() {
 	
@@ -38,10 +40,10 @@ public final class BearerAccessToken extends AccessToken {
 
 
 	/**
-	 * Creates a new minimal OAuth 2.0 bearer access token with a randomly 
-	 * generated value of the specified length. The value will be made up 
-	 * of mixed-case alphanumeric ASCII characters. The optional lifetime 
-	 * and scope are left undefined.
+	 * Creates a new minimal bearer access token with a randomly generated
+	 * value of the specified length. The value will be made up of 
+	 * mixed-case alphanumeric ASCII characters. The optional lifetime and
+	 * scope are left undefined.
 	 *
 	 * @param length The number of characters. Must be a positive integer.
 	 */
@@ -52,10 +54,9 @@ public final class BearerAccessToken extends AccessToken {
 
 
 	/**
-	 * Creates a new OAuth 2.0 bearer access token with a randomly 
-	 * generated value and the specified optional lifetime and scope. The 
-	 * value will be made up of 32 mixed-case alphanumeric ASCII 
-	 * characters.
+	 * Creates a new bearer access token with a randomly generated value 
+	 * and the specified optional lifetime and scope. The value will be 
+	 * made up of 32 mixed-case alphanumeric ASCII characters.
 	 *
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
 	 * @param scope    The scope, {@code null} if not specified.
@@ -67,10 +68,9 @@ public final class BearerAccessToken extends AccessToken {
 
 
 	/**
-	 * Creates a new OAuth 2.0 bearer access token with a randomly 
-	 * generated value of the specified length and optional lifetime and 
-	 * scope. The value will be made up of mixed-case alphanumeric ASCII 
-	 * characters.
+	 * Creates a new bearer access token with a randomly generated value of
+	 * the specified length and optional lifetime and scope. The value will
+	 * be made up of mixed-case alphanumeric ASCII characters.
 	 *
 	 * @param length   The number of characters. Must be a positive 
 	 *                 integer.
@@ -84,8 +84,8 @@ public final class BearerAccessToken extends AccessToken {
 	
 	
 	/**
-	 * Creates a new minimal OAuth 2.0 bearer access token with the 
-	 * specified value. The optional lifetime and scope are left undefined.
+	 * Creates a new minimal bearer access token with the specified value.
+	 * The optional lifetime and scope are left undefined.
 	 *
 	 * @param value The access token value. Must not be {@code null} or
 	 *              empty string.
@@ -97,8 +97,8 @@ public final class BearerAccessToken extends AccessToken {
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 bearer access token with the specified value
-	 * and optional lifetime and scope.
+	 * Creates a new bearer access token with the specified value and 
+	 * optional lifetime and scope.
 	 *
 	 * @param value    The access token value. Must not be {@code null} or
 	 *                 empty string.
@@ -155,7 +155,7 @@ public final class BearerAccessToken extends AccessToken {
 		throws ParseException {
 
 		// Parse and verify type
-		String tokenType = JSONObjectUtils.getString(jsonObject, "token_type");
+		AccessTokenType tokenType = new AccessTokenType(JSONObjectUtils.getString(jsonObject, "token_type"));
 		
 		if (! tokenType.equals(AccessTokenType.BEARER))
 			throw new ParseException("The access token type must be \"bearer\"");

@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.util.HashMap;
@@ -10,6 +10,11 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
+
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.SerializeException;
+
+import com.nimbusds.oauth2.sdk.id.ClientID;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -30,9 +35,9 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-18)
  */
-public abstract class JWTClientAuthentication extends ClientAuthentication {
+public abstract class JWTAuthentication extends ClientAuthentication {
 
 
 	/**
@@ -71,9 +76,9 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 *                        the {@code client_id} parameter. {@code null}
 	 *                        if not specified.
 	 */
-	protected JWTClientAuthentication(final ClientAuthenticationMethod method, 
-	                                  final SignedJWT clientAssertion,
-					  final ClientID clientID) {
+	protected JWTAuthentication(final ClientAuthenticationMethod method, 
+	                            final SignedJWT clientAssertion,
+	                            final ClientID clientID) {
 	
 		super(method);
 	
@@ -112,7 +117,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	
 	
 	/**
-	 * Gets the client authentication claims contained in the client
+	 * Gets the client authentication claims set contained in the client
 	 * assertion JSON Web Token (JWT).
 	 *
 	 * @return The client authentication claims.
@@ -121,7 +126,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 *                        doesn't contain a client authentication
 	 *                        claims set.
 	 */
-	public ClientAuthenticationClaimsSet getClientAuthenticationClaims()
+	public JWTAuthenticationClaimsSet getJWTAuthenticationClaimsSet()
 		throws ParseException {
 	
 		JSONObject claimsSet = null;
@@ -137,7 +142,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 		if (claimsSet == null)
 			throw new ParseException("Couldn't retrieve JSON object from the client assertion JWT");
 		
-		return ClientAuthenticationClaimsSet.parse(claimsSet);
+		return JWTAuthenticationClaimsSet.parse(claimsSet);
 	}
 	
 	
@@ -303,7 +308,7 @@ public abstract class JWTClientAuthentication extends ClientAuthentication {
 	 *                        authentication couldn't be retrieved from the
 	 *                        HTTP request.
 	 */
-	public static JWTClientAuthentication parse(final HTTPRequest httpRequest)
+	public static JWTAuthentication parse(final HTTPRequest httpRequest)
 		throws ParseException {
 		
 		httpRequest.ensureMethod(HTTPRequest.Method.POST);

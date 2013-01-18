@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.token;
 
 
 import net.jcip.annotations.Immutable;
@@ -7,9 +7,11 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+
 
 /**
- * OAuth 2.0 refresh token. This class is immutable.
+ * Refresh token. This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -25,8 +27,8 @@ public final class RefreshToken extends Token {
 
 
 	/**
-	 * Creates a new OAuth 2.0 refresh token with a randomly generated 
-	 * value. The value will be made up of 32 mixed-case alphanumeric ASCII
+	 * Creates a new refresh token with a randomly generated value. The 
+	 * value will be made up of 32 mixed-case alphanumeric ASCII
 	 * characters.
 	 */
 	public RefreshToken() {
@@ -36,9 +38,9 @@ public final class RefreshToken extends Token {
 
 
 	/**
-	 * Creates a new OAuth 2.0 refresh token with a randomly generated 
-	 * value of the specified length. The value will be made up of 
-	 * mixed-case alphanumeric ASCII characters.
+	 * Creates a new refresh token with a randomly generated value of the 
+	 * specified length. The value will be made up of mixed-case 
+	 * alphanumeric ASCII characters.
 	 *
 	 * @param length The number of characters. Must be a positive integer.
 	 */
@@ -49,7 +51,7 @@ public final class RefreshToken extends Token {
 
 
 	/**
-	 * Creates a new OAuth 2.0 refresh token with the specified value.
+	 * Creates a new refresh token with the specified value.
 	 *
 	 * @param value The refresh token value. Must not be {@code null} or 
 	 *              empty string.

@@ -5,12 +5,15 @@ import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.oauth2.sdk.token.AccessToken;
+import com.nimbusds.oauth2.sdk.token.RefreshToken;
+
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * Access token response. This class is immutable.
+ * Access token response from the Token endpoint. This class is immutable.
  *
  * <p>Example HTTP response:
  *

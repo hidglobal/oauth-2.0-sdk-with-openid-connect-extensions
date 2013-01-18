@@ -1,7 +1,9 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.auth;
 
 
 import net.jcip.annotations.Immutable;
+
+import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
@@ -25,7 +27,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
 public final class ClientAuthenticationMethod extends Identifier {

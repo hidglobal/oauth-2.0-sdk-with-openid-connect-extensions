@@ -5,12 +5,14 @@ import java.net.URL;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
  * OAuth 2.0 error. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
 public final class OAuth2Error extends Identifier {

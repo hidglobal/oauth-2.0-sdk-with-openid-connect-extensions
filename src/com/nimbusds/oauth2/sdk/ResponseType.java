@@ -3,9 +3,11 @@ package com.nimbusds.oauth2.sdk;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
- * OAuth 2.0 response type. This class is immutable.
+ * Authorisation response type. This class is immutable.
  *
  * <p>Related specifications:
  *
