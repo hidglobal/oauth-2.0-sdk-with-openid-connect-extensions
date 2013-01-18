@@ -1,6 +1,8 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.util.Map;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -60,6 +62,8 @@ public abstract class Token extends Identifier {
 	 * Returns the token parameters as a JSON object, as required for the
 	 * composition of an access token response. See OAuth 2.0 (RFC 6749), 
 	 * section 5.1.
+	 *
+	 * <p>Note that JSONObject implements {@code Map<String,Object>}.
 	 *
 	 * <p>Example:
 	 *

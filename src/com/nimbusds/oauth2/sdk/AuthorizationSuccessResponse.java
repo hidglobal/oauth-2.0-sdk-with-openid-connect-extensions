@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import net.jcip.annotations.Immutable;
@@ -41,7 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-17)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
 public class AuthorizationSuccessResponse 
@@ -202,6 +203,42 @@ public class AuthorizationSuccessResponse
 	
 		return state;
 	}
+
+
+	/**
+	 * Returns the parameters of this authorisation success response.
+	 *
+	 * <p>Example:
+	 *
+	 * <pre>
+	 * access_token = 2YotnFZFEjr1zCsicMWpAA
+	 * state = xyz
+	 * token_type = example
+	 * expires_in = 3600
+	 * </pre>
+	 *
+	 * @return The parameters as a map.
+	 */
+	public Map<String,Object> toParameters() {
+
+		Map<String,Object> params = new HashMap<String,Object>();
+
+		if (code != null)
+			params.put("code", code.getValue());
+
+		if (accessToken != null) {
+			
+			for (Map.Entry<String,Object> entry: accessToken.toJSONObject().entrySet()) {
+
+				params.put(entry.getKey(), entry.getValue());
+			}
+		}
+			
+		if (state != null)
+			params.put("state", state.getValue());
+
+		return params;
+	}
 	
 	
 	/**
@@ -240,46 +277,27 @@ public class AuthorizationSuccessResponse
 		
 		try {
 			boolean delimit = false;
-		
-			if (code != null) {
-				sb.append("code=");
-				sb.append(URLEncoder.encode(code.getValue(), "utf-8"));
-				
-				delimit = true;
-			}
-			
-			if (accessToken != null) {
-			
-				for (Map.Entry<String,Object> entry: accessToken.toJSONObject().entrySet()) {
 
-					if (delimit)
-						sb.append('&');
+			for (Map.Entry<String,Object> param: toParameters) {
 
-					delimit = true;
-
-					sb.append(entry.getKey());
-					sb.append('=');
-
-					Object value = entry.getValue();
-
-					if (value == null)
-						break;
-
-					else if (value instanceof String)
-						sb.append(URLEncoder.encode((String)value, "utf-8"));
-
-					else
-						sb.append(value.toString());
-				}
-			}
-			
-			if (state != null) {
-			
 				if (delimit)
 					sb.append('&');
-				
-				sb.append("state=");
-				sb.append(URLEncoder.encode(state.toString(), "utf-8"));
+
+				delimit = true;
+
+				sb.append(param.getKey());
+				sb.append('=');
+
+				Object value = entry.getValue();
+
+				if (value == null)
+					break;
+
+				else if (value instanceof String)
+					sb.append(URLEncoder.encode((String)value, "utf-8"));
+
+				else
+					sb.append(value.toString());
 			}
 			
 			return new URL(sb.toString());

@@ -158,7 +158,7 @@ public final class BearerAccessToken extends AccessToken {
 		AccessTokenType tokenType = new AccessTokenType(JSONObjectUtils.getString(jsonObject, "token_type"));
 		
 		if (! tokenType.equals(AccessTokenType.BEARER))
-			throw new ParseException("The access token type must be \"bearer\"");
+			throw new ParseException("Token type must be \"Bearer\"");
 		
 
 		// Parse value

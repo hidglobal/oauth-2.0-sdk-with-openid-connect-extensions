@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-18)
  */
 @Immutable
 public final class RefreshToken extends Token {
