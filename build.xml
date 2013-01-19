@@ -80,6 +80,7 @@
 			<test name="com.nimbusds.oauth2.sdk.AuthorizationErrorResponseTest"/>
 			<test name="com.nimbusds.oauth2.sdk.AccessTokenResponseTest"/>
 			<test name="com.nimbusds.oauth2.sdk.TokenRequestTest"/>
+			<test name="com.nimbusds.oauth2.sdk.TokenErrorResponseTest"/>
 		</junit>
 	</target>
 	
