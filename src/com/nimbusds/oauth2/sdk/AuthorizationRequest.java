@@ -45,7 +45,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-19)
  */
 @Immutable
 public class AuthorizationRequest implements OAuth2Request {
@@ -80,6 +80,23 @@ public class AuthorizationRequest implements OAuth2Request {
 	 * callback (recommended).
 	 */
 	private final State state;
+
+
+	/**
+	 * Creates a new minimal authorisation request.
+	 *
+	 * @param rts         The response type set. Corresponds to the 
+	 *                    {@code response_type} parameter. Must not be
+	 *                    {@code null}.
+	 * @param clientID    The client identifier. Corresponds to the
+	 *                    {@code client_id} parameter. Must not be 
+	 *                    {@code null}.
+	 */
+	public AuthorizationRequest(final ResponseTypeSet rts,
+	                            final ClientID clientID) {
+
+		this(rts, clientID, null, null, null);
+	}
 	
 	
 	/**

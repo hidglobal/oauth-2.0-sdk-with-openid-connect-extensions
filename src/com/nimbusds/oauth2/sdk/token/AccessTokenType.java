@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * Access token type. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-01-19)
  */
 @Immutable
 public final class AccessTokenType extends Identifier {
@@ -19,7 +19,7 @@ public final class AccessTokenType extends Identifier {
 	/**
 	 * Bearer, see OAuth 2.0 Bearer Token Usage (RFC 6750).
 	 */
-	public static final AccessTokenType BEARER = new AccessTokenType("bearer");
+	public static final AccessTokenType BEARER = new AccessTokenType("Bearer");
 	
 	
 	/**

@@ -31,7 +31,7 @@ public class BearerAccessTokenTest extends TestCase {
 		JSONObject json = token.toJSONObject();
 
 		assertEquals("abc", json.get("access_token"));
-		assertEquals("bearer", json.get("token_type"));
+		assertEquals("Bearer", json.get("token_type"));
 		assertEquals(2, json.size());
 
 		try {
@@ -93,7 +93,7 @@ public class BearerAccessTokenTest extends TestCase {
 		System.out.println(json);
 
 		assertEquals("abc", json.get("access_token"));
-		assertEquals("bearer", json.get("token_type"));
+		assertEquals("Bearer", json.get("token_type"));
 		assertEquals(1500l, json.get("expires_in"));
 		assertTrue(Scope.parse((String)json.get("scope")).equals(scope));
 		assertEquals(4, json.size());
@@ -107,7 +107,7 @@ public class BearerAccessTokenTest extends TestCase {
 		}
 
 		assertEquals("abc", json.get("access_token"));
-		assertEquals("bearer", json.get("token_type"));
+		assertEquals("Bearer", json.get("token_type"));
 		assertEquals(1500l, json.get("expires_in"));
 		assertTrue(Scope.parse((String)json.get("scope")).equals(scope));
 		assertEquals(4, json.size());
