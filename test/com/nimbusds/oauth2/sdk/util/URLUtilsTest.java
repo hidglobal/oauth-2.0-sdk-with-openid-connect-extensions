@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.util;
 
 
 import java.net.MalformedURLException;
@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  * Tests the URL utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-07)
+ * @version $version$ (2013-01-19)
  */
 public class URLUtilsTest extends TestCase {
 	

@@ -17,7 +17,7 @@ import com.nimbusds.oauth2.sdk.Scope;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-19)
  */
 public abstract class AccessToken extends Token {
 
@@ -25,7 +25,7 @@ public abstract class AccessToken extends Token {
 	/**
 	 * The access token type.
 	 */
-	public final AccessTokenType type;
+	private final AccessTokenType type;
 	
 	
 	/**
@@ -193,10 +193,10 @@ public abstract class AccessToken extends Token {
 		JSONObject o = new JSONObject();
 
 		o.put("access_token", getValue());
-		o.put("token_type", getType());
+		o.put("token_type", type.toString());
 		
 		if (getLifetime() > 0)
-			o.put("expires_in", getLifetime());
+			o.put("expires_in", lifetime);
 
 		if (getScope() != null)
 			o.put("scope", scope.toString());

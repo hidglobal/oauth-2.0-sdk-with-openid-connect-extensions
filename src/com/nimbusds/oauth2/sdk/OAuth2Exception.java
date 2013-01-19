@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.State;
  * General OAuth 2.0 exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-19)
  */
 public class OAuth2Exception extends Exception {
 
@@ -99,8 +99,8 @@ public class OAuth2Exception extends Exception {
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated OAuth 2.0 error, {@code null} if
 	 *                    not specified.
-	 * @param redirectURI The associated redirection URI, must not be 
-	 *                    {@code null}.
+	 * @param redirectURI The associated redirection URI, {@code null} if
+	 *                    not specified.
 	 * @param state       The optional associated state parameter, 
 	 *                    {@code null} if not specified.
 	 * @param cause       The exception cause, {@code null} if not
@@ -117,9 +117,6 @@ public class OAuth2Exception extends Exception {
 		this.error = error;
 
 		httpStatusCode = HTTP_SC_FOUND;
-
-		if (redirectURI == null)
-			throw new IllegalArgumentException("The redirection URI must not be null");
 
 		this.redirectURI = redirectURI;
 

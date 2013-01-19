@@ -14,7 +14,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * <p>Extending classes must override the {@link #equals} method.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-19)
  */
 public abstract class Identifier {
 
@@ -34,7 +34,7 @@ public abstract class Identifier {
 	public Identifier(final String value) {
 
 		if (StringUtils.isUndefined(value))
-			throw new IllegalArgumentException("The access token value must not be null or empty string");
+			throw new IllegalArgumentException("The value must not be null or empty string");
 
 		this.value = value;
 	}

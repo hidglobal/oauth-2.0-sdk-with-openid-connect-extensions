@@ -16,7 +16,7 @@ import net.jcip.annotations.NotThreadSafe;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-19)
  */
 @NotThreadSafe
 public class Scope extends HashSet<ScopeToken> {
@@ -67,6 +67,9 @@ public class Scope extends HashSet<ScopeToken> {
 			return null;
 
 		Scope scope = new Scope();
+
+		if (s.trim().isEmpty())
+			return scope;
 
 		String[] tokens = s.split("\\s+");
 

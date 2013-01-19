@@ -1,8 +1,8 @@
-<project name="OpenID Connect SDK / NimbusDS.com" default="dist" basedir=".">
+<project name="OAuth 2.0 SDK / NimbusDS.com" default="dist" basedir=".">
 
-	<property name="version" value="2.0"/>
-	<property name="version-date" value="2013-01-14"/>
-	<property name="jarfile" value="openid-connect-sdk-${version}.jar"/>
+	<property name="version" value="2.0-SNAPSHOT"/>
+	<property name="version-date" value="2013-01-19"/>
+	<property name="jarfile" value="oauth2-sdk-${version}.jar"/>
 	
 	<path id="classpath.compile">
 		<fileset dir="lib">
@@ -63,27 +63,18 @@
 		<junit showoutput="true">
 			<classpath refid="classpath.runtime"/>
 			<formatter type="plain"/>
-			<test name="com.nimbusds.openid.connect.sdk.util.URLUtilsTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.util.JSONObjectUtilsTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.claims.ClaimNameTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.NonceTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.StateTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.DisplayTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.PromptTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.ResponseTypeSetTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.ScopeParserTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationRequestTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationRequestResolverTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationResponseTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.AuthorizationErrorResponseTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.ClientSecretBasicTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.TokenRequestTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.AccessTokenTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.AccessTokenResponseTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.TokenErrorResponseTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.UserInfoRequestTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.UserInfoResponseTest"/>
-			<test name="com.nimbusds.openid.connect.sdk.messages.UserInfoErrorResponseTest"/>
+			<test name="com.nimbusds.oauth2.sdk.util.URLUtilsTest"/>
+			<test name="com.nimbusds.oauth2.sdk.util.JSONObjectUtilsTest"/>
+			<test name="com.nimbusds.oauth2.sdk.id.StateTest"/>
+			<test name="com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethodTest"/>
+			<test name="com.nimbusds.oauth2.sdk.auth.ClientSecretBasicTest"/>
+			<test name="com.nimbusds.oauth2.sdk.auth.JWTAuthenticationTest"/>
+			<test name="com.nimbusds.oauth2.sdk.token.BearerAccessTokenTest"/>
+			<test name="com.nimbusds.oauth2.sdk.ResponseTypeTest"/>
+			<test name="com.nimbusds.oauth2.sdk.ResponseTypeSetTest"/>
+			<test name="com.nimbusds.oauth2.sdk.ScopeTokenTest"/>
+			<test name="com.nimbusds.oauth2.sdk.ScopeTest"/>
+			<test name="com.nimbusds.oauth2.sdk.GrantTypeTest"/>
 		</junit>
 	</target>
 	
@@ -98,8 +89,8 @@
 			 use="true"
 			 linksource="true"
 			 overview="doc/overview.html"
-			 windowtitle="OpenID Connect SDK / NimbusDS"
-			 doctitle="OpenID Connect SDK / NimbusDS">
+			 windowtitle="OAuth 2.0 + OpenID Connect SDK / NimbusDS"
+			 doctitle="OAuth 2.0 + OpenID Connect SDK / NimbusDS">
 			<bottom>
 				<![CDATA[<i>Copyright &#169; Nimbus Directory Services / 
 			        Vladimir Dzhuvinov, 2012 - 2013. All Rights Reserved.</i>]]>

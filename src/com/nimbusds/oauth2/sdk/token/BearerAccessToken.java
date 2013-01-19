@@ -14,6 +14,23 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 /**
  * Bearer access token. This class is immutable.
  *
+ * <p>Example bearer access token serialised to JSON:
+ *
+ * <pre>
+ * {
+ *   "access_token" : "2YotnFZFEjr1zCsicMWpAA",
+ *   "token_type"   : "bearer",
+ *   "expires_in"   : 3600,
+ *   "scope"        : "read write"
+ * }
+ * </pre>
+ *
+ * <p>The above example token serialised to a HTTP Authorization header:
+ *
+ * <pre>
+ * Authorization: Bearer 2YotnFZFEjr1zCsicMWpAA
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>
@@ -22,7 +39,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-19)
  */
 @Immutable
 public final class BearerAccessToken extends AccessToken {

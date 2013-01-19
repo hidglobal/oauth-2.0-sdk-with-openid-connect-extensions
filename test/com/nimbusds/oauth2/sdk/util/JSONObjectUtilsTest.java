@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.util;
 
 
 import java.net.URL;
@@ -8,16 +8,17 @@ import javax.mail.internet.InternetAddress;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
+
 import net.minidev.json.parser.JSONParser;
 
-import com.nimbusds.openid.connect.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
  * Tests the JSON object utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-09-22)
+ * @version $version$ (2013-01-19)
  */
 public class JSONObjectUtilsTest extends TestCase {
 	

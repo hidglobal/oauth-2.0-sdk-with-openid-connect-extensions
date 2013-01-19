@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * Authorisation {@link Scope} token. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-19)
  */
 @Immutable
 public final class ScopeToken extends Identifier {
@@ -43,22 +43,8 @@ public final class ScopeToken extends Identifier {
 
 
 	/**
-	 * Creates a new scope token.
-	 *
-	 * @param value       The scope token value. Must not be {@code null}
-	 *                    or empty string.
-	 * @param requirement The requirement, {@code null} if not specified.
-	 */
-	private ScopeToken(final String value, final ScopeToken.Requirement requirement) {
-	
-		super(value);
-
-		this.requirement = requirement;
-	}
-
-
-	/**
-	 * Creates a new scope token. The requirement is not specified.
+	 * Creates a new scope token with the specified value. The requirement 
+	 * is not specified.
 	 *
 	 * @param value The scope token value. Must not be {@code null} or
 	 *              empty string.
@@ -66,6 +52,22 @@ public final class ScopeToken extends Identifier {
 	public ScopeToken(final String value) {
 	
 		this(value, null);
+	}
+
+
+	/**
+	 * Creates a new scope token with the specified value and optional
+	 * requirement.
+	 *
+	 * @param value       The scope token value. Must not be {@code null}
+	 *                    or empty string.
+	 * @param requirement The requirement, {@code null} if not specified.
+	 */
+	public ScopeToken(final String value, final ScopeToken.Requirement requirement) {
+	
+		super(value);
+
+		this.requirement = requirement;
 	}
 
 		
