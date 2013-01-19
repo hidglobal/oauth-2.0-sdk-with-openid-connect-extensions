@@ -24,11 +24,19 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Authorisation success response. Used to return an authorization code or 
  * access token at the Authorisation endpoint. This class is immutable.
  *
- * <p>Example HTTP response:
+ * <p>Example HTTP response with code (code flow):
  *
  * <pre>
  * HTTP/1.1 302 Found
  * Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
+ * </pre>
+ *
+ * <p>Example HTTP response with access token (implicit flow):
+ *
+ * <pre>
+ * HTTP/1.1 302 Found
+ * Location: http://example.com/cb#access_token=2YotnFZFEjr1zCsicMWpAA
+ *           &amp;state=xyz&amp;token_type=Bearer&amp;expires_in=3600
  * </pre>
  *
  * <p>Related specifications:

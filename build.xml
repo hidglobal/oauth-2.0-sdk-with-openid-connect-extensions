@@ -76,6 +76,8 @@
 			<test name="com.nimbusds.oauth2.sdk.ScopeTest"/>
 			<test name="com.nimbusds.oauth2.sdk.GrantTypeTest"/>
 			<test name="com.nimbusds.oauth2.sdk.AuthorizationRequestTest"/>
+			<test name="com.nimbusds.oauth2.sdk.AuthorizationSuccessResponseTest"/>
+			<test name="com.nimbusds.oauth2.sdk.AuthorizationErrorResponseTest"/>
 			<test name="com.nimbusds.oauth2.sdk.AccessTokenResponseTest"/>
 		</junit>
 	</target>

@@ -185,8 +185,26 @@ public final class BearerAccessToken extends AccessToken {
 		// Parse lifetime
 		long lifetime = 0;
 		
-		if (jsonObject.containsKey("expires_in"))
-			lifetime = JSONObjectUtils.getLong(jsonObject, "expires_in");
+		if (jsonObject.containsKey("expires_in")) {
+
+			// Lifetime can be a JSON number or string
+
+			if (jsonObject.get("expires_in") instanceof Number) {
+
+				lifetime = JSONObjectUtils.getLong(jsonObject, "expires_in");
+			}
+			else {
+				String lifetimeStr = JSONObjectUtils.getString(jsonObject, "expires_in");
+
+				try {
+					lifetime = new Long(lifetimeStr);
+
+				} catch (NumberFormatException e) {
+
+					throw new ParseException("Invalid \"expires_in\" parameter, must be integer");
+				}
+			}
+		}
 
 
 		// Parse scope
