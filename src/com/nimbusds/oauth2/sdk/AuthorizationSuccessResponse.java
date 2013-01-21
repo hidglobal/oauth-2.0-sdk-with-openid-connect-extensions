@@ -46,7 +46,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-21)
  */
 @Immutable
 public class AuthorizationSuccessResponse 
@@ -168,7 +168,8 @@ public class AuthorizationSuccessResponse
 
 
 	@Override
-	public Map<String,String> toParameters() {
+	public Map<String,String> toParameters()
+		throws SerializeException {
 
 		Map<String,String> params = new HashMap<String,String>();
 
@@ -190,18 +191,9 @@ public class AuthorizationSuccessResponse
 	}
 	
 	
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IllegalStateException If there is no authorisation code or 
-	 *                               access token to serialise.
-	 */
 	@Override
 	public URL toURI()
 		throws SerializeException {
-	
-		if (code == null && accessToken == null)
-			throw new IllegalStateException("Missing code or access token");
 	
 		StringBuilder sb = new StringBuilder(getRedirectURI().toString());
 		

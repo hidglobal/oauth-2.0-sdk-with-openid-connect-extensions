@@ -24,7 +24,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-21)
  */
 public abstract class AuthorizationResponse implements OAuth2Response {
 
@@ -94,8 +94,12 @@ public abstract class AuthorizationResponse implements OAuth2Response {
 	 * </pre>
 	 *
 	 * @return The parameters as a map.
+	 *
+	 * @throws SerializeException If this response couldn't be serialised 
+	 *                            to a parameters map.
 	 */
-	public abstract Map<String,String> toParameters();
+	public abstract Map<String,String> toParameters()
+		throws SerializeException;
 
 
 	/**
