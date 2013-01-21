@@ -192,7 +192,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 				    
 				    
 		this(rts, scope, clientID, redirectURI, nonce, 
-		     state, display, prompt, (JOSEObject)null, idTokenHint, null);    
+		     state, display, prompt, (JOSEObject)null, idTokenHint, loginHint);    
 	}
 	
 	
@@ -536,7 +536,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 			if (! rt.equals(ResponseType.CODE) &&
 			    ! rt.equals(ResponseType.TOKEN) &&
-			    ! rt.equals(new ResponseType("id_token")))
+			    ! rt.equals(OIDCResponseType.ID_TOKEN) )
 				throw new ParseException("Unsupported \"response_type\" parameter: " + rt, 
 					                 OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
 					                 redirectURI, state, null);

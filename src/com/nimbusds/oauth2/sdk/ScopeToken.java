@@ -10,10 +10,10 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * Authorisation {@link Scope} token. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-21)
  */
 @Immutable
-public final class ScopeToken extends Identifier {
+public class ScopeToken extends Identifier {
 
 
 	/**
