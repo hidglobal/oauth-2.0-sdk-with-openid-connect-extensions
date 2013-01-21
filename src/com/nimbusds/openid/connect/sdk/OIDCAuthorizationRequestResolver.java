@@ -264,9 +264,12 @@ public class OIDCAuthorizationRequestResolver {
 				throw new ResolveException("Invalid \"scope\" parameter in OpenID request object: " + 
 					                   e.getMessage(), e);
 			}
-			
+
 			if (! scope.containsAll(scopeCopy))
 				throw new ResolveException("Mismatched \"scope\" parameter in OpenID request object");
+
+			if (! scope.contains(OIDCScopeToken.OPENID))
+				throw new ResolveException("The scope must include an \"openid\" token");
 		}
 		
 		return scope;
