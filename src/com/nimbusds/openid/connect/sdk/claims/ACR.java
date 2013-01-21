@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
@@ -12,7 +14,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * the actual authentication method used or level of assurance such as 
  * ITU-T X.1254 | ISO/IEC 29115 entity authentication assurance level.
  *
- * <p>The ACR is represented by a string or an URL string.
+ * <p>The ACR is represented by a string or an URL string. This class is 
+ * immutable.
  *
  * <p>Related specifications:
  *
@@ -24,7 +27,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-21)
  */
-public class ACR extends Identifier {
+@Immutable
+public final class ACR extends Identifier {
 
 
 	/**

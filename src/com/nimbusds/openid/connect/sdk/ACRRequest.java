@@ -14,7 +14,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
  * @version $version$ (2013-01-21)
  */
 @Immutable 
-public class ACRRequest {
+public final class ACRRequest {
 
 
 	/**
