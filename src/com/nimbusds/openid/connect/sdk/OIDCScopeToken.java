@@ -1,4 +1,4 @@
-package com.nimbusds.connect.openid.sdk;
+package com.nimbusds.openid.connect.sdk;
 
 
 import java.util.Arrays;
