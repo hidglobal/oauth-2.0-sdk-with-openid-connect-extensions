@@ -19,7 +19,8 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 /**
  * Bearer access token error response. Used to indicate that access to a
- * resource protected by a Bearer access token is denied.
+ * resource protected by a Bearer access token is denied, due to an invalid
+ * token, etc.
  *
  * <p>Standard bearer access token errors:
  *
@@ -45,7 +46,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-17)
+ * @version $version$ (2013-01-21)
  */
 @Immutable
 public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
@@ -153,33 +154,22 @@ public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
 	
 		return error;
 	}
-	
-	
-	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
-	
-		HTTPResponse httpResponse = null;
-		
-		// Set HTTP status code
-		if (error == null)
-			httpResponse = new HTTPResponse(HTTPResponse.SC_UNAUTHORIZED); // 401
-			
-		else if (error == OAuth2Error.INVALID_REQUEST)
-			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400
-		
-		else if (error == OAuth2Error.INVALID_TOKEN)
-			httpResponse = new HTTPResponse(HTTPResponse.SC_UNAUTHORIZED); // 401
-		
-		else if (error == OAuth2Error.INSUFFICIENT_SCOPE)
-			httpResponse = new HTTPResponse(HTTPResponse.SC_FORBIDDEN); // 403
-		
-		else
-			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400
-		
-		
-		// Compose the WWW-Authenticate header
-		
+
+
+	/**
+	 * Returns the {@code WWW-Authenticate} HTTP response header value for 
+	 * this bearer access token error response.
+	 *
+	 * <p>Example:
+	 *
+	 * <pre>
+	 * Bearer realm="example.com", error="invalid_token", error_description="Invalid access token"
+	 * </pre>
+	 *
+	 * @return The {@code Www-Authenticate} header value.
+	 */
+	public String toWWWAuthenticateHeader() {
+
 		StringBuilder sb = new StringBuilder("Bearer");
 		
 		int numParams = 0;
@@ -224,9 +214,36 @@ public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
 				numParams++;
 			}
 		}
+
+		return sb.toString();
+	}
+	
+	
+	@Override
+	public HTTPResponse toHTTPResponse()
+		throws SerializeException {
+	
+		HTTPResponse httpResponse = null;
+		
+		// Set HTTP status code
+		if (error == null)
+			httpResponse = new HTTPResponse(HTTPResponse.SC_UNAUTHORIZED); // 401
+			
+		else if (error == OAuth2Error.INVALID_REQUEST)
+			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400
+		
+		else if (error == OAuth2Error.INVALID_TOKEN)
+			httpResponse = new HTTPResponse(HTTPResponse.SC_UNAUTHORIZED); // 401
+		
+		else if (error == OAuth2Error.INSUFFICIENT_SCOPE)
+			httpResponse = new HTTPResponse(HTTPResponse.SC_FORBIDDEN); // 403
+		
+		else
+			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST); // 400
 		
 		
-		httpResponse.setWWWAuthenticate(sb.toString());
+		// Add the WWW-Authenticate header
+		httpResponse.setWWWAuthenticate(toWWWAuthenticateHeader());
 		
 		return httpResponse;
 	}
@@ -234,14 +251,14 @@ public class BearerAccessTokenErrorResponse implements OAuth2ErrorResponse {
 
 	/**
 	 * Parses a Bearer access token error response from the specified HTTP
-	 * response WWW-Authenticate header.
+	 * response {@code WWW-Authenticate} header.
 	 *
-	 * @param wwwAuth The WWW-Authenticate header value to parse. Must not 
-	 *                be {@code null}.
+	 * @param wwwAuth The {@code WWW-Authenticate} header value to parse. 
+	 *                Must not be {@code null}.
 	 *
-	 * @throws ParseException If the WWW-Authenticate header value couldn't 
-	 *                        be parsed to a Bearer access token error 
-	 *                        response.
+	 * @throws ParseException If the {@code WWW-Authenticate} header value 
+	 *                        couldn't be parsed to a Bearer access token 
+	 *                        error response.
 	 */
 	public static BearerAccessTokenErrorResponse parse(final String wwwAuth)
 		throws ParseException {

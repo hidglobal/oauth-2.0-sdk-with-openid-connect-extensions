@@ -206,9 +206,10 @@ public abstract class AccessToken extends Token {
 	
 	
 	/**
-	 * Returns the HTTP Authorization header value for this access token.
+	 * Returns the {@code Authorization} HTTP request header value for this
+	 * access token.
 	 *
-	 * @return The HTTP Authorization header.
+	 * @return The {@code Authorization} header value.
 	 */
 	public abstract String toAuthorizationHeader();
 
@@ -233,15 +234,15 @@ public abstract class AccessToken extends Token {
 	
 	
 	/**
-	 * Parses an HTTP Authorization header for an access token. Only
-	 * bearer access token are supported.
+	 * Parses an {@code Authorization} HTTP request header value for an 
+	 * access token. Only bearer access token are supported.
 	 *
-	 * @param header The HTTP Authorization header value to parse. Must not
-	 *               be {@code null}.
+	 * @param header The {@code Authorization} header value to parse. Must 
+	 *               not be {@code null}.
 	 *
 	 * @return The access token.
 	 *
-	 * @throws ParseException If the HTTP Authorization header value 
+	 * @throws ParseException If the {@code Authorization} header value 
 	 *                        couldn't be parsed to an access token.
 	 */
 	public static AccessToken parse(final String header)

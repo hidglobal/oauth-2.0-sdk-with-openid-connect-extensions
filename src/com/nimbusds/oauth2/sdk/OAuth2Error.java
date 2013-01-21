@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * OAuth 2.0 error. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-20)
  */
 @Immutable
 public final class OAuth2Error extends Identifier {
@@ -81,7 +81,7 @@ public final class OAuth2Error extends Identifier {
 	 * authentication included, or unsupported authentication method).
 	 */
 	public static final OAuth2Error INVALID_CLIENT =
-		new OAuth2Error("INVALID_CLIENT", "Client authentication failed");
+		new OAuth2Error("invalid_client", "Client authentication failed");
 	
 	
 	/**
@@ -91,7 +91,7 @@ public final class OAuth2Error extends Identifier {
 	 * or was issued to another client.
 	 */
 	public static final OAuth2Error INVALID_GRANT =
-		new OAuth2Error("INVALID_GRANT", "Invalid grant");
+		new OAuth2Error("invalid_grant", "Invalid grant");
 	
 	
 	/**
@@ -99,7 +99,7 @@ public final class OAuth2Error extends Identifier {
 	 * server.
 	 */
 	public static final OAuth2Error UNSUPPORTED_GRANT_TYPE =
-		new OAuth2Error("UNSUPPORTED_GRANT_TYPE", "Unsupported grant type");
+		new OAuth2Error("unsupported_grant_type", "Unsupported grant type");
 	
 	
 	// OAuth Bearer, section 3.1
@@ -111,7 +111,7 @@ public final class OAuth2Error extends Identifier {
 	 * token and retry the protected resource request.
 	 */
 	public static final OAuth2Error INVALID_TOKEN =
-		new OAuth2Error("INVALID_TOKEN", "Invalid access token");
+		new OAuth2Error("invalid_token", "Invalid access token");
 	
 	
 	/**
@@ -121,7 +121,7 @@ public final class OAuth2Error extends Identifier {
 	 * with the scope necessary to access the protected resource.
 	 */
 	public static final OAuth2Error INSUFFICIENT_SCOPE =
-		new OAuth2Error("INSUFFICIENT_SCOPE", "Insufficient scope");
+		new OAuth2Error("insufficient_scope", "Insufficient scope");
 	
 	
 	/**
