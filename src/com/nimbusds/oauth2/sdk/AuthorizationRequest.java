@@ -45,7 +45,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-21)
  */
 @Immutable
 public class AuthorizationRequest implements OAuth2Request {
@@ -199,6 +199,44 @@ public class AuthorizationRequest implements OAuth2Request {
 	
 		return state;
 	}
+
+
+	/**
+	 * Returns the parameters for this authorisation request.
+	 *
+	 * <p>Example parameters:
+	 *
+	 * <pre>
+	 * response_type = code
+	 * client_id     = s6BhdRkqt3
+	 * state         = xyz
+	 * redirect_uri  = https://client.example.com/cb
+	 * </pre>
+	 * 
+	 * @return The parameters.
+	 *
+	 * @throws SerializeException If this authorisation request couldn't be
+	 *                            serialised to an parameters map.
+	 */
+	public Map<String,String> toParameters()
+		throws SerializeException {
+
+		Map <String,String> params = new LinkedHashMap<String,String>();
+		
+		params.put("response_type", rts.toString());
+		params.put("client_id", clientID.getValue());
+
+		if (redirectURI != null)
+			params.put("redirect_uri", redirectURI.toString());
+
+		if (scope != null)
+			params.put("scope", scope.toString());
+		
+		if (state != null)
+			params.put("state", state.getValue());
+
+		return params;
+	}
 	
 	
 	/**
@@ -224,21 +262,7 @@ public class AuthorizationRequest implements OAuth2Request {
 	public String toQueryString()
 		throws SerializeException {
 		
-		Map <String,String> params = new LinkedHashMap<String,String>();
-		
-		params.put("response_type", rts.toString());
-		params.put("client_id", clientID.getValue());
-
-		if (redirectURI != null)
-			params.put("redirect_uri", redirectURI.toString());
-
-		if (scope != null)
-			params.put("scope", scope.toString());
-		
-		if (state != null)
-			params.put("state", state.getValue());
-		
-		return URLUtils.serializeParameters(params);
+		return URLUtils.serializeParameters(toParameters());
 	}
 	
 	
@@ -285,34 +309,31 @@ public class AuthorizationRequest implements OAuth2Request {
 	
 		return toHTTPRequest(HTTPRequest.Method.GET);
 	}
-	
-	
+
+
 	/**
-	 * Parses an authorisation request from the specified URL query string.
+	 * Parses an authorisation request from the specified parameters.
 	 *
-	 * <p>Example URL query string:
+	 * <p>Example parameters:
 	 *
 	 * <pre>
-	 * response_type=code
-	 * &amp;client_id=s6BhdRkqt3
-	 * &amp;state=xyz
-	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+	 * response_type = code
+	 * client_id     = s6BhdRkqt3
+	 * state         = xyz
+	 * redirect_uri  = https://client.example.com/cb
 	 * </pre>
 	 *
-	 * @param query The URL query string. Must not be {@code null}.
+	 * @param params The parameters. Must not be {@code null}.
 	 *
-	 * @return The parsed authorisation request.
+	 * @return The authorisation request.
 	 *
-	 * @throws ParseException If the query string couldn't be parsed to an 
+	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final String query)
+	public static AuthorizationRequest parse(final Map<String,String> params)
 		throws ParseException {
-	
-		Map <String,String> params = URLUtils.parseParameters(query);
-		
-		String v = null;
 
+		String v = null;
 
 		// Parse mandatory client ID first
 		v = params.get("client_id");
@@ -372,6 +393,33 @@ public class AuthorizationRequest implements OAuth2Request {
 
 
 		return new AuthorizationRequest(rts, clientID, redirectURI, scope, state);
+
+	}
+	
+	
+	/**
+	 * Parses an authorisation request from the specified URL query string.
+	 *
+	 * <p>Example URL query string:
+	 *
+	 * <pre>
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+	 * </pre>
+	 *
+	 * @param query The URL query string. Must not be {@code null}.
+	 *
+	 * @return The authorisation request.
+	 *
+	 * @throws ParseException If the query string couldn't be parsed to an 
+	 *                        authorisation request.
+	 */
+	public static AuthorizationRequest parse(final String query)
+		throws ParseException {
+	
+		return parse(URLUtils.parseParameters(query));
 	}
 	
 	
