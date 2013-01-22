@@ -11,21 +11,13 @@ import com.nimbusds.oauth2.sdk.OAuth2Error;
  * {@link com.nimbusds.oauth2.sdk.OAuth2Error OAuth 2.0 errors}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
+ * @version $version$ (2013-01-22)
  */
 @Immutable
 public final class OIDCError {
 
 	
 	// Authorisation
-        
-	/**
-	 * The {@code redirect_uri} in the {@link OIDCAuthorizationRequest} 
-	 * dost not match any of the client's pre-registered
-	 * {@code redirect_uri}s. 
-	 */
-	public static final OAuth2Error INVALID_REDIRECT_URI =
-		new OAuth2Error("invalid_redirect_uri", "Invalid redirect URI");
 
 
 	/**
@@ -97,6 +89,15 @@ public final class OIDCError {
 		new OAuth2Error("invalid_openid_request_object", "Invalid OpenID request object");
 
 
+	// UserInfo
+
+	/**
+	 * The requested UserInfo schema is invalid or unsupported.
+	 */
+	public static final OAuth2Error INVALID_SCHEMA =
+		new OAuth2Error("invalid_schema", "The requested schema is invalid or unsupported");
+
+	
 	/**
 	 * Prevents public instantiation.
 	 */
