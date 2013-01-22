@@ -121,10 +121,6 @@ public class UserInfo extends ClaimsSet {
 			return null;
 	}
 
-
-	
-
-////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Gets the full name. Corresponds to the {@code name} claim, with no
@@ -190,21 +186,281 @@ public class UserInfo extends ClaimsSet {
 	public void setName(final LangTaggedObject<String> name) {
 	
 		setStringClaim("name", name);
+	}	
+	
+	
+	/**
+	 * Gets the given or first name. Corresponds to the {@code given_name} 
+	 * claim, with no language tag.
+	 *
+	 * @return The given or first name, {@code null} if not specified.
+	 */
+	public String getGivenName() {
+	
+		return getStringClaim("given_name");
+	}
+	
+	
+	/**
+	 * Gets the given or first name. Corresponds to the {@code given_name} 
+	 * claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get 
+	 *                the non-tagged entry.
+	 *
+	 * @return The given or first name, {@code null} if not specified.
+	 */
+	public String getGivenName(final LangTag langTag) {
+	
+		if (langTag == null)
+			return getStringClaim("given_name");
+
+		else
+			return getStringClaim("given_name#" + langTag);
+	}
+	
+	
+	/**
+	 * Gets the given or first name entries. Correspond to the 
+	 * {@code given_name} claim.
+	 *
+	 * @return The given or first name entries, empty map if none.
+	 */
+	public Map<LangTag,String> getGivenNameEntries() {
+	
+		return getLangTaggedStringClaims("given_name");
 	}
 
-////////////////////////////////////////////////////////////////////////////////	
+
+	/**
+	 * Sets the given or first name. Corresponds to the {@code given_name} 
+	 * claim, with no language tag.
+	 *
+	 * @param givenName The given or first name. {@code null} if not 
+	 *                  specified.
+	 */
+	public void setGivenName(final String givenName) {
+	
+		setStringClaim("given_name", givenName);
+	}
 	
 	
+	/**
+	 * Sets the given or first name. Corresponds to the {@code given_name}
+	 * claim, with an optional language tag.
+	 *
+	 * @param givenName The given or first name, with optional language 
+	 *                  tag. {@code null} if not specified.
+	 */
+	public void setGivenName(final LangTaggedObject<String> givenName) {
+	
+		setStringClaim("given_name", givenName);
+	}
+
+	
+	/**
+	 * Gets the surname or last name. Corresponds to the 
+	 * {@code family_name} claim, with no language tag.
+	 *
+	 * @return The surname or last name, {@code null} if not specified.
+	 */
+	public String getFamilyName() {
+	
+		return getStringClaim("family_name");
+	}
 	
 	
+	/**
+	 * Gets the surname or last name. Corresponds to the 
+	 * {@code family_name} claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get 
+	 *                the non-tagged entry.
+	 *
+	 * @return The surname or last name, {@code null} if not specified.
+	 */
+	public String getFamilyName(final LangTag langTag) {
+	
+		if (langTag == null)
+			return getStringClaim("family_name");
+
+		else
+			return getStringClaim("family_name#" + langTag);
+	}
 	
 	
+	/**
+	 * Gets the surname or last name entries. Correspond to the 
+	 * @code family_name} claim.
+	 *
+	 * @return The surname or last name entries, empty map if none.
+	 */
+	public Map<LangTag,String> getFamilyNameEntries() {
+	
+		return getLangTaggedStringClaims("family_name");
+	}
+
+
+	/**
+	 * Sets the surname or last name. Corresponds to the 
+	 * {@code family_name} claim, with no language tag.
+	 *
+	 * @param familyName The surname or last name. {@code null} if not 
+	 *                   specified.
+	 */
+	public void setFamilyName(final String familyName) {
+	
+		setStringClaim("family_name", familyName);
+	}
 	
 	
+	/**
+	 * Sets the surname or last name. Corresponds to the 
+	 * {@code family_name} claim, with an optional language tag.
+	 *
+	 * @param familyName The surname or last name, with optional language 
+	 *                   tag. {@code null} if not specified.
+	 */
+	public void setFamilyName(final LangTaggedObject<String> familyName) {
+	
+		setStringClaim("family_name", familyName);
+	}
+
+	
+	/**
+	 * Gets the middle name. Corresponds to the {@code middle_name} claim, 
+	 * with no language tag.
+	 *
+	 * @return The middle name, {@code null} if not specified.
+	 */
+	public String getMiddleName() {
+	
+		return getStringClaim("middle_name");
+	}
 	
 	
+	/**
+	 * Gets the middle name. Corresponds to the {@code middle_name} claim,
+	 * with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get 
+	 *                the non-tagged entry.
+	 *
+	 * @return The middle name, {@code null} if not specified.
+	 */
+	public String getMiddleName(final LangTag langTag) {
+	
+		if (langTag == null)
+			return getStringClaim("middle_name");
+
+		else
+			return getStringClaim("middle_name#" + langTag);
+	}
 	
 	
+	/**
+	 * Gets the middle name entries. Correspond to the {@code middle_name}
+	 * claim.
+	 *
+	 * @return The middle name entries, empty map if none.
+	 */
+	public Map<LangTag,String> getMiddleNameEntries() {
+	
+		return getLangTaggedStringClaims("middle_name");
+	}
+
+
+	/**
+	 * Sets the middle name. Corresponds to the {@code middle_name} claim,
+	 * with no language tag.
+	 *
+	 * @param middleName The middle name. {@code null} if not specified.
+	 */
+	public void setMiddleName(final String middleName) {
+	
+		setStringClaim("middle_name", middleName);
+	}
+	
+	
+	/**
+	 * Sets the middle name. Corresponds to the {@code middle_name} claim, 
+	 * with an optional language tag.
+	 *
+	 * @param middleName The middle name, with optional language tag. 
+	 *                   {@code null} if not specified.
+	 */
+	public void setMiddleName(final LangTaggedObject<String> middleName) {
+	
+		setStringClaim("middle_name", middleName);
+	}
+	
+	
+	/**
+	 * Gets the casual name. Corresponds to the {@code nickname} claim, 
+	 * with no language tag.
+	 *
+	 * @return The casual name, {@code null} if not specified.
+	 */
+	public String getNickname() {
+	
+		return getStringClaim("nickname");
+	}
+	
+	
+	/**
+	 * Gets the casual name. Corresponds to the {@code nickname} claim, 
+	 * with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get 
+	 *                the non-tagged entry.
+	 *
+	 * @return The casual name, {@code null} if not specified.
+	 */
+	public String getNickname(final LangTag langTag) {
+	
+		if (langTag == null)
+			return getStringClaim("nickname");
+
+		else
+			return getStringClaim("nickname#" + langTag);
+	}
+	
+	
+	/**
+	 * Gets the casual name entries. Correspond to the {@code nickname} 
+	 * claim.
+	 *
+	 * @return The casual name entries, empty map if none.
+	 */
+	public Map<LangTag,String> getNicknameEntries() {
+	
+		return getLangTaggedStringClaims("nickname");
+	}
+
+
+	/**
+	 * Sets the casual name. Corresponds to the {@code nickname} claim, 
+	 * with no language tag.
+	 *
+	 * @param nickname The casual name. {@code null} if not specified.
+	 */
+	public void setNickname(final String nickname) {
+	
+		setStringClaim("nickname", nickname);
+	}
+	
+	
+	/**
+	 * Sets the casual name. Corresponds to the {@code nickname} claim, 
+	 * with an optional language tag.
+	 *
+	 * @param nickname The casual name, with optional language tag. 
+	 *                 {@code null} if not specified.
+	 */
+	public void setNickname(final LangTaggedObject<String> nickname) {
+	
+		setStringClaim("nickname", nickname);
+	}
 	
 	
 	/**
