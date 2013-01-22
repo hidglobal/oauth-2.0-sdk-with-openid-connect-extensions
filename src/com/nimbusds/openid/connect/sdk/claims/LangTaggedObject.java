@@ -33,6 +33,17 @@ public class LangTaggedObject<T> {
 
 
 	/**
+	 * Creates a new language-tagged object with no tag.
+	 *
+	 * @param object  The object. Must not be {@code null}.
+	 */
+	public LangTaggedObject(final T object) {
+
+		this(object, null);
+	}
+
+
+	/**
 	 * Creates a new language-tagged object.
 	 *
 	 * @param object  The object to language-tag. Must not be {@code null}.
@@ -71,6 +82,12 @@ public class LangTaggedObject<T> {
 	}
 
 
+	/**
+	 * Overrides {@code java.lang.Object.equals()}.
+	 *
+	 * @return Returns {@code true} if the other object is also a language
+	 *         tagged object with the same value (object) and language tag.
+	 */
 	@Override
 	public boolean equals(final Object other) {
 
