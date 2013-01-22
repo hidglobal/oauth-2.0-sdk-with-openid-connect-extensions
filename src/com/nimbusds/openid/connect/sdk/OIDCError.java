@@ -97,6 +97,48 @@ public final class OIDCError {
 	public static final OAuth2Error INVALID_SCHEMA =
 		new OAuth2Error("invalid_schema", "The requested schema is invalid or unsupported");
 
+
+	// Client registration
+	
+	/**
+	 * Client registration: The value of the registration {@code type} is 
+	 * invalid or not supported.
+	 */
+	public static final OAuth2Error INVALID_TYPE =
+		new OAuth2Error("invalid_type", "Invalid or unsupported client registration type");
+	
+	
+	/**
+	 * Client registration: The value of {@code client_id} is invalid. 
+	 */
+	public static final OAuth2Error	INVALID_CLIENT_ID =
+		new OAuth2Error("invalid_client_id", "Invalid client identifier");
+	
+	
+	/**
+	 * Client registration: The {@code client_secret} provided for a 
+	 * {@code client_update} or {@code secret_rotate} is not valid for the 
+	 * provided {@code client_id}.
+	 */
+	public static final OAuth2Error INVALID_CLIENT_SECRET =
+		new OAuth2Error("invalid_client_secret", "Invalid client secret");
+
+
+	/**
+	 * Client registration: The value of one or more {@code redirect_uris} 
+	 * is invalid. 
+	 */
+	public static final OAuth2Error INVALID_REDIRECT_URI =
+		new OAuth2Error("invalid_redirect_uri", "Invalid redirection URI(s)");
+	
+	
+	/**
+	 * Client registration: The value of one of the configuration 
+	 * parameters is invalid.
+	 */
+	public static final OAuth2Error	INVALID_CONFIGURATION_PARAMETER =
+		new OAuth2Error("invalid_configuration_parameter", "Invalid configuration parameter");
+
 	
 	/**
 	 * Prevents public instantiation.
