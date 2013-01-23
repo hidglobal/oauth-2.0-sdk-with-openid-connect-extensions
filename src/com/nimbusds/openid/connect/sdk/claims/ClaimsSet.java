@@ -20,7 +20,7 @@ import com.nimbusds.langtag.LangTagException;
  * Claims set serialisable to a JSON object.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-23)
  */
 public abstract class ClaimsSet {
 
@@ -28,35 +28,119 @@ public abstract class ClaimsSet {
 	/**
 	 * The JSON object representing the claims set.
 	 */
-	private JSONObject claims = new JSONObject();
+	private final JSONObject claims;
 
 
+	/**
+	 * Creates a new empty claims set.
+	 */
+	protected ClaimsSet() {
 
-	protected String getStringClaim(final String name) {
-
-		Object value = claims.get(name);
-
-		if (value != null && value instanceof String)
-			return (String)value;
-		else
-			return null;
+		claims = new JSONObject();
 	}
 
 
-	protected Map<LangTag,String> getLangTaggedStringClaims(final String name) {
+	/**
+	 * Creates a new claims set from the specified JSON object.
+	 *
+	 * @param jsonObject The JSON object. Must not be {@code null}.
+	 */
+	protected ClaimsSet(final JSONObject jsonObject) {
 
-		Map<LangTag,String> map = new HashMap<LangTag,String>();
+		if (jsonObject == null)
+			throw new IllegalArgumentException("The JSON object must not be null");
+
+		claims = jsonObject;
+	}
+
+
+	/**
+	 * Gets a claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public Object getClaim(final String name) {
+
+		return claims.get(name);
+	}
+
+
+	/**
+	 * Gets a claim that casts to the specified class.
+	 *
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param clazz The Java class that the claim value should cast to.
+	 *              Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> T getClaim(final String name, final Class<T> clazz) {
+
+		try {
+			return (T)claims.get(name);
+
+		} catch (ClassCastException e) {
+
+			return null;
+		}
+	}
+
+
+	/**
+	 * Returns a map of all instances, including language-tagged, of a 
+	 * claim with the specified base name.
+	 *
+	 * <p>Example JSON serialised claims set:
+	 *
+	 * <pre>
+	 * {
+	 *   "month"    : "January",
+	 *   "month#de" : "Januar"
+	 *   "month#es" : "enero",
+	 *   "month#it" : "gennaio"
+	 * }
+	 * </pre>
+	 *
+	 * <p>The "month" claim instances as java.util.Map:
+	 *
+	 * <pre>
+	 * null => "January" (no language tag)
+	 * "de" => "Januar"
+	 * "es" => "enero"
+	 * "it" => "gennaio"
+	 * </pre>
+	 *
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param clazz The Java class that the claim values should cast to.
+	 *              Must not be {@code null}.
+	 *
+	 * @return The matching language-tagged claim values, empty map if
+	 *         none. A {@code null} key indicates the value has no language
+	 *         tag (corresponds to the base name).
+	 */
+	@SuppressWarnings("unchecked")
+	public <T> Map<LangTag,T> getLangTaggedClaim(final String name, final Class<T> clazz) {
+
+		Map<LangTag,T> map = new HashMap<LangTag,T>();
 
 		for (Map.Entry<String,Object> entry: claims.entrySet()) {
 
-			if (! (entry.getValue() instanceof String))
-				continue;
+			T value = null;
 
+			try {
+				value = (T)entry.getValue();
+
+			} catch (ClassCastException e) {
+				continue; // skip
+			}
 			
 			if (entry.getKey().equals(name)) {
 
 				// Claim name matches, no tag	
-				map.put(null, (String)entry.getValue());
+				map.put(null, value);
 			}
 			else if (entry.getKey().startsWith(name + '#')) {
 
@@ -76,7 +160,7 @@ public abstract class ClaimsSet {
 					}
 				}
 
-				map.put(langTag, (String)entry.getValue());
+				map.put(langTag, value);
 			}
 		}
 
@@ -84,8 +168,16 @@ public abstract class ClaimsSet {
 	}
 
 
-
-	protected void setStringClaim(final String name, final String value) {
+	/**
+	 * Sets a claim.
+	 *
+	 * @param name  The claim name, with an optional language tag. Must not
+	 *              be {@code null}.
+	 * @param value The claim value. Should serialise to a JSON entity. If
+	 *              {@code null} any existing claim with the same name will
+	 *              be removed.
+	 */
+	public void setClaim(final String name, final Object value) {
 
 		if (value != null)
 			claims.put(name, value);
@@ -94,8 +186,14 @@ public abstract class ClaimsSet {
 	}
 
 
-	
-	protected void setStringClaim(final String name, final LangTaggedObject<String> value) {
+	/**
+	 * Sets a claim with an optional language tag.
+	 *
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param value The claim value. If {@code null} the operation will
+	 *              have no effect.
+	 */
+	public <T> void setClaim(final String name, final LangTaggedObject<T> value) {
 
 		if (value == null)
 			return;
@@ -107,27 +205,84 @@ public abstract class ClaimsSet {
 	}
 
 
-	protected Boolean getBooleanClaim(final String name) {
+	/**
+	 * Removes a claim.
+	 *
+	 * @param name The claim name, with an optional language tag. Must not
+	 *             be {@code null}.
+	 */
+	public void removeClaim(final String name) {
 
-		Object value = claims.get(name);
-
-		if (value != null && value instanceof Boolean)
-			return (Boolean)value;
-		else
-			return null;
+		claims.remove(name);
 	}
 
 
-	protected void setBooleanClaim(final String name, final Boolean value) {
+	/**
+	 * Gets a string-based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public String getStringClaim(final String name) {
 
-		if (value != null)
-			claims.put(name, value);
-		else
-			claims.remove(name);
+		return getClaim(name, String.class);
 	}
 
 
-	protected URL getURLClaim(final String name) {
+	/**
+	 * Gets a string-based claim with an optional language tag.
+	 *
+	 * @param name    The claim name. Must not be {@code null}.
+	 * @param langTag The language tag of the claim value, {@code null} to 
+	 *                get the non-tagged value.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public String getStringClaim(final String name, final LangTag langTag) {
+	
+		if (langTag == null)
+			return getStringClaim(name);
+
+		else
+			return getStringClaim(name + '#' + langTag);
+	}
+
+
+	/**
+	 * Gets a boolean-based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public Boolean getBooleanClaim(final String name) {
+
+		return getClaim(name, Boolean.class);
+	}
+
+
+	/**
+	 * Gets a number-based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public Number getNumberClaim(final String name) {
+
+		return getClaim(name, Number.class);
+	}
+
+
+	/**
+	 * Gets an URL string based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public URL getURLClaim(final String name) {
 
 		String value = getStringClaim(name);
 
@@ -144,16 +299,30 @@ public abstract class ClaimsSet {
 	}
 
 
-	protected void setURLClaim(final String name, final URL value) {
+	/**
+	 * Sets an URL string based claim.
+	 *
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param value The claim value. If {@code null} any existing claim 
+	 *              with the same name will be removed.
+	 */
+	public void setURLClaim(final String name, final URL value) {
 
 		if (value != null)
-			claims.put(name, value.toString());
+			setClaim(name, value.toString());
 		else
-			claims.remove(name);
+			removeClaim(name);
 	}
 
 
-	protected InternetAddress getEmailClaim(final String name) {
+	/**
+	 * Gets an email string based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified.
+	 */
+	public InternetAddress getEmailClaim(final String name) {
 
 		String value = getStringClaim(name);
 
@@ -170,12 +339,19 @@ public abstract class ClaimsSet {
 	}
 
 
-	protected void setEmailClaim(final String name, final InternetAddress value) {
+	/**
+	 * Sets an email string based claim.
+	 *
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param value The claim value. If {@code null} any existing claim 
+	 *              with the same name will be removed.
+	 */
+	public void setEmailClaim(final String name, final InternetAddress value) {
 
 		if (value != null)
-			claims.put(name, value.getAddress());
+			setClaim(name, value.getAddress());
 		else
-			claims.remove(name);
+			removeClaim(name);
 	}
 	
 	

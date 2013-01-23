@@ -4,6 +4,7 @@ package com.nimbusds.openid.connect.sdk.claims;
 import java.net.URL;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -45,7 +46,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-23)
  */
 public class UserInfo extends ClaimsSet {
 
@@ -92,8 +93,7 @@ public class UserInfo extends ClaimsSet {
 	
 	
 	/**
-	 * Creates a new minimal UserInfo claims set. Any optional claims are
-	 * specified with the setter methods.
+	 * Creates a new minimal UserInfo claims set.
 	 *
 	 * @param sub The subject. Must not be {@code null}.
 	 */
@@ -102,14 +102,31 @@ public class UserInfo extends ClaimsSet {
 		if (sub == null)
 			throw new IllegalArgumentException("The subject must not be null");
 
-		setStringClaim("sub", sub.getValue());
+		setClaim("sub", sub.getValue());
+	}
+
+
+	/**
+	 * Creates a new UserInfo claims set from the specified JSON object.
+	 *
+	 * @param jsonObject The JSON object. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException If the JSON object doesn't contain
+	 *                                  a subject {@code sub} string claim.
+	 */
+	public UserInfo(final JSONObject jsonObject) {
+
+		super(jsonObject);
+
+		if (getSubject() == null)
+			throw new IllegalArgumentException("Missing or invalid \"sub\" claim");
 	}
 	
 	
 	/**
 	 * Gets the UserInfo subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The subject.
+	 * @return The subject, {@code null} if not specified.
 	 */
 	public Subject getSubject() {
 	
@@ -145,11 +162,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getName(final LangTag langTag) {
 	
-		if (langTag == null)
-			return getStringClaim("name");
-
-		else
-			return getStringClaim("name#" + langTag);
+		return getStringClaim("name", langTag);
 	}
 	
 	
@@ -160,7 +173,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getNameEntries() {
 	
-		return getLangTaggedStringClaims("name");
+		return getLangTaggedClaim("name", String.class);
 	}
 
 
@@ -172,7 +185,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setName(final String name) {
 	
-		setStringClaim("name", name);
+		setClaim("name", name);
 	}
 	
 	
@@ -185,7 +198,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setName(final LangTaggedObject<String> name) {
 	
-		setStringClaim("name", name);
+		setClaim("name", name);
 	}	
 	
 	
@@ -212,11 +225,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getGivenName(final LangTag langTag) {
 	
-		if (langTag == null)
-			return getStringClaim("given_name");
-
-		else
-			return getStringClaim("given_name#" + langTag);
+		return getStringClaim("given_name", langTag);
 	}
 	
 	
@@ -228,7 +237,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getGivenNameEntries() {
 	
-		return getLangTaggedStringClaims("given_name");
+		return getLangTaggedClaim("given_name", String.class);
 	}
 
 
@@ -241,7 +250,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setGivenName(final String givenName) {
 	
-		setStringClaim("given_name", givenName);
+		setClaim("given_name", givenName);
 	}
 	
 	
@@ -254,7 +263,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setGivenName(final LangTaggedObject<String> givenName) {
 	
-		setStringClaim("given_name", givenName);
+		setClaim("given_name", givenName);
 	}
 
 	
@@ -281,11 +290,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getFamilyName(final LangTag langTag) {
 	
-		if (langTag == null)
-			return getStringClaim("family_name");
-
-		else
-			return getStringClaim("family_name#" + langTag);
+		return getStringClaim("family_name", langTag);
 	}
 	
 	
@@ -297,7 +302,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getFamilyNameEntries() {
 	
-		return getLangTaggedStringClaims("family_name");
+		return getLangTaggedClaim("family_name", String.class);
 	}
 
 
@@ -310,7 +315,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setFamilyName(final String familyName) {
 	
-		setStringClaim("family_name", familyName);
+		setClaim("family_name", familyName);
 	}
 	
 	
@@ -323,7 +328,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setFamilyName(final LangTaggedObject<String> familyName) {
 	
-		setStringClaim("family_name", familyName);
+		setClaim("family_name", familyName);
 	}
 
 	
@@ -350,11 +355,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getMiddleName(final LangTag langTag) {
 	
-		if (langTag == null)
-			return getStringClaim("middle_name");
-
-		else
-			return getStringClaim("middle_name#" + langTag);
+		return getStringClaim("middle_name", langTag);
 	}
 	
 	
@@ -366,7 +367,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getMiddleNameEntries() {
 	
-		return getLangTaggedStringClaims("middle_name");
+		return getLangTaggedClaim("middle_name", String.class);
 	}
 
 
@@ -378,7 +379,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setMiddleName(final String middleName) {
 	
-		setStringClaim("middle_name", middleName);
+		setClaim("middle_name", middleName);
 	}
 	
 	
@@ -391,7 +392,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setMiddleName(final LangTaggedObject<String> middleName) {
 	
-		setStringClaim("middle_name", middleName);
+		setClaim("middle_name", middleName);
 	}
 	
 	
@@ -418,11 +419,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getNickname(final LangTag langTag) {
 	
-		if (langTag == null)
-			return getStringClaim("nickname");
-
-		else
-			return getStringClaim("nickname#" + langTag);
+		return getStringClaim("nickname", langTag);
 	}
 	
 	
@@ -434,7 +431,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getNicknameEntries() {
 	
-		return getLangTaggedStringClaims("nickname");
+		return getLangTaggedClaim("nickname", String.class);
 	}
 
 
@@ -446,7 +443,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setNickname(final String nickname) {
 	
-		setStringClaim("nickname", nickname);
+		setClaim("nickname", nickname);
 	}
 	
 	
@@ -459,7 +456,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setNickname(final LangTaggedObject<String> nickname) {
 	
-		setStringClaim("nickname", nickname);
+		setClaim("nickname", nickname);
 	}
 	
 	
@@ -484,7 +481,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setPreferredUsername(final String preferredUsername) {
 	
-		setStringClaim("preferred_username", preferredUsername);
+		setClaim("preferred_username", preferredUsername);
 	}
 	
 	
@@ -602,7 +599,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setEmailVerified(final Boolean emailVerified) {
 	
-		setBooleanClaim("email_verified", emailVerified);
+		setClaim("email_verified", emailVerified);
 	}
 	
 	
@@ -630,9 +627,9 @@ public class UserInfo extends ClaimsSet {
 	public void setGender(final Gender gender) {
 	
 		if (gender != null)
-			setStringClaim("gender", gender.getValue());
+			setClaim("gender", gender.getValue());
 		else
-			setStringClaim("gender", (String)null);
+			removeClaim("gender");
 	}
 	
 	
@@ -654,7 +651,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setBirthdate(final String birthdate) {
 	
-		setStringClaim("birthdate", birthdate);
+		setClaim("birthdate", birthdate);
 	}
 	
 	
@@ -676,7 +673,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setZoneinfo(final String zoneinfo) {
 	
-		setStringClaim("zoneinfo", zoneinfo);
+		setClaim("zoneinfo", zoneinfo);
 	}
 	
 	
@@ -698,7 +695,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setLocale(final String locale) {
 	
-		setStringClaim("locale", locale);
+		setClaim("locale", locale);
 	}
 	
 	
@@ -724,48 +721,102 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setPhoneNumber(final String phoneNumber) {
 	
-		setStringClaim("phone_number", phoneNumber);
+		setClaim("phone_number", phoneNumber);
 	}
-	
-	
+
+
 	/**
-	 * Adds the specified preferred address, with optional language tag.
-	 * Corresponds to the {@code address} claim.
-	 *
-	 * @param address The preferred address, with optional language tag.
-	 *                {@code null} if not specified.
-	 */
-	public void addAddress(final Object address) {
-	
-		
-	}
-	
-	
-	/**
-	 * Gets the preferred address with no language tag. Corresponds to the 
-	 * {@code address} claim.
-	 *
-	 * @return The preferred address with no language tag, {@code null} if 
-	 *         not specified.
-	 */
-	public Object getAddress() {
-	
-		return null;
-	}
-	
-	
-	/**
-	 * Gets the preferred address with the specified language tag. 
-	 * Corresponds to the {@code address} claim.
-	 *
-	 * @param langTag The language tag of the entry, {@code null} to get the
-	 *                untagged entry.
+	 * Gets the preferred address. Corresponds to the {@code address} 
+	 * claim, with no language tag.
 	 *
 	 * @return The preferred address, {@code null} if not specified.
 	 */
-	public Object getAddress(final LangTag langTag) {
+	public Address getAddress() {
 	
-		return null;
+		return getAddress(null);
+	}
+	
+	
+	/**
+	 * Gets the preferred address. Corresponds to the {@code address} 
+	 * claim, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get 
+	 *                the non-tagged entry.
+	 *
+	 * @return The preferred address, {@code null} if not specified.
+	 */
+	public Address getAddress(final LangTag langTag) {
+	
+		String name;
+
+		if (langTag!= null)
+			name = "address#" + langTag;
+		else
+			name = "address";
+
+		JSONObject jsonObject = getClaim(name, JSONObject.class);
+
+		if (jsonObject == null)
+			return null;
+
+		return new Address(jsonObject);
+	}
+	
+	
+	/**
+	 * Gets the preferred address entries. Correspond to the 
+	 * {@code address} claim.
+	 *
+	 * @return The preferred address entries, empty map if none.
+	 */
+	public Map<LangTag,Address> getAddressEntries() {
+	
+		Map<LangTag,JSONObject> entriesIn = getLangTaggedClaim("address", JSONObject.class);
+
+		Map<LangTag,Address> entriesOut = new HashMap<LangTag,Address>();
+
+		for (Map.Entry<LangTag,JSONObject> en: entriesIn.entrySet())
+			entriesOut.put(en.getKey(), new Address(en.getValue()));
+
+		return entriesOut;
+	}
+
+
+	/**
+	 * Sets the preferred address. Corresponds to the {@code address} 
+	 * claim, with no language tag.
+	 *
+	 * @param address The preferred address. {@code null} if not specified.
+	 */
+	public void setAddress(final Address address) {
+	
+		if (address != null)
+			setClaim("address", address.getJSONObject());
+		else
+			removeClaim("address");
+	}
+	
+	
+	/**
+	 * Sets the preferred address. Corresponds to the {@code address}
+	 * claim, with an optional language tag.
+	 *
+	 * @param address The preferred address, with optional language tag. 
+	 *                {@code null} if not specified.
+	 */
+	public void setAddress(final LangTaggedObject<Address> address) {
+	
+		LangTag langTag = address.getLangTag();
+
+		String name;
+
+		if (langTag!= null)
+			name = "address#" + langTag;
+		else
+			name = "address";
+
+		setClaim(name, address.getObject().getJSONObject());
 	}
 	
 	
@@ -791,7 +842,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setUpdatedTime(final String updatedTime) {
 	
-		setStringClaim("updated_time", updatedTime);
+		setClaim("updated_time", updatedTime);
 	}
 	
 	
