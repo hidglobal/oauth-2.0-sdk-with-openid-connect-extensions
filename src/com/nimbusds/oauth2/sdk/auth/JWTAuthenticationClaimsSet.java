@@ -53,7 +53,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-24)
  */
 public class JWTAuthenticationClaimsSet {
 
@@ -324,19 +324,19 @@ public class JWTAuthenticationClaimsSet {
 
 		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
 
-		jwtClaimsSet.setIssuerClaim(iss.getValue());
-		jwtClaimsSet.setSubjectClaim(sub.getValue());
-		jwtClaimsSet.setAudienceClaim(new String[]{aud.getValue()});
-		jwtClaimsSet.setExpirationTimeClaim(exp.getTime() / 1000);
+		jwtClaimsSet.setIssuer(iss.getValue());
+		jwtClaimsSet.setSubject(sub.getValue());
+		jwtClaimsSet.setAudience(new String[]{aud.getValue()});
+		jwtClaimsSet.setExpirationTime(exp);
 
 		if (nbf != null)
-			jwtClaimsSet.setNotBeforeClaim(nbf.getTime() / 1000);
+			jwtClaimsSet.setNotBeforeTime(nbf);
 		
 		if (iat != null)
-			jwtClaimsSet.setIssuedAtClaim(iat.getTime() / 1000);
+			jwtClaimsSet.setIssueTime(iat);
 		
 		if (jti != null)
-			jwtClaimsSet.setJWTIDClaim(jti.getValue());
+			jwtClaimsSet.setJWTID(jti.getValue());
 
 		return jwtClaimsSet;
 	}
