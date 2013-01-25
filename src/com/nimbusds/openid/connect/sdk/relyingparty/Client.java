@@ -32,7 +32,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-25)
  */
 public class Client {
 
@@ -40,67 +40,67 @@ public class Client {
 	/**
 	 * The registered client ID.
 	 */
-	private final ClientID clientID;
+	private final ClientID id;
 	
 	
 	/**
 	 * Redirect URIs.
 	 */
-	private Set<URL> redirectURIs;
+	private Set<URL> redirectURIs = null;
 
 
 	/**
 	 * Administrator contacts for the client.
 	 */
-	private List<InternetAddress> contacts;
+	private List<InternetAddress> contacts = null;
 
 
 	/**
 	 * The client application type.
 	 */
-	private ApplicationType applicationType;
+	private ApplicationType applicationType = null;
 
 
 	/**
-	 * The client application name.
+	 * The client name.
 	 */
-	private String applicationName;
+	private String name = null;
 
 
 	/**
 	 * The client application logo URL.
 	 */
-	private URL applicationLogoURL;
+	private URL logoURL = null;
 
 
 	/**
-	 * The client application policy for use of end-user data.
+	 * The client policy for use of end-user data.
 	 */
-	private URL policyURL;
+	private URL policyURL = null;
 
 
 	/**
-	 * The client application terms of service.
+	 * The client terms of service.
 	 */
-	private URL termsOfServiceURL;
+	private URL termsOfServiceURL = null;
 
 
 	/**
 	 * The subject identifier type for responses to this client.
 	 */
-	private SubjectType subjectType;
+	private SubjectType subjectType = null;
 
 
 	/**
 	 * Sector identifier HTTPS URL.
 	 */
-	private URL sectorIDURL;
+	private URL sectorIDURL = null;
 
 
 	/**
 	 * Token endpoint authentication method.
 	 */
-	private ClientAuthenticationMethod tokenEndpointAuthMethod;
+	private ClientAuthenticationMethod tokenEndpointAuthMethod = null;
 
 
 	/**
@@ -109,7 +109,7 @@ public class Client {
 	 * objects. If {@link #encryptionJWKURL} is not provided, also used to 
 	 * encrypt the ID Token and UserInfo endpoint responses to the client.
 	 */
-	private URL jwkSetURL;
+	private URL jwkSetURL = null;
 
 
 	/**
@@ -117,7 +117,7 @@ public class Client {
 	 * are used to encrypt the ID Token and UserInfo endpoint responses to 
 	 * the client.
 	 */
-	private URL encryptionJWKSetURL;
+	private URL encryptionJWKSetURL = null;
 
 
 	/**
@@ -127,7 +127,7 @@ public class Client {
 	 * used to encrypt the ID Token and UserInfo endpoint responses to the
 	 * client.
 	 */
-	private URL x509URL;
+	private URL x509URL = null;
 
 
 	/**
@@ -135,56 +135,56 @@ public class Client {
 	 * chain that is used to encrypt the ID Token and UserInfo endpoint
 	 * responses to the client.
 	 */
-	private URL encryptionX509URL;
+	private URL encryptionX509URL = null;
 
 
 	/**
 	 * The JSON Web Signature (JWS) algorithm required for the OpenID 
 	 * request objects sent by this client.
 	 */
-	private JWSAlgorithm requestObjectJWSAlg;
+	private JWSAlgorithm requestObjectJWSAlg = null;
 
 
 	/**
 	 * The JSON Web Signature (JWS) algorithm required for the ID Tokens
 	 * issued to this client.
 	 */
-	private JWSAlgorithm idTokenJWSAlg;
+	private JWSAlgorithm idTokenJWSAlg = null;
 
 
 	/**
 	 * The JSON Web Encryption (JWE) algorithm required for the ID Tokens
 	 * issued to this client.
 	 */
-	private JWEAlgorithm idTokenJWEAlg;
+	private JWEAlgorithm idTokenJWEAlg = null;
 
 
 	/**
 	 * The encryption method (JWE enc) required for the ID Tokens issued to
 	 * this client.
 	 */
-	private EncryptionMethod idTokenJWEEnc;
+	private EncryptionMethod idTokenJWEEnc = null;
 
 
 	/**
 	 * The JSON Web Signature (JWS) algorithm required for the UserInfo
 	 * responses to this client.
 	 */
-	private JWSAlgorithm userInfoJWSAlg;
+	private JWSAlgorithm userInfoJWSAlg = null;
 
 
 	/**
 	 * The JSON Web Encryption (JWE) algorithm required for the UserInfo
 	 * responses to this client.
 	 */
-	private JWEAlgorithm userInfoJWEAlg;
+	private JWEAlgorithm userInfoJWEAlg = null;
 
 
 	/**
 	 * The encryption method (JWE enc) required for the UserInfo responses
 	 * to this client.
 	 */
-	private EncryptionMethod userInfoJWEEnc;
+	private EncryptionMethod userInfoJWEEnc = null;
 
 
 	/**
@@ -203,26 +203,32 @@ public class Client {
 	/**
 	 * The default Authentication Context Class Reference (ACR).
 	 */
-	private ACR defaultACR;
+	private ACR defaultACR = null;
 
 
 	/**
-	 * Client JavaScript origin URIs.
+	 * Authorisation server initiated login HTTPS URL.
 	 */
-	private Set<URL> originURIs;
+	private URL initiateLoginURI = null;
+
+
+	/**
+	 * Logout redirect URL.
+	 */
+	private URL postLogoutRedirectURI = null;
 
 
 	/** 
 	 * Creates a new OpenID Connect client details instance.
 	 *
-	 * @param clientID The client ID. Must not be {@code null}.
+	 * @param id The client ID. Must not be {@code null}.
 	 */
-	public Client(final ClientID clientID) {
+	public Client(final ClientID id) {
 
-		if (clientID == null)
+		if (id == null)
 			throw new IllegalArgumentException("The client ID must not be null");
 
-		this.clientID = clientID;
+		this.id = id;
 	}
 
 
@@ -231,16 +237,16 @@ public class Client {
 	 *
 	 * @return The client ID.
 	 */
-	public ClientID getClientID() {
+	public ClientID getID() {
 
-		return clientID;
+		return id;
 	}
 	
 	
 	/**
 	 * Gets the redirect URIs for the client.
 	 *
-	 * @return The redirect URIs for the client, {@code null} if none.
+	 * @return The redirect URIs, {@code null} if none.
 	 */
 	public Set<URL> getRedirectURIs() {
 	
@@ -251,8 +257,7 @@ public class Client {
 	/**
 	 * Sets the redirect URIs for the client.
 	 *
-	 * @param redirectURIs The redirect URIs for the client, {@code null} 
-	 *                     if none.
+	 * @param redirectURIs The redirect URIs, {@code null} if none.
 	 */
 	public void setRedirectURIs(final Set<URL> redirectURIs) {
 	
@@ -263,8 +268,7 @@ public class Client {
 	/**
 	 * Gets the administrator contacts for the client.
 	 *
-	 * @return The administrator contacts for the client, {@code null} if
-	 *         none.
+	 * @return The administrator contacts, {@code null} if none.
 	 */
 	public List<InternetAddress> getContacts() {
 
@@ -275,8 +279,7 @@ public class Client {
 	/**
 	 * Sets the administrator contacts for the client.
 	 *
-	 * @param contacts The administrator contacts for the client, 
-	 *                 {@code null} if none.
+	 * @param contacts The administrator contacts, {@code null} if none.
 	 */
 	public void setContacts(final List<InternetAddress> contacts) {
 
@@ -308,54 +311,51 @@ public class Client {
 
 
 	/**
-	 * Gets the client application name.
+	 * Gets the client name.
 	 *
-	 * @return The client application name, {@code null} if not specified.
+	 * @return The client name, {@code null} if not specified.
 	 */
-	public String getApplicationName() {
+	public String getName() {
 
-		return applicationName;
+		return name;
 	}
 
 
 	/**
-	 * Sets the client application name.
+	 * Sets the client name.
 	 *
-	 * @param applicationName The client application name, {@code null} if 
-	 *                        not specified.
+	 * @param name The client name, {@code null} if not specified.
 	 */
-	public void setApplicationName(final String applicationName) {
+	public void setName(final String name) {
 
-		this.applicationName = applicationName;
+		this.name = name;
 	}
 
 
 	/**
 	 * Gets the client application logo URL.
 	 *
-	 * @return The client application logo URL, {@code null} if not
-	 *         specified.
+	 * @return The logo URL, {@code null} if not specified.
 	 */
-	public URL getApplicationLogoURL() {
+	public URL getLogoURL() {
 
-		return applicationLogoURL;
+		return logoURL;
 	}
 
 
 	/**
 	 * Sets the client application logo URL.
 	 *
-	 * @param applicationLogoURL The client application logo URL, 
-	 *                           {@code null} if not specified.
+	 * @param logoURL The logo URL, {@code null} if not specified.
 	 */
-	public void setApplicationLogoURL(final URL applicationLogoURL) {
+	public void setLogoURL(final URL logoURL) {
 
-		this.applicationLogoURL = applicationLogoURL;
+		this.logoURL = logoURL;
 	}
 
 
 	/**
-	 * Gets the client application policy for use of end-user data.
+	 * Gets the client policy for use of end-user data.
 	 *
 	 * @return The policy URL, {@code null} if not specified.
 	 */
@@ -366,7 +366,7 @@ public class Client {
 
 
 	/**
-	 * Sets the client application policy for use of end-user data.
+	 * Sets the client policy for use of end-user data.
 	 *
 	 * @param policyURL The policy URL, {@code null} if not specified.
 	 */
@@ -377,7 +377,7 @@ public class Client {
 
 
 	/**
-	 * Gets the client application terms of service.
+	 * Gets the client terms of service.
 	 *
 	 * @return The terms of service URL, {@code null} if not specified.
 	 */
@@ -388,7 +388,7 @@ public class Client {
 
 
 	/**
-	 * Sets the client application terms of service.
+	 * Sets the client terms of service.
 	 *
 	 * @param termsOfServiceURL The terms of service URL, {@code null} if
 	 *                          not specified.
@@ -762,7 +762,7 @@ public class Client {
 
 
 	/**
-	 * Gets the default max authentication age.
+	 * Gets the default maximum authentication age.
 	 *
 	 * @return The default max authentication age, in seconds. If not
 	 *         specified 0.
@@ -774,7 +774,7 @@ public class Client {
 
 
 	/**
-	 * Sets the default max authentication age.
+	 * Sets the default maximum authentication age.
 	 *
 	 * @param defaultMaxAge The default max authentication age, in seconds.
 	 *                      If not specified 0.
@@ -834,24 +834,47 @@ public class Client {
 
 
 	/**
-	 * Gets the client JavaScript origin URIs.
+	 * Gets the authorisation server initiated login HTTPS URL.
 	 *
-	 * @return The client origin URIs, {@code null}	if none specified.
+	 * @return The login URL, {@code null} if not specified.
 	 */
-	public Set<URL> getOriginURIs() {
+	public URL getInitiateLoginURI() {
 
-		return originURIs;
+		return initiateLoginURI;
 	}
 
 
 	/**
-	 * Sets the client JavaScript origin URIs.
+	 * Sets the authorisation server initiated login HTTPS URL.
 	 *
-	 * @param originURIs The client origin URIs, {@code null} if not
-	 *                   specified.
+	 * @param initiateLoginURI The login URL, {@code null} if not 
+	 *                         specified.
 	 */
-	public void setOriginURIs(final Set<URL> originURIs) {
+	public void setInitiateLoginURI(final URL initiateLoginURI) {
 
-		this.originURIs = originURIs;
+		this.initiateLoginURI = initiateLoginURI;
+	}
+
+
+	/**
+	 * Gets the post logout redirect URL.
+	 *
+	 * @return The post logout redirect URL, {@code null} if not specified.
+	 */
+	public URL getPostLogoutRedirectURI() {
+
+		return postLogoutRedirectURI;
+	}
+
+
+	/**
+	 * Sets the post logout redirect URL.
+	 *
+	 * @param postLogoutRedirectURI The post logout redirect URL, 
+	 *                              {@code null} if not specified.
+	 */
+	public void setPostLogoutRedirectURI(final URL postLogoutRedirectURI) {
+
+		this.postLogoutRedirectURI = postLogoutRedirectURI;
 	}
 }
