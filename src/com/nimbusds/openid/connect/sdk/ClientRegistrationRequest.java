@@ -1,12 +1,15 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.OAuth2Request;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.SerializeException;
 
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
@@ -16,7 +19,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * The base abstract class for client registration requests.
+ * The base abstract class for OpenID Connect client registration requests.
  *
  * <p>Related specifications:
  *
@@ -25,46 +28,47 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-25)
  */
 public abstract class ClientRegistrationRequest implements OAuth2Request {
 
 
 	/**
-	 * The registration type (always required).
+	 * The registration operation (required).
 	 */
-	private ClientRegistrationType type;
+	private final ClientRegistrationOperation operation;
 
 
 	/**
-	 * OAuth 2.0 access token (conditionally optional).
+	 * OAuth 2.0 access token (conditionally required).
 	 */
 	private AccessToken accessToken = null;
 
 
 	/**
-	 * Creates a new client registration request.
+	 * Creates a new OpenID Connect client registration request.
 	 *
-	 * @param type The client registration type. Must not be {@code null}.
+	 * @param operation The client registration operation. Must not be 
+	 *                  {@code null}.
 	 */
-	protected ClientRegistrationRequest(final ClientRegistrationType type) {
+	protected ClientRegistrationRequest(final ClientRegistrationOperation operation) {
 
-		if (type == null)
-			throw new IllegalArgumentException("The client registration type must not be null");
+		if (operation == null)
+			throw new IllegalArgumentException("The client registration operation must not be null");
 
-		this.type = type;
+		this.operation = operation;
 	}
 
 
 	/**
-	 * Gets the client registration type. Corresponds to the {@code type}
-	 * parameter.
+	 * Gets the client registration operation. Corresponds to the 
+	 * {@code operation} parameter.
 	 *
-	 * @return The client registration type.
+	 * @return The client registration operation.
 	 */
-	public ClientRegistrationType getType() {
+	public ClientRegistrationOperation getOperation() {
 
-		return type;
+		return operation;
 	}
 
 
@@ -93,6 +97,89 @@ public abstract class ClientRegistrationRequest implements OAuth2Request {
 
 
 	/**
+	 * Returns the parameters for this client registration request. The 
+	 * OAuth 2.0 access token will be included.
+	 *
+	 * @return The parameters.
+	 */
+	public Map<String,String> toParameters() {
+
+		return toParameters(true);
+	}
+
+
+	/**
+	 * Returns the parameters for this client registration request.
+	 *
+	 * @param includeAccessToken If {@code true} the OAuth 2.0 access token 
+	 *                           will be included, else not.
+	 *
+	 * @return The parameters.
+	 */
+	public Map<String,String> toParameters(final boolean includeAccessToken) {
+
+		Map <String,String> params = new LinkedHashMap<String,String>();
+
+		params.put("operation", getOperation().toString());
+
+		if (includeAccessToken && getAccessToken() != null)
+			params.put("access_token", getAccessToken().getValue());
+
+		return params;
+	}
+
+
+	/**
+	 * Returns the matching HTTP POST request. If an OAuth 2.0 access token
+	 * is specified it will be inlined in the HTTP request body.
+	 *
+	 * @return The HTTP request.
+	 *
+	 * @throws SerializeException If the OpenID Connect request message
+	 *                            couldn't be serialised to an HTTP POST 
+	 *                            request.
+	 */
+	@Override
+	public HTTPRequest toHTTPRequest()
+		throws SerializeException {
+
+		return toHTTPRequest(true);
+	}
+
+
+	/**
+	 * Returns the matching HTTP POST request.
+	 *
+	 * @param inlineAccessToken If {@code true} and if an OAuth 2.0 access 
+	 *                          token is specified, it will be inlined in 
+	 *                          the HTTP request body, else it will be 
+	 *                          included in the HTTP Authorization header.
+	 *
+	 * @return The HTTP request.
+	 *
+	 * @throws SerializeException If the OpenID Connect request message
+	 *                            couldn't be serialised to an HTTP POST 
+	 *                            request.
+	 */
+	public HTTPRequest toHTTPRequest(final boolean inlineAccessToken)
+		throws SerializeException {
+	
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+
+		String requestBody = URLUtils.serializeParameters(toParameters(inlineAccessToken));
+
+		httpRequest.setQuery(requestBody);
+
+		if (! inlineAccessToken && getAccessToken() != null)
+			httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
+
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		return httpRequest;
+	}
+
+
+	/**
 	 * Parses a client registration request from the specified HTTP POST
 	 * request.
 	 *
@@ -102,20 +189,18 @@ public abstract class ClientRegistrationRequest implements OAuth2Request {
 	 * POST /connect/register HTTP/1.1
 	 * Content-Type: application/x-www-form-urlencoded
 	 * Host: server.example.com
-	 * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJ ... fQ.8Gj_-sj ... _X
+	 * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJ ...
  	 * 
-	 * type=client_associate
+	 * operation=client_register
 	 * &amp;application_type=web
-	 * &amp;redirect_uris=https://client.example.org/callback
-	 *     %20https://client.example.org/callback2
-	 * &amp;application_name=My%20Example%20
-	 * &amp;application_name%23ja-Jpan-JP=ワタシ用の例
+	 * &amp;redirect_uris=https://client.example.org/callback%20https://client.example.org/callback2
+	 * &amp;client_name=My%20Example%20
+	 * &amp;client_name%23ja-Jpan-JP=ワタシ用の例
 	 * &amp;logo_url=https://client.example.org/logo.png
 	 * &amp;subject_type=pairwise
-	 * &amp;sector_identifier_url=
-	 *     https://othercompany.com/file_of_redirect_uris_for_our_sites.js
-	 * &amp;token_endpoint_auth_type=client_secret_basic
-	 * &amp;jwk_url=https://client.example.org/my_rsa_public_key.jwks
+	 * &amp;sector_identifier_url=https://othercompany.com/file_of_redirect_uris.json
+	 * &amp;token_endpoint_auth_method=client_secret_basic
+	 * &amp;jwk_url=https://client.example.org/my_rsa_public_key.jwk
 	 * &amp;userinfo_encrypted_response_alg=RSA1_5
 	 * &amp;userinfo_encrypted_response_enc=A128CBC+HS256
 	 * </pre>
@@ -139,30 +224,17 @@ public abstract class ClientRegistrationRequest implements OAuth2Request {
 				                 OAuth2Error.INVALID_REQUEST);
 		
 
-		// Decode and parse type parameter
+		// Decode and parse operation parameter
 		Map <String,String> params = URLUtils.parseParameters(httpRequest.getQuery());
 
-		ClientRegistrationType type = null;
-
-		try {
-			type = parseEnum("type", ClientRegistrationType.class, params);
-
-		} catch (ParseException e) {
-
-			throw new ParseException("Invalid \"type\" parameter", OIDCError.INVALID_TYPE);
-		}
-
-
-		if (type == null)
-			throw new ParseException("Missing \"type\" parameter", OIDCError.INVALID_TYPE);
-
+		ClientRegistrationOperation operation = ClientRegistrationOperation.parse(params);
 
 		ClientRegistrationRequest req = null;
 
-		switch (type) {
+		switch (operation) {
 
-			case CLIENT_ASSOCIATE:
-				return ClientAssociateRequest.parse(httpRequest);
+			case CLIENT_REGISTER:
+				return ClientRegisterRequest.parse(httpRequest);
 
 			case ROTATE_SECRET:
 				return ClientRotateSecretRequest.parse(httpRequest);
@@ -171,7 +243,7 @@ public abstract class ClientRegistrationRequest implements OAuth2Request {
 				return ClientUpdateRequest.parse(httpRequest);
 
 			default:
-				throw new ParseException("Invalid \"type\" parameter", OIDCError.INVALID_TYPE);
+				throw new ParseException("Invalid \"operation\" parameter", OIDCError.INVALID_OPERATION);
 		}
 	}
 

@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +19,9 @@ import com.nimbusds.jose.EncryptionMethod;
 
 import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.SerializeException;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 
-import com.nimbusds.oauth2.sdk.id.Subject;
-
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
@@ -41,7 +36,7 @@ import com.nimbusds.openid.connect.sdk.relyingparty.ApplicationType;
 
 
 /**
- * The base class for client details requests.
+ * The base class for OpenID Connect client register and update requests.
  *
  * <p>Related specifications:
  *
@@ -50,15 +45,13 @@ import com.nimbusds.openid.connect.sdk.relyingparty.ApplicationType;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
+ * @version $version$ (2013-01-25)
  */
-public class ClientDetailsRequest extends ClientRegistrationRequest {
+class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * The redirect URIs (required). One of the URL must match the scheme, 
-	 * host and path segments of the {@code redirect_uri} in the 
-	 * authorization request.
+	 * The redirect URIs (required).
 	 */
 	private Set<URL> redirectURIs;
 
@@ -72,30 +65,29 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	/**
 	 * The client application type (optional), defaults to web.
 	 */
-	private ApplicationType applicationType = ApplicationType.WEB;
+	private ApplicationType applicationType = ApplicationType.getDefault();
 
 
 	/**
-	 * The client application name (optional).
+	 * The client name (optional).
 	 */
-	private String applicationName = null;
+	private String name = null;
 
 
 	/**
-	 * The client application logo URL (optional).
+	 * The client logo (optional).
 	 */
-	private URL applicationLogoURL = null;
+	private URL logoURL = null;
 
 
 	/**
-	 * The client application policy URL for use of end-user data 
-	 * (optional).
+	 * The client policy for use of end-user data (optional).
 	 */
 	private URL policyURL = null;
 
 
 	/**
-	 * The client application terms of service URL (optional).
+	 * The client terms of service (optional).
 	 */
 	private URL termsOfServiceURL = null;
 
@@ -117,7 +109,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 * secret basic.
 	 */
 	private ClientAuthenticationMethod tokenEndpointAuthMethod =
-		ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
+		ClientAuthenticationMethod.getDefault();
 
 
 	/**
@@ -226,29 +218,35 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Client JavaScript origin URIs.
+	 * Authorisation server initiated login HTTPS URL (optional).
 	 */
-	private Set<URL> originURIs = null;
+	private URL initiateLoginURI = null;
 
 
 	/**
-	 * Creates a new client details request.
+	 * Logout redirect URL (optional).
+	 */
+	private URL postLogoutRedirectURI = null;
+
+
+	/**
+	 * Creates a new OpenID Connect client details request.
 	 *
-	 * @param type         The client registration type. Must be of type
-	 *                     {@link ClientRegistrationType#CLIENT_ASSOCIATE} 
-	 *                     or {@link ClientRegistrationType#CLIENT_UPDATE}.
+	 * @param operation    The client registration operation. Must be 
+	 *                     {@link ClientRegistrationOperation#CLIENT_REGISTER} 
+	 *                     or {@link ClientRegistrationOperation#CLIENT_UPDATE}.
 	 *                     Must not be {@code null}.
 	 * @param redirectURIs The client redirect URIs. The set must not be
 	 *                     {@code null} and must include at least one URL.
 	 */
-	protected ClientDetailsRequest(final ClientRegistrationType type,
+	protected ClientDetailsRequest(final ClientRegistrationOperation operation,
 		                       final Set<URL> redirectURIs) {
 
-		super(type);
+		super(operation);
 
-		if (! type.equals(ClientRegistrationType.CLIENT_ASSOCIATE) &&
-		    ! type.equals(ClientRegistrationType.CLIENT_UPDATE))
-			throw new IllegalArgumentException("The client registration type must be CLIENT_ASSOCIATE or CLIENT_UPDATE");
+		if (! operation.equals(ClientRegistrationOperation.CLIENT_REGISTER) &&
+		    ! operation.equals(ClientRegistrationOperation.CLIENT_UPDATE))
+			throw new IllegalArgumentException("The client registration operation must be CLIENT_REGISTER or CLIENT_UPDATE");
 
 
 		if (redirectURIs == null)
@@ -262,19 +260,19 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Creates a new client details request.
+	 * Creates a new OpenID Connect client details request.
 	 *
-	 * @param type        The client registration type. Must be of type
-	 *                    {@link ClientRegistrationType#CLIENT_ASSOCIATE} 
-	 *                    or {@link ClientRegistrationType#CLIENT_UPDATE}.
+	 * @param operation   The client registration operation. Must be 
+	 *                    {@link ClientRegistrationOperation#CLIENT_REGISTER} 
+	 *                    or {@link ClientRegistrationOperation#CLIENT_UPDATE}.
 	 *                    Must not be {@code null}.
 	 * @param redirectURI The client redirect URI. Must not be 
 	 *                    {@code null}.
 	 */
-	protected ClientDetailsRequest(final ClientRegistrationType type,
+	protected ClientDetailsRequest(final ClientRegistrationOperation operation,
 		                       final URL redirectURI) {
 
-		this(type, createNewSingleURLSet(redirectURI));
+		this(operation, createNewSingleURLSet(redirectURI));
 	}
 
 
@@ -306,35 +304,6 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the client application type. Corresponds to the
-	 * {@code application_type} parameter.
-	 *
-	 * @return The client application type, defaults to {@code WEB} if not 
-	 *         specified.
-	 */
-	public ApplicationType getApplicationType() {
-
-		if (applicationType == null)
-			return ApplicationType.WEB;
-		else
-			return applicationType;
-	}
-
-
-	/**
-	 * Sets the client application type. Corresponds to the
-	 * {@code application_type} parameter.
-	 *
-	 * @param applicationType The client application type, {@code null} if 
-	 *                        not specified.
-	 */
-	public void setApplicationType(final ApplicationType applicationType) {
-
-		this.applicationType = applicationType;
-	}
-
-
-	/**
 	 * Gets the administrator contacts for the client. Corresponds to the
 	 * {@code contacts} parameter.
 	 *
@@ -361,59 +330,85 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the client application name. Corresponds to the 
-	 * {@code application_name} parameter.
+	 * Gets the client application type. Corresponds to the
+	 * {@code application_type} parameter.
 	 *
-	 * @return The client application name, {@code null} if not specified.
-	 */
-	public String getApplicationName() {
-
-		return applicationName;
-	}
-
-
-	/**
-	 * Sets the client application name. Corresponds to the 
-	 * {@code application_name} parameter.
-	 *
-	 * @param applicationName The client application name, {@code null} if 
-	 *                        not specified.
-	 */
-	public void setApplicationName(final String applicationName) {
-
-		this.applicationName = applicationName;
-	}
-
-
-	/**
-	 * Gets the client application logo URL. Corresponds to the
-	 * {@code logo_url} parameter.
-	 *
-	 * @return The client application logo URL, {@code null} if not
+	 * @return The client application type, defaults to {@code WEB} if not 
 	 *         specified.
 	 */
-	public URL getApplicationLogoURL() {
+	public ApplicationType getApplicationType() {
 
-		return applicationLogoURL;
+		if (applicationType == null)
+			return ApplicationType.getDefault();
+		else
+			return applicationType;
 	}
 
 
 	/**
-	 * Sets the client application logo URL. Corresponds to the
-	 * {@code logo_url} parameter.
+	 * Sets the client application type. Corresponds to the
+	 * {@code application_type} parameter.
 	 *
-	 * @param applicationLogoURL The client application logo URL, 
-	 *                           {@code null} if not specified.
+	 * @param applicationType The client application type, {@code null} if 
+	 *                        not specified.
 	 */
-	public void setApplicationLogoURL(final URL applicationLogoURL) {
+	public void setApplicationType(final ApplicationType applicationType) {
 
-		this.applicationLogoURL = applicationLogoURL;
+		this.applicationType = applicationType;
 	}
 
 
 	/**
-	 * Gets the client application policy for use of end-user data.
-	 * Corresponds to the {@code policy_url} parameter.
+	 * Gets the client name. Corresponds to the {@code client_name} 
+	 * parameter.
+	 *
+	 * @return The client name, {@code null} if not specified.
+	 */
+	public String getName() {
+
+		return name;
+	}
+
+
+	/**
+	 * Sets the client name. Corresponds to the {@code client_name} 
+	 * parameter.
+	 *
+	 * @param name The client name, {@code null} if not specified.
+	 */
+	public void setName(final String name) {
+
+		this.name = name;
+	}
+
+
+	/**
+	 * Gets the client logo URL. Corresponds to the {@code logo_url} 
+	 * parameter.
+	 *
+	 * @return The client logo URL, {@code null} if not specified.
+	 */
+	public URL getLogoURL() {
+
+		return logoURL;
+	}
+
+
+	/**
+	 * Sets the client logo URL. Corresponds to the {@code logo_url} 
+	 * parameter.
+	 *
+	 * @param logoURL The client logo URL, {@code null} if not specified.
+	 */
+	public void setLogoURL(final URL logoURL) {
+
+		this.logoURL = logoURL;
+	}
+
+
+	/**
+	 * Gets the client policy for use of end-user data. Corresponds to the
+	 * {@code policy_url} parameter.
 	 *
 	 * @return The policy URL, {@code null} if not specified.
 	 */
@@ -424,8 +419,8 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Sets the client application policy for use of end-user data.
-	 * Corresponds to the {@code policy_url} parameter.
+	 * Sets the client policy for use of end-user data. Corresponds to the
+	 * {@code policy_url} parameter.
 	 *
 	 * @param policyURL The policy URL, {@code null} if not specified.
 	 */
@@ -436,8 +431,8 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the client application terms of service. Corresponds to the
-	 * {@code tos_url} parameter.
+	 * Gets the client terms of service. Corresponds to the {@code tos_url}
+	 * parameter.
 	 *
 	 * @return The terms of service URL, {@code null} if not specified.
 	 */
@@ -448,8 +443,8 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Sets the client application terms of service. Corresponds to the
-	 * {@code tos_url} parameter.
+	 * Sets the client terms of service. Corresponds to the {@code tos_url}
+	 * parameter.
 	 *
 	 * @param termsOfServiceURL The terms of service URL, {@code null} if 
 	 *                          not specified.
@@ -473,7 +468,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Sets the user identifier type for responses to this client. 
+	 * Sets the subject identifier type for responses to this client. 
 	 * Corresponds to the {@code subject_type} parameter.
 	 *
 	 * @param subjectType The subject identifier type, {@code null} if not 
@@ -512,12 +507,15 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 	/**
 	 * Gets the Token endpoint authentication method. Corresponds to the
-	 * {@code token_endpoint_auth_type} parameter.
+	 * {@code token_endpoint_auth_method} parameter.
 	 *
-	 * @return The Token endpoint authentication method, {@code null} if 
-	 *         not specified.
+	 * @return The Token endpoint authentication method, defaults to client
+	 *         secret basic if not specified.
 	 */
 	public ClientAuthenticationMethod getTokenEndpointAuthMethod() {
+
+		if (tokenEndpointAuthMethod == null)
+			return ClientAuthenticationMethod.getDefault();
 
 		return tokenEndpointAuthMethod;
 	}
@@ -525,7 +523,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 	/**
 	 * Sets the Token endpoint authentication method. Corresponds to the
-	 * {@code token_endpoint_auth_type} parameter.
+	 * {@code token_endpoint_auth_method} parameter.
 	 *
 	 * @param tokenEndpointAuthMethod The Token endpoint authentication 
 	 *                                method, {@code null} if not 
@@ -849,7 +847,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the default max authentication age. Corresponds to the 
+	 * Gets the default maximum authentication age. Corresponds to the 
 	 * {@code default_max_age} parameter.
 	 *
 	 * @return The default max authentication age, in seconds. If not
@@ -862,7 +860,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Sets the default max authentication age. Corresponds to the 
+	 * Sets the default maximum authentication age. Corresponds to the 
 	 * {@code default_max_age} parameter.
 	 *
 	 * @param defaultMaxAge The default max authentication age, in seconds.
@@ -881,7 +879,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 * @return If {@code true} the {@code auth_Time} claim in the ID Token 
 	 *         is required by default.
 	 */
-	public boolean requiresAuthTime() {
+	public boolean requireAuthTime() {
 
 		return requireAuthTime;
 	}
@@ -925,73 +923,185 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 
 
 	/**
-	 * Gets the client JavaScript origin URIs. Corresponds to the 
-	 * {@code javascript_origin_uris} parameter.
+	 * Gets the authorisation server initiated login HTTPS URL. Corresponds
+	 * to the {@code initiate_login_uri} parameter.
 	 *
-	 * @return The client origin URIs, {@code null}	if none specified.
+	 * @return The login URL, {@code null} if not specified.
 	 */
-	public Set<URL> getOriginURIs() {
+	public URL getInitiateLoginURI() {
 
-		return originURIs;
+		return initiateLoginURI;
 	}
 
 
 	/**
-	 * Sets the client JavaScript origin URIs. Corresponds to the 
-	 * {@code javascript_origin_uris} parameter.
+	 * Sets the authorisation server initiated login HTTPS URL. Corresponds
+	 * to the {@code initiate_login_uri} parameter.
 	 *
-	 * @param originURIs The client origin URIs, {@code null} if not
-	 *                   specified.
+	 * @param initiateLoginURI The login URL, {@code null} if not 
+	 *                         specified.
 	 */
-	public void setOriginURIs(final Set<URL> originURIs) {
+	public void setInitiateLoginURI(final URL initiateLoginURI) {
 
-		this.originURIs = originURIs;
+		this.initiateLoginURI = initiateLoginURI;
 	}
 
 
 	/**
-	 * Returns the matching HTTP POST request. If an access token is
-	 * specified it will be inlined in the HTTP request body.
+	 * Gets the post logout redirect URL. Corresponds to the 
+	 * {@code post_logout_redirect_url} parameter.
 	 *
-	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If the OpenID Connect request message
-	 *                            couldn't be serialised to an HTTP POST 
-	 *                            request.
+	 * @return The post logout redirect URL, {@code null} if not specified.
 	 */
+	public URL getPostLogoutRedirectURI() {
+
+		return postLogoutRedirectURI;
+	}
+
+
+	/**
+	 * Sets the post logout redirect URL. Corresponds to the 
+	 * {@code post_logout_redirect_url} parameter.
+	 *
+	 * @param postLogoutRedirectURI The post logout redirect URL, 
+	 *                              {@code null} if not specified.
+	 */
+	public void setPostLogoutRedirectURI(final URL postLogoutRedirectURI) {
+
+		this.postLogoutRedirectURI = postLogoutRedirectURI;
+	}
+
+
+	/**
+	 * Applies the optional parameters from the specified parameters map to
+	 * this request.
+	 *
+	 * @param params The parameter map to apply. Must not be {@code null}.
+	 *
+	 * @throws ParseException If the parameter map couldn't be applied.
+	 */
+	protected void applyOptionalParameters(final Map<String,String> params)
+		throws ParseException {
+
+		String v = null;
+
+		// Access token inlined?
+		v = params.get("access_token");
+
+		if (StringUtils.isDefined(v))
+			setAccessToken(new TypelessAccessToken(v));
+
+
+		setApplicationType(parseEnum("application_type", ApplicationType.class, params));
+
+		setContacts(parseEmailList("contacts", params));
+
+		setName(params.get("client_name"));
+
+		setLogoURL(parseURL("logo_url", params));
+
+		setPolicyURL(parseURL("policy_url", params));
+
+		setTermsOfServiceURL(parseURL(("tos_url"), params));
+
+		setSubjectType(parseEnum("subject_type", SubjectType.class, params));
+
+		setSectorIDURL(parseURL("sector_identifier_url", params));
+
+
+		v = params.get("token_endpoint_auth_method");
+
+		if (StringUtils.isDefined(v))
+			setTokenEndpointAuthMethod(new ClientAuthenticationMethod(v));
+
+
+		setJWKSetURL(parseURL("jwk_url", params));
+
+		setEncrytionJWKSetURL(parseURL("jwk_encryption_url", params));
+
+		setX509URL(parseURL("x509_url", params));
+
+		setEncryptionX509URL(parseURL("x509_encryption_url", params));
+
+
+		v = params.get("request_object_signing_alg");
+
+		if (StringUtils.isDefined(v))
+			setRequestObjectJWSAlgorithm(JWSAlgorithm.parse(v));
+
+
+		v = params.get("id_token_signed_response_alg");
+
+		if (StringUtils.isDefined(v))
+			setIDTokenJWSAlgorithm(JWSAlgorithm.parse(v));
+
+
+		v = params.get("id_token_encrypted_response_alg");
+
+		if (StringUtils.isDefined(v))
+			setIDTokenJWEAlgorithm(JWEAlgorithm.parse(v));
+
+
+		v = params.get("id_token_encrypted_response_enc");
+
+		if (StringUtils.isDefined(v))
+			setIDTokenJWEEncryptionMethod(EncryptionMethod.parse(v));
+
+
+		v = params.get("userinfo_signed_response_alg");
+
+		if (StringUtils.isDefined(v))
+			setUserInfoJWSAlgorithm(JWSAlgorithm.parse(v));
+
+
+		v = params.get("userinfo_encrypted_response_alg");
+
+		if (StringUtils.isDefined(v))
+			setUserInfoJWEAlgorithm(JWEAlgorithm.parse(v));
+
+
+		v = params.get("userinfo_encrypted_response_enc");
+
+		if (StringUtils.isDefined(v))
+			setUserInfoJWEEncryptionMethod(EncryptionMethod.parse(v));
+
+
+		setDefaultMaxAge(parsePositiveInt("default_max_age", params));
+
+
+		v = params.get("require_auth_time");
+
+		if (StringUtils.isDefined(v)) {
+
+			if (v.equalsIgnoreCase("true"))
+				requireAuthTime(true);
+
+			else if (v.equalsIgnoreCase("false"))
+				requireAuthTime(false);
+
+			else 
+				throw new ParseException("Invalid \"require_auth_time\" parameter, must be true or false",
+				                         OIDCError.INVALID_CONFIGURATION_PARAMETER);
+		}
+
+
+		v = params.get("default_acr");
+
+		if (StringUtils.isDefined(v))
+			setDefaultACR(new ACR(v));
+
+
+		setInitiateLoginURI(parseURL("initiate_login_uri", params));
+
+
+		setPostLogoutRedirectURI(parseURL("post_logout_redirect_url", params));
+	}
+
+
 	@Override
-	public HTTPRequest toHTTPRequest()
-		throws SerializeException {
+	public Map<String,String> toParameters(final boolean includeAccessToken) {
 
-		return toHTTPRequest(true);
-	}
-	
-	
-	/**
-	 * Returns the matching HTTP POST request.
-	 *
-	 * @param inlineAccessToken If {@code true} the access token will be
-	 *                          inlined in the HTTP request body, else it
-	 *                          will be included as an OAuth 2.0 Bearer
-	 *                          Token in the HTTP Authorization header.
-	 *
-	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If the OpenID Connect request message
-	 *                            couldn't be serialised to an HTTP POST 
-	 *                            request.
-	 */
-	public HTTPRequest toHTTPRequest(final boolean inlineAccessToken)
-		throws SerializeException {
-	
-		Map <String,String> params = new LinkedHashMap<String,String>();
-
-		params.put("type", getType().toString());
-
-
-		if (inlineAccessToken && getAccessToken() != null)
-			params.put("access_token", getAccessToken().getValue());
-
+		Map<String,String> params = super.toParameters(includeAccessToken);
 
 		StringBuilder urisBuf = new StringBuilder();
 
@@ -1004,9 +1114,6 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 		}
 
 		params.put("redirect_uris", urisBuf.toString());
-
-
-		params.put("application_type", applicationType.toString());
 
 
 		if (contacts != null && ! contacts.isEmpty()) {
@@ -1025,12 +1132,15 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 		}
 
 
-		if (applicationName != null)
-			params.put("application_name", applicationName);
+		params.put("application_type", getApplicationType().toString());
 
 
-		if (applicationLogoURL != null)
-			params.put("logo_url", applicationLogoURL.toString());
+		if (name != null)
+			params.put("client_name", name);
+
+
+		if (logoURL != null)
+			params.put("logo_url", logoURL.toString());
 
 
 		if (policyURL != null)
@@ -1049,8 +1159,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			params.put("sector_identifier_url", sectorIDURL.toString());
 
 
-		if (tokenEndpointAuthMethod != null)
-			params.put("token_endpoint_auth_type", tokenEndpointAuthMethod.toString());
+		params.put("token_endpoint_auth_method", getTokenEndpointAuthMethod().toString());
 
 
 		if (jwkSetURL != null)
@@ -1109,41 +1218,20 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 			params.put("default_acr", defaultACR.toString());
 
 
-
-		if (originURIs != null && ! originURIs.isEmpty()) {
-
-			StringBuilder originBuf = new StringBuilder();
-
-			for (URL origin: originURIs) {
-
-				if (originBuf.length() > 0)
-					originBuf.append(' ');
-
-				originBuf.append(origin.toString());
-			}
-
-			params.put("javascript_origin_uris", originBuf.toString());
-		}
+		if (initiateLoginURI != null)
+			params.put("initiate_login_uri", initiateLoginURI.toString());
 
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		if (postLogoutRedirectURI != null)
+			params.put("post_logout_redirect_url", postLogoutRedirectURI.toString());
 
-		String requestBody = URLUtils.serializeParameters(params);
-
-		httpRequest.setQuery(requestBody);
-
-		if (! inlineAccessToken && getAccessToken() != null)
-			httpRequest.setAuthorization("Bearer " + getAccessToken().getValue());
-
-		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-
-		return httpRequest;
+		return params;
 	}
 
 
 	/**
-	 * Parses a client details request from the specified HTTP POST
-	 * request.
+	 * Parses an OpenID Connect client details request from the specified 
+	 * HTTP POST request.
 	 *
 	 * <p>Example HTTP request (GET):
 	 *
@@ -1151,27 +1239,25 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 * POST /connect/register HTTP/1.1
 	 * Content-Type: application/x-www-form-urlencoded
 	 * Host: server.example.com
-	 * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJ ... fQ.8Gj_-sj ... _X
+	 * Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJ ...
  	 * 
-	 * type=client_associate
+	 * operation=client_register
 	 * &amp;application_type=web
-	 * &amp;redirect_uris=https://client.example.org/callback
-	 *     %20https://client.example.org/callback2
-	 * &amp;application_name=My%20Example%20
-	 * &amp;application_name%23ja-Jpan-JP=ワタシ用の例
+	 * &amp;redirect_uris=https://client.example.org/callback%20https://client.example.org/callback2
+	 * &amp;client_name=My%20Example%20
+	 * &amp;client_name%23ja-Jpan-JP=ワタシ用の例
 	 * &amp;logo_url=https://client.example.org/logo.png
 	 * &amp;subject_type=pairwise
-	 * &amp;sector_identifier_url=
-	 *     https://othercompany.com/file_of_redirect_uris_for_our_sites.js
-	 * &amp;token_endpoint_auth_type=client_secret_basic
-	 * &amp;jwk_url=https://client.example.org/my_rsa_public_key.jwks
+	 * &amp;sector_identifier_url=https://othercompany.com/file_of_redirect_uris.json
+	 * &amp;token_endpoint_auth_method=client_secret_basic
+	 * &amp;jwk_url=https://client.example.org/my_rsa_public_key.jwk
 	 * &amp;userinfo_encrypted_response_alg=RSA1_5
 	 * &amp;userinfo_encrypted_response_enc=A128CBC+HS256
 	 * </pre>
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *
-	 * @return The parsed client registration request.
+	 * @return The client registration request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
 	 *                        client registration request.
@@ -1191,30 +1277,21 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 		// Decode and parse POST parameters
 		Map <String,String> params = URLUtils.parseParameters(httpRequest.getQuery());
 		
-		String v = null;
 		
-
 		// Mandatory params
 
-		ClientRegistrationType type = null;
+		ClientRegistrationOperation operation = ClientRegistrationOperation.parse(params);
 
-		try {
-			type = parseEnum("type", ClientRegistrationType.class, params);
+		if (operation != ClientRegistrationOperation.CLIENT_REGISTER &&
+		    operation != ClientRegistrationOperation.CLIENT_UPDATE      )
+			throw new ParseException("Invalid \"operation\" parameter", 
+					                 OIDCError.INVALID_OPERATION);
 
-		} catch (ParseException e) {
-
-			throw new ParseException("Invalid \"type\" parameter", OIDCError.INVALID_TYPE);
-		}
-
-
-		if (type == null)
-			throw new ParseException("Missing \"type\" parameter", OIDCError.INVALID_TYPE);
-
-
-		v = params.get("redirect_uris");
+		String v = params.get("redirect_uris");
 		
 		if (StringUtils.isUndefined(v))
-			throw new ParseException("Missing \"redirect_uris\" parameter", OIDCError.INVALID_REDIRECT_URI);
+			throw new ParseException("Missing \"redirect_uris\" parameter", 
+				                 OIDCError.INVALID_REDIRECT_URI);
 		
 		
 		Set<URL> redirectURIs = new HashSet<URL>();
@@ -1233,171 +1310,16 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 		}
 
 
-		ClientDetailsRequest req = null;
+		ClientDetailsRequest req = new ClientDetailsRequest(operation, redirectURIs);
 
-		switch (type) {
-
-			case CLIENT_ASSOCIATE:
-				req = new ClientAssociateRequest(redirectURIs);
-				break;
-
-			case CLIENT_UPDATE:
-				req = new ClientUpdateRequest(redirectURIs);
-
-				break;
-
-			default:
-				throw new ParseException("Invalid \"type\" parameter", OIDCError.INVALID_TYPE);
-		}
+		// Parse optional params
+		req.applyOptionalParameters(params);
 
 
-		// Optional params
-
-		if (StringUtils.isDefined(httpRequest.getAuthorization())) {
-
-			// Access token in header
+		// Access token in header?
+		if (StringUtils.isDefined(httpRequest.getAuthorization()))			
 			req.setAccessToken(AccessToken.parse(httpRequest.getAuthorization()));
-		}
-		else if (StringUtils.isDefined(params.get("access_token"))) {
-
-			// Access token inlined
-			req.setAccessToken(new TypelessAccessToken(params.get("access_token")));
-		}
-
-
-		req.setApplicationType(parseEnum("application_type", ApplicationType.class, params));
-
-
-		req.setContacts(parseEmailList("contacts", params));
-
-
-		req.setApplicationName(params.get("application_name"));
-
-
-		req.setApplicationLogoURL(parseURL("logo_url", params));
-
-
-		req.setPolicyURL(parseURL("policy_url", params));
-
-
-		req.setTermsOfServiceURL(parseURL(("tos_url"), params));
-
-
-		req.setSubjectType(parseEnum("subject_type", SubjectType.class, params));
-
-
-		req.setSectorIDURL(parseURL("sector_identifier_url", params));
-
-
-		v = params.get("token_endpoint_auth_type");
-
-		if (StringUtils.isDefined(v))
-			req.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(v));
-
-
-		req.setJWKSetURL(parseURL("jwk_url", params));
-
-
-		req.setEncrytionJWKSetURL(parseURL("jwk_encryption_url", params));
-
-
-		req.setX509URL(parseURL("x509_url", params));
-
-
-		req.setEncryptionX509URL(parseURL("x509_encryption_url", params));
-
-
-		v = params.get("request_object_signing_alg");
-
-		if (StringUtils.isDefined(v))
-			req.setRequestObjectJWSAlgorithm(JWSAlgorithm.parse(v));
-
-
-		v = params.get("id_token_signed_response_alg");
-
-		if (StringUtils.isDefined(v))
-			req.setIDTokenJWSAlgorithm(JWSAlgorithm.parse(v));
-
-
-		v = params.get("id_token_encrypted_response_alg");
-
-		if (StringUtils.isDefined(v))
-			req.setIDTokenJWEAlgorithm(JWEAlgorithm.parse(v));
-
-
-		v = params.get("id_token_encrypted_response_enc");
-
-		if (StringUtils.isDefined(v))
-			req.setIDTokenJWEEncryptionMethod(EncryptionMethod.parse(v));
-
-
-		v = params.get("userinfo_signed_response_alg");
-
-		if (StringUtils.isDefined(v))
-			req.setUserInfoJWSAlgorithm(JWSAlgorithm.parse(v));
-
-
-		v = params.get("userinfo_encrypted_response_alg");
-
-		if (StringUtils.isDefined(v))
-			req.setUserInfoJWEAlgorithm(JWEAlgorithm.parse(v));
-
-
-		v = params.get("userinfo_encrypted_response_enc");
-
-		if (StringUtils.isDefined(v))
-			req.setUserInfoJWEEncryptionMethod(EncryptionMethod.parse(v));
-
-
-		req.setDefaultMaxAge(parsePositiveInt("default_max_age", params));
-
-
-		v = params.get("require_auth_time");
-
-		if (StringUtils.isDefined(v)) {
-
-			if (v.equals("true"))
-				req.requireAuthTime(true);
-
-			else if (v.equals("false"))
-				req.requireAuthTime(false);
-
-			else 
-				throw new ParseException("Invalid \"require_auth_time\" parameter, must be true or false",
-				                         OIDCError.INVALID_CONFIGURATION_PARAMETER);
-		}
-
-
-		v = params.get("default_acr");
-
-		if (StringUtils.isDefined(v)) {
-
-			req.setDefaultACR(new ACR(v));
-		}
-
 		
-		v = params.get("javascript_origin_uris");
-
-		if (StringUtils.isDefined(v)) {
-
-			Set<URL> originURIs = new HashSet<URL>();
-
-			for (String uriString: v.split(" ")) {
-
-				try {
-					originURIs.add(new URL(uriString));
-
-				} catch (MalformedURLException e) {
-
-					throw new ParseException("Invalid \"javascript_origin_uris\" parameter: " +
-					                         e.getMessage(),
-					                         OIDCError.INVALID_REDIRECT_URI);
-				}
-			}
-
-			req.setOriginURIs(originURIs);
-		}
-
 		return req;
 	}
 
@@ -1410,8 +1332,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 *               parameter name itself must not be {@code null}.
 	 * @param params The parameter map. Must not be {@code null}.
 	 *
-	 * @return The parsed URL, {@code null} if the parameter is not
-	 *         specified.
+	 * @return The URL, {@code null} if the parameter is not specified.
 	 *
 	 * @throws ParseException On a invalid URL syntax.
 	 */
@@ -1443,7 +1364,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 *               {@code null}.
 	 * @param params The parameter map. Must not be {@code null}.
 	 *
-	 * @return The parsed positive integer, zero if the parameter is not
+	 * @return The positive integer, zero if the parameter is not
 	 *         specified.
 	 *
 	 * @throws ParseException On a invalid integer syntax or non-positive
@@ -1486,7 +1407,7 @@ public class ClientDetailsRequest extends ClientRegistrationRequest {
 	 *               parameter name itself must not be {@code null}.
 	 * @param params The parameter map. Must not be {@code null}.
 	 *
-	 * @return The parsed email list, {@code null} if the parameter is not
+	 * @return The email list, {@code null} if the parameter is not
 	 *         specified.
 	 *
 	 * @throws ParseException On a invalid email syntax.

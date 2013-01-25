@@ -68,7 +68,7 @@ public class Client {
 
 
 	/**
-	 * The client application logo URL.
+	 * The client application logo.
 	 */
 	private URL logoURL = null;
 
@@ -197,7 +197,7 @@ public class Client {
 	 * If {@code true} the {@code auth_time} claim in the ID Token is
 	 * required by default.
 	 */
-	private boolean requireAuthTime = false;
+	private boolean requiresAuthTime = false;
 
 
 	/**
@@ -333,7 +333,7 @@ public class Client {
 
 
 	/**
-	 * Gets the client application logo URL.
+	 * Gets the client application logo.
 	 *
 	 * @return The logo URL, {@code null} if not specified.
 	 */
@@ -344,7 +344,7 @@ public class Client {
 
 
 	/**
-	 * Sets the client application logo URL.
+	 * Sets the client application logo.
 	 *
 	 * @param logoURL The logo URL, {@code null} if not specified.
 	 */
@@ -794,7 +794,7 @@ public class Client {
 	 */
 	public boolean requiresAuthTime() {
 
-		return requireAuthTime;
+		return requiresAuthTime;
 	}
 
 
@@ -805,9 +805,9 @@ public class Client {
 	 * @param requireAuthTime If {@code true} the {@code auth_Time} claim 
 	 *                        in the ID Token is required by default.
 	 */
-	public void requireAuthTime(final boolean requireAuthTime) {
+	public void requiresAuthTime(final boolean requireAuthTime) {
 
-		this.requireAuthTime = requireAuthTime;
+		this.requiresAuthTime = requiresAuthTime;
 	}
 
 

@@ -9,9 +9,11 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
+import com.nimbusds.oauth2.sdk.token.AccessToken;
+
 
 /**
- * Client update request.
+ * OpenID Connect client update request.
  *
  * <p>Related specifications:
  *
@@ -20,55 +22,78 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-25)
  */
 public class ClientUpdateRequest extends ClientDetailsRequest {
 
 
 	/**
-	 * Creates a new client update request.
+	 * Creates a new OpenID Connect client update request.
 	 *
+	 * @param accessToken  The OAuth 2.0 access token. Must not be 
+	 *                     {@code null}.
 	 * @param redirectURIs The client redirect URIs. The set must not be
 	 *                     {@code null} and must include at least one URL.
 	 */
-	public ClientUpdateRequest(final Set<URL> redirectURIs) {
+	public ClientUpdateRequest(final AccessToken accessToken, final Set<URL> redirectURIs) {
 
-		super(ClientRegistrationType.CLIENT_UPDATE, redirectURIs);
+		super(ClientRegistrationOperation.CLIENT_UPDATE, redirectURIs);
+
+		if (accessToken == null)
+			throw new IllegalArgumentException("The access token must not be null");
+
+		setAccessToken(accessToken);
 	}
 
 
 	/**
-	 * Creates a new client update request.
+	 * Creates a new OpenID Connect client update request.
 	 *
+	 * @param accessToken The OAuth 2.0 access token. Must not be 
+	 *                    {@code null}.
 	 * @param redirectURI The client redirect URI. Must not be 
 	 *                    {@code null}.
 	 */
-	public ClientUpdateRequest(final URL redirectURI) {
+	public ClientUpdateRequest(final AccessToken accessToken, final URL redirectURI) {
 
-		super(ClientRegistrationType.CLIENT_UPDATE, redirectURI);
+		super(ClientRegistrationOperation.CLIENT_UPDATE, redirectURI);
+
+		if (accessToken == null)
+			throw new IllegalArgumentException("The access token must not be null");
+
+		setAccessToken(accessToken);
 	}
 
 
 	/**
-	 * Parses a client update request from the specified HTTP POST
-	 * request.
+	 * Parses an OpenID Connect client update request from the specified
+	 * HTTP POST request.
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *
-	 * @return The parsed client update request.
+	 * @return The client update request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
-	 *                        valid client update request.
+	 *                        client update request.
 	 */
 	public static ClientUpdateRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
 
-		ClientDetailsRequest req = ClientDetailsRequest.parse(httpRequest);
+		ClientDetailsRequest detReq = ClientDetailsRequest.parse(httpRequest);
 
-		if (req instanceof ClientUpdateRequest)
-			return (ClientUpdateRequest)req;
+		if (detReq.getOperation() != ClientRegistrationOperation.CLIENT_UPDATE)
+			throw new ParseException("Invalid \"operation\" parameter", 
+					         OIDCError.INVALID_OPERATION);
+	
+		AccessToken accessToken = detReq.getAccessToken();
 
-		else
-			throw new ParseException("Invalid \"type\" parameter", OIDCError.INVALID_TYPE);
+		if (accessToken == null)
+			throw new ParseException("Missing access token");
+
+		ClientUpdateRequest req = new ClientUpdateRequest(accessToken, detReq.getRedirectURIs());
+
+		req.applyOptionalParameters(detReq.toParameters(true));
+
+		return req;
 	}
 }

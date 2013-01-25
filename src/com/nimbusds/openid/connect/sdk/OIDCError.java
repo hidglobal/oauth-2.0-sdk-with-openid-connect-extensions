@@ -11,7 +11,7 @@ import com.nimbusds.oauth2.sdk.OAuth2Error;
  * {@link com.nimbusds.oauth2.sdk.OAuth2Error OAuth 2.0 errors}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-25)
  */
 @Immutable
 public final class OIDCError {
@@ -101,11 +101,11 @@ public final class OIDCError {
 	// Client registration
 	
 	/**
-	 * Client registration: The value of the registration {@code type} is 
-	 * invalid or not supported.
+	 * Client registration: The value of the registration {@code operation}
+	 * is invalid or not supported.
 	 */
-	public static final OAuth2Error INVALID_TYPE =
-		new OAuth2Error("invalid_type", "Invalid or unsupported client registration type");
+	public static final OAuth2Error INVALID_OPERATION =
+		new OAuth2Error("invalid_operation", "Invalid or unsupported client registration operation");
 	
 	
 	/**

@@ -78,6 +78,8 @@ public final class ClientAuthenticationMethod extends Identifier {
 
 	/**
 	 * Gets the default client authentication method.
+	 *
+	 * @return {@link #CLIENT_SECRET_BASIC}
 	 */
 	public static ClientAuthenticationMethod getDefault() {
 

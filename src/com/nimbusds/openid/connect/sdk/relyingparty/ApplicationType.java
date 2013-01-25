@@ -5,7 +5,7 @@ package com.nimbusds.openid.connect.sdk.relyingparty;
  * Enumeration of OpenID Connect client application types.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-05)
+ * @version $version$ (2013-12-25)
  */
 public enum ApplicationType {
 
@@ -20,6 +20,17 @@ public enum ApplicationType {
 	 * Web application.
 	 */
 	WEB;
+
+
+	/**
+	 * Gets the default application type.
+	 *
+	 * @return {@link #WEB}
+	 */
+	public static ApplicationType getDefault() {
+
+		return WEB;
+	}
 
 
 	/**
