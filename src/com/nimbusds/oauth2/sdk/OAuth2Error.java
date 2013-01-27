@@ -12,10 +12,10 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * OAuth 2.0 error. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-20)
+ * @version $version$ (2013-01-27)
  */
 @Immutable
-public final class OAuth2Error extends Identifier {
+public class OAuth2Error extends Identifier {
 
 	
 	// Base OAuth 2.0 authorisation errors
@@ -131,6 +131,12 @@ public final class OAuth2Error extends Identifier {
 
 
 	/**
+	 * Optional HTTP status code, 0 if not specified.
+	 */
+	private final int httpStatusCode;
+
+
+	/**
 	 * Optional URI of a web page that includes additional information 
 	 * about the error.
 	 */
@@ -138,47 +144,65 @@ public final class OAuth2Error extends Identifier {
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code value.
+	 * Creates a new OAuth 2.0 error with the specified value.
 	 *
-	 * @param value The error code value. Must not be {@code null} or
-	 *              empty string.
+	 * @param value The error value. Must not be {@code null} or empty 
+	 *              string.
 	 */
 	public OAuth2Error(final String value) {
 	
-		this(value, null, null);
+		this(value, null);
 	}
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code value and 
+	 * Creates a new OAuth 2.0 error with the specified value and 
 	 * description.
 	 *
-	 * @param value       The error code value. Must not be {@code null} or
+	 * @param value       The error value. Must not be {@code null} or
 	 *                    empty string.
 	 * @param description The error description, {@code null} if not
 	 *                    specified.
 	 */
 	public OAuth2Error(final String value, final String description) {
 	
-		this(value, description, null);
+		this(value, description, 0);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code value,
-	 * description and page URI.
+	 * Creates a new OAuth 2.0 error with the specified value, description
+	 * and HTTP status code.
 	 *
-	 * @param value       The error code value. Must not be {@code null} or
-	 *                    empty string.
-	 * @param description The error description, {@code null} if not
-	 *                    specified.
-	 * @param uri         The error page URI, {@code null} if not
-	 *                    specified.
+	 * @param value          The error value. Must not be {@code null} or
+	 *                       empty string.
+	 * @param description    The error description, {@code null} if not
+	 *                       specified.
+	 * @param httpStatusCode The HTTP status code, zero if not specified.
 	 */
-	public OAuth2Error(final String value, final String description, final URL uri) {
+	public OAuth2Error(final String value, final String description, final int httpStatusCode) {
+	
+		this(value, description, httpStatusCode, null);
+	}
+
+
+	/**
+	 * Creates a new OAuth 2.0 error with the specified value, description,
+	 * HTTP status code and and page URI.
+	 *
+	 * @param value          The error value. Must not be {@code null} or
+	 *                       empty string.
+	 * @param description    The error description, {@code null} if not
+	 *                       specified.
+	 * @param httpStatusCode The HTTP status code, zero if not specified.
+	 * @param uri            The error page URI, {@code null} if not
+	 *                       specified.
+	 */
+	public OAuth2Error(final String value, final String description, final int httpStatusCode, final URL uri) {
 	
 		super(value);
 		this.description = description;
+		this.httpStatusCode = httpStatusCode;
 		this.uri = uri;
 	}
 	
@@ -195,6 +219,66 @@ public final class OAuth2Error extends Identifier {
 
 
 	/**
+	 * Sets the error description.
+	 *
+	 * @param description The error description, {@code null} if not 
+	 *                    specified.
+	 *
+	 * @return A copy of this error with the specified description.
+	 */
+	public OAuth2Error setDescription(final String description) {
+
+		return new OAuth2Error(getValue(), description, getHTTPStatusCode(), getURI());
+	}
+
+
+	/**
+	 * Appends the specified text to the error description.
+	 *
+	 * @param text The text to append to the error description, 
+	 *             {@code null} if not specified.
+	 *
+	 * @return A copy of this error with the specified appended 
+	 *         description.
+	 */
+	public OAuth2Error appendDescription(final String text) {
+
+		String newDescription;
+
+		if (getDescription() != null)
+			newDescription = getDescription() + text;
+		else
+			newDescription = text;
+
+		return new OAuth2Error(getValue(), newDescription, getHTTPStatusCode(), getURI());
+	}
+
+
+	/**
+	 * Gets the HTTP status code.
+	 *
+	 * @return The HTTP status code, zero if not specified.
+	 */
+	public int getHTTPStatusCode() {
+
+		return httpStatusCode;
+	}
+
+
+	/**
+	 * Sets the HTTP status code.
+	 *
+	 * @param httpStatusCode  The HTTP status code, zero if not specified.
+	 *
+	 * @return A copy of this error with the specified HTTP status code.
+	 */
+	public OAuth2Error setHTTPStatusCode(final int httpStatusCode) {
+
+		return new OAuth2Error(getValue(), getDescription(), httpStatusCode, getURI());
+	}
+
+
+	/**
 	 * Gets the error page URI.
 	 *
 	 * @return The error page URI, {@code null} if not specified.
@@ -202,6 +286,19 @@ public final class OAuth2Error extends Identifier {
 	public URL getURI() {
 
 		return uri;
+	}
+
+
+	/**
+	 * Sets the error page URI.
+	 *
+	 * @param uri The error page URI, {@code null} if not specified.
+	 *
+	 * @return A copy of this error with the specified page URI.
+	 */
+	public OAuth2Error setURI(final URL uri) {
+
+		return new OAuth2Error(getValue(), getDescription(), getHTTPStatusCode(), uri);
 	}
 
 
