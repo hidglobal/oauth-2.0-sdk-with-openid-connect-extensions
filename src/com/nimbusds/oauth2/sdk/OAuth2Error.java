@@ -102,28 +102,6 @@ public class OAuth2Error extends Identifier {
 		new OAuth2Error("unsupported_grant_type", "Unsupported grant type");
 	
 	
-	// OAuth Bearer, section 3.1
-	
-	/**
-	 * The access token provided is expired, revoked, malformed, or invalid
-	 * for other reasons.  The resource should respond with the HTTP 401 
-	 * (Unauthorized) status code.  The client may request a new access 
-	 * token and retry the protected resource request.
-	 */
-	public static final OAuth2Error INVALID_TOKEN =
-		new OAuth2Error("invalid_token", "Invalid access token");
-	
-	
-	/**
-	 * The request requires higher privileges than provided by the access 
-	 * token.  The resource server should respond with the HTTP 403 
-	 * (Forbidden) status code and may include the {@code scope} attribute 
-	 * with the scope necessary to access the protected resource.
-	 */
-	public static final OAuth2Error INSUFFICIENT_SCOPE =
-		new OAuth2Error("insufficient_scope", "Insufficient scope");
-	
-	
 	/**
 	 * Optional error description.
 	 */
@@ -151,7 +129,7 @@ public class OAuth2Error extends Identifier {
 	 */
 	public OAuth2Error(final String value) {
 	
-		this(value, null);
+		this(value, null, 0, null);
 	}
 	
 	
@@ -166,7 +144,7 @@ public class OAuth2Error extends Identifier {
 	 */
 	public OAuth2Error(final String value, final String description) {
 	
-		this(value, description, 0);
+		this(value, description, 0, null);
 	}
 
 
