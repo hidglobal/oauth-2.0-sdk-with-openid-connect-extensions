@@ -39,12 +39,12 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-17)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public class AccessTokenResponse 
 	extends TokenResponse
-	implements OAuth2SuccessResponse {
+	implements SuccessResponse {
 
 
 	/**

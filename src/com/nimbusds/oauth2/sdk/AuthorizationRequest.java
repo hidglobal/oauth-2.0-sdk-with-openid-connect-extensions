@@ -45,10 +45,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
-public class AuthorizationRequest implements OAuth2Request {
+public class AuthorizationRequest implements Request {
 
 
 	/**

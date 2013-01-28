@@ -57,7 +57,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 @Immutable
 public class AuthorizationErrorResponse
 	extends AuthorizationResponse
-	implements OAuth2ErrorResponse {
+	implements ErrorResponse {
 
 
 	/**
@@ -132,7 +132,7 @@ public class AuthorizationErrorResponse
 	
 
 	@Override
-	public OAuth2Error getError() {
+	public OAuth2Error getOAuth2Error() {
 	
 		return error;
 	}

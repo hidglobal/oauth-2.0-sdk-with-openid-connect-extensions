@@ -3,8 +3,8 @@ package com.nimbusds.openid.connect.sdk;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.oauth2.sdk.OAuth2Response;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.Response;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
@@ -24,7 +24,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-28)
  */
-public abstract class UserInfoResponse implements OAuth2Response {
+public abstract class UserInfoResponse implements Response {
 
 
 	/**

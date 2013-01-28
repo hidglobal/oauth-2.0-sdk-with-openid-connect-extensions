@@ -9,9 +9,9 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
 
-import com.nimbusds.oauth2.sdk.OAuth2SuccessResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.SuccessResponse;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -57,7 +57,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 @Immutable
 public final class UserInfoSuccessResponse 
 	extends UserInfoResponse
-	implements OAuth2SuccessResponse {
+	implements SuccessResponse {
 
 
 	/**

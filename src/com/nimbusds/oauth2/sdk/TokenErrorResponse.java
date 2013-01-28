@@ -57,7 +57,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 @Immutable
 public class TokenErrorResponse 
 	extends TokenResponse
-	implements OAuth2ErrorResponse {
+	implements ErrorResponse {
 
 
 	/**
@@ -111,7 +111,7 @@ public class TokenErrorResponse
 	
 
 	@Override
-	public OAuth2Error getError() {
+	public OAuth2Error getOAuth2Error() {
 	
 		return error;
 	}

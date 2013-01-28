@@ -7,8 +7,8 @@ import javax.mail.internet.ContentType;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.OAuth2Request;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.Request;
 import com.nimbusds.oauth2.sdk.SerializeException;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
@@ -48,10 +48,10 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
-public final class UserInfoRequest implements OAuth2Request {
+public final class UserInfoRequest implements Request {
 
 
 	/**
