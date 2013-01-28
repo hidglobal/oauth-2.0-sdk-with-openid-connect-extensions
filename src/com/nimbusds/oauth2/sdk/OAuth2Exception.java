@@ -10,33 +10,15 @@ import com.nimbusds.oauth2.sdk.id.State;
  * General OAuth 2.0 exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-28)
  */
 public class OAuth2Exception extends Exception {
-
-
-	/**
-	 * HTTP status code 302 (Found).
-	 */
-	public static final int HTTP_SC_FOUND = 302;
-
-
-	/**
-	 * HTTP status code 400 (Bad Request).
-	 */
-	public static final int HTTP_SC_BAD_REQUEST = 400;
 
 
 	/**
 	 * The associated OAuth 2.0 error, {@code null} if not specified.
 	 */
 	private final OAuth2Error error;
-
-
-	/**
-	 * The associated HTTP status code, 0 if not specified.
-	 */
-	private final int httpStatusCode;
 
 
 	/**
@@ -76,8 +58,7 @@ public class OAuth2Exception extends Exception {
 
 
 	/**
-	 * Creates a new OAuth 2.0 exception. Implies an HTTP status code
-	 * {@link #HTTP_SC_BAD_REQUEST 400}.
+	 * Creates a new OAuth 2.0 exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
 	 * @param error   The associated OAuth 2.0 error, {@code null} if not
@@ -93,8 +74,7 @@ public class OAuth2Exception extends Exception {
 
 
 	/**
-	 * Creates a new OAuth 2.0 exception. Implies a HTTP status code
-	 * {@link #HTTP_SC_FOUND 302}.
+	 * Creates a new OAuth 2.0 exception.
 	 *
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated OAuth 2.0 error, {@code null} if
@@ -115,11 +95,7 @@ public class OAuth2Exception extends Exception {
 		super(message, cause);
 
 		this.error = error;
-
-		httpStatusCode = HTTP_SC_FOUND;
-
 		this.redirectURI = redirectURI;
-
 		this.state = state;
 	}
 
@@ -129,22 +105,9 @@ public class OAuth2Exception extends Exception {
 	 *
 	 * @return The OAuth 2.0 error, {@code null} if not specified.
 	 */
-	public OAuth2Error getError() {
+	public OAuth2Error getOAuth2Error() {
 
 		return error;
-	}
-
-
-	/**
-	 * Gets the associated HTTP status code.
-	 *
-	 * @return The HTTP status code, with possible values 
-	 *         {@link #HTTP_SC_FOUND 302}, {@link #HTTP_SC_BAD_REQUEST 400}
-	 *         or 0 if not specified.
-	 */
-	public int getHTTPStatusCode() {
-
-		return httpStatusCode;
 	}
 
 

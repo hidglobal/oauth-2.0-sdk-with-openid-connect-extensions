@@ -43,8 +43,7 @@ public class ResolveException extends OAuth2Exception {
 
 
 	/**
-	 * Creates a new resolve exception. Implies a HTTP status code
-	 * {@link #HTTP_SC_BAD_REQUEST 400}.
+	 * Creates a new resolve exception.
 	 *
 	 * @param message  The exception message. May be {@code null}.
 	 * @param error    The associated OpenID Connect / OAuth 2.0 error, 
@@ -60,8 +59,7 @@ public class ResolveException extends OAuth2Exception {
 
 
 	/**
-	 * Creates a new resolve exception. Implies a HTTP status code
-	 * {@link #HTTP_SC_FOUND 302}.
+	 * Creates a new resolve exception.
 	 *
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated OpenID Connect / OAuth 2.0 error,

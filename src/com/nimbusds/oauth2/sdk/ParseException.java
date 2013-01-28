@@ -39,8 +39,7 @@ public class ParseException extends OAuth2Exception {
 
 
 	/**
-	 * Creates a new parse exception. Implies a HTTP status code
-	 * {@link #HTTP_SC_BAD_REQUEST 400}.
+	 * Creates a new parse exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
 	 * @param error   The associated OAuth 2.0 error, {@code null} if not
@@ -53,8 +52,7 @@ public class ParseException extends OAuth2Exception {
 
 
 	/**
-	 * Creates a new parse exception. Implies a HTTP status code
-	 * {@link #HTTP_SC_BAD_REQUEST 400}.
+	 * Creates a new parse exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
 	 * @param error   The associated OAuth 2.0 error, {@code null} if not
@@ -70,8 +68,7 @@ public class ParseException extends OAuth2Exception {
 
 
 	/**
-	 * Creates a new parse exception. Implies a HTTP status code
-	 * {@link #HTTP_SC_FOUND 302}.
+	 * Creates a new parse exception.
 	 *
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated OAuth 2.0 error, {@code null} if
