@@ -179,8 +179,8 @@ public final class UserInfoErrorResponse
 	 * <p>Note: The HTTP status code is not checked for matching the error
 	 * code semantics.
 	 *
-	 * @param httpResponse The HTTP response to parse. Must not be 
-	 *                     {@code null}.
+	 * @param httpResponse The HTTP response to parse. Its status code must
+	 *                     not be 200 (OK). Must not be {@code null}.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to a 
 	 *                        UserInfo error response.
@@ -188,6 +188,8 @@ public final class UserInfoErrorResponse
 	public static UserInfoErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
+		httpResponse.ensureStatusCodeNotOK();
+
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
 		if (StringUtils.isDefined(wwwAuth))

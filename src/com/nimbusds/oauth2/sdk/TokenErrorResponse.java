@@ -92,6 +92,16 @@ public class TokenErrorResponse
 	 * The error.
 	 */
 	private final OAuth2Error error;
+
+
+	/**
+	 * Creates a new OAuth 2.0 Access Token error response. No OAuth 2.0 
+	 * error is specified.
+	 */
+	private TokenErrorResponse() {
+
+		error = null;
+	}
 	
 	
 	/**
@@ -126,6 +136,10 @@ public class TokenErrorResponse
 	
 		JSONObject o = new JSONObject();
 
+		// No error?
+		if (error == null)
+			return o;
+
 		o.put("error", error.getCode());
 
 		if (error.getDescription() != null)
@@ -158,8 +172,8 @@ public class TokenErrorResponse
 	/**
 	 * Parses an OAuth 2.0 Token Error response.
 	 *
-	 * @param httpResponse The HTTP response to parse. Must not be 
-	 *                     {@code null}.
+	 * @param httpResponse The HTTP response to parse. Its status code must
+	 *                     not be 200 (OK). Must not be {@code null}.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to an 
 	 *                        OAuth 2.0 Token Error response.
@@ -167,11 +181,13 @@ public class TokenErrorResponse
 	public static TokenErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		httpResponse.ensureStatusCode(HTTPResponse.SC_BAD_REQUEST);
+		httpResponse.ensureStatusCodeNotOK();
 
-		// Cache-Control and Pragma headers are ignored
-		
 		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
+
+		// No error code?
+		if (! jsonObject.containsKey("error"))
+			return new TokenErrorResponse();
 		
 		OAuth2Error error = null;
 		

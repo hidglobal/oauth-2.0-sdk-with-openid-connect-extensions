@@ -49,7 +49,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-14)
+ * @version $version$ (2013-01-28)
  */
 @ThreadSafe
 public class HTTPResponse {
@@ -166,6 +166,21 @@ public class HTTPResponse {
 	
 		if (this.statusCode != statusCode)
 			throw new ParseException("Unexpected HTTP status code, must be " +  statusCode);
+	}
+
+
+	/**
+	 * Ensures this HTTP response does not have a {@link #SC_OK 200 OK} 
+	 * status code.
+	 *
+	 * @throws ParseException If the status code of this HTTP response is
+	 *                        200 OK.
+	 */
+	public void ensureStatusCodeNotOK()
+		throws ParseException {
+
+		if (statusCode == SC_OK)
+			throw new ParseException("Unexpected HTTP status code, must not be 200 (OK)");
 	}
 	
 	
