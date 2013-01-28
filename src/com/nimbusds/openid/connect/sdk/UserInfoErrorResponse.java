@@ -16,6 +16,8 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
+import com.nimbusds.oauth2.sdk.util.StringUtils;
+
 
 /**
  * UserInfo error response. This class is immutable.
@@ -57,7 +59,9 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * @version $version$ (2013-01-28)
  */
 @Immutable
-public final class UserInfoErrorResponse implements OAuth2ErrorResponse {
+public final class UserInfoErrorResponse 
+	extends UserInfoResponse
+	implements OAuth2ErrorResponse {
 
 
 	/**
@@ -82,6 +86,16 @@ public final class UserInfoErrorResponse implements OAuth2ErrorResponse {
 	 * The underlying bearer token error.
 	 */
 	private final BearerTokenError error;
+
+
+	/**
+	 * Creates a new UserInfo error response. No OAuth 2.0 bearer token
+	 * error is specified.
+	 */
+	private UserInfoErrorResponse() {
+
+		error = null;
+	}
 	
 
 	/**
@@ -132,7 +146,8 @@ public final class UserInfoErrorResponse implements OAuth2ErrorResponse {
 			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
 
 		// Add the WWW-Authenticate header
-		httpResponse.setWWWAuthenticate(error.toWWWAuthenticateHeader());
+		if (error != null)
+			httpResponse.setWWWAuthenticate(error.toWWWAuthenticateHeader());
 
 		return httpResponse;
 	}
@@ -175,9 +190,9 @@ public final class UserInfoErrorResponse implements OAuth2ErrorResponse {
 		
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
-		if (wwwAuth == null)
-			throw new ParseException("Missing HTTP WWW-Authenticate header");
+		if (StringUtils.isDefined(wwwAuth))
+			parse(wwwAuth);
 
-		return parse(wwwAuth);
+		return new UserInfoErrorResponse();
 	}
 }

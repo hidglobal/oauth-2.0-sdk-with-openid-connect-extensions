@@ -52,10 +52,12 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-23)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
-public final class UserInfoSuccessResponse implements OAuth2SuccessResponse {
+public final class UserInfoSuccessResponse 
+	extends UserInfoResponse
+	implements OAuth2SuccessResponse {
 
 
 	/**
