@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.relyingparty;
+package com.nimbusds.openid.connect.sdk.rp;
 
 
 import java.net.URL;

@@ -32,7 +32,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 
-import com.nimbusds.openid.connect.sdk.relyingparty.ApplicationType;
+import com.nimbusds.openid.connect.sdk.rp.ApplicationType;
 
 
 /**
@@ -45,7 +45,7 @@ import com.nimbusds.openid.connect.sdk.relyingparty.ApplicationType;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-25)
+ * @version $version$ (2013-01-28)
  */
 class ClientDetailsRequest extends ClientRegistrationRequest {
 
