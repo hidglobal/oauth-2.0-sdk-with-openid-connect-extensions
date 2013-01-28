@@ -52,7 +52,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-17)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public class TokenErrorResponse 
@@ -126,7 +126,7 @@ public class TokenErrorResponse
 	
 		JSONObject o = new JSONObject();
 
-		o.put("error", error.getValue());
+		o.put("error", error.getCode());
 
 		if (error.getDescription() != null)
 			o.put("error_description", error.getDescription());
@@ -192,7 +192,7 @@ public class TokenErrorResponse
 				uri = new URL(JSONObjectUtils.getString(jsonObject, "error_uri"));
 
 
-			error = new OAuth2Error(code, description, uri);
+			error = new OAuth2Error(code, description, HTTPResponse.SC_BAD_REQUEST, uri);
 			
 		} catch (ParseException e) {
 		

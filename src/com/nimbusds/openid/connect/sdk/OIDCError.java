@@ -3,7 +3,10 @@ package com.nimbusds.openid.connect.sdk;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.oauth2.sdk.BearerTokenError;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
+
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
@@ -11,14 +14,13 @@ import com.nimbusds.oauth2.sdk.OAuth2Error;
  * {@link com.nimbusds.oauth2.sdk.OAuth2Error OAuth 2.0 errors}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-25)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public final class OIDCError {
 
 	
 	// Authorisation
-
 
 	/**
 	 * The authorisation server requires end-user authentication. This 
@@ -30,7 +32,8 @@ public final class OIDCError {
 	 * authentication.
 	 */
 	public static final OAuth2Error LOGIN_REQUIRED =
-		new OAuth2Error("login_required", "Login required");
+		new OAuth2Error("login_required", "Login required", 
+			        HTTPResponse.SC_FOUND);
 
 
 	/**
@@ -45,7 +48,8 @@ public final class OIDCError {
 	 * displaying a user interface to prompt for a session to use.
 	 */
 	public static final OAuth2Error SESSION_SELECTION_REQUIRED =
-		new OAuth2Error("session_selection_required", "Session selection required");
+		new OAuth2Error("session_selection_required", "Session selection required",
+			        HTTPResponse.SC_FOUND);
 
 
 	/**
@@ -66,7 +70,8 @@ public final class OIDCError {
 	 * returns an error or invalid data.
 	 */
 	public static final OAuth2Error INVALID_REQUEST_URI =
-		new OAuth2Error("invalid_request_uri", "Invalid request URI");
+		new OAuth2Error("invalid_request_uri", "Invalid request URI",
+			        HTTPResponse.SC_FOUND);
 
 
 	/**
@@ -79,14 +84,16 @@ public final class OIDCError {
 	 * displaying a user interface for end-user interaction.
 	 */
 	public static final OAuth2Error INTERACTION_REQUIRED =
-		new OAuth2Error("interaction_required", "User interaction required");
+		new OAuth2Error("interaction_required", "User interaction required",
+			        HTTPResponse.SC_FOUND);
 
 
 	/**
 	 * The request parameter contains an invalid OpenID Request Object.
 	 */
 	public static final OAuth2Error	INVALID_OPENID_REQUEST_OBJECT =
-		new OAuth2Error("invalid_openid_request_object", "Invalid OpenID request object");
+		new OAuth2Error("invalid_openid_request_object", "Invalid OpenID request object",
+			        HTTPResponse.SC_FOUND);
 
 
 	// UserInfo
@@ -94,8 +101,9 @@ public final class OIDCError {
 	/**
 	 * The requested UserInfo schema is invalid or unsupported.
 	 */
-	public static final OAuth2Error INVALID_SCHEMA =
-		new OAuth2Error("invalid_schema", "The requested schema is invalid or unsupported");
+	public static final BearerTokenError INVALID_SCHEMA =
+		new BearerTokenError("invalid_schema", "The requested schema is invalid or unsupported",
+			             HTTPResponse.SC_BAD_REQUEST);
 
 
 	// Client registration

@@ -44,14 +44,14 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-27)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public class BearerTokenError extends OAuth2Error {
 
 
 	/**
-	 * The request does not contain an access token. No error value or
+	 * The request does not contain an access token. No error code or
 	 * description is specified for this error, just the HTTP status code
 	 * is set to 401 (Unauthorized).
 	 *
@@ -63,7 +63,7 @@ public class BearerTokenError extends OAuth2Error {
 	 * </pre>
 	 */
 	public static final BearerTokenError MISSING_TOKEN =
-		new BearerTokenError(HTTPResponse.SC_UNAUTHORIZED, null);
+		new BearerTokenError(null, null, HTTPResponse.SC_UNAUTHORIZED);
 
 	/**
 	 * The request is missing a required parameter, includes an unsupported
@@ -72,8 +72,7 @@ public class BearerTokenError extends OAuth2Error {
 	 * malformed. The HTTP status code is set to 400 (Bad Request).
 	 */
 	public static final BearerTokenError INVALID_REQUEST = 
-		new BearerTokenError("invalid_request", 
-			             "Invalid request", 
+		new BearerTokenError("invalid_request", "Invalid request", 
 			             HTTPResponse.SC_BAD_REQUEST);
 
 
@@ -83,8 +82,7 @@ public class BearerTokenError extends OAuth2Error {
 	 * (Unauthorized).
 	 */
 	public static final BearerTokenError INVALID_TOKEN =
-		new BearerTokenError("invalid_token", 
-			             "Invalid access token", 
+		new BearerTokenError("invalid_token", "Invalid access token", 
 			             HTTPResponse.SC_UNAUTHORIZED);
 	
 	
@@ -93,8 +91,7 @@ public class BearerTokenError extends OAuth2Error {
 	 * token. The HTTP status code is set to 403 (Forbidden).
 	 */
 	public static final BearerTokenError INSUFFICIENT_SCOPE =
-		new BearerTokenError("insufficient_scope", 
-			             "Insufficient scope", 
+		new BearerTokenError("insufficient_scope", "Insufficient scope", 
 			             HTTPResponse.SC_FORBIDDEN);
 	
 	
@@ -143,59 +140,42 @@ public class BearerTokenError extends OAuth2Error {
 	 * Required scope, {@code null} if not specified.
 	 */
 	private final Scope scope;
-
-
-	/**
-	 * Creates a new OAuth 2.0 bearer token error with the specified HTTP
-	 * status code. No error code is specified, which implies a
-	 * {@link #MISSING_TOKEN} error.
-	 *
-	 * @param httpStatusCode The HTTP status code, zero if not specified.
-	 * @param realm          The realm, {@code null} if not specified.
-	 */
-	public BearerTokenError(final int httpStatusCode, final String realm) {
-	
-		this("n/a", null, 0, null, null, null);
-	}
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 bearer token error with the specified value
+	 * Creates a new OAuth 2.0 bearer token error with the specified code
 	 * and description.
 	 *
-	 * @param value       The error value. Must not be {@code null} or
-	 *                    empty string.
+	 * @param code        The error code, {@code null} if not specified.
 	 * @param description The error description, {@code null} if not
 	 *                    specified.
 	 */
-	public BearerTokenError(final String value, final String description) {
+	public BearerTokenError(final String code, final String description) {
 	
-		this(value, description, 0, null, null, null);
+		this(code, description, 0, null, null, null);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 bearer token error with the specified value,
+	 * Creates a new OAuth 2.0 bearer token error with the specified code,
 	 * description and HTTP status code.
 	 *
-	 * @param value          The error value. Must not be {@code null} or
-	 *                       empty string.
+	 * @param code           The error code, {@code null} if not specified.
 	 * @param description    The error description, {@code null} if not
 	 *                       specified.
 	 * @param httpStatusCode The HTTP status code, zero if not specified.
 	 */
-	public BearerTokenError(final String value, final String description, final int httpStatusCode) {
+	public BearerTokenError(final String code, final String description, final int httpStatusCode) {
 	
-		this(value, description, httpStatusCode, null, null, null);
+		this(code, description, httpStatusCode, null, null, null);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 bearer token error with the specified value,
-	 * description, HTTP status code, page URI.
+	 * Creates a new OAuth 2.0 bearer token error with the specified code,
+	 * description, HTTP status code, page URI, realm and scope.
 	 *
-	 * @param value          The error value. Must not be {@code null} or
-	 *                       empty string.
+	 * @param code           The error code, {@code null} if not specified.
 	 * @param description    The error description, {@code null} if not
 	 *                       specified.
 	 * @param httpStatusCode The HTTP status code, zero if not specified.
@@ -205,14 +185,14 @@ public class BearerTokenError extends OAuth2Error {
 	 * @param scope          The required scope, {@code null} if not 
 	 *                       specified.
 	 */
-	public BearerTokenError(final String value, 
+	public BearerTokenError(final String code, 
 		                final String description, 
 		                final int httpStatusCode, 
 		                final URL uri,
 		                final String realm,
 		                final Scope scope) {
 	
-		super(value, description, httpStatusCode, uri);
+		super(code, description, httpStatusCode, uri);
 		this.realm = realm;
 		this.scope = scope;
 	}
@@ -238,7 +218,7 @@ public class BearerTokenError extends OAuth2Error {
 	 */
 	public BearerTokenError setRealm(final String realm) {
 
-		return new BearerTokenError(getValue(), 
+		return new BearerTokenError(getCode(), 
 			                    getDescription(), 
 			                    getHTTPStatusCode(), 
 			                    getURI(), 
@@ -267,7 +247,7 @@ public class BearerTokenError extends OAuth2Error {
 	 */
 	public BearerTokenError setScope(final Scope scope) {
 
-		return new BearerTokenError(getValue(),
+		return new BearerTokenError(getCode(),
 			                    getDescription(),
 			                    getHTTPStatusCode(),
 			                    getURI(),
@@ -277,7 +257,7 @@ public class BearerTokenError extends OAuth2Error {
 
 
 	/**
-	 * Returns the {@code WWW-Authenticate} HTTP response header value for 
+	 * Returns the {@code WWW-Authenticate} HTTP response header code for 
 	 * this bearer access token error response.
 	 *
 	 * <p>Example:
@@ -304,13 +284,13 @@ public class BearerTokenError extends OAuth2Error {
 		}
 		
 		// Serialise error, error_description, error_uri
-		if (getValue() != "n/a") {
+		if (getCode() != null) {
 			
 			if (numParams > 0)
 				sb.append(',');
 			
 			sb.append(" error=\"");
-			sb.append(StringEscapeUtils.escapeJava(getValue()));
+			sb.append(StringEscapeUtils.escapeJava(getCode()));
 			sb.append('"');
 			numParams++;
 			
@@ -382,7 +362,7 @@ public class BearerTokenError extends OAuth2Error {
 		
 		
 		// Parse optional error 
-		String errorValue = null;
+		String errorCode = null;
 		String errorDescription = null;
 		URL errorURI = null;
 
@@ -390,7 +370,7 @@ public class BearerTokenError extends OAuth2Error {
 		
 		if (m.find()) {
 
-			errorValue = m.group(1);
+			errorCode = m.group(1);
 
 			// Parse optional error description
 			m = errorDescriptionPattern.matcher(wwwAuth);
@@ -423,9 +403,6 @@ public class BearerTokenError extends OAuth2Error {
 			scope = Scope.parse(m.group(1));
 		
 
-		if (errorValue == null)
-			errorValue = "n/a"; // Implies missing token error
-
-		return new BearerTokenError(errorValue, errorDescription, 0, errorURI, realm, scope);
+		return new BearerTokenError(errorCode, errorDescription, 0, errorURI, realm, scope);
 	}
 }

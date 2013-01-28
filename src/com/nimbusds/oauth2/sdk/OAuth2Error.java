@@ -5,24 +5,22 @@ import java.net.URL;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.id.Identifier;
-
 
 /**
  * OAuth 2.0 error. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-27)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
-public class OAuth2Error extends Identifier {
+public class OAuth2Error {
 
 	
 	// Base OAuth 2.0 authorisation errors
 	
 	/**
 	 * The request is missing a required parameter, includes an invalid 
-	 * parameter value, or is otherwise malformed.
+	 * parameter code, or is otherwise malformed.
 	 */
 	public static final OAuth2Error INVALID_REQUEST = 
 		new OAuth2Error("invalid_request", "Invalid request");
@@ -103,6 +101,12 @@ public class OAuth2Error extends Identifier {
 	
 	
 	/**
+	 * The error code, may not always be defined.
+	 */
+	private final String code;
+
+
+	/**
 	 * Optional error description.
 	 */
 	private final String description;
@@ -122,66 +126,75 @@ public class OAuth2Error extends Identifier {
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified value.
+	 * Creates a new OAuth 2.0 error with the specified code.
 	 *
-	 * @param value The error value. Must not be {@code null} or empty 
-	 *              string.
+	 * @param code The error code, {@code null} if not specified.
 	 */
-	public OAuth2Error(final String value) {
+	public OAuth2Error(final String code) {
 	
-		this(value, null, 0, null);
+		this(code, null, 0, null);
 	}
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 error with the specified value and 
+	 * Creates a new OAuth 2.0 error with the specified code and 
 	 * description.
 	 *
-	 * @param value       The error value. Must not be {@code null} or
-	 *                    empty string.
+	 * @param code        The error code, {@code null} if not specified.
 	 * @param description The error description, {@code null} if not
 	 *                    specified.
 	 */
-	public OAuth2Error(final String value, final String description) {
+	public OAuth2Error(final String code, final String description) {
 	
-		this(value, description, 0, null);
+		this(code, description, 0, null);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified value, description
+	 * Creates a new OAuth 2.0 error with the specified code, description
 	 * and HTTP status code.
 	 *
-	 * @param value          The error value. Must not be {@code null} or
-	 *                       empty string.
+	 * @param code           The error code, {@code null} if not specified.
 	 * @param description    The error description, {@code null} if not
 	 *                       specified.
 	 * @param httpStatusCode The HTTP status code, zero if not specified.
 	 */
-	public OAuth2Error(final String value, final String description, final int httpStatusCode) {
+	public OAuth2Error(final String code, final String description, 
+		           final int httpStatusCode) {
 	
-		this(value, description, httpStatusCode, null);
+		this(code, description, httpStatusCode, null);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified value, description,
+	 * Creates a new OAuth 2.0 error with the specified code, description,
 	 * HTTP status code and and page URI.
 	 *
-	 * @param value          The error value. Must not be {@code null} or
-	 *                       empty string.
+	 * @param code           The error code, {@code null} if not specified.
 	 * @param description    The error description, {@code null} if not
 	 *                       specified.
 	 * @param httpStatusCode The HTTP status code, zero if not specified.
 	 * @param uri            The error page URI, {@code null} if not
 	 *                       specified.
 	 */
-	public OAuth2Error(final String value, final String description, final int httpStatusCode, final URL uri) {
+	public OAuth2Error(final String code, final String description, 
+		           final int httpStatusCode, final URL uri) {
 	
-		super(value);
+		this.code = code;
 		this.description = description;
 		this.httpStatusCode = httpStatusCode;
 		this.uri = uri;
+	}
+
+
+	/**
+	 * Gets the error code.
+	 *
+	 * @return The error code, {@code null} if not specified.
+	 */
+	public String getCode() {
+
+		return code;
 	}
 	
 	
@@ -206,7 +219,7 @@ public class OAuth2Error extends Identifier {
 	 */
 	public OAuth2Error setDescription(final String description) {
 
-		return new OAuth2Error(getValue(), description, getHTTPStatusCode(), getURI());
+		return new OAuth2Error(getCode(), description, getHTTPStatusCode(), getURI());
 	}
 
 
@@ -228,7 +241,7 @@ public class OAuth2Error extends Identifier {
 		else
 			newDescription = text;
 
-		return new OAuth2Error(getValue(), newDescription, getHTTPStatusCode(), getURI());
+		return new OAuth2Error(getCode(), newDescription, getHTTPStatusCode(), getURI());
 	}
 
 
@@ -252,7 +265,7 @@ public class OAuth2Error extends Identifier {
 	 */
 	public OAuth2Error setHTTPStatusCode(final int httpStatusCode) {
 
-		return new OAuth2Error(getValue(), getDescription(), httpStatusCode, getURI());
+		return new OAuth2Error(getCode(), getDescription(), httpStatusCode, getURI());
 	}
 
 
@@ -276,7 +289,30 @@ public class OAuth2Error extends Identifier {
 	 */
 	public OAuth2Error setURI(final URL uri) {
 
-		return new OAuth2Error(getValue(), getDescription(), getHTTPStatusCode(), uri);
+		return new OAuth2Error(getCode(), getDescription(), getHTTPStatusCode(), uri);
+	}
+
+
+	/**
+	 * @see #getCode
+	 */
+	@Override
+	public String toString() {
+	
+		if (code != null)
+			return code;
+		else
+			return "null";
+	}
+
+
+	@Override
+	public int hashCode() {
+	
+		if (code != null)
+			return code.hashCode();
+		else
+			return "null".hashCode();
 	}
 
 

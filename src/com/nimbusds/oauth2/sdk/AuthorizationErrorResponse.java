@@ -52,7 +52,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public class AuthorizationErrorResponse
@@ -154,7 +154,7 @@ public class AuthorizationErrorResponse
 
 		Map<String,String> params = new HashMap<String,String>();
 
-		params.put("error", error.getValue());
+		params.put("error", error.getCode());
 
 		if (error.getDescription() != null)
 			params.put("error_description", error.getDescription());
@@ -233,7 +233,7 @@ public class AuthorizationErrorResponse
 		}
 
 
-		OAuth2Error error = new OAuth2Error(errorCode, errorDescription, errorURI);
+		OAuth2Error error = new OAuth2Error(errorCode, errorDescription, HTTPResponse.SC_FOUND, errorURI);
 		
 		
 		// State

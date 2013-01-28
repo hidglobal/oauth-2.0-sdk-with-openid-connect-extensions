@@ -9,8 +9,9 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.BearerAccessTokenErrorResponse;
+import com.nimbusds.oauth2.sdk.BearerTokenError;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.nimbusds.oauth2.sdk.OAuth2ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -24,9 +25,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <ul>
  *     <li>OAuth 2.0 Bearer Token errors:
  *         <ul>
- *             <li>{@link com.nimbusds.oauth2.sdk.OAuth2Error#INVALID_REQUEST}
- *             <li>{@link com.nimbusds.oauth2.sdk.OAuth2Error#INVALID_TOKEN}
- *             <li>{@link com.nimbusds.oauth2.sdk.OAuth2Error#INSUFFICIENT_SCOPE}
+ *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#MISSING_TOKEN}
+ *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#INVALID_REQUEST}
+ *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#INVALID_TOKEN}
+ *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#INSUFFICIENT_SCOPE}
  *          </ul>
  *     <li>OpenID Connect specific errors:
  *         <ul>
@@ -52,10 +54,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
-public final class UserInfoErrorResponse extends BearerAccessTokenErrorResponse {
+public final class UserInfoErrorResponse implements OAuth2ErrorResponse {
 
 
 	/**
@@ -63,31 +65,76 @@ public final class UserInfoErrorResponse extends BearerAccessTokenErrorResponse 
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getStandardErrors() {
+	public static Set<BearerTokenError> getStandardErrors() {
 		
-		Set<OAuth2Error> bearerErrors = BearerAccessTokenErrorResponse.getStandardErrors();
-		
-		Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>(bearerErrors);
+		Set<BearerTokenError> stdErrors = new HashSet<BearerTokenError>();
+		stdErrors.add(BearerTokenError.MISSING_TOKEN);
+		stdErrors.add(BearerTokenError.INVALID_REQUEST);
+		stdErrors.add(BearerTokenError.INVALID_TOKEN);
+		stdErrors.add(BearerTokenError.INSUFFICIENT_SCOPE);
 		stdErrors.add(OIDCError.INVALID_SCHEMA);
 
 		return Collections.unmodifiableSet(stdErrors);
 	}
+
+
+	/**
+	 * The underlying bearer token error.
+	 */
+	private final BearerTokenError error;
 	
 
 	/**
 	 * Creates a new UserInfo error response.
 	 *
-	 * @param realm The bearer realm. May be {@code null}.
-	 * @param error The OAuth 2.0 error. Should match one of the 
-	 *              {@link #getStandardErrors standard errors} for a 
-	 *              UserInfo error response. Should be {@code null} if 
-	 *              the client didn't provide any authentication 
-	 *              information in the original request.
+	 * @param error The OAuth 2.0 bearer token error. Should match one of 
+	 *              the {@link #getStandardErrors standard errors} for a 
+	 *              UserInfo error response. Must not be {@code null}.
 	 */
-	public UserInfoErrorResponse(final String realm, 
-	                             final OAuth2Error error) {
-				    
-		super(realm, error);
+	public UserInfoErrorResponse(final BearerTokenError error) {
+
+		if (error == null)
+			throw new IllegalArgumentException("The error must not be null");
+
+		this.error = error;
+	}
+
+
+	@Override
+	public OAuth2Error getError() {
+
+		return error;
+	}
+
+
+	@Override
+	/**
+	 * Returns the HTTP response for this UserInfo error response.
+	 *
+	 * <p>Example HTTP response:
+	 *
+	 * <pre>
+	 * HTTP/1.1 401 Unauthorized
+	 * WWW-Authenticate: Bearer realm="example.com",
+	 *                   error="invalid_token",
+	 *                   error_description="The access token expired"
+	 * </pre>
+	 *
+	 * @return The HTTP response matching this UserInfo error response.
+	 */
+	public HTTPResponse toHTTPResponse() {
+
+		HTTPResponse httpResponse = null;
+
+		if (error.getHTTPStatusCode() > 0)
+			httpResponse = new HTTPResponse(error.getHTTPStatusCode());
+		else
+			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
+
+		// Add the WWW-Authenticate header
+		httpResponse.setWWWAuthenticate(error.toWWWAuthenticateHeader());
+
+		return httpResponse;
 	}
 
 
@@ -105,9 +152,9 @@ public final class UserInfoErrorResponse extends BearerAccessTokenErrorResponse 
 	public static UserInfoErrorResponse parse(final String wwwAuth)
 		throws ParseException {
 
-		BearerAccessTokenErrorResponse ber = BearerAccessTokenErrorResponse.parse(wwwAuth);
+		BearerTokenError error = BearerTokenError.parse(wwwAuth);
 
-		return new UserInfoErrorResponse(ber.getRealm(), ber.getError());
+		return new UserInfoErrorResponse(error);
 	}
 	
 	
