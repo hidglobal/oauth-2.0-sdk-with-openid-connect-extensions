@@ -25,7 +25,8 @@ public abstract class TokenResponse implements Response {
 	/**
 	 * Parses a token response from the specified JSON object.
 	 *
-	 * @param jsonObject The JSON object to parse. Must not be {@code null}.
+	 * @param jsonObject The JSON object to parse. Must not be 
+	 *                   @code null}.
 	 *
 	 * @return The access token or token error response.
 	 *
@@ -35,7 +36,10 @@ public abstract class TokenResponse implements Response {
 	public static TokenResponse parse(JSONObject jsonObject)
 		throws ParseException{
 
-		return null;
+		if (jsonObject.containsKey("access_token"))
+			return AccessTokenResponse.parse(jsonObject);
+		else
+			return TokenErrorResponse.parse(jsonObject);
 	}
 
 
@@ -52,6 +56,9 @@ public abstract class TokenResponse implements Response {
 	public static TokenResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		return null;
+		if (httpResponse.getStatusCode() ==  HTTPResponse.SC_OK)
+			return AccessTokenResponse.parse(httpResponse);
+		else
+			return TokenErrorResponse.parse(httpResponse);
 	}
 }
