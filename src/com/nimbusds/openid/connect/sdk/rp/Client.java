@@ -1,21 +1,31 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+
+import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Subject;
+
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.SubjectType;
 
@@ -23,7 +33,8 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
 
 
 /**
- * OpenID Connect client details.
+ * OpenID Connect client details. Supports serialisation and parsing to / from
+ * JSON object for the purpose of handling registration responses.
  *
  * <p>Related specifications:
  *
@@ -32,7 +43,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-25)
+ * @version $version$ (2013-01-28)
  */
 public class Client {
 
@@ -58,7 +69,7 @@ public class Client {
 	/**
 	 * The client application type.
 	 */
-	private ApplicationType applicationType = null;
+	private ApplicationType applicationType = ApplicationType.getDefault();
 
 
 	/**
@@ -100,14 +111,16 @@ public class Client {
 	/**
 	 * Token endpoint authentication method.
 	 */
-	private ClientAuthenticationMethod tokenEndpointAuthMethod = null;
+	private ClientAuthenticationMethod tokenEndpointAuthMethod = 
+		ClientAuthenticationMethod.getDefault();
 
 
 	/**
 	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
 	 * are used in signing Token endpoint requests and OpenID request 
-	 * objects. If {@link #encryptionJWKURL} is not provided, also used to 
-	 * encrypt the ID Token and UserInfo endpoint responses to the client.
+	 * objects. If {@link #encryptionJWKSetURL} is not provided, also used 
+	 * to encrypt the ID Token and UserInfo endpoint responses to the 
+	 * client.
 	 */
 	private URL jwkSetURL = null;
 
@@ -290,7 +303,7 @@ public class Client {
 	/**
 	 * Gets the client application type.
 	 *
-	 * @return The client application type, {@code null} if not specified.
+	 * @return The client application type.
 	 */
 	public ApplicationType getApplicationType() {
 
@@ -301,12 +314,15 @@ public class Client {
 	/**
 	 * Sets the client application type.
 	 *
-	 * @param applicationType The client application type, {@code null} if 
-	 *                        not specified.
+	 * @param applicationType The client application type, {@code null} for
+	 *                        the default.
 	 */
 	public void setApplicationType(final ApplicationType applicationType) {
 
-		this.applicationType = applicationType;
+		if (applicationType == null)
+			this.applicationType = ApplicationType.getDefault();
+		else
+			this.applicationType = applicationType;
 	}
 
 
@@ -448,8 +464,7 @@ public class Client {
 	/**
 	 * Gets the Token endpoint authentication method.
 	 *
-	 * @return The Token endpoint authentication method, {@code null} if 
-	 *         not specified.
+	 * @return The Token endpoint authentication method.
 	 */
 	public ClientAuthenticationMethod getTokenEndpointAuthMethod() {
 
@@ -461,12 +476,14 @@ public class Client {
 	 * Sets the Token endpoint authentication method.
 	 *
 	 * @param tokenEndpointAuthMethod The Token endpoint authentication 
-	 *                                method, {@code null} if not 
-	 *                                specified.
+	 *                                method, {@code null} for the default.
 	 */
 	public void setTokenEndpointAuthMethod(final ClientAuthenticationMethod tokenEndpointAuthMethod) {
 
-		this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+		if (tokenEndpointAuthMethod == null)
+			this.tokenEndpointAuthMethod = ClientAuthenticationMethod.getDefault();
+		else
+			this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
 	}
 
 
@@ -876,5 +893,312 @@ public class Client {
 	public void setPostLogoutRedirectURI(final URL postLogoutRedirectURI) {
 
 		this.postLogoutRedirectURI = postLogoutRedirectURI;
+	}
+
+
+	/**
+	 * Returns the client properties as a JSON object.
+	 *
+	 * @return The client properties as a JSON object.
+	 */
+	public JSONObject toJSONObject() {
+
+		JSONObject o = new JSONObject();
+
+		o.put("client_id", id.getValue());
+
+		if (redirectURIs != null) {
+
+			StringBuilder sb = new StringBuilder();
+
+			for (URL uri: redirectURIs) {
+
+				if (sb.length() > 0)
+					sb.append(' ');
+
+				sb.append(uri.toString());
+			}
+
+			o.put("redirect_uris", sb.toString());
+		}
+
+
+		if (contacts != null) {
+
+			StringBuilder sb = new StringBuilder();
+
+			for (InternetAddress email: contacts) {
+
+				if (sb.length() > 0)
+					sb.append(' ');
+
+				sb.append(email.getAddress());
+			}
+
+			o.put("contacts", sb.toString());
+		}
+
+
+		o.put("application_type", applicationType.toString());
+
+
+		if (name != null)
+			o.put("client_name", name);
+
+
+		if (logoURL != null)
+			o.put("logo_url", logoURL.toString());
+
+
+		if (policyURL != null)
+			o.put("policy_url", policyURL.toString());
+
+
+		if (termsOfServiceURL != null)
+			o.put("tos_url", termsOfServiceURL.toString());
+
+
+		if (subjectType != null)
+			o.put("subject_type", subjectType.toString());
+
+
+		if (sectorIDURL != null)
+			o.put("sector_identifier_url", sectorIDURL.toString());
+
+
+		o.put("token_endpoint_auth_method", tokenEndpointAuthMethod.toString());
+
+
+		if (jwkSetURL != null)
+			o.put("jwk_url", jwkSetURL.toString());
+
+
+		if (encryptionJWKSetURL != null)
+			o.put("jwk_encryption_url", encryptionJWKSetURL.toString());
+
+
+		if (x509URL != null)
+			o.put("x509_url", x509URL.toString());
+
+
+		if (encryptionX509URL != null)
+			o.put("x509_encryption_url", encryptionX509URL.toString());
+
+
+		if (requestObjectJWSAlg != null)
+			o.put("request_object_signing_alg", requestObjectJWSAlg.getName());
+
+
+		if (idTokenJWSAlg != null)
+			o.put("id_token_signed_response_alg", idTokenJWSAlg.getName());
+
+
+		if (idTokenJWEAlg != null)
+			o.put("id_token_encrypted_response_alg", idTokenJWEAlg.getName());
+
+
+		if (idTokenJWEEnc != null)
+			o.put("id_token_encrypted_response_enc", idTokenJWEEnc.getName());
+
+
+		if (userInfoJWSAlg != null)
+			o.put("userinfo_signed_response_alg", userInfoJWSAlg.getName());
+
+
+		if (userInfoJWEAlg != null)
+			o.put("userinfo_encrypted_response_alg", userInfoJWEAlg.getName());
+
+
+		if (userInfoJWEEnc != null)
+			o.put("userinfo_encrypted_response_enc", userInfoJWEEnc.getName());
+
+
+		if (defaultMaxAge > 0)
+			o.put("default_max_age", defaultMaxAge);
+
+
+		o.put("require_auth_time", requiresAuthTime);
+
+
+		if (defaultACR != null)
+			o.put("default_acr", defaultACR.getValue());
+
+
+		if (initiateLoginURI != null)
+			o.put("initiate_login_uri", initiateLoginURI.toString());
+
+
+		if (postLogoutRedirectURI != null)
+			o.put("post_logout_redirect_url", postLogoutRedirectURI.toString());
+
+		return o;
+	}
+
+
+	/**
+	 * Parses an OpenID Connect client details instance from the specified
+	 * JSON object.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be 
+	 *                   {@code null}.
+	 *
+	 * @return The OpenID Connect client details.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to an
+	 *                        OpenID Connect client details instance.
+	 */
+	public Client parse(final JSONObject jsonObject)
+		throws ParseException {
+
+		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
+
+		Client client = new Client(id);
+
+		if (jsonObject.containsKey("redirect_uris")) {
+
+			Set<URL> redirectURIs = new HashSet<URL>();
+
+			for (String uriString: JSONObjectUtils.getString(jsonObject, "redirect_uris").split(" ")) {
+
+				try {
+					redirectURIs.add(new URL(uriString));
+
+				} catch (MalformedURLException e) {
+
+					throw new ParseException("Invalid \"redirect_uris\" parameter: " +
+						                  e.getMessage());
+				}
+			}
+
+			client.setRedirectURIs(redirectURIs);
+		}
+
+
+		if (jsonObject.containsKey("contacts")) {
+
+			List<InternetAddress> emailList = new LinkedList<InternetAddress>();
+
+			for (String emailString: JSONObjectUtils.getString(jsonObject, "contacts").split(" ")) {
+
+				try {
+					emailList.add(new InternetAddress(emailString));
+
+				} catch (AddressException e) {
+
+					throw new ParseException("Invalid \"contacts\" parameter: " +
+							         e.getMessage());
+				}
+			}
+
+			client.setContacts(emailList);
+		}
+
+
+		if (jsonObject.containsKey("application_type"))
+			client.setApplicationType(JSONObjectUtils.getEnum(jsonObject, 
+				                                          "application_type", 
+				                                          ApplicationType.class));
+
+
+		if (jsonObject.containsKey("client_name"))
+			client.setName(JSONObjectUtils.getString(jsonObject, "client_name"));
+
+
+		if (jsonObject.containsKey("logo_url"))
+			client.setLogoURL(JSONObjectUtils.getURL(jsonObject, "logo_url"));
+
+
+		if (jsonObject.containsKey("policy_url"))
+			client.setPolicyURL(JSONObjectUtils.getURL(jsonObject, "policy_url"));
+
+
+		if (jsonObject.containsKey("tos_url"))
+			client.setTermsOfServiceURL(JSONObjectUtils.getURL(jsonObject, "tos_url"));
+
+
+		if (jsonObject.containsKey("subject_type"))
+			client.setSubjectType(JSONObjectUtils.getEnum(jsonObject, "subject_type", SubjectType.class));
+
+
+		if (jsonObject.containsKey("sector_identifier_url"))
+			client.setSectorIDURL(JSONObjectUtils.getURL(jsonObject, "sector_identifier_url"));
+
+
+		if (jsonObject.containsKey("token_endpoint_auth_method"))
+			client.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(
+				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_method")));
+
+
+		if (jsonObject.containsKey("jwk_url"))
+			client.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwk_url"));
+
+
+		if (jsonObject.containsKey("jwk_encryption_url"))
+			client.setEncrytionJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwk_encryption_url"));
+
+
+		if (jsonObject.containsKey("x509_url"))
+			client.setX509URL(JSONObjectUtils.getURL(jsonObject, "x509_url"));
+
+
+		if (jsonObject.containsKey("x509_encryption_url"))
+			client.setEncryptionX509URL(JSONObjectUtils.getURL(jsonObject, "x509_encryption_url"));
+
+
+		if (jsonObject.containsKey("request_object_signing_alg"))
+			client.setRequestObjectJWSAlgorithm(new JWSAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "request_object_signing_alg")));
+
+
+		if (jsonObject.containsKey("id_token_signed_response_alg"))
+			client.setIDTokenJWSAlgorithm(new JWSAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "id_token_signed_response_alg")));
+
+
+		if (jsonObject.containsKey("id_token_encrypted_response_alg"))
+			client.setIDTokenJWEAlgorithm(new JWEAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_alg")));
+
+
+		if (jsonObject.containsKey("id_token_encrypted_response_enc"))
+			client.setIDTokenJWEEncryptionMethod(new EncryptionMethod(
+				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_enc")));
+
+
+		if (jsonObject.containsKey("userinfo_signed_response_alg"))
+			client.setUserInfoJWSAlgorithm(new JWSAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "userinfo_signed_response_alg")));
+
+
+		if (jsonObject.containsKey("userinfo_encrypted_response_alg"))
+			client.setUserInfoJWEAlgorithm(new JWEAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_alg")));
+
+
+		if (jsonObject.containsKey("userinfo_encrypted_response_enc"))
+			client.setUserInfoJWEEncryptionMethod(new EncryptionMethod(
+				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_enc")));
+
+
+		if (jsonObject.containsKey("default_max_age"))
+			client.setDefaultMaxAge(JSONObjectUtils.getInt(jsonObject, "default_max_age"));
+
+
+		if (jsonObject.containsKey("require_auth_time"))
+			client.requiresAuthTime(JSONObjectUtils.getBoolean(jsonObject, "require_auth_time"));
+
+
+		if (jsonObject.containsKey("default_acr"))
+			client.setDefaultACR(new ACR(JSONObjectUtils.getString(jsonObject, "default_acr")));
+
+
+		if (jsonObject.containsKey("initiate_login_uri"))
+			client.setInitiateLoginURI(JSONObjectUtils.getURL(jsonObject, "initiate_login_uri"));
+
+
+		if (jsonObject.containsKey("post_logout_redirect_url"))
+			client.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_url"));
+
+		return client;
 	}
 }

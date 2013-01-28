@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * JSON object helper methods for parsing and typed retrieval of member values.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-16)
+ * @version $version$ (2013-01-28)
  */
 public class JSONObjectUtils {
 	
@@ -219,6 +219,36 @@ public class JSONObjectUtils {
 		throws ParseException {
 		
 		return getGeneric(o, key, String.class);
+	}
+
+
+	/**
+	 * Gets a string member of a JSON object as an enumerated object.
+	 *
+	 * @param o         The JSON object. Must not be {@code null}.
+	 * @param key       The JSON object member key. Must not be
+	 *                  {@code null}.
+	 * @param enumClass The enumeration class. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static <T extends Enum<T>> T getEnum(final JSONObject o, 
+		                                    final String key,
+		                                    final Class<T> enumClass)
+		throws ParseException {
+
+		String value = getString(o, key);
+
+		for (T en: enumClass.getEnumConstants()) {
+			       
+			if (en.toString().equalsIgnoreCase(value))
+				return en;
+		}
+
+		throw new ParseException("Unexpected value of JSON object member with key \"" + key + "\"");
 	}
 	
 	
