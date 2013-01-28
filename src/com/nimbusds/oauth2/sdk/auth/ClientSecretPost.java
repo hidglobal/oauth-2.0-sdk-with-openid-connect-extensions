@@ -35,7 +35,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public final class ClientSecretPost extends ClientAuthentication {
@@ -50,7 +50,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	/**
 	 * The client secret.
 	 */
-	private final String secret;
+	private final Secret secret;
 	
 	
 	/**
@@ -59,7 +59,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	 * @param clientID The client identifier. Must not be {@code null}.
 	 * @param secret   The client secret. Must not be {@code null}.
 	 */
-	public ClientSecretPost(final ClientID clientID, final String secret) {
+	public ClientSecretPost(final ClientID clientID, final Secret secret) {
 	
 		super(ClientAuthenticationMethod.CLIENT_SECRET_POST);
 	
@@ -91,7 +91,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	 *
 	 * @return The client secret.
 	 */
-	public String getClientSecret() {
+	public Secret getClientSecret() {
 	
 		return secret;
 	}
@@ -117,7 +117,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 		Map<String,String> params = new HashMap<String,String>();
 		
 		params.put("client_id", clientID.toString());
-		params.put("client_secret", secret);
+		params.put("client_secret", secret.getValue());
 		
 		return params;
 	}
@@ -170,12 +170,12 @@ public final class ClientSecretPost extends ClientAuthentication {
 		if (clientIDString == null)
 			throw new ParseException("Missing \"client_id\" parameter");
 		
-		String secret = params.get("client_secret");
+		String secretValue = params.get("client_secret");
 		
-		if (secret == null)
+		if (secretValue == null)
 			throw new ParseException("Missing \"client_secret\" parameter");
 		
-		return new ClientSecretPost(new ClientID(clientIDString), secret);
+		return new ClientSecretPost(new ClientID(clientIDString), new Secret(secretValue));
 	}
 	
 	

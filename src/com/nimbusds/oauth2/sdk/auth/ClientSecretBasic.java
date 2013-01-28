@@ -35,7 +35,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-28)
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
@@ -50,7 +50,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	/**
 	 * The client secret.
 	 */
-	private final String secret;
+	private final Secret secret;
 	
 	
 	/**
@@ -59,7 +59,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 * @param clientID The client identifier. Must not be {@code null}.
 	 * @param secret   The client secret. Must not be {@code null}.
 	 */
-	public ClientSecretBasic(final ClientID clientID, final String secret) {
+	public ClientSecretBasic(final ClientID clientID, final Secret secret) {
 	
 		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
 	
@@ -91,7 +91,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 *
 	 * @return The client secret.
 	 */
-	public String getClientSecret() {
+	public Secret getClientSecret() {
 	
 		return secret;
 	}
@@ -116,7 +116,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	
 		StringBuilder sb = new StringBuilder(clientID.toString());
 		sb.append(':');
-		sb.append(secret);
+		sb.append(secret.getValue());
 		
 		String b64 = null;
 		
@@ -179,7 +179,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 			throw new ParseException("Missing credentials delimiter \":\"");
 		
 		ClientID clientID = new ClientID(credentials[0]);
-		String secret = credentials[1];
+		Secret secret = new Secret(credentials[1]);
 		
 		return new ClientSecretBasic(clientID, secret);
 	}
