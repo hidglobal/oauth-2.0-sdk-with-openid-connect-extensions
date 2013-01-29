@@ -14,7 +14,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * {@link com.nimbusds.oauth2.sdk.OAuth2Error OAuth 2.0 errors}.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-29)
  */
 @Immutable
 public final class OIDCError {
@@ -113,31 +113,17 @@ public final class OIDCError {
 	 * is invalid or not supported.
 	 */
 	public static final OAuth2Error INVALID_OPERATION =
-		new OAuth2Error("invalid_operation", "Invalid or unsupported client registration operation");
+		new OAuth2Error("invalid_operation", "Invalid or unsupported client registration operation",
+			        HTTPResponse.SC_BAD_REQUEST);
 	
 	
-	/**
-	 * Client registration: The value of {@code client_id} is invalid. 
-	 */
-	public static final OAuth2Error	INVALID_CLIENT_ID =
-		new OAuth2Error("invalid_client_id", "Invalid client identifier");
-	
-	
-	/**
-	 * Client registration: The {@code client_secret} provided for a 
-	 * {@code client_update} or {@code secret_rotate} is not valid for the 
-	 * provided {@code client_id}.
-	 */
-	public static final OAuth2Error INVALID_CLIENT_SECRET =
-		new OAuth2Error("invalid_client_secret", "Invalid client secret");
-
-
 	/**
 	 * Client registration: The value of one or more {@code redirect_uris} 
 	 * is invalid. 
 	 */
 	public static final OAuth2Error INVALID_REDIRECT_URI =
-		new OAuth2Error("invalid_redirect_uri", "Invalid redirection URI(s)");
+		new OAuth2Error("invalid_redirect_uri", "Invalid redirect URI(s)",
+			        HTTPResponse.SC_BAD_REQUEST);
 	
 	
 	/**
@@ -145,7 +131,8 @@ public final class OIDCError {
 	 * parameters is invalid.
 	 */
 	public static final OAuth2Error	INVALID_CONFIGURATION_PARAMETER =
-		new OAuth2Error("invalid_configuration_parameter", "Invalid configuration parameter");
+		new OAuth2Error("invalid_configuration_parameter", "Invalid configuration parameter",
+			        HTTPResponse.SC_BAD_REQUEST);
 
 	
 	/**

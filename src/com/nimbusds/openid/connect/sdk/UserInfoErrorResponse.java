@@ -1,8 +1,6 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.URL;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,7 +54,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-29)
  */
 @Immutable
 public final class UserInfoErrorResponse 
@@ -121,7 +119,6 @@ public final class UserInfoErrorResponse
 	}
 
 
-	@Override
 	/**
 	 * Returns the HTTP response for this UserInfo error response.
 	 *
@@ -136,6 +133,7 @@ public final class UserInfoErrorResponse
 	 *
 	 * @return The HTTP response matching this UserInfo error response.
 	 */
+	@Override
 	public HTTPResponse toHTTPResponse() {
 
 		HTTPResponse httpResponse = null;

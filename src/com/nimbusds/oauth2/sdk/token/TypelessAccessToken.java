@@ -21,7 +21,7 @@ public class TypelessAccessToken extends AccessToken {
 
 	
 	/**
-	 * Creates a new minimal type;ess access token with the specified 
+	 * Creates a new minimal typeless access token with the specified 
 	 * value. The optional lifetime and scope are left undefined.
 	 *
 	 * @param value The access token value. Must not be {@code null} or

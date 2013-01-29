@@ -43,7 +43,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-29)
  */
 public class Client {
 
@@ -1047,7 +1047,7 @@ public class Client {
 	 * @throws ParseException If the JSON object couldn't be parsed to an
 	 *                        OpenID Connect client details instance.
 	 */
-	public Client parse(final JSONObject jsonObject)
+	public static Client parse(final JSONObject jsonObject)
 		throws ParseException {
 
 		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));

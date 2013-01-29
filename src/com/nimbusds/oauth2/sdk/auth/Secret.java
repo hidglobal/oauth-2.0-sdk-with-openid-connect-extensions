@@ -9,8 +9,8 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
- * Secret or password. The secret should be {@link #erase}d once no longer in
- * use.
+ * Secret or password. The secret should be {@link #erase erased} when no 
+ * longer in use.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-28)
