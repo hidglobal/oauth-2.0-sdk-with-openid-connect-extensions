@@ -170,19 +170,6 @@ public class ClientRotateSecretSuccessResponse
 	}
 
 
-	@Override
-	public HTTPResponse toHTTPResponse() {
-
-		HTTPResponse httpResponse = new HTTPResponse(HTTPResponse.SC_OK);
-
-		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
-		httpResponse.setCacheControl("no-store");
-		httpResponse.setContent(toJSONObject().toString());
-
-		return httpResponse;
-	}
-
-
 	/**
 	 * Parses an OpenID Connect client rotate secret success response from 
 	 * the specified JSON object.
@@ -204,20 +191,7 @@ public class ClientRotateSecretSuccessResponse
 		AccessToken accessToken = new TypelessAccessToken(
 			JSONObjectUtils.getString(jsonObject, "registration_access_token"));
 
-
-		Secret clientSecret = null;
-
-		if (JSONObjectUtils.containsKey(jsonObject, "client_secret")) {
-
-			Date expDate = null;
-
-			if (JSONObjectUtils.containsKey(jsonObject, "expires_at"));
-				expDate = new Date(JSONObjectUtils.getLong(jsonObject, "expires_at"));
-
-			clientSecret = new Secret(JSONObjectUtils.getString(jsonObject, "clientSecret"),
-				                                            expDate);
-
-		}
+		Secret clientSecret = ClientRegisterResponse.parseClientSecret(jsonObject);
 
 		return new ClientRotateSecretSuccessResponse(clientID, accessToken, clientSecret);
 	}

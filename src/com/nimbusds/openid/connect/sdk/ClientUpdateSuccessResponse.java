@@ -92,19 +92,6 @@ public class ClientUpdateSuccessResponse
 	}
 
 
-	@Override
-	public HTTPResponse toHTTPResponse() {
-
-		HTTPResponse httpResponse = new HTTPResponse(HTTPResponse.SC_OK);
-
-		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
-		httpResponse.setCacheControl("no-store");
-		httpResponse.setContent(toJSONObject().toString());
-
-		return httpResponse;
-	}
-
-
 	/**
 	 * Parses an OpenID Connect client update success response from the
 	 * specified JSON object.

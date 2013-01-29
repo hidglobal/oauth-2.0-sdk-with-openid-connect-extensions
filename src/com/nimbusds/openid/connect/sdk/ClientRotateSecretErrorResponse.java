@@ -151,35 +151,6 @@ public final class ClientRotateSecretErrorResponse
 	}
 
 
-	@Override
-	public HTTPResponse toHTTPResponse() {
-
-		HTTPResponse httpResponse = null;
-
-		if (error.getHTTPStatusCode() > 0)
-			httpResponse = new HTTPResponse(error.getHTTPStatusCode());
-		else
-			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
-
-		if (error instanceof BearerTokenError) {
-
-			httpResponse.setWWWAuthenticate(((BearerTokenError)error).toWWWAuthenticateHeader());
-		}
-		else {
-			JSONObject jsonObject = toJSONObject();
-
-			if (jsonObject != null) {
-
-				httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
-				httpResponse.setCacheControl("no-store");
-				httpResponse.setContent(jsonObject.toString());
-			}
-		}
-
-		return httpResponse;
-	}
-
-
 	/**
 	 * Parses an OpenID Connect client rotate secret error response from 
 	 * the specified JSON object.
@@ -196,14 +167,7 @@ public final class ClientRotateSecretErrorResponse
 	public static ClientRotateSecretErrorResponse parse(final JSONObject jsonObject)
 		throws ParseException {
 
-		String errorCode = JSONObjectUtils.getString(jsonObject, "error_code");
-
-		String errorDescription = null;
-
-		if (jsonObject.containsKey("error_description"))
-			errorDescription = JSONObjectUtils.getString(jsonObject, "error_description");
-
-		OAuth2Error error = new OAuth2Error(errorCode, errorDescription, HTTPResponse.SC_BAD_REQUEST);
+		OAuth2Error error = ClientRegistrationResponse.parseError(jsonObject);
 
 		return new ClientRotateSecretErrorResponse(error);
 	}
@@ -225,27 +189,11 @@ public final class ClientRotateSecretErrorResponse
 	public static ClientRotateSecretErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
-		httpResponse.ensureStatusCodeNotOK();
+		OAuth2Error error = ClientRegistrationResponse.parseError(httpResponse);
 
-		// OAuth 2.0 Bearer token error?
-		if (httpResponse.getWWWAuthenticate() != null) {
-
-			BearerTokenError error = BearerTokenError.parse(httpResponse.getWWWAuthenticate());
-
+		if (error != null)
 			return new ClientRotateSecretErrorResponse(error);
-		}
-
-		// Client reg specific error?
-		if (httpResponse.getStatusCode() == HTTPResponse.SC_BAD_REQUEST &&
-		    httpResponse.getContentType() != null &&
-		    httpResponse.getContentType().equals(CommonContentTypes.APPLICATION_JSON)) {
-
-			JSONObject jsonObject = httpResponse.getContentAsJSONObject();
-
-			return parse(jsonObject);
-		}
-
-		// Other error
-		return new ClientRotateSecretErrorResponse();
+		else
+			return new ClientRotateSecretErrorResponse();
 	}
 }

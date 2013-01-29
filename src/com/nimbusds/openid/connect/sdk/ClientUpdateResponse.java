@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-29)
  */
-public abstract class ClientUpdateResponse implements ClientRegistrationResponse {
+public abstract class ClientUpdateResponse extends ClientRegistrationResponse {
 
 
 	/**
