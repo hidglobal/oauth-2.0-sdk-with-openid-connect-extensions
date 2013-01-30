@@ -1,7 +1,7 @@
 <project name="OAuth 2.0 SDK / NimbusDS.com" default="dist" basedir=".">
 
 	<property name="version" value="2.0-SNAPSHOT"/>
-	<property name="version-date" value="2013-01-29"/>
+	<property name="version-date" value="2013-01-30"/>
 	<property name="jarfile" value="oauth2-sdk-${version}.jar"/>
 	
 	<path id="classpath.compile">
@@ -70,6 +70,7 @@
 			<test name="com.nimbusds.oauth2.sdk.auth.ClientSecretBasicTest"/>
 			<test name="com.nimbusds.oauth2.sdk.auth.JWTAuthenticationTest"/>
 			<test name="com.nimbusds.oauth2.sdk.token.BearerAccessTokenTest"/>
+			<test name="com.nimbusds.oauth2.sdk.token.BearerTokenErrorTest"/>
 			<test name="com.nimbusds.oauth2.sdk.ResponseTypeTest"/>
 			<test name="com.nimbusds.oauth2.sdk.ResponseTypeSetTest"/>
 			<test name="com.nimbusds.oauth2.sdk.ScopeTokenTest"/>
@@ -81,7 +82,6 @@
 			<test name="com.nimbusds.oauth2.sdk.AccessTokenResponseTest"/>
 			<test name="com.nimbusds.oauth2.sdk.TokenRequestTest"/>
 			<test name="com.nimbusds.oauth2.sdk.TokenErrorResponseTest"/>
-			<test name="com.nimbusds.oauth2.sdk.BearerAccessTokenErrorResponseTest"/>
 		</junit>
 	</target>
 	

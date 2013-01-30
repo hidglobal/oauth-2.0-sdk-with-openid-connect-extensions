@@ -22,7 +22,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Tests token error response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-30)
  */
 public class TokenErrorResponseTest extends TestCase {
 	
@@ -39,7 +39,7 @@ public class TokenErrorResponseTest extends TestCase {
 
 	public void testStandardErrors() {
 	
-		Set<OAuth2Error> errors = TokenErrorResponse.getStandardErrors();
+		Set<ErrorObject> errors = TokenErrorResponse.getStandardErrors();
 	
 		assertTrue(errors.contains(OAuth2Error.INVALID_REQUEST));
 		assertTrue(errors.contains(OAuth2Error.INVALID_CLIENT));
@@ -55,13 +55,11 @@ public class TokenErrorResponseTest extends TestCase {
 	public void testSerializeAndParse()
 		throws Exception {
 	
-		OAuth2Error err = new OAuth2Error(OAuth2Error.INVALID_REQUEST.getValue(),
-			                          OAuth2Error.INVALID_REQUEST.getDescription(),
-			                          ERROR_PAGE_URL);
+		ErrorObject err = OAuth2Error.INVALID_REQUEST.setURI(ERROR_PAGE_URL);
 
 		TokenErrorResponse r = new TokenErrorResponse(err);
 		
-		assertEquals(OAuth2Error.INVALID_REQUEST, r.getError());
+		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		
 
 		HTTPResponse httpResponse = r.toHTTPResponse();
@@ -74,7 +72,7 @@ public class TokenErrorResponseTest extends TestCase {
 		
 		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(httpResponse.getContent());	
 
-		assertEquals(OAuth2Error.INVALID_REQUEST.getValue(), (String)jsonObject.get("error"));
+		assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), (String)jsonObject.get("error"));
 		assertEquals(OAuth2Error.INVALID_REQUEST.getDescription(), (String)jsonObject.get("error_description"));
 		assertEquals(ERROR_PAGE_URL.toString(), (String)jsonObject.get("error_uri"));
 		assertEquals(3, jsonObject.size());
@@ -82,6 +80,6 @@ public class TokenErrorResponseTest extends TestCase {
 		
 		r = TokenErrorResponse.parse(httpResponse);
 		
-		assertEquals(OAuth2Error.INVALID_REQUEST, r.getError());
+		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 	}
 }

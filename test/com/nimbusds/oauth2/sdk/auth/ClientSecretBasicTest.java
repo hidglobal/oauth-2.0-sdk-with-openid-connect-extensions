@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
  * Tests client secret basic authentication.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-30)
  */
 public class ClientSecretBasicTest extends TestCase {
 
@@ -23,13 +23,14 @@ public class ClientSecretBasicTest extends TestCase {
 		final String pw = "open sesame";
 		
 		ClientID clientID = new ClientID(id);
+		Secret secret = new Secret(pw);
 		
-		ClientSecretBasic csb = new ClientSecretBasic(clientID, pw);
+		ClientSecretBasic csb = new ClientSecretBasic(clientID, secret);
 		
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, csb.getMethod());
 		
 		assertEquals(id, csb.getClientID().toString());
-		assertEquals(pw, csb.getClientSecret());
+		assertEquals(pw, csb.getClientSecret().getValue());
 		
 		String header = csb.toHTTPAuthorizationHeader();
 		
@@ -44,6 +45,6 @@ public class ClientSecretBasicTest extends TestCase {
 		}
 		
 		assertEquals(id, csb.getClientID().toString());
-		assertEquals(pw, csb.getClientSecret());
+		assertEquals(pw, csb.getClientSecret().getValue());
 	}
 }

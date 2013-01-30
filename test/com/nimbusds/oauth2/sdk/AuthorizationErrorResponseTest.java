@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Tests authorisation error response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-30)
  */
 public class AuthorizationErrorResponseTest extends TestCase {
 	
@@ -42,7 +42,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 
 	public void testStandardErrors() {
 	
-		Set<OAuth2Error> errors = AuthorizationErrorResponse.getStandardErrors();
+		Set<ErrorObject> errors = AuthorizationErrorResponse.getStandardErrors();
 	
 		assertTrue(errors.contains(OAuth2Error.INVALID_REQUEST));
 		assertTrue(errors.contains(OAuth2Error.UNAUTHORIZED_CLIENT));
@@ -70,12 +70,12 @@ public class AuthorizationErrorResponseTest extends TestCase {
 									      state);
 
 		assertEquals(REDIRECT_URL, r.getRedirectURI());
-		assertEquals(OAuth2Error.INVALID_REQUEST, r.getError());
+		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertEquals(rts, r.getResponseTypeSet());
 		assertEquals(state, r.getState());
 
 		Map<String,String> params = r.toParameters();
-		assertEquals(OAuth2Error.INVALID_REQUEST.getValue(), params.get("error"));
+		assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), params.get("error"));
 		assertEquals(OAuth2Error.INVALID_REQUEST.getDescription(), params.get("error_description"));
 		assertNull(params.get("error_uri"));
 		assertEquals(state.toString(), params.get("state"));
@@ -94,7 +94,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 			
 		params = URLUtils.parseParameters(location.getQuery());
 			
-		assertEquals(OAuth2Error.INVALID_REQUEST.getValue(), params.get("error"));
+		assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), params.get("error"));
 		assertEquals(OAuth2Error.INVALID_REQUEST.getDescription(), params.get("error_description"));
 		assertEquals(state.toString(), params.get("state"));
 		assertEquals(3, params.size());
@@ -107,7 +107,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		r = AuthorizationErrorResponse.parse(httpResponse);
 
 		assertEquals(REDIRECT_URL, r.getRedirectURI());
-		assertEquals(OAuth2Error.INVALID_REQUEST, r.getError());
+		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertNull(r.getResponseTypeSet());
 		assertEquals(state, r.getState());
 	}
@@ -129,8 +129,8 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		}
 		
 		assertEquals("https://client.example.com/cb", r.getRedirectURI().toString());
-		assertEquals(OAuth2Error.INVALID_REQUEST, r.getError());
-		assertEquals(ERROR_PAGE_URL, r.getError().getURI());
+		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
+		assertEquals(ERROR_PAGE_URL, r.getErrorObject().getURI());
 		assertEquals(new State("123"), r.getState());
 		
 		assertNull(r.getResponseTypeSet());
