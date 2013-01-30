@@ -41,6 +41,16 @@
 		</replace>
 	</target>
 	
+	<taskdef resource="checkstyletask.properties"
+                 classpath="lib/checkstyle-5.6-all.jar"/>
+	
+	<target name="checkstyle">
+		<checkstyle config="checkstyle.xml">
+			<fileset dir="src/" includes="**/*.java"/>
+			<formatter type="plain"/>
+		</checkstyle>
+	</target>
+	
 	<target name="compile" depends="src">
 		<mkdir dir="build"/>
 		<javac srcdir="procsrc" 
