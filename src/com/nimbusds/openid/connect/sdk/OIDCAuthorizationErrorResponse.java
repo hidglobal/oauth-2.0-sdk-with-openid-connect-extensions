@@ -61,7 +61,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.1.3.
+ *     <li>OpenID Connect Messages 1.0, section 2.1.3.
  *     <li>OpenID Connect Standard 1.0, section 2.3.5.2.
  * </ul>
  *

@@ -5,15 +5,15 @@ import com.nimbusds.oauth2.sdk.Response;
 
 
 /**
- * OpenID Connect authorisation response.
+ * OpenID Connect token endpoint response.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, sections 2.1.2 and 2.1.3.
+ *     <li>OpenID Connect Messages 1.0, sections 2.2.3 and 2.2.4.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-30)
  */
-public interface OIDCAuthorizationResponse extends Response { }
+public interface OIDCTokenResponse extends Response { }

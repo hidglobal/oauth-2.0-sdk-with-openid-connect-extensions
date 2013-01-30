@@ -58,10 +58,12 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
-public final class OIDCAccessTokenResponse extends AccessTokenResponse {
+public final class OIDCAccessTokenResponse 
+	extends AccessTokenResponse
+	implements OIDCTokenResponse {
 
 
 	/**

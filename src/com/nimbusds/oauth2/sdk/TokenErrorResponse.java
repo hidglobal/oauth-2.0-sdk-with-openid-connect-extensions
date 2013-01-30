@@ -98,7 +98,7 @@ public class TokenErrorResponse
 	 * Creates a new OAuth 2.0 Access Token error response. No OAuth 2.0 
 	 * error is specified.
 	 */
-	private TokenErrorResponse() {
+	protected TokenErrorResponse() {
 
 		error = null;
 	}
@@ -167,23 +167,20 @@ public class TokenErrorResponse
 		
 		return httpResponse;
 	}
-	
-	
+
+
 	/**
-	 * Parses an OAuth 2.0 Token Error response.
+	 * Parses an OAuth 2.0 Token Error response from the specified JSON
+	 * object.
 	 *
-	 * @param httpResponse The HTTP response to parse. Its status code must
-	 *                     not be 200 (OK). Must not be {@code null}.
+	 * @param jsonObject The JSON object to parse. Its status code must not
+	 *                   be 200 (OK). Must not be {@code null}.
 	 *
-	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 * @throws ParseException If the JSON object couldn't be parsed to an 
 	 *                        OAuth 2.0 Token Error response.
 	 */
-	public static TokenErrorResponse parse(final HTTPResponse httpResponse)
+	public static TokenErrorResponse parse(final JSONObject jsonObject)
 		throws ParseException {
-		
-		httpResponse.ensureStatusCodeNotOK();
-
-		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
 
 		// No error code?
 		if (! jsonObject.containsKey("error"))
@@ -220,5 +217,26 @@ public class TokenErrorResponse
 		}
 		
 		return new TokenErrorResponse(error);
+	}
+	
+	
+	/**
+	 * Parses an OAuth 2.0 Token Error response from the specified HTTP
+	 * response.
+	 *
+	 * @param httpResponse The HTTP response to parse. Its status code must
+	 *                     not be 200 (OK). Must not be {@code null}.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 *                        OAuth 2.0 Token Error response.
+	 */
+	public static TokenErrorResponse parse(final HTTPResponse httpResponse)
+		throws ParseException {
+		
+		httpResponse.ensureStatusCodeNotOK();
+
+		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
+
+		return parse(jsonObject);
 	}
 }
