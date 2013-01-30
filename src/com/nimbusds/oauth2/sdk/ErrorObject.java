@@ -7,97 +7,14 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * OAuth 2.0 error. This class is immutable.
+ * Error object, used to encapsulate OAuth 2.0 and other errors. This class is 
+ * immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
-public class OAuth2Error {
-
-	
-	// Base OAuth 2.0 authorisation errors
-	
-	/**
-	 * The request is missing a required parameter, includes an invalid 
-	 * parameter code, or is otherwise malformed.
-	 */
-	public static final OAuth2Error INVALID_REQUEST = 
-		new OAuth2Error("invalid_request", "Invalid request");
-	
-	
-	/**
-	 * The client is not authorised to request an authorisation code using 
-	 * this method.
-	 */
-	public static final OAuth2Error UNAUTHORIZED_CLIENT =
-		new OAuth2Error("unauthorized_client", "Unauthorized client");
-	
-	
-	/**
-	 * The resource owner or authorisation server denied the request.
-	 */
-	public static final OAuth2Error ACCESS_DENIED =
-		new OAuth2Error("access_denied", "Access denied by resource owner or authorization server");
-	
-	
-	/**
-	 * The authorisation server does not support obtaining an authorisation 
-	 * code using this method.
-	 */
-	public static final OAuth2Error UNSUPPORTED_RESPONSE_TYPE =
-		new OAuth2Error("unsupported_response_type", "Unsupported response type");
-	
-	
-	/**
-	 * The requested scope is invalid, unknown, or malformed.
-	 */
-	public static final OAuth2Error INVALID_SCOPE =
-		new OAuth2Error("invalid_scope", "Invalid, unknown or malformed scope");
-	
-	
-	/**
-	 * The authorisation server encountered an unexpected condition which 
-	 * prevented it from fulfilling the request.
-	 */
-	public static final OAuth2Error SERVER_ERROR =
-		new OAuth2Error("server_error", "Unexpected server error");
-	
-	
-	/**
-	 * The authorisation server is currently unable to handle the request 
-	 * due to a temporary overloading or maintenance of the server.
-	 */
-	public static final OAuth2Error TEMPORARILY_UNAVAILABLE =
-		new OAuth2Error("temporarily_unavailable", "The authorization server is temporarily unavailable");
-	
-	
-	// Token, Base OAuth 2.0 authorisation errors, section 5.2
-	
-	/**
-	 * Client authentication failed (e.g. unknown client, no client 
-	 * authentication included, or unsupported authentication method).
-	 */
-	public static final OAuth2Error INVALID_CLIENT =
-		new OAuth2Error("invalid_client", "Client authentication failed");
-	
-	
-	/**
-	 * The provided authorisation grant (e.g. authorisation code, resource 
-	 * owner credentials) or refresh token is invalid, expired, revoked, 
-	 * does not match the redirection URI used in the authorization request,
-	 * or was issued to another client.
-	 */
-	public static final OAuth2Error INVALID_GRANT =
-		new OAuth2Error("invalid_grant", "Invalid grant");
-	
-	
-	/**
-	 * The authorisation grant type is not supported by the authorisation 
-	 * server.
-	 */
-	public static final OAuth2Error UNSUPPORTED_GRANT_TYPE =
-		new OAuth2Error("unsupported_grant_type", "Unsupported grant type");
+public class ErrorObject {
 	
 	
 	/**
@@ -126,40 +43,39 @@ public class OAuth2Error {
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code.
+	 * Creates a new error with the specified code.
 	 *
 	 * @param code The error code, {@code null} if not specified.
 	 */
-	public OAuth2Error(final String code) {
+	public ErrorObject(final String code) {
 	
 		this(code, null, 0, null);
 	}
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code and 
-	 * description.
+	 * Creates a new error with the specified code and description.
 	 *
 	 * @param code        The error code, {@code null} if not specified.
 	 * @param description The error description, {@code null} if not
 	 *                    specified.
 	 */
-	public OAuth2Error(final String code, final String description) {
+	public ErrorObject(final String code, final String description) {
 	
 		this(code, description, 0, null);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code, description
-	 * and HTTP status code.
+	 * Creates a new error with the specified code, description and HTTP 
+	 * status code.
 	 *
 	 * @param code           The error code, {@code null} if not specified.
 	 * @param description    The error description, {@code null} if not
 	 *                       specified.
 	 * @param httpStatusCode The HTTP status code, zero if not specified.
 	 */
-	public OAuth2Error(final String code, final String description, 
+	public ErrorObject(final String code, final String description, 
 		           final int httpStatusCode) {
 	
 		this(code, description, httpStatusCode, null);
@@ -167,8 +83,8 @@ public class OAuth2Error {
 
 
 	/**
-	 * Creates a new OAuth 2.0 error with the specified code, description,
-	 * HTTP status code and and page URI.
+	 * Creates a new error with the specified code, description, HTTP 
+	 * status code and page URI.
 	 *
 	 * @param code           The error code, {@code null} if not specified.
 	 * @param description    The error description, {@code null} if not
@@ -177,7 +93,7 @@ public class OAuth2Error {
 	 * @param uri            The error page URI, {@code null} if not
 	 *                       specified.
 	 */
-	public OAuth2Error(final String code, final String description, 
+	public ErrorObject(final String code, final String description, 
 		           final int httpStatusCode, final URL uri) {
 	
 		this.code = code;
@@ -217,9 +133,9 @@ public class OAuth2Error {
 	 *
 	 * @return A copy of this error with the specified description.
 	 */
-	public OAuth2Error setDescription(final String description) {
+	public ErrorObject setDescription(final String description) {
 
-		return new OAuth2Error(getCode(), description, getHTTPStatusCode(), getURI());
+		return new ErrorObject(getCode(), description, getHTTPStatusCode(), getURI());
 	}
 
 
@@ -232,7 +148,7 @@ public class OAuth2Error {
 	 * @return A copy of this error with the specified appended 
 	 *         description.
 	 */
-	public OAuth2Error appendDescription(final String text) {
+	public ErrorObject appendDescription(final String text) {
 
 		String newDescription;
 
@@ -241,7 +157,7 @@ public class OAuth2Error {
 		else
 			newDescription = text;
 
-		return new OAuth2Error(getCode(), newDescription, getHTTPStatusCode(), getURI());
+		return new ErrorObject(getCode(), newDescription, getHTTPStatusCode(), getURI());
 	}
 
 
@@ -263,9 +179,9 @@ public class OAuth2Error {
 	 *
 	 * @return A copy of this error with the specified HTTP status code.
 	 */
-	public OAuth2Error setHTTPStatusCode(final int httpStatusCode) {
+	public ErrorObject setHTTPStatusCode(final int httpStatusCode) {
 
-		return new OAuth2Error(getCode(), getDescription(), httpStatusCode, getURI());
+		return new ErrorObject(getCode(), getDescription(), httpStatusCode, getURI());
 	}
 
 
@@ -287,9 +203,9 @@ public class OAuth2Error {
 	 *
 	 * @return A copy of this error with the specified page URI.
 	 */
-	public OAuth2Error setURI(final URL uri) {
+	public ErrorObject setURI(final URL uri) {
 
-		return new OAuth2Error(getCode(), getDescription(), getHTTPStatusCode(), uri);
+		return new ErrorObject(getCode(), getDescription(), getHTTPStatusCode(), uri);
 	}
 
 
@@ -320,7 +236,7 @@ public class OAuth2Error {
 	public boolean equals(final Object object) {
 	
 		return object != null && 
-		       object instanceof OAuth2Error && 
+		       object instanceof ErrorObject && 
 		       this.toString().equals(object.toString());
 	}
 }

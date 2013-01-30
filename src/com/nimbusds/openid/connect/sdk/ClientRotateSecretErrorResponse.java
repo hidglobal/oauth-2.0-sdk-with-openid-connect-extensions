@@ -10,8 +10,8 @@ import net.jcip.annotations.Immutable;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.BearerTokenError;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
-import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
@@ -61,7 +61,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
 public final class ClientRotateSecretErrorResponse 
@@ -75,9 +75,9 @@ public final class ClientRotateSecretErrorResponse
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getStandardErrors() {
+	public static Set<ErrorObject> getStandardErrors() {
 		
-		Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>();
+		Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
 		stdErrors.add(BearerTokenError.MISSING_TOKEN);
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);
@@ -92,7 +92,7 @@ public final class ClientRotateSecretErrorResponse
 	/**
 	 * The error.
 	 */
-	private final OAuth2Error error;
+	private final ErrorObject error;
 
 
 	/**
@@ -113,7 +113,7 @@ public final class ClientRotateSecretErrorResponse
 	 *              OpenID Connect client rotate secret error response. 
 	 *              Must not be {@code null}.
 	 */
-	public ClientRotateSecretErrorResponse(final OAuth2Error error) {
+	public ClientRotateSecretErrorResponse(final ErrorObject error) {
 
 		if (error == null)
 			throw new IllegalArgumentException("The error must not be null");
@@ -123,7 +123,7 @@ public final class ClientRotateSecretErrorResponse
 
 
 	@Override
-	public OAuth2Error getOAuth2Error() {
+	public ErrorObject getErrorObject() {
 
 		return error;
 	}
@@ -167,7 +167,7 @@ public final class ClientRotateSecretErrorResponse
 	public static ClientRotateSecretErrorResponse parse(final JSONObject jsonObject)
 		throws ParseException {
 
-		OAuth2Error error = ClientRegistrationResponse.parseError(jsonObject);
+		ErrorObject error = ClientRegistrationResponse.parseError(jsonObject);
 
 		return new ClientRotateSecretErrorResponse(error);
 	}
@@ -189,7 +189,7 @@ public final class ClientRotateSecretErrorResponse
 	public static ClientRotateSecretErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
-		OAuth2Error error = ClientRegistrationResponse.parseError(httpResponse);
+		ErrorObject error = ClientRegistrationResponse.parseError(httpResponse);
 
 		if (error != null)
 			return new ClientRotateSecretErrorResponse(error);

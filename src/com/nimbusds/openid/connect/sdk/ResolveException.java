@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.net.URL;
 
-import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.OAuth2Exception;
 
 import com.nimbusds.oauth2.sdk.id.State;
@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.id.State;
  * Resolve exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
+ * @version $version$ (2013-01-30)
  */
 public class ResolveException extends OAuth2Exception {
 
@@ -51,7 +51,7 @@ public class ResolveException extends OAuth2Exception {
 	 * @param cause    The exception cause, {@code null} if not specified.
 	 */
 	public ResolveException(final String message, 
-		                final OAuth2Error error,
+		                final ErrorObject error,
 		                final Throwable cause) {
 	
 		super(message, error, cause);
@@ -72,7 +72,7 @@ public class ResolveException extends OAuth2Exception {
 	 *                    specified.
 	 */
 	public ResolveException(final String message, 
-		                final OAuth2Error error,
+		                final ErrorObject error,
 		                final URL redirectURI,
 		                final State state,
 		                final Throwable cause) {

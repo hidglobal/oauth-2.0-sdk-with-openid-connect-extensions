@@ -10,8 +10,8 @@ import net.jcip.annotations.Immutable;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.BearerTokenError;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
-import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
@@ -62,7 +62,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
 public final class ClientUpdateErrorResponse 
@@ -76,9 +76,9 @@ public final class ClientUpdateErrorResponse
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getStandardErrors() {
+	public static Set<ErrorObject> getStandardErrors() {
 		
-		Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>();
+		Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
 		stdErrors.add(BearerTokenError.MISSING_TOKEN);
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);
@@ -94,7 +94,7 @@ public final class ClientUpdateErrorResponse
 	/**
 	 * The error.
 	 */
-	private final OAuth2Error error;
+	private final ErrorObject error;
 
 
 	/**
@@ -115,7 +115,7 @@ public final class ClientUpdateErrorResponse
 	 *              OpenID Connect client update error response. Must not
 	 *              be {@code null}.
 	 */
-	public ClientUpdateErrorResponse(final OAuth2Error error) {
+	public ClientUpdateErrorResponse(final ErrorObject error) {
 
 		if (error == null)
 			throw new IllegalArgumentException("The error must not be null");
@@ -125,7 +125,7 @@ public final class ClientUpdateErrorResponse
 
 
 	@Override
-	public OAuth2Error getOAuth2Error() {
+	public ErrorObject getErrorObject() {
 
 		return error;
 	}
@@ -170,7 +170,7 @@ public final class ClientUpdateErrorResponse
 	public static ClientUpdateErrorResponse parse(final JSONObject jsonObject)
 		throws ParseException {
 
-		OAuth2Error error = ClientRegistrationResponse.parseError(jsonObject);
+		ErrorObject error = ClientRegistrationResponse.parseError(jsonObject);
 
 		return new ClientUpdateErrorResponse(error);
 	}
@@ -192,7 +192,7 @@ public final class ClientUpdateErrorResponse
 	public static ClientUpdateErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
-		OAuth2Error error = ClientRegistrationResponse.parseError(httpResponse);
+		ErrorObject error = ClientRegistrationResponse.parseError(httpResponse);
 
 		if (error != null)
 			return new ClientUpdateErrorResponse(error);

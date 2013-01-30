@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.State;
  * Parse exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
+ * @version $version$ (2013-01-30)
  */
 public class ParseException extends OAuth2Exception {
 
@@ -42,10 +42,9 @@ public class ParseException extends OAuth2Exception {
 	 * Creates a new parse exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
-	 * @param error   The associated OAuth 2.0 error, {@code null} if not
-	 *                specified.
+	 * @param error   The associated error, {@code null} if not specified.
 	 */
-	public ParseException(final String message, final OAuth2Error error) {
+	public ParseException(final String message, final ErrorObject error) {
 	
 		this(message, error, null);
 	}
@@ -55,12 +54,11 @@ public class ParseException extends OAuth2Exception {
 	 * Creates a new parse exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
-	 * @param error   The associated OAuth 2.0 error, {@code null} if not
-	 *                specified.
+	 * @param error   The associated error, {@code null} if not specified.
 	 * @param cause   The exception cause, {@code null} if not specified.
 	 */
 	public ParseException(final String message, 
-		              final OAuth2Error error,
+		              final ErrorObject error,
 		              final Throwable cause) {
 	
 		super(message, error, cause);
@@ -71,8 +69,8 @@ public class ParseException extends OAuth2Exception {
 	 * Creates a new parse exception.
 	 *
 	 * @param message     The exception message. May be {@code null}.
-	 * @param error       The associated OAuth 2.0 error, {@code null} if
-	 *                    not specified.
+	 * @param error       The associated error, {@code null} if not
+	 *                    specified.
 	 * @param redirectURI The associated redirection URI, must not be 
 	 *                    {@code null}.
 	 * @param state       The optional associated state parameter, 
@@ -81,7 +79,7 @@ public class ParseException extends OAuth2Exception {
 	 *                    specified.
 	 */
 	public ParseException(final String message, 
-		              final OAuth2Error error,
+		              final ErrorObject error,
 		              final URL redirectURI,
 		              final State state,
 		              final Throwable cause) {

@@ -6,8 +6,8 @@ import java.util.Date;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.BearerTokenError;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
-import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Response;
 import com.nimbusds.oauth2.sdk.SuccessResponse;
@@ -31,7 +31,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
+ * @version $version$ (2013-01-30)
  */
 public abstract class ClientRegistrationResponse implements Response {
 
@@ -59,7 +59,7 @@ public abstract class ClientRegistrationResponse implements Response {
 		}
 		else if (this instanceof ErrorResponse) {
 
-			OAuth2Error error = ((ErrorResponse)this).getOAuth2Error();
+			ErrorObject error = ((ErrorResponse)this).getErrorObject();
 
 			if (error.getHTTPStatusCode() > 0)
 				httpResponse = new HTTPResponse(error.getHTTPStatusCode());
@@ -124,7 +124,7 @@ public abstract class ClientRegistrationResponse implements Response {
 	 * @throws ParseException If the JSON object couldn't be parsed to an
 	 *                        OpenID Connect client registration error.
 	 */
-	protected static OAuth2Error parseError(final JSONObject jsonObject)
+	protected static ErrorObject parseError(final JSONObject jsonObject)
 		throws ParseException {
 
 		String errorCode = JSONObjectUtils.getString(jsonObject, "error_code");
@@ -134,7 +134,7 @@ public abstract class ClientRegistrationResponse implements Response {
 		if (jsonObject.containsKey("error_description"))
 			errorDescription = JSONObjectUtils.getString(jsonObject, "error_description");
 
-		return new OAuth2Error(errorCode, errorDescription, HTTPResponse.SC_BAD_REQUEST);
+		return new ErrorObject(errorCode, errorDescription, HTTPResponse.SC_BAD_REQUEST);
 	}
 
 
@@ -151,7 +151,7 @@ public abstract class ClientRegistrationResponse implements Response {
 	 * @throws ParseException If the HTTP response couldn't be parsed to
 	 *                        an error.
 	 */
-	protected static OAuth2Error parseError(final HTTPResponse httpResponse)
+	protected static ErrorObject parseError(final HTTPResponse httpResponse)
 		throws ParseException {
 
 		httpResponse.ensureStatusCodeNotOK();

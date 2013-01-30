@@ -8,8 +8,8 @@ import java.util.Set;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.BearerTokenError;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
-import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -54,7 +54,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
 public final class UserInfoErrorResponse 
@@ -113,7 +113,7 @@ public final class UserInfoErrorResponse
 
 
 	@Override
-	public OAuth2Error getOAuth2Error() {
+	public ErrorObject getErrorObject() {
 
 		return error;
 	}

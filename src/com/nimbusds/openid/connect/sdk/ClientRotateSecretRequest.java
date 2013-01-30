@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.util.Map;
 
-import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -25,7 +24,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-25)
+ * @version $version$ (2013-01-30)
  */
 public class ClientRotateSecretRequest extends ClientRegistrationRequest {
 
@@ -62,12 +61,10 @@ public class ClientRotateSecretRequest extends ClientRegistrationRequest {
 		throws ParseException {
 
 		if (! httpRequest.getMethod().equals(HTTPRequest.Method.POST)) 
-			throw new ParseException("Invalid client registration request, must be sent by HTTP POST",
-				                 OAuth2Error.INVALID_REQUEST);
+			throw new ParseException("Invalid client registration request, must be sent by HTTP POST");
 
 		if (httpRequest.getQuery() == null)
-			throw new ParseException("Missing client registration parameters",
-				                 OAuth2Error.INVALID_REQUEST);
+			throw new ParseException("Missing client registration parameters");
 		
 
 		// Decode and parse POST parameters

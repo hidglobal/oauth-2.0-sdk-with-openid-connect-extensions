@@ -52,7 +52,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
 public class TokenErrorResponse 
@@ -63,7 +63,7 @@ public class TokenErrorResponse
 	/**
 	 * The standard OAuth 2.0 errors for an Access Token error response.
 	 */
-	private static final Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>();
+	private static final Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
 	
 	
 	static {
@@ -82,7 +82,7 @@ public class TokenErrorResponse
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getStandardErrors() {
+	public static Set<ErrorObject> getStandardErrors() {
 	
 		return Collections.unmodifiableSet(stdErrors);
 	}
@@ -91,7 +91,7 @@ public class TokenErrorResponse
 	/**
 	 * The error.
 	 */
-	private final OAuth2Error error;
+	private final ErrorObject error;
 
 
 	/**
@@ -107,21 +107,21 @@ public class TokenErrorResponse
 	/**
 	 * Creates a new OAuth 2.0 Access Token error response.
 	 *
-	 * @param error The OAuth 2.0 error. Should match one of the 
+	 * @param error The error. Should match one of the 
 	 *              {@link #getStandardErrors standard errors} for a token 
 	 *              error response. Must not be {@code null}.
 	 */
-	public TokenErrorResponse(final OAuth2Error error) {
+	public TokenErrorResponse(final ErrorObject error) {
 	
 		if (error == null)
-			throw new IllegalArgumentException("The OAuth 2.0 error must not be null");
+			throw new IllegalArgumentException("The error must not be null");
 			
 		this.error = error;
 	}
 	
 
 	@Override
-	public OAuth2Error getOAuth2Error() {
+	public ErrorObject getErrorObject() {
 	
 		return error;
 	}
@@ -189,7 +189,7 @@ public class TokenErrorResponse
 		if (! jsonObject.containsKey("error"))
 			return new TokenErrorResponse();
 		
-		OAuth2Error error = null;
+		ErrorObject error = null;
 		
 		try {
 			// Parse code
@@ -208,7 +208,7 @@ public class TokenErrorResponse
 				uri = new URL(JSONObjectUtils.getString(jsonObject, "error_uri"));
 
 
-			error = new OAuth2Error(code, description, HTTPResponse.SC_BAD_REQUEST, uri);
+			error = new ErrorObject(code, description, HTTPResponse.SC_BAD_REQUEST, uri);
 			
 		} catch (ParseException e) {
 		

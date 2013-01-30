@@ -16,6 +16,7 @@ import com.nimbusds.jose.Payload;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -48,7 +49,7 @@ import com.nimbusds.openid.connect.sdk.util.JOSEObjectRetriever;
  * <p>This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
+ * @version $version$ (2013-01-30)
  */
 @ThreadSafe
 public class OIDCAuthorizationRequestResolver {
@@ -811,7 +812,8 @@ public class OIDCAuthorizationRequestResolver {
 
 		} catch (ResolveException e) {
 
-			throw new ResolveException(e.getMessage(), OAuth2Error.INVALID_REQUEST,
+			throw new ResolveException(e.getMessage(), 
+				                   OAuth2Error.INVALID_REQUEST,
 				                   redirectURI, state, e);
 		}
 

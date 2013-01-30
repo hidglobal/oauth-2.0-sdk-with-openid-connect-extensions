@@ -17,7 +17,6 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.EncryptionMethod;
 
-import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
@@ -45,7 +44,7 @@ import com.nimbusds.openid.connect.sdk.rp.ApplicationType;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 class ClientDetailsRequest extends ClientRegistrationRequest {
 
@@ -1266,12 +1265,10 @@ class ClientDetailsRequest extends ClientRegistrationRequest {
 		throws ParseException {
 
 		if (! httpRequest.getMethod().equals(HTTPRequest.Method.POST)) 
-			throw new ParseException("Invalid client registration request, must be sent by HTTP POST",
-				                 OAuth2Error.INVALID_REQUEST);
+			throw new ParseException("Invalid client registration request, must be sent by HTTP POST");
 
 		if (httpRequest.getQuery() == null)
-			throw new ParseException("Missing client registration parameters",
-				                 OAuth2Error.INVALID_REQUEST);
+			throw new ParseException("Missing client registration parameters");
 		
 
 		// Decode and parse POST parameters

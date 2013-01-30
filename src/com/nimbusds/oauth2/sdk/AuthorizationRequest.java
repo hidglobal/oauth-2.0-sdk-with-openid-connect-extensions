@@ -45,7 +45,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
 public class AuthorizationRequest implements Request {
@@ -424,8 +424,7 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Parses an authorisation request from the specified HTTP GET or HTTP
-	 * POST request.
+	 * Parses an authorisation request from the specified HTTP request.
 	 *
 	 * <p>Example HTTP request (GET):
 	 *

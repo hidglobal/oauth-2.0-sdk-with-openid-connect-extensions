@@ -1,26 +1,22 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import net.jcip.annotations.Immutable;
-
 import com.nimbusds.oauth2.sdk.BearerTokenError;
-import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.nimbusds.oauth2.sdk.ErrorObject;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * OpenID Connect specific errors. Extend the standard 
- * {@link com.nimbusds.oauth2.sdk.OAuth2Error OAuth 2.0 errors}.
+ * OpenID Connect specific errors.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
+ * @version $version$ (2013-01-30)
  */
-@Immutable
 public final class OIDCError {
 
 	
-	// Authorisation
+	// Authorisation endpoint
 
 	/**
 	 * The authorisation server requires end-user authentication. This 
@@ -31,8 +27,8 @@ public final class OIDCError {
 	 * cannot be completed without displaying a user interface for user 
 	 * authentication.
 	 */
-	public static final OAuth2Error LOGIN_REQUIRED =
-		new OAuth2Error("login_required", "Login required", 
+	public static final ErrorObject LOGIN_REQUIRED =
+		new ErrorObject("login_required", "Login required", 
 			        HTTPResponse.SC_FOUND);
 
 
@@ -47,8 +43,8 @@ public final class OIDCError {
 	 * {@link OIDCAuthorizationRequest} cannot be completed without 
 	 * displaying a user interface to prompt for a session to use.
 	 */
-	public static final OAuth2Error SESSION_SELECTION_REQUIRED =
-		new OAuth2Error("session_selection_required", "Session selection required",
+	public static final ErrorObject SESSION_SELECTION_REQUIRED =
+		new ErrorObject("session_selection_required", "Session selection required",
 			        HTTPResponse.SC_FOUND);
 
 
@@ -61,16 +57,16 @@ public final class OIDCError {
 	 * {@link OIDCAuthorizationRequest} cannot be completed without 
 	 * displaying a user interface for end-user consent.
 	 */
-	public static final OAuth2Error	CONSENT_REQUIRED =
-		new OAuth2Error("consent_required", "Consent required");
+	public static final ErrorObject	CONSENT_REQUIRED =
+		new ErrorObject("consent_required", "Consent required");
 
 
 	/**
 	 * The {@code request_uri} in the {@link OIDCAuthorizationRequest} 
 	 * returns an error or invalid data.
 	 */
-	public static final OAuth2Error INVALID_REQUEST_URI =
-		new OAuth2Error("invalid_request_uri", "Invalid request URI",
+	public static final ErrorObject INVALID_REQUEST_URI =
+		new ErrorObject("invalid_request_uri", "Invalid request URI",
 			        HTTPResponse.SC_FOUND);
 
 
@@ -83,20 +79,20 @@ public final class OIDCError {
 	 * the {@link OIDCAuthorizationRequest} cannot be completed without 
 	 * displaying a user interface for end-user interaction.
 	 */
-	public static final OAuth2Error INTERACTION_REQUIRED =
-		new OAuth2Error("interaction_required", "User interaction required",
+	public static final ErrorObject INTERACTION_REQUIRED =
+		new ErrorObject("interaction_required", "User interaction required",
 			        HTTPResponse.SC_FOUND);
 
 
 	/**
 	 * The request parameter contains an invalid OpenID Request Object.
 	 */
-	public static final OAuth2Error	INVALID_OPENID_REQUEST_OBJECT =
-		new OAuth2Error("invalid_openid_request_object", "Invalid OpenID request object",
+	public static final ErrorObject	INVALID_OPENID_REQUEST_OBJECT =
+		new ErrorObject("invalid_openid_request_object", "Invalid OpenID request object",
 			        HTTPResponse.SC_FOUND);
 
 
-	// UserInfo
+	// UserInfo endpoint
 
 	/**
 	 * The requested UserInfo schema is invalid or unsupported.
@@ -106,14 +102,14 @@ public final class OIDCError {
 			             HTTPResponse.SC_BAD_REQUEST);
 
 
-	// Client registration
+	// Client registration endpoint
 	
 	/**
 	 * Client registration: The value of the registration {@code operation}
 	 * is invalid or not supported.
 	 */
-	public static final OAuth2Error INVALID_OPERATION =
-		new OAuth2Error("invalid_operation", "Invalid or unsupported client registration operation",
+	public static final ErrorObject INVALID_OPERATION =
+		new ErrorObject("invalid_operation", "Invalid or unsupported client registration operation",
 			        HTTPResponse.SC_BAD_REQUEST);
 	
 	
@@ -121,8 +117,8 @@ public final class OIDCError {
 	 * Client registration: The value of one or more {@code redirect_uris} 
 	 * is invalid. 
 	 */
-	public static final OAuth2Error INVALID_REDIRECT_URI =
-		new OAuth2Error("invalid_redirect_uri", "Invalid redirect URI(s)",
+	public static final ErrorObject INVALID_REDIRECT_URI =
+		new ErrorObject("invalid_redirect_uri", "Invalid redirect URI(s)",
 			        HTTPResponse.SC_BAD_REQUEST);
 	
 	
@@ -130,8 +126,8 @@ public final class OIDCError {
 	 * Client registration: The value of one of the configuration 
 	 * parameters is invalid.
 	 */
-	public static final OAuth2Error	INVALID_CONFIGURATION_PARAMETER =
-		new OAuth2Error("invalid_configuration_parameter", "Invalid configuration parameter",
+	public static final ErrorObject	INVALID_CONFIGURATION_PARAMETER =
+		new ErrorObject("invalid_configuration_parameter", "Invalid configuration parameter",
 			        HTTPResponse.SC_BAD_REQUEST);
 
 	

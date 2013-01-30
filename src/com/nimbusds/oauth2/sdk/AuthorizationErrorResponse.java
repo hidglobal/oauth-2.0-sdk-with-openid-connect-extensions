@@ -52,7 +52,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
 public class AuthorizationErrorResponse
@@ -63,7 +63,7 @@ public class AuthorizationErrorResponse
 	/**
 	 * The standard OAuth 2.0 errors for an Authorisation error response.
 	 */
-	private static Set<OAuth2Error> stdErrors = new HashSet<OAuth2Error>();
+	private static Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
 	
 	
 	static {
@@ -83,7 +83,7 @@ public class AuthorizationErrorResponse
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<OAuth2Error> getStandardErrors() {
+	public static Set<ErrorObject> getStandardErrors() {
 	
 		return Collections.unmodifiableSet(stdErrors);
 	}
@@ -92,7 +92,7 @@ public class AuthorizationErrorResponse
 	/**
 	 * The error.
 	 */
-	private final OAuth2Error error;
+	private final ErrorObject error;
 	
 	
 	/**
@@ -106,7 +106,7 @@ public class AuthorizationErrorResponse
 	 * Creates a new authorisation error response.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
-	 * @param error       The OAuth 2.0 error. Should match one of the 
+	 * @param error       The error. Should match one of the 
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    authorisation error response. Must not be 
 	 *                    {@code null}.
@@ -116,14 +116,14 @@ public class AuthorizationErrorResponse
 	 * @param state       The state, {@code null} if not requested.
 	 */
 	public AuthorizationErrorResponse(final URL redirectURI,
-	                                  final OAuth2Error error,
+	                                  final ErrorObject error,
 					  final ResponseTypeSet rts,
 					  final State state) {
 					  
 		super(redirectURI, state);
 		
 		if (error == null)
-			throw new IllegalArgumentException("The error code must not be null");
+			throw new IllegalArgumentException("The error must not be null");
 			
 		this.error = error;
 		
@@ -132,7 +132,7 @@ public class AuthorizationErrorResponse
 	
 
 	@Override
-	public OAuth2Error getOAuth2Error() {
+	public ErrorObject getErrorObject() {
 	
 		return error;
 	}
@@ -193,7 +193,8 @@ public class AuthorizationErrorResponse
 
 
 	/**
-	 * Parses an authorisation error response.
+	 * Parses an authorisation error response from the specified redirect
+	 * URI and parameters.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
@@ -233,7 +234,7 @@ public class AuthorizationErrorResponse
 		}
 
 
-		OAuth2Error error = new OAuth2Error(errorCode, errorDescription, HTTPResponse.SC_FOUND, errorURI);
+		ErrorObject error = new ErrorObject(errorCode, errorDescription, HTTPResponse.SC_FOUND, errorURI);
 		
 		
 		// State
@@ -244,7 +245,7 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * Parses an authorisation error response.
+	 * Parses an authorisation error response from the specified URI.
 	 *
 	 * <p>Example URI:
 	 *
@@ -260,7 +261,7 @@ public class AuthorizationErrorResponse
 	 *
 	 * @return The authorisation error response.
 	 *
-	 * @throws ParseException If the redirect URI couldn't be parsed to an
+	 * @throws ParseException If the URI couldn't be parsed to an
 	 *                        authorisation error response.
 	 */
 	public static AuthorizationErrorResponse parse(final URL uri)
@@ -283,7 +284,8 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * Parses an authorisation error response.
+	 * Parses an authorisation error response from the specified HTTP
+	 * response.
 	 *
 	 * <p>Example HTTP response:
 	 *

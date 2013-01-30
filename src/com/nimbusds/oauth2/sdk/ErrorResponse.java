@@ -8,15 +8,15 @@ import java.net.URL;
  * Response message indicating an error.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 public interface ErrorResponse extends Response {
 
 
 	/**
-	 * Gets the OAuth 2.0 error associated with the error response.
+	 * Gets the error associated with the error response.
 	 *
-	 * @return The OAuth 2.0 error, {@code null} if none.
+	 * @return The error, {@code null} if none.
 	 */
-	public OAuth2Error getOAuth2Error();
+	public ErrorObject getErrorObject();
 }

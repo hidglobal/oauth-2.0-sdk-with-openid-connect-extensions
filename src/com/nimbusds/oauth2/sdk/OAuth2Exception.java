@@ -10,15 +10,15 @@ import com.nimbusds.oauth2.sdk.id.State;
  * General OAuth 2.0 exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 public class OAuth2Exception extends Exception {
 
 
 	/**
-	 * The associated OAuth 2.0 error, {@code null} if not specified.
+	 * The associated error, {@code null} if not specified.
 	 */
-	private final OAuth2Error error;
+	private final ErrorObject error;
 
 
 	/**
@@ -61,12 +61,11 @@ public class OAuth2Exception extends Exception {
 	 * Creates a new OAuth 2.0 exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
-	 * @param error   The associated OAuth 2.0 error, {@code null} if not
-	 *                specified.
+	 * @param error   The associated error, {@code null} if not specified.
 	 * @param cause   The exception cause, {@code null} if not specified.
 	 */
 	public OAuth2Exception(final String message, 
-		               final OAuth2Error error,
+		               final ErrorObject error,
 		               final Throwable cause) {
 	
 		this(message, error, null, null, cause);
@@ -77,8 +76,8 @@ public class OAuth2Exception extends Exception {
 	 * Creates a new OAuth 2.0 exception.
 	 *
 	 * @param message     The exception message. May be {@code null}.
-	 * @param error       The associated OAuth 2.0 error, {@code null} if
-	 *                    not specified.
+	 * @param error       The associated error, {@code null} if not 
+	 *                    specified.
 	 * @param redirectURI The associated redirection URI, {@code null} if
 	 *                    not specified.
 	 * @param state       The optional associated state parameter, 
@@ -87,7 +86,7 @@ public class OAuth2Exception extends Exception {
 	 *                    specified.
 	 */
 	public OAuth2Exception(final String message, 
-		               final OAuth2Error error,
+		               final ErrorObject error,
 		               final URL redirectURI,
 		               final State state,
 		               final Throwable cause) {
@@ -101,11 +100,11 @@ public class OAuth2Exception extends Exception {
 
 
 	/**
-	 * Gets the associated OAuth 2.0 error.
+	 * Gets the associated error.
 	 *
-	 * @return The OAuth 2.0 error, {@code null} if not specified.
+	 * @return The error, {@code null} if not specified.
 	 */
-	public OAuth2Error getOAuth2Error() {
+	public ErrorObject getErrorObject() {
 
 		return error;
 	}

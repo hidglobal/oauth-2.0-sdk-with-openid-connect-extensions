@@ -44,10 +44,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 @Immutable
-public class BearerTokenError extends OAuth2Error {
+public class BearerTokenError extends ErrorObject {
 
 
 	/**
@@ -403,6 +403,11 @@ public class BearerTokenError extends OAuth2Error {
 			scope = Scope.parse(m.group(1));
 		
 
-		return new BearerTokenError(errorCode, errorDescription, 0, errorURI, realm, scope);
+		return new BearerTokenError(errorCode, 
+			                    errorDescription, 
+			                    0, // HTTP status code
+			                    errorURI, 
+			                    realm, 
+			                    scope);
 	}
 }
