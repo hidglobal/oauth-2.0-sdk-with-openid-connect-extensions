@@ -11,6 +11,7 @@ import net.minidev.json.JSONObject;
 
 import net.minidev.json.parser.JSONParser;
 
+import com.nimbusds.oauth2.sdk.ClientType;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 
@@ -18,7 +19,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * Tests the JSON object utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-01-30)
  */
 public class JSONObjectUtilsTest extends TestCase {
 	
@@ -35,6 +36,7 @@ public class JSONObjectUtilsTest extends TestCase {
 		o.put("string", "Alice");
 		o.put("url", "http://server.example.com/cb/");
 		o.put("email", "alice@wonderland.net");
+		o.put("client_type", "public");
 		
 		JSONParser parser = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT);
 		
@@ -162,6 +164,7 @@ public class JSONObjectUtilsTest extends TestCase {
 			assertEquals("Alice", JSONObjectUtils.getString(o, "string"));
 			assertEquals("http://server.example.com/cb/", JSONObjectUtils.getURL(o, "url").toString());
 			assertEquals("alice@wonderland.net", JSONObjectUtils.getEmail(o, "email").toString());
+			assertEquals(ClientType.PUBLIC, JSONObjectUtils.getEnum(o, "client_type", ClientType.class));
 			
 		} catch (ParseException e) {
 		
