@@ -7,12 +7,13 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.BearerTokenError;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+
+import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
@@ -25,10 +26,10 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * <ul>
  *     <li>OAuth 2.0 Bearer Token errors:
  *         <ul>
- *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#MISSING_TOKEN}
- *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#INVALID_REQUEST}
- *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#INVALID_TOKEN}
- *             <li>{@link com.nimbusds.oauth2.sdk.BearerTokenError#INSUFFICIENT_SCOPE}
+ *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#MISSING_TOKEN}
+ *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INVALID_REQUEST}
+ *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INVALID_TOKEN}
+ *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INSUFFICIENT_SCOPE}
  *          </ul>
  *     <li>OpenID Connect specific errors:
  *         <ul>

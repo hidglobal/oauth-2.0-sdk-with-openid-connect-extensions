@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk;
+package com.nimbusds.oauth2.sdk.token;
 
 
 import java.net.MalformedURLException;
@@ -10,6 +10,10 @@ import java.util.regex.Pattern;
 import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+
+import com.nimbusds.oauth2.sdk.ErrorObject;
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.Scope;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 

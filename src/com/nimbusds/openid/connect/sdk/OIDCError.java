@@ -1,10 +1,11 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import com.nimbusds.oauth2.sdk.BearerTokenError;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+
+import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 
 
 /**
