@@ -66,6 +66,7 @@
 			<test name="com.nimbusds.oauth2.sdk.util.URLUtilsTest"/>
 			<test name="com.nimbusds.oauth2.sdk.util.JSONObjectUtilsTest"/>
 			<test name="com.nimbusds.oauth2.sdk.id.StateTest"/>
+			<test name="com.nimbusds.oauth2.sdk.auth.SecretTest"/>
 			<test name="com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethodTest"/>
 			<test name="com.nimbusds.oauth2.sdk.auth.ClientSecretBasicTest"/>
 			<test name="com.nimbusds.oauth2.sdk.auth.JWTAuthenticationTest"/>
