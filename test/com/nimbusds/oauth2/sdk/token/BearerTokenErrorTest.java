@@ -21,7 +21,7 @@ public class BearerTokenErrorTest extends TestCase {
 
 	public void testConstantCodes() {
 
-		assertEquals("null", BearerTokenError.MISSING_TOKEN.getCode());
+		assertNull(BearerTokenError.MISSING_TOKEN.getCode());
 		assertEquals("invalid_request", BearerTokenError.INVALID_REQUEST.getCode());
 		assertEquals("invalid_token", BearerTokenError.INVALID_TOKEN.getCode());
 		assertEquals("insufficient_scope", BearerTokenError.INSUFFICIENT_SCOPE.getCode());
@@ -58,7 +58,7 @@ public class BearerTokenErrorTest extends TestCase {
 	public void testNoErrorCode()
 		throws Exception {
 
-		String wwwAuth = "WWW-Authenticate: realm=\"example.com\"";
+		String wwwAuth = "Bearer realm=\"example.com\"";
 
 		BearerTokenError error = BearerTokenError.parse(wwwAuth);
 
