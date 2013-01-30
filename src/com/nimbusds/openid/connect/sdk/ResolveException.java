@@ -4,7 +4,7 @@ package com.nimbusds.openid.connect.sdk;
 import java.net.URL;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.OAuth2Exception;
+import com.nimbusds.oauth2.sdk.GeneralException;
 
 import com.nimbusds.oauth2.sdk.id.State;
 
@@ -15,7 +15,7 @@ import com.nimbusds.oauth2.sdk.id.State;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-30)
  */
-public class ResolveException extends OAuth2Exception {
+public class ResolveException extends GeneralException {
 
 
 	/**

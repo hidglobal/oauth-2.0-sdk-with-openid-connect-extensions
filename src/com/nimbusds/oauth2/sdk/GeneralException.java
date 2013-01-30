@@ -7,12 +7,12 @@ import com.nimbusds.oauth2.sdk.id.State;
 
 
 /**
- * General OAuth 2.0 exception.
+ * The base class for exceptions defined in this SDK.
  *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-30)
  */
-public class OAuth2Exception extends Exception {
+public class GeneralException extends Exception {
 
 
 	/**
@@ -35,45 +35,45 @@ public class OAuth2Exception extends Exception {
 
 
 	/**
-	 * Creates a new OAuth 2.0 exception.
+	 * Creates a new general exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
 	 */
-	public OAuth2Exception(final String message) {
+	public GeneralException(final String message) {
 	
 		this(message, null);
 	}
 	
 	
 	/**
-	 * Creates a new OAuth 2.0 exception.
+	 * Creates a new general exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
 	 * @param cause   The exception cause, {@code null} if not specified.
 	 */
-	public OAuth2Exception(final String message, final Throwable cause) {
+	public GeneralException(final String message, final Throwable cause) {
 	
 		this(message, null, cause);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 exception.
+	 * Creates a new general exception.
 	 *
 	 * @param message The exception message. May be {@code null}.
 	 * @param error   The associated error, {@code null} if not specified.
 	 * @param cause   The exception cause, {@code null} if not specified.
 	 */
-	public OAuth2Exception(final String message, 
-		               final ErrorObject error,
-		               final Throwable cause) {
+	public GeneralException(final String message, 
+		                final ErrorObject error,
+		                final Throwable cause) {
 	
 		this(message, error, null, null, cause);
 	}
 
 
 	/**
-	 * Creates a new OAuth 2.0 exception.
+	 * Creates a new general exception.
 	 *
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated error, {@code null} if not 
@@ -85,11 +85,11 @@ public class OAuth2Exception extends Exception {
 	 * @param cause       The exception cause, {@code null} if not
 	 *                    specified.
 	 */
-	public OAuth2Exception(final String message, 
-		               final ErrorObject error,
-		               final URL redirectURI,
-		               final State state,
-		               final Throwable cause) {
+	public GeneralException(final String message, 
+		                final ErrorObject error,
+		                final URL redirectURI,
+		                final State state,
+		                final Throwable cause) {
 	
 		super(message, cause);
 

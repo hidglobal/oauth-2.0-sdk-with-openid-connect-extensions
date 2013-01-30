@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.id.State;
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-01-30)
  */
-public class ParseException extends OAuth2Exception {
+public class ParseException extends GeneralException {
 
 
 	/**
