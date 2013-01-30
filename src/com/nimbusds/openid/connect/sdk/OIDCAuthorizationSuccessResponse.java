@@ -151,7 +151,8 @@ public class OIDCAuthorizationSuccessResponse
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success response.
+	 * Parses an OpenID Connect authorisation success response from the
+	 * specified redirect URI and parameters.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
@@ -193,7 +194,8 @@ public class OIDCAuthorizationSuccessResponse
 	
 	
 	/**
-	 * Parses an OpenID Connect authorisation success response.
+	 * Parses an OpenID Connect authorisation success response from the
+	 * specified URI.
 	 *
 	 * <p>Example URI:
 	 *
@@ -235,7 +237,8 @@ public class OIDCAuthorizationSuccessResponse
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success response.
+	 * Parses an OpenID Connect authorisation success response from the
+	 * specified HTTP response.
 	 *
 	 * <p>Example HTTP response:
 	 *
