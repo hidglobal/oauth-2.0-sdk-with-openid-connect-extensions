@@ -19,8 +19,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.id.Subject;
 
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-
 
 /**
  * UserInfo claims set, serialisable to a JSON object.

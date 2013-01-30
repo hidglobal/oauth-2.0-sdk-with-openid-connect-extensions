@@ -1,8 +1,6 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
-import java.util.Map;
-
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;

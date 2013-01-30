@@ -13,12 +13,9 @@ import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
-
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**

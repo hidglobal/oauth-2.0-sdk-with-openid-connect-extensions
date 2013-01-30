@@ -9,8 +9,6 @@ import com.nimbusds.oauth2.sdk.SuccessResponse;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-
 import com.nimbusds.openid.connect.sdk.rp.Client;
 
 

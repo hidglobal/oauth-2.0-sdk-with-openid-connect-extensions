@@ -1,16 +1,12 @@
 package com.nimbusds.oauth2.sdk.auth;
 
 
-import java.io.UnsupportedEncodingException;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.mail.internet.ContentType;
 
 import net.jcip.annotations.Immutable;
-
-import org.apache.commons.codec.binary.Base64;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;

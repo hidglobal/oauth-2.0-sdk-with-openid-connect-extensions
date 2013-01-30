@@ -1,8 +1,6 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.util.Map;
-
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;

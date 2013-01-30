@@ -23,7 +23,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
-import com.nimbusds.oauth2.sdk.id.Subject;
 
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 

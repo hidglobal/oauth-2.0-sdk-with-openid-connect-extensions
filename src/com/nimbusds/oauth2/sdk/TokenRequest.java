@@ -8,8 +8,6 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
-import com.nimbusds.oauth2.sdk.util.URLUtils;
-
 
 /**
  * The base abstract class for access token and refresh token requests to the
@@ -36,7 +34,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-01-30)
  */
 public abstract class TokenRequest implements Request {
 

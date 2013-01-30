@@ -9,7 +9,6 @@ import javax.mail.internet.InternetAddress;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import net.minidev.json.JSONValue;
 
 import net.minidev.json.parser.JSONParser;
 

@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 
 import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
 
 
 /**

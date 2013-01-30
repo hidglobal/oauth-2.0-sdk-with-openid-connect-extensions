@@ -4,7 +4,6 @@ package com.nimbusds.openid.connect.sdk;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.jcip.annotations.Immutable;
@@ -14,15 +13,12 @@ import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.AuthorizationRequest;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.ScopeToken;
 import com.nimbusds.oauth2.sdk.SerializeException;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;

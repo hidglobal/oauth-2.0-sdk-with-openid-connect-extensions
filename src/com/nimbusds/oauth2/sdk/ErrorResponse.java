@@ -1,9 +1,6 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
-
-
 /**
  * Response message indicating an error.
  *

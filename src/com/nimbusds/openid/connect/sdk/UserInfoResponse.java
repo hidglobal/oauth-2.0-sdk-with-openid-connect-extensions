@@ -1,8 +1,6 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Response;
 

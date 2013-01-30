@@ -5,8 +5,6 @@ import javax.mail.internet.ContentType;
 
 import net.jcip.annotations.Immutable;
 
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.jwt.JWT;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -15,8 +13,6 @@ import com.nimbusds.oauth2.sdk.SuccessResponse;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 

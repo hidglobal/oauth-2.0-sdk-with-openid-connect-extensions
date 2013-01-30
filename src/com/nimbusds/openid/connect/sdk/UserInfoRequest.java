@@ -3,8 +3,6 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.util.Map;
 
-import javax.mail.internet.ContentType;
-
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.ParseException;

@@ -1,10 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import java.util.Map;
 

@@ -1,8 +1,6 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.util.Date;
-
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;

@@ -9,8 +9,6 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
