@@ -4,15 +4,19 @@ package com.nimbusds.openid.connect.sdk.rp;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import net.minidev.json.JSONObject;
+
+import com.nimbusds.langtag.LangTag;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -29,6 +33,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
+import com.nimbusds.openid.connect.sdk.claims.LangTaggedObject;
 
 
 /**
@@ -42,7 +47,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
+ * @version $version$ (2013-01-31)
  */
 public class Client {
 
@@ -72,9 +77,9 @@ public class Client {
 
 
 	/**
-	 * The client name.
+	 * The client name, with optional language tags.
 	 */
-	private String name = null;
+	private Map<LangTag,String> nameEntries = new HashMap<LangTag,String>();
 
 
 	/**
@@ -256,7 +261,8 @@ public class Client {
 	
 	
 	/**
-	 * Gets the redirect URIs for the client.
+	 * Gets the redirect URIs for the client. Corresponds to the
+	 * {@code redirect_uris} client registration parameter.
 	 *
 	 * @return The redirect URIs, {@code null} if none.
 	 */
@@ -267,7 +273,8 @@ public class Client {
 	
 	
 	/**
-	 * Sets the redirect URIs for the client.
+	 * Sets the redirect URIs for the client. Corresponds to the
+	 * {@code redirect_uris} client registration parameter.
 	 *
 	 * @param redirectURIs The redirect URIs, {@code null} if none.
 	 */
@@ -278,7 +285,8 @@ public class Client {
 
 
 	/**
-	 * Gets the administrator contacts for the client.
+	 * Gets the administrator contacts for the client. Corresponds to the
+	 * {@code contacts} client registration parameter.
 	 *
 	 * @return The administrator contacts, {@code null} if none.
 	 */
@@ -289,7 +297,8 @@ public class Client {
 
 
 	/**
-	 * Sets the administrator contacts for the client.
+	 * Sets the administrator contacts for the client. Corresponds to the
+	 * {@code contacts} client registration parameter.
 	 *
 	 * @param contacts The administrator contacts, {@code null} if none.
 	 */
@@ -300,7 +309,8 @@ public class Client {
 
 
 	/**
-	 * Gets the client application type.
+	 * Gets the client application type. Corresponds to the
+	 * {@code application_type} client registration parameter.
 	 *
 	 * @return The client application type.
 	 */
@@ -311,7 +321,8 @@ public class Client {
 
 
 	/**
-	 * Sets the client application type.
+	 * Sets the client application type. Corresponds to the
+	 * {@code application_type} client registration parameter.
 	 *
 	 * @param applicationType The client application type, {@code null} for
 	 *                        the default.
@@ -326,29 +337,75 @@ public class Client {
 
 
 	/**
-	 * Gets the client name.
+	 * Gets the client name. Corresponds to the {@code client_name} client 
+	 * registration parameter, with no language tag.
 	 *
 	 * @return The client name, {@code null} if not specified.
 	 */
 	public String getName() {
 
-		return name;
+		return getName(null);
 	}
 
 
 	/**
-	 * Sets the client name.
+	 * Gets the client name. Corresponds to the {@code client_name} client
+	 * registration parameter, with an optional language tag.
+	 *
+	 * @param langTag The language tag of the entry, {@code null} to get 
+	 *                the non-tagged entry.
+	 *
+	 * @return The client name, {@code null} if not specified.
+	 */
+	public String getName(final LangTag langTag) {
+
+		return nameEntries.get(langTag);
+	}
+
+
+	/**
+	 * Gets the client name entries. Corresponds to the {@code client_name}
+	 * client registration parameter.
+	 *
+	 * @return The client name entries, empty map if none.
+	 */
+	public Map<LangTag,String> getNameEntries() {
+
+		return nameEntries;
+	}
+
+
+	/**
+	 * Sets the client name. Corresponds to the {@code client_name} client
+	 * registration parameter, with no language tag.
 	 *
 	 * @param name The client name, {@code null} if not specified.
 	 */
 	public void setName(final String name) {
 
-		this.name = name;
+		nameEntries.put(null, name);
 	}
 
 
 	/**
-	 * Gets the client application logo.
+	 * Sets the client name. Corresponds to the {@code client_name} client
+	 * registration parameter, with an optional language tag.
+	 *
+	 * @param name The client name, with optional language tag. 
+	 *             {@code null} if not specified.
+	 */
+	public void setName(final LangTaggedObject<String> name) {
+
+		if (name == null)
+			return;
+
+		nameEntries.put(name.getLangTag(), name.getObject());
+	}
+
+
+	/**
+	 * Gets the client application logo. Corresponds to the
+	 * {@code logo_url} client registration parameter.
 	 *
 	 * @return The logo URL, {@code null} if not specified.
 	 */
@@ -359,7 +416,8 @@ public class Client {
 
 
 	/**
-	 * Sets the client application logo.
+	 * Sets the client application logo. Corresponds to the
+	 * {@code logo_url} client registration parameter.
 	 *
 	 * @param logoURL The logo URL, {@code null} if not specified.
 	 */
@@ -370,7 +428,8 @@ public class Client {
 
 
 	/**
-	 * Gets the client policy for use of end-user data.
+	 * Gets the client policy for use of end-user data. Corresponds to the
+	 * {@code policy_url} client registration parameter.
 	 *
 	 * @return The policy URL, {@code null} if not specified.
 	 */
@@ -381,7 +440,8 @@ public class Client {
 
 
 	/**
-	 * Sets the client policy for use of end-user data.
+	 * Sets the client policy for use of end-user data. Corresponds to the
+	 * {@code policy_url} client registration parameter.
 	 *
 	 * @param policyURL The policy URL, {@code null} if not specified.
 	 */
@@ -392,7 +452,8 @@ public class Client {
 
 
 	/**
-	 * Gets the client terms of service.
+	 * Gets the client terms of service. Corresponds to the
+	 * {@code tos_url} client registration parameter.
 	 *
 	 * @return The terms of service URL, {@code null} if not specified.
 	 */
@@ -403,7 +464,8 @@ public class Client {
 
 
 	/**
-	 * Sets the client terms of service.
+	 * Sets the client terms of service. Corresponds to the
+	 * {@code tos_url} client registration parameter.
 	 *
 	 * @param termsOfServiceURL The terms of service URL, {@code null} if
 	 *                          not specified.
@@ -415,7 +477,9 @@ public class Client {
 
 
 	/**
-	 * Gets the subject identifier type for responses to this client.
+	 * Gets the subject identifier type for responses to this client. 
+	 * Corresponds to the {@code subject_type} client registration 
+	 * parameter.
 	 *
 	 * @return The subject identifier type, {@code null} if not specified.
 	 */
@@ -426,7 +490,9 @@ public class Client {
 
 
 	/**
-	 * Sets the subject identifier type for responses to this client.
+	 * Sets the subject identifier type for responses to this client. 
+	 * Corresponds to the {@code subject_type} client registration 
+	 * parameter.
 	 *
 	 * @param subjectType The subject identifier type, {@code null} if not 
 	 *                    specified.
@@ -438,7 +504,8 @@ public class Client {
 
 
 	/**
-	 * Gets the sector identifier URL.
+	 * Gets the sector identifier URL. Corresponds to the 
+	 * {@code sector_identifier_url} client registration parameter.
 	 *
 	 * @return The sector identifier URL, {@code null} if not specified.
 	 */
@@ -449,7 +516,8 @@ public class Client {
 
 
 	/**
-	 * Sets the sector identifier URL.
+	 * Sets the sector identifier URL. Corresponds to the 
+	 * {@code sector_identifier_url} client registration parameter.
 	 *
 	 * @param sectorIDURL The sector identifier URL, {@code null} if not 
 	 *                    specified.
@@ -461,7 +529,8 @@ public class Client {
 
 
 	/**
-	 * Gets the Token endpoint authentication method.
+	 * Gets the Token endpoint authentication method. Corresponds to the 
+	 * {@code token_endpoint_auth_method} client registration parameter.
 	 *
 	 * @return The Token endpoint authentication method.
 	 */
@@ -472,7 +541,8 @@ public class Client {
 
 
 	/**
-	 * Sets the Token endpoint authentication method.
+	 * Sets the Token endpoint authentication method. Corresponds to the 
+	 * {@code token_endpoint_auth_method} client registration parameter.
 	 *
 	 * @param tokenEndpointAuthMethod The Token endpoint authentication 
 	 *                                method, {@code null} for the default.
@@ -491,7 +561,8 @@ public class Client {
 	 * key(s) that are used in signing Token endpoint requests and OpenID 
 	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided, 
 	 * also used to encrypt the ID Token and UserInfo endpoint responses to 
-	 * the client.
+	 * the client. Corresponds to the {@code jwk_url} client registration 
+	 * parameter.
 	 *
 	 * @return The JWK set URL, {@code null} if not specified.
 	 */
@@ -506,7 +577,8 @@ public class Client {
 	 * key(s) that are used in signing Token endpoint requests and OpenID 
 	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided,
 	 * also used to encrypt the ID Token and UserInfo endpoint responses to
-	 * the client.
+	 * the client. Corresponds to the {@code jwk_url} client registration 
+	 * parameter.
 	 *
 	 * @param jwkSetURL The JWK set URL, {@code null} if not specified.
 	 */
@@ -519,7 +591,8 @@ public class Client {
 	/**
 	 * Gets the URL for the client's JSON Web Key (JWK) set containing
 	 * key(s) that ares used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client.
+	 * responses to the client. Corresponds to the 
+	 * {@code jwk_encryption_url} client registration parameter.
 	 *
 	 * @return The encryption JWK set URL, {@code null} if not specified.
 	 */
@@ -532,7 +605,8 @@ public class Client {
 	/**
 	 * Sets the URL for the client's JSON Web Key (JWK) set containing
 	 * key(s) that are used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client.
+	 * responses to the client. Corresponds to the 
+	 * {@code jwk_encryption_url} client registration parameter.
 	 *
 	 * @param encryptionJWKSetURL The encryption JWK set URL, {@code null} 
 	 *                            if not specified.
@@ -548,7 +622,8 @@ public class Client {
 	 * certificate chain that is used for signing Token endpoint requests 
 	 * and OpenID request objects. If {@link #getEncryptionX509URL} is not 
 	 * provided, also used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client.
+	 * responses to the client. Corresponds to the {@code x509_url} client 
+	 * registration parameter.
 	 *
 	 * @return The X.509 certificate URL, {@code null} if not specified.
 	 */
@@ -563,7 +638,8 @@ public class Client {
 	 * certificate chain that is used for signing Token endpoint requests 
 	 * and OpenID request objects. If {@link #getEncryptionX509URL} is not 
 	 * provided, also used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client.
+	 * responses to the client. Corresponds to the {@code x509_url} client 
+	 * registration parameter.
 	 *
 	 * @param x509URL The X.509 certificate URL, {@code null} if not 
 	 *                specified.
@@ -577,7 +653,8 @@ public class Client {
 	/**
 	 * Gets the URL for the client's PEM encoded X.509 certificate or 
 	 * certificate chain that is used to encrypt the ID Token and UserInfo 
-	 * endpoint responses to the client.
+	 * endpoint responses to the client. Corresponds to the 
+	 * {@code x509_encryption_url} client registration parameter.
 	 *
 	 * @return The encryption X.509 certificate URL, {@code null} if not
 	 *         specified.
@@ -591,7 +668,8 @@ public class Client {
 	/**
 	 * Sets the URL for the client's PEM encoded X.509 certificate or 
 	 * certificate chain that is used to encrypt the ID Token and UserInfo 
-	 * endpoint responses to the client.
+	 * endpoint responses to the client. Corresponds to the 
+	 * {@code x509_encryption_url} client registration parameter.
 	 *
 	 * @param encryptionX509URL The encryption X.509 certificate URL, 
 	 *                          {@code null} if not specified.
@@ -604,7 +682,8 @@ public class Client {
 
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the OpenID 
-	 * request objects sent by this client.
+	 * request objects sent by this client. Corresponds to the 
+	 * {@code request_object_signing_alg} client registration parameter.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
@@ -616,7 +695,8 @@ public class Client {
 
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the OpenID 
-	 * request objects sent by this client.
+	 * request objects sent by this client. Corresponds to the 
+	 * {@code request_object_signing_alg} client registration parameter.
 	 *
 	 * @param requestObjectJWSAlg The JWS algorithm, {@code null} if not 
 	 *                            specified.
@@ -629,7 +709,8 @@ public class Client {
 
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the ID 
-	 * Tokens issued to this client.
+	 * Tokens issued to this client. Corresponds to the 
+	 * {@code id_token_signed_response_alg} client registration parameter.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
@@ -641,7 +722,8 @@ public class Client {
 
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the ID 
-	 * Tokens issued to this client.
+	 * Tokens issued to this client. Corresponds to the 
+	 * {@code id_token_signed_response_alg} client registration parameter.
 	 *
 	 * @param idTokenJWSAlg The JWS algorithm, {@code null} if not 
 	 *                      specified.
@@ -654,7 +736,9 @@ public class Client {
 
 	/**
 	 * Gets the JSON Web Encryption (JWE) algorithm required for the ID 
-	 * Tokens issued to this client.
+	 * Tokens issued to this client. Corresponds to the 
+	 * {@code id_token_encrypted_response_alg} client registration 
+	 * parameter.
 	 *
 	 * @return The JWE algorithm, {@code null} if not specified.
 	 */
@@ -666,7 +750,9 @@ public class Client {
 
 	/**
 	 * Sets the JSON Web Encryption (JWE) algorithm required for the ID 
-	 * Tokens issued to this client.
+	 * Tokens issued to this client. Corresponds to the 
+	 * {@code id_token_encrypted_response_alg} client registration 
+	 * parameter.
 	 *
 	 * @param idTokenJWEAlg The JWE algorithm, {@code null} if not 
 	 *                      specified.
@@ -679,7 +765,9 @@ public class Client {
 
 	/**
 	 * Gets the encryption method (JWE enc) required for the ID Tokens 
-	 * issued to this client.
+	 * issued to this client. Corresponds to the 
+	 * {@code id_token_encrypted_response_enc} client registration 
+	 * parameter.
 	 *
 	 * @return The JWE encryption method, {@code null} if not specified.
 	 */
@@ -691,7 +779,9 @@ public class Client {
 
 	/**
 	 * Sets the encryption method (JWE enc) required for the ID Tokens 
-	 * issued to this client.
+	 * issued to this client. Corresponds to the 
+	 * {@code id_token_encrypted_response_enc} client registration 
+	 * parameter.
 	 *
 	 * @param idTokenJWEEnc The JWE encryption method, {@code null} if not 
 	 *                      specified.
@@ -704,7 +794,9 @@ public class Client {
 
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the 
-	 * UserInfo responses to this client.
+	 * UserInfo responses to this client. Corresponds to the 
+	 * {@code userinfo_signed_response_alg} client registration 
+	 * parameter.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
@@ -716,7 +808,9 @@ public class Client {
 
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the 
-	 * UserInfo responses to this client.
+	 * UserInfo responses to this client. Corresponds to the 
+	 * {@code userinfo_signed_response_alg} client registration 
+	 * parameter.
 	 *
 	 * @param userInfoJWSAlg The JWS algorithm, {@code null} if not 
 	 *                       specified.
@@ -729,7 +823,9 @@ public class Client {
 
 	/**
 	 * Gets the JSON Web Encryption (JWE) algorithm required for the 
-	 * UserInfo responses to this client.
+	 * UserInfo responses to this client. Corresponds to the 
+	 * {@code userinfo_encrypted_response_alg} client registration 
+	 * parameter.
 	 *
 	 * @return The JWE algorithm, {@code null} if not specified.
 	 */
@@ -741,7 +837,9 @@ public class Client {
 
 	/**
 	 * Sets the JSON Web Encryption (JWE) algorithm required for the 
-	 * UserInfo responses to this client.
+	 * UserInfo responses to this client. Corresponds to the 
+	 * {@code userinfo_encrypted_response_alg} client registration 
+	 * parameter.
 	 *
 	 * @param userInfoJWEAlg The JWE algorithm, {@code null} if not
 	 *                       specified.
@@ -754,7 +852,9 @@ public class Client {
 
 	/**
 	 * Gets the encryption method (JWE enc) required for the UserInfo 
-	 * responses to this client.
+	 * responses to this client. Corresponds to the 
+	 * {@code userinfo_encrypted_response_enc} client registration 
+	 * parameter.
 	 *
 	 * @return The JWE encryption method, {@code null} if not specified.
 	 */
@@ -766,7 +866,9 @@ public class Client {
 
 	/**
 	 * Sets the encryption method (JWE enc) required for the UserInfo 
-	 * responses to this client.
+	 * responses to this client. Corresponds to the 
+	 * {@code userinfo_encrypted_response_enc} client registration 
+	 * parameter.
 	 *
 	 * @param userInfoJWEEnc The JWE encryption method, {@code null} if not 
 	 *                       specified.
@@ -778,7 +880,8 @@ public class Client {
 
 
 	/**
-	 * Gets the default maximum authentication age.
+	 * Gets the default maximum authentication age. Corresponds to the 
+	 * {@code default_max_age} client registration parameter.
 	 *
 	 * @return The default max authentication age, in seconds. If not
 	 *         specified 0.
@@ -790,7 +893,8 @@ public class Client {
 
 
 	/**
-	 * Sets the default maximum authentication age.
+	 * Sets the default maximum authentication age. Corresponds to the 
+	 * {@code default_max_age} client registration parameter.
 	 *
 	 * @param defaultMaxAge The default max authentication age, in seconds.
 	 *                      If not specified 0.
@@ -803,7 +907,8 @@ public class Client {
 
 	/**
 	 * Gets the default requirement for the {@code auth_time} claim in the
-	 * ID Token.
+	 * ID Token. Corresponds to the {@code require_auth_time} client 
+	 * registration parameter.
 	 *
 	 * @return If {@code true} the {@code auth_Time} claim in the ID Token 
 	 *         is required by default.
@@ -816,7 +921,8 @@ public class Client {
 
 	/**
 	 * Sets the default requirement for the {@code auth_time} claim in the
-	 * ID Token.
+	 * ID Token. Corresponds to the {@code require_auth_time} client 
+	 * registration parameter.
 	 *
 	 * @param requireAuthTime If {@code true} the {@code auth_Time} claim 
 	 *                        in the ID Token is required by default.
@@ -828,7 +934,9 @@ public class Client {
 
 
 	/**
-	 * Gets the default Authentication Context Class Reference (ACR).
+	 * Gets the default Authentication Context Class Reference (ACR). 
+	 * Corresponds to the {@code default_acr} client registration 
+	 * parameter.
 	 *
 	 * @return The default ACR, {@code null} if not specified.
 	 */
@@ -840,6 +948,8 @@ public class Client {
 
 	/**
 	 * Sets the default Authentication Context Class Reference (ACR).
+	 * Corresponds to the {@code default_acr} client registration 
+	 * parameter.
 	 *
 	 * @param defaultACR The default ACR, {@code null} if not specified.
 	 */
@@ -851,6 +961,8 @@ public class Client {
 
 	/**
 	 * Gets the authorisation server initiated login HTTPS URL.
+	 * Corresponds to the {@code initiate_login_uri} client registration 
+	 * parameter.
 	 *
 	 * @return The login URL, {@code null} if not specified.
 	 */
@@ -862,6 +974,8 @@ public class Client {
 
 	/**
 	 * Sets the authorisation server initiated login HTTPS URL.
+	 * Corresponds to the {@code initiate_login_uri} client registration 
+	 * parameter.
 	 *
 	 * @param initiateLoginURI The login URL, {@code null} if not 
 	 *                         specified.
@@ -873,7 +987,8 @@ public class Client {
 
 
 	/**
-	 * Gets the post logout redirect URL.
+	 * Gets the post logout redirect URL. Corresponds to the 
+	 * {@code post_logout_redirect_url} client registration parameter.
 	 *
 	 * @return The post logout redirect URL, {@code null} if not specified.
 	 */
@@ -884,7 +999,8 @@ public class Client {
 
 
 	/**
-	 * Sets the post logout redirect URL.
+	 * Sets the post logout redirect URL. Corresponds to the 
+	 * {@code post_logout_redirect_url} client registration parameter.
 	 *
 	 * @param postLogoutRedirectURI The post logout redirect URL, 
 	 *                              {@code null} if not specified.
@@ -941,8 +1057,18 @@ public class Client {
 		o.put("application_type", applicationType.toString());
 
 
-		if (name != null)
-			o.put("client_name", name);
+		if (! nameEntries.isEmpty()) {
+
+			for (Map.Entry<LangTag,String> entry: nameEntries.entrySet()) {
+
+				LangTag langTag = entry.getKey();
+
+				if (langTag == null)
+					o.put("client_name", entry.getValue());
+				else
+					o.put("client_name#" + langTag, entry.getValue());
+			} 
+		}
 
 
 		if (logoURL != null)
