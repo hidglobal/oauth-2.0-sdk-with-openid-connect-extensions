@@ -13,14 +13,14 @@ import javax.mail.internet.InternetAddress;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
+import com.nimbusds.langtag.LangTagUtil;
 
 
 /**
  * Claims set serialisable to a JSON object.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-23)
+ * @version $version$ (2013-01-31)
  */
 public abstract class ClaimsSet {
 
@@ -124,47 +124,22 @@ public abstract class ClaimsSet {
 	@SuppressWarnings("unchecked")
 	public <T> Map<LangTag,T> getLangTaggedClaim(final String name, final Class<T> clazz) {
 
-		Map<LangTag,T> map = new HashMap<LangTag,T>();
+		Map<LangTag,Object> matches = LangTagUtil.find(name, claims);
 
-		for (Map.Entry<String,Object> entry: claims.entrySet()) {
+		Map<LangTag,T> out = new HashMap<LangTag,T>();
 
-			T value = null;
+		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
 			try {
-				value = (T)entry.getValue();
+				out.put(entry.getKey(), (T)entry.getValue());
 
 			} catch (ClassCastException e) {
-				continue; // skip
-			}
-			
-			if (entry.getKey().equals(name)) {
 
-				// Claim name matches, no tag	
-				map.put(null, value);
-			}
-			else if (entry.getKey().startsWith(name + '#')) {
-
-				// Claim name matches, has tag
-				String[] parts = entry.getKey().split("#", 2);
-
-				LangTag langTag = null;
-
-				if (parts.length == 2) {
-					
-					try {
-						langTag = LangTag.parse(parts[1]);
-						
-					} catch (LangTagException e) {
-
-						// ignore
-					}
-				}
-
-				map.put(langTag, value);
+				// skip
 			}
 		}
 
-		return map;
+		return out;
 	}
 
 

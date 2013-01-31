@@ -17,6 +17,7 @@ import javax.mail.internet.InternetAddress;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
+import com.nimbusds.langtag.LangTagUtil;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -1224,6 +1225,20 @@ public class Client {
 				                                          "application_type", 
 				                                          ApplicationType.class));
 
+		// Find lang-tagged client_name params
+		Map<LangTag,Object> matches = LangTagUtil.find("client_name", jsonObject);
+
+		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
+
+			try {
+				client.setName(new LangTaggedObject<String>((String)entry.getValue(), 
+					                                    entry.getKey()));
+
+			} catch (ClassCastException e) {
+
+				// ignore
+			}
+		}
 
 		if (jsonObject.containsKey("client_name"))
 			client.setName(JSONObjectUtils.getString(jsonObject, "client_name"));
