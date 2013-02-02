@@ -17,9 +17,11 @@ import com.nimbusds.oauth2.sdk.Scope;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-02-02)
  */
-public abstract class AccessToken extends Token {
+public abstract class AccessToken 
+	extends Token
+	implements Comparable<AccessToken> {
 
 	
 	/**
@@ -212,6 +214,13 @@ public abstract class AccessToken extends Token {
 	 * @return The {@code Authorization} header value.
 	 */
 	public abstract String toAuthorizationHeader();
+
+
+	@Override
+	public int compareTo(AccessToken other) {
+
+		return getValue().compareTo(other.getValue());
+	}
 
 
 	/**

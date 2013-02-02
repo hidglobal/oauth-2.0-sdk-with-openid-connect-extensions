@@ -20,10 +20,12 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-02-02)
  */
 @Immutable
-public final class RefreshToken extends Token {
+public final class RefreshToken
+	extends Token
+	implements Comparable<RefreshToken> {
 
 
 	/**
@@ -103,5 +105,12 @@ public final class RefreshToken extends Token {
 		return object != null && 
 		       object instanceof RefreshToken && 
 		       this.toString().equals(object.toString());
+	}
+
+
+	@Override
+	public int compareTo(RefreshToken other) {
+
+		return getValue().compareTo(other.getValue());
 	}
 }
