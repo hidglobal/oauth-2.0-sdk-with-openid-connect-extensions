@@ -3,6 +3,10 @@ package com.nimbusds.oauth2.sdk.id;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
+import net.minidev.json.JSONAware;
+import net.minidev.json.JSONValue;
+
+
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
@@ -14,9 +18,9 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * <p>Extending classes must override the {@link #equals} method.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-02-04)
  */
-public abstract class Identifier {
+public abstract class Identifier implements JSONAware {
 
 
 	/**
@@ -71,6 +75,21 @@ public abstract class Identifier {
 	public String getValue() {
 
 		return value;
+	}
+
+
+	/**
+	 * Returns the JSON string representation of this identifier.
+	 *
+	 * @return The JSON string.
+	 */
+	@Override
+	public String toJSONString() {
+
+		StringBuilder sb = new StringBuilder("\"");
+		sb.append(JSONValue.escape(value));
+		sb.append('"');
+		return sb.toString();
 	}
 	
 	

@@ -8,7 +8,7 @@ import junit.framework.TestCase;
  * Tests random state value generation.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-02-04)
  */
 public class StateTest extends TestCase {
 	
@@ -93,5 +93,17 @@ public class StateTest extends TestCase {
 		System.out.println("Random state (16 chars): " + state);
 		
 		assertEquals(16, state.toString().length());
+	}
+
+
+	public void testJSONValue() {
+
+		State state = new State("abc");
+
+		String json = state.toJSONString();
+
+		System.out.println("\"state\":" + json);
+
+		assertEquals("\"abc\"", json);
 	}
 }
