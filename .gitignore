@@ -1,5 +1,5 @@
-build
-javadoc
-procsrc
-openid-connect-sdk-*.jar
+/build/
+/javadoc/
+/procsrc/
+/*.jar
 TEST*
