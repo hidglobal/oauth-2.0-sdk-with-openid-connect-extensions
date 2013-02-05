@@ -17,7 +17,7 @@ import com.nimbusds.oauth2.sdk.Scope;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-02)
+ * @version $version$ (2013-02-05)
  */
 public abstract class AccessToken 
 	extends Token
@@ -204,6 +204,13 @@ public abstract class AccessToken
 			o.put("scope", scope.toString());
 		
 		return o;
+	}
+
+
+	@Override
+	public String toJSONString() {
+
+		return toJSONObject().toString();
 	}
 	
 	
