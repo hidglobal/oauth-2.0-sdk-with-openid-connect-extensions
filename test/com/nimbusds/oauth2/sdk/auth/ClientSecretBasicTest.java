@@ -12,15 +12,17 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
  * Tests client secret basic authentication.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
+ * @version $version$ (2013-02-09)
  */
 public class ClientSecretBasicTest extends TestCase {
 
 
 	public void testSerializeAndParse() {
 	
-		final String id = "Aladdin";
-		final String pw = "open sesame";
+		// Test vectors from OAuth 2.0 RFC
+		
+		final String id = "s6BhdRkqt3";
+		final String pw = "7Fjfp0ZBr1KtDRbnfVdmIw";
 		
 		ClientID clientID = new ClientID(id);
 		Secret secret = new Secret(pw);
@@ -34,7 +36,7 @@ public class ClientSecretBasicTest extends TestCase {
 		
 		String header = csb.toHTTPAuthorizationHeader();
 		
-		assertEquals("Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==", header);
+		assertEquals("Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3", header);
 		
 		try {
 			csb = ClientSecretBasic.parse(header);
@@ -46,5 +48,17 @@ public class ClientSecretBasicTest extends TestCase {
 		
 		assertEquals(id, csb.getClientID().toString());
 		assertEquals(pw, csb.getClientSecret().getValue());
+	}
+
+
+	public void testParseAndSerialize()
+		throws Exception {
+
+		String header = "Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3";
+
+		ClientSecretBasic csb = ClientSecretBasic.parse(header);
+
+		assertEquals("s6BhdRkqt3", csb.getClientID().getValue());
+		assertEquals("7Fjfp0ZBr1KtDRbnfVdmIw", csb.getClientSecret().getValue());
 	}
 }

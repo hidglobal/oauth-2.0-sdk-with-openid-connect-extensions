@@ -3,6 +3,9 @@ package com.nimbusds.oauth2.sdk.auth;
 
 import java.io.UnsupportedEncodingException;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+
 import net.jcip.annotations.Immutable;
 
 import org.apache.commons.codec.binary.Base64;
@@ -19,11 +22,11 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * {@link ClientAuthenticationMethod#CLIENT_SECRET_BASIC}. This class is
  * immutable.
  *
- * <p>Example HTTP Authorization header (for client identifier "Aladdin" and
- * password "open sesame"):
+ * <p>Example HTTP Authorization header (for client identifier "s6BhdRkqt3" and
+ * secret "7Fjfp0ZBr1KtDRbnfVdmIw"):
  *
  * <pre>
- * Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+ * Authorization: Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3
  * </pre>
  *
  * <p>Related specifications:
@@ -35,7 +38,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-02-09)
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
@@ -113,15 +116,18 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 * @return The HTTP Authorization header.
 	 */
 	public String toHTTPAuthorizationHeader() {
-	
-		StringBuilder sb = new StringBuilder(clientID.toString());
-		sb.append(':');
-		sb.append(secret.getValue());
 		
 		String b64 = null;
 		
 		try {
-			b64 = Base64.encodeBase64String(sb.toString().getBytes("utf-8"));
+			String encodedClientID = URLEncoder.encode(clientID.toString(), "UTF-8");
+			String encodedSecret = URLEncoder.encode(secret.getValue(), "UTF-8");
+
+			StringBuilder sb = new StringBuilder(encodedClientID);
+			sb.append(':');
+			sb.append(encodedSecret);
+
+			b64 = Base64.encodeBase64String(sb.toString().getBytes("UTF-8"));
 			
 		} catch (UnsupportedEncodingException e) {
 		
@@ -162,26 +168,23 @@ public final class ClientSecretBasic extends ClientAuthentication {
 		if (! parts[0].equalsIgnoreCase("Basic"))
 			throw new ParseException("HTTP authentication must be \"Basic\"");
 		
-		
-		String credentialsString = null;
-		
 		try {
-			credentialsString = new String(Base64.decodeBase64(parts[1]), "utf-8");
+			String credentialsString = new String(Base64.decodeBase64(parts[1]), "utf-8");
+
+			String[] credentials = credentialsString.split(":", 2);
+		
+			if (credentials.length != 2)
+				throw new ParseException("Missing credentials delimiter \":\"");
+
+			String decodedClientID = URLDecoder.decode(credentials[0]);
+			String decodedSecret = URLDecoder.decode(credentials[1]);
+
+			return new ClientSecretBasic(new ClientID(decodedClientID), new Secret(decodedSecret));
 			
 		} catch (UnsupportedEncodingException e) {
 		
 			throw new ParseException(e.getMessage(), e);
 		}
-		
-		String[] credentials = credentialsString.split(":", 2);
-		
-		if (credentials.length != 2)
-			throw new ParseException("Missing credentials delimiter \":\"");
-		
-		ClientID clientID = new ClientID(credentials[0]);
-		Secret secret = new Secret(credentials[1]);
-		
-		return new ClientSecretBasic(clientID, secret);
 	}
 	
 	
