@@ -32,6 +32,12 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
 /**
  * Public OpenID Connect provider configuration. This class is immutable.
  *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Discovery 1.0, section 3.2.
+ * </ul>
+ *
  * @author Vladimir Dzhuvinov
  * @version $version$ (2013-02-11)
  */
