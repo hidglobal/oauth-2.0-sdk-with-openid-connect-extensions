@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.sdk.op;
 
 import java.net.URL;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import net.minidev.json.JSONObject;
@@ -40,7 +40,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-11)
+ * @version $version$ (2013-02-13)
  */
 public class ProviderConfiguration {
 
@@ -618,7 +618,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("acr_values_supported")) {
 
-			config.acrValues = new HashSet<ACR>();
+			config.acrValues = new LinkedHashSet<ACR>();
 
 			if (jsonObject.get("acr_values_supported") instanceof String) {
 
@@ -626,8 +626,6 @@ public class ProviderConfiguration {
 			}
 			else {
 				String[] stringArray = JSONObjectUtils.getStringArray(jsonObject, "acr_values_supported");
-
-				config.acrValues = new HashSet<ACR>();
 
 				for (String v: stringArray) {
 
@@ -638,7 +636,7 @@ public class ProviderConfiguration {
 		}
 
 
-		config.subjectTypes = new HashSet<SubjectType>();
+		config.subjectTypes = new LinkedHashSet<SubjectType>();
 
 		if (jsonObject.get("subject_types_supported") instanceof String) {
 
@@ -646,8 +644,6 @@ public class ProviderConfiguration {
 		}
 		else {
 			String[] stringArray = JSONObjectUtils.getStringArray(jsonObject, "subject_types_supported");
-
-			config.subjectTypes = new HashSet<SubjectType>();
 
 			for (String v: stringArray) {
 
@@ -660,7 +656,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("userinfo_signing_alg_values_supported")) {
 
-			config.userInfoJWSAlgs = new HashSet<JWSAlgorithm>();
+			config.userInfoJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
 
 			if (jsonObject.get("userinfo_signing_alg_values_supported") instanceof String) {
 
@@ -680,7 +676,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("userinfo_encryption_alg_values_supported")) {
 
-			config.userInfoJWEAlgs = new HashSet<JWEAlgorithm>();
+			config.userInfoJWEAlgs = new LinkedHashSet<JWEAlgorithm>();
 
 			if (jsonObject.get("userinfo_encryption_alg_values_supported") instanceof String) {
 
@@ -700,7 +696,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("userinfo_encryption_enc_values_supported")) {
 
-			config.userInfoJWEEncs = new HashSet<EncryptionMethod>();
+			config.userInfoJWEEncs = new LinkedHashSet<EncryptionMethod>();
 
 			if (jsonObject.get("userinfo_encryption_enc_values_supported") instanceof String) {
 
@@ -722,7 +718,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("id_token_signing_alg_values_supported")) {
 
-			config.idTokenJWSAlgs = new HashSet<JWSAlgorithm>();
+			config.idTokenJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
 
 			if (jsonObject.get("id_token_signing_alg_values_supported") instanceof String) {
 
@@ -742,7 +738,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("id_token_encryption_alg_values_supported")) {
 
-			config.idTokenJWEAlgs = new HashSet<JWEAlgorithm>();
+			config.idTokenJWEAlgs = new LinkedHashSet<JWEAlgorithm>();
 
 			if (jsonObject.get("id_token_encryption_alg_values_supported") instanceof String) {
 
@@ -762,7 +758,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("id_token_encryption_enc_values_supported")) {
 
-			config.idTokenJWEEncs = new HashSet<EncryptionMethod>();
+			config.idTokenJWEEncs = new LinkedHashSet<EncryptionMethod>();
 
 			if (jsonObject.get("id_token_encryption_enc_values_supported") instanceof String) {
 
@@ -784,7 +780,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("request_object_signing_alg_values_supported")) {
 
-			config.requestObjectJWSAlgs = new HashSet<JWSAlgorithm>();
+			config.requestObjectJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
 
 			if (jsonObject.get("request_object_signing_alg_values_supported") instanceof String) {
 
@@ -804,7 +800,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("request_object_encryption_alg_values_supported")) {
 
-			config.requestObjectJWEAlgs = new HashSet<JWEAlgorithm>();
+			config.requestObjectJWEAlgs = new LinkedHashSet<JWEAlgorithm>();
 
 			if (jsonObject.get("request_object_encryption_alg_values_supported") instanceof String) {
 
@@ -824,7 +820,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("request_object_encryption_enc_values_supported")) {
 
-			config.requestObjectJWEEncs = new HashSet<EncryptionMethod>();
+			config.requestObjectJWEEncs = new LinkedHashSet<EncryptionMethod>();
 
 			if (jsonObject.get("request_object_encryption_enc_values_supported") instanceof String) {
 
@@ -844,7 +840,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("token_endpoint_auth_methods_supported")) {
 
-			config.tokenEndpointAuthMethods = new HashSet<ClientAuthenticationMethod>();
+			config.tokenEndpointAuthMethods = new LinkedHashSet<ClientAuthenticationMethod>();
 
 			if (jsonObject.get("token_endpoint_auth_methods_supported") instanceof String) {
 
@@ -865,7 +861,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("token_endpoint_auth_signing_alg_values_supported")) {
 
-			config.tokenEndpointJWSAlgs = new HashSet<JWSAlgorithm>();
+			config.tokenEndpointJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
 
 			if (jsonObject.get("token_endpoint_auth_signing_alg_values_supported") instanceof String) {
 
@@ -885,7 +881,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("display_values_supported")) {
 
-			config.displays = new HashSet<Display>();
+			config.displays = new LinkedHashSet<Display>();
 
 			if (jsonObject.get("display_values_supported") instanceof String) {
 
@@ -905,7 +901,7 @@ public class ProviderConfiguration {
 
 		if (jsonObject.containsKey("claims_supported")) {
 
-			config.claims = new HashSet<String>();
+			config.claims = new LinkedHashSet<String>();
 
 			if (jsonObject.get("claims_supported") instanceof String) {
 
