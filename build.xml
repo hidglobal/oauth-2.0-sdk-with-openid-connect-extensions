@@ -82,6 +82,7 @@
 			<test name="com.nimbusds.oauth2.sdk.auth.JWTAuthenticationTest"/>
 			<test name="com.nimbusds.oauth2.sdk.token.BearerAccessTokenTest"/>
 			<test name="com.nimbusds.oauth2.sdk.token.BearerTokenErrorTest"/>
+			<test name="com.nimbusds.oauth2.sdk.token.TokenPairTest"/>
 			<test name="com.nimbusds.oauth2.sdk.ResponseTypeTest"/>
 			<test name="com.nimbusds.oauth2.sdk.ResponseTypeSetTest"/>
 			<test name="com.nimbusds.oauth2.sdk.ScopeTokenTest"/>

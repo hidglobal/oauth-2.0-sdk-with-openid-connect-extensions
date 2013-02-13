@@ -7,6 +7,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.nimbusds.oauth2.sdk.token.TokenPair;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -39,7 +40,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-02-13)
  */
 @Immutable
 public class AccessTokenResponse 
@@ -75,6 +76,18 @@ public class AccessTokenResponse
 		
 		this.refreshToken = refreshToken;
 	}
+
+
+	/**
+	 * Creates a new access token response.
+	 *
+	 * @param tokenPair The access and refresh token pair. Must not be 
+	 *                  {@code null}.
+	 */
+	public AccessTokenResponse(final TokenPair tokenPair) {
+				   
+		this(tokenPair.getAccessToken(), tokenPair.getRefreshToken());
+	}
 	
 	
 	/**
@@ -96,6 +109,17 @@ public class AccessTokenResponse
 	public RefreshToken getRefreshToken() {
 	
 		return refreshToken;
+	}
+
+
+	/**
+	 * Gets the access and refresh token pair.
+	 *
+	 * @return The access and refresh token pair. Must not be {@code null}.
+	 */
+	public TokenPair getTokenPair() {
+
+		return new TokenPair(accessToken, refreshToken);
 	}
 	
 	

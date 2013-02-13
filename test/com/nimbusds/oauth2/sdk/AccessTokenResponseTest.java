@@ -10,13 +10,14 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.nimbusds.oauth2.sdk.token.TokenPair;
 
 
 /**
  * Tests access token response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-02-13)
  */
 public class AccessTokenResponseTest extends TestCase {
 	
@@ -61,6 +62,11 @@ public class AccessTokenResponseTest extends TestCase {
 		
 		RefreshToken refreshToken = atr.getRefreshToken();
 		assertEquals(refreshTokenString, refreshToken.getValue());
+
+		// Test pair getter
+		TokenPair pair = atr.getTokenPair();
+		assertEquals(accessToken, pair.getAccessToken());
+		assertEquals(refreshToken, pair.getRefreshToken());
 		
 		try {
 			httpResponse = atr.toHTTPResponse();
