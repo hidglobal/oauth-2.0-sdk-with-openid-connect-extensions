@@ -8,13 +8,14 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import javax.mail.internet.ContentType;
-
 import net.jcip.annotations.ThreadSafe;
+
+import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -38,10 +39,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-14)
+ * @version $version$ (2013-02-18)
  */
 @ThreadSafe
-public class HTTPRequest {
+public class HTTPRequest extends HTTPMessage {
 
 
 	/**
@@ -66,12 +67,6 @@ public class HTTPRequest {
 	 * The request method.
 	 */
 	private final Method method;
-	
-	
-	/**
-	 * Specifies a {@code Content-Type} header value.
-	 */
-	private ContentType contentType = null;
 	
 	
 	/**
@@ -182,90 +177,6 @@ public class HTTPRequest {
 	
 	
 	/**
-	 * Gets the {@code Content-Type} header value.
-	 *
-	 * @return The {@code Content-Type} header value, {@code null} if not 
-	 *         specified.
-	 */
-	public ContentType getContentType() {
-	
-		return contentType;
-	}
-	
-	
-	/**
-	 * Sets the {@code Content-Type} header value.
-	 *
-	 * @param ct The {@code Content-Type} header value, {@code null} if not
-	 *           specified.
-	 */
-	public void setContentType(final ContentType ct) {
-	
-		contentType = ct;
-	}
-	
-	
-	/**
-	 * Sets the {@code Content-Type} header value.
-	 *
-	 * @param ct The {@code Content-Type} header value, {@code null} if not
-	 *           specified.
-	 *
-	 * @throws ParseException If the header value couldn't be parsed.
-	 */
-	public void setContentType(final String ct)
-		throws ParseException {
-		
-		if (ct == null) {
-			contentType = null;
-			return;
-		}
-		
-		try {
-			contentType = new ContentType(ct);
-			
-		} catch (javax.mail.internet.ParseException e) {
-		
-			throw new ParseException("Invalid Content-Type header value: " + e.getMessage());
-		}
-	}
-	
-	
-	/**
-	 * Ensures this HTTP request has a specified {@code Content-Type} 
-	 * header value.
-	 *
-	 * @throws ParseException If the {@code Content-Type} header is 
-	 *                        missing.
-	 */
-	public void ensureContentType()
-		throws ParseException {
-	
-		if (contentType == null)
-			throw new ParseException("Missing HTTP Content-Type header");
-	}
-	
-	
-	/**
-	 * Ensures this HTTP request has the specified {@code Content-Type} 
-	 * header value. Note that this method compares only the primary type 
-	 * and subtype; any content type parameters, such as {@code charset}, 
-	 * are ignored.
-	 *
-	 * @param contentType The expected content type. Must not be 
-	 *                    {@code null}.
-	 *
-	 * @throws ParseException If the {@code Content-Type} header is missing
-	 *                        or its primary and subtype doesn't match.
-	 */ 
-	public void ensureContentType(final ContentType contentType)
-		throws ParseException {
-		
-		ContentTypeUtils.ensureContentType(contentType, getContentType());
-	}
-	
-	
-	/**
 	 * Gets the {@code Authorization} header value.
 	 *
 	 * @return The {@code Authorization} header value, {@code null} if not 
@@ -337,10 +248,25 @@ public class HTTPRequest {
 	
 		this.query = query;
 	}
+
+
+	/**
+	 * Ensures this HTTP response has a specified query string or entity
+	 * body.
+	 *
+	 * @throws ParseException If the query string or entity body is missing
+	 *                        or empty.
+	 */
+	private void ensureQuery()
+		throws ParseException {
+		
+		if (query == null || query.isEmpty())
+			throw new ParseException("Missing or empty HTTP query string / entity body");
+	}
 	
 	
 	/**
-	 * Gets the request query  as a parameter map. The parameters are 
+	 * Gets the request query as a parameter map. The parameters are 
 	 * decoded according to {@code application/x-www-form-urlencoded}.
 	 *
 	 * @return The request query parameters, decoded. If none the map will
@@ -349,5 +275,26 @@ public class HTTPRequest {
 	public Map<String, String> getQueryParameters() {
 	
 		return URLUtils.parseParameters(query);
+	}
+
+
+	/**
+	 * Gets the request query or entity body as a JSON Object.
+	 *
+	 * @return The request query or entity body as a JSON object.
+	 *
+	 * @throws ParseException If the Content-Type header isn't 
+	 *                        {@code application/json}, the request query
+	 *                        or entity body is {@code null}, empty or 
+	 *                        couldn't be parsed to a valid JSON object.
+	 */
+	public JSONObject getQueryAsJSONObject()
+		throws ParseException {
+
+		ensureContentType(CommonContentTypes.APPLICATION_JSON);
+
+		ensureQuery();
+
+		return JSONObjectUtils.parseJSONObject(query);
 	}
 }

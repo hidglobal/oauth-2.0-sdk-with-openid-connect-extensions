@@ -4,6 +4,7 @@ package com.nimbusds.openid.connect.sdk.rp;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -26,6 +27,9 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.oauth2.sdk.auth.Secret;
+
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
 
@@ -38,7 +42,8 @@ import com.nimbusds.openid.connect.sdk.claims.LangTaggedObject;
 
 
 /**
- * OpenID Connect client details. Used in client registration requests.
+ * OpenID Connect client details. Used in client registration requests and
+ * responses.
  *
  * <p>Related specifications:
  *
@@ -55,7 +60,7 @@ public class Client {
 	/**
 	 * The registered client ID.
 	 */
-	private ClientID id;
+	private ClientID id = null;
 	
 	
 	/**
@@ -235,21 +240,31 @@ public class Client {
 	private URL postLogoutRedirectURI = null;
 
 
+	/**
+	 * The registration access token.
+	 */
+	private BearerAccessToken accessToken = null;
+
+
+	/**
+	 * The client secret.
+	 */
+	private Secret secret = null;
+
+
 	/** 
 	 * Creates a new OpenID Connect client details instance.
-	 *
-	 * @param id The client ID. Must not be {@code null}.
 	 */
-	public Client(final ClientID id) {
+	public Client() {
 
-		setID(id);
+		// ID not set
 	}
 
 
 	/**
 	 * Gets the client ID.
 	 *
-	 * @return The client ID.
+	 * @return The client ID, {@code null} if not specified.
 	 */
 	public ClientID getID() {
 
@@ -260,12 +275,9 @@ public class Client {
 	/**
 	 * Sets the client ID.
 	 *
-	 * @param id The client ID. Must not be {@code null}.
+	 * @param id The client ID, {@code null} if not specified.
 	 */
 	public void setID(final ClientID id) {
-
-		if (id == null)
-			throw new IllegalArgumentException("The client ID must not be null");
 
 		this.id = id;
 	}
@@ -1023,6 +1035,56 @@ public class Client {
 
 
 	/**
+	 * Gets the registration access token. Corresponds to the 
+	 * {@code registration_access_token} client registration parameter.
+	 *
+	 * @return The registration access token, {@code null} if not 
+	 *         specified.
+	 */
+	public BearerAccessToken getRegistrationAccessToken() {
+
+		return accessToken;
+	}
+
+
+	/**
+	 * Sets the registration access token. Corresponds to the
+	 * {@code registration_access_token} client registration parameter.
+	 *
+	 * @param accessToken The registration access token, {@code null} if 
+	 *                    not specified.
+	 */
+	public void setRegistrationAccessToken(final BearerAccessToken accessToken) {
+
+		this.accessToken = accessToken;
+	}
+
+
+	/**
+	 * Gets the client secret. Corresponds to the {@code client_secret} and
+	 * {@code expires_at} client registration parameters.
+	 *
+	 * @return The client secret, {@code null} if not specified.
+	 */
+	public Secret getSecret() {
+
+		return secret;
+	}
+
+
+	/**
+	 * Sets the client secret. Corresponds to the {@code client_secret} and
+	 * {@code expires_at} client registration parameters.
+	 *
+	 * @param secret The client secret, {@code null} if not specified.
+	 */
+	public void setSecret(final Secret secret) {
+
+		this.secret = secret;
+	}
+
+
+	/**
 	 * Returns the client details as a JSON object.
 	 *
 	 * @return The client details as a JSON object.
@@ -1031,7 +1093,8 @@ public class Client {
 
 		JSONObject o = new JSONObject();
 
-		o.put("client_id", id.getValue());
+		if (id != null)
+			o.put("client_id", id.getValue());
 
 		if (redirectURIs != null) {
 
@@ -1164,6 +1227,19 @@ public class Client {
 		if (postLogoutRedirectURI != null)
 			o.put("post_logout_redirect_url", postLogoutRedirectURI.toString());
 
+
+		if (accessToken != null)
+			o.put("registration_access_token", accessToken.getValue());
+
+
+		if (secret != null) {
+			o.put("client_secret", secret.getValue());
+
+			if (secret.getExpirationDate() != null)
+				o.put("expires_at", secret.getExpirationDate().getTime());
+
+		}
+
 		return o;
 	}
 
@@ -1183,9 +1259,11 @@ public class Client {
 	public static Client parse(final JSONObject jsonObject)
 		throws ParseException {
 
-		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
+		Client client = new Client();
 
-		Client client = new Client(id);
+		if (jsonObject.containsKey("client_id"))
+			client.setID(new ClientID(JSONObjectUtils.getString(jsonObject, "client_id")));
+
 
 		if (jsonObject.containsKey("redirect_uris")) {
 
@@ -1353,6 +1431,24 @@ public class Client {
 
 		if (jsonObject.containsKey("post_logout_redirect_url"))
 			client.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_url"));
+
+
+		if (jsonObject.containsKey("registration_access_token"))
+			client.setRegistrationAccessToken(new BearerAccessToken(
+				JSONObjectUtils.getString(jsonObject, "registration_access_token")));
+
+
+		if (jsonObject.containsKey("client_secret")) {
+
+			String value = JSONObjectUtils.getString(jsonObject, "client_secret");
+
+			Date exp = null;
+
+			if (jsonObject.containsKey("expires_at"))
+				exp = new Date(JSONObjectUtils.getLong(jsonObject, "expires_at"));
+
+			client.setSecret(new Secret(value, exp));
+		}
 
 		return client;
 	}

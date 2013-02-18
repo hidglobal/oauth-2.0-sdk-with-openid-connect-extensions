@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
  * OpenID Connect specific errors.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
+ * @version $version$ (2013-02-18)
  */
 public final class OIDCError {
 
@@ -106,11 +106,10 @@ public final class OIDCError {
 	// Client registration endpoint
 	
 	/**
-	 * Client registration: The value of the registration {@code operation}
-	 * is invalid or not supported.
+	 * Client registration: The value of {@code client_id} is invalid.
 	 */
-	public static final ErrorObject INVALID_OPERATION =
-		new ErrorObject("invalid_operation", "Invalid or unsupported client registration operation",
+	public static final ErrorObject INVALID_CLIENT_ID =
+		new ErrorObject("invalid_client_id", "Invalid client ID",
 			        HTTPResponse.SC_BAD_REQUEST);
 	
 	

@@ -6,8 +6,6 @@ import java.io.PrintWriter;
 
 import java.net.URL;
 
-import javax.mail.internet.ContentType;
-
 import javax.servlet.http.HttpServletResponse;
 
 import net.jcip.annotations.ThreadSafe;
@@ -19,7 +17,6 @@ import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 
-import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -49,10 +46,10 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-02-18)
  */
 @ThreadSafe
-public class HTTPResponse {
+public class HTTPResponse extends HTTPMessage {
 
 	
 	/**
@@ -98,12 +95,6 @@ public class HTTPResponse {
 	 * Specifies a {@code Location} header value (for redirects).
 	 */
 	private URL location = null;
-	
-	
-	/**
-	 * Specifies a {@code Content-Type} header value.
-	 */
-	private ContentType contentType = null;
 	
 	
 	/**
@@ -203,61 +194,6 @@ public class HTTPResponse {
 	public void setLocation(final URL location) {
 	
 		this.location = location;
-	}
-	
-	
-	/**
-	 * Gets the {@code Content-Type} header value.
-	 *
-	 * @return The header value, {@code null} if not specified.
-	 */
-	public ContentType getContentType() {
-	
-		return contentType;
-	}
-	
-	
-	/**
-	 * Sets the {@code Content-Type} header value.
-	 *
-	 * @param contentType The header value, {@code null} if not specified.
-	 */
-	public void setContentType(final ContentType contentType) {
-	
-		this.contentType = contentType;
-	}
-	
-	
-	/**
-	 * Ensures this HTTP response has a specified {@code Content-Type} 
-	 * header value.
-	 *
-	 * @throws ParseException If the {@code Content-Type} header is missing.
-	 */
-	public void ensureContentType()
-		throws ParseException {
-	
-		if (contentType == null)
-			throw new ParseException("Missing HTTP Content-Type header");
-	}
-	
-	
-	/**
-	 * Ensures this HTTP response has the specified {@code Content-Type} 
-	 * header value. Note that this method compares only the primary type 
-	 * and subtype; any content type parameters, such as {@code charset}, 
-	 * are ignored.
-	 *
-	 * @param contentType The expected content type. Must not be 
-	 *                    {@code null}.
-	 *
-	 * @throws ParseException If the {@code Content-Type} header is missing
-	 *                        or its primary and subtype doesn't match.
-	 */ 
-	public void ensureContentType(final ContentType contentType)
-		throws ParseException {
-		
-		ContentTypeUtils.ensureContentType(contentType, getContentType());
 	}
 	
 	
@@ -431,8 +367,8 @@ public class HTTPResponse {
 		if (location != null)
 			sr.setHeader("Location", location.toString());
 		
-		if (contentType != null)
-			sr.setContentType(contentType.toString());
+		if (getContentType() != null)
+			sr.setContentType(getContentType().toString());
 		
 		if (cacheControl != null)
 			sr.setHeader("Cache-Control", cacheControl);

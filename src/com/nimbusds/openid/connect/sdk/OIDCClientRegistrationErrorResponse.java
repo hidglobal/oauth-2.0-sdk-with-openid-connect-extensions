@@ -7,19 +7,23 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import net.minidev.json.JSONObject;
+
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
- * UserInfo error response. This class is immutable.
+ * OpenID Connect client registration error response. This class is immutable.
  *
  * <p>Standard errors:
  *
@@ -33,7 +37,9 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  *          </ul>
  *     <li>OpenID Connect specific errors:
  *         <ul>
- *             <li>{@link OIDCError#INVALID_SCHEMA}
+ *             <li>{@link OIDCError#INVALID_CLIENT_ID}
+ *             <li>{@link OIDCError#INVALID_REDIRECT_URI}
+ *             <li>{@link OIDCError#INVALID_CONFIGURATION_PARAMETER}
  *         </ul>
  * </ul>
  *
@@ -49,8 +55,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.3.
- *     <li>OpenID Connect Standard 1.0, section 4.3.
+ *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.3.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  *
@@ -58,53 +63,46 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * @version $version$ (2013-02-18)
  */
 @Immutable
-public final class UserInfoErrorResponse 
-	extends UserInfoResponse
+public class OIDCClientRegistrationErrorResponse 
+	extends OIDCClientRegistrationResponse
 	implements ErrorResponse {
 
 
 	/**
-	 * Gets the standard errors for a UserInfo error response.
+	 * Gets the standard errors for an OpenID Connect client registration
+	 * error response.
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
-	public static Set<BearerTokenError> getStandardErrors() {
+	public static Set<ErrorObject> getStandardErrors() {
 		
-		Set<BearerTokenError> stdErrors = new HashSet<BearerTokenError>();
+		Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
 		stdErrors.add(BearerTokenError.MISSING_TOKEN);
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);
 		stdErrors.add(BearerTokenError.INSUFFICIENT_SCOPE);
-		stdErrors.add(OIDCError.INVALID_SCHEMA);
+		stdErrors.add(OIDCError.INVALID_CLIENT_ID);
+		stdErrors.add(OIDCError.INVALID_REDIRECT_URI);
+		stdErrors.add(OIDCError.INVALID_CONFIGURATION_PARAMETER);
 
 		return Collections.unmodifiableSet(stdErrors);
 	}
 
 
 	/**
-	 * The underlying bearer token error.
+	 * The underlying error.
 	 */
-	private final BearerTokenError error;
+	private final ErrorObject error;
 
 
 	/**
-	 * Creates a new UserInfo error response. No OAuth 2.0 bearer token
-	 * error is specified.
-	 */
-	private UserInfoErrorResponse() {
-
-		error = null;
-	}
-	
-
-	/**
-	 * Creates a new UserInfo error response.
+	 * Creates a new OpenID Connect client registration error response.
 	 *
-	 * @param error The OAuth 2.0 bearer token error. Should match one of 
-	 *              the {@link #getStandardErrors standard errors} for a 
-	 *              UserInfo error response. Must not be {@code null}.
+	 * @param error The error. Should match one of the 
+	 *              {@link #getStandardErrors standard errors} for a client
+	 *              registration error response. Must not be {@code null}.
 	 */
-	public UserInfoErrorResponse(final BearerTokenError error) {
+	public OIDCClientRegistrationErrorResponse(final ErrorObject error) {
 
 		if (error == null)
 			throw new IllegalArgumentException("The error must not be null");
@@ -121,7 +119,8 @@ public final class UserInfoErrorResponse
 
 
 	/**
-	 * Returns the HTTP response for this UserInfo error response.
+	 * Returns the HTTP response for this OpenID Connect client 
+	 * registration error response.
 	 *
 	 * <p>Example HTTP response:
 	 *
@@ -132,7 +131,7 @@ public final class UserInfoErrorResponse
 	 *                   error_description="The access token expired"
 	 * </pre>
 	 *
-	 * @return The HTTP response matching this UserInfo error response.
+	 * @return The HTTP response.
 	 */
 	@Override
 	public HTTPResponse toHTTPResponse() {
@@ -145,35 +144,33 @@ public final class UserInfoErrorResponse
 			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
 
 		// Add the WWW-Authenticate header
-		if (error != null)
-			httpResponse.setWWWAuthenticate(error.toWWWAuthenticateHeader());
+		if (error != null && error instanceof BearerTokenError) {
+
+			BearerTokenError bte = (BearerTokenError)error;
+
+			httpResponse.setWWWAuthenticate(bte.toWWWAuthenticateHeader());
+		}
+		else {
+			JSONObject jsonObject = new JSONObject();
+
+			if (error.getCode() != null)
+				jsonObject.put("error", error.getCode());
+
+			if (error.getDescription() != null)
+				jsonObject.put("error_description", error.getDescription());
+
+			httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
+
+			httpResponse.setContent(jsonObject.toString());
+		}
 
 		return httpResponse;
 	}
 
 
 	/**
-	 * Parses a UserInfo error response from the specified HTTP response
-	 * {@code WWW-Authenticate} header.
-	 *
-	 * @param wwwAuth The {@code WWW-Authenticate} header value to parse. 
-	 *                Must not be {@code null}.
-	 *
-	 * @throws ParseException If the {@code WWW-Authenticate} header value 
-	 *                        couldn't be parsed to a UserInfo error 
-	 *                        response.
-	 */
-	public static UserInfoErrorResponse parse(final String wwwAuth)
-		throws ParseException {
-
-		BearerTokenError error = BearerTokenError.parse(wwwAuth);
-
-		return new UserInfoErrorResponse(error);
-	}
-	
-	
-	/**
-	 * Parses a UserInfo error response from the specified HTTP response.
+	 * Parses an OpenID Connect client registration error response from the
+	 * specified HTTP response.
 	 *
 	 * <p>Note: The HTTP status code is not checked for matching the error
 	 * code semantics.
@@ -181,19 +178,36 @@ public final class UserInfoErrorResponse
 	 * @param httpResponse The HTTP response to parse. Its status code must
 	 *                     not be 200 (OK). Must not be {@code null}.
 	 *
-	 * @throws ParseException If the HTTP response couldn't be parsed to a 
-	 *                        UserInfo error response.
+	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 *                        OpenID Connect client registration error 
+	 *                        response.
 	 */
-	public static UserInfoErrorResponse parse(final HTTPResponse httpResponse)
+	public static OIDCClientRegistrationErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
 		httpResponse.ensureStatusCodeNotOK();
 
+		ErrorObject error = null;
+
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
-		if (StringUtils.isDefined(wwwAuth))
-			parse(wwwAuth);
+		if (StringUtils.isDefined(wwwAuth)) {
 
-		return new UserInfoErrorResponse();
+			error = BearerTokenError.parse(wwwAuth);
+		}
+		else {
+			JSONObject jsonObject = httpResponse.getContentAsJSONObject();
+
+			String code = JSONObjectUtils.getString(jsonObject, "error");
+
+			String description = null;
+
+			if (jsonObject.containsKey("error_description"))
+				description = JSONObjectUtils.getString(jsonObject, "error_description");
+
+			error = new ErrorObject(code, description);
+		}
+
+		return new OIDCClientRegistrationErrorResponse(error);
 	}
 }
