@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -38,17 +38,16 @@ import com.nimbusds.openid.connect.sdk.claims.LangTaggedObject;
 
 
 /**
- * OpenID Connect client details. Supports serialisation and parsing to / from
- * JSON object for the purpose of handling registration responses.
+ * OpenID Connect client details. Used in client registration requests.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.1.
+ *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-31)
+ * @version $version$ (2013-02-18)
  */
 public class Client {
 
@@ -56,7 +55,7 @@ public class Client {
 	/**
 	 * The registered client ID.
 	 */
-	private final ClientID id;
+	private ClientID id;
 	
 	
 	/**
@@ -98,7 +97,7 @@ public class Client {
 	/**
 	 * The client terms of service.
 	 */
-	private URL termsOfServiceURL = null;
+	private URL tosURL = null;
 
 
 	/**
@@ -221,7 +220,7 @@ public class Client {
 	/**
 	 * The default Authentication Context Class Reference (ACR).
 	 */
-	private ACR defaultACR = null;
+	private Set<ACR> defaultACRs = null;
 
 
 	/**
@@ -243,10 +242,7 @@ public class Client {
 	 */
 	public Client(final ClientID id) {
 
-		if (id == null)
-			throw new IllegalArgumentException("The client ID must not be null");
-
-		this.id = id;
+		setID(id);
 	}
 
 
@@ -258,6 +254,20 @@ public class Client {
 	public ClientID getID() {
 
 		return id;
+	}
+
+
+	/**
+	 * Sets the client ID.
+	 *
+	 * @param id The client ID. Must not be {@code null}.
+	 */
+	public void setID(final ClientID id) {
+
+		if (id == null)
+			throw new IllegalArgumentException("The client ID must not be null");
+
+		this.id = id;
 	}
 	
 	
@@ -460,7 +470,7 @@ public class Client {
 	 */
 	public URL getTermsOfServiceURL() {
 
-		return termsOfServiceURL;
+		return tosURL;
 	}
 
 
@@ -468,12 +478,12 @@ public class Client {
 	 * Sets the client terms of service. Corresponds to the
 	 * {@code tos_url} client registration parameter.
 	 *
-	 * @param termsOfServiceURL The terms of service URL, {@code null} if
-	 *                          not specified.
+	 * @param tosURL The terms of service URL, {@code null} if not 
+	 *               specified.
 	 */
-	public void setTermsOfServiceURL(final URL termsOfServiceURL) {
+	public void setTermsOfServiceURL(final URL tosURL) {
 
-		this.termsOfServiceURL = termsOfServiceURL;
+		this.tosURL = tosURL;
 	}
 
 
@@ -935,28 +945,28 @@ public class Client {
 
 
 	/**
-	 * Gets the default Authentication Context Class Reference (ACR). 
-	 * Corresponds to the {@code default_acr} client registration 
+	 * Gets the default Authentication Context Class References (ACRs). 
+	 * Corresponds to the {@code default_acr_values} client registration 
 	 * parameter.
 	 *
-	 * @return The default ACR, {@code null} if not specified.
+	 * @return The default ACRs, {@code null} if not specified.
 	 */
-	public ACR getDefaultACR() {
+	public Set<ACR> getDefaultACRs() {
 
-		return defaultACR;
+		return defaultACRs;
 	}
 
 
 	/**
-	 * Sets the default Authentication Context Class Reference (ACR).
-	 * Corresponds to the {@code default_acr} client registration 
+	 * Sets the default Authentication Context Class References (ACRs).
+	 * Corresponds to the {@code default_acr_values} client registration 
 	 * parameter.
 	 *
-	 * @param defaultACR The default ACR, {@code null} if not specified.
+	 * @param defaultACRs The default ACRs, {@code null} if not specified.
 	 */
-	public void setDefaultACR(final ACR defaultACR) {
+	public void setDefaultACRs(final Set<ACR> defaultACRs) {
 
-		this.defaultACR = defaultACR;
+		this.defaultACRs = defaultACRs;
 	}
 
 
@@ -1013,9 +1023,9 @@ public class Client {
 
 
 	/**
-	 * Returns the client properties as a JSON object.
+	 * Returns the client details as a JSON object.
 	 *
-	 * @return The client properties as a JSON object.
+	 * @return The client details as a JSON object.
 	 */
 	public JSONObject toJSONObject() {
 
@@ -1025,33 +1035,23 @@ public class Client {
 
 		if (redirectURIs != null) {
 
-			StringBuilder sb = new StringBuilder();
+			List<String> uriList = new LinkedList<String>();
 
-			for (URL uri: redirectURIs) {
+			for (URL uri: redirectURIs)
+				uriList.add(uri.toString());
 
-				if (sb.length() > 0)
-					sb.append(' ');
-
-				sb.append(uri.toString());
-			}
-
-			o.put("redirect_uris", sb.toString());
+			o.put("redirect_uris", uriList);
 		}
 
 
 		if (contacts != null) {
 
-			StringBuilder sb = new StringBuilder();
+			List<String> contactList = new LinkedList<String>();
 
-			for (InternetAddress email: contacts) {
+			for (InternetAddress email: contacts)
+				contactList.add(email.toString());
 
-				if (sb.length() > 0)
-					sb.append(' ');
-
-				sb.append(email.getAddress());
-			}
-
-			o.put("contacts", sb.toString());
+			o.put("contacts", contactList);
 		}
 
 
@@ -1080,8 +1080,8 @@ public class Client {
 			o.put("policy_url", policyURL.toString());
 
 
-		if (termsOfServiceURL != null)
-			o.put("tos_url", termsOfServiceURL.toString());
+		if (tosURL != null)
+			o.put("tos_url", tosURL.toString());
 
 
 		if (subjectType != null)
@@ -1146,8 +1146,15 @@ public class Client {
 		o.put("require_auth_time", requiresAuthTime);
 
 
-		if (defaultACR != null)
-			o.put("default_acr", defaultACR.getValue());
+		if (defaultACRs != null) {
+
+			List<String> acrList = new LinkedList<String>();
+
+			for (ACR acr: defaultACRs)
+				acrList.add(acr.getValue());
+
+			o.put("default_acr_values", acrList);
+		}
 
 
 		if (initiateLoginURI != null)
@@ -1182,9 +1189,9 @@ public class Client {
 
 		if (jsonObject.containsKey("redirect_uris")) {
 
-			Set<URL> redirectURIs = new HashSet<URL>();
+			Set<URL> redirectURIs = new LinkedHashSet<URL>();
 
-			for (String uriString: JSONObjectUtils.getString(jsonObject, "redirect_uris").split(" ")) {
+			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "redirect_uris")) {
 
 				try {
 					redirectURIs.add(new URL(uriString));
@@ -1204,7 +1211,7 @@ public class Client {
 
 			List<InternetAddress> emailList = new LinkedList<InternetAddress>();
 
-			for (String emailString: JSONObjectUtils.getString(jsonObject, "contacts").split(" ")) {
+			for (String emailString: JSONObjectUtils.getStringArray(jsonObject, "contacts")) {
 
 				try {
 					emailList.add(new InternetAddress(emailString));
@@ -1236,9 +1243,10 @@ public class Client {
 
 			} catch (ClassCastException e) {
 
-				// ignore
+				throw new ParseException("Invalid \"client_name\" (language tag) parameter");
 			}
 		}
+
 
 		if (jsonObject.containsKey("client_name"))
 			client.setName(JSONObjectUtils.getString(jsonObject, "client_name"));
@@ -1328,8 +1336,15 @@ public class Client {
 			client.requiresAuthTime(JSONObjectUtils.getBoolean(jsonObject, "require_auth_time"));
 
 
-		if (jsonObject.containsKey("default_acr"))
-			client.setDefaultACR(new ACR(JSONObjectUtils.getString(jsonObject, "default_acr")));
+		if (jsonObject.containsKey("default_acr_values")) {
+
+			Set<ACR> acrValues = new LinkedHashSet<ACR>();
+
+			for (String acrString: JSONObjectUtils.getStringArray(jsonObject, "default_acr_values"))
+				acrValues.add(new ACR(acrString));
+
+			client.setDefaultACRs(acrValues);
+		}
 
 
 		if (jsonObject.containsKey("initiate_login_uri"))
