@@ -4,6 +4,8 @@ package com.nimbusds.oauth2.sdk.util;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.List;
+
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
@@ -321,6 +323,25 @@ public class JSONObjectUtils {
 
 
 	/**
+	 * Gets a list member of a JSON object.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<Object> getList(final JSONObject o, final String key)
+		throws ParseException {
+		
+		return getGeneric(o, key, List.class);
+	}
+
+
+	/**
 	 * Gets a string array member of a JSON object.
 	 *
 	 * @param o   The JSON object. Must not be {@code null}.
@@ -334,10 +355,10 @@ public class JSONObjectUtils {
 	public static String[] getStringArray(final JSONObject o, final String key)
 		throws ParseException {
 
-		JSONArray jsonArray = getJSONArray(o, key);
+		List<Object> list = getList(o, key);
 
 		try {
-			return jsonArray.toArray(new String[0]);
+			return list.toArray(new String[0]);
 
 		} catch (ArrayStoreException e) {
 
