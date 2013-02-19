@@ -10,6 +10,8 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
+import com.nimbusds.oauth2.sdk.util.StringUtils;
+
 import com.nimbusds.openid.connect.sdk.rp.Client;
 
 
@@ -136,7 +138,7 @@ public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 		String authzHeaderValue = httpRequest.getAuthorization();
 
-		if (authzHeaderValue != null)
+		if (StringUtils.isDefined(authzHeaderValue))
 			req.setAccessToken(BearerAccessToken.parse(authzHeaderValue));
 
 		return req;
