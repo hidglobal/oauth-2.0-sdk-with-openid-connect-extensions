@@ -48,7 +48,7 @@ import com.nimbusds.openid.connect.sdk.rp.Client;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
+ * @version $version$ (2013-02-19)
  */
 public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
@@ -124,12 +124,6 @@ public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.POST);
 
-		BearerAccessToken accessToken = null;
-
-		if (httpRequest.getAuthorization() != null)
-			BearerAccessToken.parse(httpRequest.getAuthorization());
-
-
 		JSONObject jsonObject = httpRequest.getQueryAsJSONObject();
 
 		Client client = Client.parse(jsonObject);
@@ -140,7 +134,10 @@ public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 		OIDCClientAddRequest req = new OIDCClientAddRequest(client);
 
-		req.setAccessToken(accessToken);
+		String authzHeaderValue = httpRequest.getAuthorization();
+
+		if (authzHeaderValue != null)
+			req.setAccessToken(BearerAccessToken.parse(authzHeaderValue));
 
 		return req;
 	}

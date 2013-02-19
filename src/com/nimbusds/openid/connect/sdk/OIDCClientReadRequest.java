@@ -34,7 +34,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
+ * @version $version$ (2013-02-19)
  */
 public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 
@@ -107,11 +107,6 @@ public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.GET);
 
-		BearerAccessToken accessToken = null;
-
-		if (httpRequest.getAuthorization() != null)
-			BearerAccessToken.parse(httpRequest.getAuthorization());
-
 		Map<String,String> params = httpRequest.getQueryParameters();
 
 		String clientIDString = params.get("client_id");
@@ -121,7 +116,10 @@ public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 
 		OIDCClientReadRequest req = new OIDCClientReadRequest(new ClientID(clientIDString));
 
-		req.setAccessToken(accessToken);
+		String authzHeaderValue = httpRequest.getAuthorization();
+
+		if (authzHeaderValue != null)
+			req.setAccessToken(BearerAccessToken.parse(authzHeaderValue));
 
 		return req;
 	}
