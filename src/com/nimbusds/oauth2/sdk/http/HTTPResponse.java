@@ -46,7 +46,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
+ * @version $version$ (2013-02-21)
  */
 @ThreadSafe
 public class HTTPResponse extends HTTPMessage {
@@ -356,7 +356,7 @@ public class HTTPResponse extends HTTPMessage {
 	 *
 	 * @throws IOException If the response content couldn't be written.
 	 */
-	public void apply(final HttpServletResponse sr)
+	public void applyTo(final HttpServletResponse sr)
 		throws IOException {
 	
 		// Set the status code
