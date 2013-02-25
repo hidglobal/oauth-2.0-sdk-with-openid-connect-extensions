@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * longer in use.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-02-25)
  */
 public class Secret {
 
@@ -110,6 +110,28 @@ public class Secret {
 
 		return expDate;
 	}
+
+
+	/**
+	 * Checks is this secret has expired.
+	 *
+	 * @return {@code true} if the secret has an associated expiration date
+	 *         which is in the past (according to the current system time), 
+	 *         else returns {@code false}.
+	 */
+	public boolean expired() {
+
+		if (expDate == null)
+			return false;
+
+		final Date now = new Date();
+
+		if (expDate.after(now))
+			return false;
+		else
+			return true;
+	}
+
 	
 	
 	/**
