@@ -110,8 +110,8 @@ public final class AccessTokenRequest extends TokenRequest {
 	 *
 	 * @param code        The authorisation code received from the 
 	 *                    authorisation server. Must not be {@code null}.
-	 * @param redirectURI The redirect URI, may be {@code null} if not
-	 *                    specified in the initial authorisation request.
+	 * @param redirectURI The redirect URI, may be {@code null} if specified
+	 *                    in the initial authorisation request.
 	 * @param clientID    The client identifier. Must not be {@code null}.
 	 */
 	public AccessTokenRequest(final AuthorizationCode code, 
