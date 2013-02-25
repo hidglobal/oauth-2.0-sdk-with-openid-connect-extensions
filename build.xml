@@ -1,7 +1,7 @@
 <project name="OAuth 2.0 SDK / NimbusDS.com" default="dist" basedir=".">
 
 	<property name="version" value="2.0-SNAPSHOT"/>
-	<property name="version-date" value="2013-02-13"/>
+	<property name="version-date" value="2013-02-25"/>
 	<property name="jarfile" value="oauth2-sdk-${version}.jar"/>
 	
 	<path id="classpath.compile">

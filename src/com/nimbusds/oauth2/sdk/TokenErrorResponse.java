@@ -52,7 +52,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
+ * @version $version$ (2013-02-25)
  */
 @Immutable
 public class TokenErrorResponse 
@@ -153,8 +153,7 @@ public class TokenErrorResponse
 	
 	
 	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
+	public HTTPResponse toHTTPResponse() {
 		
 		// HTTP status 400
 		HTTPResponse httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
