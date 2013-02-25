@@ -41,7 +41,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-02-25)
  */
 @Immutable
 public final class RefreshTokenRequest extends TokenRequest {
@@ -116,7 +116,7 @@ public final class RefreshTokenRequest extends TokenRequest {
 		httpRequest.setQuery(URLUtils.serializeParameters(params));
 		
 		if (getClientAuthentication() != null)
-			getClientAuthentication().apply(httpRequest);
+			getClientAuthentication().applyTo(httpRequest);
 		
 		return httpRequest;
 	}

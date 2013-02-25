@@ -36,7 +36,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-02-25)
  */
 public abstract class JWTAuthentication extends ClientAuthentication {
 
@@ -189,7 +189,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	
 	
 	@Override
-	public void apply(final HTTPRequest httpRequest)
+	public void applyTo(final HTTPRequest httpRequest)
 		throws SerializeException {
 		
 		if (httpRequest.getMethod() != HTTPRequest.Method.POST)

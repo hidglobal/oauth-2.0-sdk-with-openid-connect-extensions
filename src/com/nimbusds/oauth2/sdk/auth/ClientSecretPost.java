@@ -31,7 +31,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-02-25)
  */
 @Immutable
 public final class ClientSecretPost extends ClientAuthentication {
@@ -120,7 +120,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	
 	
 	@Override
-	public void apply(final HTTPRequest httpRequest)
+	public void applyTo(final HTTPRequest httpRequest)
 		throws SerializeException {
 	
 		if (httpRequest.getMethod() != HTTPRequest.Method.POST)

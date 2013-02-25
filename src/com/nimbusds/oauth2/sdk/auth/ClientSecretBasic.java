@@ -38,7 +38,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-09)
+ * @version $version$ (2013-02-25)
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
@@ -139,7 +139,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	
 	
 	@Override
-	public void apply(final HTTPRequest httpRequest) {
+	public void applyTo(final HTTPRequest httpRequest) {
 	
 		httpRequest.setAuthorization(toHTTPAuthorizationHeader());
 	}

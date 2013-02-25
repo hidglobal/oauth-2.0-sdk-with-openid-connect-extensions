@@ -55,7 +55,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
+ * @version $version$ (2013-02-25)
  */
 @Immutable
 public final class AccessTokenRequest extends TokenRequest {
@@ -110,8 +110,8 @@ public final class AccessTokenRequest extends TokenRequest {
 	 *
 	 * @param code        The authorisation code received from the 
 	 *                    authorisation server. Must not be {@code null}.
-	 * @param redirectURI The redirect URI, may be {@code null} if specified
-	 *                    in the initial authorisation request.
+	 * @param redirectURI The redirect URI, may be {@code null} if 
+	 *                    specified in the initial authorisation request.
 	 * @param clientID    The client identifier. Must not be {@code null}.
 	 */
 	public AccessTokenRequest(final AuthorizationCode code, 
@@ -357,7 +357,7 @@ public final class AccessTokenRequest extends TokenRequest {
 		httpRequest.setQuery(URLUtils.serializeParameters(params));
 		
 		if (getClientAuthentication() != null)
-			getClientAuthentication().apply(httpRequest);
+			getClientAuthentication().applyTo(httpRequest);
 		
 		return httpRequest;	
 	}
@@ -432,14 +432,18 @@ public final class AccessTokenRequest extends TokenRequest {
 			// Parse client authentication
 			ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
 
-			if (clientAuth != null && clientID == null)
+			if (clientAuth != null) {
+
+				// Access token request with client authentication
 				return new AccessTokenRequest(code, redirectURI, clientAuth);
+			}
+			else {
+				if (clientID == null)
+					throw new ParseException("Missing \"client_id\" parameter");
 
-			else if (clientAuth == null && clientID != null)
+				// Access token request with no client authentication
 				return new AccessTokenRequest(code, redirectURI, clientID);
-
-			else
-				throw new ParseException("Client authentication conflicts with \"client_id\" parameter");
+			}
 		}
 		else if (grantType.equals(GrantType.PASSWORD)) {
 

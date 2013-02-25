@@ -22,7 +22,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-18)
+ * @version $version$ (2013-02-25)
  */
 public abstract class ClientAuthentication {
 	
@@ -118,6 +118,6 @@ public abstract class ClientAuthentication {
 	 * @throws SerializeException If the client authentication parameters
 	 *                            couldn't be applied to the HTTP request.
 	 */
-	public abstract void apply(final HTTPRequest httpRequest) 
+	public abstract void applyTo(final HTTPRequest httpRequest) 
 		throws SerializeException;
 }
