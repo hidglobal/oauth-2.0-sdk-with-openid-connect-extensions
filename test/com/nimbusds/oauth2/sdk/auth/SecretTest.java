@@ -10,7 +10,7 @@ import junit.framework.TestCase;
  * Tests the secret / password class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-25)
+ * @version $version$ (2013-03-05)
  */
 public class SecretTest extends TestCase {
 
@@ -60,5 +60,17 @@ public class SecretTest extends TestCase {
 		Secret secret = new Secret("password", past);
 
 		assertTrue(secret.expired());
+	}
+
+
+	public void testEquality() {
+
+		assertTrue(new Secret("password").equals(new Secret("password")));
+	}
+
+
+	public void testInequality() {
+
+		assertFalse(new Secret("password").equals(new Secret("passw0rd")));
 	}
 }
