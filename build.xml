@@ -104,7 +104,7 @@
 	        	 sourcepath="procsrc"
 			 classpathref="classpath.compile"
 			 destdir="javadoc"
-			 author="true"
+			 author="false"
 			 version="true"
 			 use="true"
 			 linksource="true"
