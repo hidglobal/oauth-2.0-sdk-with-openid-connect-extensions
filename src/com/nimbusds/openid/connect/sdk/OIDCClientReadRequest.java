@@ -1,17 +1,14 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
-
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
@@ -35,7 +32,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-19)
+ * @version $version$ (2013-05-10)
  */
 public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 
@@ -73,14 +70,10 @@ public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 	}
 
 
-	/**
-	 * Returns the matching HTTP GET request.
-	 *
-	 * @return The HTTP request.
-	 */
-	public HTTPRequest toHTTPRequest() {
+	@Override
+	public HTTPRequest toHTTPRequest(final URL url) {
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, url);
 
 		Map<String,String> params = new HashMap<String,String>();
 

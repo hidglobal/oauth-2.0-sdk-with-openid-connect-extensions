@@ -3,19 +3,15 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -55,7 +51,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-25)
+ * @version $version$ (2013-05-10)
  */
 @Immutable
 public final class AccessTokenRequest extends TokenRequest {
@@ -315,10 +311,10 @@ public final class AccessTokenRequest extends TokenRequest {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest()
+	public HTTPRequest toHTTPRequest(final URL url)
 		throws SerializeException {
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		
 		Map<String,String> params = new LinkedHashMap<String,String>();
@@ -334,8 +330,8 @@ public final class AccessTokenRequest extends TokenRequest {
 
 			if (clientID != null)
 				params.put("client_id", clientID.getValue());
-		}
-		else if (getGrantType().equals(GrantType.PASSWORD)) {
+		
+		} else if (getGrantType().equals(GrantType.PASSWORD)) {
 
 			params.put("username", username);
 
@@ -344,13 +340,13 @@ public final class AccessTokenRequest extends TokenRequest {
 			if (scope != null)
 				params.put("scope", scope.toString());
 
-		}
-		else if (getGrantType().equals(GrantType.CLIENT_CREDENTIALS)) {
+		} else if (getGrantType().equals(GrantType.CLIENT_CREDENTIALS)) {
 
 			if (scope != null)
 				params.put("scope", scope.toString());
-		}
-		else {
+
+		} else {
+
 			throw new SerializeException("Unsupported grant type: " + getGrantType());
 		}
 		

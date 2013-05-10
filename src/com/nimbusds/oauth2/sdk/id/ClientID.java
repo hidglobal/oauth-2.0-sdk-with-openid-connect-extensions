@@ -7,6 +7,12 @@ import net.jcip.annotations.Immutable;
 /**
  * Client identifier. This class is immutable.
  *
+ * <p>Example of a client identifier created from string:
+ *
+ * <pre>
+ * ClientID clientID = new ClientID("client-12345678");
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>

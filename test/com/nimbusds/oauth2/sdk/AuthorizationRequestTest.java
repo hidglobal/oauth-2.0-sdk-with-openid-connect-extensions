@@ -3,16 +3,13 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Map;
 
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -20,7 +17,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Tests authorisation request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-05-10)
  */
 public class AuthorizationRequestTest extends TestCase {
 	
@@ -51,7 +48,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals("123456", params.get("client_id"));
 		assertEquals(2, params.size());
 
-		HTTPRequest httpReq = req.toHTTPRequest();
+		HTTPRequest httpReq = req.toHTTPRequest(new URL("https://connect2id.com/authz/"));
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
 		assertEquals(query, httpReq.getQuery());
 
@@ -101,7 +98,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(state, new State(params.get("state")));
 		assertEquals(5, params.size());
 
-		HTTPRequest httpReq = req.toHTTPRequest();
+		HTTPRequest httpReq = req.toHTTPRequest(new URL("https://connect2id.com/authz/"));
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
 		assertEquals(query, httpReq.getQuery());
 

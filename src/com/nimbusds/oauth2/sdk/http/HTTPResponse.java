@@ -21,11 +21,11 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * HTTP response with support for all parameters required to construct an 
+ * HTTP response with support for the parameters required to construct an 
  * {@link com.nimbusds.oauth2.sdk.Response OAuth 2.0 response message}. This
  * class is thread-safe.
  *
- * <p>Supported HTTP status codes:
+ * <p>Provided HTTP status code constants:
  *
  * <ul>
  *     <li>{@link #SC_OK HTTP 200 OK}
@@ -46,7 +46,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-21)
+ * @version $version$ (2013-05-10)
  */
 @ThreadSafe
 public class HTTPResponse extends HTTPMessage {

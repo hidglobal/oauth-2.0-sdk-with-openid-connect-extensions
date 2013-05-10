@@ -43,7 +43,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
+ * @version $version$ (2013-05-10)
  */
 @Immutable
 public class AuthorizationRequest implements Request {
@@ -267,6 +267,8 @@ public class AuthorizationRequest implements Request {
 	/**
 	 * Returns the matching HTTP request.
 	 *
+	 * @param url    The URL of the HTTP endpoint for which the request is
+	 *               intended. Must not be {@code null}.
 	 * @param method The HTTP request method which can be GET or POST. Must
 	 *               not be {@code null}.
 	 *
@@ -276,15 +278,23 @@ public class AuthorizationRequest implements Request {
 	 *                            couldn't be serialised to an HTTP  
 	 *                            request.
 	 */
-	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method)
+	public HTTPRequest toHTTPRequest(final URL url, final HTTPRequest.Method method)
 		throws SerializeException {
 		
 		HTTPRequest httpRequest;
 		
-		if (method.equals(HTTPRequest.Method.GET))
-			httpRequest = new HTTPRequest(HTTPRequest.Method.GET);
-		else
-			httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		if (method.equals(HTTPRequest.Method.GET)) {
+
+			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, url);
+
+		} else if (method.equals(HTTPRequest.Method.POST)) {
+
+			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
+
+		} else {
+
+			throw new IllegalArgumentException("The HTTP request method must be GET or POST");
+		}
 		
 		httpRequest.setQuery(toQueryString());
 		
@@ -292,20 +302,11 @@ public class AuthorizationRequest implements Request {
 	}
 	
 	
-	/**
-	 * Returns the matching HTTP GET request.
-	 *
-	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If the authorisation request message
-	 *                            couldn't be serialised to an HTTP GET 
-	 *                            request.
-	 */
 	@Override
-	public HTTPRequest toHTTPRequest()
+	public HTTPRequest toHTTPRequest(final URL url)
 		throws SerializeException {
 	
-		return toHTTPRequest(HTTPRequest.Method.GET);
+		return toHTTPRequest(url, HTTPRequest.Method.GET);
 	}
 
 

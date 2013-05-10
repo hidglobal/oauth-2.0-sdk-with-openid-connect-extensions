@@ -9,6 +9,16 @@ import net.jcip.annotations.NotThreadSafe;
 /**
  * Authorisation scope. This class is not thread-safe.
  *
+ * <p>Example scope from OpenID Connect indicating access to the user's email
+ * and profile details:
+ *
+ * <pre>
+ * Scope scope = new Scope();
+ * scope.add(OIDCScopeToken.OPENID);
+ * scope.add(OIDCScopeToken.EMAIL);
+ * scope.add(OIDCScopeToken.PROFILE);
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>

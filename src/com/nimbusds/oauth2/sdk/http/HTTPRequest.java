@@ -2,8 +2,12 @@ package com.nimbusds.oauth2.sdk.http;
 
 
 import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
-
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,14 +17,13 @@ import net.jcip.annotations.ThreadSafe;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * HTTP request with support for all parameters required to construct an 
+ * HTTP request with support for the parameters required to construct an 
  * {@link com.nimbusds.oauth2.sdk.Request OAuth 2.0 request message}. This
  * class is thread-safe.
  *
@@ -39,7 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
+ * @version $version$ (2013-05-10)
  */
 @ThreadSafe
 public class HTTPRequest extends HTTPMessage {
@@ -67,6 +70,12 @@ public class HTTPRequest extends HTTPMessage {
 	 * The request method.
 	 */
 	private final Method method;
+
+
+	/**
+	 * The request URL.
+	 */
+	private final URL url;
 	
 	
 	/**
@@ -85,13 +94,20 @@ public class HTTPRequest extends HTTPMessage {
 	 * Creates a new minimally specified HTTP request.
 	 *
 	 * @param method The HTTP request method. Must not be {@code null}.
+	 * @param url    The HTTP request URL. Must not be {@code null}.
 	 */
-	public HTTPRequest(final Method method) {
+	public HTTPRequest(final Method method, final URL url) {
 	
 		if (method == null)
 			throw new IllegalArgumentException("The HTTP method must not be null");
 		
 		this.method = method;
+
+
+		if (url == null)
+			throw new IllegalArgumentException("The HTTP URL must not be null");
+
+		this.url = url;
 	}
 	
 	
@@ -110,6 +126,14 @@ public class HTTPRequest extends HTTPMessage {
 		throws IOException {
 	
 		method = HTTPRequest.Method.valueOf(sr.getMethod().toUpperCase());
+
+		try {
+			url = new URL(sr.getRequestURL().toString());
+
+		} catch (MalformedURLException e) {
+
+			throw new IllegalArgumentException("Invalid request URL: " + e.getMessage(), e);
+		}
 		
 		String ct = sr.getContentType();
 		
@@ -126,8 +150,8 @@ public class HTTPRequest extends HTTPMessage {
 		if (method.equals(Method.GET)) {
 		
 			setQuery(sr.getQueryString());
-		}
-		else if (method.equals(Method.POST)) {
+
+		} else if (method.equals(Method.POST)) {
 		
 			// read body
 			
@@ -158,6 +182,17 @@ public class HTTPRequest extends HTTPMessage {
 	public Method getMethod() {
 	
 		return method;
+	}
+
+
+	/**
+	 * Gets the request URL.
+	 *
+	 * @return The request URL.
+	 */
+	public URL getURL() {
+
+		return url;
 	}
 	
 	
@@ -207,7 +242,7 @@ public class HTTPRequest extends HTTPMessage {
 	 * <p>Note that the '?' character preceding the query string in GET
 	 * requests is not included in the returned string.
 	 *
-	 * <p>Example query string:
+	 * <p>Example query string (line breaks for clarity):
 	 *
 	 * <pre>
 	 * response_type=code
@@ -232,7 +267,7 @@ public class HTTPRequest extends HTTPMessage {
 	 * <p>Note that the '?' character preceding the query string in GET
 	 * requests must not be included.
 	 *
-	 * <p>Example query string:
+	 * <p>Example query string (line breaks for clarity):
 	 *
 	 * <pre>
 	 * response_type=code
@@ -272,7 +307,7 @@ public class HTTPRequest extends HTTPMessage {
 	 * @return The request query parameters, decoded. If none the map will
 	 *         be empty.
 	 */
-	public Map<String, String> getQueryParameters() {
+	public Map<String,String> getQueryParameters() {
 	
 		return URLUtils.parseParameters(query);
 	}
@@ -296,5 +331,104 @@ public class HTTPRequest extends HTTPMessage {
 		ensureQuery();
 
 		return JSONObjectUtils.parseJSONObject(query);
+	}
+
+
+	/**
+	 * Processes this HTTP request by making a connection to the request
+	 * URL and retrieving the resulting HTTP response.
+	 *
+	 * @return The resulting HTTP response.
+	 *
+	 * @throws IOException If the HTTP request couldn't be processed, due 
+	 *                     to a network or other error.
+	 */
+	public HTTPResponse process()
+		throws IOException {
+
+		URL finalURL;
+
+		if (method.equals(HTTPRequest.Method.GET) && query != null) {
+
+			// Append query string
+
+			try {
+				finalURL = new URL(url, "?" + query);
+
+			} catch (MalformedURLException e) {
+
+				throw new IOException("Couldn't append query string: " + e.getMessage(), e);
+			}
+
+		} else {
+
+			finalURL = url;
+		}
+
+		HttpURLConnection conn = (HttpURLConnection)finalURL.openConnection();
+
+		if (authorization != null)
+			conn.setRequestProperty("Authorization", authorization);
+
+		if (method.equals(HTTPRequest.Method.POST)) {
+
+			conn.setDoOutput(true);
+			
+			conn.setRequestProperty("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString());
+
+			if (query != null) {
+
+				OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+				writer.write(query);
+				writer.flush();	
+			}
+		}
+
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+       
+		StringBuilder body = new StringBuilder();
+
+		String line = null;
+			
+		while ((line = reader.readLine()) != null) {
+			
+			body.append(line);
+			body.append(System.getProperty("line.separator"));
+		}
+			
+		reader.close();
+
+
+		HTTPResponse response = new HTTPResponse(conn.getResponseCode());
+
+		String location = conn.getHeaderField("Location");
+
+		if (location != null) {
+
+			try {
+				response.setLocation(new URL(location));
+
+			} catch (MalformedURLException e) {
+
+				throw new IOException("Couldn't parse Location header: " + e.getMessage(), e);
+			}
+			
+		}
+
+
+		response.setCacheControl(conn.getHeaderField("Cache-Control"));
+
+		response.setPragma(conn.getHeaderField("Pragma"));
+
+		response.setWWWAuthenticate(conn.getHeaderField("WWW-Authenticate"));
+
+		String bodyContent = body.toString();
+
+		if (! bodyContent.isEmpty())
+			response.setContent(bodyContent);
+
+
+		return response;
 	}
 }

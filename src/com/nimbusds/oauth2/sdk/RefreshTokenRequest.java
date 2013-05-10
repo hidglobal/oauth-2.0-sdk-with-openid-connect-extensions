@@ -1,18 +1,16 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -41,7 +39,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-25)
+ * @version $version$ (2013-05-10)
  */
 @Immutable
 public final class RefreshTokenRequest extends TokenRequest {
@@ -93,19 +91,11 @@ public final class RefreshTokenRequest extends TokenRequest {
 	}
 	
 	
-	/**
-	 * Returns the HTTP request for this refresh token request.
-	 *
-	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If this refresh token request couldn't be 
-	 *                            serialised to an HTTP request.
-	 */
 	@Override
-	public HTTPRequest toHTTPRequest()
+	public HTTPRequest toHTTPRequest(final URL url)
 		throws SerializeException {
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
 		
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		

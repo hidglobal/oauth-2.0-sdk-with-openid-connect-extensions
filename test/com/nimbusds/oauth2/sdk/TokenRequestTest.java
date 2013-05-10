@@ -1,14 +1,14 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.URL;
+
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
 
 
@@ -16,7 +16,7 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
  * Tests access and refresh token request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
+ * @version $version$ (2013-05-10)
  */
 public class TokenRequestTest extends TestCase {
 	
@@ -24,7 +24,7 @@ public class TokenRequestTest extends TestCase {
 	public void testAccessTokenRequestWithBasicSecret()
 		throws Exception {
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		
 		String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
@@ -62,7 +62,7 @@ public class TokenRequestTest extends TestCase {
 		assertEquals("https://client.example.com/cb", atr.getRedirectURI().toString());
 		
 		
-		httpRequest = atr.toHTTPRequest();
+		httpRequest = atr.toHTTPRequest(new URL("https://connect2id.com/token/"));
 		
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
@@ -73,7 +73,7 @@ public class TokenRequestTest extends TestCase {
 	public void testRefreshTokenRequestWithBasicSecret()
 		throws Exception {
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		
 		final String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
@@ -107,7 +107,7 @@ public class TokenRequestTest extends TestCase {
 		RefreshToken token = rtr.getRefreshToken();
 		assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", token.getValue());
 		
-		httpRequest = rtr.toHTTPRequest();
+		httpRequest = rtr.toHTTPRequest(new URL("https://connect2id.com/token/"));
 		
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());

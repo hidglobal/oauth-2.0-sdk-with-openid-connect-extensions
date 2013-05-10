@@ -1,17 +1,15 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.URL;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
-
 import com.nimbusds.openid.connect.sdk.rp.Client;
 
 
@@ -50,7 +48,7 @@ import com.nimbusds.openid.connect.sdk.rp.Client;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-19)
+ * @version $version$ (2013-05-10)
  */
 public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
@@ -71,8 +69,7 @@ public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 		super();
 
-		if (client.getRedirectURIs() == null ||
-		    client.getRedirectURIs().isEmpty())
+		if (client.getRedirectURIs() == null || client.getRedirectURIs().isEmpty())
 			throw new IllegalArgumentException("The client details must specify one or more redirect URIs");
 
 		this.client = client;
@@ -90,14 +87,10 @@ public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 	}
 
 
-	/**
-	 * Returns the matching HTTP POST request.
-	 *
-	 * @return The HTTP request.
-	 */
-	public HTTPRequest toHTTPRequest() {
+	@Override
+	public HTTPRequest toHTTPRequest(final URL url) {
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
 
 		if (getAccessToken() != null)
 			httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());

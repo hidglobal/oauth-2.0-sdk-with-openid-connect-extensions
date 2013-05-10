@@ -12,6 +12,13 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * Nonce. This is a random, unique string value to associate a user-session 
  * with an ID Token and to mitigate replay attacks. This class is immutable.
  *
+ * <p>Example generation of a nonce with eight random mixed-case alphanumeric
+ * characters:
+ *
+ * <pre>
+ * Nonce nonce = new Nonce(8);
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>

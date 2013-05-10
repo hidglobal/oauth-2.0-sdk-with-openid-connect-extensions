@@ -19,6 +19,22 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  *     <li>{@link #impliesCodeFlow}
  * </ul>
  *
+ * <p>Example response type set with code only (implies code flow):
+ *
+ * <pre>
+ * ResponseTypeSet() rts = new ResponseTypeSet();
+ * rts.add(ResponseType.CODE);
+ * </pre>
+ *
+ * <p>Example OpenID Connect response type set with ID token and access token
+ * (implies implicit flow):
+ *
+ * <pre>
+ * ResponseTypeSet() rts = new ResponseTypeSet();
+ * rts.add(ResponseType.TOKEN);
+ * rts.add(OIDCResponseType.ID_TOKEN);
+ * </pre>
+ *
  * <p>Related specifications:
  *
  * <ul>

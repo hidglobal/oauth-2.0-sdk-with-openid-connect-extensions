@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.URL;
 import java.util.Map;
 
 import net.jcip.annotations.Immutable;
@@ -8,10 +9,8 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Request;
 import com.nimbusds.oauth2.sdk.SerializeException;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 
@@ -46,7 +45,7 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
+ * @version $version$ (2013-05-10)
  */
 @Immutable
 public final class UserInfoRequest implements Request {
@@ -122,10 +121,10 @@ public final class UserInfoRequest implements Request {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest()
+	public HTTPRequest toHTTPRequest(final URL url)
 		throws SerializeException {
 	
-		HTTPRequest httpRequest = new HTTPRequest(httpMethod);
+		HTTPRequest httpRequest = new HTTPRequest(httpMethod, url);
 		
 		switch (httpMethod) {
 		
