@@ -417,6 +417,15 @@ public class HTTPRequest extends HTTPMessage {
 		}
 
 
+		try {
+			response.setContentType(conn.getContentType());
+
+		} catch (ParseException e) {
+
+			throw new IOException("Couldn't parse Content-Type header: " + e.getMessage(), e);
+		}
+
+
 		response.setCacheControl(conn.getHeaderField("Cache-Control"));
 
 		response.setPragma(conn.getHeaderField("Pragma"));
