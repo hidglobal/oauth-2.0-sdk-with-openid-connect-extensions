@@ -38,7 +38,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-25)
+ * @version $version$ (2013-05-13)
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
@@ -176,8 +176,8 @@ public final class ClientSecretBasic extends ClientAuthentication {
 			if (credentials.length != 2)
 				throw new ParseException("Missing credentials delimiter \":\"");
 
-			String decodedClientID = URLDecoder.decode(credentials[0]);
-			String decodedSecret = URLDecoder.decode(credentials[1]);
+			String decodedClientID = URLDecoder.decode(credentials[0], "utf-8");
+			String decodedSecret = URLDecoder.decode(credentials[1], "utf-8");
 
 			return new ClientSecretBasic(new ClientID(decodedClientID), new Secret(decodedSecret));
 			

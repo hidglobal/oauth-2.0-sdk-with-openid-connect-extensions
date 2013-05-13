@@ -1,6 +1,1 @@
-/build/
-/examples/*.class
-/javadoc/
-/procsrc/
-/*.jar
-TEST*
+/target/

@@ -53,7 +53,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-24)
+ * @version $version$ (2013-05-13)
  */
 public class JWTAuthenticationClaimsSet {
 
@@ -326,7 +326,11 @@ public class JWTAuthenticationClaimsSet {
 
 		jwtClaimsSet.setIssuer(iss.getValue());
 		jwtClaimsSet.setSubject(sub.getValue());
-		jwtClaimsSet.setAudience(new String[]{aud.getValue()});
+
+		List<String> audList = new LinkedList<String>();
+		audList.add(aud.getValue());
+
+		jwtClaimsSet.setAudience(audList);
 		jwtClaimsSet.setExpirationTime(exp);
 
 		if (nbf != null)

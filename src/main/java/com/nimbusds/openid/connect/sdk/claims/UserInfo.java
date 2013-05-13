@@ -15,8 +15,6 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
 
-import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.id.Subject;
 
 

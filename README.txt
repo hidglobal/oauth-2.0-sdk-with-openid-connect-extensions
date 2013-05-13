@@ -48,17 +48,17 @@ Additional features:
 
 
 This SDK version implements the OpenID Connect draft suite from 27 December 
-2012.
+2012 (version 14).
 
 
 The SDK JavaDocs are at http://nimbusds.com/files/openid-connect-sdk/javadoc/
 
 
 The Nimbus OpenID Connect SDK is licensed under GPL 2.0. Licences for 
-integration into proprietary products and services are available for fee, 
+integration into proprietary products and services are available for a fee, 
 please get in touch with us at http://nimbusds.com/contact.html
 
 
-2013-01-14
+2013-05-13
 
 [eof]
