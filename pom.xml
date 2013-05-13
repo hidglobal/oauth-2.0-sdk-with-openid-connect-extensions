@@ -199,6 +199,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<configuration>
 					<linksource>true</linksource>
+					<overview>${basedir}/src/main/javadoc/overview.html</overview>
 				</configuration>
 				<executions>
 					<execution>
