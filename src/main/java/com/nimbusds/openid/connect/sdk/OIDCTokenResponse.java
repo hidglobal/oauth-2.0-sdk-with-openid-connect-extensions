@@ -14,6 +14,5 @@ import com.nimbusds.oauth2.sdk.Response;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public interface OIDCTokenResponse extends Response { }

@@ -8,7 +8,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * Enumeration of the subject identifier types.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-11)
  */
 public enum SubjectType {
 
@@ -54,13 +53,17 @@ public enum SubjectType {
                 if (s == null || s.trim().isEmpty())
                         throw new ParseException("Null or empty subject type string");
 
-                if (s.equals("pairwise"))
+                if (s.equals("pairwise")) {
+
                         return PAIRWISE;
+                
+                } else if (s.equals("public")) {
 
-                else if (s.equals("public"))
                         return PUBLIC;
+                        
+                } else {
 
-                else
                         throw new ParseException("Unknown subject type: " + s);
+                }
         }
 }

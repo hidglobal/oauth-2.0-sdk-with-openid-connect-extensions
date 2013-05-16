@@ -2,9 +2,7 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 
 
@@ -12,7 +10,6 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
  * OpenID Connect specific errors.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
  */
 public final class OIDCError {
 

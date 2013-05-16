@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Map;
 import java.util.Set;
 
@@ -13,7 +12,6 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
@@ -22,7 +20,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Tests token error response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class TokenErrorResponseTest extends TestCase {
 	

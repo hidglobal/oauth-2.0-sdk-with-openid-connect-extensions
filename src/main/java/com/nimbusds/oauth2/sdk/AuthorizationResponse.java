@@ -2,13 +2,10 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.net.URL;
-
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
@@ -24,7 +21,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
  */
 public abstract class AuthorizationResponse implements Response {
 

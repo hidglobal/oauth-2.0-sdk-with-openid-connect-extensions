@@ -14,13 +14,11 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.JWTID;
 import com.nimbusds.oauth2.sdk.id.Subject;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -53,7 +51,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-13)
  */
 public class JWTAuthenticationClaimsSet {
 

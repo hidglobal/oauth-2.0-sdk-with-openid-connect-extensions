@@ -15,7 +15,6 @@ import com.nimbusds.oauth2.sdk.ScopeToken;
  * Standard OpenID Connect scope token.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 public class OIDCScopeToken extends ScopeToken {
 

@@ -51,7 +51,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 @Immutable
 public final class AccessTokenRequest extends TokenRequest {
@@ -432,16 +431,17 @@ public final class AccessTokenRequest extends TokenRequest {
 
 				// Access token request with client authentication
 				return new AccessTokenRequest(code, redirectURI, clientAuth);
-			}
-			else {
+
+			} else {
+
 				if (clientID == null)
 					throw new ParseException("Missing \"client_id\" parameter");
 
 				// Access token request with no client authentication
 				return new AccessTokenRequest(code, redirectURI, clientID);
 			}
-		}
-		else if (grantType.equals(GrantType.PASSWORD)) {
+		
+		} else if (grantType.equals(GrantType.PASSWORD)) {
 
 			String username = params.get("username");
 
@@ -456,8 +456,8 @@ public final class AccessTokenRequest extends TokenRequest {
 			Scope scope = Scope.parse(params.get("scope"));
 
 			return new AccessTokenRequest(username, password, scope);
-		}
-		else if (grantType.equals(GrantType.CLIENT_CREDENTIALS)) {
+		
+		} else if (grantType.equals(GrantType.CLIENT_CREDENTIALS)) {
 
 			Scope scope = Scope.parse(params.get("scope"));
 
@@ -468,8 +468,8 @@ public final class AccessTokenRequest extends TokenRequest {
 
 			return new AccessTokenRequest(scope, clientAuth);
 				
-		}
-		else {
+		} else {
+			
 			throw new ParseException("Unsupported grant type: " + grantType);
 		}
 	}

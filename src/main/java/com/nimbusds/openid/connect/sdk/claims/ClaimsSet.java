@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +19,6 @@ import com.nimbusds.langtag.LangTagUtil;
  * Claims set serialisable to a JSON object.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-31)
  */
 public abstract class ClaimsSet {
 

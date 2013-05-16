@@ -3,9 +3,7 @@ package com.nimbusds.openid.connect.sdk;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Request;
-
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
@@ -20,7 +18,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
  */
  public abstract class OIDCClientRegistrationRequest implements Request {
 

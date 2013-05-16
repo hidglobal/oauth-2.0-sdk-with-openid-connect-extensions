@@ -4,7 +4,6 @@ package com.nimbusds.oauth2.sdk.util;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -16,7 +15,6 @@ import junit.framework.TestCase;
  * Tests the URL utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 public class URLUtilsTest extends TestCase {
 	

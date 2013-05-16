@@ -8,7 +8,6 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.jwt.JWT;
 
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
@@ -17,7 +16,6 @@ import com.nimbusds.oauth2.sdk.id.State;
  * Resolved OpenID Connect authorisation request. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 @Immutable
 public final class ResolvedOIDCAuthorizationRequest {

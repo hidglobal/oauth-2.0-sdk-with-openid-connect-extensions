@@ -8,7 +8,6 @@ import junit.framework.TestCase;
  * Tests the scope token class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 public class ScopeTokenTest extends TestCase {
 

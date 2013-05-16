@@ -25,7 +25,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 @Immutable
 public final class ACR extends Identifier {

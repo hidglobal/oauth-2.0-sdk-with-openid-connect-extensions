@@ -10,7 +10,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * Content type matching.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-11)
  */
 public class ContentTypeUtils {
 

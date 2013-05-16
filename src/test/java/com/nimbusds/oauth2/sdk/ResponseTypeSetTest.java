@@ -8,7 +8,6 @@ import junit.framework.TestCase;
  * Tests the response type set class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 public class ResponseTypeSetTest extends TestCase {
 

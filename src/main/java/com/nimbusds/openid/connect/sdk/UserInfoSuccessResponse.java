@@ -10,7 +10,6 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.SuccessResponse;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
@@ -48,7 +47,6 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
  */
 @Immutable
 public final class UserInfoSuccessResponse 
@@ -113,7 +111,6 @@ public final class UserInfoSuccessResponse
 			return CommonContentTypes.APPLICATION_JSON;
 		else
 			return CommonContentTypes.APPLICATION_JWT;
-		
 	}
 	
 	
@@ -156,8 +153,9 @@ public final class UserInfoSuccessResponse
 		if (claimsSet != null) {
 		
 			content = claimsSet.getJSONObject().toString();
-		}
-		else {
+
+		} else {
+			
 			try {
 				content = jwt.serialize();
 				

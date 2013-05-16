@@ -3,13 +3,11 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JOSEObject;
-
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
@@ -20,12 +18,9 @@ import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.SerializeException;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
@@ -55,7 +50,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 @Immutable
 public final class OIDCAuthorizationRequest extends AuthorizationRequest {

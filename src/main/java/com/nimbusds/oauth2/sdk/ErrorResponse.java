@@ -5,7 +5,6 @@ package com.nimbusds.oauth2.sdk;
  * Response message indicating an error.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public interface ErrorResponse extends Response {
 

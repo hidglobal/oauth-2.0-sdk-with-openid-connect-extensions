@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import java.net.URL;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,9 +13,7 @@ import com.nimbusds.oauth2.sdk.AuthorizationErrorResponse;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
-
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
@@ -66,7 +63,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 @Immutable
 public class OIDCAuthorizationErrorResponse 

@@ -48,7 +48,6 @@ import com.nimbusds.openid.connect.sdk.rp.Client;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 

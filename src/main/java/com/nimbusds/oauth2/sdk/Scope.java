@@ -26,7 +26,6 @@ import net.jcip.annotations.NotThreadSafe;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 @NotThreadSafe
 public class Scope extends HashSet<ScopeToken> {

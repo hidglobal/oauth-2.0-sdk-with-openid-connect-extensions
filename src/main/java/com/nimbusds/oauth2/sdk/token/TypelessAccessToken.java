@@ -5,8 +5,8 @@ import net.minidev.json.JSONObject;
 
 
 /**
- * Typeless access token, cannot be serialized. Intended to represent parsed
- * access tokens which type cannot be inferred.
+ * Typeless access token, cannot be serialized. Intended to represent certain
+ * parsed access tokens which type cannot be inferred.
  *
  * <p>Related specifications:
  *
@@ -15,7 +15,6 @@ import net.minidev.json.JSONObject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
  */
 public class TypelessAccessToken extends AccessToken {
 

@@ -35,7 +35,6 @@ import com.nimbusds.jose.PlainObject;
  * <p>Not supported: JWS-signed and then JWE-encrypted (nested) objects.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
  */
 @ThreadSafe
 public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
@@ -185,20 +184,20 @@ public class DefaultJOSEObjectDecoder implements JOSEObjectDecoder {
 			PlainObject plainObject = (PlainObject)joseObject;
 			
 			return plainObject.getPayload();
-		}
-		else if (joseObject instanceof JWSObject) {
+		
+		} else if (joseObject instanceof JWSObject) {
 		
 			JWSObject jwsObject = (JWSObject)joseObject;
 			
 			return verify(jwsObject);
-		}
-		else if (joseObject instanceof JWEObject) {
+
+		} else if (joseObject instanceof JWEObject) {
 		
 			JWEObject jweObject = (JWEObject)joseObject;
 			
 			return decrypt(jweObject);
-		}
-		else {
+			
+		} else {
 		
 			throw new JOSEException("Unexpected JOSE object type: " + joseObject.getClass());
 		}

@@ -2,12 +2,10 @@ package com.nimbusds.oauth2.sdk.util;
 
 
 import java.io.UnsupportedEncodingException;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,7 +15,6 @@ import java.util.Map;
  * URL operations.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-05-07)
  */
 public class URLUtils {
 

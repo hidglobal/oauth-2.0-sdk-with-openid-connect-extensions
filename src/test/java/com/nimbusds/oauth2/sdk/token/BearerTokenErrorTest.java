@@ -6,7 +6,6 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
@@ -14,7 +13,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * Tests the bearer token error class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class BearerTokenErrorTest extends TestCase {
 

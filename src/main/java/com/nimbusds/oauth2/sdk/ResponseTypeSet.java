@@ -42,7 +42,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
  */
 @NotThreadSafe
 public class ResponseTypeSet extends HashSet<ResponseType> {

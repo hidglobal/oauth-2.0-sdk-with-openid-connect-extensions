@@ -6,7 +6,6 @@ package com.nimbusds.openid.connect.sdk;
  * standard.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 public class Version {
 

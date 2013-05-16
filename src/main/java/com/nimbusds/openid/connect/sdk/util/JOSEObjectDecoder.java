@@ -13,7 +13,6 @@ import com.nimbusds.jose.Payload;
  * decryption.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-17)
  */
 public interface JOSEObjectDecoder {
 

@@ -5,7 +5,6 @@ import java.net.URL;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.GeneralException;
-
 import com.nimbusds.oauth2.sdk.id.State;
 
 
@@ -13,7 +12,6 @@ import com.nimbusds.oauth2.sdk.id.State;
  * Resolve exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class ResolveException extends GeneralException {
 

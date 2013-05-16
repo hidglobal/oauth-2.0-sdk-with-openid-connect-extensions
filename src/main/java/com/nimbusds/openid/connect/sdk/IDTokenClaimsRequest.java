@@ -15,10 +15,8 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
-
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.id.Subject;
-
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
@@ -45,7 +43,6 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 @Immutable
 public class IDTokenClaimsRequest extends ClaimsRequest {

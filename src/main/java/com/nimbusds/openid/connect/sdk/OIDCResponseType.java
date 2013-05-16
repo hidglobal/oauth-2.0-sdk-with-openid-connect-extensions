@@ -18,7 +18,6 @@ import com.nimbusds.oauth2.sdk.ResponseType;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 @Immutable
 public class OIDCResponseType {

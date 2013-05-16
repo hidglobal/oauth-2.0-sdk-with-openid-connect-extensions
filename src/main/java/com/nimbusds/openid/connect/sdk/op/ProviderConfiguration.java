@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk.op;
 
 
 import java.net.URL;
-
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,16 +16,12 @@ import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.ScopeToken;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
-
+import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.Issuer;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.Display;
 import com.nimbusds.openid.connect.sdk.SubjectType;
-
-import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 
 
@@ -40,7 +35,6 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-13)
  */
 public class ProviderConfiguration {
 

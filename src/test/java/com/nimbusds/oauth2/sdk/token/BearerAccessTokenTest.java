@@ -13,7 +13,6 @@ import com.nimbusds.oauth2.sdk.Scope;
  * Tests the bearer access token class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 public class BearerAccessTokenTest extends TestCase {
 

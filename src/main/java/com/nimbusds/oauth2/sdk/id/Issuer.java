@@ -8,7 +8,6 @@ import net.jcip.annotations.Immutable;
  * Issuer identifier. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
  */
 @Immutable
 public final class Issuer extends Identifier {

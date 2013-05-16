@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 
 import java.net.URL;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -42,7 +41,6 @@ import com.nimbusds.oauth2.sdk.id.Subject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-31)
  */
 public class UserInfo extends ClaimsSet {
 

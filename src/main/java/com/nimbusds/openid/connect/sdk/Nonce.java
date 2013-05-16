@@ -4,7 +4,6 @@ package com.nimbusds.openid.connect.sdk;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
@@ -26,7 +25,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 @Immutable
 public final class Nonce extends Identifier {

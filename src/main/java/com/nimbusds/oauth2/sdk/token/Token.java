@@ -16,7 +16,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2014-01-18)
  */
 public abstract class Token extends Identifier {
 

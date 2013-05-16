@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk.http;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import java.net.URL;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +15,6 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -46,20 +44,19 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 @ThreadSafe
 public class HTTPResponse extends HTTPMessage {
 
 	
 	/**
-	 * HTTP status code (200) indicating the request succeeded normally.
+	 * HTTP status code (200) indicating the request succeeded.
 	 */
 	public static final int SC_OK = 200;
 	
 	
 	/**
-	 * HTTP status code (302) indicating that the resource reside 
+	 * HTTP status code (302) indicating that the resource resides
 	 * temporarily under a different URI (redirect).
 	 */
 	public static final int SC_FOUND = 302;
@@ -110,7 +107,7 @@ public class HTTPResponse extends HTTPMessage {
 	
 	
 	/**
-	 * Specifies a {@code Www-Authenticate} header value.
+	 * Specifies a {@code WWW-Authenticate} header value.
 	 */
 	private String wwwAuthenticate = null;
 	
@@ -242,7 +239,7 @@ public class HTTPResponse extends HTTPMessage {
 	
 	
 	/**
-	 * Gets the {@code Www-Authenticate} header value.
+	 * Gets the {@code WWW-Authenticate} header value.
 	 *
 	 * @return The header value, {@code null} if not specified.
 	 */
@@ -253,7 +250,7 @@ public class HTTPResponse extends HTTPMessage {
 	
 	
 	/**
-	 * Sets the {@code Www-Authenticate} header value.
+	 * Sets the {@code WWW-Authenticate} header value.
 	 *
 	 * @param wwwAuthenticate The header value, {@code null} if not 
 	 *                        specified.
@@ -351,8 +348,8 @@ public class HTTPResponse extends HTTPMessage {
 	 * Applies the status code, headers and content of this HTTP response
 	 * object to the specified HTTP servlet response.
 	 *
-	 * @param sr The HTTP servlet response to apply. Must not be 
-	 *           {@code null}.
+	 * @param sr The HTTP servlet response to have the properties of this
+	 *           HTTP request applied to. Must not be {@code null}.
 	 *
 	 * @throws IOException If the response content couldn't be written.
 	 */

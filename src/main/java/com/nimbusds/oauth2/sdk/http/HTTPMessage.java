@@ -4,7 +4,6 @@ package com.nimbusds.oauth2.sdk.http;
 import javax.mail.internet.ContentType;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
 
 
@@ -12,7 +11,6 @@ import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
  * The base abstract class for HTTP requests and responses.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
  */
 abstract class HTTPMessage {
 

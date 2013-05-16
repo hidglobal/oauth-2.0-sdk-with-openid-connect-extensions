@@ -13,7 +13,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * longer in use.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-03-05)
  */
 public class Secret {
 

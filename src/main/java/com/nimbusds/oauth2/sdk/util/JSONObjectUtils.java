@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.List;
 
 import javax.mail.internet.AddressException;
@@ -11,7 +10,6 @@ import javax.mail.internet.InternetAddress;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-
 import net.minidev.json.parser.JSONParser;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -21,7 +19,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * JSON object helper methods for parsing and typed retrieval of member values.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
  */
 public class JSONObjectUtils {
 	

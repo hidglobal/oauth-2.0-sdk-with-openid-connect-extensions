@@ -6,7 +6,6 @@ import net.jcip.annotations.Immutable;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-
 import com.nimbusds.oauth2.sdk.ParseException;
 
 
@@ -20,7 +19,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-02)
  */
 @Immutable
 public final class RefreshToken

@@ -8,7 +8,6 @@ import javax.mail.internet.InternetAddress;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
-
 import net.minidev.json.parser.JSONParser;
 
 import com.nimbusds.oauth2.sdk.ClientType;
@@ -19,7 +18,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * Tests the JSON object utility methods.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class JSONObjectUtilsTest extends TestCase {
 	

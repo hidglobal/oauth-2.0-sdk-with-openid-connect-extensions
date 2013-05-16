@@ -8,7 +8,6 @@ import junit.framework.TestCase;
  * Tests the OpenID Connect provider configuration class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-11)
  */
 public class ProviderConfigurationTest extends TestCase {
 

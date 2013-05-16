@@ -4,7 +4,6 @@ package com.nimbusds.oauth2.sdk;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
@@ -34,7 +33,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public abstract class TokenRequest implements Request {
 

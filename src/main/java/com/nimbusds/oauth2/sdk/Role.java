@@ -11,9 +11,9 @@ package com.nimbusds.oauth2.sdk;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-16)
  */
 public enum Role {
+
 
 	/**
 	 * An entity capable of granting access to a protected resource. When 
@@ -31,11 +31,11 @@ public enum Role {
 
 	/**
 	 * An application making protected resource requests on behalf of the
-	* resource owner and with its authorization.  The term "client" does
-	* not imply any particular implementation characteristics (e.g.,
-	* whether the application executes on a server, a desktop, or other
-	* devices).
-	*/
+	 * resource owner and with its authorization.  The term "client" does
+	 * not imply any particular implementation characteristics (e.g.
+	 * whether the application executes on a server, a desktop, or other
+	 * devices).
+	 */
 	CLIENT,
 
 

@@ -11,7 +11,6 @@ import net.jcip.annotations.Immutable;
  * immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 @Immutable
 public class ErrorObject {

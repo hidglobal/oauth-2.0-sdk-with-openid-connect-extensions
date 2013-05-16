@@ -10,11 +10,8 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
@@ -55,7 +52,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
  */
 @Immutable
 public final class UserInfoErrorResponse 

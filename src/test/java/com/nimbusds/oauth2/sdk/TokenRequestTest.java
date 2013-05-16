@@ -16,7 +16,6 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
  * Tests access and refresh token request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 public class TokenRequestTest extends TestCase {
 	

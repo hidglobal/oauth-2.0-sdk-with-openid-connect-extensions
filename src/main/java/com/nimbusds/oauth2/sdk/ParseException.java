@@ -10,7 +10,6 @@ import com.nimbusds.oauth2.sdk.id.State;
  * Parse exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class ParseException extends GeneralException {
 

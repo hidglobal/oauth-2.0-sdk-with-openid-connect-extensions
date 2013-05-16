@@ -10,7 +10,6 @@ import junit.framework.TestCase;
  * Tests the secret / password class.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-03-05)
  */
 public class SecretTest extends TestCase {
 

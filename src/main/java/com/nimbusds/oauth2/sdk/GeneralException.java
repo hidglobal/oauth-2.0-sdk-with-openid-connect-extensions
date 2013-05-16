@@ -10,7 +10,6 @@ import com.nimbusds.oauth2.sdk.id.State;
  * The base class for exceptions defined in this SDK.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class GeneralException extends Exception {
 

@@ -14,7 +14,6 @@ import com.nimbusds.langtag.LangTag;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
  */
 public class LangTaggedObject<T> {
 

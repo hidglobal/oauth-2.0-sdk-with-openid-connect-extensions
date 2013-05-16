@@ -11,7 +11,6 @@ package com.nimbusds.oauth2.sdk;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-14)
  */
 public enum ClientType {
 

@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
@@ -17,7 +16,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 public enum Display {
 
@@ -91,16 +89,15 @@ public enum Display {
 		if (s.equals("page"))
 			return PAGE;
 			
-		else if (s.equals("popup"))
+		if (s.equals("popup"))
 			return POPUP;
 			
-		else if (s.equals("touch"))
+		if (s.equals("touch"))
 			return TOUCH;
 			
-		else if (s.equals("wap"))
+		if (s.equals("wap"))
 			return WAP;
 			
-		else
-			throw new ParseException("Unknown display type: " + s);
+		throw new ParseException("Unknown display type: " + s);
 	}
 }

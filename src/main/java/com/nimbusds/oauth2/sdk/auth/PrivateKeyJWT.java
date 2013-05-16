@@ -12,12 +12,9 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -44,10 +41,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Host: server.example.com
  * Content-Type: application/x-www-form-urlencoded
  *
- * grant_type=authorization_code&
- * code=i1WsRn1uB1&
- * client_id=s6BhdRkqt3&
- * client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&
+ * grant_type=authorization_code&amp;
+ * code=i1WsRn1uB1&amp;
+ * client_id=s6BhdRkqt3&amp;
+ * client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&amp;
  * client_assertion=PHNhbWxwOl...[omitted for brevity]...ZT
  * </pre>
  *
@@ -60,7 +57,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-14)
  */
 @Immutable
 public final class PrivateKeyJWT extends JWTAuthentication {
@@ -94,7 +90,8 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 	 *
 	 * @param clientAssertion The client assertion, corresponding to the
 	 *                        {@code client_assertion} parameter, as an RSA 
-	 *                        or ECDSA-signed JWT. Must not be {@code null}.
+	 *                        or ECDSA-signed JWT. Must not be 
+	 *                        {@code null}.
 	 * @param clientID        Optional client identifier, corresponding to
 	 *                        the {@code client_id} parameter. {@code null}
 	 *                        if not specified.
@@ -133,7 +130,7 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		
 		if (getSupportedJWAs().contains(alg))
-			throw new ParseException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, RS245, ES384 or ES512)");
+			throw new ParseException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, ES256, ES384 or ES512)");
 		
 		return new PrivateKeyJWT(clientAssertion, clientID);
 	}

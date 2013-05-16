@@ -45,7 +45,6 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 @Immutable
 public final class UserInfoRequest implements Request {

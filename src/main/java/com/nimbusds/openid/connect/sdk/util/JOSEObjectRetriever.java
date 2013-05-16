@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk.util;
 
 
 import java.io.IOException;
-
 import java.net.URL;
 
 import com.nimbusds.jose.JOSEObject;
@@ -15,7 +14,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * by HTTP URL reference.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-17)
  */
 public interface JOSEObjectRetriever {
 

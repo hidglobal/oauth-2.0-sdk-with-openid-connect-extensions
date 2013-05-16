@@ -17,7 +17,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Tests authorisation request serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 public class AuthorizationRequestTest extends TestCase {
 	

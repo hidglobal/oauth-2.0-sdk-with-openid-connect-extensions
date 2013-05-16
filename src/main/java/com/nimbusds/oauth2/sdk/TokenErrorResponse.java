@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +13,6 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -52,7 +50,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-25)
  */
 @Immutable
 public class TokenErrorResponse 

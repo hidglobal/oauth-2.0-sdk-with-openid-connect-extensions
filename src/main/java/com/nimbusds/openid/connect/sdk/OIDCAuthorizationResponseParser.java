@@ -2,13 +2,10 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import java.net.URL;
-
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -22,7 +19,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class OIDCAuthorizationResponseParser { 
 

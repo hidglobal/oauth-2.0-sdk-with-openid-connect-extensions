@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -11,9 +10,7 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
@@ -43,7 +40,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 @Immutable
 public class AuthorizationRequest implements Request {

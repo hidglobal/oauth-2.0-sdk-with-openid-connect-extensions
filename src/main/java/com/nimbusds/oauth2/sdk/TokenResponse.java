@@ -17,7 +17,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
  */
 public abstract class TokenResponse implements Response {
 

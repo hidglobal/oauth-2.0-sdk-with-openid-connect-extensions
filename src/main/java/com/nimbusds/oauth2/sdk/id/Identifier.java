@@ -6,7 +6,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import net.minidev.json.JSONAware;
 import net.minidev.json.JSONValue;
 
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
@@ -18,7 +17,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * <p>Extending classes must override the {@link #equals} method.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-04)
  */
 public abstract class Identifier implements JSONAware {
 

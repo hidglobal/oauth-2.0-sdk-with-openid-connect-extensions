@@ -5,7 +5,6 @@ package com.nimbusds.oauth2.sdk;
  * OAuth 2.0 authorisation and token endpoint errors.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-29)
  */
 public final class OAuth2Error {
 

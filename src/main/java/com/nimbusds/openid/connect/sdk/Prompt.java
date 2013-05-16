@@ -7,7 +7,6 @@ import java.util.Iterator;
 import net.jcip.annotations.NotThreadSafe;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
@@ -22,7 +21,6 @@ import com.nimbusds.oauth2.sdk.util.StringUtils;
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 @NotThreadSafe
 public class Prompt extends HashSet<Prompt.Type> {

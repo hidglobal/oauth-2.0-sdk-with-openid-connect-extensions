@@ -2,7 +2,6 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import java.io.IOException;
-
 import java.net.URL;
 
 import net.jcip.annotations.ThreadSafe;
@@ -12,7 +11,6 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jose.Payload;
-
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
@@ -21,10 +19,8 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.Scope;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.util.DefaultJOSEObjectRetriever;
@@ -48,7 +44,6 @@ import com.nimbusds.openid.connect.sdk.util.JOSEObjectRetriever;
  * <p>This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 @ThreadSafe
 public class OIDCAuthorizationRequestResolver {

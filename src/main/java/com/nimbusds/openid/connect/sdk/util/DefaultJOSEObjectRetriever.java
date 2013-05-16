@@ -4,7 +4,6 @@ package com.nimbusds.openid.connect.sdk.util;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -19,13 +18,12 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * The default retriever of JOSE objects referenced by URL. Caching header 
  * directives are not honoured. This class is thread-safe.
  *
- * <p>Depending on network condition, retrieval of remote OpenID Connect request
- * objects may slow authorisation request processing significantly to affect 
- * smooth user experience. It is therefore recommended to set HTTP connect and
- * read timeouts.
+ * <p>Depending on network condition, retrieval of remote OpenID Connect 
+ * request objects may slow authorisation request processing significantly to 
+ * affect smooth user experience. It is therefore recommended to set HTTP 
+ * connect and read timeouts.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-11-13)
  */
 @ThreadSafe
 public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {

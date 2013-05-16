@@ -41,7 +41,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-13)
  */
 @ThreadSafe
 public class HTTPRequest extends HTTPMessage {

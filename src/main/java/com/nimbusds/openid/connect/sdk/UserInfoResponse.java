@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.sdk;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Response;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
@@ -20,7 +19,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-28)
  */
 public abstract class UserInfoResponse implements Response {
 

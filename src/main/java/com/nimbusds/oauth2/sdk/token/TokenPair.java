@@ -8,7 +8,6 @@ import net.minidev.json.JSONObject;
  * Access and refresh token pair. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-13)
  */
 public final class TokenPair {
 

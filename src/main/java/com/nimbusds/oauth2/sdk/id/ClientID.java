@@ -20,7 +20,6 @@ import net.jcip.annotations.Immutable;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-15)
  */
 @Immutable
 public final class ClientID extends Identifier {

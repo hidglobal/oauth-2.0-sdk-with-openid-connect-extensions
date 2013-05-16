@@ -5,7 +5,6 @@ package com.nimbusds.oauth2.sdk.util;
  * String utilities.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2012-10-10)
  */
 public class StringUtils {
 

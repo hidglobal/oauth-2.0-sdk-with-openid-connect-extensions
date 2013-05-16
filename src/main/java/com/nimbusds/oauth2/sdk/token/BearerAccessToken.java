@@ -7,7 +7,6 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -39,7 +38,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 @Immutable
 public final class BearerAccessToken extends AccessToken {

@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk.token;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
@@ -48,7 +46,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 @Immutable
 public class BearerTokenError extends ErrorObject {

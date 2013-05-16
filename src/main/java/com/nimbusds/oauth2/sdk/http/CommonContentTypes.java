@@ -7,7 +7,8 @@ import javax.mail.internet.ParameterList;
 
 /**
  * Common content types used in the OAuth 2.0 protocol and implementing 
- * applications. The character set all of content types is set to UTF-8.
+ * applications. The character set all of content types is set to 
+ * {@link #DEFAULT_CHARSET UTF-8}.
  *
  * @author Vladimir Dzhuvinov
  */

@@ -38,7 +38,6 @@ import net.minidev.json.JSONObject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 public abstract class ClaimsRequest {
 

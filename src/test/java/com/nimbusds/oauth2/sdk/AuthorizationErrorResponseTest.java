@@ -3,16 +3,13 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -20,7 +17,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Tests authorisation error response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 public class AuthorizationErrorResponseTest extends TestCase {
 	

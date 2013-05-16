@@ -13,7 +13,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * immutable.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-22)
  */
 @Immutable
 public class Gender extends Identifier {

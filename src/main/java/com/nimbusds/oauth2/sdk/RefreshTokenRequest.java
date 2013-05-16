@@ -39,7 +39,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-05-10)
  */
 @Immutable
 public final class RefreshTokenRequest extends TokenRequest {

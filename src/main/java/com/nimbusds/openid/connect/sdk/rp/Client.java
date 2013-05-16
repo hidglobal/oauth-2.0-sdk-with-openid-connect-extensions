@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.sdk.rp;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -25,18 +24,13 @@ import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.Secret;
-
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
-
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.SubjectType;
-
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.LangTaggedObject;
 
@@ -52,7 +46,6 @@ import com.nimbusds.openid.connect.sdk.claims.LangTaggedObject;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-18)
  */
 public class Client {
 

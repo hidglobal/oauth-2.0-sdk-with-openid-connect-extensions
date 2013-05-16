@@ -8,7 +8,6 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.TokenErrorResponse;
-
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
@@ -47,7 +46,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-30)
  */
 @Immutable
 public class OIDCTokenErrorResponse 
@@ -93,11 +91,14 @@ public class OIDCTokenErrorResponse
 
 		ErrorObject error = TokenErrorResponse.parse(jsonObject).getErrorObject();
 
-		if (error != null)
+		if (error != null) {
+
 			return new OIDCTokenErrorResponse(error);
 
-		else
+		} else {
+
 			return new OIDCTokenErrorResponse();
+		}
 	}
 
 
@@ -116,10 +117,13 @@ public class OIDCTokenErrorResponse
 
 		ErrorObject error = TokenErrorResponse.parse(httpResponse).getErrorObject();
 
-		if (error != null)
+		if (error != null) {
+
 			return new OIDCTokenErrorResponse(error);
 
-		else
+		} else {
+			
 			return new OIDCTokenErrorResponse();
+		}
 	}
 }

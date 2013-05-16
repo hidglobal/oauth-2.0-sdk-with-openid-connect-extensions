@@ -17,7 +17,6 @@ import com.nimbusds.oauth2.sdk.Scope;
  * </ul>
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-05)
  */
 public abstract class AccessToken 
 	extends Token

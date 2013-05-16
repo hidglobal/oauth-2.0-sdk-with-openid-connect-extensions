@@ -8,7 +8,6 @@ import junit.framework.TestCase;
  * Tests random state value generation.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-04)
  */
 public class StateTest extends TestCase {
 	

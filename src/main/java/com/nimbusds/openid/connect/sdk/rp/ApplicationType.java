@@ -5,7 +5,6 @@ package com.nimbusds.openid.connect.sdk.rp;
  * Enumeration of OpenID Connect client application types.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-12-25)
  */
 public enum ApplicationType {
 

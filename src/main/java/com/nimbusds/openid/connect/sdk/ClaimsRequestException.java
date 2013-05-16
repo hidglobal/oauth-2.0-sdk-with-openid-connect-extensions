@@ -5,7 +5,6 @@ package com.nimbusds.openid.connect.sdk;
  * Claims request exception.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-21)
  */
 public class ClaimsRequestException extends Exception {
 

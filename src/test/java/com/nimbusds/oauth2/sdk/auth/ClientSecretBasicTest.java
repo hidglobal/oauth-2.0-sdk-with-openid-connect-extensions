@@ -4,7 +4,6 @@ package com.nimbusds.oauth2.sdk.auth;
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-
 import com.nimbusds.oauth2.sdk.id.ClientID;
 
 
@@ -12,7 +11,6 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
  * Tests client secret basic authentication.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-09)
  */
 public class ClientSecretBasicTest extends TestCase {
 

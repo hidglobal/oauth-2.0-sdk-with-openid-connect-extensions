@@ -3,15 +3,12 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.Map;
 
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-
 import com.nimbusds.oauth2.sdk.id.State;
-
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.AccessTokenType;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -21,7 +18,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * Tests authorisation response serialisation and parsing.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-01-19)
  */
 public class AuthorizationSuccessResponseTest extends TestCase {
 	
