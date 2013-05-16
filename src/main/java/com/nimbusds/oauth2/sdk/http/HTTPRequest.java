@@ -334,15 +334,15 @@ public class HTTPRequest extends HTTPMessage {
 
 
 	/**
-	 * Processes this HTTP request by making a connection to the request
-	 * URL and retrieving the resulting HTTP response.
+	 * Sends this HTTP request to the request URL and retrieves the 
+	 * resulting HTTP response.
 	 *
 	 * @return The resulting HTTP response.
 	 *
-	 * @throws IOException If the HTTP request couldn't be processed, due 
-	 *                     to a network or other error.
+	 * @throws IOException If the HTTP request couldn't be made, due to a 
+	 *                     network or other error.
 	 */
-	public HTTPResponse process()
+	public HTTPResponse send()
 		throws IOException {
 
 		URL finalURL;
