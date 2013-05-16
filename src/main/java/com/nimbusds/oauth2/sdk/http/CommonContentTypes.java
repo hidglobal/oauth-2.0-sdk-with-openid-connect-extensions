@@ -10,9 +10,14 @@ import javax.mail.internet.ParameterList;
  * applications. The character set all of content types is set to UTF-8.
  *
  * @author Vladimir Dzhuvinov
- * @version $version$ (2013-02-19)
  */
 public final class CommonContentTypes {
+
+
+	/**
+	 * The default character set.
+	 */
+	public static final String DEFAULT_CHARSET = "UTF-8";
 
 
 	/**
@@ -41,6 +46,6 @@ public final class CommonContentTypes {
 
 	static {
 
-		PARAM_LIST.set("charset", "UTF-8");
+		PARAM_LIST.set("charset", DEFAULT_CHARSET);
 	}
 }
