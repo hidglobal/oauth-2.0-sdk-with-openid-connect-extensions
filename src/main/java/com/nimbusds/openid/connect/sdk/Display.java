@@ -27,14 +27,15 @@ public enum Display {
 	
 	
 	/**
-	 * Popup user-agent window.
+	 * Popup user-agent window. The popup user-agent window should be 450 
+	 * pixels wide and 500 pixels tall. 
 	 */
 	POPUP,
 	
 	
 	/**
-	 * Device that leverages a touch interface. The authorisation server may
-	 * attempt to detect the touch device and further customise the 
+	 * Device that leverages a touch interface. The authorisation server 
+	 * may attempt to detect the touch device and further customise the 
 	 * interface.
 	 */
 	TOUCH,
@@ -47,9 +48,9 @@ public enum Display {
 
 
 	/**
-	 * Gets the default display type ({@link #PAGE}).
+	 * Gets the default display type.
 	 *
-	 * @return The default display type.
+	 * @return The default display type ({@link #PAGE}).
 	 */
 	public static Display getDefault() {
 	
