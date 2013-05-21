@@ -742,25 +742,25 @@ public class OIDCAuthorizationRequestResolver {
 		JSONObject requestObject = null;
 		
 		// Do we have an OpenID request object?
-		if (request.hasRequestObject()) {
+		if (request.hasRequestJWT()) {
 		
 			JOSEObject encodedRequestObject = null;
 		
-			if (request.getRequestObjectURI() != null) {
+			if (request.getRequestJWTURI() != null) {
 			
 				// The request object must be downloaded from URI
 				try {
-					encodedRequestObject = downloadRequestObject(request.getRequestObjectURI());
+					encodedRequestObject = downloadRequestObject(request.getRequestJWTURI());
 
 				} catch (ResolveException e) {
 
 					throw new ResolveException(e.getMessage(), OIDCError.INVALID_REQUEST_URI, 
 						                   redirectURI, state, e);
 				}
-			}
-			else {
+
+			} else {
 				// The request object is inlined
-				encodedRequestObject = request.getRequestObject();
+				encodedRequestObject = null; // TODO request.getRequestJWT();
 			}
 			
 			try {
