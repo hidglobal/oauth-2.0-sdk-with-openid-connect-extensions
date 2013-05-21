@@ -11,9 +11,10 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -206,7 +207,7 @@ public class AuthorizationErrorResponse
 		throws ParseException {
 
 		// Parse the error
-		if (StringUtils.isUndefined(params.get("error")))
+		if (StringUtils.isBlank(params.get("error")))
 			throw new ParseException("Missing error code");
 
 		// Parse error code

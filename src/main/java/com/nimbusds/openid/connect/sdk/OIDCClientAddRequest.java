@@ -3,13 +3,14 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.net.URL;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.openid.connect.sdk.rp.Client;
 
 
@@ -130,7 +131,7 @@ public class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 		String authzHeaderValue = httpRequest.getAuthorization();
 
-		if (StringUtils.isDefined(authzHeaderValue))
+		if (StringUtils.isNotBlank(authzHeaderValue))
 			req.setAccessToken(BearerAccessToken.parse(authzHeaderValue));
 
 		return req;

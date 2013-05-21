@@ -4,9 +4,10 @@ package com.nimbusds.oauth2.sdk;
 import java.net.URL;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -165,7 +166,7 @@ public abstract class AuthorizationResponse implements Response {
 	public static AuthorizationResponse parse(final URL redirectURI, final Map<String,String> params)
 		throws ParseException {
 
-		if (StringUtils.isDefined(params.get("error")))
+		if (StringUtils.isNotBlank(params.get("error")))
 			return AuthorizationErrorResponse.parse(redirectURI, params);
 
 		else

@@ -6,8 +6,9 @@ import java.util.Iterator;
 
 import net.jcip.annotations.NotThreadSafe;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -91,7 +92,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 		public static Type parse(final String s)
 			throws ParseException {
 
-			if (s == null || s.trim().isEmpty())
+			if (StringUtils.isBlank(s))
 				throw new ParseException("Null or empty prompt type string");
 
 			if (s.equals("none"))
@@ -183,7 +184,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 	public static Prompt parse(final String s)
 		throws ParseException {
 	
-		if (StringUtils.isUndefined(s))
+		if (StringUtils.isBlank(s))
 			return null;
 	
 		Prompt prompt = new Prompt();

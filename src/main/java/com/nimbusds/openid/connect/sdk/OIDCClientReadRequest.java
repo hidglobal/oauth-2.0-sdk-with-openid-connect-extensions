@@ -5,11 +5,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -111,7 +112,7 @@ public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 
 		String authzHeaderValue = httpRequest.getAuthorization();
 
-		if (StringUtils.isDefined(authzHeaderValue))
+		if (StringUtils.isNotBlank(authzHeaderValue))
 			req.setAccessToken(BearerAccessToken.parse(authzHeaderValue));
 
 		return req;

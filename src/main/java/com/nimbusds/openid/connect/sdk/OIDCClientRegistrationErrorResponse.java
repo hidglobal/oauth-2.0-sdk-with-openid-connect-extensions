@@ -7,6 +7,8 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
@@ -16,7 +18,6 @@ import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -187,7 +188,7 @@ public class OIDCClientRegistrationErrorResponse
 
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
-		if (StringUtils.isDefined(wwwAuth)) {
+		if (StringUtils.isNotBlank(wwwAuth)) {
 
 			error = BearerTokenError.parse(wwwAuth);
 		}

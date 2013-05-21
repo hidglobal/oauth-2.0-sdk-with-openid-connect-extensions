@@ -8,10 +8,11 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -333,7 +334,7 @@ public class AuthorizationRequest implements Request {
 		// Parse mandatory client ID first
 		v = params.get("client_id");
 		
-		if (StringUtils.isUndefined(v))
+		if (StringUtils.isBlank(v))
 			throw new ParseException("Missing \"client_id\" parameter", 
 				                 OAuth2Error.INVALID_REQUEST);
 
@@ -345,7 +346,7 @@ public class AuthorizationRequest implements Request {
 
 		URL redirectURI = null;
 
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 			
 			try {
 				redirectURI = new URL(v);
@@ -383,7 +384,7 @@ public class AuthorizationRequest implements Request {
 
 		Scope scope = null;
 		
-		if (StringUtils.isDefined(v))
+		if (StringUtils.isNotBlank(v))
 			scope = Scope.parse(v);
 
 

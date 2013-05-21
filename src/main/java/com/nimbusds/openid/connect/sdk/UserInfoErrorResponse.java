@@ -7,12 +7,13 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -187,7 +188,7 @@ public final class UserInfoErrorResponse
 
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
-		if (StringUtils.isDefined(wwwAuth))
+		if (StringUtils.isNotBlank(wwwAuth))
 			parse(wwwAuth);
 
 		return new UserInfoErrorResponse();

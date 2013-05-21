@@ -2,7 +2,7 @@ package com.nimbusds.oauth2.sdk.id;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -71,7 +71,7 @@ public final class State extends Identifier {
 	 */
 	public static State parse(final String s) {
 	
-		if (StringUtils.isUndefined(s))
+		if (StringUtils.isBlank(s))
 			return null;
 		
 		return new State(s);

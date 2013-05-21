@@ -5,7 +5,7 @@ import java.util.HashSet;
 
 import net.jcip.annotations.NotThreadSafe;
 
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -82,7 +82,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	public static ResponseTypeSet parse(final String s)
 		throws ParseException {
 	
-		if (StringUtils.isUndefined(s))
+		if (StringUtils.isBlank(s))
 			throw new ParseException("Null or empty response type set string");
 	
 		ResponseTypeSet set = new ResponseTypeSet();

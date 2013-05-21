@@ -2,11 +2,10 @@ package com.nimbusds.oauth2.sdk.id;
 
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import net.minidev.json.JSONAware;
 import net.minidev.json.JSONValue;
-
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -35,7 +34,7 @@ public abstract class Identifier implements JSONAware {
 	 */
 	public Identifier(final String value) {
 
-		if (StringUtils.isUndefined(value))
+		if (StringUtils.isBlank(value))
 			throw new IllegalArgumentException("The value must not be null or empty string");
 
 		this.value = value;

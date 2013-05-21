@@ -1,8 +1,9 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -84,7 +85,7 @@ public enum Display {
 	public static Display parse(final String s)
 		throws ParseException {
 	
-		if (StringUtils.isUndefined(s))
+		if (StringUtils.isBlank(s))
 			return getDefault();
 		
 		if (s.equals("page"))

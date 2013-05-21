@@ -4,8 +4,7 @@ package com.nimbusds.oauth2.sdk.auth;
 import java.util.Date;
 
 import org.apache.commons.lang3.RandomStringUtils;
-
-import com.nimbusds.oauth2.sdk.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -48,7 +47,7 @@ public class Secret {
 	 */
 	public Secret(final String value, final Date expDate) {
 
-		if (StringUtils.isUndefined(value))
+		if (StringUtils.isBlank(value))
 			throw new IllegalArgumentException("The value must not be null or empty string");
 
 		this.value = value;

@@ -3,8 +3,9 @@ package com.nimbusds.openid.connect.sdk;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.id.Identifier;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 
 
 /**
@@ -85,7 +86,7 @@ public final class Nonce extends Identifier {
 	 */
 	public static Nonce parse(final String s) {
 	
-		if (StringUtils.isUndefined(s))
+		if (StringUtils.isBlank(s))
 			return null;
 		
 		return new Nonce(s);

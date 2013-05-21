@@ -10,6 +10,8 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 
@@ -27,7 +29,6 @@ import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
@@ -831,7 +832,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		int maxAge = 0;
 
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 
 			try {
 				maxAge = Integer.parseInt(v);
@@ -849,7 +850,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		List<LangTag> uiLocales = null;
 
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 
 			uiLocales = new LinkedList<LangTag>();
 
@@ -872,7 +873,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		List<LangTag> claimsLocales = null;
 
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 
 			claimsLocales = new LinkedList<LangTag>();
 
@@ -895,7 +896,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		JWT idTokenHint = null;
 		
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 		
 			try {
 				idTokenHint = JWTParser.parse(v);
@@ -915,7 +916,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		List<ACR> acrValues = null;
 
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 
 			acrValues = new LinkedList<ACR>();
 
@@ -935,7 +936,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		JWT requestJWT = null;
 		
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 		
 			try {
 				requestJWT = JWTParser.parse(v);
@@ -953,7 +954,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		URL requestURI = null;
 		
-		if (StringUtils.isDefined(v)) {
+		if (StringUtils.isNotBlank(v)) {
 	
 			// request_object and request_uri must not be defined at the same time
 			if (requestJWT != null)
