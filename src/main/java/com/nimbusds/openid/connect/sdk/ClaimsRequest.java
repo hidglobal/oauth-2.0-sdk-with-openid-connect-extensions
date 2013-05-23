@@ -509,7 +509,8 @@ public class ClaimsRequest {
 	 */
 	public void addIDTokenClaim(final Entry entry) {
 
-		ImmutablePair<String,LangTag> key = new ImmutablePair(entry.getClaimName(), entry.getLangTag());
+		ImmutablePair<String,LangTag> key = 
+			new ImmutablePair<String,LangTag>(entry.getClaimName(), entry.getLangTag());
 
 		idTokenClaims.put(key, entry);
 	}
@@ -659,7 +660,8 @@ public class ClaimsRequest {
 	 */
 	public void addUserInfoClaim(final Entry entry) {
 
-		ImmutablePair<String,LangTag> key = new ImmutablePair(entry.getClaimName(), entry.getLangTag());
+		ImmutablePair<String,LangTag> key = 
+			new ImmutablePair<String,LangTag>(entry.getClaimName(), entry.getLangTag());
 
 		userInfoClaims.put(key, entry);
 	}

@@ -7,26 +7,21 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import javax.mail.internet.ContentType;
+import javax.mail.internet.ParseException;
+
 import net.jcip.annotations.ThreadSafe;
-
-import com.nimbusds.jose.JOSEObject;
-
-import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
- * The default retriever of JOSE objects referenced by URL. Caching header 
- * directives are not honoured. This class is thread-safe.
- *
- * <p>Depending on network condition, retrieval of remote OpenID Connect 
- * request objects may slow authorisation request processing significantly to 
- * affect smooth user experience. It is therefore recommended to set HTTP 
- * connect and read timeouts.
+ * The default retriever of resources specified by URL. Provides setting of
+ * HTTP connect and read timeouts. Caching header directives are not honoured. 
+ * This class is thread-safe.
  *
  * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
-public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
+public class DefaultResourceRetriever implements ResourceRetriever {
 
 
 	/**
@@ -48,24 +43,24 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 	
 	
 	/**
-	 * Creates a new retriever of JOSE objects. The HTTP connect and read 
-	 * timeouts are set to zero (none).
+	 * Creates a new resource retriever. The HTTP connect and read timeouts
+	 * are set to zero (infinite).
 	 */
-	public DefaultJOSEObjectRetriever() {
+	public DefaultResourceRetriever() {
 	
 		this(0, 0);	
 	}
 	
 	
 	/**
-	 * Creates a new retriever of JOSE objects.
+	 * Creates a new resource retriever.
 	 *
 	 * @param connectTimeout The HTTP connects timeout, in milliseconds, 
-	 *                       zero for none. Must not be negative.
+	 *                       zero for infinite. Must not be negative.
 	 * @param readTimeout    The HTTP read timeout, in milliseconds, zero 
-	 *                       for none. Must not be negative.
+	 *                       for infinite. Must not be negative.
 	 */
-	public DefaultJOSEObjectRetriever(final int connectTimeout, final int readTimeout) {
+	public DefaultResourceRetriever(final int connectTimeout, final int readTimeout) {
 	
 		setConnectTimeout(connectTimeout);
 		setReadTimeout(readTimeout);
@@ -77,7 +72,8 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 	/**
 	 * Gets the HTTP connect timeout.
 	 *
-	 * @return The HTTP connect timeout, in milliseconds, zero for none.
+	 * @return The HTTP connect timeout, in milliseconds, zero for 
+	 *         infinite.
 	 */
 	public int getConnectTimeout() {
 	
@@ -88,8 +84,8 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 	/**
 	 * Sets the HTTP connect timeout.
 	 *
-	 * @param connectTimeout The HTTP connect timeout, in milliseconds, zero
-	 *                       for none. Must not be negative.
+	 * @param connectTimeout The HTTP connect timeout, in milliseconds, 
+	 *                       zero for infinite. Must not be negative.
 	 */
 	public void setConnectTimeout(final int connectTimeout) {
 	
@@ -103,7 +99,7 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 	/**
 	 * Gets the HTTP read timeout.
 	 *
-	 * @return The HTTP read timeout, in milliseconds, zero for none.
+	 * @return The HTTP read timeout, in milliseconds, zero for infinite.
 	 */
 	public int getReadTimeout() {
 	
@@ -115,7 +111,7 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 	 * Sets the HTTP read timeout.
 	 *
 	 * @param readTimeout The HTTP read timeout, in milliseconds, zero for
-	 *                    none. Must not be negative.
+	 *                    infinite. Must not be negative.
 	 */
 	public void setReadTimeout(final int readTimeout) {
 	
@@ -127,10 +123,19 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 	
 	
 	@Override	
-	public JOSEObject downloadJOSEObject(final URL url)
-		throws IOException, ParseException {
+	public Resource retrieveResource(final URL url)
+		throws IOException {
 		
-		HttpURLConnection con = (HttpURLConnection)url.openConnection();
+		HttpURLConnection con;
+
+		try {
+			con = (HttpURLConnection)url.openConnection();
+
+		} catch (ClassCastException e) {
+
+			throw new IOException("Couldn't open HTTP(S) connection: " + e.getMessage(), e);
+		}
+
 		con.setConnectTimeout(connectTimeout);
 		con.setReadTimeout(readTimeout);
 		
@@ -148,16 +153,30 @@ public class DefaultJOSEObjectRetriever implements JOSEObjectRetriever {
 		
 		input.close();
 		
-		// Save HTTP code + message
+		// Check HTTP code + message
 		final int statusCode = con.getResponseCode();
 		final String statusMessage = con.getResponseMessage();
-		
-		try {
-			return JOSEObject.parse(sb.toString());
-			
-		} catch (java.text.ParseException e) {
-		
-			throw new ParseException("Couldn't parse JOSE object: " + e.getMessage(), e);
+
+		if (statusCode != HttpURLConnection.HTTP_OK) {
+
+			throw new IOException("HTTP " + statusCode + ": " + statusMessage);
 		}
+
+		// Parse the Content-Type header
+		ContentType contentType = null;
+
+		if (con.getContentType() != null) {
+
+			try {
+				contentType = new ContentType(con.getContentType());
+
+			} catch (ParseException e) {
+
+				throw new IOException("Couldn't parse Content-Type header: " + e.getMessage(), e);
+			}
+		}
+
+		
+		return new Resource(sb.toString(), contentType);
 	}
 }

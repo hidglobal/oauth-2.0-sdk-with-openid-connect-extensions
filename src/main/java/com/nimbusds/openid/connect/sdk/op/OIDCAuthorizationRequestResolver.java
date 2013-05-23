@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk;
+package com.nimbusds.openid.connect.sdk.op;
 
 
 import java.io.IOException;
@@ -13,6 +13,7 @@ import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -23,25 +24,33 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
-import com.nimbusds.openid.connect.sdk.util.DefaultJOSEObjectRetriever;
-import com.nimbusds.openid.connect.sdk.util.JOSEObjectDecoder;
-import com.nimbusds.openid.connect.sdk.util.JOSEObjectRetriever;
+import com.nimbusds.openid.connect.sdk.util.DefaultResourceRetriever;
+import com.nimbusds.openid.connect.sdk.util.DefaultJWTDecoder;
+import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
+import com.nimbusds.openid.connect.sdk.util.Resource;
+import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
 
 
 
 /**
  * OpenID Connect authorisation request resolver. Takes in a raw 
- * {@link OIDCAuthorizationRequest} and if an OpenID request object is present
- * applies it to derive the final authorisation request parameters, ID Token 
- * and UserInfo claims.
+ * {@link com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest} and if a
+ * request object is specified applies it to derive the final authorisation 
+ * request parameters.
  *
- * <p>To process OpenID request objects the resolver must be supplied with a
- * {@link com.nimbusds.openid.connect.sdk.util.JOSEObjectRetriever retriever} 
- * for remote JOSE objects and a 
- * {@link com.nimbusds.openid.connect.sdk.util.JOSEObjectDecoder decoder} to 
- * handle their JOSE decoding and JWS validation and/or JWE decryption.
+ * <p>To process request objects the resolver must be supplied with a
+ * {@link com.nimbusds.openid.connect.sdk.util.ResourceRetriever retriever} for
+ * remote JWT objects and a 
+ * {@link com.nimbusds.openid.connect.sdk.util.JWTDecoder decoder} to handle
+ * their decoding and JWS validation and / or JWE decryption.
  *
  * <p>This class is thread-safe.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.9.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
@@ -50,116 +59,121 @@ public class OIDCAuthorizationRequestResolver {
 
 
 	/**
-	 * Retriever for JOSE objects passed as URL.
+	 * Retriever for JWTs passed by URL.
 	 */
-	private final JOSEObjectRetriever retriever;
+	private final ResourceRetriever jwtRetriever;
 	
 	
 	/**
-	 * Decoder for JOSE objects.
+	 * Decoder for JWTs.
 	 */
-	private final JOSEObjectDecoder decoder;
+	private final JWTDecoder jwtDecoder;
 	
 	
 	/**
 	 * Creates a new OpenID Connect authorisation request resolver with a 
-	 * {@link com.nimbusds.openid.connect.sdk.util.DefaultJOSEObjectRetriever
-	 * default JOSE object retriever}.
+	 * {@link com.nimbusds.openid.connect.sdk.util.DefaultResourceRetriever
+	 * default retriever} for JWTs passed by URL.
 	 *
-	 * @param decoder A configured JOSE decoder and JWS validator/JWE 
-	 *                decryptor for the optional OpenID request objects. 
-	 *                Must not be {@code null}.
+	 * @param jwtDecoder A configured JWT decoder and JWS validator / JWE 
+	 *                   decryptor for the optional request objects. Must
+	 *                   not be {@code null}.
 	 */
-	public OIDCAuthorizationRequestResolver(final JOSEObjectDecoder decoder) {
+	public OIDCAuthorizationRequestResolver(final JWTDecoder jwtDecoder) {
 	
-		this(new DefaultJOSEObjectRetriever(), decoder);
+		this(new DefaultResourceRetriever(), jwtDecoder);
 	}
 	
 	
 	/**
 	 * Creates a new OpenID Connect authorisation request resolver.
 	 *
-	 * @param retriever A configured retriever for optional OpenID request
-	 *                  objects passed by URI reference. Must not be
-	 *                  {@code null}.
-	 * @param decoder   A configured JOSE decoder and JWS validator/JWE 
-	 *                  decryptor for the optional OpenID request objects.
-	 *                  Must not be {@code null}.
+	 * @param jwtRetriever A configured retriever for optional request
+	 *                     objects passed by URL. Must not be {@code null}.
+	 * @param jwtDecoder   A configured JWT decoder and JWS validator / JWE 
+	 *                     decryptor for the optional request objects. Must
+	 *                     not be {@code null}.
 	 */
-	public OIDCAuthorizationRequestResolver(final JOSEObjectRetriever retriever,
-	                                        final JOSEObjectDecoder decoder) {
+	public OIDCAuthorizationRequestResolver(final ResourceRetriever jwtRetriever,
+	                                        final JWTDecoder jwtDecoder) {
 		
-		this.retriever = retriever;
-		this.decoder = decoder;
+		this.jwtRetriever = jwtRetriever;
+		this.jwtDecoder = jwtDecoder;
 	}
 	
 	
 	/**
-	 * Gets the configured JOSE object retriever.
+	 * Gets the JWT retriever.
 	 *
-	 * @return The JOSE object retriever.
+	 * @return The JWT retriever.
 	 */
-	public JOSEObjectRetriever getJOSEObjectRetriever() {
+	public ResourceRetriever getJWTRetriever() {
 	
-		return retriever;
+		return jwtRetriever;
 	}
 	
 	
 	/**
-	 * Gets the configured JOSE object decoder.
+	 * Gets the JWT decoder.
 	 *
-	 * @return The JOSE object decoder.
+	 * @return The JWT decoder.
 	 */
-	public JOSEObjectDecoder getJOSEObjectDecoder() {
+	public JWTDecoder getJWTDecoder() {
 	
-		return decoder;
+		return jwtDecoder;
 	}
 	
 	
 	/**
-	 * Downloads an OpenID request object from the specified URL.
+	 * Downloads an OpenID Connect request object from the specified URL.
+	 * The content type of the URL resource is not checked.
 	 *
-	 * @param url The URL of the OpenID request object. Must not be
-	 *            {@code null}.
+	 * @param url The URL of the request object. Must not be {@code null}.
 	 *
-	 * @return The downloaded JOSE-encoded request object.
+	 * @return The downloaded request object JWT.
 	 *
 	 * @throws ResolveException If the request object couldn't be 
-	 *                          downloaded or parsed to a JOSE-encoded 
-	 *                          object.
+	 *                          downloaded or parsed to a JWT.
 	 */
-	private JOSEObject downloadRequestObject(final URL url)
+	private JWT downloadRequestObject(final URL url)
 		throws ResolveException {
 	
+		Resource resource = null;
+
 		try {
-			return retriever.downloadJOSEObject(url);
+			resource = jwtRetriever.retrieveResource(url);
 			
 		} catch (IOException e) {
 
-			throw new ResolveException("Couldn't download OpenID request object: " + 
+			throw new ResolveException("Couldn't download OpenID Connect request object: " + 
 				                   e.getMessage(), e);
+		}
 
-		} catch (ParseException e) {
+		try {
+			return JWTParser.parse(resource.getContent());
+		
+		} catch (java.text.ParseException e) {
 
-			throw new ResolveException("Couldn't parse downloaded OpenID request object: " + 
+			throw new ResolveException("Couldn't parse OpenID Connect request object: " +
 				                   e.getMessage(), e);
 		}
 	}
 	
 	
 	/**
-	 * JOSE-decodes and JWS-validates and / or JWE-decrypts the specified
-	 * OpenID request object.
+	 * Decodes the specified OpenID Connect request object, and if its
+	 * secured performs additional JWS signature validation and / or JWE
+	 * decryption.
 	 *
-	 * @param joseObject The JOSE object to decode. Must not be 
-	 *                   {@code null}.
+	 * @param requestObject The request object to decode. Must not be 
+	 *                      {@code null}.
 	 *
-	 * @return The JSON object representing the OpenID request object.
+	 * @return The JWT claims of the request object.
 	 *
-	 * @throws ResolveException If JOSE decoding, JWS validation or JWE
+	 * @throws ResolveException If JWT decoding, JWS validation or JWE
 	 *                          decryption failed.
 	 */
-	private JSONObject decodeRequestObject(final JOSEObject joseObject)
+	private ReadOnlyJWTClaimsSet decodeRequestObject(final JWT requestObject)
 		throws ResolveException {
 		
 		Payload payload = null;
