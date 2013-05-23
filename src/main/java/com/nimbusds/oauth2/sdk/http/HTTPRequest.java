@@ -351,7 +351,7 @@ public class HTTPRequest extends HTTPMessage {
 			// Append query string
 
 			try {
-				finalURL = new URL(url, "?" + query);
+				finalURL = new URL(url.toString() + "?" + query);
 
 			} catch (MalformedURLException e) {
 
