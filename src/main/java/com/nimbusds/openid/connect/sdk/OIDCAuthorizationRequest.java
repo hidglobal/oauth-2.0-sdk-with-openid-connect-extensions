@@ -61,7 +61,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public final class OIDCAuthorizationRequest extends AuthorizationRequest {
+public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
