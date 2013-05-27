@@ -650,18 +650,21 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Returns {@code true} if this authorisation request has a request
-	 * object included in the {@code request} parameter or referenced 
-	 * through the {@code request_uri} parameter).
+	 * Returns {@code true} if this authorisation request specifies an
+	 * OpenID Connect request object (directly through the {@code request} 
+	 * parameter or by reference through the {@code request_uri} parameter).
 	 *
 	 * @return {@code true} if a request object is specified, else 
 	 *         {@code false}.
 	 */
-	public boolean hasRequestObject() {
+	public boolean specifiesRequestObject() {
 	
 		if (requestObject != null || requestURI != null) {
+
 			return true;
+
 		} else {
+			
 			return false;
 		}
 	}

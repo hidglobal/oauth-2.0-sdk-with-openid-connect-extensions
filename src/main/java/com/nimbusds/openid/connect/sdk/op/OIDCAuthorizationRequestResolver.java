@@ -3,7 +3,6 @@ package com.nimbusds.openid.connect.sdk.op;
 
 import java.io.IOException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +16,10 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.SerializeException;
+
+import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
 import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
 import com.nimbusds.openid.connect.sdk.util.Resource;
 import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
@@ -139,16 +142,16 @@ public class OIDCAuthorizationRequestResolver {
 	 *
 	 * @return The retrieved JWT.
 	 *
-	 * @throws IllegalStateException If no JWT retriever is configured.
-	 * @throws ResolveException      If the resource couldn't be retrieved, 
-	 *                               or parsed to a JWT.
+	 * @throws ResolveException If no JWT retriever is configured, if the
+	 *                          resource couldn't be retrieved, or parsed
+	 *                          to a JWT.
 	 */
 	private JWT retrieveJWT(final URL url)
 		throws ResolveException {
 	
 		if (jwtRetriever == null) {
 
-			throw new IllegalStateException("OpenID Connect request object cannot be resolved: No JWT retriever is configured");
+			throw new ResolveException("OpenID Connect request object cannot be resolved: No JWT retriever is configured");
 		}
 
 		Resource resource = null;
@@ -165,7 +168,7 @@ public class OIDCAuthorizationRequestResolver {
 		try {
 			return JWTParser.parse(resource.getContent());
 		
-		} catch (ParseException e) {
+		} catch (java.text.ParseException e) {
 
 			throw new ResolveException("Couldn't parse OpenID Connect request object: " +
 				                   e.getMessage(), e);
@@ -184,16 +187,16 @@ public class OIDCAuthorizationRequestResolver {
 	 * @return The extracted JWT claims of the OpenID Connect request 
 	 *         object.
 	 *
-	 * @throws IllegalArgumentException If no JWT decoder is configured.
-	 * @throws ResolveException         If JWT decoding, JWS validation or 
-	 *                                  JWE decryption failed.
+	 * @throws ResolveException If no JWT decoder is configured, if JWT 
+	 *                          decoding, JWS validation or JWE decryption 
+	 *                          failed.
 	 */
 	private ReadOnlyJWTClaimsSet decodeRequestObject(final JWT requestObject)
 		throws ResolveException {
 		
 		if (jwtDecoder == null) {
 
-			throw new IllegalArgumentException("OpenID Connect request object cannot be decoded: No JWT decoder is configured");
+			throw new ResolveException("OpenID Connect request object cannot be decoded: No JWT decoder is configured");
 		}
 
 		try {
@@ -203,45 +206,31 @@ public class OIDCAuthorizationRequestResolver {
 		
 			throw new ResolveException("Couldn't decode OpenID Connect request object JWT: " + 
 				                   e.getMessage(), e);
-		} catch (ParseException e) {
+		} catch (java.text.ParseException e) {
 
 			throw new ResolveException("Couldn't parse OpenID Connect request object JWT claims: " + 
 				                   e.getMessage(), e);
 		}
 	}
 
-	
-	/**
-	 * Resolves the specified OpenID Connect request object.
-	 *
-	 * @param url The URL of the OpenID Connect request object JWT. Must 
-	 *            not be {@code null}.
-	 *
-	 * @return The OpenID Connect request object parameters.
-	 *
-	 * @throws ResolveException If retrieval or decoding of the JWT failed.
-	 */
-	public Map<String,String> resolve(final URL url)
-		throws ResolveException {
-
-		return resolve(retrieveJWT(url));
-	}
-
 
 	/**
-	 * Resolves the specified OpenID Connect request object.
+	 * Reformats the specified JWT claims set to a 
+	 * {@code java.util.Map<String,String>} instance.
 	 *
-	 * @param requestObject The OpenID Connect request object JWT. Must not 
-	 *                      be {@code null}.
+	 * @param claimsSet The JWT claims set to reformat. Must not be
+	 *                  {@code null}.
 	 *
-	 * @return The OpenID Connect request object parameters.
+	 * @return The JWT claims set as an unmodifiable map of string keys / 
+	 *         string values.
 	 *
-	 * @throws ResolveException If decoding of the JWT failed.
+	 * @throws ResolveException If reformatting of the JWT claims set 
+	 *                          failed.
 	 */
-	public Map<String,String> resolve(final JWT requestObject)
+	public static Map<String,String> reformatClaims(final ReadOnlyJWTClaimsSet claimsSet)
 		throws ResolveException {
 
-		Map<String,Object> claims = decodeRequestObject(requestObject).getAllClaims();
+		Map<String,Object> claims = claimsSet.getAllClaims();
 
 		// Reformat all claim values as strings
 		Map<String,String> reformattedClaims = new HashMap<String,String>();
@@ -276,5 +265,90 @@ public class OIDCAuthorizationRequestResolver {
 		}
 
 		return Collections.unmodifiableMap(reformattedClaims);
+	}
+
+
+	public ResolvedOIDCAuthorizationRequest resolve(final OIDCAuthorizationRequest request)
+		throws ResolveException {
+
+		if (! request.specifiesRequestObject()) {
+
+			// Return the same request
+
+			return new ResolvedOIDCAuthorizationRequest(
+				request.getResponseTypeSet(),
+				request.getScope(),
+				request.getClientID(),
+				request.getRedirectURI(),
+				request.getState(),
+				request.getNonce(),
+				request.getDisplay(),
+				request.getPrompt(),
+				request.getMaxAge(),
+				request.getUILocales(),
+				request.getClaimsLocales(),
+				request.getIDTokenHint(),
+				request.getLoginHint(),
+				request.getACRValues(),
+				request.getClaims());
+		}
+
+		JWT jwt = null;
+
+		if (request.getRequestURI() != null) {
+
+			jwt = retrieveJWT(request.getRequestURI());
+
+		} else {
+
+			jwt = request.getRequestObject();
+		}
+
+		ReadOnlyJWTClaimsSet jwtClaims = decodeRequestObject(jwt);
+
+		Map<String,String> requestObjectParams = reformatClaims(jwtClaims);
+
+		Map<String,String> finalParams = new HashMap<String,String>();
+
+		try {
+			finalParams.putAll(request.toParameters());
+
+		} catch (SerializeException e) {
+
+			throw new ResolveException("Couldn't resolve final OpenID Connect authorization request: " + e.getMessage(), e);
+		}
+
+		// Merge params from request object
+		finalParams.putAll(requestObjectParams);
+
+
+		// Parse again
+		OIDCAuthorizationRequest finalAuthzRequest = null;
+
+		try {
+			finalAuthzRequest = OIDCAuthorizationRequest.parse(finalParams);
+
+		} catch (ParseException e) {
+
+			throw new ResolveException("Couldn't create final OpenID Connect authorization request: " + e.getMessage(), e);
+		}
+
+
+		return new ResolvedOIDCAuthorizationRequest(
+				finalAuthzRequest.getResponseTypeSet(),
+				finalAuthzRequest.getScope(),
+				finalAuthzRequest.getClientID(),
+				finalAuthzRequest.getRedirectURI(),
+				finalAuthzRequest.getState(),
+				finalAuthzRequest.getNonce(),
+				finalAuthzRequest.getDisplay(),
+				finalAuthzRequest.getPrompt(),
+				finalAuthzRequest.getMaxAge(),
+				finalAuthzRequest.getUILocales(),
+				finalAuthzRequest.getClaimsLocales(),
+				finalAuthzRequest.getIDTokenHint(),
+				finalAuthzRequest.getLoginHint(),
+				finalAuthzRequest.getACRValues(),
+				finalAuthzRequest.getClaims());
 	}
 }
