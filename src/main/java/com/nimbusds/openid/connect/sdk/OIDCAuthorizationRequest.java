@@ -12,6 +12,8 @@ import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.minidev.json.JSONObject;
+
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 
@@ -29,6 +31,7 @@ import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
@@ -126,9 +129,9 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Specific claims to be returned (optional).
+	 * Individual claims to be returned (optional).
 	 */
-	private final Object claims;
+	private final ClaimsRequest claims;
 	
 	
 	/**
@@ -228,8 +231,8 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      Reference values. Corresponds to the optional
 	 *                      {@code acr_values} parameter. {@code null} if
 	 *                      not specified.
-	 * @param claims        The specified claims to be returned. 
-	 *                      Corresponds to the optional {@code claims}
+	 * @param claims        The individual claims to be returned. 
+	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 */
 	public OIDCAuthorizationRequest(final ResponseTypeSet rts,
@@ -246,7 +249,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final JWT idTokenHint,
 				        final String loginHint,
 				        final List<ACR> acrValues,
-				        final Object claims) {
+				        final ClaimsRequest claims) {
 				    
 				    
 		this(rts, scope, clientID, redirectURI, state, nonce, display, prompt,
@@ -305,8 +308,8 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      Reference values. Corresponds to the optional
 	 *                      {@code acr_values} parameter. {@code null} if
 	 *                      not specified.
-	 * @param claims        The specified claims to be returned. 
-	 *                      Corresponds to the optional {@code claims}
+	 * @param claims        The individual claims to be returned. 
+	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 * @param requestObject The request object. Corresponds to the optional
 	 *                      {@code request} parameter. {@code null} if not
@@ -326,7 +329,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final JWT idTokenHint,
 				        final String loginHint,
 				        final List<ACR> acrValues,
-				        final Object claims,
+				        final ClaimsRequest claims,
 				        final JWT requestObject) {
 				    
 		super(rts, clientID, redirectURI, scope, state);
@@ -426,8 +429,8 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      Reference values. Corresponds to the optional
 	 *                      {@code acr_values} parameter. {@code null} if
 	 *                      not specified.
-	 * @param claims        The specified claims to be returned. 
-	 *                      Corresponds to the optional {@code claims}
+	 * @param claims        The individual claims to be returned. 
+	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 * @param requestURI    The request object URL. Corresponds to the 
 	 *                      optional {@code request_uri} parameter. 
@@ -447,7 +450,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final JWT idTokenHint,
 				        final String loginHint,
 				        final List<ACR> acrValues,
-				        final Object claims,
+				        final ClaimsRequest claims,
 				        final URL requestURI) {
 				    
 		super(rts, clientID, redirectURI, scope, state);
@@ -610,13 +613,13 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Gets the specific claims to return. Corresponds to the optional
-	 * {@code claims} parameter.
+	 * Gets the individual claims to be returned. Corresponds to the 
+	 * optional {@code claims} parameter.
 	 *
-	 * @return The specific claims to return, {@code null} if not
+	 * @return The individual claims to be returned, {@code null} if not
 	 *         specified.
 	 */
-	public Object getClaims() {
+	public ClaimsRequest getClaims() {
 
 		return claims;
 	}
@@ -682,11 +685,35 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (maxAge > 0)
 			params.put("max_age", "" + maxAge);
 
-		if (uiLocales != null)
-			params.put("ui_locales", null);
+		if (uiLocales != null) {
 
-		if (claimsLocales != null)
-			params.put("claims_locales", null);
+			StringBuilder sb = new StringBuilder();
+
+			for (LangTag locale: uiLocales) {
+
+				if (sb.length() > 0)
+					sb.append(' ');
+
+				sb.append(locale.toString());
+			}
+
+			params.put("ui_locales", sb.toString());
+		}
+
+		if (claimsLocales != null) {
+
+			StringBuilder sb = new StringBuilder();
+
+			for (LangTag locale: claimsLocales) {
+
+				if (sb.length() > 0)
+					sb.append(' ');
+
+				sb.append(locale.toString());
+			}
+
+			params.put("claims_locales", sb.toString());
+		}
 
 		if (idTokenHint != null) {
 		
@@ -702,11 +729,24 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (loginHint != null)
 			params.put("login_hint", loginHint);
 
-		if (acrValues != null)
-			params.put("acr_values", null);
+		if (acrValues != null) {
+
+			StringBuilder sb = new StringBuilder();
+
+			for (ACR acr: acrValues) {
+
+				if (sb.length() > 0)
+					sb.append(' ');
+
+				sb.append(acr.toString());
+			}
+
+			params.put("acr_values", sb.toString());
+		}
+			
 
 		if (claims != null)
-			params.put("claims", null);
+			params.put("claims", claims.toJSONObject().toString());
 		
 		if (requestObject != null) {
 		
@@ -928,7 +968,25 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		v = params.get("claims");
 
-		Object claims = null;
+		ClaimsRequest claims = null;
+
+		if (StringUtils.isNotBlank(v)) {
+
+			JSONObject jsonObject = null;
+
+			try {
+				jsonObject = JSONObjectUtils.parseJSONObject(v);
+
+			} catch (ParseException e) {
+
+				throw new ParseException("Invalid \"claims\" parameter: " + e.getMessage(),
+					                 OAuth2Error.INVALID_REQUEST,
+					                 redirectURI, state, e);
+			}
+
+			// Parse exceptions silently ignored
+			claims = ClaimsRequest.parse(jsonObject);
+		}
 		
 		
 		v = params.get("request_uri");

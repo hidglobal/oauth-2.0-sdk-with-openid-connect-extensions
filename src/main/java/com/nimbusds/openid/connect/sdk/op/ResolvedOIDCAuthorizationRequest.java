@@ -15,6 +15,7 @@ import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
+import com.nimbusds.openid.connect.sdk.ClaimsRequest;
 import com.nimbusds.openid.connect.sdk.Display;
 import com.nimbusds.openid.connect.sdk.Nonce;
 import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
@@ -82,8 +83,8 @@ public final class ResolvedOIDCAuthorizationRequest extends OIDCAuthorizationReq
 	 *                      Reference values. Corresponds to the optional
 	 *                      {@code acr_values} parameter. {@code null} if
 	 *                      not specified.
-	 * @param claims        The specified claims to be returned. 
-	 *                      Corresponds to the optional {@code claims}
+	 * @param claims        The individual claims to be returned. 
+	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 */
 	public ResolvedOIDCAuthorizationRequest(final ResponseTypeSet rts,
@@ -100,11 +101,11 @@ public final class ResolvedOIDCAuthorizationRequest extends OIDCAuthorizationReq
 				                final JWT idTokenHint,
 				                final String loginHint,
 				                final List<ACR> acrValues,
-				                final Object claims) {
+				                final ClaimsRequest claims) {
 				    
 				    
 		super(rts, scope, clientID, redirectURI, state, nonce, display, prompt,
 		      maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues,
-		      claims, (JWT)null);
+		      claims);
 	}
 }
