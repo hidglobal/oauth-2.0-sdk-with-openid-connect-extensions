@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk.util;
 
 
+import java.text.ParseException;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
@@ -133,11 +134,12 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 *
 	 * @return The JWT claims set.
 	 *
-	 * @throws JOSEException If no matching JWS verifier was found, the 
-	 *                       signature is bad or verification failed.
+	 * @throws JOSEException  If no matching JWS verifier was found, the 
+	 *                        signature is bad or verification failed.
+	 * @throws ParseException If parsing of the JWT claims set failed.
 	 */
 	private ReadOnlyJWTClaimsSet verify(final SignedJWT signedJWT)
-		throws JOSEException {
+		throws JOSEException, ParseException {
 		
 		JWSAlgorithm alg = signedJWT.getHeader().getAlgorithm();
 		
@@ -177,11 +179,12 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 *
 	 * @return The JWT claims set.
 	 *
-	 * @throws JOSEException If no matching JWE decrypter was found or if
-	 *                       decryption failed.
+	 * @throws JOSEException  If no matching JWE decrypter was found or if
+	 *                        decryption failed.
+	 * @throws ParseException If parsing of the JWT claims set failed.
 	 */
 	private ReadOnlyJWTClaimsSet decrypt(final EncryptedJWT encryptedJWT)
-		throws JOSEException {
+		throws JOSEException, ParseException {
 		
 		JWEAlgorithm alg = encryptedJWT.getHeader().getAlgorithm();
 		
@@ -207,11 +210,11 @@ public class DefaultJWTDecoder implements JWTDecoder {
 
 	@Override
 	public ReadOnlyJWTClaimsSet decodeJWT(final JWT jwt)
-		throws JOSEException {
+		throws JOSEException, ParseException {
 		
 		if (jwt instanceof PlainJWT) {
 		
-			PlainJWT plainJWT = (PlainJWT)plainJWT;
+			PlainJWT plainJWT = (PlainJWT)jwt;
 			
 			return plainJWT.getJWTClaimsSet();
 		

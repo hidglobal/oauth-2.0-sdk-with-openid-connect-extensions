@@ -132,13 +132,13 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Request JWT (optional).
+	 * Request object (optional).
 	 */
-	private final JWT requestJWT;
+	private final JWT requestObject;
 	
 	
 	/**
-	 * Request object JWT URL (optional).
+	 * Request object URL (optional).
 	 */
 	private final URL requestURI;
 	
@@ -180,7 +180,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	/**
 	 * Creates a new OpenID Connect authorisation request without a request
-	 * JWT.
+	 * object.
 	 *
 	 * @param rts           The response type set. Corresponds to the 
 	 *                      {@code response_type} parameter. Must not be
@@ -257,7 +257,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	/**
 	 * Creates a new OpenID Connect authorisation request with a request 
-	 * JWT specified by value.
+	 * object specified by value.
 	 *
 	 * @param rts           The response type set. Corresponds to the 
 	 *                      {@code response_type} parameter. Must not be
@@ -308,7 +308,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * @param claims        The specified claims to be returned. 
 	 *                      Corresponds to the optional {@code claims}
 	 *                      parameter. {@code null} if not specified.
-	 * @param requestJWT    The request JWT. Corresponds to the optional
+	 * @param requestObject The request object. Corresponds to the optional
 	 *                      {@code request} parameter. {@code null} if not
 	 *                      specified.
 	 */
@@ -327,7 +327,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final String loginHint,
 				        final List<ACR> acrValues,
 				        final Object claims,
-				        final JWT requestJWT) {
+				        final JWT requestObject) {
 				    
 		super(rts, clientID, redirectURI, scope, state);
 
@@ -371,14 +371,14 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 			this.acrValues = null;
 
 		this.claims = claims;
-		this.requestJWT = requestJWT;
+		this.requestObject = requestObject;
 		this.requestURI = null;
 	}
 	
 	
 	/**
 	 * Creates a new OpenID Connect authorisation request with a request 
-	 * JWT specified by URI reference.
+	 * object specified by URL.
 	 *
 	 * @param rts           The response type set. Corresponds to the 
 	 *                      {@code response_type} parameter. Must not be
@@ -429,7 +429,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * @param claims        The specified claims to be returned. 
 	 *                      Corresponds to the optional {@code claims}
 	 *                      parameter. {@code null} if not specified.
-	 * @param requestURI    The request JWT URI. Corresponds to the 
+	 * @param requestURI    The request object URL. Corresponds to the 
 	 *                      optional {@code request_uri} parameter. 
 	 *                      {@code null} if not specified.
 	 */
@@ -493,7 +493,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 			this.acrValues = null;
 
 		this.claims = claims;
-		this.requestJWT = null;
+		this.requestObject = null;
 		this.requestURI = requestURI;
 	}
 	
@@ -623,40 +623,40 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Gets the request JWT. Corresponds to the optional {@code request} 
+	 * Gets the request object. Corresponds to the optional {@code request} 
 	 * parameter.
 	 *
-	 * @return The request JWT, {@code null} if not specified.
+	 * @return The request object, {@code null} if not specified.
 	 */
-	public JWT getRequestJWT() {
+	public JWT getRequestObject() {
 	
-		return requestJWT;
+		return requestObject;
 	}
 	
 	
 	/**
-	 * Gets the request JWT URI. Corresponds to the optional 
+	 * Gets the request object URL. Corresponds to the optional 
 	 * {@code request_uri} parameter.
 	 *
-	 * @return The request JWT URI, {@code null} if not specified.
+	 * @return The request object URL, {@code null} if not specified.
 	 */
-	public URL getRequestJWTURI() {
+	public URL getRequestURI() {
 	
 		return requestURI;
 	}
 	
 	
 	/**
-	 * Returns {@code true} if this authorisation request has a request JWT
-	 * included in the {@code request} parameter or referenced through the 
-	 * {@code request_uri} parameter).
+	 * Returns {@code true} if this authorisation request has a request
+	 * object included in the {@code request} parameter or referenced 
+	 * through the {@code request_uri} parameter).
 	 *
-	 * @return {@code true} if a request JWT is specified, else 
+	 * @return {@code true} if a request object is specified, else 
 	 *         {@code false}.
 	 */
-	public boolean hasRequestJWT() {
+	public boolean hasRequestObject() {
 	
-		if (requestJWT != null || requestURI != null) {
+		if (requestObject != null || requestURI != null) {
 			return true;
 		} else {
 			return false;
@@ -708,17 +708,14 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (claims != null)
 			params.put("claims", null);
 		
-		
-		// Request EXOR request_uri check done by setter methods
-		
-		if (requestJWT != null) {
+		if (requestObject != null) {
 		
 			try {
-				params.put("request", requestJWT.serialize());
+				params.put("request", requestObject.serialize());
 				
 			} catch (IllegalStateException e) {
 			
-				throw new SerializeException("Couldn't serialize request JWT: " + e.getMessage(), e);
+				throw new SerializeException("Couldn't serialize request object to JWT: " + e.getMessage(), e);
 			}
 		}
 		
@@ -739,9 +736,9 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * response_type = token id_token
 	 * client_id     = s6BhdRkqt3
 	 * redirect_uri  = https://client.example.com/cb
-	 * scope         =  openid profile
-	 * state         =  af0ifjsldkj
-	 * nonce         =  -0S6_WzA2Mj
+	 * scope         = openid profile
+	 * state         = af0ifjsldkj
+	 * nonce         = -0S6_WzA2Mj
 	 * </pre>
 	 *
 	 * @param params The parameters. Must not be {@code null}.
@@ -754,8 +751,11 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	public static OIDCAuthorizationRequest parse(final Map<String,String> params)
 		throws ParseException {
 
+		// Parse and validate the core OAuth 2.0 autz request params in 
+		// the context of OIDC
 		AuthorizationRequest ar = AuthorizationRequest.parse(params);
 
+		// Required in OIDC
 		URL redirectURI = ar.getRedirectURI();
 
 		if (redirectURI == null)
@@ -776,6 +776,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 					                 redirectURI, state, null);
 		}
 		
+		// Required in OIDC, must include "openid" parameter
 		Scope scope = ar.getScope();
 
 		if (scope == null)
@@ -791,8 +792,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		ClientID clientID = ar.getClientID();
 
 
-		// Parse OIDC parameters
-
+		// Parse the remaining OIDC parameters
 		Nonce nonce = Nonce.parse(params.get("nonce"));
 		
 		// Nonce required in implicit flow
@@ -801,7 +801,6 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 				                 OAuth2Error.INVALID_REQUEST,
 				                 redirectURI, state, null);
 		
-
 		Display display = null;
 		
 		try {
@@ -932,36 +931,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		Object claims = null;
 		
 		
-		v = params.get("request");
-		
-		JWT requestJWT = null;
-		
-		if (StringUtils.isNotBlank(v)) {
-		
-			try {
-				requestJWT = JWTParser.parse(v);
-				
-			} catch (java.text.ParseException e) {
-			
-				throw new ParseException("Invalid \"request\" parameter: " + e.getMessage(), 
-					                 OIDCError.INVALID_OPENID_REQUEST_OBJECT,
-					                 redirectURI, state, e);
-			}
-		}
-		
-		
 		v = params.get("request_uri");
 		
 		URL requestURI = null;
 		
 		if (StringUtils.isNotBlank(v)) {
-	
-			// request_object and request_uri must not be defined at the same time
-			if (requestJWT != null)
-				throw new ParseException("Invalid request: Found mutually exclusive \"request_object\" and \"request_uri\" parameters",
-					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, null);
-	
+
 			try {
 				requestURI = new URL(v);
 		
@@ -972,14 +947,40 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 					                 redirectURI, state, e);
 			}
 		}
-	
-		// Select appropriate constructor
+
+		v = params.get("request");
+
+		JWT requestObject = null;
+
+		if (StringUtils.isNotBlank(v)) {
+
+			// request_object and request_uri must not be defined at the same time
+			if (requestURI != null) {
+
+				throw new ParseException("Invalid request: Found mutually exclusive \"request\" and \"request_uri\" parameters",
+					                 OAuth2Error.INVALID_REQUEST,
+					                 redirectURI, state, null);
+			}
+
+			try {
+				requestObject = JWTParser.parse(v);
+				
+			} catch (java.text.ParseException e) {
+		
+				throw new ParseException("Invalid \"request_object\" parameter: " + e.getMessage(), 
+					                 OAuth2Error.INVALID_REQUEST,
+					                 redirectURI, state, e);
+			}
+		}
+		
+		
+		// Select the appropriate constructor
 		
 		// Inline request object
-		if (requestJWT != null)
+		if (requestObject != null)
 			return new OIDCAuthorizationRequest(rts, scope, clientID, redirectURI, state, nonce,
 			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
-			                                    idTokenHint, loginHint, acrValues, claims, requestJWT);
+			                                    idTokenHint, loginHint, acrValues, claims, requestObject);
 	
 		// Request object by URL reference
 		if (requestURI != null)

@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.util;
 
 
+import java.text.ParseException;
+
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
@@ -25,9 +27,10 @@ public interface JWTDecoder {
 	 *
 	 * @return The JWT claims set.
 	 *
-	 * @throws JOSEException If decoding, JWS validation and / or JWE
-	 *                       decryption of the JWT failed.
+	 * @throws JOSEException  If decoding, JWS validation and / or JWE
+	 *                        decryption of the JWT failed.
+	 * @throws ParseException If parsing of the JWT claims set failed.
 	 */
 	public ReadOnlyJWTClaimsSet decodeJWT(final JWT jwt)
-		throws JOSEException;
+		throws JOSEException, ParseException;
 }
