@@ -23,6 +23,13 @@ import com.nimbusds.openid.connect.sdk.claims.*;
  */
 public class OIDCAuthorizationRequestTest extends TestCase {
 
+
+	private final static String EXAMPLE_JWT_STRING = 
+		"eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJIUzI1NiJ9." +
+		"eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFt" +
+     		"cGxlLmNvbS9pc19yb290Ijp0cnVlfQ." +
+     		"dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk";
+
 	
 	public void testMinimalConstructor()
 		throws Exception {
@@ -124,7 +131,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		claimsLocales.add(LangTag.parse("en-US"));
 		claimsLocales.add(LangTag.parse("en-GB"));
 
-		JWT idTokenHint = null;
+		JWT idTokenHint = JWTParser.parse(EXAMPLE_JWT_STRING);
 
 		String loginHint = "alice123";
 
@@ -177,5 +184,82 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertTrue("Claims locale en-US", claimsLocales.get(0).equals(LangTag.parse("en-US")));
 		assertTrue("Claims locale en-US", claimsLocales.get(1).equals(LangTag.parse("en-GB")));
 		assertEquals("Claims locales size", 2, claimsLocales.size());
+
+		assertEquals(EXAMPLE_JWT_STRING, request.getIDTokenHint().getParsedString());
+
+		assertEquals(loginHint, request.getLoginHint());
+
+		List<ACR> acrValuesOut = request.getACRValues();
+		assertEquals("1", acrValuesOut.get(0).toString());
+		assertEquals("2", acrValuesOut.get(1).toString());
+		assertEquals(2, acrValuesOut.size());
+
+		ClaimsRequest claimsOut = request.getClaims();
+
+		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+
+		assertEquals(2, claimsOut.getUserInfoClaims().size());
+
+
+		// Check the resulting query string
+		String queryString = request.toQueryString();
+
+		System.out.println("OIDC authz query string: " + queryString);
+
+
+		request = OIDCAuthorizationRequest.parse(queryString);
+
+		rtsOut = request.getResponseTypeSet();
+		assertTrue(rtsOut.contains(ResponseType.CODE));
+		assertEquals(1, rtsOut.size());
+
+		scopeOut = request.getScope();
+		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertEquals(3, scopeOut.size());
+
+		assertTrue(new ClientID("123456789").equals(request.getClientID()));
+
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+
+		assertTrue(new State("abc").equals(request.getState()));
+		assertTrue(new Nonce("xyz").equals(request.getNonce()));
+
+		// Check extended parameters
+
+		assertEquals("Display checK", Display.POPUP, request.getDisplay());
+
+		promptOut = request.getPrompt();
+		assertTrue("Prompt login", promptOut.contains(Prompt.Type.LOGIN));
+		assertTrue("Prompt consent", promptOut.contains(Prompt.Type.CONSENT));
+		assertEquals("Prompt size", 2, promptOut.size());
+
+		assertEquals(3600, request.getMaxAge());
+
+		uiLocales = request.getUILocales();
+		assertTrue("UI locale en-US", uiLocales.get(0).equals(LangTag.parse("en-US")));
+		assertTrue("UI locale en-GB", uiLocales.get(1).equals(LangTag.parse("en-GB")));
+		assertEquals("UI locales size", 2, uiLocales.size());
+
+		claimsLocales = request.getClaimsLocales();
+		assertTrue("Claims locale en-US", claimsLocales.get(0).equals(LangTag.parse("en-US")));
+		assertTrue("Claims locale en-US", claimsLocales.get(1).equals(LangTag.parse("en-GB")));
+		assertEquals("Claims locales size", 2, claimsLocales.size());
+
+		assertEquals(EXAMPLE_JWT_STRING, request.getIDTokenHint().getParsedString());
+
+		assertEquals(loginHint, request.getLoginHint());
+
+		acrValuesOut = request.getACRValues();
+		assertEquals("1", acrValuesOut.get(0).toString());
+		assertEquals("2", acrValuesOut.get(1).toString());
+		assertEquals(2, acrValuesOut.size());
+
+		claimsOut = request.getClaims();
+
+		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+
+		assertEquals(2, claimsOut.getUserInfoClaims().size());
 	}
 }
