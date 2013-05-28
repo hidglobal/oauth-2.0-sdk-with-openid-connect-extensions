@@ -49,8 +49,11 @@ public abstract class Identifier implements JSONAware {
 	 * @param length The number of characters. Must be a positive integer.
 	 */
 	public Identifier(final int length) {
-	
-		this(RandomStringUtils.randomAlphanumeric(length));
+		
+		if (length < 1)
+			throw new IllegalArgumentException("The value must be a positive integer");
+
+		value = RandomStringUtils.randomAlphanumeric(length);
 	}
 	
 	
