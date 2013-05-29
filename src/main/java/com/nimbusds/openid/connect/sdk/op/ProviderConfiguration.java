@@ -13,7 +13,7 @@ import com.nimbusds.jose.JWSAlgorithm;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.ScopeToken;
+import com.nimbusds.oauth2.sdk.ScopeValue;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
@@ -585,7 +585,7 @@ public class ProviderConfiguration {
 				for (String v: stringArray) {
 
 					if (v != null)
-						config.scope.add(new ScopeToken(v));
+						config.scope.add(new ScopeValue(v));
 				}
 			}
 		}

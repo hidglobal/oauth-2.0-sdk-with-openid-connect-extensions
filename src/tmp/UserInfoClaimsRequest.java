@@ -56,7 +56,7 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 	 * UserInfo scope.
 	 *
 	 * @param scope The UserInfo scope. Must include an 
-	 *              {@link OIDCScopeToken#OPENID openid} scope token and 
+	 *              {@link OIDCScopeValue#OPENID openid} scope token and 
 	 *              must not be {@code null}.
 	 *
 	 * @return The matching UserInfo claims request JSON object.
@@ -65,20 +65,20 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 	
 		JSONObject claims = new JSONObject();
 			
-		if (scope.contains(OIDCScopeToken.PROFILE))
-			claims.putAll(OIDCScopeToken.PROFILE.getClaimsRequestJSONObject());
+		if (scope.contains(OIDCScopeValue.PROFILE))
+			claims.putAll(OIDCScopeValue.PROFILE.getClaimsRequestJSONObject());
 		
-		if (scope.contains(OIDCScopeToken.EMAIL))
-			claims.putAll(OIDCScopeToken.EMAIL.getClaimsRequestJSONObject());
+		if (scope.contains(OIDCScopeValue.EMAIL))
+			claims.putAll(OIDCScopeValue.EMAIL.getClaimsRequestJSONObject());
 			
-		if (scope.contains(OIDCScopeToken.PHONE))
-			claims.putAll(OIDCScopeToken.PHONE.getClaimsRequestJSONObject());
+		if (scope.contains(OIDCScopeValue.PHONE))
+			claims.putAll(OIDCScopeValue.PHONE.getClaimsRequestJSONObject());
 		
-		if (scope.contains(OIDCScopeToken.ADDRESS)) {
+		if (scope.contains(OIDCScopeValue.ADDRESS)) {
 			
 			// Nested!
 			JSONObject address = new JSONObject();
-			address.put("address", OIDCScopeToken.ADDRESS.getClaimsRequestJSONObject());
+			address.put("address", OIDCScopeValue.ADDRESS.getClaimsRequestJSONObject());
 		
 			claims.putAll(address);
 		}
@@ -149,7 +149,7 @@ public class UserInfoClaimsRequest extends ClaimsRequest {
 		throws ResolveException {
 		
 		// Set required claims
-		requiredClaims.addAll(OIDCScopeToken.OPENID.getClaims());
+		requiredClaims.addAll(OIDCScopeValue.OPENID.getClaims());
 		
 		// Resolve requested scope to claims
 		requestedClaims.putAll(getClaimsObjectForScope(scope));

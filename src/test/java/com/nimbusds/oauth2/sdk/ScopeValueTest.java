@@ -9,12 +9,12 @@ import junit.framework.TestCase;
  *
  * @author Vladimir Dzhuvinov
  */
-public class ScopeTokenTest extends TestCase {
+public class ScopeValueTest extends TestCase {
 
 
 	public void testMinimalConstructor() {
 
-		ScopeToken t = new ScopeToken("read");
+		ScopeValue t = new ScopeValue("read");
 
 		assertEquals("read", t.getValue());
 
@@ -24,18 +24,18 @@ public class ScopeTokenTest extends TestCase {
 
 	public void testFullConstructor() {
 
-		ScopeToken t = new ScopeToken("write", ScopeToken.Requirement.OPTIONAL);
+		ScopeValue t = new ScopeValue("write", ScopeValue.Requirement.OPTIONAL);
 
 		assertEquals("write", t.getValue());
 
-		assertEquals(ScopeToken.Requirement.OPTIONAL, t.getRequirement());
+		assertEquals(ScopeValue.Requirement.OPTIONAL, t.getRequirement());
 	}
 
 
 	public void testEquality() {
 
-		ScopeToken t1 = new ScopeToken("read");
-		ScopeToken t2 = new ScopeToken("read");
+		ScopeValue t1 = new ScopeValue("read");
+		ScopeValue t2 = new ScopeValue("read");
 
 		assertTrue(t1.equals(t2));
 	}

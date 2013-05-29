@@ -8,24 +8,24 @@ import java.util.Set;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.oauth2.sdk.ScopeToken;
+import com.nimbusds.oauth2.sdk.ScopeValue;
 
 
 /**
- * Standard OpenID Connect scope token.
+ * Standard OpenID Connect scope value.
  *
  * @author Vladimir Dzhuvinov
  */
-public class OIDCScopeToken extends ScopeToken {
+public class OIDCScopeValue extends ScopeValue {
 
 
 	/**
 	 * Informs the authorisation server that the client is making an OpenID 
-	 * Connect request (REQUIRED). This scope token requests access to the
+	 * Connect request (REQUIRED). This scope values requests access to the
 	 * {@code sub} claim. 
 	 */
-	public static final OIDCScopeToken OPENID =
-		new OIDCScopeToken("openid", ScopeToken.Requirement.REQUIRED, new String[]{"sub"});
+	public static final OIDCScopeValue OPENID =
+		new OIDCScopeValue("openid", ScopeValue.Requirement.REQUIRED, new String[]{"sub"});
 	
 	
 	/**
@@ -37,21 +37,21 @@ public class OIDCScopeToken extends ScopeToken {
 	 * {@code birthdate}, {@code zoneinfo}, {@code locale}, and 
 	 * {@code updated_time}. 
 	 */
-	public static final OIDCScopeToken PROFILE =
-		new OIDCScopeToken("profile", new String[]{"name",
-	                                               "family_name",
-	                                               "given_name",
-	                                               "middle_name",
-	                                               "nickname",
-	                                               "preferred_username",
-	                                               "profile",
-	                                               "picture",
-	                                               "website",
-	                                               "gender",
-	                                               "birthdate",
-	                                               "zoneinfo",
-	                                               "locale",
-	                                               "updated_time"});
+	public static final OIDCScopeValue PROFILE =
+		new OIDCScopeValue("profile", new String[]{"name",
+	                                                   "family_name",
+	                                                   "given_name",
+	                                                   "middle_name",
+	                                                   "nickname",
+	                                                   "preferred_username",
+	                                                   "profile",
+	                                                   "picture",
+	                                                   "website",
+	                                                   "gender",
+	                                                   "birthdate",
+	                                                   "zoneinfo",
+	                                                   "locale",
+	                                                   "updated_time"});
 	
 	
 	/**
@@ -59,29 +59,29 @@ public class OIDCScopeToken extends ScopeToken {
 	 * claims at the UserInfo endpoint be granted by the issued access 
 	 * token.
 	 */
-	public static final OIDCScopeToken EMAIL =
-		new OIDCScopeToken("email", new String[]{"email", "email_verified"});
+	public static final OIDCScopeValue EMAIL =
+		new OIDCScopeValue("email", new String[]{"email", "email_verified"});
 	
 	
 	/**
 	 * Requests that access to {@code address} claim at the UserInfo 
 	 * endpoint be granted by the issued access token. 
 	 */
-	public static final OIDCScopeToken ADDRESS =
-		new OIDCScopeToken("address", new String[]{"formatted",
-	                                               "street_address",
-	                                               "locality",
-	                                               "region",
-	                                               "postal_code",
-	                                               "country"});
+	public static final OIDCScopeValue ADDRESS =
+		new OIDCScopeValue("address", new String[]{"formatted",
+	                                                   "street_address",
+	                                                   "locality",
+	                                                   "region",
+	                                                   "postal_code",
+	                                                   "country"});
 	
 	
 	/**
 	 * Requests that access to the {@code phone_number} claim at the 
 	 * UserInfo endpoint be granted by the issued access token. 
 	 */
-	public static final OIDCScopeToken PHONE =
-		new OIDCScopeToken("phone", new String[]{"phone_number"});
+	public static final OIDCScopeValue PHONE =
+		new OIDCScopeValue("phone", new String[]{"phone_number"});
 
 
 	/**
@@ -89,8 +89,8 @@ public class OIDCScopeToken extends ScopeToken {
 	 * to obtain an access token that grants access the end-user's UserInfo
 	 * endpoint even when the user is not present (not logged in).
 	 */
-	public static final OIDCScopeToken OFFLINE_ACCESS =
-		new OIDCScopeToken("offline_access", null);
+	public static final OIDCScopeValue OFFLINE_ACCESS =
+		new OIDCScopeValue("offline_access", null);
 
 
 	/**
@@ -107,8 +107,8 @@ public class OIDCScopeToken extends ScopeToken {
 	 * @param claims      The names of the associated claims, {@code null} 
 	 *                    if not applicable.
 	 */
-	private OIDCScopeToken(final String value, 
-		               final ScopeToken.Requirement requirement,
+	private OIDCScopeValue(final String value, 
+		               final ScopeValue.Requirement requirement,
 	                       final String[] claims) {
 	
 		super(value, requirement);
@@ -123,16 +123,16 @@ public class OIDCScopeToken extends ScopeToken {
 
 	/**
 	 * Creates a new OpenID Connect scope token. The requirement is set to
-	 * {@link ScopeToken.Requirement#OPTIONAL optional}.
+	 * {@link ScopeValue.Requirement#OPTIONAL optional}.
 	 *
 	 * @param value  The scope token value. Must not be {@code null}.
 	 * @param claims The names of the associated claims. Must not be
 	 *               {@code null}.
 	 */
-	private OIDCScopeToken(final String value, 
+	private OIDCScopeValue(final String value, 
 		               final String[] claims) {
 	
-		this(value, ScopeToken.Requirement.OPTIONAL, claims);
+		this(value, ScopeValue.Requirement.OPTIONAL, claims);
 	}
 
 
@@ -160,7 +160,7 @@ public class OIDCScopeToken extends ScopeToken {
 		
 		for (String claim: claims) {
 		
-			if (getRequirement() == ScopeToken.Requirement.REQUIRED) {
+			if (getRequirement() == ScopeValue.Requirement.REQUIRED) {
 			
 				// Essential (applies to OPENID - sub only)
 				JSONObject details = new JSONObject();

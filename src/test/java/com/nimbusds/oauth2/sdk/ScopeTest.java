@@ -16,8 +16,8 @@ public class ScopeTest extends TestCase {
 
 		Scope scope = new Scope();
 
-		scope.add(new ScopeToken("read"));
-		scope.add(new ScopeToken("write"));
+		scope.add(new ScopeValue("read"));
+		scope.add(new ScopeValue("write"));
 
 		assertEquals(2, scope.size());
 
