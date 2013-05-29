@@ -14,9 +14,9 @@ import net.jcip.annotations.NotThreadSafe;
  *
  * <pre>
  * Scope scope = new Scope();
- * scope.add(OIDCScopeToken.OPENID);
- * scope.add(OIDCScopeToken.EMAIL);
- * scope.add(OIDCScopeToken.PROFILE);
+ * scope.add(OIDCScopeValue.OPENID);
+ * scope.add(OIDCScopeValue.EMAIL);
+ * scope.add(OIDCScopeValue.PROFILE);
  * </pre>
  *
  * <p>Related specifications:
@@ -28,7 +28,7 @@ import net.jcip.annotations.NotThreadSafe;
  * @author Vladimir Dzhuvinov
  */
 @NotThreadSafe
-public class Scope extends HashSet<ScopeToken> {
+public class Scope extends HashSet<ScopeValue> {
 
 	
 	/**
@@ -41,8 +41,8 @@ public class Scope extends HashSet<ScopeToken> {
 	
 	
 	/**
-	 * Returns the string representation of this scope. The scope tokens
-	 * can be serialised in any order.
+	 * Returns the string representation of this scope. The scope values
+	 * may be serialised in any order.
 	 *
 	 * @return The string representation.
 	 */
@@ -51,7 +51,7 @@ public class Scope extends HashSet<ScopeToken> {
 	
 		StringBuilder sb = new StringBuilder();
 	
-		for (ScopeToken token: this) {
+		for (ScopeValue token: this) {
 
 			if (sb.length() > 0)
 				sb.append(' ');
@@ -83,7 +83,7 @@ public class Scope extends HashSet<ScopeToken> {
 		String[] tokens = s.split("\\s+");
 
 		for (String t: tokens)
-			scope.add(new ScopeToken(t));
+			scope.add(new ScopeValue(t));
 
 		return scope;
 	}

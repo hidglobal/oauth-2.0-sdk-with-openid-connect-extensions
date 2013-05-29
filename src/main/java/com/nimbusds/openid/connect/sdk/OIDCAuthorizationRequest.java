@@ -153,8 +153,9 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
 	 * @param scope       The request scope. Corresponds to the
-	 *                    {@code scope} parameter. Must not be 
-	 *                    {@code null}.
+	 *                    {@code scope} parameter. Must contain an
+	 *                    {@link OIDCScopeValue#OPENID openid value}. Must
+	 *                    not be {@code null}.
 	 * @param clientID    The client identifier. Corresponds to the
 	 *                    {@code client_id} parameter. Must not be 
 	 *                    {@code null}.
@@ -190,7 +191,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeToken#OPENID openid token}. 
+	 *                      {@link OIDCScopeValue#OPENID openid value}. 
 	 *                      Must not be {@code null}.
 	 * @param clientID      The client identifier. Corresponds to the
 	 *                      {@code client_id} parameter. Must not be 
@@ -267,7 +268,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeToken#OPENID openid token}. 
+	 *                      {@link OIDCScopeValue#OPENID openid value}. 
 	 *                      Must not be {@code null}.
 	 * @param clientID      The client identifier. Corresponds to the
 	 *                      {@code client_id} parameter. Must not be 
@@ -340,7 +341,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (scope == null)
 			throw new IllegalArgumentException("The scope must not be null");
 
-		if (! scope.contains(OIDCScopeToken.OPENID))
+		if (! scope.contains(OIDCScopeValue.OPENID))
 			throw new IllegalArgumentException("The scope must include an \"openid\" token");
 		
 		
@@ -388,7 +389,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeToken#OPENID openid token}. 
+	 *                      {@link OIDCScopeValue#OPENID openid value}. 
 	 *                      Must not be {@code null}.
 	 * @param clientID      The client identifier. Corresponds to the
 	 *                      {@code client_id} parameter. Must not be 
@@ -461,7 +462,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (scope == null)
 			throw new IllegalArgumentException("The scope must not be null");
 
-		if (! scope.contains(OIDCScopeToken.OPENID))
+		if (! scope.contains(OIDCScopeValue.OPENID))
 			throw new IllegalArgumentException("The scope must include an \"openid\" token");
 		
 		
@@ -827,7 +828,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				                 OAuth2Error.INVALID_REQUEST, 
 					         redirectURI, state, null);
 
-		if (! scope.contains(OIDCScopeToken.OPENID))
+		if (! scope.contains(OIDCScopeValue.OPENID))
 			throw new ParseException("The scope must include an \"openid\" token",
 				                 OAuth2Error.INVALID_REQUEST, 
 					         redirectURI, state, null);

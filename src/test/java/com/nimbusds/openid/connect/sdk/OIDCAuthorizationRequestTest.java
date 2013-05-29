@@ -38,9 +38,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		rts.add(ResponseType.CODE);
 
 		Scope scope = new Scope();
-		scope.add(OIDCScopeToken.OPENID);
-		scope.add(OIDCScopeToken.EMAIL);
-		scope.add(OIDCScopeToken.PROFILE);
+		scope.add(OIDCScopeValue.OPENID);
+		scope.add(OIDCScopeValue.EMAIL);
+		scope.add(OIDCScopeValue.PROFILE);
 
 		ClientID clientID = new ClientID("123456789");
 
@@ -57,9 +57,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -82,9 +82,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -103,9 +103,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		rts.add(ResponseType.CODE);
 
 		Scope scope = new Scope();
-		scope.add(OIDCScopeToken.OPENID);
-		scope.add(OIDCScopeToken.EMAIL);
-		scope.add(OIDCScopeToken.PROFILE);
+		scope.add(OIDCScopeValue.OPENID);
+		scope.add(OIDCScopeValue.EMAIL);
+		scope.add(OIDCScopeValue.PROFILE);
 
 		ClientID clientID = new ClientID("123456789");
 
@@ -152,9 +152,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -214,9 +214,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -271,9 +271,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		rts.add(ResponseType.CODE);
 
 		Scope scope = new Scope();
-		scope.add(OIDCScopeToken.OPENID);
-		scope.add(OIDCScopeToken.EMAIL);
-		scope.add(OIDCScopeToken.PROFILE);
+		scope.add(OIDCScopeValue.OPENID);
+		scope.add(OIDCScopeValue.EMAIL);
+		scope.add(OIDCScopeValue.PROFILE);
 
 		ClientID clientID = new ClientID("123456789");
 
@@ -323,9 +323,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -387,9 +387,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -446,9 +446,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		rts.add(ResponseType.CODE);
 
 		Scope scope = new Scope();
-		scope.add(OIDCScopeToken.OPENID);
-		scope.add(OIDCScopeToken.EMAIL);
-		scope.add(OIDCScopeToken.PROFILE);
+		scope.add(OIDCScopeValue.OPENID);
+		scope.add(OIDCScopeValue.EMAIL);
+		scope.add(OIDCScopeValue.PROFILE);
 
 		ClientID clientID = new ClientID("123456789");
 
@@ -498,9 +498,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
@@ -562,9 +562,9 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
-		assertTrue(scopeOut.contains(OIDCScopeToken.OPENID));
-		assertTrue(scopeOut.contains(OIDCScopeToken.EMAIL));
-		assertTrue(scopeOut.contains(OIDCScopeToken.PROFILE));
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
 		assertEquals(3, scopeOut.size());
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));

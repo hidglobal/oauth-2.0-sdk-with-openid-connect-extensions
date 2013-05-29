@@ -42,8 +42,8 @@ public final class ResolvedOIDCAuthorizationRequest extends OIDCAuthorizationReq
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeToken#OPENID openid token}. 
-	 *                      Must not be {@code null}.
+	 *                      {@link com.nimbusds.openid.connect.sdk.OIDCScopeValue#OPENID 
+	 *                      openid value}. Must not be {@code null}.
 	 * @param clientID      The client identifier. Corresponds to the
 	 *                      {@code client_id} parameter. Must not be 
 	 *                      {@code null}.
