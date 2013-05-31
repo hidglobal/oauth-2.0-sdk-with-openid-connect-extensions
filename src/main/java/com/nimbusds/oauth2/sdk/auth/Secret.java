@@ -1,8 +1,10 @@
 package com.nimbusds.oauth2.sdk.auth;
 
 
+import java.nio.charset.Charset;
 import java.util.Date;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,7 +21,7 @@ public class Secret {
 	/**
 	 * The secret value.
 	 */
-	private String value;
+	private byte[] value;
 
 
 	/**
@@ -37,12 +39,24 @@ public class Secret {
 
 		this(value, null);
 	}
+	
+	
+	/**
+	 * Creates a new secret with the specified value.
+	 *
+	 * @param value The value. Must not be {@code null} or empty array.
+	 */
+	public Secret(final byte[] value) {
+
+		this(value, null);
+	}
 
 
 	/**
 	 * Creates a new secret with the specified value and expiration date.
 	 *
-	 * @param value   The value. Must not be {@code null} or empty string.
+	 * @param value   The value. Must be UTF-8 encoded, not {@code null} or 
+	 * *              empty string.
 	 * @param expDate The expiration date, {@code null} if not specified.
 	 */
 	public Secret(final String value, final Date expDate) {
@@ -50,8 +64,25 @@ public class Secret {
 		if (StringUtils.isBlank(value))
 			throw new IllegalArgumentException("The value must not be null or empty string");
 
-		this.value = value;
+		this.value = value.getBytes(Charset.forName("utf-8"));
 
+		this.expDate = expDate;
+	}
+	
+	
+	/**
+	 * Creates a new secret with the specified value and expiration date.
+	 *
+	 * @param value   The value. Must not be {@code null} or empty string.
+	 * @param expDate The expiration date, {@code null} if not specified.
+	 */
+	public Secret(final byte[] value, final Date expDate) {
+
+		if (ArrayUtils.isEmpty(value))
+			throw new IllegalArgumentException("The value must not be null or empty array");
+
+		this.value = value;
+		
 		this.expDate = expDate;
 	}
 
@@ -82,9 +113,25 @@ public class Secret {
 	/**
 	 * Gets the value of this secret.
 	 *
-	 * @return The value, {@code null} if it has been erased.
+	 * @return The value as a UTF-8 encoded string, {@code null} if it has 
+	 *         been erased.
 	 */
 	public String getValue() {
+
+		if (ArrayUtils.isEmpty(value))
+			return null;
+		
+		return new String(value, Charset.forName("utf-8"));
+	}
+	
+	
+	/**
+	 * Gets the value of this secret.
+	 *
+	 * @return The value as a byte array, {@code null} if it has 
+	 *         been erased.
+	 */
+	public byte[] getValueBytes() {
 
 		return value;
 	}
@@ -95,6 +142,12 @@ public class Secret {
 	 */
 	public void erase() {
 
+		if (ArrayUtils.isEmpty(value))
+			return;
+		
+		for (int i=0; i < value.length; i++)
+			value[i] = 0;
+		
 		value = null;
 	}
 
