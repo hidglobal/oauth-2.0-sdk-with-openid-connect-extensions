@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.Collections;
 import java.util.HashSet;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -46,6 +47,18 @@ import org.apache.commons.lang3.StringUtils;
 @NotThreadSafe
 public class ResponseTypeSet extends HashSet<ResponseType> {
 
+	/**
+	 *  Gets the default response type set.
+	 * 
+	 * @return The default response type set, consisting of 
+	 *         {@link ResponseType#CODE} only.
+	 */
+	public static ResponseTypeSet getDefault() {
+		
+		ResponseTypeSet defaultRTS = new ResponseTypeSet();
+		defaultRTS.add(ResponseType.CODE);
+		return defaultRTS;
+	}
 
 	/**
 	 * Creates a new empty response type set.
@@ -97,7 +110,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	
 	
 	/**
-	 * Returns {@code true} if this reponse type set implies a code flow.
+	 * Returns {@code true} if this response type set implies a code flow.
 	 * This is determined by checking for the presence of {@code code} in
 	 * the response type set.
 	 *
@@ -113,7 +126,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	
 	
 	/**
-	 * Returns {@code true} if this reponse type set implies an implicit 
+	 * Returns {@code true} if this response type set implies an implicit 
 	 * flow. This is determined by checking for the absence of {@code code}
 	 * in the response type set.
 	 *
@@ -148,6 +161,7 @@ public class ResponseTypeSet extends HashSet<ResponseType> {
 	 * @return Space delimited string representing the authorisation 
 	 *         response types.
 	 */
+	@Override
 	public String toString() {
 	
 		StringBuilder sb = new StringBuilder();

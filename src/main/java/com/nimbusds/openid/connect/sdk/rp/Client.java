@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Set;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
@@ -23,7 +25,10 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
+import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -32,7 +37,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
-import com.nimbusds.openid.connect.sdk.claims.LangTaggedObject;
+
 
 
 /**
@@ -53,196 +58,191 @@ public class Client {
 	/**
 	 * The registered client ID.
 	 */
-	private ClientID id = null;
+	private ClientID id;
+	
+	
+	/**
+	 * The client registration URI.
+	 */
+	private URL registrationURI;
 	
 	
 	/**
 	 * Redirect URIs.
 	 */
-	private Set<URL> redirectURIs = null;
+	private Set<URL> redirectURIs;
+	
+	
+	/**
+	 * The expected OAuth 2.0 response types.
+	 */
+	private ResponseTypeSet responseTypes;
+	
+	
+	/**
+	 * The expected OAuth 2.0 grant types.
+	 */
+	private Set<GrantType> grantTypes;
+	
+	
+	/**
+	 * The client application type.
+	 */
+	private ApplicationType applicationType;
 
 
 	/**
 	 * Administrator contacts for the client.
 	 */
-	private List<InternetAddress> contacts = null;
+	private List<InternetAddress> contacts;
 
 
 	/**
-	 * The client application type.
+	 * The client name.
 	 */
-	private ApplicationType applicationType = ApplicationType.getDefault();
-
-
-	/**
-	 * The client name, with optional language tags.
-	 */
-	private Map<LangTag,String> nameEntries = new HashMap<LangTag,String>();
+	private Map<LangTag,String> nameEntries;
 
 
 	/**
 	 * The client application logo.
 	 */
-	private URL logoURL = null;
+	private Map<LangTag,URL> logoURIEntries;
 
 
 	/**
 	 * The client policy for use of end-user data.
 	 */
-	private URL policyURL = null;
+	private Map<LangTag,URL> policyURIEntries;
 
 
 	/**
 	 * The client terms of service.
 	 */
-	private URL tosURL = null;
+	private Map<LangTag,URL> tosURIEntries;
 
 
 	/**
 	 * The subject identifier type for responses to this client.
 	 */
-	private SubjectType subjectType = null;
+	private SubjectType subjectType;
 
 
 	/**
-	 * Sector identifier HTTPS URL.
+	 * Sector identifier URI.
 	 */
-	private URL sectorIDURL = null;
+	private URL sectorIDURI;
 
 
 	/**
 	 * Token endpoint authentication method.
 	 */
-	private ClientAuthenticationMethod tokenEndpointAuthMethod = 
-		ClientAuthenticationMethod.getDefault();
+	private ClientAuthenticationMethod authMethod;
 
 
 	/**
-	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
-	 * are used in signing Token endpoint requests and OpenID request 
-	 * objects. If {@link #encryptionJWKSetURL} is not provided, also used 
-	 * to encrypt the ID Token and UserInfo endpoint responses to the 
-	 * client.
+	 * URI for this client's JSON Web Key (JWK) set containing key(s) that
+	 * are used in signing requests to the server and key(s) for encrypting
+	 * responses.
 	 */
-	private URL jwkSetURL = null;
-
-
+	private URL jwkSetURI;
+	
+	
 	/**
-	 * URL for the client's JSON Web Key (JWK) set containing key(s) that
-	 * are used to encrypt the ID Token and UserInfo endpoint responses to 
-	 * the client.
+	 * Pre-registered OpenID Connect request URIs.
 	 */
-	private URL encryptionJWKSetURL = null;
-
-
-	/**
-	 * URL for the client's PEM encoded X.509 certificate or certificate 
-	 * chain that is used for signing Token endpoint requests and OpenID
-	 * request objects. If {@link #encryptionX509URL} is not provided, also
-	 * used to encrypt the ID Token and UserInfo endpoint responses to the
-	 * client.
-	 */
-	private URL x509URL = null;
-
-
-	/**
-	 * URL for the client's PEM encoded X.509 certificate or certificate
-	 * chain that is used to encrypt the ID Token and UserInfo endpoint
-	 * responses to the client.
-	 */
-	private URL encryptionX509URL = null;
+	private Set<URL> requestObjectURIs;
 
 
 	/**
 	 * The JSON Web Signature (JWS) algorithm required for the OpenID 
-	 * request objects sent by this client.
+	 * Connect request objects sent by this client.
 	 */
-	private JWSAlgorithm requestObjectJWSAlg = null;
+	private JWSAlgorithm requestObjectJWSAlg;
 
 
 	/**
 	 * The JSON Web Signature (JWS) algorithm required for the ID Tokens
 	 * issued to this client.
 	 */
-	private JWSAlgorithm idTokenJWSAlg = null;
+	private JWSAlgorithm idTokenJWSAlg;
 
 
 	/**
 	 * The JSON Web Encryption (JWE) algorithm required for the ID Tokens
 	 * issued to this client.
 	 */
-	private JWEAlgorithm idTokenJWEAlg = null;
+	private JWEAlgorithm idTokenJWEAlg;
 
 
 	/**
 	 * The encryption method (JWE enc) required for the ID Tokens issued to
 	 * this client.
 	 */
-	private EncryptionMethod idTokenJWEEnc = null;
+	private EncryptionMethod idTokenJWEEnc;
 
 
 	/**
 	 * The JSON Web Signature (JWS) algorithm required for the UserInfo
 	 * responses to this client.
 	 */
-	private JWSAlgorithm userInfoJWSAlg = null;
+	private JWSAlgorithm userInfoJWSAlg;
 
 
 	/**
 	 * The JSON Web Encryption (JWE) algorithm required for the UserInfo
 	 * responses to this client.
 	 */
-	private JWEAlgorithm userInfoJWEAlg = null;
+	private JWEAlgorithm userInfoJWEAlg;
 
 
 	/**
 	 * The encryption method (JWE enc) required for the UserInfo responses
 	 * to this client.
 	 */
-	private EncryptionMethod userInfoJWEEnc = null;
+	private EncryptionMethod userInfoJWEEnc;
 
 
 	/**
 	 * The default max authentication age, in seconds. If not specified 0.
 	 */
-	private int defaultMaxAge = 0;
+	private int defaultMaxAge;
 
 
 	/**
 	 * If {@code true} the {@code auth_time} claim in the ID Token is
 	 * required by default.
 	 */
-	private boolean requiresAuthTime = false;
+	private boolean requiresAuthTime;
 
 
 	/**
-	 * The default Authentication Context Class Reference (ACR).
+	 * The default Authentication Context Class Reference (ACR) values.
 	 */
-	private Set<ACR> defaultACRs = null;
+	private Set<ACR> defaultACRs;
 
 
 	/**
 	 * Authorisation server initiated login HTTPS URL.
 	 */
-	private URL initiateLoginURI = null;
+	private URL initiateLoginURI;
 
 
 	/**
 	 * Logout redirect URL.
 	 */
-	private URL postLogoutRedirectURI = null;
+	private URL postLogoutRedirectURI;
 
 
 	/**
 	 * The registration access token.
 	 */
-	private BearerAccessToken accessToken = null;
+	private BearerAccessToken accessToken;
 
 
 	/**
 	 * The client secret.
 	 */
-	private Secret secret = null;
+	private Secret secret;
 
 
 	/** 
@@ -250,12 +250,16 @@ public class Client {
 	 */
 	public Client() {
 
-		// ID not set
+		nameEntries = new HashMap<LangTag,String>();
+		logoURIEntries = new HashMap<LangTag,URL>();
+		policyURIEntries = new HashMap<LangTag,URL>();
+		policyURIEntries = new HashMap<LangTag,URL>();
+		tosURIEntries = new HashMap<LangTag,URL>();
 	}
 
 
 	/**
-	 * Gets the client ID.
+	 * Gets the registered client ID.
 	 *
 	 * @return The client ID, {@code null} if not specified.
 	 */
@@ -266,7 +270,7 @@ public class Client {
 
 
 	/**
-	 * Sets the client ID.
+	 * Sets the registered client ID.
 	 *
 	 * @param id The client ID, {@code null} if not specified.
 	 */
@@ -277,10 +281,35 @@ public class Client {
 	
 	
 	/**
-	 * Gets the redirect URIs for the client. Corresponds to the
+	 * Gets the URI of the client registration. Corresponds to the
+	 * {@code registration_client_uri} client registration parameter.
+	 * 
+	 * @return The registration URI, {@code null} if not specified.
+	 */
+	public URL getRegistrationURI() {
+		
+		return registrationURI;
+	}
+	
+	
+	/**
+	 * Sets the URI of the client registration. Corresponds to the
+	 * {@code registration_client_uri} client registration parameter.
+	 * 
+	 * @param registrationURI The registration URI, {@code null} if not
+	 *                        specified.
+	 */
+	public void setRegistrationURI(final URL registrationURI) {
+		
+		this.registrationURI = registrationURI;
+	}
+	
+	
+	/**
+	 * Gets the redirect URIs for this client. Corresponds to the
 	 * {@code redirect_uris} client registration parameter.
 	 *
-	 * @return The redirect URIs, {@code null} if none.
+	 * @return The redirect URIs, {@code null} if not specified.
 	 */
 	public Set<URL> getRedirectURIs() {
 	
@@ -289,46 +318,72 @@ public class Client {
 	
 	
 	/**
-	 * Sets the redirect URIs for the client. Corresponds to the
+	 * Sets the redirect URIs for this client. Corresponds to the
 	 * {@code redirect_uris} client registration parameter.
 	 *
-	 * @param redirectURIs The redirect URIs, {@code null} if none.
+	 * @param redirectURIs The redirect URIs, {@code null} if not 
+	 *                     specified.
 	 */
 	public void setRedirectURIs(final Set<URL> redirectURIs) {
 	
 		this.redirectURIs = redirectURIs;
 	}
-
-
+	
+	
 	/**
-	 * Gets the administrator contacts for the client. Corresponds to the
-	 * {@code contacts} client registration parameter.
-	 *
-	 * @return The administrator contacts, {@code null} if none.
+	 * Gets the expected OAuth 2.0 response types. Corresponds to the
+	 * {@code response_types} client registration parameter.
+	 * 
+	 * @return The response types, {@code null} if not specified.
 	 */
-	public List<InternetAddress> getContacts() {
-
-		return contacts;
+	public ResponseTypeSet getResponseTypes() {
+		
+		return responseTypes;
 	}
-
-
+	
+	
 	/**
-	 * Sets the administrator contacts for the client. Corresponds to the
-	 * {@code contacts} client registration parameter.
-	 *
-	 * @param contacts The administrator contacts, {@code null} if none.
+	 * Sets the expected OAuth 2.0 response types. Corresponds to the
+	 * {@code response_types} client registration parameter.
+	 * 
+	 * @param responseTypes The response types, {@code null} if not 
+	 *                      specified.
 	 */
-	public void setContacts(final List<InternetAddress> contacts) {
-
-		this.contacts = contacts;
+	public void setResponseTypes(final ResponseTypeSet responseTypes) {
+		
+		this.responseTypes = responseTypes;
 	}
-
-
+	
+	
+	/**
+	 * Gets the expected OAuth 2.0 grant types. Corresponds to the
+	 * {@code grant_types} client registration parameter.
+	 * 
+	 * @return The grant types, {@code null} if not specified.
+	 */
+	public Set<GrantType> getGrantTypes() {
+		
+		return grantTypes;
+	}
+	
+	
+	/**
+	 * Sets the expected OAuth 2.0 grant types. Corresponds to the
+	 * {@code grant_types} client registration parameter.
+	 * 
+	 * @param grantTypes The grant types, {@code null} if not specified.
+	 */
+	public void setGrantTypes(final Set<GrantType> grantTypes) {
+		
+		this.grantTypes = grantTypes;
+	}
+	
+	
 	/**
 	 * Gets the client application type. Corresponds to the
 	 * {@code application_type} client registration parameter.
 	 *
-	 * @return The client application type.
+	 * @return The client application type, {@code null} if not specified.
 	 */
 	public ApplicationType getApplicationType() {
 
@@ -340,15 +395,37 @@ public class Client {
 	 * Sets the client application type. Corresponds to the
 	 * {@code application_type} client registration parameter.
 	 *
-	 * @param applicationType The client application type, {@code null} for
-	 *                        the default.
+	 * @param applicationType The client application type, {@code null} if
+	 *                        not specified.
 	 */
 	public void setApplicationType(final ApplicationType applicationType) {
 
-		if (applicationType == null)
-			this.applicationType = ApplicationType.getDefault();
-		else
-			this.applicationType = applicationType;
+		this.applicationType = applicationType;
+	}
+
+
+	/**
+	 * Gets the administrator contacts for the client. Corresponds to the
+	 * {@code contacts} client registration parameter.
+	 *
+	 * @return The administrator contacts, {@code null} if not specified.
+	 */
+	public List<InternetAddress> getContacts() {
+
+		return contacts;
+	}
+
+
+	/**
+	 * Sets the administrator contacts for the client. Corresponds to the
+	 * {@code contacts} client registration parameter.
+	 *
+	 * @param contacts The administrator contacts, {@code null} if not
+	 *                 specified.
+	 */
+	public void setContacts(final List<InternetAddress> contacts) {
+
+		this.contacts = contacts;
 	}
 
 
@@ -407,88 +484,208 @@ public class Client {
 	 * Sets the client name. Corresponds to the {@code client_name} client
 	 * registration parameter, with an optional language tag.
 	 *
-	 * @param name The client name, with optional language tag. 
-	 *             {@code null} if not specified.
+	 * @param name    The client name. Must not be {@code null}.
+	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public void setName(final LangTaggedObject<String> name) {
+	public void setName(final String name, final LangTag langTag) {
 
-		if (name == null)
-			return;
-
-		nameEntries.put(name.getLangTag(), name.getObject());
+		nameEntries.put(langTag, name);
 	}
 
 
 	/**
-	 * Gets the client application logo. Corresponds to the
-	 * {@code logo_url} client registration parameter.
+	 * Gets the client application logo. Corresponds to the 
+	 * {@code logo_uri} client registration parameter, with no language 
+	 * tag.
 	 *
-	 * @return The logo URL, {@code null} if not specified.
+	 * @return The logo URI, {@code null} if not specified.
 	 */
-	public URL getLogoURL() {
+	public URL getLogoURI() {
 
-		return logoURL;
+		return getLogoURI(null);
 	}
 
 
 	/**
-	 * Sets the client application logo. Corresponds to the
-	 * {@code logo_url} client registration parameter.
+	 * Gets the client application logo. Corresponds to the 
+	 * {@code logo_uri} client registration parameter, with an optional
+	 * language tag.
 	 *
-	 * @param logoURL The logo URL, {@code null} if not specified.
+	 * @return The logo URI, {@code null} if not specified.
 	 */
-	public void setLogoURL(final URL logoURL) {
+	public URL getLogoURI(final LangTag langTag) {
 
-		this.logoURL = logoURL;
+		return logoURIEntries.get(langTag);
 	}
 
 
 	/**
-	 * Gets the client policy for use of end-user data. Corresponds to the
-	 * {@code policy_url} client registration parameter.
+	 * Gets the client application logo entries. Corresponds to the 
+	 * {@code logo_uri} client registration parameter.
 	 *
-	 * @return The policy URL, {@code null} if not specified.
+	 * @return The logo URI entries, empty map if none.
 	 */
-	public URL getPolicyURL() {
+	public Map<LangTag,URL> getLogoURIEntries() {
 
-		return policyURL;
+		return logoURIEntries;
 	}
 
 
 	/**
-	 * Sets the client policy for use of end-user data. Corresponds to the
-	 * {@code policy_url} client registration parameter.
+	 * Sets the client application logo. Corresponds to the 
+	 * {@code logo_uri} client registration parameter, with no language 
+	 * tag.
 	 *
-	 * @param policyURL The policy URL, {@code null} if not specified.
+	 * @param logoURI The logo URI, {@code null} if not specified.
 	 */
-	public void setPolicyURL(final URL policyURL) {
+	public void setLogoURI(final URL logoURI) {
 
-		this.policyURL = policyURL;
+		logoURIEntries.put(null, logoURI);
 	}
 
 
 	/**
-	 * Gets the client terms of service. Corresponds to the
-	 * {@code tos_url} client registration parameter.
+	 * Sets the client application logo. Corresponds to the 
+	 * {@code logo_uri} client registration parameter, with an optional
+	 * language tag.
 	 *
-	 * @return The terms of service URL, {@code null} if not specified.
+	 * @param logoURI The logo URI. Must not be {@code null}.
+	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public URL getTermsOfServiceURL() {
+	public void setLogoURI(final URL logoURI, final LangTag langTag) {
 
-		return tosURL;
+		logoURIEntries.put(langTag, logoURI);
+	}
+	
+
+	/**
+	 * Gets the client policy for use of end-user data. Corresponds to the 
+	 * {@code policy_uri} client registration parameter, with no language 
+	 * tag.
+	 *
+	 * @return The policy URI, {@code null} if not specified.
+	 */
+	public URL getPolicyURI() {
+
+		return getPolicyURI(null);
 	}
 
 
 	/**
-	 * Sets the client terms of service. Corresponds to the
-	 * {@code tos_url} client registration parameter.
+	 * Gets the client policy for use of end-user data. Corresponds to the 
+	 * {@code policy_url} client registration parameter, with an optional
+	 * language tag.
 	 *
-	 * @param tosURL The terms of service URL, {@code null} if not 
+	 * @return The policy URI, {@code null} if not specified.
+	 */
+	public URL getPolicyURI(final LangTag langTag) {
+
+		return policyURIEntries.get(langTag);
+	}
+
+
+	/**
+	 * Gets the client policy entries for use of end-user data. 
+	 * Corresponds to the {@code policy_uri} client registration parameter.
+	 *
+	 * @return The policy URI entries, empty map if none.
+	 */
+	public Map<LangTag,URL> getPolicyURIEntries() {
+
+		return policyURIEntries;
+	}
+
+
+	/**
+	 * Sets the client policy for use of end-user data. Corresponds to the 
+	 * {@code policy_uri} client registration parameter, with no language 
+	 * tag.
+	 *
+	 * @param policyURI The policy URI, {@code null} if not specified.
+	 */
+	public void setPolicyURI(final URL policyURI) {
+
+		policyURIEntries.put(null, policyURI);
+	}
+
+
+	/**
+	 * Sets the client policy for use of end-user data. Corresponds to the 
+	 * {@code policy_uri} client registration parameter, with an optional
+	 * language tag.
+	 *
+	 * @param policyURI The policy URI. Must not be {@code null}.
+	 * @param langTag   The language tag, {@code null} if not specified.
+	 */
+	public void setPolicyURI(final URL policyURI, final LangTag langTag) {
+
+		policyURIEntries.put(langTag, policyURI);
+	}
+
+
+	/**
+	 * Gets the client's terms of service. Corresponds to the 
+	 * {@code tos_uri} client registration parameter, with no language 
+	 * tag.
+	 *
+	 * @return The terms of service URI, {@code null} if not specified.
+	 */
+	public URL getTermsOfServiceURI() {
+
+		return getTermsOfServiceURI(null);
+	}
+
+
+	/**
+	 * Gets the client's terms of service. Corresponds to the 
+	 * {@code tos_uri} client registration parameter, with an optional
+	 * language tag.
+	 *
+	 * @return The terms of service URI, {@code null} if not specified.
+	 */
+	public URL getTermsOfServiceURI(final LangTag langTag) {
+
+		return tosURIEntries.get(langTag);
+	}
+
+
+	/**
+	 * Gets the client's terms of service entries. Corresponds to the 
+	 * {@code tos_uri} client registration parameter.
+	 *
+	 * @return The terms of service URI entries, empty map if none.
+	 */
+	public Map<LangTag,URL> getTermsOfServiceURIEntries() {
+
+		return tosURIEntries;
+	}
+
+
+	/**
+	 * Sets the client's terms of service. Corresponds to the 
+	 * {@code tos_uri} client registration parameter, with no language 
+	 * tag.
+	 *
+	 * @param tosURI The terms of service URI, {@code null} if not 
 	 *               specified.
 	 */
-	public void setTermsOfServiceURL(final URL tosURL) {
+	public void setTermsOfServiceURI(final URL tosURI) {
 
-		this.tosURL = tosURL;
+		tosURIEntries.put(null, tosURI);
+	}
+
+
+	/**
+	 * Sets the client's terms of service. Corresponds to the 
+	 * {@code tos_uri} client registration parameter, with an optional
+	 * language tag.
+	 *
+	 * @param tosURI  The terms of service URI. Must not be {@code null}.
+	 * @param langTag The language tag, {@code null} if not specified.
+	 */
+	public void setTermsOfServiceURI(final URL tosURI, final LangTag langTag) {
+
+			tosURIEntries.put(langTag, tosURI);
 	}
 
 
@@ -520,27 +717,27 @@ public class Client {
 
 
 	/**
-	 * Gets the sector identifier URL. Corresponds to the 
-	 * {@code sector_identifier_url} client registration parameter.
+	 * Gets the sector identifier URI. Corresponds to the 
+	 * {@code sector_identifier_uri} client registration parameter.
 	 *
-	 * @return The sector identifier URL, {@code null} if not specified.
+	 * @return The sector identifier URI, {@code null} if not specified.
 	 */
-	public URL getSectorIDURL() {
+	public URL getSectorIDURI() {
 
-		return sectorIDURL;
+		return sectorIDURI;
 	}
 
 
 	/**
-	 * Sets the sector identifier URL. Corresponds to the 
-	 * {@code sector_identifier_url} client registration parameter.
+	 * Sets the sector identifier URI. Corresponds to the 
+	 * {@code sector_identifier_uri} client registration parameter.
 	 *
-	 * @param sectorIDURL The sector identifier URL, {@code null} if not 
+	 * @param sectorIDURI The sector identifier URI, {@code null} if not 
 	 *                    specified.
 	 */
-	public void setSectorIDURL(final URL sectorIDURL) {
+	public void setSectorIDURI(final URL sectorIDURI) {
 
-		this.sectorIDURL = sectorIDURL;
+		this.sectorIDURI = sectorIDURI;
 	}
 
 
@@ -548,11 +745,12 @@ public class Client {
 	 * Gets the Token endpoint authentication method. Corresponds to the 
 	 * {@code token_endpoint_auth_method} client registration parameter.
 	 *
-	 * @return The Token endpoint authentication method.
+	 * @return The Token endpoint authentication method, {@code null} if
+	 *         not specified.
 	 */
 	public ClientAuthenticationMethod getTokenEndpointAuthMethod() {
 
-		return tokenEndpointAuthMethod;
+		return authMethod;
 	}
 
 
@@ -560,145 +758,73 @@ public class Client {
 	 * Sets the Token endpoint authentication method. Corresponds to the 
 	 * {@code token_endpoint_auth_method} client registration parameter.
 	 *
-	 * @param tokenEndpointAuthMethod The Token endpoint authentication 
-	 *                                method, {@code null} for the default.
+	 * @param authMethod The Token endpoint authentication  method, 
+	 *                   {@code null} if not specified.
 	 */
-	public void setTokenEndpointAuthMethod(final ClientAuthenticationMethod tokenEndpointAuthMethod) {
+	public void setTokenEndpointAuthMethod(final ClientAuthenticationMethod authMethod) {
 
-		if (tokenEndpointAuthMethod == null)
-			this.tokenEndpointAuthMethod = ClientAuthenticationMethod.getDefault();
-		else
-			this.tokenEndpointAuthMethod = tokenEndpointAuthMethod;
+		this.authMethod = authMethod;
 	}
 
 
 	/**
-	 * Gets the URL for the client's JSON Web Key (JWK) set containing 
-	 * key(s) that are used in signing Token endpoint requests and OpenID 
-	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided, 
-	 * also used to encrypt the ID Token and UserInfo endpoint responses to 
-	 * the client. Corresponds to the {@code jwk_url} client registration 
-	 * parameter.
-	 *
-	 * @return The JWK set URL, {@code null} if not specified.
-	 */
-	public URL getJWKSetURL() {
-
-		return jwkSetURL;
-	}
-
-
-	/**
-	 * Sets the URL for the client's JSON Web Key (JWK) set containing 
-	 * key(s) that are used in signing Token endpoint requests and OpenID 
-	 * request objects. If {@link #getEncryptionJWKSetURL} if not provided,
-	 * also used to encrypt the ID Token and UserInfo endpoint responses to
-	 * the client. Corresponds to the {@code jwk_url} client registration 
-	 * parameter.
-	 *
-	 * @param jwkSetURL The JWK set URL, {@code null} if not specified.
-	 */
-	public void setJWKSetURL(final URL jwkSetURL) {
-
-		this.jwkSetURL = jwkSetURL;
-	}
-
-
-	/**
-	 * Gets the URL for the client's JSON Web Key (JWK) set containing
-	 * key(s) that ares used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client. Corresponds to the 
-	 * {@code jwk_encryption_url} client registration parameter.
-	 *
-	 * @return The encryption JWK set URL, {@code null} if not specified.
-	 */
-	public URL getEncryptionJWKSetURL() {
-
-		return encryptionJWKSetURL;
-	}
-
-
-	/**
-	 * Sets the URL for the client's JSON Web Key (JWK) set containing
-	 * key(s) that are used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client. Corresponds to the 
-	 * {@code jwk_encryption_url} client registration parameter.
-	 *
-	 * @param encryptionJWKSetURL The encryption JWK set URL, {@code null} 
-	 *                            if not specified.
-	 */
-	public void setEncrytionJWKSetURL(final URL encryptionJWKSetURL) {
-
-		this.encryptionJWKSetURL = encryptionJWKSetURL;
-	}
-
-
-	/**
-	 * Gets the URL for the client's PEM encoded X.509 certificate or 
-	 * certificate chain that is used for signing Token endpoint requests 
-	 * and OpenID request objects. If {@link #getEncryptionX509URL} is not 
-	 * provided, also used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client. Corresponds to the {@code x509_url} client 
+	 * Gets the URI for this client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used in signing requests to the server and key(s) 
+	 * for encrypting responses. Corresponds to the {@code jwks_uri} client 
 	 * registration parameter.
 	 *
-	 * @return The X.509 certificate URL, {@code null} if not specified.
+	 * @return The JWK set URI, {@code null} if not specified.
 	 */
-	public URL getX509URL() {
+	public URL getJWKSetURI() {
 
-		return x509URL;
+		return jwkSetURI;
 	}
 
 
 	/**
-	 * Sets the URL for the client's PEM encoded X.509 certificate or 
-	 * certificate chain that is used for signing Token endpoint requests 
-	 * and OpenID request objects. If {@link #getEncryptionX509URL} is not 
-	 * provided, also used to encrypt the ID Token and UserInfo endpoint 
-	 * responses to the client. Corresponds to the {@code x509_url} client 
+	 * Sets the URI for this client's JSON Web Key (JWK) set containing 
+	 * key(s) that are used in signing requests to the server and key(s) 
+	 * for encrypting responses. Corresponds to the {@code jwks_uri} client 
 	 * registration parameter.
 	 *
-	 * @param x509URL The X.509 certificate URL, {@code null} if not 
-	 *                specified.
+	 * @param jwkSetURI The JWK set URI, {@code null} if not specified.
 	 */
-	public void setX509URL(final URL x509URL) {
+	public void setJWKSetURL(final URL jwkSetURI) {
 
-		this.x509URL = x509URL;
+		this.jwkSetURI = jwkSetURI;
 	}
-
-
+	
+	
 	/**
-	 * Gets the URL for the client's PEM encoded X.509 certificate or 
-	 * certificate chain that is used to encrypt the ID Token and UserInfo 
-	 * endpoint responses to the client. Corresponds to the 
-	 * {@code x509_encryption_url} client registration parameter.
-	 *
-	 * @return The encryption X.509 certificate URL, {@code null} if not
-	 *         specified.
+	 * Gets the pre-registered OpenID Connect request object URIs. 
+	 * Corresponds to the {@code request_uris} client registration 
+	 * parameter.
+	 * 
+	 * @return The request object URIs, {@code null} if not specified.
 	 */
-	public URL getEncryptionX509URL() {
-
-		return encryptionX509URL;
+	public Set<URL> getRequestObjectURIs() {
+		
+		return requestObjectURIs;
 	}
-
-
+	
+	
 	/**
-	 * Sets the URL for the client's PEM encoded X.509 certificate or 
-	 * certificate chain that is used to encrypt the ID Token and UserInfo 
-	 * endpoint responses to the client. Corresponds to the 
-	 * {@code x509_encryption_url} client registration parameter.
-	 *
-	 * @param encryptionX509URL The encryption X.509 certificate URL, 
-	 *                          {@code null} if not specified.
+	 * Sets the pre-registered OpenID Connect request object URIs. 
+	 * Corresponds to the {@code request_uris} client registration 
+	 * parameter.
+	 * 
+	 * @param requestObjectURIs The request object URIs, {@code null} if 
+	 *                          not specified.
 	 */
-	public void setEncryptionX509URL(final URL encryptionX509URL) {
-
-		this.encryptionX509URL = encryptionX509URL;
+	public void setRequestObjectURIs(final Set<URL> requestObjectURIs) {
+		
+		this.requestObjectURIs = requestObjectURIs;
 	}
 
 
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the OpenID 
-	 * request objects sent by this client. Corresponds to the 
+	 * Connect request objects sent by this client. Corresponds to the 
 	 * {@code request_object_signing_alg} client registration parameter.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
@@ -711,7 +837,7 @@ public class Client {
 
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the OpenID 
-	 * request objects sent by this client. Corresponds to the 
+	 * Connect request objects sent by this client. Corresponds to the 
 	 * {@code request_object_signing_alg} client registration parameter.
 	 *
 	 * @param requestObjectJWSAlg The JWS algorithm, {@code null} if not 
@@ -940,21 +1066,21 @@ public class Client {
 	 * ID Token. Corresponds to the {@code require_auth_time} client 
 	 * registration parameter.
 	 *
-	 * @param requireAuthTime If {@code true} the {@code auth_Time} claim 
-	 *                        in the ID Token is required by default.
+	 * @param requiresAuthTime If {@code true} the {@code auth_Time} claim 
+	 *                         in the ID Token is required by default.
 	 */
-	public void requiresAuthTime(final boolean requireAuthTime) {
+	public void requiresAuthTime(final boolean requiresAuthTime) {
 
 		this.requiresAuthTime = requiresAuthTime;
 	}
 
 
 	/**
-	 * Gets the default Authentication Context Class References (ACRs). 
-	 * Corresponds to the {@code default_acr_values} client registration 
-	 * parameter.
+	 * Gets the default Authentication Context Class Reference (ACR) 
+	 * values. Corresponds to the {@code default_acr_values} client 
+	 * registration parameter.
 	 *
-	 * @return The default ACRs, {@code null} if not specified.
+	 * @return The default ACR values, {@code null} if not specified.
 	 */
 	public Set<ACR> getDefaultACRs() {
 
@@ -963,9 +1089,9 @@ public class Client {
 
 
 	/**
-	 * Sets the default Authentication Context Class References (ACRs).
-	 * Corresponds to the {@code default_acr_values} client registration 
-	 * parameter.
+	 * Sets the default Authentication Context Class Reference (ACR)
+	 * values. Corresponds to the {@code default_acr_values} client 
+	 * registration parameter.
 	 *
 	 * @param defaultACRs The default ACRs, {@code null} if not specified.
 	 */
@@ -976,11 +1102,11 @@ public class Client {
 
 
 	/**
-	 * Gets the authorisation server initiated login HTTPS URL.
-	 * Corresponds to the {@code initiate_login_uri} client registration 
-	 * parameter.
+	 * Gets the HTTPS URI that the authorisation server can call to
+	 * initiate a login at the client. Corresponds to the 
+	 * {@code initiate_login_uri} client registration parameter.
 	 *
-	 * @return The login URL, {@code null} if not specified.
+	 * @return The login URI, {@code null} if not specified.
 	 */
 	public URL getInitiateLoginURI() {
 
@@ -989,24 +1115,23 @@ public class Client {
 
 
 	/**
-	 * Sets the authorisation server initiated login HTTPS URL.
-	 * Corresponds to the {@code initiate_login_uri} client registration 
-	 * parameter.
+	 * Sets the HTTPS URI that the authorisation server can call to
+	 * initiate a login at the client. Corresponds to the 
+	 * {@code initiate_login_uri} client registration parameter.
 	 *
-	 * @param initiateLoginURI The login URL, {@code null} if not 
-	 *                         specified.
+	 * @param loginURI The login URI, {@code null} if not specified.
 	 */
-	public void setInitiateLoginURI(final URL initiateLoginURI) {
+	public void setInitiateLoginURI(final URL loginURI) {
 
-		this.initiateLoginURI = initiateLoginURI;
+		this.initiateLoginURI = loginURI;
 	}
 
 
 	/**
-	 * Gets the post logout redirect URL. Corresponds to the 
-	 * {@code post_logout_redirect_url} client registration parameter.
+	 * Gets the post logout redirect URI. Corresponds to the 
+	 * {@code post_logout_redirect_uri} client registration parameter.
 	 *
-	 * @return The post logout redirect URL, {@code null} if not specified.
+	 * @return The logout URI, {@code null} if not specified.
 	 */
 	public URL getPostLogoutRedirectURI() {
 
@@ -1015,15 +1140,14 @@ public class Client {
 
 
 	/**
-	 * Sets the post logout redirect URL. Corresponds to the 
-	 * {@code post_logout_redirect_url} client registration parameter.
+	 * Sets the post logout redirect URI. Corresponds to the 
+	 * {@code post_logout_redirect_uri} client registration parameter.
 	 *
-	 * @param postLogoutRedirectURI The post logout redirect URL, 
-	 *                              {@code null} if not specified.
+	 * @param logoutURI The logout URI, {@code null} if not specified.
 	 */
-	public void setPostLogoutRedirectURI(final URL postLogoutRedirectURI) {
+	public void setPostLogoutRedirectURI(final URL logoutURI) {
 
-		this.postLogoutRedirectURI = postLogoutRedirectURI;
+		this.postLogoutRedirectURI = logoutURI;
 	}
 
 
@@ -1055,7 +1179,7 @@ public class Client {
 
 	/**
 	 * Gets the client secret. Corresponds to the {@code client_secret} and
-	 * {@code expires_at} client registration parameters.
+	 * {@code client_secret_expires_at} client registration parameters.
 	 *
 	 * @return The client secret, {@code null} if not specified.
 	 */
@@ -1067,7 +1191,7 @@ public class Client {
 
 	/**
 	 * Sets the client secret. Corresponds to the {@code client_secret} and
-	 * {@code expires_at} client registration parameters.
+	 * {@code client_secret_expires_at} client registration parameters.
 	 *
 	 * @param secret The client secret, {@code null} if not specified.
 	 */
@@ -1075,10 +1199,40 @@ public class Client {
 
 		this.secret = secret;
 	}
+	
+	
+	/**
+	 * Applies the client details defaults where no values have been
+	 * specified.
+	 */
+	public void applyDefaults() {
+		
+		if (responseTypes == null) {
+			responseTypes = ResponseTypeSet.getDefault();
+		}
+		
+		if (grantTypes == null) {
+			grantTypes = new HashSet<GrantType>();
+			grantTypes.add(GrantType.AUTHORIZATION_CODE);
+		}
+		
+		if (applicationType == null) {
+			applicationType = ApplicationType.getDefault();
+		}
+		
+		if (authMethod == null) {
+			authMethod = ClientAuthenticationMethod.getDefault();
+		}
+		
+		if (idTokenJWSAlg == null) {
+			idTokenJWSAlg = JWSAlgorithm.RS256;
+		}
+	}
 
 
 	/**
-	 * Returns the client details as a JSON object.
+	 * Returns the client details as a JSON object. The key names match
+	 * the corresponding client registration parameter names.
 	 *
 	 * @return The client details as a JSON object.
 	 */
@@ -1091,18 +1245,48 @@ public class Client {
 
 		if (redirectURIs != null) {
 
-			List<String> uriList = new LinkedList<String>();
+			JSONArray uriList = new JSONArray();
 
 			for (URL uri: redirectURIs)
 				uriList.add(uri.toString());
 
 			o.put("redirect_uris", uriList);
 		}
+		
+		
+		if (registrationURI != null)
+			o.put("registration_client_uri", registrationURI.toString());
+		
+		
+		if (responseTypes != null) {
+			
+			JSONArray rtList = new JSONArray();
+			
+			for (ResponseType rt: responseTypes)
+				rtList.add(rt.toString());
+			
+			o.put("response_types", rtList);
+		}
+		
+		
+		if (grantTypes != null) {
+			
+			JSONArray grantList = new JSONArray();
+			
+			for (GrantType grant: grantTypes)
+				grantList.add(grant.toString());
+			
+			o.put("grant_types", grantList);
+		}
+		
+		
+		if (applicationType != null)
+			o.put("application_type", applicationType.toString());
 
 
 		if (contacts != null) {
 
-			List<String> contactList = new LinkedList<String>();
+			JSONArray contactList = new JSONArray();
 
 			for (InternetAddress email: contacts)
 				contactList.add(email.toString());
@@ -1111,14 +1295,15 @@ public class Client {
 		}
 
 
-		o.put("application_type", applicationType.toString());
-
-
 		if (! nameEntries.isEmpty()) {
 
 			for (Map.Entry<LangTag,String> entry: nameEntries.entrySet()) {
 
 				LangTag langTag = entry.getKey();
+				String name = entry.getValue();
+				
+				if (name == null)
+					continue;
 
 				if (langTag == null)
 					o.put("client_name", entry.getValue());
@@ -1126,45 +1311,87 @@ public class Client {
 					o.put("client_name#" + langTag, entry.getValue());
 			} 
 		}
+		
+		
+		if (! logoURIEntries.isEmpty()) {
 
+			for (Map.Entry<LangTag,URL> entry: logoURIEntries.entrySet()) {
 
-		if (logoURL != null)
-			o.put("logo_url", logoURL.toString());
+				LangTag langTag = entry.getKey();
+				URL uri = entry.getValue();
+				
+				if (uri == null)
+					continue;
 
+				if (langTag == null)
+					o.put("logo_uri", entry.getValue());
+				else
+					o.put("logo_uri#" + langTag, entry.getValue().toString());
+			} 
+		}
+		
+		
+		if (! policyURIEntries.isEmpty()) {
 
-		if (policyURL != null)
-			o.put("policy_url", policyURL.toString());
+			for (Map.Entry<LangTag,URL> entry: policyURIEntries.entrySet()) {
 
+				LangTag langTag = entry.getKey();
+				URL uri = entry.getValue();
+				
+				if (uri == null)
+					continue;
 
-		if (tosURL != null)
-			o.put("tos_url", tosURL.toString());
+				if (langTag == null)
+					o.put("policy_uri", entry.getValue());
+				else
+					o.put("policy_uri#" + langTag, entry.getValue().toString());
+			} 
+		}
+		
+		
+		if (! tosURIEntries.isEmpty()) {
+
+			for (Map.Entry<LangTag,URL> entry: tosURIEntries.entrySet()) {
+
+				LangTag langTag = entry.getKey();
+				URL uri = entry.getValue();
+				
+				if (uri == null)
+					continue;
+
+				if (langTag == null)
+					o.put("tos_uri", entry.getValue());
+				else
+					o.put("tos_uri#" + langTag, entry.getValue().toString());
+			} 
+		}
 
 
 		if (subjectType != null)
 			o.put("subject_type", subjectType.toString());
 
 
-		if (sectorIDURL != null)
-			o.put("sector_identifier_url", sectorIDURL.toString());
+		if (sectorIDURI != null)
+			o.put("sector_identifier_uri", sectorIDURI.toString());
 
 
-		o.put("token_endpoint_auth_method", tokenEndpointAuthMethod.toString());
+		if (authMethod != null)
+			o.put("token_endpoint_auth_method", authMethod.toString());
 
 
-		if (jwkSetURL != null)
-			o.put("jwk_url", jwkSetURL.toString());
-
-
-		if (encryptionJWKSetURL != null)
-			o.put("jwk_encryption_url", encryptionJWKSetURL.toString());
-
-
-		if (x509URL != null)
-			o.put("x509_url", x509URL.toString());
-
-
-		if (encryptionX509URL != null)
-			o.put("x509_encryption_url", encryptionX509URL.toString());
+		if (jwkSetURI != null)
+			o.put("jwks_uri", jwkSetURI.toString());
+		
+		
+		if (requestObjectURIs != null) {
+			
+			JSONArray uriList = new JSONArray();
+			
+			for (URL uri: requestObjectURIs)
+				uriList.add(uri.toString());
+			
+			o.put("request_uris", uriList);
+		}
 
 
 		if (requestObjectJWSAlg != null)
@@ -1204,7 +1431,7 @@ public class Client {
 
 		if (defaultACRs != null) {
 
-			List<String> acrList = new LinkedList<String>();
+			JSONArray acrList = new JSONArray();
 
 			for (ACR acr: defaultACRs)
 				acrList.add(acr.getValue());
@@ -1218,19 +1445,19 @@ public class Client {
 
 
 		if (postLogoutRedirectURI != null)
-			o.put("post_logout_redirect_url", postLogoutRedirectURI.toString());
+			o.put("post_logout_redirect_uri", postLogoutRedirectURI.toString());
 
 
-		if (accessToken != null)
+		// registration response parameters
+		if (accessToken != null) {
 			o.put("registration_access_token", accessToken.getValue());
-
+		}
 
 		if (secret != null) {
 			o.put("client_secret", secret.getValue());
 
 			if (secret.getExpirationDate() != null)
-				o.put("expires_at", secret.getExpirationDate().getTime());
-
+				o.put("client_secret_expires_at", secret.getExpirationDate().getTime());
 		}
 
 		return o;
@@ -1256,6 +1483,10 @@ public class Client {
 
 		if (jsonObject.containsKey("client_id"))
 			client.setID(new ClientID(JSONObjectUtils.getString(jsonObject, "client_id")));
+		
+		
+		if (jsonObject.containsKey("registration_client_uri"))
+			client.setRegistrationURI(JSONObjectUtils.getURL(jsonObject, "registration_client_uri"));
 
 
 		if (jsonObject.containsKey("redirect_uris")) {
@@ -1276,7 +1507,40 @@ public class Client {
 
 			client.setRedirectURIs(redirectURIs);
 		}
-
+		
+		
+		if (jsonObject.containsKey("response_types")) {
+			
+			ResponseTypeSet responseTypes = new ResponseTypeSet();
+			
+			for (String response: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
+				
+				responseTypes.add(new ResponseType(response));
+			}
+			
+			client.setResponseTypes(responseTypes);
+		}
+		
+		
+		if (jsonObject.containsKey("grant_types")) {
+			
+			Set<GrantType> grantTypes = new LinkedHashSet<GrantType>();
+			
+			for (String grant: JSONObjectUtils.getStringArray(jsonObject, "grant_types")) {
+				
+				grantTypes.add(new GrantType(grant));
+			}
+			
+			client.setGrantTypes(grantTypes);
+		}
+		
+		
+		if (jsonObject.containsKey("application_type"))
+			client.setApplicationType(JSONObjectUtils.getEnum(jsonObject, 
+				                                          "application_type", 
+				                                          ApplicationType.class));
+		
+		
 
 		if (jsonObject.containsKey("contacts")) {
 
@@ -1297,20 +1561,13 @@ public class Client {
 			client.setContacts(emailList);
 		}
 
-
-		if (jsonObject.containsKey("application_type"))
-			client.setApplicationType(JSONObjectUtils.getEnum(jsonObject, 
-				                                          "application_type", 
-				                                          ApplicationType.class));
-
 		// Find lang-tagged client_name params
 		Map<LangTag,Object> matches = LangTagUtil.find("client_name", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
 			try {
-				client.setName(new LangTaggedObject<String>((String)entry.getValue(), 
-					                                    entry.getKey()));
+				client.setName((String)entry.getValue(), entry.getKey());
 
 			} catch (ClassCastException e) {
 
@@ -1319,51 +1576,84 @@ public class Client {
 		}
 
 
-		if (jsonObject.containsKey("client_name"))
-			client.setName(JSONObjectUtils.getString(jsonObject, "client_name"));
+		matches = LangTagUtil.find("logo_uri", jsonObject);
 
+		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
-		if (jsonObject.containsKey("logo_url"))
-			client.setLogoURL(JSONObjectUtils.getURL(jsonObject, "logo_url"));
+			try {
+				client.setLogoURI(new URL((String)entry.getValue()), entry.getKey());
 
+			} catch (Exception e) {
 
-		if (jsonObject.containsKey("policy_url"))
-			client.setPolicyURL(JSONObjectUtils.getURL(jsonObject, "policy_url"));
+				throw new ParseException("Invalid \"logo_uri\" (language tag) parameter");
+			}
+		}
+		
+		
+		matches = LangTagUtil.find("policy_uri", jsonObject);
 
+		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
-		if (jsonObject.containsKey("tos_url"))
-			client.setTermsOfServiceURL(JSONObjectUtils.getURL(jsonObject, "tos_url"));
+			try {
+				client.setPolicyURI(new URL((String)entry.getValue()), entry.getKey());
+
+			} catch (Exception e) {
+
+				throw new ParseException("Invalid \"policy_uri\" (language tag) parameter");
+			}
+		}
+		
+		
+		matches = LangTagUtil.find("tos_uri", jsonObject);
+
+		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
+
+			try {
+				client.setTermsOfServiceURI(new URL((String)entry.getValue()), entry.getKey());
+
+			} catch (Exception e) {
+
+				throw new ParseException("Invalid \"tos_uri\" (language tag) parameter");
+			}
+		}
 
 
 		if (jsonObject.containsKey("subject_type"))
 			client.setSubjectType(JSONObjectUtils.getEnum(jsonObject, "subject_type", SubjectType.class));
 
 
-		if (jsonObject.containsKey("sector_identifier_url"))
-			client.setSectorIDURL(JSONObjectUtils.getURL(jsonObject, "sector_identifier_url"));
+		if (jsonObject.containsKey("sector_identifier_uri"))
+			client.setSectorIDURI(JSONObjectUtils.getURL(jsonObject, "sector_identifier_uri"));
 
 
 		if (jsonObject.containsKey("token_endpoint_auth_method"))
 			client.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(
 				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_method")));
 
-
-		if (jsonObject.containsKey("jwk_url"))
-			client.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwk_url"));
-
-
-		if (jsonObject.containsKey("jwk_encryption_url"))
-			client.setEncrytionJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwk_encryption_url"));
+			
+		if (jsonObject.containsKey("jwks_uri"))
+			client.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwks_uri"));
 
 
-		if (jsonObject.containsKey("x509_url"))
-			client.setX509URL(JSONObjectUtils.getURL(jsonObject, "x509_url"));
-
-
-		if (jsonObject.containsKey("x509_encryption_url"))
-			client.setEncryptionX509URL(JSONObjectUtils.getURL(jsonObject, "x509_encryption_url"));
-
-
+		if (jsonObject.containsKey("request_uris")) {
+			
+			Set<URL> requestURIs = new LinkedHashSet<URL>();
+			
+			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "request_uris")) {
+				
+				try {
+					requestURIs.add(new URL(uriString));
+					
+				} catch (MalformedURLException e) {
+					
+					throw new ParseException("Invalid \"request_uris\" parameter");
+				}
+			}
+			
+			client.setRequestObjectURIs(requestURIs);
+		}
+		
+		
 		if (jsonObject.containsKey("request_object_signing_alg"))
 			client.setRequestObjectJWSAlgorithm(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "request_object_signing_alg")));
@@ -1422,10 +1712,11 @@ public class Client {
 			client.setInitiateLoginURI(JSONObjectUtils.getURL(jsonObject, "initiate_login_uri"));
 
 
-		if (jsonObject.containsKey("post_logout_redirect_url"))
-			client.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_url"));
+		if (jsonObject.containsKey("post_logout_redirect_uri"))
+			client.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_uri"));
 
 
+		// Registration response parameters
 		if (jsonObject.containsKey("registration_access_token"))
 			client.setRegistrationAccessToken(new BearerAccessToken(
 				JSONObjectUtils.getString(jsonObject, "registration_access_token")));
@@ -1437,8 +1728,8 @@ public class Client {
 
 			Date exp = null;
 
-			if (jsonObject.containsKey("expires_at"))
-				exp = new Date(JSONObjectUtils.getLong(jsonObject, "expires_at"));
+			if (jsonObject.containsKey("client_secret_expires_at"))
+				exp = new Date(JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at"));
 
 			client.setSecret(new Secret(value, exp));
 		}
