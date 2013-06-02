@@ -20,7 +20,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
+ *     <li>RFC 6711
  *     <li>See ISO/IEC DIS 29115
  * </ul>
  *
@@ -28,36 +29,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  */
 @Immutable
 public final class ACR extends Identifier {
-
-
-	/**
-	 * ACR level 0.
-	 */
-	public static final ACR LEVEL_ZERO = new ACR("0");
-
-
-	/**
-	 * ACR level 1.
-	 */
-	public static final ACR LEVEL_ONE = new ACR("1");
-
-
-	/**
-	 * ACR level 2.
-	 */
-	public static final ACR LEVEL_TWO = new ACR("2");
-
-
-	/**
-	 * ACR level 3.
-	 */
-	public static final ACR LEVEL_THREE = new ACR("3");
-
-
-	/**
-	 * ACR level 4.
-	 */
-	public static final ACR LEVEL_FOUR = new ACR("4");
 	
 	
 	/**
