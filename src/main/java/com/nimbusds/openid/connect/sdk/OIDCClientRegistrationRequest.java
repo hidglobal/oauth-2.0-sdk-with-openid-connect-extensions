@@ -25,7 +25,19 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  	/**
 	 * OAuth 2.0 Bearer access token (conditionally required).
 	 */
-	private BearerAccessToken accessToken = null;
+	private final BearerAccessToken accessToken;
+	
+	
+	/**
+	 * Creates a new OpenID Connect client registration request.
+	 * 
+	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
+	 *                    {@code null} if none.
+	 */
+	protected OIDCClientRegistrationRequest(final BearerAccessToken accessToken) {
+
+		this.accessToken = accessToken;
+	}
 
 
 	/**
@@ -36,18 +48,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 	public BearerAccessToken getAccessToken() {
 
 		return accessToken;
-	}
-
-
-	/**
-	 * Sets the OAuth 2.0 Bearer access token.
-	 *
-	 * @param accessToken The OAuth 2.0 Bearer access token, {@code null} 
-	 *                    if none.
-	 */
-	public void setAccessToken(final BearerAccessToken accessToken) {
-
-		this.accessToken = accessToken;
 	}
 
 

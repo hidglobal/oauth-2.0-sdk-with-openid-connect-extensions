@@ -47,12 +47,12 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.
+ *     <li>OpenID Connect Dynamic ClientDetails Registration 1.0, section 2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
-public class Client {
+public class ClientDetails {
 
 
 	/**
@@ -248,7 +248,7 @@ public class Client {
 	/** 
 	 * Creates a new OpenID Connect client details instance.
 	 */
-	public Client() {
+	public ClientDetails() {
 
 		nameEntries = new HashMap<LangTag,String>();
 		logoURIEntries = new HashMap<LangTag,URL>();
@@ -1476,10 +1476,10 @@ public class Client {
 	 * @throws ParseException If the JSON object couldn't be parsed to an
 	 *                        OpenID Connect client details instance.
 	 */
-	public static Client parse(final JSONObject jsonObject)
+	public static ClientDetails parse(final JSONObject jsonObject)
 		throws ParseException {
 
-		Client client = new Client();
+		ClientDetails client = new ClientDetails();
 
 		if (jsonObject.containsKey("client_id"))
 			client.setID(new ClientID(JSONObjectUtils.getString(jsonObject, "client_id")));

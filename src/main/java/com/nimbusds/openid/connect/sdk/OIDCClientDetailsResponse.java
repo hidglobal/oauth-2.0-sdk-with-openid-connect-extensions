@@ -8,7 +8,7 @@ import com.nimbusds.oauth2.sdk.SuccessResponse;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
-import com.nimbusds.openid.connect.sdk.rp.Client;
+import com.nimbusds.openid.connect.sdk.rp.ClientDetails;
 
 
 
@@ -47,7 +47,7 @@ import com.nimbusds.openid.connect.sdk.rp.Client;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.2.
+ *     <li>OpenID Connect Dynamic ClientDetails Registration 1.0, section 3.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -61,7 +61,7 @@ public class OIDCClientDetailsResponse
 	/**
 	 * The client details.
 	 */
-	private Client client;
+	private ClientDetails client;
 
 
 	/**
@@ -69,7 +69,7 @@ public class OIDCClientDetailsResponse
 	 *
 	 * @param client The client details. Must not be {@code null}.
 	 */
-	public OIDCClientDetailsResponse(final Client client) {
+	public OIDCClientDetailsResponse(final ClientDetails client) {
 
 		if (client == null)
 			throw new IllegalArgumentException("The client details must not be null");
@@ -83,7 +83,7 @@ public class OIDCClientDetailsResponse
 	 *
 	 * @return The client details.
 	 */
-	public Client getClientDetails() {
+	public ClientDetails getClientDetails() {
 
 		return client;
 	}
@@ -118,7 +118,7 @@ public class OIDCClientDetailsResponse
 
 		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
 
-		Client client = Client.parse(httpResponse.getContentAsJSONObject());
+		ClientDetails client = ClientDetails.parse(httpResponse.getContentAsJSONObject());
 
 		return new OIDCClientDetailsResponse(client);
 	}

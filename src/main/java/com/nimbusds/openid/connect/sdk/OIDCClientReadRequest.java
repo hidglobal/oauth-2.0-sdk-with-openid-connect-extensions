@@ -2,20 +2,18 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * OpenID Connect client read request.
+ * OpenID Connect client read request. This class is immutable.
  *
  * <p>Example HTTP request:
  *
@@ -34,39 +32,22 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * @author Vladimir Dzhuvinov
  */
+@Immutable
 public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
-
-
-	/**
-	 * The client ID.
-	 */
-	private final ClientID clientID;
 
 
 	/**
 	 * Creates a new OpenID Connect client read request.
 	 *
-	 * @param clientID The client ID. Must not be {@code null}.
+	 * @param accessToken An OAuth 2.0 Bearer access token for the request. 
+	 *                    Must not be {@code null}.
 	 */
-	public OIDCClientReadRequest(final ClientID clientID) {
+	public OIDCClientReadRequest(final BearerAccessToken accessToken) {
 
-		super();
+		super(accessToken);
 
-		if (clientID == null)
-			throw new IllegalArgumentException("The client ID must not be null");
-
-		this.clientID = clientID;
-	}
-
-
-	/**
-	 * Gets the client ID.
-	 *
-	 * @return The client ID.
-	 */
-	public ClientID getClientID() {
-
-		return clientID;
+		if (accessToken == null)
+			throw new IllegalArgumentException("The access token must not be null");
 	}
 
 
@@ -74,12 +55,8 @@ public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 	public HTTPRequest toHTTPRequest(final URL url) {
 	
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, url);
-
-		Map<String,String> params = new HashMap<String,String>();
-
-		params.put("client_id", clientID.getValue());
-
-		httpRequest.setQuery(URLUtils.serializeParameters(params));
+		
+		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 
 		return httpRequest;
 	}
@@ -101,20 +78,13 @@ public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.GET);
 
-		Map<String,String> params = httpRequest.getQueryParameters();
-
-		String clientIDString = params.get("client_id");
-
-		if (clientIDString == null)
-			throw new ParseException("Missing client_id");	
-
-		OIDCClientReadRequest req = new OIDCClientReadRequest(new ClientID(clientIDString));
-
 		String authzHeaderValue = httpRequest.getAuthorization();
-
-		if (StringUtils.isNotBlank(authzHeaderValue))
-			req.setAccessToken(BearerAccessToken.parse(authzHeaderValue));
-
-		return req;
+		
+		if (StringUtils.isBlank(authzHeaderValue))
+			throw new ParseException("Missing HTTP Authorization header");
+		
+		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
+		
+		return new OIDCClientReadRequest(accessToken);
 	}
 }
