@@ -37,7 +37,7 @@ import com.nimbusds.oauth2.sdk.id.Subject;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.
+ *     <li>OpenID Connect Messages 1.0, section 2.5.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -69,8 +69,9 @@ public class UserInfo extends ClaimsSet {
 		stdClaimNames.add("zoneinfo");
 		stdClaimNames.add("locale");
 		stdClaimNames.add("phone_number");
+		stdClaimNames.add("phone_number_verified");
 		stdClaimNames.add("address");
-		stdClaimNames.add("updated_time");
+		stdClaimNames.add("updated_at");
 	}
 	
 	
@@ -93,9 +94,6 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public UserInfo(final Subject sub) {
 	
-		if (sub == null)
-			throw new IllegalArgumentException("The subject must not be null");
-
 		setClaim("sub", sub.getValue());
 	}
 
@@ -175,7 +173,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the full name. Corresponds to the {@code name} claim, with no
 	 * language tag.
 	 *
-	 * @param name The full name. {@code null} if not specified.
+	 * @param name The full name. If {@code null} the claim will be 
+	 *             removed.
 	 */
 	public void setName(final String name) {
 	
@@ -187,12 +186,13 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the full name. Corresponds to the {@code name} claim, with an
 	 * optional language tag.
 	 *
-	 * @param name The full name, with optional language tag. {@code null}
-	 *             if not specified.
+	 * @param name    The full name. If {@code null} the claim will be 
+	 *                removed.
+	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public void setName(final LangTaggedObject<String> name) {
+	public void setName(final String name, final LangTag langTag) {
 	
-		setClaim("name", name);
+		setClaim("name", name, langTag);
 	}	
 	
 	
@@ -239,8 +239,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the given or first name. Corresponds to the {@code given_name} 
 	 * claim, with no language tag.
 	 *
-	 * @param givenName The given or first name. {@code null} if not 
-	 *                  specified.
+	 * @param givenName The given or first name. If {@code null} the claim
+	 *                  will be removed.
 	 */
 	public void setGivenName(final String givenName) {
 	
@@ -252,12 +252,13 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the given or first name. Corresponds to the {@code given_name}
 	 * claim, with an optional language tag.
 	 *
-	 * @param givenName The given or first name, with optional language 
-	 *                  tag. {@code null} if not specified.
+	 * @param givenName The given or first full name. If {@code null} the 
+	 *                  claim will be removed.
+	 * @param langTag   The language tag, {@code null} if not specified.
 	 */
-	public void setGivenName(final LangTaggedObject<String> givenName) {
+	public void setGivenName(final String givenName, final LangTag langTag) {
 	
-		setClaim("given_name", givenName);
+		setClaim("given_name", givenName, langTag);
 	}
 
 	
@@ -304,8 +305,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the surname or last name. Corresponds to the 
 	 * {@code family_name} claim, with no language tag.
 	 *
-	 * @param familyName The surname or last name. {@code null} if not 
-	 *                   specified.
+	 * @param familyName The surname or last name. If {@code null} the 
+	 *                   claim will be removed.
 	 */
 	public void setFamilyName(final String familyName) {
 	
@@ -317,12 +318,13 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the surname or last name. Corresponds to the 
 	 * {@code family_name} claim, with an optional language tag.
 	 *
-	 * @param familyName The surname or last name, with optional language 
-	 *                   tag. {@code null} if not specified.
+	 * @param familyName The surname or last name. If {@code null} the 
+	 *                   claim will be removed.
+	 * @param langTag    The language tag, {@code null} if not specified.
 	 */
-	public void setFamilyName(final LangTaggedObject<String> familyName) {
+	public void setFamilyName(final String familyName, final LangTag langTag) {
 	
-		setClaim("family_name", familyName);
+		setClaim("family_name", familyName, langTag);
 	}
 
 	
@@ -369,7 +371,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the middle name. Corresponds to the {@code middle_name} claim,
 	 * with no language tag.
 	 *
-	 * @param middleName The middle name. {@code null} if not specified.
+	 * @param middleName The middle name. If {@code null} the claim will be
+	 *                   removed.
 	 */
 	public void setMiddleName(final String middleName) {
 	
@@ -381,12 +384,13 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the middle name. Corresponds to the {@code middle_name} claim, 
 	 * with an optional language tag.
 	 *
-	 * @param middleName The middle name, with optional language tag. 
-	 *                   {@code null} if not specified.
+	 * @param middleName The middle name. If {@code null} the claim will be
+	 *                   removed.
+	 * @param langTag    The language tag, {@code null} if not specified.
 	 */
-	public void setMiddleName(final LangTaggedObject<String> middleName) {
+	public void setMiddleName(final String middleName, final LangTag langTag) {
 	
-		setClaim("middle_name", middleName);
+		setClaim("middle_name", middleName, langTag);
 	}
 	
 	
@@ -433,7 +437,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the casual name. Corresponds to the {@code nickname} claim, 
 	 * with no language tag.
 	 *
-	 * @param nickname The casual name. {@code null} if not specified.
+	 * @param nickname The casual name. If {@code null} the claim will be
+	 *                 removed.
 	 */
 	public void setNickname(final String nickname) {
 	
@@ -445,12 +450,13 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the casual name. Corresponds to the {@code nickname} claim, 
 	 * with an optional language tag.
 	 *
-	 * @param nickname The casual name, with optional language tag. 
-	 *                 {@code null} if not specified.
+	 * @param nickname The casual name. If {@code null} the claim will be
+	 *                 removed.
+	 * @param langTag  The language tag, {@code null} if not specified.
 	 */
-	public void setNickname(final LangTaggedObject<String> nickname) {
+	public void setNickname(final String nickname, final LangTag langTag) {
 	
-		setClaim("nickname", nickname);
+		setClaim("nickname", nickname, langTag);
 	}
 	
 	
@@ -470,8 +476,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the preferred username. Corresponds to the 
 	 * {@code preferred_username} claim.
 	 *
-	 * @param preferredUsername The preferred username, {@code null} if not 
-	 *                          specified.
+	 * @param preferredUsername The preferred username. If {@code null} the
+	 *                          claim will be removed.
 	 */
 	public void setPreferredUsername(final String preferredUsername) {
 	
@@ -493,7 +499,8 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Sets the profile page. Corresponds to the {@code profile} claim.
 	 *
-	 * @param profile The profile page URL, {@code null} if not specified.
+	 * @param profile The profile page URL. If {@code null} the claim will
+	 *                be removed.
 	 */
 	public void setProfile(final URL profile) {
 	
@@ -515,7 +522,8 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Sets the picture. Corresponds to the {@code picture} claim.
 	 *
-	 * @param picture The picture URL, {@code null} if not specified.
+	 * @param picture The picture URL. If {@code null} the claim will be
+	 *                removed.
 	 */
 	public void setPicture(final URL picture) {
 	
@@ -537,8 +545,8 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Sets the web page or blog. Corresponds to the {@code website} claim.
 	 *
-	 * @param website The web page or blog URL, {@code null} if not 
-	 *                specified.
+	 * @param website The web page or blog URL. If {@code null} the claim
+	 *                will be removed.
 	 */
 	public void setWebsite(final URL website) {
 	
@@ -562,8 +570,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the preferred email address. Corresponds to the {@code email}
 	 * claim.
 	 *
-	 * @param email The preferred email address, {@code null} if not
-	 *              specified.
+	 * @param email The preferred email address. If {@code null} the claim
+	 *              will be removed.
 	 */
 	public void setEmail(final InternetAddress email) {
 	
@@ -588,8 +596,8 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the email verification status. Corresponds to the
 	 * {@code email_verified} claim.
 	 *
-	 * @param emailVerified The email verification status, {@code null} if 
-	 *                      not specified.
+	 * @param emailVerified The email verification status. If {@code null} 
+	 *                      the claim will be removed.
 	 */
 	public void setEmailVerified(final Boolean emailVerified) {
 	
@@ -605,25 +613,25 @@ public class UserInfo extends ClaimsSet {
 	public Gender getGender() {
 	
 		String value = getStringClaim("gender");
-
-		if (value != null)
-			return new Gender(value);
-		else
+		
+		if (value == null)
 			return null;
+
+		return new Gender(value);
 	}
 	
 	
 	/**
 	 * Sets the gender. Corresponds to the {@code gender} claim.
 	 *
-	 * @param gender The gender, {@code null} if not specified.
+	 * @param gender The gender. If {@code null} the claim will be removed.
 	 */
 	public void setGender(final Gender gender) {
 	
 		if (gender != null)
 			setClaim("gender", gender.getValue());
 		else
-			removeClaim("gender");
+			setClaim("gender", null);
 	}
 	
 	
@@ -641,7 +649,8 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Sets the date of birth. Corresponds to the {@code birthdate} claim.
 	 *
-	 * @param birthdate The date of birth, {@code null} if not specified.
+	 * @param birthdate The date of birth. If {@code null} the claim will
+	 *                  be removed.
 	 */
 	public void setBirthdate(final String birthdate) {
 	
@@ -663,7 +672,8 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Sets the zoneinfo. Corresponds to the {@code zoneinfo} claim.
 	 *
-	 * @param zoneinfo The zoneinfo, {@code null} if not specified.
+	 * @param zoneinfo The zoneinfo. If {@code null} the claim will be 
+	 *                 removed.
 	 */
 	public void setZoneinfo(final String zoneinfo) {
 	
@@ -685,7 +695,8 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Sets the locale. Corresponds to the {@code locale} claim.
 	 *
-	 * @param locale The locale, {@code null} if not specified.
+	 * @param locale The locale. If {@code null} the claim will be 
+	 *               removed.
 	 */
 	public void setLocale(final String locale) {
 	
@@ -710,12 +721,38 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the preferred telephone number. Corresponds to the 
 	 * {@code phone_number} claim.
 	 *
-	 * @param phoneNumber The preferred telephone number, {@code null} if
-	 *                    not specified.
+	 * @param phoneNumber The preferred telephone number. If {@code null} 
+	 *                    the claim will be removed.
 	 */
 	public void setPhoneNumber(final String phoneNumber) {
 	
 		setClaim("phone_number", phoneNumber);
+	}
+	
+	
+	/**
+	 * Gets the phone number verification status. Corresponds to the 
+	 * {@code phone_number_verified} claim.
+	 *
+	 * @return The phone number verification status, {@code null} if not 
+	 *         specified.
+	 */
+	public Boolean getPhoneNumberVerified() {
+	
+		return getBooleanClaim("phone_number_verified");
+	}
+	
+	
+	/**
+	 * Sets the email verification status. Corresponds to the
+	 * {@code phone_number_verified} claim.
+	 *
+	 * @param phoneNumberVerified The phone number verification status. If 
+	 *                            {@code null} the claim will be removed.
+	 */
+	public void setPhoneNumberVerified(final Boolean phoneNumberVerified) {
+	
+		setClaim("phone_number_verified", phoneNumberVerified);
 	}
 
 
@@ -781,14 +818,15 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the preferred address. Corresponds to the {@code address} 
 	 * claim, with no language tag.
 	 *
-	 * @param address The preferred address. {@code null} if not specified.
+	 * @param address The preferred address. If {@code null} the claim will
+	 *                be removed.
 	 */
 	public void setAddress(final Address address) {
 	
 		if (address != null)
 			setClaim("address", address.getJSONObject());
 		else
-			removeClaim("address");
+			setClaim("address", null);
 	}
 	
 	
@@ -796,46 +834,44 @@ public class UserInfo extends ClaimsSet {
 	 * Sets the preferred address. Corresponds to the {@code address}
 	 * claim, with an optional language tag.
 	 *
-	 * @param address The preferred address, with optional language tag. 
-	 *                {@code null} if not specified.
+	 * @param address  The preferred address. If {@code null} the claim 
+	 *                 will be removed.
+	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public void setAddress(final LangTaggedObject<Address> address) {
-	
-		LangTag langTag = address.getLangTag();
+	public void setAddress(final Address address, final LangTag langTag) {
 
-		String name;
+		String key = langTag == null ? "address" : "address#" + langTag;
 
-		if (langTag!= null)
-			name = "address#" + langTag;
+		if (address != null)
+			setClaim(key, address.getJSONObject());
 		else
-			name = "address";
-
-		setClaim(name, address.getObject().getJSONObject());
+			setClaim(key, null);
 	}
 	
 	
 	/**
 	 * Gets the time the end-user information was last updated. Corresponds 
-	 * to the {@code updated_time} claim.
+	 * to the {@code updated_at} claim.
 	 *
 	 * @return The time the end-user information was last updated, 
 	 *         {@code null} if not specified.
 	 */
 	public String getUpdatedTime() {
 	
-		return getStringClaim("updated_time");
+		return getStringClaim("updated_at");
 	}
 	
 	
 	/**
 	 * Sets the time the end-user information was last updated. Corresponds
-	 * to the {@code updated_time} claim.
+	 * to the {@code updated_at} claim.
 	 *
 	 * @param updatedTime The time the end-user information was last 
-	 *                    updated, {@code null} if not specified.
+	 *                    updated. If {@code null} the claim will be 
+	 *                    removed.
 	 */
 	public void setUpdatedTime(final String updatedTime) {
 	
-		setClaim("updated_time", updatedTime);
+		setClaim("updated_at", updatedTime);
 	}
 }

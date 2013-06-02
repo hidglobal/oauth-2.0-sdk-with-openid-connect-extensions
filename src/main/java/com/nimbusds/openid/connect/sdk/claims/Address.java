@@ -14,7 +14,7 @@ import net.minidev.json.JSONObject;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.1.
+ *     <li>OpenID Connect Messages 1.0, section 2.5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -101,8 +101,8 @@ public class Address extends ClaimsSet {
 	 * information. May contain newlines. Corresponds to the 
 	 * {@code street_address} claim.
 	 *
-	 * @param streetAddress The full street address component. {@code null}
-	 *                      if not specified.
+	 * @param streetAddress The full street address component. If
+	 *                      {@code null} the claim will be removed.
 	 */
 	public void setStreetAddress(final String streetAddress) {
 	
@@ -129,8 +129,8 @@ public class Address extends ClaimsSet {
 	 * Sets the city or locality component. Corresponds to the 
 	 * {@code locality} claim.
 	 *
-	 * @param locality The city or locality component. {@code null} if not 
-	 *                 specified.
+	 * @param locality The city or locality component. If {@code null} the
+	 *                 claim will be removed.
 	 */
 	public void setLocality(final String locality) {
 	
@@ -156,7 +156,7 @@ public class Address extends ClaimsSet {
 	 * Corresponds to the {@code region} claim.
 	 *
 	 * @param region The state, province, prefecture or region component.
-	 *               {@code null} if not specified.
+	 *               If {@code null} the claim will be removed.
 	 */
 	public void setRegion(final String region) {
 	
@@ -181,8 +181,8 @@ public class Address extends ClaimsSet {
 	 * Sets the zip code or postal code component. Corresponds to the
 	 * {@code postal_code} claim.
 	 *
-	 * @param postalCode The zip code or postal code component.
-	 *                   {@code null} if not specified.
+	 * @param postalCode The zip code or postal code component. If 
+	 *                   {@code null} the claim will be removed.
 	 */
 	public void setPostalCode(final String postalCode) {
 	
@@ -207,8 +207,8 @@ public class Address extends ClaimsSet {
 	 * Sets the country name component. Corresponds to the {@code country} 
 	 * claim.
 	 *
-	 * @param country The country name component. {@code null} if not 
-	 *                specified.
+	 * @param country The country name component. If {@code null} the claim
+	 *                will be removed.
 	 */
 	public void setCountry(final String country) {
 	

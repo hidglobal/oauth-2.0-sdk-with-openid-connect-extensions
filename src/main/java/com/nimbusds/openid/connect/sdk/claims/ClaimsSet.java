@@ -72,7 +72,8 @@ public abstract class ClaimsSet {
 	 * @param clazz The Java class that the claim value should cast to.
 	 *              Must not be {@code null}.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or casting
+	 *         failed.
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> T getClaim(final String name, final Class<T> clazz) {
@@ -132,7 +133,6 @@ public abstract class ClaimsSet {
 				out.put(entry.getKey(), (T)entry.getValue());
 
 			} catch (ClassCastException e) {
-
 				// skip
 			}
 		}
@@ -162,31 +162,18 @@ public abstract class ClaimsSet {
 	/**
 	 * Sets a claim with an optional language tag.
 	 *
-	 * @param name  The claim name. Must not be {@code null}.
-	 * @param value The claim value. If {@code null} the operation will
-	 *              have no effect.
+	 * @param name    The claim name. Must not be {@code null}.
+	 * @param value   The claim value. Should serialise to a JSON entity.
+	 *                If {@code null} any existing claim with the same name 
+	 *                and language tag (if any) will be removed.
+	 * @param langTag The language tag of the claim value, {@code null} if
+	 *                not tagged.
 	 */
-	public <T> void setClaim(final String name, final LangTaggedObject<T> value) {
+	public <T> void setClaim(final String name, final Object value, final LangTag langTag) {
 
-		if (value == null)
-			return;
-
-		else if (value.getLangTag() != null)
-			claims.put(name + '#' + value.getLangTag(), value.getObject());
-		else
-			claims.put(name, value.getObject());
-	}
-
-
-	/**
-	 * Removes a claim.
-	 *
-	 * @param name The claim name, with an optional language tag. Must not
-	 *             be {@code null}.
-	 */
-	public void removeClaim(final String name) {
-
-		claims.remove(name);
+		String keyName = langTag != null ? name + "#" + langTag : name;
+		
+		setClaim(keyName, value);
 	}
 
 
@@ -195,7 +182,8 @@ public abstract class ClaimsSet {
 	 *
 	 * @param name The claim name. Must not be {@code null}.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or casting
+	 *         failed.
 	 */
 	public String getStringClaim(final String name) {
 
@@ -210,13 +198,13 @@ public abstract class ClaimsSet {
 	 * @param langTag The language tag of the claim value, {@code null} to 
 	 *                get the non-tagged value.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or casting
+	 *         failed.
 	 */
 	public String getStringClaim(final String name, final LangTag langTag) {
 	
 		if (langTag == null)
 			return getStringClaim(name);
-
 		else
 			return getStringClaim(name + '#' + langTag);
 	}
@@ -227,7 +215,8 @@ public abstract class ClaimsSet {
 	 *
 	 * @param name The claim name. Must not be {@code null}.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or casting
+	 *         failed.
 	 */
 	public Boolean getBooleanClaim(final String name) {
 
@@ -240,7 +229,8 @@ public abstract class ClaimsSet {
 	 *
 	 * @param name The claim name. Must not be {@code null}.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or casting
+	 *         failed.
 	 */
 	public Number getNumberClaim(final String name) {
 
@@ -253,7 +243,8 @@ public abstract class ClaimsSet {
 	 *
 	 * @param name The claim name. Must not be {@code null}.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or parsing
+	 *         failed.
 	 */
 	public URL getURLClaim(final String name) {
 
@@ -284,7 +275,7 @@ public abstract class ClaimsSet {
 		if (value != null)
 			setClaim(name, value.toString());
 		else
-			removeClaim(name);
+			claims.remove(name);
 	}
 
 
@@ -293,7 +284,8 @@ public abstract class ClaimsSet {
 	 *
 	 * @param name The claim name. Must not be {@code null}.
 	 *
-	 * @return The claim value, {@code null} if not specified.
+	 * @return The claim value, {@code null} if not specified or parsing
+	 *         failed.
 	 */
 	public InternetAddress getEmailClaim(final String name) {
 
@@ -324,7 +316,7 @@ public abstract class ClaimsSet {
 		if (value != null)
 			setClaim(name, value.getAddress());
 		else
-			removeClaim(name);
+			claims.remove(name);
 	}
 	
 	
