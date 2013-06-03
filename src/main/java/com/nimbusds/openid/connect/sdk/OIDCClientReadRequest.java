@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +34,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public class OIDCClientReadRequest extends OIDCClientRegistrationRequest {
+public class OIDCClientReadRequest extends ProtectedResourceRequest {
 
 
 	/**

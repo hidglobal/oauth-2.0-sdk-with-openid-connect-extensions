@@ -10,6 +10,7 @@ import net.jcip.annotations.Immutable;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -18,7 +19,7 @@ import com.nimbusds.openid.connect.sdk.rp.ClientDetails;
 
 
 /**
- * OpenID Connect client add (register) request. This class is immutable.
+ * OpenID Connect client register request. This class is immutable.
  *
  * <p>Example HTTP request:
  *
@@ -56,7 +57,7 @@ import com.nimbusds.openid.connect.sdk.rp.ClientDetails;
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public final class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
+public final class OIDCClientRegisterRequest extends ProtectedResourceRequest {
 
 
 	/**
@@ -66,14 +67,14 @@ public final class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 
 	/**
-	 * Creates a new OpenID Connect client add (register) request.
+	 * Creates a new OpenID Connect client register request.
 	 *
 	 * @param client      The client details. Must not be {@code null} and 
 	 *                    must specify one or more redirect URIs.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	public OIDCClientAddRequest(final ClientDetails client, final BearerAccessToken accessToken) {
+	public OIDCClientRegisterRequest(final ClientDetails client, final BearerAccessToken accessToken) {
 
 		super(accessToken);
 
@@ -112,7 +113,7 @@ public final class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 
 
 	/**
-	 * Parses an OpenID Connect client add (register) request from the
+	 * Parses an OpenID Connect client register request from the
 	 * specified HTTP POST request.
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
@@ -122,7 +123,7 @@ public final class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
 	 *                        client register request.
 	 */
-	public static OIDCClientAddRequest parse(final HTTPRequest httpRequest)
+	public static OIDCClientRegisterRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.POST);
@@ -143,6 +144,6 @@ public final class OIDCClientAddRequest extends OIDCClientRegistrationRequest {
 		if (StringUtils.isNotBlank(authzHeaderValue))
 			accessToken = BearerAccessToken.parse(authzHeaderValue);
 		
-		return new OIDCClientAddRequest(client, accessToken);
+		return new OIDCClientRegisterRequest(client, accessToken);
 	}
 }

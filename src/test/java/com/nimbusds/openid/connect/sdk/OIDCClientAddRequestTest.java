@@ -58,7 +58,7 @@ public class OIDCClientAddRequestTest extends TestCase {
 
 		httpRequest.setQuery(jsonString);
 		
-		OIDCClientAddRequest request = OIDCClientAddRequest.parse(httpRequest);
+		OIDCClientRegisterRequest request = OIDCClientRegisterRequest.parse(httpRequest);
 		
 		ClientDetails client = request.getClientDetails();
 		
