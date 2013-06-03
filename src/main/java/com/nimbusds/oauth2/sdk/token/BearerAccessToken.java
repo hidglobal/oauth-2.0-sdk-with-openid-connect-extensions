@@ -7,7 +7,9 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import java.util.Map;
 
 
 /**
@@ -244,6 +246,55 @@ public final class BearerAccessToken extends AccessToken {
 		} catch (IllegalArgumentException e) {
 		
 			throw new ParseException(e.getMessage());
+		}
+	}
+	
+	
+	/**
+	 * Parses an HTTP request for a bearer access token.
+	 * 
+	 * @param request The HTTP request to parse. Must be GET or POST, and
+	 *                not {@code null}.
+	 * 
+	 * @return The bearer access token.
+	 * 
+	 * @throws ParseException If a bearer access token wasn't found in the
+	 *                        HTTP request.
+	 */
+	public static BearerAccessToken parse(final HTTPRequest request)
+		throws ParseException {
+		
+		if (request.getMethod().equals(HTTPRequest.Method.GET)) {
+			
+			String authzHeader = request.getAuthorization();
+				
+			if (authzHeader != null) {
+				
+				return parse(authzHeader);
+			}
+			
+			Map<String,String> params = request.getQueryParameters();	
+			
+			if (params.get("access_token") != null) {
+				
+				return parse(params.get("access_token"));
+			}
+			
+			throw new ParseException("Missing Bearer access token");
+			
+		} else if (request.getMethod().equals(HTTPRequest.Method.POST)) {
+			
+			Map<String,String> params = request.getQueryParameters();	
+			
+			if (params.get("access_token") != null) {
+				
+				return parse(params.get("access_token"));
+			}
+			
+			throw new ParseException("Missing Bearer access token");
+			
+		} else {
+			throw new ParseException("Unexpected HTTP method: " + request.getMethod());
 		}
 	}
 }
