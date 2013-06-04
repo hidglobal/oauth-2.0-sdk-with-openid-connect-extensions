@@ -268,32 +268,29 @@ public class OIDCAuthorizationRequestResolver {
 	}
 
 
-	public ResolvedOIDCAuthorizationRequest resolve(final OIDCAuthorizationRequest request)
+	/**
+	 * Resolves the specified OpenID Connect authorisation request by 
+	 * superseding its parameters with those found in the optional OpenID 
+	 * Connect request object (if any).
+	 * 
+	 * @param request The OpenID Connect authorisation request. Must not be
+	 *                {@code null}.
+	 * 
+	 * @return The resolved authorisation request, or the original 
+	 *         unmodified request if no OpenID Connect request object was
+	 *         specified.
+	 * 
+	 * @throws ResolveException If the request couldn't be resolved.
+	 */
+	public OIDCAuthorizationRequest resolve(final OIDCAuthorizationRequest request)
 		throws ResolveException {
 
 		if (! request.specifiesRequestObject()) {
-
 			// Return the same request
-
-			return new ResolvedOIDCAuthorizationRequest(
-				request.getResponseTypeSet(),
-				request.getScope(),
-				request.getClientID(),
-				request.getRedirectURI(),
-				request.getState(),
-				request.getNonce(),
-				request.getDisplay(),
-				request.getPrompt(),
-				request.getMaxAge(),
-				request.getUILocales(),
-				request.getClaimsLocales(),
-				request.getIDTokenHint(),
-				request.getLoginHint(),
-				request.getACRValues(),
-				request.getClaims());
+			return request;
 		}
 
-		JWT jwt = null;
+		JWT jwt;
 
 		if (request.getRequestURI() != null) {
 
@@ -334,7 +331,7 @@ public class OIDCAuthorizationRequestResolver {
 		}
 
 
-		return new ResolvedOIDCAuthorizationRequest(
+		return new OIDCAuthorizationRequest(
 				finalAuthzRequest.getResponseTypeSet(),
 				finalAuthzRequest.getScope(),
 				finalAuthzRequest.getClientID(),
