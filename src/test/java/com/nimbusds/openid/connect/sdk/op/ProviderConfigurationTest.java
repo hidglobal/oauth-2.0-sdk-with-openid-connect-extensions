@@ -47,6 +47,6 @@ public class ProviderConfigurationTest extends TestCase {
 	public void testParse()
 		throws Exception {
 
-		ProviderConfiguration config = ProviderConfiguration.parse(CONFIG);
+		OIDCProviderMetadata config = OIDCProviderMetadata.parse(CONFIG);
 	}
 }
