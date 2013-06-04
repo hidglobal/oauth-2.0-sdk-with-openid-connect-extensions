@@ -35,12 +35,15 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *         </ul>
  *     <li>OpenID Connect specific errors:
  *         <ul>
+ *             <li>{@link OIDCError#INTERACTION_REQUIRED}
  *             <li>{@link OIDCError#LOGIN_REQUIRED}
  *             <li>{@link OIDCError#SESSION_SELECTION_REQUIRED}
  *             <li>{@link OIDCError#CONSENT_REQUIRED}
  *             <li>{@link OIDCError#INVALID_REQUEST_URI}
- *             <li>{@link OIDCError#INTERACTION_REQUIRED}
- *             <li>{@link OIDCError#INVALID_OPENID_REQUEST_OBJECT}
+ *             <li>{@link OIDCError#INVALID_REQUEST_OBJECT}
+ *             <li>{@link OIDCError#REGISTRATION_NOT_SUPPORTED}
+ *             <li>{@link OIDCError#REQUEST_NOT_SUPPORTED}
+ *             <li>{@link OIDCError#REQUEST_URI_NOT_SUPPORTED}
  *         </ul>
  *     </li>
  * </ul>
@@ -80,12 +83,15 @@ public class OIDCAuthorizationErrorResponse
 	static {
 		stdErrors.addAll(AuthorizationErrorResponse.getStandardErrors());
 
+		stdErrors.add(OIDCError.INTERACTION_REQUIRED);
 		stdErrors.add(OIDCError.LOGIN_REQUIRED);
 		stdErrors.add(OIDCError.SESSION_SELECTION_REQUIRED);
 		stdErrors.add(OIDCError.CONSENT_REQUIRED);
 		stdErrors.add(OIDCError.INVALID_REQUEST_URI);
-		stdErrors.add(OIDCError.INTERACTION_REQUIRED);
-		stdErrors.add(OIDCError.INVALID_OPENID_REQUEST_OBJECT);
+		stdErrors.add(OIDCError.INVALID_REQUEST_OBJECT);
+		stdErrors.add(OIDCError.REGISTRATION_NOT_SUPPORTED);
+		stdErrors.add(OIDCError.REQUEST_NOT_SUPPORTED);
+		stdErrors.add(OIDCError.REQUEST_URI_NOT_SUPPORTED);
 	}
 
 

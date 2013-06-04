@@ -35,9 +35,8 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *          </ul>
  *     <li>OpenID Connect specific errors:
  *         <ul>
- *             <li>{@link OIDCError#INVALID_CLIENT_ID}
  *             <li>{@link OIDCError#INVALID_REDIRECT_URI}
- *             <li>{@link OIDCError#INVALID_CONFIGURATION_PARAMETER}
+ *             <li>{@link OIDCError#INVALID_CLIENT_METADATA}
  *         </ul>
  * </ul>
  *
@@ -78,9 +77,8 @@ public class OIDCClientRegistrationErrorResponse
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);
 		stdErrors.add(BearerTokenError.INSUFFICIENT_SCOPE);
-		stdErrors.add(OIDCError.INVALID_CLIENT_ID);
 		stdErrors.add(OIDCError.INVALID_REDIRECT_URI);
-		stdErrors.add(OIDCError.INVALID_CONFIGURATION_PARAMETER);
+		stdErrors.add(OIDCError.INVALID_CLIENT_METADATA);
 
 		return Collections.unmodifiableSet(stdErrors);
 	}

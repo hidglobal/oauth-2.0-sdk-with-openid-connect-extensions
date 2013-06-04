@@ -19,20 +19,13 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 /**
  * UserInfo error response. This class is immutable.
  *
- * <p>Standard errors:
+ * <p>Standard OAuth 2.0 Bearer Token errors:
  *
  * <ul>
- *     <li>OAuth 2.0 Bearer Token errors:
- *         <ul>
- *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#MISSING_TOKEN}
- *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INVALID_REQUEST}
- *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INVALID_TOKEN}
- *             <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INSUFFICIENT_SCOPE}
- *          </ul>
- *     <li>OpenID Connect specific errors:
- *         <ul>
- *             <li>{@link OIDCError#INVALID_SCHEMA}
- *         </ul>
+ *     <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#MISSING_TOKEN}
+ *     <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INVALID_REQUEST}
+ *     <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INVALID_TOKEN}
+ *     <li>{@link com.nimbusds.oauth2.sdk.token.BearerTokenError#INSUFFICIENT_SCOPE}
  * </ul>
  *
  * <p>Example HTTP response:
@@ -72,7 +65,6 @@ public final class UserInfoErrorResponse
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);
 		stdErrors.add(BearerTokenError.INSUFFICIENT_SCOPE);
-		stdErrors.add(OIDCError.INVALID_SCHEMA);
 
 		return Collections.unmodifiableSet(stdErrors);
 	}
