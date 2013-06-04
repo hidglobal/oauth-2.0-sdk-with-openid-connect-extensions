@@ -3,6 +3,7 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -315,6 +316,49 @@ public abstract class ClaimsSet {
 
 		if (value != null)
 			setClaim(name, value.getAddress());
+		else
+			claims.remove(name);
+	}
+	
+	
+	/**
+	 * Gets a date / time based claim, represented as the number of seconds 
+	 * from 1970-01-01T0:0:0Z as measured in UTC until the date / time. 
+	 * 
+	 * @param name The claim name. Must not be {@code null}.
+	 * 
+	 * @return The claim value, {@code null} if not specified or parsing
+	 *         failed.
+	 */
+	public Date getDateClaim(final String name) {
+		
+		Number value = getNumberClaim(name);
+		
+		if (value == null)
+			return null;
+		
+		try {
+			return new Date(value.longValue());
+			
+		} catch (Exception e) {
+			
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * Sets a date / time based claim, represented as the number of seconds 
+	 * from 1970-01-01T0:0:0Z as measured in UTC until the date / time. 
+	 * 
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param value The claim value. If {@code null} any existing claim
+	 *              with the same name will be removed.
+	 */
+	public void setDateClaim(final String name, final Date value) {
+		
+		if (value != null)
+			setClaim(name, value.getTime());
 		else
 			claims.remove(name);
 	}

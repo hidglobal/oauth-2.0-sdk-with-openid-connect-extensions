@@ -3,6 +3,7 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import java.net.URL;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -856,9 +857,9 @@ public class UserInfo extends ClaimsSet {
 	 * @return The time the end-user information was last updated, 
 	 *         {@code null} if not specified.
 	 */
-	public String getUpdatedTime() {
+	public Date getUpdatedTime() {
 	
-		return getStringClaim("updated_at");
+		return getDateClaim("updated_at");
 	}
 	
 	
@@ -870,8 +871,8 @@ public class UserInfo extends ClaimsSet {
 	 *                    updated. If {@code null} the claim will be 
 	 *                    removed.
 	 */
-	public void setUpdatedTime(final String updatedTime) {
+	public void setUpdatedTime(final Date updatedTime) {
 	
-		setClaim("updated_at", updatedTime);
+		setDateClaim("updated_at", updatedTime);
 	}
 }
