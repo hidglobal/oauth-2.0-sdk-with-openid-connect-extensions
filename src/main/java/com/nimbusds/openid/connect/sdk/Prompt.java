@@ -34,7 +34,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 	
 		/** 
-		 * The authorization server must not display any authentication 
+		 * The authorisation server must not display any authentication 
 		 * or consent UI pages. An error is returned if the end user is 
 		 * not already authenticated or the client does not have 
 		 * pre-configured consent for the requested {@code scope}. This 
@@ -61,7 +61,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 		/**
 		 * The authorisation server must prompt the end-user to select
 		 * a user account. This allows a user who has multiple accounts 
-		 * at the authorization server to select amongst the multiple 
+		 * at the authorisation server to select amongst the multiple 
 		 * accounts that they may have current sessions for.
 		 */
 		SELECT_ACCOUNT;
