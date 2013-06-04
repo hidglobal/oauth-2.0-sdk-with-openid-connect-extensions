@@ -30,9 +30,6 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
 import java.net.MalformedURLException;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -792,7 +789,7 @@ public class OIDCProviderMetadata {
 
 		// Parse issuer and subject_types_supported first
 		
-		Set<SubjectType> subjectTypes = new HashSet<SubjectType>();
+		Set<SubjectType> subjectTypes = new LinkedHashSet<SubjectType>();
 		
 		for (String v: JSONObjectUtils.getStringArray(jsonObject, "subject_types_supported")) {
 			subjectTypes.add(SubjectType.parse(v));
