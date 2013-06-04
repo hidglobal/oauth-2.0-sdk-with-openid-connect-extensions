@@ -1434,7 +1434,7 @@ public class ClientDetails {
 			JSONArray acrList = new JSONArray();
 
 			for (ACR acr: defaultACRs)
-				acrList.add(acr.getValue());
+				acrList.add(acr);
 
 			o.put("default_acr_values", acrList);
 		}
