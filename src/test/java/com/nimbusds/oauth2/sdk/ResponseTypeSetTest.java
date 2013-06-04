@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.Iterator;
 import junit.framework.TestCase;
 
 
@@ -49,6 +50,23 @@ public class ResponseTypeSetTest extends TestCase {
 		assertTrue(rts.contains(ResponseType.CODE));
 		assertTrue(rts.contains(new ResponseType("id_token")));
 		assertEquals(2, rts.size());
+	}
+	
+	
+	public void testOrder() {
+		
+		ResponseTypeSet rts = new ResponseTypeSet();
+		rts.add(new ResponseType("code"));
+		rts.add(new ResponseType("id_token"));
+		rts.add(new ResponseType("token"));
+		
+		Iterator<ResponseType> it = rts.iterator();
+		
+		assertEquals(ResponseType.CODE, it.next());
+		assertTrue(new ResponseType("id_token").equals(it.next()));
+		assertEquals(ResponseType.TOKEN, it.next());
+		
+		assertFalse(it.hasNext());
 	}
 
 
