@@ -14,7 +14,7 @@ public class ScopeValueTest extends TestCase {
 
 	public void testMinimalConstructor() {
 
-		ScopeValue t = new ScopeValue("read");
+		Scope.Value t = new Scope.Value("read");
 
 		assertEquals("read", t.getValue());
 
@@ -24,18 +24,18 @@ public class ScopeValueTest extends TestCase {
 
 	public void testFullConstructor() {
 
-		ScopeValue t = new ScopeValue("write", ScopeValue.Requirement.OPTIONAL);
+		Scope.Value t = new Scope.Value("write", Scope.Value.Requirement.OPTIONAL);
 
 		assertEquals("write", t.getValue());
 
-		assertEquals(ScopeValue.Requirement.OPTIONAL, t.getRequirement());
+		assertEquals(Scope.Value.Requirement.OPTIONAL, t.getRequirement());
 	}
 
 
 	public void testEquality() {
 
-		ScopeValue t1 = new ScopeValue("read");
-		ScopeValue t2 = new ScopeValue("read");
+		Scope.Value t1 = new Scope.Value("read");
+		Scope.Value t2 = new Scope.Value("read");
 
 		assertTrue(t1.equals(t2));
 	}

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.oauth2.sdk.ScopeValue;
+import com.nimbusds.oauth2.sdk.Scope;
 
 
 /**
@@ -16,7 +16,7 @@ import com.nimbusds.oauth2.sdk.ScopeValue;
  *
  * @author Vladimir Dzhuvinov
  */
-public class OIDCScopeValue extends ScopeValue {
+public class OIDCScopeValue extends Scope.Value {
 
 
 	/**
@@ -25,7 +25,7 @@ public class OIDCScopeValue extends ScopeValue {
 	 * {@code sub} claim. 
 	 */
 	public static final OIDCScopeValue OPENID =
-		new OIDCScopeValue("openid", ScopeValue.Requirement.REQUIRED, new String[]{"sub"});
+		new OIDCScopeValue("openid", Scope.Value.Requirement.REQUIRED, new String[]{"sub"});
 	
 	
 	/**
@@ -110,7 +110,7 @@ public class OIDCScopeValue extends ScopeValue {
 	 *                    if not applicable.
 	 */
 	private OIDCScopeValue(final String value, 
-		               final ScopeValue.Requirement requirement,
+		               final Scope.Value.Requirement requirement,
 	                       final String[] claims) {
 	
 		super(value, requirement);
@@ -134,7 +134,7 @@ public class OIDCScopeValue extends ScopeValue {
 	private OIDCScopeValue(final String value, 
 		               final String[] claims) {
 	
-		this(value, ScopeValue.Requirement.OPTIONAL, claims);
+		this(value, Scope.Value.Requirement.OPTIONAL, claims);
 	}
 
 
@@ -162,7 +162,7 @@ public class OIDCScopeValue extends ScopeValue {
 		
 		for (String claim: claims) {
 		
-			if (getRequirement() == ScopeValue.Requirement.REQUIRED) {
+			if (getRequirement() == Scope.Value.Requirement.REQUIRED) {
 			
 				// Essential (applies to OPENID - sub only)
 				JSONObject details = new JSONObject();

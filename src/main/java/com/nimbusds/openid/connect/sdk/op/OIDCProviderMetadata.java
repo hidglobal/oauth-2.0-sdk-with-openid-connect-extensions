@@ -17,7 +17,6 @@ import com.nimbusds.langtag.LangTagException;
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.ScopeValue;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.Issuer;
@@ -831,7 +830,7 @@ public class OIDCProviderMetadata {
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "scopes_supported")) {
 
 				if (v != null)
-					op.scope.add(new ScopeValue(v));
+					op.scope.add(new Scope.Value(v));
 			}
 		}
 
