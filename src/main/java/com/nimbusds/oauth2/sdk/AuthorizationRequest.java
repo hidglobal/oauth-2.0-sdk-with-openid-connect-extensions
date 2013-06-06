@@ -264,10 +264,10 @@ public class AuthorizationRequest implements Request {
 	/**
 	 * Returns the matching HTTP request.
 	 *
-	 * @param url    The URL of the HTTP endpoint for which the request is
-	 *               intended. Must not be {@code null}.
 	 * @param method The HTTP request method which can be GET or POST. Must
 	 *               not be {@code null}.
+	 * @param url    The URL of the HTTP endpoint for which the request is
+	 *               intended. Must not be {@code null}.
 	 *
 	 * @return The HTTP request.
 	 *
@@ -275,7 +275,7 @@ public class AuthorizationRequest implements Request {
 	 *                            couldn't be serialised to an HTTP  
 	 *                            request.
 	 */
-	public HTTPRequest toHTTPRequest(final URL url, final HTTPRequest.Method method)
+	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method, final URL url)
 		throws SerializeException {
 		
 		HTTPRequest httpRequest;
@@ -303,7 +303,7 @@ public class AuthorizationRequest implements Request {
 	public HTTPRequest toHTTPRequest(final URL url)
 		throws SerializeException {
 	
-		return toHTTPRequest(url, HTTPRequest.Method.GET);
+		return toHTTPRequest(HTTPRequest.Method.GET, url);
 	}
 
 
