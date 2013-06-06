@@ -35,7 +35,7 @@ public class OIDCScopeValue extends ScopeValue {
 	 * {@code middle_name}, {@code nickname}, {@code preferred_username}, 
 	 * {@code profile}, {@code picture}, {@code website}, {@code gender}, 
 	 * {@code birthdate}, {@code zoneinfo}, {@code locale}, and 
-	 * {@code updated_time}. 
+	 * {@code updated_at}. 
 	 */
 	public static final OIDCScopeValue PROFILE =
 		new OIDCScopeValue("profile", new String[]{"name",
@@ -51,7 +51,7 @@ public class OIDCScopeValue extends ScopeValue {
 	                                                   "birthdate",
 	                                                   "zoneinfo",
 	                                                   "locale",
-	                                                   "updated_time"});
+	                                                   "updated_at"});
 	
 	
 	/**
@@ -77,11 +77,13 @@ public class OIDCScopeValue extends ScopeValue {
 	
 	
 	/**
-	 * Requests that access to the {@code phone_number} claim at the 
-	 * UserInfo endpoint be granted by the issued access token. 
+	 * Requests that access to the {@code phone_number} and
+	 * {@code phone_number_verified} claims at the UserInfo endpoint be 
+	 * granted by the issued access token. 
 	 */
 	public static final OIDCScopeValue PHONE =
-		new OIDCScopeValue("phone", new String[]{"phone_number"});
+		new OIDCScopeValue("phone", new String[]{"phone_number",
+		                                         "phone_number_verified"});
 
 
 	/**
