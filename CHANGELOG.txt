@@ -9,3 +9,10 @@ version 1.0 (2012-05-29)
 version 2.0 (2013-05-13)
 	* Intermediary development release with Maven build, published to 
 	  Maven Central.
+
+version 2.1 (2013-06-06)
+	* Updates the APIs to OpenID Connect Messages draft 20, OpenID Connect 
+	  Standard draft 21, OpenID Connect Discovery draft 17 and OpenID 
+	  Connect Registration draft 19.
+	* Major refactoring of the APIs for greater simplicity.
+	* Adds JUnit tests.
