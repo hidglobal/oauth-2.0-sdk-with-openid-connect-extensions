@@ -12,8 +12,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * Authorisation endpoint response. This is the base abstract class for
- * authorisation success and error responses.
+ * The base abstract class for authorisation success and error responses.
  *
  * <p>Related specifications:
  *

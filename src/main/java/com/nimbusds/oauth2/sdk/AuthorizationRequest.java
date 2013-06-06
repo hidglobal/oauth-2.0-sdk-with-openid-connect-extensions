@@ -21,8 +21,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * end-user's consent to grant the client access to a protected resource. 
  * This class is immutable.
  *
- * <p>Extending classes may define additional parameters as well as enforce
- * tighter requirements on the base parameters.
+ * <p>Extending classes may define additional request parameters as well as 
+ * enforce tighter requirements on the base parameters.
  *
  * <p>Example HTTP request:
  *
