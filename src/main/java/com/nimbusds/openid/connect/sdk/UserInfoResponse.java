@@ -7,8 +7,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * UserInfo endpoint response. This is the base abstract class for UserInfo
- * success and error responses.
+ * The base abstract class for UserInfo success and error responses.
  *
  * <p>Related specifications:
  *
