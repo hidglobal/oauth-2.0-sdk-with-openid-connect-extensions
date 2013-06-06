@@ -10,7 +10,5 @@
  *     <li>{@link com.nimbusds.oauth2.sdk.auth.ClientSecretJWT}
  *     <li>{@link com.nimbusds.oauth2.sdk.auth.PrivateKeyJWT}
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 package com.nimbusds.oauth2.sdk.auth;

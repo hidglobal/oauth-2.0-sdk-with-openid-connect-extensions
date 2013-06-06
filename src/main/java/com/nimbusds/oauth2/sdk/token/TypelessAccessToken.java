@@ -5,8 +5,8 @@ import net.minidev.json.JSONObject;
 
 
 /**
- * Typeless access token, cannot be serialized. Intended to represent certain
- * parsed access tokens which type cannot be inferred.
+ * Typeless access token, cannot be serialised. Intended to represent parsed
+ * access tokens which type cannot be inferred.
  *
  * <p>Related specifications:
  *

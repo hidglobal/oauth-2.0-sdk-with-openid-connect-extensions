@@ -43,7 +43,12 @@
  *                 server responds with a token error.
  *         </ul>
  * </ul>
- *
- * @author Vladimir Dzhuvinov
+ * 
+ * <p>Protected resource messages:
+ * 
+ * <ul>
+ *     <li>{@link com.nimbusds.oauth2.sdk.ProtectedResourceRequest} The client
+ *         makes a request to a protected resource using an OAuth 2.0 access
+ *         token.
  */
 package com.nimbusds.oauth2.sdk;

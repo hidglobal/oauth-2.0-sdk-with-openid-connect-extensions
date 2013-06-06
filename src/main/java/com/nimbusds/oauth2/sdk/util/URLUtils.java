@@ -20,7 +20,7 @@ public class URLUtils {
 
 	
 	/**
-	 * The default character set.
+	 * The default UTF-8 character set.
 	 */
 	public static final String CHARSET = "utf-8";
 	
