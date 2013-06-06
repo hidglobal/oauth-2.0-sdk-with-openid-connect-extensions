@@ -93,10 +93,10 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * The response type set, used to determine redirect URL composition. 
-	 * If unknown {@code null}.
+	 * The response type, used to determine redirect URL composition. If
+	 * unknown {@code null}.
 	 */
-	private final ResponseTypeSet rts;
+	private final ResponseType rt;
 	
 	
 	/**
@@ -107,14 +107,13 @@ public class AuthorizationErrorResponse
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    authorisation error response. Must not be 
 	 *                    {@code null}.
-	 * @param rts         The response type set, used to determine the
-	 *                    redirect URL composition. If unknown
-	 *                    {@code null}.
+	 * @param rt          The response type, used to determine the redirect
+	 *                    URI composition. If unknown {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
 	public AuthorizationErrorResponse(final URL redirectURI,
 	                                  final ErrorObject error,
-					  final ResponseTypeSet rts,
+					  final ResponseType rt,
 					  final State state) {
 					  
 		super(redirectURI, state);
@@ -124,7 +123,7 @@ public class AuthorizationErrorResponse
 			
 		this.error = error;
 		
-		this.rts = rts;
+		this.rt = rt;
 	}
 	
 
@@ -136,13 +135,13 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * Gets the response type set.
+	 * Gets the response type.
 	 *
-	 * @return The response type set, {@code null} if not specified.
+	 * @return The response type, {@code null} if not specified.
 	 */
-	public ResponseTypeSet getResponseTypeSet() {
+	public ResponseType getResponseType() {
 	
-		return rts;
+		return rt;
 	}
 
 
@@ -172,7 +171,7 @@ public class AuthorizationErrorResponse
 		
 		StringBuilder sb = new StringBuilder(getRedirectURI().toString());
 		
-		if (rts == null || rts.contains(ResponseType.TOKEN))
+		if (rt == null || rt.contains(ResponseType.Value.TOKEN))
 			sb.append("#");
 		else
 			sb.append("?");

@@ -17,7 +17,6 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 
-import com.nimbusds.jose.JOSEObject;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
@@ -25,7 +24,7 @@ import com.nimbusds.oauth2.sdk.AuthorizationRequest;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.ResponseTypeSet;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -107,7 +106,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Previously issued ID Token passed to the authorization server as a 
+	 * Previously issued ID Token passed to the authorisation server as a 
 	 * hint about the end-user's current or past authenticated session with
 	 * the client (optional). Should be present when {@code prompt=none} is 
 	 * used.
@@ -116,7 +115,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Hint to the authorization server about the login identifier the 
+	 * Hint to the authorisation server about the login identifier the 
 	 * end-user may use to log in (optional).
 	 */
 	private final String loginHint;
@@ -149,7 +148,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	/**
 	 * Creates a new minimal OpenID Connect authorisation request.
 	 *
-	 * @param rts         The response type set. Corresponds to the 
+	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
 	 * @param scope       The request scope. Corresponds to the
@@ -167,7 +166,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * @param nonce       The nonce. Corresponds to the {@code nonce} 
 	 *                    parameter. May be {@code null} for code flow.
 	 */
-	public OIDCAuthorizationRequest(final ResponseTypeSet rts,
+	public OIDCAuthorizationRequest(final ResponseType rt,
 	                                final Scope scope,
 				        final ClientID clientID,
 				        final URL redirectURI,
@@ -176,7 +175,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		// Not specified: display, prompt, maxAge, uiLocales, claimsLocales, 
 		// idTokenHint, loginHint, acrValues, claims
-		this(rts, scope, clientID, redirectURI, state, nonce, 
+		this(rt, scope, clientID, redirectURI, state, nonce, 
 		     null, null, 0, null, null, 
 		     null, null, null, null);
 	}
@@ -186,7 +185,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * Creates a new OpenID Connect authorisation request without a request
 	 * object.
 	 *
-	 * @param rts           The response type set. Corresponds to the 
+	 * @param rt            The response type. Corresponds to the 
 	 *                      {@code response_type} parameter. Must not be
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
@@ -236,7 +235,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 */
-	public OIDCAuthorizationRequest(final ResponseTypeSet rts,
+	public OIDCAuthorizationRequest(final ResponseType rt,
 	                                final Scope scope,
 				        final ClientID clientID,
 				        final URL redirectURI,
@@ -253,7 +252,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final ClaimsRequest claims) {
 				    
 				    
-		this(rts, scope, clientID, redirectURI, state, nonce, display, prompt,
+		this(rt, scope, clientID, redirectURI, state, nonce, display, prompt,
 		     maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues,
 		     claims, (JWT)null);
 	}
@@ -263,7 +262,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * Creates a new OpenID Connect authorisation request with a request 
 	 * object specified by value.
 	 *
-	 * @param rts           The response type set. Corresponds to the 
+	 * @param rt            The response type set. Corresponds to the 
 	 *                      {@code response_type} parameter. Must not be
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
@@ -316,7 +315,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code request} parameter. {@code null} if not
 	 *                      specified.
 	 */
-	public OIDCAuthorizationRequest(final ResponseTypeSet rts,
+	public OIDCAuthorizationRequest(final ResponseType rt,
 	                                final Scope scope,
 				        final ClientID clientID,
 				        final URL redirectURI,
@@ -333,7 +332,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final ClaimsRequest claims,
 				        final JWT requestObject) {
 				    
-		super(rts, clientID, redirectURI, scope, state);
+		super(rt, clientID, redirectURI, scope, state);
 
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirect URI must not be null");
@@ -346,7 +345,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		
 		// Nonce required for implicit protocol flow
-		if (rts.impliesImplicitFlow() && nonce == null)
+		if (rt.impliesImplicitFlow() && nonce == null)
 			throw new IllegalArgumentException("Nonce is required in implicit protocol flow");
 		
 		this.nonce = nonce;
@@ -384,7 +383,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * Creates a new OpenID Connect authorisation request with a request 
 	 * object specified by URL.
 	 *
-	 * @param rts           The response type set. Corresponds to the 
+	 * @param rt            The response type. Corresponds to the 
 	 *                      {@code response_type} parameter. Must not be
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
@@ -437,7 +436,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      optional {@code request_uri} parameter. 
 	 *                      {@code null} if not specified.
 	 */
-	public OIDCAuthorizationRequest(final ResponseTypeSet rts,
+	public OIDCAuthorizationRequest(final ResponseType rt,
 	                                final Scope scope,
 				        final ClientID clientID,
 				        final URL redirectURI,
@@ -454,7 +453,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 				        final ClaimsRequest claims,
 				        final URL requestURI) {
 				    
-		super(rts, clientID, redirectURI, scope, state);
+		super(rt, clientID, redirectURI, scope, state);
 
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirect URI must not be null");
@@ -467,7 +466,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		
 		// Nonce required for implicit protocol flow
-		if (rts.impliesImplicitFlow() && nonce == null)
+		if (rt.impliesImplicitFlow() && nonce == null)
 			throw new IllegalArgumentException("Nonce is required in implicit protocol flow");
 		
 		this.nonce = nonce;
@@ -808,13 +807,13 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		State state = ar.getState();
 
-		ResponseTypeSet rts = ar.getResponseTypeSet();
+		ResponseType rt = ar.getResponseType();
 
-		for (ResponseType rt: rts) {
+		for (ResponseType.Value rtValue: rt) {
 
-			if (! rt.equals(ResponseType.CODE) &&
-			    ! rt.equals(ResponseType.TOKEN) &&
-			    ! rt.equals(OIDCResponseType.ID_TOKEN) )
+			if (! rtValue.equals(ResponseType.Value.CODE) &&
+			    ! rtValue.equals(ResponseType.Value.TOKEN) &&
+			    ! rtValue.equals(OIDCResponseTypeValue.ID_TOKEN) )
 				throw new ParseException("Unsupported \"response_type\" parameter: " + rt, 
 					                 OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
 					                 redirectURI, state, null);
@@ -840,7 +839,7 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		Nonce nonce = Nonce.parse(params.get("nonce"));
 		
 		// Nonce required in implicit flow
-		if (rts.impliesImplicitFlow() && nonce == null)
+		if (rt.impliesImplicitFlow() && nonce == null)
 			throw new ParseException("Missing \"nonce\" parameter",
 				                 OAuth2Error.INVALID_REQUEST,
 				                 redirectURI, state, null);
@@ -1040,18 +1039,18 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		// Inline request object
 		if (requestObject != null)
-			return new OIDCAuthorizationRequest(rts, scope, clientID, redirectURI, state, nonce,
+			return new OIDCAuthorizationRequest(rt, scope, clientID, redirectURI, state, nonce,
 			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
 			                                    idTokenHint, loginHint, acrValues, claims, requestObject);
 	
 		// Request object by URL reference
 		if (requestURI != null)
-			return new OIDCAuthorizationRequest(rts, scope, clientID, redirectURI, state, nonce,
+			return new OIDCAuthorizationRequest(rt, scope, clientID, redirectURI, state, nonce,
 			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
 			                                    idTokenHint, loginHint, acrValues, claims, requestURI);
 		
 		// No request object or URI
-		return new OIDCAuthorizationRequest(rts, scope, clientID, redirectURI, state, nonce,
+		return new OIDCAuthorizationRequest(rt, scope, clientID, redirectURI, state, nonce,
 			                            display, prompt, maxAge, uiLocales, claimsLocales, 
 			                            idTokenHint, loginHint, acrValues, claims);
 	}

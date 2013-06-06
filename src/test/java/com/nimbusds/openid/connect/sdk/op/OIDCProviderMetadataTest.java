@@ -10,11 +10,12 @@ import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.langtag.LangTag;
-import com.nimbusds.oauth2.sdk.ResponseTypeSet;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 
 import com.nimbusds.openid.connect.sdk.Display;
+import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
 import com.nimbusds.openid.connect.sdk.OIDCScopeValue;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
@@ -128,8 +129,27 @@ public class OIDCProviderMetadataTest {
 		assertTrue(scopes.contains(OIDCScopeValue.OFFLINE_ACCESS));
 		assertEquals(6, scopes.size());
 		
-		ResponseTypeSet rts = op.getResponseTypes();
-		// TODO
+		Set<ResponseType> rts = op.getResponseTypes();
+		// [\"code\", \"code id_token\", \"id_token\", \"token id_token\"]
+		ResponseType rt1 = new ResponseType();
+		rt1.add(ResponseType.Value.CODE);
+		assertTrue(rts.contains(rt1));
+		
+		ResponseType rt2 = new ResponseType();
+		rt2.add(ResponseType.Value.CODE);
+		rt2.add(OIDCResponseTypeValue.ID_TOKEN);
+		assertTrue(rts.contains(rt2));
+		
+		ResponseType rt3 = new ResponseType();
+		rt3.add(OIDCResponseTypeValue.ID_TOKEN);
+		assertTrue(rts.contains(rt3));
+		
+		ResponseType rt4 = new ResponseType();
+		rt4.add(ResponseType.Value.TOKEN);
+		rt4.add(OIDCResponseTypeValue.ID_TOKEN);
+		assertTrue(rts.contains(rt4));
+		
+		assertEquals(4, rts.size());
 		
 		Set<ACR> acrValues = op.getACRs();
 		assertTrue(acrValues.contains(new ACR("urn:mace:incommon:iap:silver")));

@@ -1,7 +1,6 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -24,14 +23,14 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testMinimal()
 		throws Exception {
 
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		ClientID clientID = new ClientID("123456");
 
 		AuthorizationRequest req = new AuthorizationRequest(rts, clientID);
 
-		assertEquals(rts, req.getResponseTypeSet());
+		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
 		assertNull(req.getRedirectURI());
@@ -53,7 +52,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		req = AuthorizationRequest.parse(query);
 
-		assertEquals(rts, req.getResponseTypeSet());
+		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
 		assertNull(req.getRedirectURI());
@@ -65,8 +64,8 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testFull()
 		throws Exception {
 
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		ClientID clientID = new ClientID("123456");
 
@@ -78,7 +77,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		AuthorizationRequest req = new AuthorizationRequest(rts, clientID, redirectURI, scope, state);
 
-		assertEquals(rts, req.getResponseTypeSet());
+		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectURI());
 		assertEquals(scope, req.getScope());
@@ -103,7 +102,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		req = AuthorizationRequest.parse(query);
 
-		assertEquals(rts, req.getResponseTypeSet());
+		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectURI());
 		assertEquals(scope, req.getScope());

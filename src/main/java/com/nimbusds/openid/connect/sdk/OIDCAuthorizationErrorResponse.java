@@ -12,7 +12,7 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.oauth2.sdk.AuthorizationErrorResponse;
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseTypeSet;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
@@ -115,17 +115,16 @@ public class OIDCAuthorizationErrorResponse
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    OpenID Connect authorisation error response. Must 
 	 *                    not be {@code null}.
-	 * @param rts         The response type set, used to determine the
-	 *                    redirect URL composition. If unknown
-	 *                    {@code null}.
+	 * @param rt          The response type, used to determine the redirect
+	 *                    URI composition. If unknown {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
 	public OIDCAuthorizationErrorResponse(final URL redirectURI,
 	                                      final ErrorObject error,
-					      final ResponseTypeSet rts,
+					      final ResponseType rt,
 					      final State state) {
 					  
-		super(redirectURI, error, rts, state);
+		super(redirectURI, error, rt, state);
 	}
 
 
@@ -150,7 +149,7 @@ public class OIDCAuthorizationErrorResponse
 
 		return new OIDCAuthorizationErrorResponse(resp.getRedirectURI(),
 			                                  resp.getErrorObject(),
-			                                  resp.getResponseTypeSet(),
+			                                  resp.getResponseType(),
 			                                  resp.getState());
 	}
 
@@ -183,7 +182,7 @@ public class OIDCAuthorizationErrorResponse
 
 		return new OIDCAuthorizationErrorResponse(resp.getRedirectURI(),
 			                                  resp.getErrorObject(),
-			                                  resp.getResponseTypeSet(),
+			                                  resp.getResponseType(),
 			                                  resp.getState());
 	}
 
@@ -217,7 +216,7 @@ public class OIDCAuthorizationErrorResponse
 
 		return new OIDCAuthorizationErrorResponse(resp.getRedirectURI(),
 			                                  resp.getErrorObject(),
-			                                  resp.getResponseTypeSet(),
+			                                  resp.getResponseType(),
 			                                  resp.getState());
 	}
 }

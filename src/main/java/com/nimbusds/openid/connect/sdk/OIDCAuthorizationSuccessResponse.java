@@ -13,7 +13,6 @@ import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.AuthorizationSuccessResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -92,20 +91,20 @@ public class OIDCAuthorizationSuccessResponse
 	
 	
 	@Override
-	public ResponseTypeSet getImpliedResponseTypeSet() {
+	public ResponseType getImpliedResponseType() {
 	
-		ResponseTypeSet rts = new ResponseTypeSet();
+		ResponseType rt = new ResponseType();
 		
 		if (getAuthorizationCode() != null)
-			rts.add(ResponseType.CODE);
+			rt.add(ResponseType.Value.CODE);
 			
 		if (getIDToken() != null)
-			rts.add(OIDCResponseType.ID_TOKEN);
+			rt.add(OIDCResponseTypeValue.ID_TOKEN);
 		
 		if (getAccessToken() != null)
-			rts.add(ResponseType.TOKEN);
+			rt.add(ResponseType.Value.TOKEN);
 			
-		return rts;
+		return rt;
 	}
 	
 	

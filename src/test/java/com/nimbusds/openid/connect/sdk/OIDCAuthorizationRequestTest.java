@@ -1,6 +1,6 @@
 package com.nimbusds.openid.connect.sdk;
 
-import java.net.MalformedURLException;
+
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,8 +34,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testMinimalConstructor()
 		throws Exception {
 
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		Scope scope = new Scope();
 		scope.add(OIDCScopeValue.OPENID);
@@ -52,8 +52,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		OIDCAuthorizationRequest request = 
 			new OIDCAuthorizationRequest(rts, scope, clientID, redirectURI, state, nonce);
 
-		ResponseTypeSet rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		ResponseType rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
@@ -77,8 +77,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		request = OIDCAuthorizationRequest.parse(queryString);
 
-		rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
@@ -99,8 +99,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testExtendedConstructor()
 		throws Exception {
 
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		Scope scope = new Scope();
 		scope.add(OIDCScopeValue.OPENID);
@@ -147,8 +147,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 			new OIDCAuthorizationRequest(rts, scope, clientID, redirectURI, state, nonce, 
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims);
 
-		ResponseTypeSet rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		ResponseType rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
@@ -209,8 +209,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		request = OIDCAuthorizationRequest.parse(queryString);
 
-		rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
@@ -267,8 +267,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testRequestObjectConstructor()
 		throws Exception {
 
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		Scope scope = new Scope();
 		scope.add(OIDCScopeValue.OPENID);
@@ -318,8 +318,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
 				                     requestObject);
 
-		ResponseTypeSet rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		ResponseType rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
@@ -382,8 +382,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		request = OIDCAuthorizationRequest.parse(queryString);
 
-		rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();
@@ -442,8 +442,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testRequestURIConstructor()
 		throws Exception {
 
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		Scope scope = new Scope();
 		scope.add(OIDCScopeValue.OPENID);
@@ -493,8 +493,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
 				                     requestURI);
 
-		ResponseTypeSet rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		ResponseType rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		Scope scopeOut = request.getScope();
@@ -557,8 +557,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		request = OIDCAuthorizationRequest.parse(queryString);
 
-		rtsOut = request.getResponseTypeSet();
-		assertTrue(rtsOut.contains(ResponseType.CODE));
+		rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
 		scopeOut = request.getScope();

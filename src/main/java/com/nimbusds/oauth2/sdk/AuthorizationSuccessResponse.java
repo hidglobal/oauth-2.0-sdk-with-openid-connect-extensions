@@ -17,7 +17,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * Authorisation success response. Used to return an authorization code or 
+ * Authorisation success response. Used to return an authorisation code or 
  * access token at the Authorisation endpoint. This class is immutable.
  *
  * <p>Example HTTP response with code (code flow):
@@ -122,21 +122,21 @@ public class AuthorizationSuccessResponse
 	
 	
 	/**
-	 * Gets the implied response type set.
+	 * Gets the implied response type.
 	 *
-	 * @return The implied response type set.
+	 * @return The implied response type.
 	 */
-	public ResponseTypeSet getImpliedResponseTypeSet() {
+	public ResponseType getImpliedResponseType() {
 	
-		ResponseTypeSet rts = new ResponseTypeSet();
+		ResponseType rt = new ResponseType();
 		
 		if (code != null)
-			rts.add(ResponseType.CODE);
+			rt.add(ResponseType.Value.CODE);
 		
 		if (accessToken != null)
-			rts.add(ResponseType.TOKEN);
+			rt.add(ResponseType.Value.TOKEN);
 			
-		return rts;
+		return rt;
 	}
 	
 	

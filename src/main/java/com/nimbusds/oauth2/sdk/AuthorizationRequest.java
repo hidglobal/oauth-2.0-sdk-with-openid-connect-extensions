@@ -47,9 +47,9 @@ public class AuthorizationRequest implements Request {
 
 
 	/**
-	 * The response type set (required).
+	 * The response type (required).
 	 */
-	private final ResponseTypeSet rts;
+	private final ResponseType rt;
 
 
 	/**
@@ -80,24 +80,24 @@ public class AuthorizationRequest implements Request {
 	/**
 	 * Creates a new minimal authorisation request.
 	 *
-	 * @param rts         The response type set. Corresponds to the 
+	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
 	 * @param clientID    The client identifier. Corresponds to the
 	 *                    {@code client_id} parameter. Must not be 
 	 *                    {@code null}.
 	 */
-	public AuthorizationRequest(final ResponseTypeSet rts,
+	public AuthorizationRequest(final ResponseType rt,
 	                            final ClientID clientID) {
 
-		this(rts, clientID, null, null, null);
+		this(rt, clientID, null, null, null);
 	}
 	
 	
 	/**
 	 * Creates a new authorisation request.
 	 *
-	 * @param rts         The response type set. Corresponds to the 
+	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
 	 * @param clientID    The client identifier. Corresponds to the
@@ -113,16 +113,16 @@ public class AuthorizationRequest implements Request {
 	 *                    {@code state} parameter. {@code null} if not 
 	 *                    specified.
 	 */
-	public AuthorizationRequest(final ResponseTypeSet rts,
+	public AuthorizationRequest(final ResponseType rt,
 	                            final ClientID clientID,
 				    final URL redirectURI,
 	                            final Scope scope,
 				    final State state) {
 
-		if (rts == null)
-			throw new IllegalArgumentException("The response type set must not be null");
+		if (rt == null)
+			throw new IllegalArgumentException("The response type must not be null");
 		
-		this.rts = rts;
+		this.rt = rt;
 
 
 		if (clientID == null)
@@ -138,14 +138,14 @@ public class AuthorizationRequest implements Request {
 	
 	
 	/**
-	 * Gets the response type set. Corresponds to the {@code response_type}
+	 * Gets the response type. Corresponds to the {@code response_type}
 	 * parameter.
 	 *
-	 * @return The response type set.
+	 * @return The response type.
 	 */
-	public ResponseTypeSet getResponseTypeSet() {
+	public ResponseType getResponseType() {
 	
-		return rts;
+		return rt;
 	}
 
 
@@ -218,7 +218,7 @@ public class AuthorizationRequest implements Request {
 
 		Map <String,String> params = new LinkedHashMap<String,String>();
 		
-		params.put("response_type", rts.toString());
+		params.put("response_type", rt.toString());
 		params.put("client_id", clientID.getValue());
 
 		if (redirectURI != null)
@@ -329,10 +329,8 @@ public class AuthorizationRequest implements Request {
 	public static AuthorizationRequest parse(final Map<String,String> params)
 		throws ParseException {
 
-		String v = null;
-
 		// Parse mandatory client ID first
-		v = params.get("client_id");
+		String v = params.get("client_id");
 		
 		if (StringUtils.isBlank(v))
 			throw new ParseException("Missing \"client_id\" parameter", 
@@ -366,10 +364,10 @@ public class AuthorizationRequest implements Request {
 		// Parse mandatory response type
 		v = params.get("response_type");
 		
-		ResponseTypeSet rts = null;
+		ResponseType rt = null;
 		
 		try {
-			rts = ResponseTypeSet.parse(v);
+			rt = ResponseType.parse(v);
 		
 		} catch (ParseException e) {
 			
@@ -388,7 +386,7 @@ public class AuthorizationRequest implements Request {
 			scope = Scope.parse(v);
 
 
-		return new AuthorizationRequest(rts, clientID, redirectURI, scope, state);
+		return new AuthorizationRequest(rt, clientID, redirectURI, scope, state);
 
 	}
 	

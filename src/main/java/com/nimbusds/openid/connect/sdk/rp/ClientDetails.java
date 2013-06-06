@@ -28,7 +28,6 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -76,7 +75,7 @@ public class ClientDetails {
 	/**
 	 * The expected OAuth 2.0 response types.
 	 */
-	private ResponseTypeSet responseTypes;
+	private ResponseType responseTypes;
 	
 	
 	/**
@@ -336,7 +335,7 @@ public class ClientDetails {
 	 * 
 	 * @return The response types, {@code null} if not specified.
 	 */
-	public ResponseTypeSet getResponseTypes() {
+	public ResponseType getResponseTypes() {
 		
 		return responseTypes;
 	}
@@ -349,7 +348,7 @@ public class ClientDetails {
 	 * @param responseTypes The response types, {@code null} if not 
 	 *                      specified.
 	 */
-	public void setResponseTypes(final ResponseTypeSet responseTypes) {
+	public void setResponseTypes(final ResponseType responseTypes) {
 		
 		this.responseTypes = responseTypes;
 	}
@@ -1208,7 +1207,7 @@ public class ClientDetails {
 	public void applyDefaults() {
 		
 		if (responseTypes == null) {
-			responseTypes = ResponseTypeSet.getDefault();
+			responseTypes = ResponseType.getDefault();
 		}
 		
 		if (grantTypes == null) {
@@ -1262,8 +1261,8 @@ public class ClientDetails {
 			
 			JSONArray rtList = new JSONArray();
 			
-			for (ResponseType rt: responseTypes)
-				rtList.add(rt.toString());
+			for (ResponseType.Value rtValue: responseTypes)
+				rtList.add(rtValue.toString());
 			
 			o.put("response_types", rtList);
 		}
@@ -1511,11 +1510,11 @@ public class ClientDetails {
 		
 		if (jsonObject.containsKey("response_types")) {
 			
-			ResponseTypeSet responseTypes = new ResponseTypeSet();
+			ResponseType responseTypes = new ResponseType();
 			
-			for (String response: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
+			for (String responseTypeValue: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
 				
-				responseTypes.add(new ResponseType(response));
+				responseTypes.add(new ResponseType.Value(responseTypeValue));
 			}
 			
 			client.setResponseTypes(responseTypes);

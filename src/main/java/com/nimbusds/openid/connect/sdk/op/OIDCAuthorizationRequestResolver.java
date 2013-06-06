@@ -332,7 +332,7 @@ public class OIDCAuthorizationRequestResolver {
 
 
 		return new OIDCAuthorizationRequest(
-				finalAuthzRequest.getResponseTypeSet(),
+				finalAuthzRequest.getResponseType(),
 				finalAuthzRequest.getScope(),
 				finalAuthzRequest.getClientID(),
 				finalAuthzRequest.getRedirectURI(),

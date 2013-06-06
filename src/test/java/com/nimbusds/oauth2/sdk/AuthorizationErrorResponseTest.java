@@ -55,8 +55,8 @@ public class AuthorizationErrorResponseTest extends TestCase {
 	public void testSerializeAndParse()
 		throws Exception {
 	
-		ResponseTypeSet rts = new ResponseTypeSet();
-		rts.add(ResponseType.CODE);
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
 
 		State state = new State("xyz");
 	
@@ -67,7 +67,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 
 		assertEquals(REDIRECT_URL, r.getRedirectURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
-		assertEquals(rts, r.getResponseTypeSet());
+		assertEquals(rts, r.getResponseType());
 		assertEquals(state, r.getState());
 
 		Map<String,String> params = r.toParameters();
@@ -104,7 +104,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 
 		assertEquals(REDIRECT_URL, r.getRedirectURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
-		assertNull(r.getResponseTypeSet());
+		assertNull(r.getResponseType());
 		assertEquals(state, r.getState());
 	}
 	
@@ -129,7 +129,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertEquals(ERROR_PAGE_URL, r.getErrorObject().getURI());
 		assertEquals(new State("123"), r.getState());
 		
-		assertNull(r.getResponseTypeSet());
+		assertNull(r.getResponseType());
 	}
 	
 	

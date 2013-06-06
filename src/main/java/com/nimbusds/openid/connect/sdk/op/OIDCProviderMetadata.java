@@ -19,7 +19,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.ScopeValue;
 import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.ResponseTypeSet;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
@@ -109,7 +108,7 @@ public class OIDCProviderMetadata {
 	/**
 	 * The supported response types.
 	 */
-	private ResponseTypeSet rts;
+	private Set<ResponseType> rts;
 	
 	
 	/**
@@ -426,7 +425,7 @@ public class OIDCProviderMetadata {
 	 * @return The supported response type values, {@code null} if not 
 	 *         specified.
 	 */
-	public ResponseTypeSet getResponseTypes() {
+	public Set<ResponseType> getResponseTypes() {
 
 		return rts;
 	}
@@ -838,12 +837,12 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("response_types_supported")) {
 
-			op.rts = new ResponseTypeSet();
+			op.rts = new LinkedHashSet<ResponseType>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "response_types_supported")) {
 
 				if (v != null)
-					op.rts.add(new ResponseType(v));
+					op.rts.add(ResponseType.parse(v));
 			}
 		}
 		
