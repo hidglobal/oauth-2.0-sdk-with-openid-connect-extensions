@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import net.jcip.annotations.Immutable;
 
@@ -895,10 +896,12 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 			uiLocales = new LinkedList<LangTag>();
 
-			for (String s: v.split("\\s+")) {
+			StringTokenizer st = new StringTokenizer(v, " ");
+
+			while (st.hasMoreTokens()) {
 
 				try {
-					uiLocales.add(LangTag.parse(s));
+					uiLocales.add(LangTag.parse(st.nextToken()));
 
 				} catch (LangTagException e) {
 
@@ -918,10 +921,12 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 			claimsLocales = new LinkedList<LangTag>();
 
-			for (String s: v.split("\\s+")) {
+			StringTokenizer st = new StringTokenizer(v, " ");
+
+			while (st.hasMoreTokens()) {
 
 				try {
-					claimsLocales.add(LangTag.parse(s));
+					claimsLocales.add(LangTag.parse(st.nextToken()));
 
 				} catch (LangTagException e) {
 
@@ -961,9 +966,11 @@ public class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 			acrValues = new LinkedList<ACR>();
 
-			for (String s: v.split("\\s+")) {
+			StringTokenizer st = new StringTokenizer(v, " ");
 
-				acrValues.add(new ACR(s));
+			while (st.hasMoreTokens()) {
+
+				acrValues.add(new ACR(st.nextToken()));
 			}
 		}
 

@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.util.HashSet;
+import java.util.StringTokenizer;
 
 import net.jcip.annotations.Immutable;
 import net.jcip.annotations.NotThreadSafe;
@@ -161,11 +162,10 @@ public class Scope extends HashSet<Scope.Value> {
 			return scope;
 		}
 
-		String[] tokens = s.split("\\s+");
+		StringTokenizer st = new StringTokenizer(s, " ");
 
-		for (String t : tokens) {
-			scope.add(new Scope.Value(t));
-		}
+		while(st.hasMoreTokens())
+			scope.add(new Scope.Value(st.nextToken()));
 
 		return scope;
 	}

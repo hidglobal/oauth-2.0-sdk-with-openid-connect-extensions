@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.util.HashSet;
+import java.util.StringTokenizer;
 
 import net.jcip.annotations.Immutable;
 import net.jcip.annotations.NotThreadSafe;
@@ -145,10 +146,10 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 	
 		ResponseType rt = new ResponseType();
 		
-		String[] tokens = s.split("\\s");
-		
-		for (String t: tokens)
-			rt.add(new ResponseType.Value(t));
+		StringTokenizer st = new StringTokenizer(s, " ");
+
+		while (st.hasMoreTokens())
+			rt.add(new ResponseType.Value(st.nextToken()));
 		
 		return rt;
 	}

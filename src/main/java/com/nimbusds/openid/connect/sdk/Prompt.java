@@ -3,6 +3,7 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.StringTokenizer;
 
 import net.jcip.annotations.NotThreadSafe;
 
@@ -189,10 +190,10 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 		Prompt prompt = new Prompt();
 		
-		String[] tokens = s.split("\\s+");
-		
-		for (String t: tokens)
-			prompt.add(Prompt.Type.parse(t));
+		StringTokenizer st = new StringTokenizer(s, " ");
+
+		while (st.hasMoreTokens())
+			prompt.add(Prompt.Type.parse(st.nextToken()));
 		
 		if (! prompt.isValid())
 			throw new ParseException("Invalid prompt set: " + s);

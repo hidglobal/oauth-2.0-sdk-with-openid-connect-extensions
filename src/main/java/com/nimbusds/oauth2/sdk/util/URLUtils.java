@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 
 /**
@@ -142,7 +143,11 @@ public class URLUtils {
 			return params; // empty map
 		
 		try {
-			for (String param : query.split("&")) {
+			StringTokenizer st = new StringTokenizer(query, "&");
+
+			while(st.hasMoreTokens()) {
+
+				String param = st.nextToken();
 
 				String pair[] = param.split("=");
 
