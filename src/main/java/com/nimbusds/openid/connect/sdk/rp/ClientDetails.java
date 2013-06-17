@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic ClientDetails Registration 1.0, section 2.
+ *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
