@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import com.nimbusds.oauth2.sdk.reg.ClientRegistrationRequest;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.langtag.LangTag;
@@ -58,7 +59,7 @@ public class OIDCClientAddRequestTest extends TestCase {
 
 		httpRequest.setQuery(jsonString);
 		
-		OIDCClientRegisterRequest request = OIDCClientRegisterRequest.parse(httpRequest);
+		ClientRegistrationRequest request = ClientRegistrationRequest.parse(httpRequest);
 		
 		ClientDetails client = request.getClientDetails();
 		
