@@ -106,6 +106,12 @@ public class ClientDetails {
 	 * The client application logo.
 	 */
 	private Map<LangTag,URL> logoURIEntries;
+	
+	
+	/**
+	 * The client URI entries.
+	 */
+	private Map<LangTag,URL> uriEntries;
 
 
 	/**
@@ -251,6 +257,7 @@ public class ClientDetails {
 
 		nameEntries = new HashMap<LangTag,String>();
 		logoURIEntries = new HashMap<LangTag,URL>();
+		uriEntries = new HashMap<LangTag,URL>();
 		policyURIEntries = new HashMap<LangTag,URL>();
 		policyURIEntries = new HashMap<LangTag,URL>();
 		tosURIEntries = new HashMap<LangTag,URL>();
@@ -554,6 +561,67 @@ public class ClientDetails {
 	public void setLogoURI(final URL logoURI, final LangTag langTag) {
 
 		logoURIEntries.put(langTag, logoURI);
+	}
+	
+	
+	/**
+	 * Gets the client home page. Corresponds to the {@code client_uri} 
+	 * client registration parameter, with no language tag.
+	 *
+	 * @return The client URI, {@code null} if not specified.
+	 */
+	public URL geURI() {
+
+		return getURI(null);
+	}
+
+
+	/**
+	 * Gets the client home page. Corresponds to the {@code client_uri} 
+	 * client registration parameter, with an optional language tag.
+	 *
+	 * @return The client URI, {@code null} if not specified.
+	 */
+	public URL getURI(final LangTag langTag) {
+
+		return uriEntries.get(langTag);
+	}
+
+
+	/**
+	 * Gets the client home page entries. Corresponds to the 
+	 * {@code client_uri} client registration parameter.
+	 *
+	 * @return The client URI entries, empty map if none.
+	 */
+	public Map<LangTag,URL> geURIEntries() {
+
+		return uriEntries;
+	}
+
+
+	/**
+	 * Sets the client home page. Corresponds to the {@code client_uri} 
+	 * client registration parameter, with no language tag.
+	 *
+	 * @param uri The client URI, {@code null} if not specified.
+	 */
+	public void setURI(final URL uri) {
+
+		uriEntries.put(null, uri);
+	}
+
+
+	/**
+	 * Sets the client home page. Corresponds to the {@code client_uri} 
+	 * client registration parameter, with an optional language tag.
+	 *
+	 * @param uri     The URI. Must not be {@code null}.
+	 * @param langTag The language tag, {@code null} if not specified.
+	 */
+	public void setURI(final URL uri, final LangTag langTag) {
+
+		logoURIEntries.put(langTag, uri);
 	}
 	
 
