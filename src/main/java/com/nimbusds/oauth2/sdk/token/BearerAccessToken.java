@@ -191,13 +191,13 @@ public final class BearerAccessToken extends AccessToken {
 
 			if (jsonObject.get("expires_in") instanceof Number) {
 
-				lifetime = JSONObjectUtils.getLong(jsonObject, "expires_in") * 1000;
+				lifetime = JSONObjectUtils.getLong(jsonObject, "expires_in");
 			}
 			else {
 				String lifetimeStr = JSONObjectUtils.getString(jsonObject, "expires_in");
 
 				try {
-					lifetime = new Long(lifetimeStr) * 1000;
+					lifetime = new Long(lifetimeStr);
 
 				} catch (NumberFormatException e) {
 
