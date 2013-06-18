@@ -4,6 +4,8 @@ package com.nimbusds.oauth2.sdk.reg;
 import java.net.URL;
 import java.util.Date;
 
+import net.jcip.annotations.Immutable;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -14,8 +16,8 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * Client details. Encapsulates the full information about a dynamically 
- * registered OAuth 2.0 client:
+ * Client information. Encapsulates the registration and metadata details of 
+ * an OAuth 2.0 client:
  * 
  * <ul>
  *     <li>The client identifier.
@@ -30,12 +32,13 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 2.
+ *         (draft-ietf-oauth-dyn-reg-12), section 2, 3.2 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
-public class ClientDetails {
+@Immutable
+public class ClientInformation {
 
 
 	/**
@@ -75,7 +78,7 @@ public class ClientDetails {
 
 
 	/**
-	 * Creates a new client details instance.
+	 * Creates a new client information instance.
 	 * 
 	 * @param id              The client identifier. Must not be 
 	 *                        {@code null}.
@@ -90,7 +93,7 @@ public class ClientDetails {
 	 * @param issueDate       The issue date of the client identifier,
 	 *                        {@code null} if not specified.
 	 */
-	public ClientDetails(final ClientID id, 
+	public ClientInformation(final ClientID id, 
 		             final URL registrationURI,
 		             final BearerAccessToken accessToken,
 			     final ClientMetadata metadata,
@@ -187,7 +190,7 @@ public class ClientDetails {
 
 
 	/**
-	 * Returns the JSON object representation of this client details 
+	 * Returns the JSON object representation of this client information 
 	 * instance.
 	 *
 	 * @return The JSON object.
@@ -206,7 +209,7 @@ public class ClientDetails {
 			o.put("client_secret", secret.getValue());
 
 			if (secret.getExpirationDate() != null)
-				o.put("client_secret_expires_at", secret.getExpirationDate().getTime());
+				o.put("client_secret_expires_at", secret.getExpirationDate().getTime() / 1000);
 		}
 		
 		if (issueDate != null) {
@@ -219,17 +222,17 @@ public class ClientDetails {
 
 
 	/**
-	 * Parses a client details instance from the specified JSON object.
+	 * Parses a client information instance from the specified JSON object.
 	 *
 	 * @param jsonObject The JSON object to parse. Must not be 
 	 *                   {@code null}.
 	 *
-	 * @return The client details.
+	 * @return The client information.
 	 *
 	 * @throws ParseException If the JSON object couldn't be parsed to a
-	 *                        client details instance.
+	 *                        client information instance.
 	 */
-	public static ClientDetails parse(final JSONObject jsonObject)
+	public static ClientInformation parse(final JSONObject jsonObject)
 		throws ParseException {
 
 		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
@@ -254,7 +257,7 @@ public class ClientDetails {
 			Date exp = null;
 
 			if (jsonObject.containsKey("client_secret_expires_at"))
-				exp = new Date(JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at"));
+				exp = new Date(JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at") * 1000);
 
 			secret = new Secret(value, exp);
 		}
@@ -268,6 +271,6 @@ public class ClientDetails {
 		}
 
 		
-		return new ClientDetails(id, registrationURI, accessToken, metadata, secret, issueDate);
+		return new ClientInformation(id, registrationURI, accessToken, metadata, secret, issueDate);
 	}
 }

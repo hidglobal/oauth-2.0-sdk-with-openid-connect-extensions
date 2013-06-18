@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk;
+package com.nimbusds.oauth2.sdk.reg;
 
 
 import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
@@ -14,36 +14,37 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
 /**
- * OpenID Connect client read request. This class is immutable.
+ * Client read request. This class is immutable.
  *
  * <p>Example HTTP request:
  *
  * <pre>
- * GET /connect/register?client_id=s6BhdRkqt3 HTTP/1.1
+ * GET /register/s6BhdRkqt3 HTTP/1.1
  * Accept: application/json
  * Host: server.example.com
- * Authorization: Bearer this.is.an.access.token.value.ffx83
+ * Authorization: Bearer reg-23410913-abewfq.123483
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic Client Registration 1.0, section 4.1.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
+ *         (draft-ietf-oauth-dyn-reg-12), section 4.2.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public class OIDCClientReadRequest extends ProtectedResourceRequest {
+public class ClientReadRequest extends ProtectedResourceRequest {
 
 
 	/**
-	 * Creates a new OpenID Connect client read request.
+	 * Creates a new client read request.
 	 *
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request. 
 	 *                    Must not be {@code null}.
 	 */
-	public OIDCClientReadRequest(final BearerAccessToken accessToken) {
+	public ClientReadRequest(final BearerAccessToken accessToken) {
 
 		super(accessToken);
 
@@ -56,16 +57,13 @@ public class OIDCClientReadRequest extends ProtectedResourceRequest {
 	public HTTPRequest toHTTPRequest(final URL url) {
 	
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, url);
-		
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
-
 		return httpRequest;
 	}
 
 
 	/**
-	 * Parses an OpenID Connect client read request from the specified HTTP
-	 * GET request.
+	 * Parses a client read request from the specified HTTP GET request.
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *
@@ -74,7 +72,7 @@ public class OIDCClientReadRequest extends ProtectedResourceRequest {
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
 	 *                        client read request.
 	 */
-	public static OIDCClientReadRequest parse(final HTTPRequest httpRequest)
+	public static ClientReadRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.GET);
@@ -86,6 +84,6 @@ public class OIDCClientReadRequest extends ProtectedResourceRequest {
 		
 		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
 		
-		return new OIDCClientReadRequest(accessToken);
+		return new ClientReadRequest(accessToken);
 	}
 }

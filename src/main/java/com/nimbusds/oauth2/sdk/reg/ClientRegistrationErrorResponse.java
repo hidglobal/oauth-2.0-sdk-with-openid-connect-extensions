@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk;
+package com.nimbusds.oauth2.sdk.reg;
 
 
 import java.util.Collections;
@@ -21,7 +21,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OpenID Connect client registration error response. This class is immutable.
+ * Client registration error response. This class is immutable.
  *
  * <p>Standard errors:
  *
@@ -35,38 +35,43 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *          </ul>
  *     <li>OpenID Connect specific errors:
  *         <ul>
- *             <li>{@link OIDCError#INVALID_REDIRECT_URI}
- *             <li>{@link OIDCError#INVALID_CLIENT_METADATA}
+ *             <li>{@link RegistrationError#INVALID_REDIRECT_URI}
+ *             <li>{@link RegistrationError#INVALID_CLIENT_METADATA}
  *         </ul>
  * </ul>
  *
  * <p>Example HTTP response:
  *
  * <pre>
- * HTTP/1.1 401 Unauthorized
- * WWW-Authenticate: Bearer realm="example.com",
- *                   error="invalid_token",
- *                   error_description="The access token expired"
+ * HTTP/1.1 400 Bad Request
+ * Content-Type: application/json
+ * Cache-Control: no-store
+ * Pragma: no-cache
+ *
+ * {
+ *  "error":"invalid_redirect_uri",
+ *  "error_description":"The redirect URI of http://sketchy.example.com is not allowed for this server."
+ * }
  * </pre>
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.3.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
+ *         (draft-ietf-oauth-dyn-reg-12), section 5.2.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public class OIDCClientRegistrationErrorResponse 
-	extends OIDCClientRegistrationResponse
+public class ClientRegistrationErrorResponse 
+	extends ClientRegistrationResponse
 	implements ErrorResponse {
 
 
 	/**
-	 * Gets the standard errors for an OpenID Connect client registration
-	 * error response.
+	 * Gets the standard errors for a client registration error response.
 	 *
 	 * @return The standard errors, as a read-only set.
 	 */
@@ -77,8 +82,8 @@ public class OIDCClientRegistrationErrorResponse
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);
 		stdErrors.add(BearerTokenError.INSUFFICIENT_SCOPE);
-		stdErrors.add(OIDCError.INVALID_REDIRECT_URI);
-		stdErrors.add(OIDCError.INVALID_CLIENT_METADATA);
+		stdErrors.add(RegistrationError.INVALID_REDIRECT_URI);
+		stdErrors.add(RegistrationError.INVALID_CLIENT_METADATA);
 
 		return Collections.unmodifiableSet(stdErrors);
 	}
@@ -91,13 +96,13 @@ public class OIDCClientRegistrationErrorResponse
 
 
 	/**
-	 * Creates a new OpenID Connect client registration error response.
+	 * Creates a new client registration error response.
 	 *
 	 * @param error The error. Should match one of the 
 	 *              {@link #getStandardErrors standard errors} for a client
 	 *              registration error response. Must not be {@code null}.
 	 */
-	public OIDCClientRegistrationErrorResponse(final ErrorObject error) {
+	public ClientRegistrationErrorResponse(final ErrorObject error) {
 
 		if (error == null)
 			throw new IllegalArgumentException("The error must not be null");
@@ -114,16 +119,21 @@ public class OIDCClientRegistrationErrorResponse
 
 
 	/**
-	 * Returns the HTTP response for this OpenID Connect client 
-	 * registration error response.
+	 * Returns the HTTP response for this client registration error 
+	 * response.
 	 *
 	 * <p>Example HTTP response:
 	 *
 	 * <pre>
-	 * HTTP/1.1 401 Unauthorized
-	 * WWW-Authenticate: Bearer realm="example.com",
-	 *                   error="invalid_token",
-	 *                   error_description="The access token expired"
+	 * HTTP/1.1 400 Bad Request
+	 * Content-Type: application/json
+	 * Cache-Control: no-store
+	 * Pragma: no-cache
+	 *
+	 * {
+	 *  "error":"invalid_redirect_uri",
+	 *  "error_description":"The redirect URI of http://sketchy.example.com is not allowed for this server."
+	 * }
 	 * </pre>
 	 *
 	 * @return The HTTP response.
@@ -158,14 +168,17 @@ public class OIDCClientRegistrationErrorResponse
 
 			httpResponse.setContent(jsonObject.toString());
 		}
+		
+		httpResponse.setCacheControl("no-store");
+		httpResponse.setPragma("no-cache");
 
 		return httpResponse;
 	}
 
 
 	/**
-	 * Parses an OpenID Connect client registration error response from the
-	 * specified HTTP response.
+	 * Parses a client registration error response from the specified HTTP 
+	 * response.
 	 *
 	 * <p>Note: The HTTP status code is not checked for matching the error
 	 * code semantics.
@@ -173,11 +186,10 @@ public class OIDCClientRegistrationErrorResponse
 	 * @param httpResponse The HTTP response to parse. Its status code must
 	 *                     not be 200 (OK). Must not be {@code null}.
 	 *
-	 * @throws ParseException If the HTTP response couldn't be parsed to an 
-	 *                        OpenID Connect client registration error 
-	 *                        response.
+	 * @throws ParseException If the HTTP response couldn't be parsed to a
+	 *                        client registration error response.
 	 */
-	public static OIDCClientRegistrationErrorResponse parse(final HTTPResponse httpResponse)
+	public static ClientRegistrationErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
 		httpResponse.ensureStatusCodeNotOK();
@@ -191,18 +203,22 @@ public class OIDCClientRegistrationErrorResponse
 			error = BearerTokenError.parse(wwwAuth);
 		}
 		else {
-			JSONObject jsonObject = httpResponse.getContentAsJSONObject();
-
-			String code = JSONObjectUtils.getString(jsonObject, "error");
-
+			String code = null;
 			String description = null;
+			
+			if (CommonContentTypes.APPLICATION_JSON == httpResponse.getContentType()) {
+				
+				JSONObject jsonObject = httpResponse.getContentAsJSONObject();
 
-			if (jsonObject.containsKey("error_description"))
-				description = JSONObjectUtils.getString(jsonObject, "error_description");
+				code = JSONObjectUtils.getString(jsonObject, "error");
 
-			error = new ErrorObject(code, description);
+				if (jsonObject.containsKey("error_description"))
+					description = JSONObjectUtils.getString(jsonObject, "error_description");
+			}
+			
+			error = new ErrorObject(code, description, httpResponse.getStatusCode());
 		}
 
-		return new OIDCClientRegistrationErrorResponse(error);
+		return new ClientRegistrationErrorResponse(error);
 	}
 }
