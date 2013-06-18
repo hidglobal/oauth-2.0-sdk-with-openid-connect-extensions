@@ -78,6 +78,9 @@ This SDK version implements the following standards and drafts:
 	* The OAuth 2.0 Authorization Framework (RFC 6749)
 
 	* The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 6750)
+	
+	* OAuth 2.0 Dynamic Client Registration Protocol 
+	  (draft-ietf-oauth-dyn-reg-12)
 
 	* OpenID Connect Messages, draft 20.
 
@@ -95,4 +98,4 @@ for integrating the SDK into proprietary products and services are available,
 please get in touch with us at http://nimbusds.com/contact.html
 
 
-2013-06-06
+2013-06-18

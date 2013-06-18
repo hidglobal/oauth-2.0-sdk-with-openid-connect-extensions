@@ -16,3 +16,10 @@ version 2.1 (2013-06-06)
 	  Connect Registration draft 19.
 	* Major refactoring of the APIs for greater simplicity.
 	* Adds JUnit tests.
+	
+version 2.2 (2013-06-18)
+	* Refactors dynamic OpenID Connect client registration.
+	* Adds partial support of the OAuth 2.0 Dynamic Client Registration 
+	  Protocol (draft-ietf-oauth-dyn-reg-12).
+	* Optimises parsing of request parameters consisting of one or more
+	  tokens (scope, response type, etc).
