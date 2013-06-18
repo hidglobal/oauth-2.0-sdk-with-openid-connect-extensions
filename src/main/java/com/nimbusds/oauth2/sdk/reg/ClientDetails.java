@@ -264,7 +264,7 @@ public class ClientDetails {
 		
 		if (jsonObject.containsKey("client_id_issued_at")) {
 			
-			issueDate = new Date(JSONObjectUtils.getLong(jsonObject, "client_id_issued_at"));
+			issueDate = new Date(JSONObjectUtils.getLong(jsonObject, "client_id_issued_at") * 1000);
 		}
 
 		
