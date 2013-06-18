@@ -31,6 +31,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>{@link Method#GET HTTP GET}
  *     <li>{@link Method#POST HTTP POST}
+ *     <li>{@link Method#POST HTTP DELETE}
  * </ul>
  *
  * <p>Supported request headers:
@@ -43,7 +44,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
-public class HTTPRequest extends HTTPMessage {
+public final class HTTPRequest extends HTTPMessage {
 
 
 	/**
@@ -60,7 +61,13 @@ public class HTTPRequest extends HTTPMessage {
 		/**
 		 * HTTP POST.
 		 */
-		POST
+		POST,
+		
+		
+		/**
+		 * HTTP DELETE.
+		 */
+		DELETE
 	}
 	
 	
@@ -157,7 +164,7 @@ public class HTTPRequest extends HTTPMessage {
 			
 			BufferedReader reader = sr.getReader();
 			
-			String line = null;
+			String line;
 			
 			while ((line = reader.readLine()) != null) {
 			
@@ -387,7 +394,7 @@ public class HTTPRequest extends HTTPMessage {
        
 		StringBuilder body = new StringBuilder();
 
-		String line = null;
+		String line;
 			
 		while ((line = reader.readLine()) != null) {
 			

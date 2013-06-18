@@ -46,7 +46,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
-public class HTTPResponse extends HTTPMessage {
+public final class HTTPResponse extends HTTPMessage {
 
 	
 	/**
