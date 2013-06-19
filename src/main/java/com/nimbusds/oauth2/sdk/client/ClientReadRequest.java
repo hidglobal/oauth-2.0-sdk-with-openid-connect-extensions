@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk.reg;
+package com.nimbusds.oauth2.sdk.client;
 
 
 import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;

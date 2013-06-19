@@ -14,7 +14,7 @@ import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.reg.ClientMetadata;
+import com.nimbusds.oauth2.sdk.client.ClientMetadata;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.SubjectType;

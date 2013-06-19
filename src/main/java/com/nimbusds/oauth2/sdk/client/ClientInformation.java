@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk.reg;
+package com.nimbusds.oauth2.sdk.client;
 
 
 import java.net.URL;
@@ -93,12 +93,12 @@ public class ClientInformation {
 	 * @param issueDate       The issue date of the client identifier,
 	 *                        {@code null} if not specified.
 	 */
-	public ClientInformation(final ClientID id, 
-		             final URL registrationURI,
-		             final BearerAccessToken accessToken,
-			     final ClientMetadata metadata,
-			     final Secret secret,
-			     final Date issueDate) {
+	public ClientInformation(final ClientID id,
+		                 final URL registrationURI,
+				 final BearerAccessToken accessToken,
+				 final ClientMetadata metadata,
+				 final Secret secret,
+				 final Date issueDate) {
 
 		if (id == null)
 			throw new IllegalArgumentException("The client identifier must not be null");
@@ -162,6 +162,17 @@ public class ClientInformation {
 	public BearerAccessToken getRegistrationAccessToken() {
 
 		return accessToken;
+	}
+	
+	
+	/**
+	 * Gets the client metadata.
+	 * 
+	 * @return The client metadata.
+	 */
+	public ClientMetadata getClientMetadata() {
+		
+		return metadata;
 	}
 
 
