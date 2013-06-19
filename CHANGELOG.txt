@@ -23,3 +23,8 @@ version 2.2 (2013-06-18)
 	  Protocol (draft-ietf-oauth-dyn-reg-12).
 	* Optimises parsing of request parameters consisting of one or more
 	  tokens (scope, response type, etc).
+
+version 2.3 (2013-06-19)
+	* Renames OAuth 2.0 dynamic client registration package.
+	* Adds ClientInformation.getClientMetadata() method.
+	* Adds OIDCClientInformation class.
