@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
+import com.nimbusds.oauth2.sdk.ParseException;
 import java.net.URL;
 import java.util.Date;
 
@@ -9,6 +10,8 @@ import com.nimbusds.oauth2.sdk.client.ClientInformation;
 import com.nimbusds.oauth2.sdk.client.ClientMetadata;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -37,7 +40,7 @@ public class OIDCClientInformation extends ClientInformation {
 
 	
 	/**
-	 * Creates a new client information instance.
+	 * Creates a new OpenID Connect client information instance.
 	 * 
 	 * @param id              The client identifier. Must not be 
 	 *                        {@code null}.
@@ -71,5 +74,60 @@ public class OIDCClientInformation extends ClientInformation {
 	public OIDCClientMetadata getOIDCClientMetadata() {
 		
 		return (OIDCClientMetadata)getClientMetadata();
+	}
+	
+	
+	/**
+	 * Parses an OpenID Connect client information instance from the 
+	 * specified JSON object.
+	 *
+	 * @param jsonObject The JSON object to parse. Must not be 
+	 *                   {@code null}.
+	 *
+	 * @return The client information.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to an
+	 *                        OpenID Connect client information instance.
+	 */
+	public static OIDCClientInformation parse(final JSONObject jsonObject)
+		throws ParseException {
+
+		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
+		
+		
+		URL registrationURI = JSONObjectUtils.getURL(jsonObject, "registration_client_uri");
+		
+		
+		BearerAccessToken accessToken = new BearerAccessToken(
+				JSONObjectUtils.getString(jsonObject, "registration_access_token"));
+
+		
+		OIDCClientMetadata metadata = OIDCClientMetadata.parse(jsonObject);
+		
+		
+		Secret secret = null;
+		
+		if (jsonObject.containsKey("client_secret")) {
+
+			String value = JSONObjectUtils.getString(jsonObject, "client_secret");
+
+			Date exp = null;
+
+			if (jsonObject.containsKey("client_secret_expires_at"))
+				exp = new Date(JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at") * 1000);
+
+			secret = new Secret(value, exp);
+		}
+		
+		
+		Date issueDate = null;
+		
+		if (jsonObject.containsKey("client_id_issued_at")) {
+			
+			issueDate = new Date(JSONObjectUtils.getLong(jsonObject, "client_id_issued_at") * 1000);
+		}
+
+		
+		return new OIDCClientInformation(id, registrationURI, accessToken, metadata, secret, issueDate);
 	}
 }
