@@ -28,3 +28,6 @@ version 2.3 (2013-06-19)
 	* Renames OAuth 2.0 dynamic client registration package.
 	* Adds ClientInformation.getClientMetadata() method.
 	* Adds OIDCClientInformation class.
+
+version 2.3.1 (2013-06-20)
+	* Adds static OIDCClientInformation.parse(JSONObject) method.
