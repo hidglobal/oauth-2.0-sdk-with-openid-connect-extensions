@@ -1,7 +1,6 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
