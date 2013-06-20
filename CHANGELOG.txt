@@ -29,5 +29,5 @@ version 2.3 (2013-06-19)
 	* Adds ClientInformation.getClientMetadata() method.
 	* Adds OIDCClientInformation class.
 
-version 2.3.1 (2013-06-20)
+version 2.4 (2013-06-20)
 	* Adds static OIDCClientInformation.parse(JSONObject) method.
