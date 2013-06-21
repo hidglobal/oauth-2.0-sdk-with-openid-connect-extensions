@@ -1,6 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.URL;
+
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 
@@ -16,7 +18,7 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
  *
  * @author Vladimir Dzhuvinov
  */
- public abstract class ProtectedResourceRequest implements Request {
+ public abstract class ProtectedResourceRequest extends AbstractRequest {
 
 
  	/**
@@ -28,10 +30,15 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 	/**
 	 * Creates a new protected resource request.
 	 * 
+	 * @param uri         The URI of the protected resource. May be 
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param accessToken An OAuth 2.0 access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	protected ProtectedResourceRequest(final AccessToken accessToken) {
+	protected ProtectedResourceRequest(final URL uri, final AccessToken accessToken) {
+		
+		super(uri);
 
 		this.accessToken = accessToken;
 	}

@@ -103,17 +103,21 @@ public final class AccessTokenRequest extends TokenRequest {
 	 * Creates a new unauthenticated access token request, using an
 	 * {@link GrantType#AUTHORIZATION_CODE authorisation code grant}.
 	 *
+	 * @param uri         The URI of the token endpoint. May be 
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param code        The authorisation code received from the 
 	 *                    authorisation server. Must not be {@code null}.
 	 * @param redirectURI The redirect URI, may be {@code null} if 
 	 *                    specified in the initial authorisation request.
 	 * @param clientID    The client identifier. Must not be {@code null}.
 	 */
-	public AccessTokenRequest(final AuthorizationCode code, 
+	public AccessTokenRequest(final URL uri,
+		                  final AuthorizationCode code, 
 		                  final URL redirectURI,
 		                  final ClientID clientID) {
 	
-		super(GrantType.AUTHORIZATION_CODE, null);
+		super(uri, GrantType.AUTHORIZATION_CODE, null);
 
 		if (code == null)
 			throw new IllegalArgumentException("The authorization code must not be null");
@@ -140,6 +144,9 @@ public final class AccessTokenRequest extends TokenRequest {
 	 * Creates a new authenticated access token request, using an
 	 * {@link GrantType#AUTHORIZATION_CODE authorisation code grant}. 
 	 *
+	 * @param uri         The URI of the token endpoint. May be 
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param code        The authorisation code received from the 
 	 *                    authorisation server. Must not be {@code null}.
 	 * @param redirectURI The redirect URI, may be {@code null} if not
@@ -147,11 +154,12 @@ public final class AccessTokenRequest extends TokenRequest {
 	 * @param clientAuth  The client authentication. Must not be 
 	 *                    {@code null}.
 	 */
-	public AccessTokenRequest(final AuthorizationCode code, 
+	public AccessTokenRequest(final URL uri,
+		                  final AuthorizationCode code, 
 		                  final URL redirectURI, 
 	                          final ClientAuthentication clientAuth) {
 	
-		super(GrantType.AUTHORIZATION_CODE, clientAuth);
+		super(uri, GrantType.AUTHORIZATION_CODE, clientAuth);
 		
 		if (code == null)
 			throw new IllegalArgumentException("The authorization code must not be null");
@@ -162,8 +170,7 @@ public final class AccessTokenRequest extends TokenRequest {
 
 		if (clientAuth == null)
 			throw new IllegalArgumentException("The client authentication must not be null");
-
-
+		
 		clientID = null;
 		username = null;
 		password = null;
@@ -173,8 +180,12 @@ public final class AccessTokenRequest extends TokenRequest {
 
 	/**
 	 * Creates a new authenticated access token request, using a
-	 * {@link GrantType#PASSWORD resource owner password credentials grant}.
+	 * {@link GrantType#PASSWORD resource owner password credentials 
+	 * grant}.
 	 *
+	 * @param uri      The URI of the token endpoint. May be {@code null} 
+	 *                 if the {@link #toHTTPRequest()} method will not be 
+	 *                 used.
 	 * @param username The resource owner username. Must not be 
 	 *                 {@code null}.
 	 * @param password The resource owner password. Must not be 
@@ -182,11 +193,12 @@ public final class AccessTokenRequest extends TokenRequest {
 	 * @param scope    The scope of the access request, {@code null} if not
 	 *                 specified.
 	 */
-	public AccessTokenRequest(final String username, 
+	public AccessTokenRequest(final URL uri,
+		                  final String username, 
 		                  final String password,
 		                  final Scope scope) {
 	
-		super(GrantType.PASSWORD, null);
+		super(uri, GrantType.PASSWORD, null);
 
 		if (username == null)
 			throw new IllegalArgumentException("The username must not be null");
@@ -211,15 +223,19 @@ public final class AccessTokenRequest extends TokenRequest {
 	 * Creates a new authenticated access token request, using a
 	 * {@link GrantType#CLIENT_CREDENTIALS client credentials grant}.
 	 *
+	 * @param uri        The URI of the token endpoint. May be 
+	 *                   {@code null} if the {@link #toHTTPRequest()}
+	 *                   method will not be used.
 	 * @param scope      The scope of the access request, {@code null} if 
 	 *                   not specified.
 	 * @param clientAuth The client authentication. Must not be 
 	 *                   {@code null}.
 	 */
-	public AccessTokenRequest(final Scope scope, 
+	public AccessTokenRequest(final URL uri,
+		                  final Scope scope, 
 		                  final ClientAuthentication clientAuth) {
 	
-		super(GrantType.CLIENT_CREDENTIALS, null);
+		super(uri, GrantType.CLIENT_CREDENTIALS, null);
 
 		this.scope = scope;
 
@@ -310,10 +326,13 @@ public final class AccessTokenRequest extends TokenRequest {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url)
+	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
+		
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		
 		Map<String,String> params = new LinkedHashMap<String,String>();
@@ -430,7 +449,7 @@ public final class AccessTokenRequest extends TokenRequest {
 			if (clientAuth != null) {
 
 				// Access token request with client authentication
-				return new AccessTokenRequest(code, redirectURI, clientAuth);
+				return new AccessTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), code, redirectURI, clientAuth);
 
 			} else {
 
@@ -438,7 +457,7 @@ public final class AccessTokenRequest extends TokenRequest {
 					throw new ParseException("Missing \"client_id\" parameter");
 
 				// Access token request with no client authentication
-				return new AccessTokenRequest(code, redirectURI, clientID);
+				return new AccessTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), code, redirectURI, clientID);
 			}
 		
 		} else if (grantType.equals(GrantType.PASSWORD)) {
@@ -455,7 +474,7 @@ public final class AccessTokenRequest extends TokenRequest {
 
 			Scope scope = Scope.parse(params.get("scope"));
 
-			return new AccessTokenRequest(username, password, scope);
+			return new AccessTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), username, password, scope);
 		
 		} else if (grantType.equals(GrantType.CLIENT_CREDENTIALS)) {
 
@@ -466,7 +485,7 @@ public final class AccessTokenRequest extends TokenRequest {
 			if (clientAuth == null)
 				throw new ParseException("Missing client authentication");
 
-			return new AccessTokenRequest(scope, clientAuth);
+			return new AccessTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), scope, clientAuth);
 				
 		} else {
 			

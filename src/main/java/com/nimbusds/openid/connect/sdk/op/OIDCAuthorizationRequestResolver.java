@@ -323,7 +323,7 @@ public class OIDCAuthorizationRequestResolver {
 		OIDCAuthorizationRequest finalAuthzRequest = null;
 
 		try {
-			finalAuthzRequest = OIDCAuthorizationRequest.parse(finalParams);
+			finalAuthzRequest = OIDCAuthorizationRequest.parse(request.getURI(), finalParams);
 
 		} catch (ParseException e) {
 
@@ -332,20 +332,21 @@ public class OIDCAuthorizationRequestResolver {
 
 
 		return new OIDCAuthorizationRequest(
-				finalAuthzRequest.getResponseType(),
-				finalAuthzRequest.getScope(),
-				finalAuthzRequest.getClientID(),
-				finalAuthzRequest.getRedirectURI(),
-				finalAuthzRequest.getState(),
-				finalAuthzRequest.getNonce(),
-				finalAuthzRequest.getDisplay(),
-				finalAuthzRequest.getPrompt(),
-				finalAuthzRequest.getMaxAge(),
-				finalAuthzRequest.getUILocales(),
-				finalAuthzRequest.getClaimsLocales(),
-				finalAuthzRequest.getIDTokenHint(),
-				finalAuthzRequest.getLoginHint(),
-				finalAuthzRequest.getACRValues(),
-				finalAuthzRequest.getClaims());
+			finalAuthzRequest.getURI(),
+			finalAuthzRequest.getResponseType(),
+			finalAuthzRequest.getScope(),
+			finalAuthzRequest.getClientID(),
+			finalAuthzRequest.getRedirectURI(),
+			finalAuthzRequest.getState(),
+			finalAuthzRequest.getNonce(),
+			finalAuthzRequest.getDisplay(),
+			finalAuthzRequest.getPrompt(),
+			finalAuthzRequest.getMaxAge(),
+			finalAuthzRequest.getUILocales(),
+			finalAuthzRequest.getClaimsLocales(),
+			finalAuthzRequest.getIDTokenHint(),
+			finalAuthzRequest.getLoginHint(),
+			finalAuthzRequest.getACRValues(),
+			finalAuthzRequest.getClaims());
 	}
 }

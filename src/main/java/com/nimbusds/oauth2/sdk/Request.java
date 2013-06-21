@@ -15,17 +15,23 @@ public interface Request extends Message {
 
 
 	/**
+	 * Gets the URI of the endpoint (HTTP or HTTPS) for which the request 
+	 * is intended.
+	 * 
+	 * @return The endpoint URI, {@code null} if not specified.
+	 */
+	public URL getURI();
+	
+	
+	/**
 	 * Returns the matching HTTP request.
-	 *
-	 * @param url The URL of the HTTP endpoint for which the request is
-	 *            intended. Must not be {@code null}.
 	 *
 	 * @return The HTTP request.
 	 *
 	 * @throws SerializeException If the request message couldn't be
 	 *                            serialised to an HTTP request.
 	 */
-	public HTTPRequest toHTTPRequest(final URL url) 
+	public HTTPRequest toHTTPRequest() 
 		throws SerializeException;
 }
 

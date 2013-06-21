@@ -31,6 +31,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>{@link Method#GET HTTP GET}
  *     <li>{@link Method#POST HTTP POST}
+ *     <li>{@link Method#POST HTTP PUT}
  *     <li>{@link Method#POST HTTP DELETE}
  * </ul>
  *
@@ -62,6 +63,12 @@ public final class HTTPRequest extends HTTPMessage {
 		 * HTTP POST.
 		 */
 		POST,
+		
+		
+		/**
+		 * HTTP PUT.
+		 */
+		PUT,
 		
 		
 		/**

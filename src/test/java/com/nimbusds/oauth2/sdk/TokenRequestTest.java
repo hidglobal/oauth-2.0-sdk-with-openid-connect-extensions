@@ -39,7 +39,7 @@ public class TokenRequestTest extends TestCase {
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 		
 		assertTrue(tr instanceof AccessTokenRequest);
-		
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
 		assertEquals(GrantType.AUTHORIZATION_CODE, tr.getGrantType());
 		assertTrue(tr.getClientAuthentication() instanceof ClientSecretBasic);
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
@@ -61,8 +61,9 @@ public class TokenRequestTest extends TestCase {
 		assertEquals("https://client.example.com/cb", atr.getRedirectURI().toString());
 		
 		
-		httpRequest = atr.toHTTPRequest(new URL("https://connect2id.com/token/"));
+		httpRequest = atr.toHTTPRequest();
 		
+		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
 		assertEquals(postBody, httpRequest.getQuery());
@@ -87,7 +88,7 @@ public class TokenRequestTest extends TestCase {
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 		
 		assertTrue(tr instanceof RefreshTokenRequest);
-		
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
 		assertEquals(GrantType.REFRESH_TOKEN, tr.getGrantType());
 		assertTrue(tr.getClientAuthentication() instanceof ClientSecretBasic);
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
@@ -106,8 +107,8 @@ public class TokenRequestTest extends TestCase {
 		RefreshToken token = rtr.getRefreshToken();
 		assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", token.getValue());
 		
-		httpRequest = rtr.toHTTPRequest(new URL("https://connect2id.com/token/"));
-		
+		httpRequest = rtr.toHTTPRequest();
+		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
 		assertEquals(postBody, httpRequest.getQuery());

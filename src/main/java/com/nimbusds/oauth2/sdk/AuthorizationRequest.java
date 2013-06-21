@@ -43,7 +43,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public class AuthorizationRequest implements Request {
+public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
@@ -80,6 +80,9 @@ public class AuthorizationRequest implements Request {
 	/**
 	 * Creates a new minimal authorisation request.
 	 *
+	 * @param uri         The URI of the authorisation endpoint. May be 
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
@@ -87,16 +90,20 @@ public class AuthorizationRequest implements Request {
 	 *                    {@code client_id} parameter. Must not be 
 	 *                    {@code null}.
 	 */
-	public AuthorizationRequest(final ResponseType rt,
+	public AuthorizationRequest(final URL uri,
+		                    final ResponseType rt,
 	                            final ClientID clientID) {
 
-		this(rt, clientID, null, null, null);
+		this(uri, rt, clientID, null, null, null);
 	}
 	
 	
 	/**
 	 * Creates a new authorisation request.
 	 *
+	 *  @param uri        The URI of the authorisation endpoint. May be 
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
@@ -113,12 +120,15 @@ public class AuthorizationRequest implements Request {
 	 *                    {@code state} parameter. {@code null} if not 
 	 *                    specified.
 	 */
-	public AuthorizationRequest(final ResponseType rt,
+	public AuthorizationRequest(final URL uri,
+		                    final ResponseType rt,
 	                            final ClientID clientID,
 				    final URL redirectURI,
 	                            final Scope scope,
 				    final State state) {
 
+		super(uri);
+		
 		if (rt == null)
 			throw new IllegalArgumentException("The response type must not be null");
 		
@@ -266,8 +276,6 @@ public class AuthorizationRequest implements Request {
 	 *
 	 * @param method The HTTP request method which can be GET or POST. Must
 	 *               not be {@code null}.
-	 * @param url    The URL of the HTTP endpoint for which the request is
-	 *               intended. Must not be {@code null}.
 	 *
 	 * @return The HTTP request.
 	 *
@@ -275,18 +283,21 @@ public class AuthorizationRequest implements Request {
 	 *                            couldn't be serialised to an HTTP  
 	 *                            request.
 	 */
-	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method, final URL url)
+	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method)
 		throws SerializeException {
+		
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
 		
 		HTTPRequest httpRequest;
 		
 		if (method.equals(HTTPRequest.Method.GET)) {
 
-			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, url);
+			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, getURI());
 
 		} else if (method.equals(HTTPRequest.Method.POST)) {
 
-			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
+			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
 
 		} else {
 
@@ -300,10 +311,10 @@ public class AuthorizationRequest implements Request {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url)
+	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 	
-		return toHTTPRequest(HTTPRequest.Method.GET, url);
+		return toHTTPRequest(HTTPRequest.Method.GET);
 	}
 
 
@@ -319,6 +330,9 @@ public class AuthorizationRequest implements Request {
 	 * redirect_uri  = https://client.example.com/cb
 	 * </pre>
 	 *
+	 * @param uri    The URI of the authorisation endpoint. May be 
+	 *               {@code null} if the {@link #toHTTPRequest()} method 
+	 *               will not be used.
 	 * @param params The parameters. Must not be {@code null}.
 	 *
 	 * @return The authorisation request.
@@ -326,7 +340,7 @@ public class AuthorizationRequest implements Request {
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final Map<String,String> params)
+	public static AuthorizationRequest parse(final URL uri, final Map<String,String> params)
 		throws ParseException {
 
 		// Parse mandatory client ID first
@@ -386,7 +400,7 @@ public class AuthorizationRequest implements Request {
 			scope = Scope.parse(v);
 
 
-		return new AuthorizationRequest(rt, clientID, redirectURI, scope, state);
+		return new AuthorizationRequest(uri, rt, clientID, redirectURI, scope, state);
 
 	}
 	
@@ -403,6 +417,9 @@ public class AuthorizationRequest implements Request {
 	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
+	 * @param uri   The URI of the authorisation endpoint. May be 
+	 *              {@code null} if the {@link #toHTTPRequest()} method
+	 *              will not be used.
 	 * @param query The URL query string. Must not be {@code null}.
 	 *
 	 * @return The authorisation request.
@@ -410,10 +427,10 @@ public class AuthorizationRequest implements Request {
 	 * @throws ParseException If the query string couldn't be parsed to an 
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final String query)
+	public static AuthorizationRequest parse(final URL uri, final String query)
 		throws ParseException {
 	
-		return parse(URLUtils.parseParameters(query));
+		return parse(uri, URLUtils.parseParameters(query));
 	}
 	
 	
@@ -445,6 +462,6 @@ public class AuthorizationRequest implements Request {
 		if (query == null)
 			throw new ParseException("Missing URL query string");
 		
-		return parse(query);
+		return parse(URLUtils.getBaseURL(httpRequest.getURL()), query);
 	}
 }

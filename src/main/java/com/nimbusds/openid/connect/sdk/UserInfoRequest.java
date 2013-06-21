@@ -20,19 +20,9 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * <p>Example HTTP GET request:
  *
  * <pre>
- * GET /userinfo?schema=openid HTTP/1.1
+ * GET /userinfo HTTP/1.1
  * Host: server.example.com
- * Authorization: Bearer mF_9.B5f-4.1JqM
- * </pre>
- *
- * <p>Example HTTP POST request:
- *
- * <pre>
- * POST /userinfo HTTP/1.1
- * Host: server.example.com
- * Content-Type: application/x-www-form-urlencoded
- *
- * schema=openid&amp;access_token=mF_9.B5f-4.1JqM
+ * Authorization: Bearer SlAV32hkKG
  * </pre>
  *
  * <p>Related specifications:
@@ -58,26 +48,32 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 	/**
 	 * Creates a new UserInfo HTTP GET request.
 	 *
+	 * @param uri         The URI of the UserInfo endpoint. May be
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request.
 	 *                    Must not be {@code null}.
 	 */
-	public UserInfoRequest(final BearerAccessToken accessToken) {
+	public UserInfoRequest(final URL uri, final BearerAccessToken accessToken) {
 	
-		this(HTTPRequest.Method.GET, accessToken);
+		this(uri, HTTPRequest.Method.GET, accessToken);
 	}
 	
 	
 	/**
 	 * Creates a new UserInfo request.
 	 *
+	 * @param uri         The URI of the UserInfo endpoint. May be
+	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param httpMethod  The HTTP method. Must be HTTP GET or POST and not 
 	 *                    {@code null}.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request.
 	 *                    Must not be {@code null}.
 	 */
-	public UserInfoRequest(final HTTPRequest.Method httpMethod, final BearerAccessToken accessToken) {
+	public UserInfoRequest(final URL uri, final HTTPRequest.Method httpMethod, final BearerAccessToken accessToken) {
 	
-		super(accessToken);
+		super(uri, accessToken);
 		
 		if (httpMethod == null)
 			throw new IllegalArgumentException("The HTTP method must not be null");
@@ -102,10 +98,13 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url)
+	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
+		
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(httpMethod, url);
+		HTTPRequest httpRequest = new HTTPRequest(httpMethod, getURI());
 		
 		switch (httpMethod) {
 		
@@ -145,6 +144,6 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 		
 		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest);
 	
-		return new UserInfoRequest(httpMethod, accessToken);
+		return new UserInfoRequest(httpRequest.getURL(), httpMethod, accessToken);
 	}
 }

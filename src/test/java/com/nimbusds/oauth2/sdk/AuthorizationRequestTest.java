@@ -22,14 +22,17 @@ public class AuthorizationRequestTest extends TestCase {
 	
 	public void testMinimal()
 		throws Exception {
+		
+		URL uri = new URL("https://c2id.com/authz/");
 
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
 
 		ClientID clientID = new ClientID("123456");
 
-		AuthorizationRequest req = new AuthorizationRequest(rts, clientID);
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID);
 
+		assertEquals(uri, req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
@@ -46,12 +49,14 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals("123456", params.get("client_id"));
 		assertEquals(2, params.size());
 
-		HTTPRequest httpReq = req.toHTTPRequest(new URL("https://connect2id.com/authz/"));
+		HTTPRequest httpReq = req.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
+		assertEquals(uri, httpReq.getURL());
 		assertEquals(query, httpReq.getQuery());
 
-		req = AuthorizationRequest.parse(query);
+		req = AuthorizationRequest.parse(uri, query);
 
+		assertEquals(uri, req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
@@ -64,6 +69,7 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testFull()
 		throws Exception {
 
+		URL uri = new URL("https://c2id.com/authz/");
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
 
@@ -75,8 +81,9 @@ public class AuthorizationRequestTest extends TestCase {
 
 		State state = new State();
 
-		AuthorizationRequest req = new AuthorizationRequest(rts, clientID, redirectURI, scope, state);
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID, redirectURI, scope, state);
 
+		assertEquals(uri, req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectURI());
@@ -96,12 +103,13 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(state, new State(params.get("state")));
 		assertEquals(5, params.size());
 
-		HTTPRequest httpReq = req.toHTTPRequest(new URL("https://connect2id.com/authz/"));
+		HTTPRequest httpReq = req.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
 		assertEquals(query, httpReq.getQuery());
 
-		req = AuthorizationRequest.parse(query);
+		req = AuthorizationRequest.parse(uri, query);
 
+		assertEquals(uri, req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectURI());

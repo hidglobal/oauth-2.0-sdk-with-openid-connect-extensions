@@ -7,6 +7,7 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
+import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
@@ -39,12 +40,15 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
 	/**
 	 * Creates a new client delete request.
 	 *
+	 * @param uri         The URI of the client configuration endpoint. May 
+	 *                    be {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	public ClientDeleteRequest(final BearerAccessToken accessToken) {
+	public ClientDeleteRequest(final URL uri, final BearerAccessToken accessToken) {
 
-		super(accessToken);
+		super(uri, accessToken);
 		
 		if (accessToken == null)
 			throw new IllegalArgumentException("The access token must not be null");
@@ -52,9 +56,13 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
 
 
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url) {
+	public HTTPRequest toHTTPRequest() 
+		throws SerializeException {
+		
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.DELETE, url);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.DELETE, getURI());
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 		return httpRequest;
 	}
@@ -81,6 +89,6 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
 		
 		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
 		
-		return new ClientDeleteRequest(accessToken);
+		return new ClientDeleteRequest(httpRequest.getURL(), accessToken);
 	}
 }

@@ -11,6 +11,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
+import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -62,15 +63,19 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 	/**
 	 * Creates a new client registration request.
 	 *
+	 * @param uri         The URI of the client registration endpoint. May 
+	 *                    be {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param metadata    The client metadata. Must not be {@code null} and 
 	 *                    must specify one or more redirect URIs.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	public ClientRegistrationRequest(final ClientMetadata metadata, 
+	public ClientRegistrationRequest(final URL uri,
+		                         final ClientMetadata metadata, 
 		                         final BearerAccessToken accessToken) {
 
-		super(accessToken);
+		super(uri, accessToken);
 
 		if (metadata == null)
 			throw new IllegalArgumentException("The client metadata must not be null");
@@ -91,9 +96,13 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 
 
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url) {
+	public HTTPRequest toHTTPRequest()
+		throws SerializeException{
+		
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
 
 		if (getAccessToken() != null)
 			httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
@@ -135,6 +144,6 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 		if (StringUtils.isNotBlank(authzHeaderValue))
 			accessToken = BearerAccessToken.parse(authzHeaderValue);
 		
-		return new ClientRegistrationRequest(metadata, accessToken);
+		return new ClientRegistrationRequest(httpRequest.getURL(), metadata, accessToken);
 	}
 }

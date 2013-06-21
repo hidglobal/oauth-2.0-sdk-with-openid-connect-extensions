@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.URL;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
@@ -34,7 +35,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  *
  * @author Vladimir Dzhuvinov
  */
-public abstract class TokenRequest implements Request {
+public abstract class TokenRequest extends AbstractRequest {
 
 
 	/**
@@ -52,11 +53,18 @@ public abstract class TokenRequest implements Request {
 	/**
 	 * Creates a new token request.
 	 *
+	 * @param uri        The URI of the token endpoint. May be 
+	 *                   {@code null} if the {@link #toHTTPRequest()}
+	 *                   method will not be used.
 	 * @param grantType  The grant type. Must not be {@code null}.
 	 * @param clientAuth The client authentication, {@code null} if none.
 	 */
-	protected TokenRequest(final GrantType grantType, final ClientAuthentication clientAuth) {
+	protected TokenRequest(final URL uri, 
+		               final GrantType grantType, 
+			       final ClientAuthentication clientAuth) {
 	
+		super(uri);
+		
 		if (grantType == null)
 			throw new IllegalArgumentException("The grant type must not be null");
 		

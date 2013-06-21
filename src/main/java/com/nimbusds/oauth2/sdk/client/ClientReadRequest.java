@@ -9,6 +9,7 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
+import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
@@ -41,12 +42,15 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 	/**
 	 * Creates a new client read request.
 	 *
+	 * @param uri         The URI of the client configuration endpoint. May 
+	 *                    be {@code null} if the {@link #toHTTPRequest()}
+	 *                    method will not be used.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request. 
 	 *                    Must not be {@code null}.
 	 */
-	public ClientReadRequest(final BearerAccessToken accessToken) {
+	public ClientReadRequest(final URL uri, final BearerAccessToken accessToken) {
 
-		super(accessToken);
+		super(uri, accessToken);
 
 		if (accessToken == null)
 			throw new IllegalArgumentException("The access token must not be null");
@@ -54,9 +58,13 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 
 
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url) {
+	public HTTPRequest toHTTPRequest() 
+		throws SerializeException {
+		
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, url);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, getURI());
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 		return httpRequest;
 	}
@@ -84,6 +92,6 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 		
 		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
 		
-		return new ClientReadRequest(accessToken);
+		return new ClientReadRequest(httpRequest.getURL(), accessToken);
 	}
 }

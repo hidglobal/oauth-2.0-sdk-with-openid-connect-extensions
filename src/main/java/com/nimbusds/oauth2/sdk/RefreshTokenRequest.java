@@ -53,24 +53,31 @@ public final class RefreshTokenRequest extends TokenRequest {
 	/**
 	 * Creates a new unauthenticated refresh token request.
 	 *
+	 * @param uri          The URI of the token endpoint. May be 
+	 *                     {@code null} if the {@link #toHTTPRequest()}
+	 *                     method will not be used.
 	 * @param refreshToken The refresh token. Must not be {@code null}.
 	 */
-	public RefreshTokenRequest(final RefreshToken refreshToken) {
+	public RefreshTokenRequest(final URL uri, final RefreshToken refreshToken) {
 	
-		this(refreshToken, null);
+		this(uri, refreshToken, null);
 	}
 	
 	 
 	/**
 	 * Creates a new authenticated refresh token request.
 	 *
+	 * @param uri          The URI of the token endpoint. May be 
+	 *                     {@code null} if the {@link #toHTTPRequest()}
+	 *                     method will not be used.
 	 * @param refreshToken The refresh token. Must not be {@code null}.
 	 * @param clientAuth   The client authentication, {@code null} if none.
 	 */
-	public RefreshTokenRequest(final RefreshToken refreshToken, 
+	public RefreshTokenRequest(final URL uri,
+		                   final RefreshToken refreshToken, 
 		                   final ClientAuthentication clientAuth) {
 	
-		super(GrantType.REFRESH_TOKEN, clientAuth);
+		super(uri, GrantType.REFRESH_TOKEN, clientAuth);
 		
 		if (refreshToken == null)
 			throw new IllegalArgumentException("The refresh token must not be null");
@@ -91,10 +98,13 @@ public final class RefreshTokenRequest extends TokenRequest {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest(final URL url)
+	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
+		
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
 		
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		
@@ -155,6 +165,7 @@ public final class RefreshTokenRequest extends TokenRequest {
 		// Parse client authentication
 		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
 		
-		return new RefreshTokenRequest(new RefreshToken(tokenString), clientAuth);
+		return new RefreshTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), 
+			                       new RefreshToken(tokenString), clientAuth);
 	}
 }
