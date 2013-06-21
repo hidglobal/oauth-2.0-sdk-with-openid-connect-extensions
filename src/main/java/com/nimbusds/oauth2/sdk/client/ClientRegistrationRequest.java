@@ -121,10 +121,10 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *
-	 * @return The client add (register) request.
+	 * @return The client registration request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to a 
-	 *                        client register request.
+	 *                        client registration request.
 	 */
 	public static ClientRegistrationRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
