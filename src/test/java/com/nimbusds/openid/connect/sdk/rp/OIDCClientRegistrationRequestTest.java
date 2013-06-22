@@ -8,6 +8,7 @@ import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.mail.internet.InternetAddress;
@@ -21,6 +22,63 @@ import static org.junit.Assert.*;
  * @author Vladimir Dzhuvinov
  */
 public class OIDCClientRegistrationRequestTest {
+	
+	
+	@Test
+	public void testRoundtrip() throws Exception {
+		
+		URL uri = new URL("https://server.example.com/connect/register");
+		
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		
+		Set<URL> redirectURIs = new HashSet<URL>();
+		redirectURIs.add(new URL("https://client.example.org/callback"));
+		metadata.setRedirectURIs(redirectURIs);
+		
+		metadata.setApplicationType(ApplicationType.NATIVE);
+		
+		metadata.setJWKSetURL(new URL("https://client.example.org/my_public_keys.jwks"));
+		
+		OIDCClientRegistrationRequest request = new OIDCClientRegistrationRequest(uri, metadata, null);
+		
+		assertEquals(uri, request.getURI());
+		
+		assertNull(request.getAccessToken());
+		
+		metadata = request.getOIDCClientMetadata();
+		
+		redirectURIs = metadata.getRedirectURIs();
+		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
+		assertEquals(1, redirectURIs.size());
+		
+		assertEquals(ApplicationType.NATIVE, metadata.getApplicationType());
+		
+		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+		
+		HTTPRequest httpRequest = request.toHTTPRequest();
+		
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		assertEquals(CommonContentTypes.APPLICATION_JSON, httpRequest.getContentType());
+		
+		System.out.println(httpRequest.getQuery());
+		
+		request = OIDCClientRegistrationRequest.parse(httpRequest);
+		
+		assertEquals(uri, request.getURI());
+		
+		assertNull(request.getAccessToken());
+		
+		metadata = request.getOIDCClientMetadata();
+		
+		redirectURIs = metadata.getRedirectURIs();
+		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
+		assertEquals(1, redirectURIs.size());
+		
+		assertEquals(ApplicationType.NATIVE, metadata.getApplicationType());
+		
+		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+	}
+		
 	
 	@Test
 	public void testParse() throws Exception {
