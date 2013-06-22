@@ -30,9 +30,9 @@ import net.minidev.json.JSONObject;
  * <p>Related specifications:
  *
  * <ul>
+ *     <li>OpenID Connect Dynamic Client Registration 1.0.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
  *         (draft-ietf-oauth-dyn-reg-12), section 2, 3.2 and 5.1.
- *     <li>OpenID Connect Dynamic Client Registration 1.0.
  * </ul>
  * @author Vladimir Dzhuvinov
  */
