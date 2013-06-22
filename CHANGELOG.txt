@@ -31,3 +31,7 @@ version 2.3 (2013-06-19)
 
 version 2.4 (2013-06-20)
 	* Adds static OIDCClientInformation.parse(JSONObject) method.
+
+version 2.5 (2013-06-22)
+	* Adds support OAuth 2.0 dynamic client update.
+	* Adds OpenID Connect dynamic client registration classes.
