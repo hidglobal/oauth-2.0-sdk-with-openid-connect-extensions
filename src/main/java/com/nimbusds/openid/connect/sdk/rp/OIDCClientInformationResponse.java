@@ -1,6 +1,8 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.client.ClientInformationResponse;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -49,7 +51,8 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * 
  * @author Vladimir Dzhuvinov
  */
-public class OIDCClientInformationResponse extends ClientInformationResponse {
+@Immutable
+public final class OIDCClientInformationResponse extends ClientInformationResponse {
 	
 	
 	/**

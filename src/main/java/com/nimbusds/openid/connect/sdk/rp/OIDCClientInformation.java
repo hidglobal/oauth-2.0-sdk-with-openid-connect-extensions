@@ -1,17 +1,20 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
-import com.nimbusds.oauth2.sdk.ParseException;
 import java.net.URL;
 import java.util.Date;
 
+import net.jcip.annotations.Immutable;
+
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.client.ClientInformation;
 import com.nimbusds.oauth2.sdk.client.ClientMetadata;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import net.minidev.json.JSONObject;
 
 
 /**
@@ -36,7 +39,8 @@ import net.minidev.json.JSONObject;
  * </ul>
  * @author Vladimir Dzhuvinov
  */
-public class OIDCClientInformation extends ClientInformation {
+@Immutable
+public final class OIDCClientInformation extends ClientInformation {
 
 	
 	/**
