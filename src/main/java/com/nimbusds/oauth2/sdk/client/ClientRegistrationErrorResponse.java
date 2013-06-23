@@ -149,13 +149,13 @@ public class ClientRegistrationErrorResponse
 			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
 
 		// Add the WWW-Authenticate header
-		if (error != null && error instanceof BearerTokenError) {
+		if (error instanceof BearerTokenError) {
 
 			BearerTokenError bte = (BearerTokenError)error;
 
 			httpResponse.setWWWAuthenticate(bte.toWWWAuthenticateHeader());
-		}
-		else {
+
+		} else {
 			JSONObject jsonObject = new JSONObject();
 
 			if (error.getCode() != null)
@@ -201,8 +201,9 @@ public class ClientRegistrationErrorResponse
 		if (StringUtils.isNotBlank(wwwAuth)) {
 
 			error = BearerTokenError.parse(wwwAuth);
-		}
-		else {
+
+		} else {
+			
 			String code = null;
 			String description = null;
 			
