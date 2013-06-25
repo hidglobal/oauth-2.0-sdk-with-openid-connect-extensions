@@ -35,3 +35,8 @@ version 2.4 (2013-06-20)
 version 2.5 (2013-06-22)
 	* Adds support OAuth 2.0 dynamic client update.
 	* Adds OpenID Connect dynamic client registration classes.
+
+version 2.6 (2013-06-25)
+	* Enforces order of preference of ACR values in OpenID Connect client
+	  metadata, as required by the specification.
+	* Documentation and performance improvements.
