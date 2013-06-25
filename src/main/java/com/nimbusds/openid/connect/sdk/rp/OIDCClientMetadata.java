@@ -4,6 +4,8 @@ package com.nimbusds.openid.connect.sdk.rp;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import net.minidev.json.JSONArray;
@@ -19,7 +21,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
-
 
 
 /**
@@ -125,9 +126,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * The default Authentication Context Class Reference (ACR) values.
+	 * The default Authentication Context Class Reference (ACR) values, by
+	 * order of preference.
 	 */
-	private Set<ACR> defaultACRs;
+	private List<ACR> defaultACRs;
 
 
 	/**
@@ -526,9 +528,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * values. Corresponds to the {@code default_acr_values} client 
 	 * registration parameter.
 	 *
-	 * @return The default ACR values, {@code null} if not specified.
+	 * @return The default ACR values, by order of preference, 
+	 *         {@code null} if not specified.
 	 */
-	public Set<ACR> getDefaultACRs() {
+	public List<ACR> getDefaultACRs() {
 
 		return defaultACRs;
 	}
@@ -539,9 +542,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * values. Corresponds to the {@code default_acr_values} client 
 	 * registration parameter.
 	 *
-	 * @param defaultACRs The default ACRs, {@code null} if not specified.
+	 * @param defaultACRs The default ACRs, by order of preference, 
+	 *                    {@code null} if not specified.
 	 */
-	public void setDefaultACRs(final Set<ACR> defaultACRs) {
+	public void setDefaultACRs(final List<ACR> defaultACRs) {
 
 		this.defaultACRs = defaultACRs;
 	}
@@ -790,7 +794,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 		if (jsonObject.containsKey("default_acr_values")) {
 
-			Set<ACR> acrValues = new LinkedHashSet<ACR>();
+			List<ACR> acrValues = new LinkedList<ACR>();
 
 			for (String acrString: JSONObjectUtils.getStringArray(jsonObject, "default_acr_values"))
 				acrValues.add(new ACR(acrString));
