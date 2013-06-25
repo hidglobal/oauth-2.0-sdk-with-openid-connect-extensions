@@ -1,7 +1,10 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -26,8 +29,6 @@ import com.nimbusds.openid.connect.sdk.Display;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
-import java.net.MalformedURLException;
-import java.util.Collections;
 
 
 /**
@@ -787,7 +788,7 @@ public class OIDCProviderMetadata {
 
 		// Parse issuer and subject_types_supported first
 		
-		Set<SubjectType> subjectTypes = new LinkedHashSet<SubjectType>();
+		Set<SubjectType> subjectTypes = EnumSet.noneOf(SubjectType.class);
 		
 		for (String v: JSONObjectUtils.getStringArray(jsonObject, "subject_types_supported")) {
 			subjectTypes.add(SubjectType.parse(v));
@@ -1007,7 +1008,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("display_values_supported")) {
 
-			op.displays = new LinkedHashSet<Display>();
+			op.displays = EnumSet.noneOf(Display.class);
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "display_values_supported")) {
 
@@ -1018,7 +1019,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("claim_types_supported")) {
 			
-			op.claimTypes = new LinkedHashSet<ClaimType>();
+			op.claimTypes = EnumSet.noneOf(ClaimType.class);
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "claim_types_supported")) {
 				
