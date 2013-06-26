@@ -40,3 +40,6 @@ version 2.6 (2013-06-25)
 	* Enforces order of preference of ACR values in OpenID Connect client
 	  metadata, as required by the specification.
 	* Documentation and performance improvements.
+
+version 2.7 (2013-06-26)
+	* Switches Identifier generation to java.security.SecureRandom.
