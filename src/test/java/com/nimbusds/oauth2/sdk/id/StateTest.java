@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk.id;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.codec.binary.Base64;
+
 
 /**
  * Tests random state value generation.
@@ -79,9 +81,9 @@ public class StateTest extends TestCase {
 		
 		State state = new State();
 		
-		System.out.println("Random state (default size): " + state);
+		System.out.println("Random state (default byte length): " + state);
 		
-		assertEquals(32, state.toString().length());
+		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, Base64.decodeBase64(state.toString()).length);
 	}
 	
 	
@@ -89,9 +91,9 @@ public class StateTest extends TestCase {
 	
 		State state = new State(16);
 		
-		System.out.println("Random state (16 chars): " + state);
+		System.out.println("Random state (16 byte length): " + state);
 		
-		assertEquals(16, state.toString().length());
+		assertEquals(16, Base64.decodeBase64(state.toString()).length);
 	}
 
 

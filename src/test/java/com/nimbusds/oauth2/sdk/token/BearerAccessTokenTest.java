@@ -7,6 +7,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
+import org.apache.commons.codec.binary.Base64;
 
 
 /**
@@ -53,7 +54,7 @@ public class BearerAccessTokenTest extends TestCase {
 
 		assertNotNull(token);
 
-		assertEquals(12, token.getValue().length());
+		assertEquals(12, Base64.decodeBase64(token.getValue()).length);
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
@@ -67,7 +68,7 @@ public class BearerAccessTokenTest extends TestCase {
 
 		assertNotNull(token);
 
-		assertEquals(32, token.getValue().length());
+		assertEquals(32, Base64.decodeBase64(token.getValue()).length);
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 

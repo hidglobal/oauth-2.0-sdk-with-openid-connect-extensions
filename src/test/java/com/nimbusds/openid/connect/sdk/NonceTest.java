@@ -3,6 +3,10 @@ package com.nimbusds.openid.connect.sdk;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.codec.binary.Base64;
+
+import com.nimbusds.oauth2.sdk.id.Identifier;
+
 
 /**
  * Tests the Nonce class.
@@ -18,7 +22,7 @@ public class NonceTest extends TestCase {
 
 		System.out.println("Generated nonce: " + nonce);
 
-		assertEquals(32, nonce.getValue().length());
+		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, Base64.decodeBase64(nonce.getValue()).length);
 	}
 
 
@@ -27,7 +31,7 @@ public class NonceTest extends TestCase {
 		Nonce nonce =  new Nonce(1);
 
 		System.out.println("Generated nonce: " + nonce);
-		assertEquals(1,nonce.getValue().length());
+		assertEquals(1, Base64.decodeBase64(nonce.getValue()).length);
 
 	}
 
