@@ -73,7 +73,7 @@ public class ClientMetadata {
 	/**
 	 * The expected OAuth 2.0 response types.
 	 */
-	private ResponseType responseTypes;
+	private Set<ResponseType> responseTypes;
 	
 	
 	/**
@@ -225,7 +225,7 @@ public class ClientMetadata {
 	 * 
 	 * @return The response types, {@code null} if not specified.
 	 */
-	public ResponseType getResponseTypes() {
+	public Set<ResponseType> getResponseTypes() {
 		
 		return responseTypes;
 	}
@@ -238,7 +238,7 @@ public class ClientMetadata {
 	 * @param responseTypes The response types, {@code null} if not 
 	 *                      specified.
 	 */
-	public void setResponseTypes(final ResponseType responseTypes) {
+	public void setResponseTypes(final Set<ResponseType> responseTypes) {
 		
 		this.responseTypes = responseTypes;
 	}
@@ -673,8 +673,8 @@ public class ClientMetadata {
 	 * specified.
 	 * 
 	 * <ul>
-	 *     <li>The response types default to "code".
-	 *     <li>The grant types default to "authorization_code".
+	 *     <li>The response types default to {@code ["code"]}.
+	 *     <li>The grant types default to {@code "authorization_code".}
 	 *     <li>The client authentication method defaults to 
 	 *         "client_secret_basic".
 	 * </ul>
@@ -682,7 +682,8 @@ public class ClientMetadata {
 	public void applyDefaults() {
 		
 		if (responseTypes == null) {
-			responseTypes = ResponseType.getDefault();
+			responseTypes = new HashSet<ResponseType>();
+			responseTypes.add(ResponseType.getDefault());
 		}
 		
 		if (grantTypes == null) {
@@ -724,8 +725,8 @@ public class ClientMetadata {
 			
 			JSONArray rtList = new JSONArray();
 			
-			for (ResponseType.Value rtValue: responseTypes)
-				rtList.add(rtValue.toString());
+			for (ResponseType rt: responseTypes)
+				rtList.add(rt.toString());
 			
 			o.put("response_types", rtList);
 		}
@@ -782,7 +783,7 @@ public class ClientMetadata {
 					continue;
 
 				if (langTag == null)
-					o.put("logo_uri", entry.getValue());
+					o.put("logo_uri", entry.getValue().toString());
 				else
 					o.put("logo_uri#" + langTag, entry.getValue().toString());
 			} 
@@ -800,7 +801,7 @@ public class ClientMetadata {
 					continue;
 
 				if (langTag == null)
-					o.put("client_uri", entry.getValue());
+					o.put("client_uri", entry.getValue().toString());
 				else
 					o.put("client_uri#" + langTag, entry.getValue().toString());
 			} 
@@ -818,7 +819,7 @@ public class ClientMetadata {
 					continue;
 
 				if (langTag == null)
-					o.put("policy_uri", entry.getValue());
+					o.put("policy_uri", entry.getValue().toString());
 				else
 					o.put("policy_uri#" + langTag, entry.getValue().toString());
 			} 
@@ -836,7 +837,7 @@ public class ClientMetadata {
 					continue;
 
 				if (langTag == null)
-					o.put("tos_uri", entry.getValue());
+					o.put("tos_uri", entry.getValue().toString());
 				else
 					o.put("tos_uri#" + langTag, entry.getValue().toString());
 			} 
@@ -896,11 +897,11 @@ public class ClientMetadata {
 		
 		if (jsonObject.containsKey("response_types")) {
 			
-			ResponseType responseTypes = new ResponseType();
+			Set<ResponseType> responseTypes = new LinkedHashSet<ResponseType>();
 			
-			for (String responseTypeValue: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
+			for (String rt: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
 				
-				responseTypes.add(new ResponseType.Value(responseTypeValue));
+				responseTypes.add(ResponseType.parse(rt));
 			}
 			
 			metadata.setResponseTypes(responseTypes);
@@ -1020,5 +1021,4 @@ public class ClientMetadata {
 
 		return metadata;
 	}
-	
 }

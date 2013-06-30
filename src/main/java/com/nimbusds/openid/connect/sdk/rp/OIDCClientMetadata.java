@@ -592,8 +592,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * specified.
 	 * 
 	 * <ul>
-	 *     <li>The response types default to "code".
-	 *     <li>The grant types default to "authorization_code".
+	 *     <li>The response types default to {@code ["code"]}.
+	 *     <li>The grant types default to {@code "authorization_code".}
 	 *     <li>The client authentication method defaults to 
 	 *         "client_secret_basic".
 	 *     <li>The ID token JWS algorithm defaults to "RS256".
