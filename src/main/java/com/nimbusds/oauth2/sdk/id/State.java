@@ -30,20 +30,20 @@ public final class State extends Identifier {
 
 	/**
 	 * Creates a new state with a randomly generated value of the specified
-	 * length. The value will be made up of mixed-case alphanumeric ASCII 
-	 * characters.
+	 * byte length, Base64URL-encoded.
 	 *
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
 	 */
-	public State(final int length) {
+	public State(final int byteLength) {
 	
-		super(length);
+		super(byteLength);
 	}
 	
 	
 	/**
-	 * Creates a new state with a randomly generated value. The value will
-	 * be made up of 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new state with a randomly generated 256-bit (32-byte) 
+	 * value, Base64URL-encoded.
 	 */
 	public State() {
 

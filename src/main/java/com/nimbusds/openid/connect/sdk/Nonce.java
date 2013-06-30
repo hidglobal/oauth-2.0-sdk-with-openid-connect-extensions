@@ -45,20 +45,20 @@ public final class Nonce extends Identifier {
 
 	/**
 	 * Creates a new nonce with a randomly generated value of the specified
-	 * length. The value will be made up of mixed-case alphanumeric ASCII 
-	 * characters.
+	 * byte length, Base64URL-encoded.
 	 *
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
 	 */
-	public Nonce(final int length) {
+	public Nonce(final int byteLength) {
 	
-		super(length);
+		super(byteLength);
 	}
 	
 	
 	/**
-	 * Creates a new nonce with a randomly generated value. The value will
-	 * be made up of 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new nonce with a randomly generated 256-bit (32-byte) 
+	 * value, Base64URL-encoded.
 	 */
 	public Nonce() {
 

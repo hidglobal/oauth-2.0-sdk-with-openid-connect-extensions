@@ -46,9 +46,9 @@ public final class BearerAccessToken extends AccessToken {
 
 	
 	/**
-	 * Creates a new minimal bearer access token with a randomly generated
-	 * value. The value will be made up of 32 mixed-case alphanumeric ASCII
-	 * characters. The optional lifetime and scope are left undefined.
+	 * Creates a new minimal bearer access token with a randomly generated 
+	 * 256-bit (32-byte) value, Base64URL-encoded. The optional lifetime 
+	 * and scope are left undefined.
 	 */
 	public BearerAccessToken() {
 	
@@ -57,23 +57,22 @@ public final class BearerAccessToken extends AccessToken {
 
 
 	/**
-	 * Creates a new minimal bearer access token with a randomly generated
-	 * value of the specified length. The value will be made up of 
-	 * mixed-case alphanumeric ASCII characters. The optional lifetime and
-	 * scope are left undefined.
+	 * Creates a new minimal bearer access token with a randomly generated 
+	 * value of the specified byte length, Base64URL-encoded. The optional 
+	 * lifetime and scope are left undefined.
 	 *
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
 	 */
-	public BearerAccessToken(final int length) {
+	public BearerAccessToken(final int byteLength) {
 	
-		this(length, 0l, null);
+		this(byteLength, 0l, null);
 	}
 
 
 	/**
-	 * Creates a new bearer access token with a randomly generated value 
-	 * and the specified optional lifetime and scope. The value will be 
-	 * made up of 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new bearer access token with a randomly generated 256-bit 
+	 * (32-byte) value, Base64URL-encoded.
 	 *
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
 	 * @param scope    The scope, {@code null} if not specified.
@@ -85,18 +84,17 @@ public final class BearerAccessToken extends AccessToken {
 
 
 	/**
-	 * Creates a new bearer access token with a randomly generated value of
-	 * the specified length and optional lifetime and scope. The value will
-	 * be made up of mixed-case alphanumeric ASCII characters.
+	 * Creates a new bearer access token with a randomly generated value of 
+	 * the specified byte length, Base64URL-encoded.
 	 *
-	 * @param length   The number of characters. Must be a positive 
-	 *                 integer.
-	 * @param lifetime The lifetime in seconds, 0 if not specified.
-	 * @param scope    The scope, {@code null} if not specified.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
+	 * @param lifetime   The lifetime in seconds, 0 if not specified.
+	 * @param scope      The scope, {@code null} if not specified.
 	 */
-	public BearerAccessToken(final int length, final long lifetime, final Scope scope) {
+	public BearerAccessToken(final int byteLength, final long lifetime, final Scope scope) {
 	
-		super(AccessTokenType.BEARER, length, lifetime, scope);
+		super(AccessTokenType.BEARER, byteLength, lifetime, scope);
 	}
 	
 	

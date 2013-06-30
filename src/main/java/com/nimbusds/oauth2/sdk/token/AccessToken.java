@@ -42,9 +42,9 @@ public abstract class AccessToken
 
 
 	/**
-	 * Creates a new minimal access token with a randomly generated value. 
-	 * The value will be made up of 32 mixed-case alphanumeric ASCII 
-	 * characters. The optional lifetime and scope are left undefined.
+	 * Creates a new minimal access token with a randomly generated 256-bit 
+	 * (32-byte) value, Base64URL-encoded. The optional lifetime and scope 
+	 * are left undefined.
 	 *
 	 * @param type The access token type. Must not be {@code null}.
 	 */
@@ -55,24 +55,23 @@ public abstract class AccessToken
 
 
 	/**
-	 * Creates a new minimal access token with a randomly generated value
-	 * of the specified length. The value will be made up of mixed-case 
-	 * alphanumeric ASCII characters. The optional lifetime and scope are 
-	 * left undefined.
+	 * Creates a new minimal access token with a randomly generated value 
+	 * of the specified byte length, Base64URL-encoded. The optional 
+	 * lifetime and scope are left undefined.
 	 *
-	 * @param type   The access token type. Must not be {@code null}.
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param type       The access token type. Must not be {@code null}.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
 	 */
-	public AccessToken(final AccessTokenType type, final int length) {
+	public AccessToken(final AccessTokenType type, final int byteLength) {
 	
-		this(type, length, 0l, null);
+		this(type, byteLength, 0l, null);
 	}
 
 
 	/**
-	 * Creates a new access token with a randomly generated value and the 
-	 * specified optional lifetime and scope. The value will be made up of
-	 * 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new access token with a randomly generated 256-bit 
+	 * (32-byte) value, Base64URL-encoded.
 	 *
 	 * @param type     The access token type. Must not be {@code null}.
 	 * @param lifetime The lifetime in seconds, 0 if not specified.
@@ -87,22 +86,22 @@ public abstract class AccessToken
 
 
 	/**
-	 * Creates a new access token with a randomly generated value of the 
-	 * specified length and optional lifetime and scope. The value will be 
-	 * made up of mixed-case alphanumeric ASCII characters.
+	 * Creates a new access token with a randomly generated value 
+	 * of the specified byte length, Base64URL-encoded, and optional 
+	 * lifetime and scope.
 	 *
-	 * @param type     The access token type. Must not be {@code null}.
-	 * @param length   The number of characters. Must be a positive 
-	 *                 integer.
-	 * @param lifetime The lifetime in seconds, 0 if not specified.
-	 * @param scope    The scope, {@code null} if not specified.
+	 * @param type       The access token type. Must not be {@code null}.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
+	 * @param lifetime   The lifetime in seconds, 0 if not specified.
+	 * @param scope      The scope, {@code null} if not specified.
 	 */
 	public AccessToken(final AccessTokenType type, 
-		           final int length, 
+		           final int byteLength, 
 		           final long lifetime, 
 		           final Scope scope) {
 	
-		super(length);
+		super(byteLength);
 
 		if (type == null)
 			throw new IllegalArgumentException("The access token type must not be null");

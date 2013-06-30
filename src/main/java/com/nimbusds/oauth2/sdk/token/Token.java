@@ -33,21 +33,21 @@ public abstract class Token extends Identifier {
 
 
 	/**
-	 * Creates a new token with a randomly generated value of the specified
-	 * length. The value will be made up of mixed-case alphanumeric ASCII 
-	 * characters.
+	 * Creates a new token with a randomly generated value of the specified 
+	 * byte length, Base64URL-encoded.
 	 *
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
 	 */
-	protected Token(final int length) {
+	protected Token(final int byteLength) {
 	
-		super(length);
+		super(byteLength);
 	}
 	
 	
 	/**
-	 * Creates a new token with a randomly generated value. The value will 
-	 * be made up of 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new token with a randomly generated 256-bit (32-byte) 
+	 * value, Base64URL-encoded.
 	 */
 	protected Token() {
 	

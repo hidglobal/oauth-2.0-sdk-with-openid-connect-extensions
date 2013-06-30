@@ -27,9 +27,8 @@ public final class RefreshToken
 
 
 	/**
-	 * Creates a new refresh token with a randomly generated value. The 
-	 * value will be made up of 32 mixed-case alphanumeric ASCII
-	 * characters.
+	 * Creates a new refresh token with a randomly generated 256-bit 
+	 * (32-byte) value, Base64URL-encoded.
 	 */
 	public RefreshToken() {
 	
@@ -39,14 +38,14 @@ public final class RefreshToken
 
 	/**
 	 * Creates a new refresh token with a randomly generated value of the 
-	 * specified length. The value will be made up of mixed-case 
-	 * alphanumeric ASCII characters.
+	 * specified length, Base64URL-encoded.
 	 *
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param byteLength The byte length of the value to generate. Must be
+	 *                   greater than one.
 	 */
-	public RefreshToken(final int length) {
+	public RefreshToken(final int byteLength) {
 	
-		super(length);
+		super(byteLength);
 	}
 
 
