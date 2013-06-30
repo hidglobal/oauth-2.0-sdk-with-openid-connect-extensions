@@ -36,7 +36,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <pre>
  * {
  *  "redirect_uris"             : ["https://client.example.org/callback",
- *                                 "https://client.example.org/callback2"]
+ *                                 "https://client.example.org/callback2"],
  *  "client_name"                : "My Example Client",
  *  "client_name#ja-Jpan-JP"     : "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D",
  *  "token_endpoint_auth_method" : "client_secret_basic",
