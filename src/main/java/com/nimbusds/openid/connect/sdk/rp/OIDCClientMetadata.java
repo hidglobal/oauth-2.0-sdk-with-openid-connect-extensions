@@ -587,6 +587,18 @@ public class OIDCClientMetadata extends ClientMetadata {
 	}
 	
 	
+	/**
+	 * Applies the client metadata defaults where no values have been
+	 * specified.
+	 * 
+	 * <ul>
+	 *     <li>The response types default to "code".
+	 *     <li>The grant types default to "authorization_code".
+	 *     <li>The client authentication method defaults to 
+	 *         "client_secret_basic".
+	 *     <li>The ID token JWS algorithm defaults to "RS256".
+	 * </ul>
+	 */
 	@Override
 	public void applyDefaults() {
 		
