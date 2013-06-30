@@ -1,21 +1,26 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import com.nimbusds.langtag.LangTag;
-import com.nimbusds.oauth2.sdk.GrantType;
-import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
 import javax.mail.internet.InternetAddress;
+
 import net.minidev.json.JSONObject;
+
 import org.junit.Test;
 import static org.junit.Assert.*;
+
+import com.nimbusds.langtag.LangTag;
+
+import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
