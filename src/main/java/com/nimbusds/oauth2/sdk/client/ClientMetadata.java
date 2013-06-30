@@ -479,7 +479,7 @@ public class ClientMetadata {
 	 */
 	public void setURI(final URL uri, final LangTag langTag) {
 
-		logoURIEntries.put(langTag, uri);
+		uriEntries.put(langTag, uri);
 	}
 	
 
@@ -610,7 +610,7 @@ public class ClientMetadata {
 	 */
 	public void setTermsOfServiceURI(final URL tosURI, final LangTag langTag) {
 
-			tosURIEntries.put(langTag, tosURI);
+		tosURIEntries.put(langTag, tosURI);
 	}
 	
 	
@@ -671,6 +671,13 @@ public class ClientMetadata {
 	/**
 	 * Applies the client metadata defaults where no values have been
 	 * specified.
+	 * 
+	 * <ul>
+	 *     <li>The response types default to "code".
+	 *     <li>The grant types default to "authorization_code".
+	 *     <li>The client authentication method defaults to 
+	 *         "client_secret_basic".
+	 * </ul>
 	 */
 	public void applyDefaults() {
 		
