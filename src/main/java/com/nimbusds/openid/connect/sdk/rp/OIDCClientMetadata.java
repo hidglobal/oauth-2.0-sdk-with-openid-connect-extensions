@@ -168,7 +168,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	
 	/**
 	 * Gets the client application type. Corresponds to the
-	 * {@code application_type} client registration parameter.
+	 * {@code application_type} client metadata field.
 	 *
 	 * @return The client application type, {@code null} if not specified.
 	 */
@@ -180,7 +180,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Sets the client application type. Corresponds to the
-	 * {@code application_type} client registration parameter.
+	 * {@code application_type} client metadata field.
 	 *
 	 * @param applicationType The client application type, {@code null} if
 	 *                        not specified.
@@ -193,8 +193,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Gets the subject identifier type for responses to this client. 
-	 * Corresponds to the {@code subject_type} client registration 
-	 * parameter.
+	 * Corresponds to the {@code subject_type} client metadata field.
 	 *
 	 * @return The subject identifier type, {@code null} if not specified.
 	 */
@@ -206,8 +205,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Sets the subject identifier type for responses to this client. 
-	 * Corresponds to the {@code subject_type} client registration 
-	 * parameter.
+	 * Corresponds to the {@code subject_type} client metadata field.
 	 *
 	 * @param subjectType The subject identifier type, {@code null} if not 
 	 *                    specified.
@@ -220,7 +218,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Gets the sector identifier URI. Corresponds to the 
-	 * {@code sector_identifier_uri} client registration parameter.
+	 * {@code sector_identifier_uri} client metadata field.
 	 *
 	 * @return The sector identifier URI, {@code null} if not specified.
 	 */
@@ -232,7 +230,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Sets the sector identifier URI. Corresponds to the 
-	 * {@code sector_identifier_uri} client registration parameter.
+	 * {@code sector_identifier_uri} client metadata field.
 	 *
 	 * @param sectorIDURI The sector identifier URI, {@code null} if not 
 	 *                    specified.
@@ -244,9 +242,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 	
 	
 	/**
-	 * Gets the pre-registered OpenID Connect request object URIs. 
-	 * Corresponds to the {@code request_uris} client registration 
-	 * parameter.
+	 * Gets the pre-registered OpenID Connect request object URIs.
+	 * Corresponds to the {@code request_uris} client metadata field.
 	 * 
 	 * @return The request object URIs, {@code null} if not specified.
 	 */
@@ -257,15 +254,14 @@ public class OIDCClientMetadata extends ClientMetadata {
 	
 	
 	/**
-	 * Sets the pre-registered OpenID Connect request object URIs. 
-	 * Corresponds to the {@code request_uris} client registration 
-	 * parameter.
-	 * 
-	 * @param requestObjectURIs The request object URIs, {@code null} if 
-	 *                          not specified.
+	 * Sets the pre-registered OpenID Connect request object URIs.
+	 * Corresponds to the {@code request_uris} client metadata field.
+	 *
+	 * @param requestObjectURIs The request object URIs, {@code null} if not
+	 * specified.
 	 */
 	public void setRequestObjectURIs(final Set<URL> requestObjectURIs) {
-		
+
 		this.requestObjectURIs = requestObjectURIs;
 	}
 
@@ -273,7 +269,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the OpenID 
 	 * Connect request objects sent by this client. Corresponds to the 
-	 * {@code request_object_signing_alg} client registration parameter.
+	 * {@code request_object_signing_alg} client metadata field.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
@@ -286,7 +282,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the OpenID 
 	 * Connect request objects sent by this client. Corresponds to the 
-	 * {@code request_object_signing_alg} client registration parameter.
+	 * {@code request_object_signing_alg} client metadata field.
 	 *
 	 * @param requestObjectJWSAlg The JWS algorithm, {@code null} if not 
 	 *                            specified.
@@ -300,7 +296,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the ID 
 	 * Tokens issued to this client. Corresponds to the 
-	 * {@code id_token_signed_response_alg} client registration parameter.
+	 * {@code id_token_signed_response_alg} client metadata field.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
@@ -313,7 +309,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the ID 
 	 * Tokens issued to this client. Corresponds to the 
-	 * {@code id_token_signed_response_alg} client registration parameter.
+	 * {@code id_token_signed_response_alg} client metadata field.
 	 *
 	 * @param idTokenJWSAlg The JWS algorithm, {@code null} if not 
 	 *                      specified.
@@ -327,8 +323,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the JSON Web Encryption (JWE) algorithm required for the ID 
 	 * Tokens issued to this client. Corresponds to the 
-	 * {@code id_token_encrypted_response_alg} client registration 
-	 * parameter.
+	 * {@code id_token_encrypted_response_alg} client metadata field.
 	 *
 	 * @return The JWE algorithm, {@code null} if not specified.
 	 */
@@ -341,8 +336,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the JSON Web Encryption (JWE) algorithm required for the ID 
 	 * Tokens issued to this client. Corresponds to the 
-	 * {@code id_token_encrypted_response_alg} client registration 
-	 * parameter.
+	 * {@code id_token_encrypted_response_alg} client metadata field.
 	 *
 	 * @param idTokenJWEAlg The JWE algorithm, {@code null} if not 
 	 *                      specified.
@@ -356,8 +350,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the encryption method (JWE enc) required for the ID Tokens 
 	 * issued to this client. Corresponds to the 
-	 * {@code id_token_encrypted_response_enc} client registration 
-	 * parameter.
+	 * {@code id_token_encrypted_response_enc} client metadata field.
 	 *
 	 * @return The JWE encryption method, {@code null} if not specified.
 	 */
@@ -370,8 +363,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the encryption method (JWE enc) required for the ID Tokens 
 	 * issued to this client. Corresponds to the 
-	 * {@code id_token_encrypted_response_enc} client registration 
-	 * parameter.
+	 * {@code id_token_encrypted_response_enc} client metadata field.
 	 *
 	 * @param idTokenJWEEnc The JWE encryption method, {@code null} if not 
 	 *                      specified.
@@ -385,8 +377,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for the 
 	 * UserInfo responses to this client. Corresponds to the 
-	 * {@code userinfo_signed_response_alg} client registration 
-	 * parameter.
+	 * {@code userinfo_signed_response_alg} client metadata field.
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
@@ -398,9 +389,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Sets the JSON Web Signature (JWS) algorithm required for the 
-	 * UserInfo responses to this client. Corresponds to the 
-	 * {@code userinfo_signed_response_alg} client registration 
-	 * parameter.
+	 * UserInfo responses to this client. Corresponds to the
+	 * {@code userinfo_signed_response_alg} client metadata field.
 	 *
 	 * @param userInfoJWSAlg The JWS algorithm, {@code null} if not 
 	 *                       specified.
@@ -414,8 +404,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the JSON Web Encryption (JWE) algorithm required for the 
 	 * UserInfo responses to this client. Corresponds to the 
-	 * {@code userinfo_encrypted_response_alg} client registration 
-	 * parameter.
+	 * {@code userinfo_encrypted_response_alg} client metadata field.
 	 *
 	 * @return The JWE algorithm, {@code null} if not specified.
 	 */
@@ -428,8 +417,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the JSON Web Encryption (JWE) algorithm required for the 
 	 * UserInfo responses to this client. Corresponds to the 
-	 * {@code userinfo_encrypted_response_alg} client registration 
-	 * parameter.
+	 * {@code userinfo_encrypted_response_alg} client metadata field.
 	 *
 	 * @param userInfoJWEAlg The JWE algorithm, {@code null} if not
 	 *                       specified.
@@ -443,8 +431,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the encryption method (JWE enc) required for the UserInfo 
 	 * responses to this client. Corresponds to the 
-	 * {@code userinfo_encrypted_response_enc} client registration 
-	 * parameter.
+	 * {@code userinfo_encrypted_response_enc} client metadata field.
 	 *
 	 * @return The JWE encryption method, {@code null} if not specified.
 	 */
@@ -457,8 +444,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the encryption method (JWE enc) required for the UserInfo 
 	 * responses to this client. Corresponds to the 
-	 * {@code userinfo_encrypted_response_enc} client registration 
-	 * parameter.
+	 * {@code userinfo_encrypted_response_enc} client metadata field.
 	 *
 	 * @param userInfoJWEEnc The JWE encryption method, {@code null} if not 
 	 *                       specified.
@@ -471,7 +457,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Gets the default maximum authentication age. Corresponds to the 
-	 * {@code default_max_age} client registration parameter.
+	 * {@code default_max_age} client metadata field.
 	 *
 	 * @return The default max authentication age, in seconds. If not
 	 *         specified 0.
@@ -484,7 +470,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Sets the default maximum authentication age. Corresponds to the 
-	 * {@code default_max_age} client registration parameter.
+	 * {@code default_max_age} client metadata field.
 	 *
 	 * @param defaultMaxAge The default max authentication age, in seconds.
 	 *                      If not specified 0.
@@ -498,7 +484,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the default requirement for the {@code auth_time} claim in the
 	 * ID Token. Corresponds to the {@code require_auth_time} client 
-	 * registration parameter.
+	 * metadata field.
 	 *
 	 * @return If {@code true} the {@code auth_Time} claim in the ID Token 
 	 *         is required by default.
@@ -512,7 +498,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the default requirement for the {@code auth_time} claim in the
 	 * ID Token. Corresponds to the {@code require_auth_time} client 
-	 * registration parameter.
+	 * metadata field.
 	 *
 	 * @param requiresAuthTime If {@code true} the {@code auth_Time} claim 
 	 *                         in the ID Token is required by default.
@@ -526,7 +512,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the default Authentication Context Class Reference (ACR) 
 	 * values. Corresponds to the {@code default_acr_values} client 
-	 * registration parameter.
+	 * metadata field.
 	 *
 	 * @return The default ACR values, by order of preference, 
 	 *         {@code null} if not specified.
@@ -540,7 +526,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the default Authentication Context Class Reference (ACR)
 	 * values. Corresponds to the {@code default_acr_values} client 
-	 * registration parameter.
+	 * metadata field.
 	 *
 	 * @param defaultACRs The default ACRs, by order of preference, 
 	 *                    {@code null} if not specified.
@@ -554,7 +540,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Gets the HTTPS URI that the authorisation server can call to
 	 * initiate a login at the client. Corresponds to the 
-	 * {@code initiate_login_uri} client registration parameter.
+	 * {@code initiate_login_uri} client metadata field.
 	 *
 	 * @return The login URI, {@code null} if not specified.
 	 */
@@ -567,7 +553,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sets the HTTPS URI that the authorisation server can call to
 	 * initiate a login at the client. Corresponds to the 
-	 * {@code initiate_login_uri} client registration parameter.
+	 * {@code initiate_login_uri} client metadata field.
 	 *
 	 * @param loginURI The login URI, {@code null} if not specified.
 	 */
@@ -579,7 +565,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Gets the post logout redirect URI. Corresponds to the 
-	 * {@code post_logout_redirect_uri} client registration parameter.
+	 * {@code post_logout_redirect_uri} client metadata field.
 	 *
 	 * @return The logout URI, {@code null} if not specified.
 	 */
@@ -591,7 +577,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 	/**
 	 * Sets the post logout redirect URI. Corresponds to the 
-	 * {@code post_logout_redirect_uri} client registration parameter.
+	 * {@code post_logout_redirect_uri} client metadata field.
 	 *
 	 * @param logoutURI The logout URI, {@code null} if not specified.
 	 */

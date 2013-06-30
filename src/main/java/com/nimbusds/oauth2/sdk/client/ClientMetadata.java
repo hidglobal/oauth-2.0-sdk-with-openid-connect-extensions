@@ -172,7 +172,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the redirect URIs for this client. Corresponds to the
-	 * {@code redirect_uris} client registration parameter.
+	 * {@code redirect_uris} client metadata field.
 	 *
 	 * @return The redirect URIs, {@code null} if not specified.
 	 */
@@ -184,7 +184,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Sets the redirect URIs for this client. Corresponds to the
-	 * {@code redirect_uris} client registration parameter.
+	 * {@code redirect_uris} client metadata field.
 	 *
 	 * @param redirectURIs The redirect URIs, {@code null} if not 
 	 *                     specified.
@@ -197,8 +197,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the scope values that the client can use when requesting access 
-	 * tokens. Corresponds to the {@code scope} client registration
-	 * parameter.
+	 * tokens. Corresponds to the {@code scope} client metadata field.
 	 * 
 	 * @return The scope, {@code null} if not specified.
 	 */
@@ -210,8 +209,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Sets the scope values that the client can use when requesting access 
-	 * tokens. Corresponds to the {@code scope} client registration
-	 * parameter.
+	 * tokens. Corresponds to the {@code scope} client metadata field.
 	 * 
 	 * @param scope The scope, {@code null} if not specified.
 	 */
@@ -223,7 +221,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the expected OAuth 2.0 response types. Corresponds to the
-	 * {@code response_types} client registration parameter.
+	 * {@code response_types} client metadata field.
 	 * 
 	 * @return The response types, {@code null} if not specified.
 	 */
@@ -235,7 +233,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Sets the expected OAuth 2.0 response types. Corresponds to the
-	 * {@code response_types} client registration parameter.
+	 * {@code response_types} client metadata field.
 	 * 
 	 * @param responseTypes The response types, {@code null} if not 
 	 *                      specified.
@@ -248,7 +246,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the expected OAuth 2.0 grant types. Corresponds to the
-	 * {@code grant_types} client registration parameter.
+	 * {@code grant_types} client metadata field.
 	 * 
 	 * @return The grant types, {@code null} if not specified.
 	 */
@@ -260,7 +258,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Sets the expected OAuth 2.0 grant types. Corresponds to the
-	 * {@code grant_types} client registration parameter.
+	 * {@code grant_types} client metadata field.
 	 * 
 	 * @param grantTypes The grant types, {@code null} if not specified.
 	 */
@@ -272,7 +270,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the administrator contacts for the client. Corresponds to the
-	 * {@code contacts} client registration parameter.
+	 * {@code contacts} client metadata field.
 	 *
 	 * @return The administrator contacts, {@code null} if not specified.
 	 */
@@ -284,7 +282,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the administrator contacts for the client. Corresponds to the
-	 * {@code contacts} client registration parameter.
+	 * {@code contacts} client metadata field.
 	 *
 	 * @param contacts The administrator contacts, {@code null} if not
 	 *                 specified.
@@ -295,9 +293,9 @@ public class ClientMetadata {
 	}
 	
 	
-		/**
+	/**
 	 * Gets the client name. Corresponds to the {@code client_name} client 
-	 * registration parameter, with no language tag.
+	 * metadata field, with no language tag.
 	 *
 	 * @return The client name, {@code null} if not specified.
 	 */
@@ -309,7 +307,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client name. Corresponds to the {@code client_name} client
-	 * registration parameter, with an optional language tag.
+	 * metadata field, with an optional language tag.
 	 *
 	 * @param langTag The language tag of the entry, {@code null} to get 
 	 *                the non-tagged entry.
@@ -324,7 +322,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client name entries. Corresponds to the {@code client_name}
-	 * client registration parameter.
+	 * client metadata field.
 	 *
 	 * @return The client name entries, empty map if none.
 	 */
@@ -336,7 +334,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client name. Corresponds to the {@code client_name} client
-	 * registration parameter, with no language tag.
+	 * metadata field, with no language tag.
 	 *
 	 * @param name The client name, {@code null} if not specified.
 	 */
@@ -348,7 +346,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client name. Corresponds to the {@code client_name} client
-	 * registration parameter, with an optional language tag.
+	 * metadata field, with an optional language tag.
 	 *
 	 * @param name    The client name. Must not be {@code null}.
 	 * @param langTag The language tag, {@code null} if not specified.
@@ -361,7 +359,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client application logo. Corresponds to the 
-	 * {@code logo_uri} client registration parameter, with no language 
+	 * {@code logo_uri} client metadata field, with no language 
 	 * tag.
 	 *
 	 * @return The logo URI, {@code null} if not specified.
@@ -374,7 +372,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client application logo. Corresponds to the 
-	 * {@code logo_uri} client registration parameter, with an optional
+	 * {@code logo_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The logo URI, {@code null} if not specified.
@@ -387,7 +385,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client application logo entries. Corresponds to the 
-	 * {@code logo_uri} client registration parameter.
+	 * {@code logo_uri} client metadata field.
 	 *
 	 * @return The logo URI entries, empty map if none.
 	 */
@@ -399,7 +397,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client application logo. Corresponds to the 
-	 * {@code logo_uri} client registration parameter, with no language 
+	 * {@code logo_uri} client metadata field, with no language 
 	 * tag.
 	 *
 	 * @param logoURI The logo URI, {@code null} if not specified.
@@ -412,7 +410,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client application logo. Corresponds to the 
-	 * {@code logo_uri} client registration parameter, with an optional
+	 * {@code logo_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @param logoURI The logo URI. Must not be {@code null}.
@@ -426,7 +424,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the client home page. Corresponds to the {@code client_uri} 
-	 * client registration parameter, with no language tag.
+	 * client metadata field, with no language tag.
 	 *
 	 * @return The client URI, {@code null} if not specified.
 	 */
@@ -438,7 +436,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client home page. Corresponds to the {@code client_uri} 
-	 * client registration parameter, with an optional language tag.
+	 * client metadata field, with an optional language tag.
 	 *
 	 * @return The client URI, {@code null} if not specified.
 	 */
@@ -450,7 +448,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client home page entries. Corresponds to the 
-	 * {@code client_uri} client registration parameter.
+	 * {@code client_uri} client metadata field.
 	 *
 	 * @return The client URI entries, empty map if none.
 	 */
@@ -462,7 +460,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client home page. Corresponds to the {@code client_uri} 
-	 * client registration parameter, with no language tag.
+	 * client metadata field, with no language tag.
 	 *
 	 * @param uri The client URI, {@code null} if not specified.
 	 */
@@ -474,7 +472,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client home page. Corresponds to the {@code client_uri} 
-	 * client registration parameter, with an optional language tag.
+	 * client metadata field, with an optional language tag.
 	 *
 	 * @param uri     The URI. Must not be {@code null}.
 	 * @param langTag The language tag, {@code null} if not specified.
@@ -487,7 +485,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_uri} client registration parameter, with no language 
+	 * {@code policy_uri} client metadata field, with no language 
 	 * tag.
 	 *
 	 * @return The policy URI, {@code null} if not specified.
@@ -500,7 +498,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_url} client registration parameter, with an optional
+	 * {@code policy_url} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The policy URI, {@code null} if not specified.
@@ -513,7 +511,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client policy entries for use of end-user data. 
-	 * Corresponds to the {@code policy_uri} client registration parameter.
+	 * Corresponds to the {@code policy_uri} client metadata field.
 	 *
 	 * @return The policy URI entries, empty map if none.
 	 */
@@ -525,7 +523,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_uri} client registration parameter, with no language 
+	 * {@code policy_uri} client metadata field, with no language 
 	 * tag.
 	 *
 	 * @param policyURI The policy URI, {@code null} if not specified.
@@ -538,7 +536,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_uri} client registration parameter, with an optional
+	 * {@code policy_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @param policyURI The policy URI. Must not be {@code null}.
@@ -552,7 +550,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client's terms of service. Corresponds to the 
-	 * {@code tos_uri} client registration parameter, with no language 
+	 * {@code tos_uri} client metadata field, with no language 
 	 * tag.
 	 *
 	 * @return The terms of service URI, {@code null} if not specified.
@@ -565,7 +563,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client's terms of service. Corresponds to the 
-	 * {@code tos_uri} client registration parameter, with an optional
+	 * {@code tos_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The terms of service URI, {@code null} if not specified.
@@ -578,7 +576,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client's terms of service entries. Corresponds to the 
-	 * {@code tos_uri} client registration parameter.
+	 * {@code tos_uri} client metadata field.
 	 *
 	 * @return The terms of service URI entries, empty map if none.
 	 */
@@ -590,7 +588,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client's terms of service. Corresponds to the 
-	 * {@code tos_uri} client registration parameter, with no language 
+	 * {@code tos_uri} client metadata field, with no language 
 	 * tag.
 	 *
 	 * @param tosURI The terms of service URI, {@code null} if not 
@@ -604,7 +602,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the client's terms of service. Corresponds to the 
-	 * {@code tos_uri} client registration parameter, with an optional
+	 * {@code tos_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @param tosURI  The terms of service URI. Must not be {@code null}.
@@ -618,7 +616,7 @@ public class ClientMetadata {
 	
 	/**
 	 * Gets the Token endpoint authentication method. Corresponds to the 
-	 * {@code token_endpoint_auth_method} client registration parameter.
+	 * {@code token_endpoint_auth_method} client metadata field.
 	 *
 	 * @return The Token endpoint authentication method, {@code null} if
 	 *         not specified.
@@ -631,7 +629,7 @@ public class ClientMetadata {
 
 	/**
 	 * Sets the Token endpoint authentication method. Corresponds to the 
-	 * {@code token_endpoint_auth_method} client registration parameter.
+	 * {@code token_endpoint_auth_method} client metadata field.
 	 *
 	 * @param authMethod The Token endpoint authentication  method, 
 	 *                   {@code null} if not specified.
@@ -646,7 +644,7 @@ public class ClientMetadata {
 	 * Gets the URI for this client's JSON Web Key (JWK) set containing 
 	 * key(s) that are used in signing requests to the server and key(s) 
 	 * for encrypting responses. Corresponds to the {@code jwks_uri} client 
-	 * registration parameter.
+	 * metadata field.
 	 *
 	 * @return The JWK set URI, {@code null} if not specified.
 	 */
@@ -660,7 +658,7 @@ public class ClientMetadata {
 	 * Sets the URI for this client's JSON Web Key (JWK) set containing 
 	 * key(s) that are used in signing requests to the server and key(s) 
 	 * for encrypting responses. Corresponds to the {@code jwks_uri} client 
-	 * registration parameter.
+	 * metadata field.
 	 *
 	 * @param jwkSetURI The JWK set URI, {@code null} if not specified.
 	 */
