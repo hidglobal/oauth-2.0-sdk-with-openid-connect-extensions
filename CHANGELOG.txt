@@ -43,3 +43,6 @@ version 2.6 (2013-06-25)
 
 version 2.7 (2013-06-26)
 	* Switches Identifier generation to java.security.SecureRandom.
+
+version 2.8 (2013-06-30)
+	* Fixes serialisation and assignment bugs in ClientMetadata.
