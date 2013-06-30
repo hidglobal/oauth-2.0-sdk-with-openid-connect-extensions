@@ -2,10 +2,12 @@ package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.nio.charset.Charset;
+import java.security.SecureRandom;
 import java.util.Date;
 
+import org.apache.commons.codec.binary.Base64;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -15,7 +17,19 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Vladimir Dzhuvinov
  */
-public class Secret {
+public final class Secret {
+	
+	
+	/**
+	 * The default byte length of generated secrets.
+	 */
+	public static final int DEFAULT_BYTE_LENGTH = 32;
+	
+	
+	/**
+	 * The secure random generator.
+	 */
+	private static final SecureRandom secureRandom = new SecureRandom();
 
 
 	/**
@@ -33,20 +47,10 @@ public class Secret {
 	/**
 	 * Creates a new secret with the specified value.
 	 *
-	 * @param value The value. Must not be {@code null} or empty string.
+	 * @param value The secret value. Must not be {@code null} or empty 
+	 *              string.
 	 */
 	public Secret(final String value) {
-
-		this(value, null);
-	}
-	
-	
-	/**
-	 * Creates a new secret with the specified value.
-	 *
-	 * @param value The value. Must not be {@code null} or empty array.
-	 */
-	public Secret(final byte[] value) {
 
 		this(value, null);
 	}
@@ -55,8 +59,8 @@ public class Secret {
 	/**
 	 * Creates a new secret with the specified value and expiration date.
 	 *
-	 * @param value   The value. Must be UTF-8 encoded, not {@code null} or 
-	 * *              empty string.
+	 * @param value   The secret value. Must be UTF-8 encoded, not 
+	 *                {@code null} or empty string.
 	 * @param expDate The expiration date, {@code null} if not specified.
 	 */
 	public Secret(final String value, final Date expDate) {
@@ -71,42 +75,50 @@ public class Secret {
 	
 	
 	/**
-	 * Creates a new secret with the specified value and expiration date.
+	 * Creates a new secret with a randomly generated value of the 
+	 * specified byte length, Base64URL-encoded.
 	 *
-	 * @param value   The value. Must not be {@code null} or empty string.
-	 * @param expDate The expiration date, {@code null} if not specified.
+	 * @param byteLength The byte length of the secret value to generate. 
+	 *                   Must be greater than one.
 	 */
-	public Secret(final byte[] value, final Date expDate) {
+	public Secret(final int byteLength) {
 
-		if (ArrayUtils.isEmpty(value))
-			throw new IllegalArgumentException("The value must not be null or empty array");
-
-		this.value = value;
-		
-		this.expDate = expDate;
+		this(byteLength, null);
 	}
 
 
 	/**
 	 * Creates a new secret with a randomly generated value of the 
-	 * specified length. The value will be made up of mixed-case 
-	 * alphanumeric ASCII characters.
+	 * specified byte length, Base64URL-encoded, and the specified 
+	 * expiration date.
 	 *
-	 * @param length The number of characters. Must be a positive integer.
+	 * @param byteLength The byte length of the secret value to generate. 
+	 *                   Must be greater than one.
+	 * @param expDate    The expiration date, {@code null} if not 
+	 *                   specified.
 	 */
-	public Secret(final int length) {
+	public Secret(final int byteLength, final Date expDate) {
 	
-		this(RandomStringUtils.randomAlphanumeric(length));
+		if (byteLength < 1)
+			throw new IllegalArgumentException("The byte length must be a positive integer");
+		
+		byte[] n = new byte[byteLength];
+		
+		secureRandom.nextBytes(n);
+
+		value = Base64.encodeBase64URLSafe(n);
+		
+		this.expDate = expDate;
 	}
 	
 	
 	/**
-	 * Creates a new secret with a randomly generated value. The value will
-	 * be made up of 32 mixed-case alphanumeric ASCII characters.
+	 * Creates a new secret with a randomly generated 256-bit (32-byte) 
+	 * value, Base64URL-encoded.
 	 */
 	public Secret() {
 
-		this(32);
+		this(DEFAULT_BYTE_LENGTH);
 	}
 
 

@@ -46,3 +46,4 @@ version 2.7 (2013-06-26)
 
 version 2.8 (2013-06-30)
 	* Fixes serialisation and assignment bugs in ClientMetadata.
+	* Switches Secret generation to java.security.SecureRandom.

@@ -30,11 +30,11 @@ public class SecretTest extends TestCase {
 
 	public void testErase() {
 
-		Secret secret = new Secret();
+		Secret secret = new Secret("password");
 
 		System.out.println("Secret: " + secret.getValue());
 
-		assertEquals(32, secret.getValue().length());
+		assertEquals("password".length(), secret.getValue().length());
 
 		secret.erase();
 
@@ -71,5 +71,16 @@ public class SecretTest extends TestCase {
 	public void testInequality() {
 
 		assertFalse(new Secret("password").equals(new Secret("passw0rd")));
+	}
+	
+	
+	public void testGenerate() {
+		
+		Secret secret = new Secret();
+		
+		System.out.println("Generated secret: " + secret.getValue());
+		
+		// Base64 < encoded byte length
+		assertTrue(Secret.DEFAULT_BYTE_LENGTH < secret.getValue().length());
 	}
 }
