@@ -73,6 +73,26 @@ public final class ACRRequest {
 	
 	
 	/**
+	 * Checks if this authentication Context Class Reference (ACR) request
+	 * has not essential or voluntary values specified.
+	 * 
+	 * @return {@code true} if this ACR request doesn't specify any 
+	 *         essential or voluntary values, else {@code false}.
+	 */
+	public boolean noValuesSpecified() {
+		
+		if (essentialACRs != null && ! essentialACRs.isEmpty())
+			return false;
+		
+		if (voluntaryACRs != null && ! voluntaryACRs.isEmpty())
+			return false;
+		
+		return true;
+	}
+	
+	
+	
+	/**
 	 * Resolves the requested essential and voluntary ACR values from the
 	 * specified OpenID Connect authorisation request.
 	 * 

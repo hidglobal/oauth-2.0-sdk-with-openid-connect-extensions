@@ -77,6 +77,8 @@ public class ACRRequestTest {
 		
 		assertNull(acrRequest.getEssentialACRs());
 		assertNull(acrRequest.getVoluntaryACRs());
+		
+		assertTrue(acrRequest.noValuesSpecified());
 	}
 	
 	
@@ -114,6 +116,8 @@ public class ACRRequestTest {
 		assertTrue(voluntaryACRs.contains(new ACR("2")));
 		
 		assertEquals(2, voluntaryACRs.size());
+		
+		assertFalse(acrRequest.noValuesSpecified());
 	}
 	
 	
@@ -152,6 +156,8 @@ public class ACRRequestTest {
 		assertEquals(2, acrRequest.getEssentialACRs().size());
 		
 		assertNull(acrRequest.getVoluntaryACRs());
+		
+		assertFalse(acrRequest.noValuesSpecified());
 	}
 	
 	
@@ -190,6 +196,8 @@ public class ACRRequestTest {
 		assertTrue(acrRequest.getVoluntaryACRs().contains(new ACR("A")));
 		assertTrue(acrRequest.getVoluntaryACRs().contains(new ACR("B")));
 		assertEquals(2, acrRequest.getVoluntaryACRs().size());
+		
+		assertFalse(acrRequest.noValuesSpecified());
 	}
 	
 	
@@ -232,5 +240,7 @@ public class ACRRequestTest {
 		assertTrue(acrRequest.getVoluntaryACRs().contains(new ACR("1")));
 		assertTrue(acrRequest.getVoluntaryACRs().contains(new ACR("2")));
 		assertEquals(2, acrRequest.getVoluntaryACRs().size());
+		
+		assertFalse(acrRequest.noValuesSpecified());
 	}
 }
