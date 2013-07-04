@@ -137,8 +137,8 @@ public class OIDCClientRegistrationRequestTest {
 		
 		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
 		
-		assertEquals(JWEAlgorithm.RSA1_5, metadata.getUserInfoJWEAlgorithm());
-		assertEquals(EncryptionMethod.A128CBC_HS256, metadata.getUserInfoJWEEncryptionMethod());
+		assertEquals(JWEAlgorithm.RSA1_5, metadata.getUserInfoJWEAlg());
+		assertEquals(EncryptionMethod.A128CBC_HS256, metadata.getUserInfoJWEEnc());
 		
 		List<InternetAddress> contacts = metadata.getContacts();
 		assertTrue(contacts.contains(new InternetAddress("ve7jtb@example.org")));

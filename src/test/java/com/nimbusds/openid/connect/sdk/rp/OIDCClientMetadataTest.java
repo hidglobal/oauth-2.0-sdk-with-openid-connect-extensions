@@ -74,8 +74,8 @@ public class OIDCClientMetadataTest extends TestCase {
 		
 		assertEquals(new URL("https://client.example.org/my_public_keys.jwks").toString(), clientMetadata.getJWKSetURI().toString());
 		
-		assertEquals(JWEAlgorithm.RSA1_5, clientMetadata.getUserInfoJWEAlgorithm());
-		assertEquals(EncryptionMethod.A128CBC_HS256, clientMetadata.getUserInfoJWEEncryptionMethod());
+		assertEquals(JWEAlgorithm.RSA1_5, clientMetadata.getUserInfoJWEAlg());
+		assertEquals(EncryptionMethod.A128CBC_HS256, clientMetadata.getUserInfoJWEEnc());
 		
 		List<InternetAddress> contacts = clientMetadata.getContacts();
 		

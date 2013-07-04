@@ -273,7 +273,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
-	public JWSAlgorithm getRequestObjectJWSAlgorithm() {
+	public JWSAlgorithm getRequestObjectJWSAlg() {
 
 		return requestObjectJWSAlg;
 	}
@@ -287,7 +287,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param requestObjectJWSAlg The JWS algorithm, {@code null} if not 
 	 *                            specified.
 	 */
-	public void setRequestObjectJWSAlgorithm(final JWSAlgorithm requestObjectJWSAlg) {
+	public void setRequestObjectJWSAlg(final JWSAlgorithm requestObjectJWSAlg) {
 
 		this.requestObjectJWSAlg = requestObjectJWSAlg;
 	}
@@ -300,7 +300,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
-	public JWSAlgorithm getIDTokenJWSAlgorithm() {
+	public JWSAlgorithm getIDTokenJWSAlg() {
 
 		return idTokenJWSAlg;
 	}
@@ -314,7 +314,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param idTokenJWSAlg The JWS algorithm, {@code null} if not 
 	 *                      specified.
 	 */
-	public void setIDTokenJWSAlgorithm(final JWSAlgorithm idTokenJWSAlg) {
+	public void setIDTokenJWSAlg(final JWSAlgorithm idTokenJWSAlg) {
 
 		this.idTokenJWSAlg = idTokenJWSAlg;
 	}
@@ -327,7 +327,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWE algorithm, {@code null} if not specified.
 	 */
-	public JWEAlgorithm getIDTokenJWEAlgorithm() {
+	public JWEAlgorithm getIDTokenJWEAlg() {
 
 		return idTokenJWEAlg;
 	}
@@ -341,7 +341,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param idTokenJWEAlg The JWE algorithm, {@code null} if not 
 	 *                      specified.
 	 */
-	public void setIDTokenJWEAlgorithm(final JWEAlgorithm idTokenJWEAlg) {
+	public void setIDTokenJWEAlg(final JWEAlgorithm idTokenJWEAlg) {
 
 		this.idTokenJWEAlg = idTokenJWEAlg;
 	}
@@ -354,7 +354,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWE encryption method, {@code null} if not specified.
 	 */
-	public EncryptionMethod getIDTokenJWEEncryptionMethod() {
+	public EncryptionMethod getIDTokenJWEEnc() {
 
 		return idTokenJWEEnc;
 	}
@@ -368,7 +368,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param idTokenJWEEnc The JWE encryption method, {@code null} if not 
 	 *                      specified.
 	 */
-	public void setIDTokenJWEEncryptionMethod(final EncryptionMethod idTokenJWEEnc) {
+	public void setIDTokenJWEEnc(final EncryptionMethod idTokenJWEEnc) {
 
 		this.idTokenJWEEnc = idTokenJWEEnc;
 	}
@@ -381,7 +381,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWS algorithm, {@code null} if not specified.
 	 */
-	public JWSAlgorithm getUserInfoJWSAlgorithm() {
+	public JWSAlgorithm getUserInfoJWSAlg() {
 
 		return userInfoJWSAlg;
 	}
@@ -395,7 +395,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param userInfoJWSAlg The JWS algorithm, {@code null} if not 
 	 *                       specified.
 	 */
-	public void setUserInfoJWSAlgorithm(final JWSAlgorithm userInfoJWSAlg) {
+	public void setUserInfoJWSAlg(final JWSAlgorithm userInfoJWSAlg) {
 
 		this.userInfoJWSAlg = userInfoJWSAlg;
 	}
@@ -408,7 +408,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWE algorithm, {@code null} if not specified.
 	 */
-	public JWEAlgorithm getUserInfoJWEAlgorithm() {
+	public JWEAlgorithm getUserInfoJWEAlg() {
 
 		return userInfoJWEAlg;
 	}
@@ -422,7 +422,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param userInfoJWEAlg The JWE algorithm, {@code null} if not
 	 *                       specified.
 	 */
-	public void setUserInfoJWEAlgorithm(final JWEAlgorithm userInfoJWEAlg) {
+	public void setUserInfoJWEAlg(final JWEAlgorithm userInfoJWEAlg) {
 
 		this.userInfoJWEAlg = userInfoJWEAlg;
 	}
@@ -435,7 +435,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The JWE encryption method, {@code null} if not specified.
 	 */
-	public EncryptionMethod getUserInfoJWEEncryptionMethod() {
+	public EncryptionMethod getUserInfoJWEEnc() {
 
 		return userInfoJWEEnc;
 	}
@@ -449,7 +449,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param userInfoJWEEnc The JWE encryption method, {@code null} if not 
 	 *                       specified.
 	 */
-	public void setUserInfoJWEEncryptionMethod(final EncryptionMethod userInfoJWEEnc) {
+	public void setUserInfoJWEEnc(final EncryptionMethod userInfoJWEEnc) {
 
 		this.userInfoJWEEnc = userInfoJWEEnc;
 	}
@@ -748,37 +748,37 @@ public class OIDCClientMetadata extends ClientMetadata {
 		
 		
 		if (jsonObject.containsKey("request_object_signing_alg"))
-			metadata.setRequestObjectJWSAlgorithm(new JWSAlgorithm(
+			metadata.setRequestObjectJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "request_object_signing_alg")));
 
 
 		if (jsonObject.containsKey("id_token_signed_response_alg"))
-			metadata.setIDTokenJWSAlgorithm(new JWSAlgorithm(
+			metadata.setIDTokenJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "id_token_signed_response_alg")));
 
 
 		if (jsonObject.containsKey("id_token_encrypted_response_alg"))
-			metadata.setIDTokenJWEAlgorithm(new JWEAlgorithm(
+			metadata.setIDTokenJWEAlg(new JWEAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_alg")));
 
 
 		if (jsonObject.containsKey("id_token_encrypted_response_enc"))
-			metadata.setIDTokenJWEEncryptionMethod(new EncryptionMethod(
+			metadata.setIDTokenJWEEnc(new EncryptionMethod(
 				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_enc")));
 
 
 		if (jsonObject.containsKey("userinfo_signed_response_alg"))
-			metadata.setUserInfoJWSAlgorithm(new JWSAlgorithm(
+			metadata.setUserInfoJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "userinfo_signed_response_alg")));
 
 
 		if (jsonObject.containsKey("userinfo_encrypted_response_alg"))
-			metadata.setUserInfoJWEAlgorithm(new JWEAlgorithm(
+			metadata.setUserInfoJWEAlg(new JWEAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_alg")));
 
 
 		if (jsonObject.containsKey("userinfo_encrypted_response_enc"))
-			metadata.setUserInfoJWEEncryptionMethod(new EncryptionMethod(
+			metadata.setUserInfoJWEEnc(new EncryptionMethod(
 				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_enc")));
 
 
