@@ -3,12 +3,14 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 
 /**
@@ -27,7 +29,7 @@ public class OIDCScopeValue extends Scope.Value {
 
 	/**
 	 * Informs the authorisation server that the client is making an OpenID 
-	 * Connect request (REQUIRED). This scope values requests access to the
+	 * Connect request (REQUIRED). This scope value requests access to the
 	 * {@code sub} claim. 
 	 */
 	public static final OIDCScopeValue OPENID =
@@ -108,9 +110,9 @@ public class OIDCScopeValue extends Scope.Value {
 
 
 	/**
-	 * Creates a new OpenID Connect scope token.
+	 * Creates a new OpenID Connect scope value.
 	 *
-	 * @param value       The scope token value. Must not be {@code null}.
+	 * @param value       The scope value. Must not be {@code null}.
 	 * @param requirement The requirement. Must not be {@code null}.
 	 * @param claims      The names of the associated claims, {@code null} 
 	 *                    if not applicable.
@@ -129,10 +131,10 @@ public class OIDCScopeValue extends Scope.Value {
 
 
 	/**
-	 * Creates a new OpenID Connect scope token. The requirement is set to
+	 * Creates a new OpenID Connect scope value. The requirement is set to
 	 * {@link ScopeValue.Requirement#OPTIONAL optional}.
 	 *
-	 * @param value  The scope token value. Must not be {@code null}.
+	 * @param value  The scope value. Must not be {@code null}.
 	 * @param claims The names of the associated claims. Must not be
 	 *               {@code null}.
 	 */
@@ -149,14 +151,15 @@ public class OIDCScopeValue extends Scope.Value {
 	 * @return The names of the associated claims, {@code null} if not
 	 *         applicable.
 	 */
-	public Set<String> getClaims() {
+	public Set<String> getClaimNames() {
 
 		return claims;
 	}
 	
 	
 	/**
-	 * Gets a default claims request JSON object for the scope token.
+	 * Gets the claims request JSON object for this OpenID Connect scope 
+	 * value.
 	 * 
 	 * <p>See OpenID Connect Messages 1.0, section 2.6.1.
 	 * 
@@ -177,10 +180,10 @@ public class OIDCScopeValue extends Scope.Value {
 	 * }
 	 * </pre>
 	 *
-	 * @return The default claims request JSON object, {@code null} if not
+	 * @return The claims request JSON object, {@code null} if not
 	 *         applicable.
 	 */
-	public JSONObject getClaimsRequestJSONObject() {
+	public JSONObject toClaimsRequestJSONObject() {
 
 		JSONObject req = new JSONObject();
 		
@@ -200,5 +203,28 @@ public class OIDCScopeValue extends Scope.Value {
 		}
 		
 		return req;
+	}
+	
+	
+	/**
+	 * Gets the claims request entries for this OpenID Connect scope value.
+	 * 
+	 * <p>See OpenID Connect Messages 1.0, section 2.6.1.
+	 * 
+	 * @return The claims request entries, {@code null} if not applicable 
+	 *         (for scope values {@link #OPENID} and 
+	 *         {@link #OFFLINE_ACCESS}).
+	 */
+	public Set<ClaimsRequest.Entry> toClaimsRequestEntries() {
+		
+		Set<ClaimsRequest.Entry> entries = new HashSet<ClaimsRequest.Entry>();
+		
+		if (this == OPENID || this == OFFLINE_ACCESS)
+			return Collections.unmodifiableSet(entries);
+		
+		for (String claimName: getClaimNames())
+			entries.add(new ClaimsRequest.Entry(claimName, ClaimRequirement.VOLUNTARY));
+		
+		return Collections.unmodifiableSet(entries);
 	}
 }

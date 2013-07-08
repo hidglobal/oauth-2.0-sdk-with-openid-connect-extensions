@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +18,8 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
+
+import com.nimbusds.oauth2.sdk.Scope;
 
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
@@ -92,6 +93,19 @@ public class ClaimsRequest {
 		public Entry(final String claimName, final LangTag langTag) {
 
 			this(claimName, ClaimRequirement.VOLUNTARY, langTag, (String)null, null);
+		}
+		
+		
+		/**
+		 * Creates a new individual claim request.
+		 *
+		 * @param claimName   The claim name. Must not be {@code null}.
+		 * @param requirement The claim requirement. Must not be 
+		 *                    {@code null}.
+		 */
+		public Entry(final String claimName, final ClaimRequirement requirement) {
+
+			this(claimName, requirement, null, null, null);
 		}
 
 
@@ -326,7 +340,7 @@ public class ClaimsRequest {
 				// Process the key
 				String claimNameWithOptLangTag = member.getKey();
 
-				String claimName = null;
+				String claimName;
 				LangTag langTag = null;
 
 				if (claimNameWithOptLangTag.contains("#")) {
@@ -413,7 +427,6 @@ public class ClaimsRequest {
 	 */
 	private final Map<ImmutablePair<String,LangTag>,Entry> userInfoClaims =
 		new HashMap<ImmutablePair<String,LangTag>,Entry>();	
-	
 	
 
 	/**
@@ -780,6 +793,41 @@ public class ClaimsRequest {
 	public String toString() {
 
 		return toJSONObject().toString();
+	}
+	
+	
+	
+	/**
+	 * Gets the claims request for the specified scope. The scope values
+	 * that are {@lind OIDCScopeValue standard OpenID Connect scope values}
+	 * are resolved to their respective individual claims requests, any
+	 * other scope values are ignored.
+	 * 
+	 * @param scope The scope. Must not be {@code null}.
+	 * 
+	 * @return The claims request.
+	 */
+	public static ClaimsRequest forScope(final Scope scope) {
+		
+		ClaimsRequest claimsRequest = new ClaimsRequest();
+		
+		for (Scope.Value value: scope) {
+			
+			if (value instanceof OIDCScopeValue) {
+				
+				OIDCScopeValue oidcValue = (OIDCScopeValue)value;
+				
+				Set<ClaimsRequest.Entry> entries = oidcValue.toClaimsRequestEntries();
+				
+				if (entries == null)
+					continue;
+				
+				for (ClaimsRequest.Entry en: entries)
+					claimsRequest.addUserInfoClaim(en);
+			}
+		}
+		
+		return claimsRequest;
 	}
 
 
