@@ -812,7 +812,6 @@ public class ClaimsRequest {
 	}
 	
 	
-	
 	/**
 	 * Gets the claims request for the specified scope. The scope values
 	 * that are {@link OIDCScopeValue standard OpenID Connect scope values}
