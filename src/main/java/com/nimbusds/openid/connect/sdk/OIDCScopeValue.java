@@ -10,6 +10,7 @@ import java.util.Set;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.Scope;
+
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 
@@ -76,12 +77,7 @@ public class OIDCScopeValue extends Scope.Value {
 	 * endpoint be granted by the issued access token. 
 	 */
 	public static final OIDCScopeValue ADDRESS =
-		new OIDCScopeValue("address", new String[]{"formatted",
-	                                                   "street_address",
-	                                                   "locality",
-	                                                   "region",
-	                                                   "postal_code",
-	                                                   "country"});
+		new OIDCScopeValue("address", new String[]{"address"});
 	
 	
 	/**
@@ -195,8 +191,8 @@ public class OIDCScopeValue extends Scope.Value {
 				JSONObject details = new JSONObject();
 				details.put("essential", true);
 				req.put(claim, details);
-			}
-			else {
+				
+			} else {
 				// Voluntary
 				req.put(claim, null);
 			}

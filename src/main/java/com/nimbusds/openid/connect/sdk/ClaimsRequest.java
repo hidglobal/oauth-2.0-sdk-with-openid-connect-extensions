@@ -815,7 +815,7 @@ public class ClaimsRequest {
 	
 	/**
 	 * Gets the claims request for the specified scope. The scope values
-	 * that are {@lind OIDCScopeValue standard OpenID Connect scope values}
+	 * that are {@link OIDCScopeValue standard OpenID Connect scope values}
 	 * are resolved to their respective individual claims requests, any
 	 * other scope values are ignored.
 	 * 
@@ -829,18 +829,31 @@ public class ClaimsRequest {
 		
 		for (Scope.Value value: scope) {
 			
-			if (value instanceof OIDCScopeValue) {
+			Set<ClaimsRequest.Entry> entries;
+			
+			if (value.equals(OIDCScopeValue.PROFILE)) {
 				
-				OIDCScopeValue oidcValue = (OIDCScopeValue)value;
+				entries = OIDCScopeValue.PROFILE.toClaimsRequestEntries();
 				
-				Set<ClaimsRequest.Entry> entries = oidcValue.toClaimsRequestEntries();
+			} else if (value.equals(OIDCScopeValue.EMAIL)) {
 				
-				if (entries == null)
-					continue;
+				entries = OIDCScopeValue.EMAIL.toClaimsRequestEntries();
 				
-				for (ClaimsRequest.Entry en: entries)
-					claimsRequest.addUserInfoClaim(en);
+			} else if (value.equals(OIDCScopeValue.PHONE)) {
+				
+				entries = OIDCScopeValue.PHONE.toClaimsRequestEntries();
+				
+			} else if (value.equals(OIDCScopeValue.ADDRESS)) {
+				
+				entries = OIDCScopeValue.ADDRESS.toClaimsRequestEntries();
+				
+			} else {
+				
+				continue; // skip
 			}
+			
+			for (ClaimsRequest.Entry en: entries)
+				claimsRequest.addUserInfoClaim(en);
 		}
 		
 		return claimsRequest;
