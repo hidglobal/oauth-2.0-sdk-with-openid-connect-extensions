@@ -111,9 +111,9 @@ public class Scope extends HashSet<Scope.Value> {
 		@Override
 		public boolean equals(final Object object) {
 
-			return object != null
-				&& object instanceof Value
-				&& this.toString().equals(object.toString());
+			return object != null && 
+			       object instanceof Value && 
+			       this.toString().equals(object.toString());
 		}
 	}
 
