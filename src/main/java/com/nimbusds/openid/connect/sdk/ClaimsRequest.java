@@ -436,6 +436,22 @@ public class ClaimsRequest {
 
 		// Nothing to initialise
 	}
+	
+	
+	/**
+	 * Adds the entries from the specified other claims request.
+	 * 
+	 * @param other The other claims request. If {@code null} no claims
+	 *              request entries will be added to this claims request.
+	 */
+	public void add(final ClaimsRequest other) {
+		
+		if (other == null)
+			return;
+		
+		idTokenClaims.putAll(other.idTokenClaims);
+		userInfoClaims.putAll(other.userInfoClaims);
+	}
 
 
 	/**
