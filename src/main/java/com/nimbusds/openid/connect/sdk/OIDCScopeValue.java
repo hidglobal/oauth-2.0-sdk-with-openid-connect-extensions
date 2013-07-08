@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import net.minidev.json.JSONObject;
@@ -13,6 +13,12 @@ import com.nimbusds.oauth2.sdk.Scope;
 
 /**
  * Standard OpenID Connect scope value.
+ * 
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Messages 1.0, section 2.4.
+ * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
@@ -116,8 +122,7 @@ public class OIDCScopeValue extends Scope.Value {
 		super(value, requirement);
 		
 		if (claims != null)
-			this.claims = Collections.unmodifiableSet(new HashSet<String>(Arrays.asList(claims)));
-
+			this.claims = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(claims)));
 		else
 			this.claims = null;
 	}
@@ -152,6 +157,25 @@ public class OIDCScopeValue extends Scope.Value {
 	
 	/**
 	 * Gets a default claims request JSON object for the scope token.
+	 * 
+	 * <p>See OpenID Connect Messages 1.0, section 2.6.1.
+	 * 
+	 * <p>Example JSON object for "openid" scope value:
+	 * 
+	 * <pre>
+	 * {
+	 *   "openid" : { "essential" : true }
+	 * }
+	 * </pre>
+	 * 
+	 * <p>Example JSON object for "email" scope value:
+	 * 
+	 * <pre>
+	 * {
+	 *   "email"          : null,
+	 *   "email_verified" : null
+	 * }
+	 * </pre>
 	 *
 	 * @return The default claims request JSON object, {@code null} if not
 	 *         applicable.
