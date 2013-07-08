@@ -41,17 +41,21 @@ public class Scope extends HashSet<Scope.Value> {
 	@Immutable
 	public static class Value extends Identifier {
 
+		
 		/**
 		 * Enumeration of the scope value requirements for 
 		 * application-specific authorisation requests.
 		 */
 		public static enum Requirement {
 
+			
 			/**
 			 * The value must be present in the {@link Scope}
 			 * parameter.
 			 */
 			REQUIRED,
+			
+			
 			/**
 			 * The value may be optionally included in the
 			 * {@link Scope} parameter.
@@ -64,6 +68,7 @@ public class Scope extends HashSet<Scope.Value> {
 		 * Optional requirement.
 		 */
 		private final Value.Requirement requirement;
+		
 
 		/**
 		 * Creates a new scope value. The requirement is not specified.
@@ -91,6 +96,7 @@ public class Scope extends HashSet<Scope.Value> {
 			this.requirement = requirement;
 		}
 
+		
 		/**
 		 * Gets the requirement of this scope value.
 		 *
@@ -101,6 +107,7 @@ public class Scope extends HashSet<Scope.Value> {
 			return requirement;
 		}
 
+		
 		@Override
 		public boolean equals(final Object object) {
 
@@ -152,15 +159,13 @@ public class Scope extends HashSet<Scope.Value> {
 	 */
 	public static Scope parse(final String s) {
 
-		if (s == null) {
+		if (s == null)
 			return null;
-		}
 
 		Scope scope = new Scope();
 
-		if (s.trim().isEmpty()) {
+		if (s.trim().isEmpty())
 			return scope;
-		}
 
 		StringTokenizer st = new StringTokenizer(s, " ");
 
