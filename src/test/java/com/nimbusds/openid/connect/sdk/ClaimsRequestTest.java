@@ -4,6 +4,9 @@ package com.nimbusds.openid.connect.sdk;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 import java.util.Collection;
+import java.util.Set;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import junit.framework.TestCase;
 
 
@@ -87,6 +90,33 @@ public class ClaimsRequestTest extends TestCase {
 		assertTrue(containsVoluntaryClaimsRequestEntry(userInfoClaims, "address"));
 		
 		assertEquals(19, userInfoClaims.size());
+		
+		Set<String> claimNames = cr.getIDTokenClaimNames(false);
+		assertTrue(claimNames.isEmpty());
+		
+		claimNames = cr.getUserInfoClaimNames(false);
+		
+		assertTrue(claimNames.contains("email"));
+		assertTrue(claimNames.contains("email_verified"));
+		assertTrue(claimNames.contains("name"));
+		assertTrue(claimNames.contains("given_name"));
+		assertTrue(claimNames.contains("family_name"));
+		assertTrue(claimNames.contains("middle_name"));
+		assertTrue(claimNames.contains("nickname"));
+		assertTrue(claimNames.contains("preferred_username"));
+		assertTrue(claimNames.contains("profile"));
+		assertTrue(claimNames.contains("picture"));
+		assertTrue(claimNames.contains("website"));
+		assertTrue(claimNames.contains("gender"));
+		assertTrue(claimNames.contains("birthdate"));
+		assertTrue(claimNames.contains("zoneinfo"));
+		assertTrue(claimNames.contains("locale"));
+		assertTrue(claimNames.contains("updated_at"));
+		assertTrue(claimNames.contains("phone_number"));
+		assertTrue(claimNames.contains("phone_number_verified"));
+		assertTrue(claimNames.contains("address"));
+		
+		assertEquals(19, claimNames.size());
 	}
 	
 	
@@ -148,5 +178,30 @@ public class ClaimsRequestTest extends TestCase {
 		assertTrue(containsVoluntaryClaimsRequestEntry(userInfoClaims, "updated_at"));
 		
 		assertEquals(16, userInfoClaims.size());
+		
+		
+		Set<String> claimNames = cr.getIDTokenClaimNames(false);
+		assertTrue(claimNames.isEmpty());
+		
+		claimNames = cr.getUserInfoClaimNames(false);
+		
+		assertTrue(claimNames.contains("email"));
+		assertTrue(claimNames.contains("email_verified"));
+		assertTrue(claimNames.contains("name"));
+		assertTrue(claimNames.contains("given_name"));
+		assertTrue(claimNames.contains("family_name"));
+		assertTrue(claimNames.contains("middle_name"));
+		assertTrue(claimNames.contains("nickname"));
+		assertTrue(claimNames.contains("preferred_username"));
+		assertTrue(claimNames.contains("profile"));
+		assertTrue(claimNames.contains("picture"));
+		assertTrue(claimNames.contains("website"));
+		assertTrue(claimNames.contains("gender"));
+		assertTrue(claimNames.contains("birthdate"));
+		assertTrue(claimNames.contains("zoneinfo"));
+		assertTrue(claimNames.contains("locale"));
+		assertTrue(claimNames.contains("updated_at"));
+		
+		assertEquals(16, claimNames.size());
 	}
 }

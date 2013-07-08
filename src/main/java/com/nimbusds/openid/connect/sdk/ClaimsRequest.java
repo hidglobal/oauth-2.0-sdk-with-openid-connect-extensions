@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -206,6 +207,31 @@ public class ClaimsRequest {
 
 			return claimName;
 		}
+		
+		
+		/**
+		 * Gets the claim name, optionally with the language tag
+		 * appended.
+		 * 
+		 * <p>Example with language tag:
+		 * 
+		 * <pre>
+		 * name#de-DE
+		 * </pre>
+		 * 
+		 * @param withLangTag If {@code true} the language tag will be
+		 *                    appended to the name (if any), else not.
+		 * 
+		 * @return The claim name, with optionally appended language
+		 *         tag.
+		 */
+		public String getClaimName(final boolean withLangTag) {
+			
+			if (withLangTag && langTag != null)
+				return claimName + "#" + langTag.toString();
+			else
+				return claimName;
+		}
 
 
 		/**
@@ -306,17 +332,7 @@ public class ClaimsRequest {
 					entrySpec.put("essential", true);
 				}
 
-				// Compose the key
-				if (entry.getLangTag() != null) {
-
-					// E.g. "given_name#en_UK" -> {"essential":true}
-					o.put(entry.getClaimName() + "#" + entry.getLangTag(), entrySpec);
-
-				} else {
-
-					// E.g. "given_name" -> {"essential":true}
-					o.put(entry.getClaimName(), entrySpec);
-				}
+				o.put(entry.getClaimName(true), entrySpec);
 			}
 
 			return o;
@@ -555,6 +571,27 @@ public class ClaimsRequest {
 
 		return Collections.unmodifiableCollection(idTokenClaims.values());
 	}
+	
+	
+	/**
+	 * Gets the names of the requested ID token claim names.
+	 * 
+	 * @param withLangTag If {@code true} the language tags, if any, will 
+	 *                    be appended to the names, else not.
+	 * 
+	 * 
+	 * @return The ID token claim names, as an unmodifiable set, empty set
+	 *         if none.
+	 */
+	public Set<String> getIDTokenClaimNames(final boolean withLangTag) {
+		
+		Set<String> names = new HashSet<String>();
+		
+		for (Entry en: idTokenClaims.values())
+			names.add(en.getClaimName(withLangTag));
+		
+		return Collections.unmodifiableSet(names);
+	}
 
 
 	/**
@@ -705,6 +742,27 @@ public class ClaimsRequest {
 	public Collection<Entry> getUserInfoClaims() {
 
 		return Collections.unmodifiableCollection(userInfoClaims.values());
+	}
+	
+	
+	/**
+	 * Gets the names of the requested UserInfo claim names.
+	 * 
+	 * @param withLangTag If {@code true} the language tags, if any, will 
+	 *                    be appended to the names, else not.
+	 * 
+	 * 
+	 * @return The UserInfo claim names, as an unmodifiable set, empty set
+	 *         if none.
+	 */
+	public Set<String> getUserInfoClaimNames(final boolean withLangTag) {
+		
+		Set<String> names = new HashSet<String>();
+		
+		for (Entry en: userInfoClaims.values())
+			names.add(en.getClaimName(withLangTag));
+		
+		return Collections.unmodifiableSet(names);
 	}
 
 
