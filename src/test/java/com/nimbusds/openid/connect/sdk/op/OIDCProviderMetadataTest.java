@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
-import java.util.Set;
+import java.util.List;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -102,12 +102,12 @@ public class OIDCProviderMetadataTest {
 		assertEquals("https://server.example.com/connect/authorize", op.getAuthorizationEndpointURL().toString());
 		assertEquals("https://server.example.com/connect/token", op.getTokenEndpointURL().toString());
 		
-		Set<ClientAuthenticationMethod> authMethods = op.getTokenEndpointAuthMethods();
+		List<ClientAuthenticationMethod> authMethods = op.getTokenEndpointAuthMethods();
 		assertTrue(authMethods.contains(ClientAuthenticationMethod.CLIENT_SECRET_BASIC));
 		assertTrue(authMethods.contains(ClientAuthenticationMethod.PRIVATE_KEY_JWT));
 		assertEquals(2, authMethods.size());
 		
-		Set<JWSAlgorithm> tokenEndpointJWSAlgs = op.getTokenEndpointJWSAlgs();
+		List<JWSAlgorithm> tokenEndpointJWSAlgs = op.getTokenEndpointJWSAlgs();
 		assertTrue(tokenEndpointJWSAlgs.contains(JWSAlgorithm.RS256));
 		assertTrue(tokenEndpointJWSAlgs.contains(JWSAlgorithm.ES256));
 		assertEquals(2, tokenEndpointJWSAlgs.size());
@@ -129,7 +129,7 @@ public class OIDCProviderMetadataTest {
 		assertTrue(scopes.contains(OIDCScopeValue.OFFLINE_ACCESS));
 		assertEquals(6, scopes.size());
 		
-		Set<ResponseType> rts = op.getResponseTypes();
+		List<ResponseType> rts = op.getResponseTypes();
 		// [\"code\", \"code id_token\", \"id_token\", \"token id_token\"]
 		ResponseType rt1 = new ResponseType();
 		rt1.add(ResponseType.Value.CODE);
@@ -151,67 +151,67 @@ public class OIDCProviderMetadataTest {
 		
 		assertEquals(4, rts.size());
 		
-		Set<ACR> acrValues = op.getACRs();
+		List<ACR> acrValues = op.getACRs();
 		assertTrue(acrValues.contains(new ACR("urn:mace:incommon:iap:silver")));
 		assertTrue(acrValues.contains(new ACR("urn:mace:incommon:iap:bronze")));
 		assertEquals(2, acrValues.size());
 		
-		Set<SubjectType> subjectTypes = op.getSubjectTypes();
+		List<SubjectType> subjectTypes = op.getSubjectTypes();
 		assertTrue(subjectTypes.contains(SubjectType.PUBLIC));
 		assertTrue(subjectTypes.contains(SubjectType.PAIRWISE));
 		assertEquals(2, subjectTypes.size());
 		
 		// UserInfo
-		Set<JWSAlgorithm> userInfoJWSAlgs = op.getUserInfoJWSAlgs();
+		List<JWSAlgorithm> userInfoJWSAlgs = op.getUserInfoJWSAlgs();
 		assertTrue(userInfoJWSAlgs.contains(JWSAlgorithm.RS256));
 		assertTrue(userInfoJWSAlgs.contains(JWSAlgorithm.ES256));
 		assertTrue(userInfoJWSAlgs.contains(JWSAlgorithm.HS256));
 		assertEquals(3, userInfoJWSAlgs.size());
 		
-		Set<JWEAlgorithm> userInfoJWEalgs = op.getUserInfoJWEAlgs();
+		List<JWEAlgorithm> userInfoJWEalgs = op.getUserInfoJWEAlgs();
 		assertTrue(userInfoJWEalgs.contains(JWEAlgorithm.RSA1_5));
 		assertTrue(userInfoJWEalgs.contains(JWEAlgorithm.A128KW));
 		assertEquals(2, userInfoJWEalgs.size());
 		
-		Set<EncryptionMethod> userInfoEncs = op.getUserInfoJWEEncs();
+		List<EncryptionMethod> userInfoEncs = op.getUserInfoJWEEncs();
 		assertTrue(userInfoEncs.contains(EncryptionMethod.A128CBC_HS256));
 		assertTrue(userInfoEncs.contains(EncryptionMethod.A128GCM));
 		assertEquals(2, userInfoEncs.size());
 	
 		// ID token
-		Set<JWSAlgorithm> idTokenJWSAlgs = op.getIDTokenJWSAlgs();
+		List<JWSAlgorithm> idTokenJWSAlgs = op.getIDTokenJWSAlgs();
 		assertTrue(idTokenJWSAlgs.contains(JWSAlgorithm.RS256));
 		assertTrue(idTokenJWSAlgs.contains(JWSAlgorithm.ES256));
 		assertTrue(idTokenJWSAlgs.contains(JWSAlgorithm.HS256));
 		assertEquals(3, idTokenJWSAlgs.size());
 		
-		Set<JWEAlgorithm> idTokenJWEAlgs = op.getIDTokenJWEAlgs();
+		List<JWEAlgorithm> idTokenJWEAlgs = op.getIDTokenJWEAlgs();
 		assertTrue(idTokenJWEAlgs.contains(JWEAlgorithm.RSA1_5));
 		assertTrue(idTokenJWEAlgs.contains(JWEAlgorithm.A128KW));
 		assertEquals(2, idTokenJWEAlgs.size());
 		
-		Set<EncryptionMethod> idTokenEncs = op.getIDTokenJWEEncs();
+		List<EncryptionMethod> idTokenEncs = op.getIDTokenJWEEncs();
 		assertTrue(idTokenEncs.contains(EncryptionMethod.A128CBC_HS256));
 		assertTrue(idTokenEncs.contains(EncryptionMethod.A128GCM));
 		assertEquals(2, idTokenEncs.size());
 		
 		// Request object
-		Set<JWSAlgorithm> requestObjectJWSAlgs = op.getRequestObjectJWSAlgs();
+		List<JWSAlgorithm> requestObjectJWSAlgs = op.getRequestObjectJWSAlgs();
 		assertTrue(requestObjectJWSAlgs.contains(JWSAlgorithm.NONE));
 		assertTrue(requestObjectJWSAlgs.contains(JWSAlgorithm.RS256));
 		assertTrue(requestObjectJWSAlgs.contains(JWSAlgorithm.ES256));
 		
-		Set<Display> displayTypes = op.getDisplays();
+		List<Display> displayTypes = op.getDisplays();
 		assertTrue(displayTypes.contains(Display.PAGE));
 		assertTrue(displayTypes.contains(Display.POPUP));
 		assertEquals(2, displayTypes.size());
 		
-		Set<ClaimType> claimTypes = op.getClaimTypes();
+		List<ClaimType> claimTypes = op.getClaimTypes();
 		assertTrue(claimTypes.contains(ClaimType.NORMAL));
 		assertTrue(claimTypes.contains(ClaimType.DISTRIBUTED));
 		assertEquals(2, claimTypes.size());
 		
-		Set<String> claims = op.getClaims();
+		List<String> claims = op.getClaims();
 		assertTrue(claims.contains("sub"));
 		assertTrue(claims.contains("iss"));
 		assertTrue(claims.contains("auth_time"));
@@ -234,7 +234,7 @@ public class OIDCProviderMetadataTest {
 		
 		assertEquals("http://server.example.com/connect/service_documentation.html", op.getServiceDocsURL().toString());
 		
-		Set<LangTag> uiLocales = op.getUILocales();
+		List<LangTag> uiLocales = op.getUILocales();
 		assertTrue(uiLocales.contains(LangTag.parse("en-US")));
 		assertTrue(uiLocales.contains(LangTag.parse("en-GB")));
 		assertTrue(uiLocales.contains(LangTag.parse("en-CA")));

@@ -3,10 +3,9 @@ package com.nimbusds.openid.connect.sdk.op;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 
 import net.minidev.json.JSONObject;
 
@@ -108,122 +107,122 @@ public class OIDCProviderMetadata {
 	/**
 	 * The supported response types.
 	 */
-	private Set<ResponseType> rts;
+	private List<ResponseType> rts;
 	
 	
 	/**
 	 * The supported grant types.
 	 */
-	private Set<GrantType> gts;
+	private List<GrantType> gts;
 
 
 	/**
 	 * The supported ACRs.
 	 */
-	private Set<ACR> acrValues;
+	private List<ACR> acrValues;
 
 
 	/**
 	 * The supported subject types.
 	 */
-	private final Set<SubjectType> subjectTypes;
+	private final List<SubjectType> subjectTypes;
 
 
 	/**
 	 * The supported token endpoint authentication methods.
 	 */
-	private Set<ClientAuthenticationMethod> tokenEndpointAuthMethods;
+	private List<ClientAuthenticationMethod> tokenEndpointAuthMethods;
 
 
 	/**
 	 * The supported JWS algorithms for the {@code private_key_jwt} and 
 	 * {@code client_secret_jwt} token endpoint authentication methods.
 	 */
-	private Set<JWSAlgorithm> tokenEndpointJWSAlgs;
+	private List<JWSAlgorithm> tokenEndpointJWSAlgs;
 
 
 	/**
 	 * The supported JWS algorithms for OpenID Connect request objects.
 	 */
-	private Set<JWSAlgorithm> requestObjectJWSAlgs;
+	private List<JWSAlgorithm> requestObjectJWSAlgs;
 
 
 	/**
 	 * The supported JWE algorithms for OpenID Connect request objects.
 	 */
-	private Set<JWEAlgorithm> requestObjectJWEAlgs;
+	private List<JWEAlgorithm> requestObjectJWEAlgs;
 
 
 	/**
 	 * The supported encryption methods for OpenID Connect request objects.
 	 */
-	private Set<EncryptionMethod> requestObjectJWEEncs;
+	private List<EncryptionMethod> requestObjectJWEEncs;
 
 
 	/**
 	 * The supported ID token JWS algorithms.
 	 */
-	private Set<JWSAlgorithm> idTokenJWSAlgs;
+	private List<JWSAlgorithm> idTokenJWSAlgs;
 
 
 	/**
 	 * The supported ID token JWE algorithms.
 	 */
-	private Set<JWEAlgorithm> idTokenJWEAlgs;
+	private List<JWEAlgorithm> idTokenJWEAlgs;
 
 
 	/**
 	 * The supported ID token encryption methods.
 	 */
-	private Set<EncryptionMethod> idTokenJWEEncs;
+	private List<EncryptionMethod> idTokenJWEEncs;
 
 
 	/**
 	 * The supported UserInfo JWS algorithms.
 	 */
-	private Set<JWSAlgorithm> userInfoJWSAlgs;
+	private List<JWSAlgorithm> userInfoJWSAlgs;
 
 
 	/**
 	 * The supported UserInfo JWE algorithms.
 	 */
-	private Set<JWEAlgorithm> userInfoJWEAlgs;
+	private List<JWEAlgorithm> userInfoJWEAlgs;
 
 
 	/**
 	 * The supported UserInfo encryption methods.
 	 */
-	private Set<EncryptionMethod> userInfoJWEEncs;
+	private List<EncryptionMethod> userInfoJWEEncs;
 
 
 	/**
 	 * The supported displays.
 	 */
-	private Set<Display> displays;
+	private List<Display> displays;
 	
 	
 	/**
 	 * The supported claim types.
 	 */
-	private Set<ClaimType> claimTypes;
+	private List<ClaimType> claimTypes;
 
 
 	/**
 	 * The supported claims names.
 	 */
-	private Set<String> claims;
+	private List<String> claims;
 	
 	
 	/**
 	 * The supported claims locales.
 	 */
-	private Set<LangTag> claimsLocales;
+	private List<LangTag> claimsLocales;
 	
 	
 	/**
 	 * The supported UI locales.
 	 */
-	private Set<LangTag> uiLocales;
+	private List<LangTag> uiLocales;
 
 
 	/**
@@ -280,7 +279,7 @@ public class OIDCProviderMetadata {
 	 * @param subjectTypes The supported subject types. At least one must
 	 *                     be specified. Must not be {@code null}.
 	 */
-	protected OIDCProviderMetadata(final Issuer issuer, final Set<SubjectType> subjectTypes) {
+	protected OIDCProviderMetadata(final Issuer issuer, final List<SubjectType> subjectTypes) {
 	
 		URL url = null;
 		
@@ -425,7 +424,7 @@ public class OIDCProviderMetadata {
 	 * @return The supported response type values, {@code null} if not 
 	 *         specified.
 	 */
-	public Set<ResponseType> getResponseTypes() {
+	public List<ResponseType> getResponseTypes() {
 
 		return rts;
 	}
@@ -437,7 +436,7 @@ public class OIDCProviderMetadata {
 	 * 
 	 * @return The supported grant types, {@code null} if not specified.
 	 */
-	public Set<GrantType> getGrantTypes() {
+	public List<GrantType> getGrantTypes() {
 		
 		return gts;
 	}
@@ -449,7 +448,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported ACRs, {@code null} if not specified.
 	 */
-	public Set<ACR> getACRs() {
+	public List<ACR> getACRs() {
 
 		return acrValues;
 	}
@@ -461,7 +460,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported subject types.
 	 */
-	public Set<SubjectType> getSubjectTypes() {
+	public List<SubjectType> getSubjectTypes() {
 
 		return subjectTypes;
 	}
@@ -475,7 +474,7 @@ public class OIDCProviderMetadata {
 	 * @return The supported token endpoint authentication methods, 
 	 *         {@code null} if not specified.
 	 */
-	public Set<ClientAuthenticationMethod> getTokenEndpointAuthMethods() {
+	public List<ClientAuthenticationMethod> getTokenEndpointAuthMethods() {
 
 		return tokenEndpointAuthMethods;
 	}
@@ -490,7 +489,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWS algorithms, {@code null} if not specified.
 	 */
-	public Set<JWSAlgorithm> getTokenEndpointJWSAlgs() {
+	public List<JWSAlgorithm> getTokenEndpointJWSAlgs() {
 
 		return tokenEndpointJWSAlgs;
 	}
@@ -503,7 +502,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWS algorithms, {@code null} if not specified.
 	 */
-	public Set<JWSAlgorithm> getRequestObjectJWSAlgs() {
+	public List<JWSAlgorithm> getRequestObjectJWSAlgs() {
 
 		return requestObjectJWSAlgs;
 	}
@@ -517,7 +516,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWE algorithms, {@code null} if not specified.
 	 */
-	public Set<JWEAlgorithm> getRequestObjectJWEAlgs() {
+	public List<JWEAlgorithm> getRequestObjectJWEAlgs() {
 
 		return requestObjectJWEAlgs;
 	}
@@ -532,7 +531,7 @@ public class OIDCProviderMetadata {
 	 * @return The supported encryption methods, {@code null} if not 
 	 *         specified.
 	 */
-	public Set<EncryptionMethod> getRequestObjectJWEEncs() {
+	public List<EncryptionMethod> getRequestObjectJWEEncs() {
 
 		return requestObjectJWEEncs;
 	}
@@ -544,7 +543,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWS algorithms, {@code null} if not specified.
 	 */
-	public Set<JWSAlgorithm> getIDTokenJWSAlgs() {
+	public List<JWSAlgorithm> getIDTokenJWSAlgs() {
 
 		return idTokenJWSAlgs;
 	}
@@ -556,7 +555,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWE algorithms, {@code null} if not specified.
 	 */
-	public Set<JWEAlgorithm> getIDTokenJWEAlgs() {
+	public List<JWEAlgorithm> getIDTokenJWEAlgs() {
 
 		return idTokenJWEAlgs;
 	}
@@ -569,7 +568,7 @@ public class OIDCProviderMetadata {
 	 * @return The supported encryption methods, {@code null} if not 
 	 *         specified.
 	 */
-	public Set<EncryptionMethod> getIDTokenJWEEncs() {
+	public List<EncryptionMethod> getIDTokenJWEEncs() {
 
 		return idTokenJWEEncs;
 	}
@@ -581,7 +580,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWS algorithms, {@code null} if not specified.
 	 */
-	public Set<JWSAlgorithm> getUserInfoJWSAlgs() {
+	public List<JWSAlgorithm> getUserInfoJWSAlgs() {
 
 		return idTokenJWSAlgs;
 	}
@@ -593,7 +592,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported JWE algorithms, {@code null} if not specified.
 	 */
-	public Set<JWEAlgorithm> getUserInfoJWEAlgs() {
+	public List<JWEAlgorithm> getUserInfoJWEAlgs() {
 
 		return idTokenJWEAlgs;
 	}
@@ -607,7 +606,7 @@ public class OIDCProviderMetadata {
 	 * @return The supported encryption methods, {@code null} if not 
 	 *         specified.
 	 */
-	public Set<EncryptionMethod> getUserInfoJWEEncs() {
+	public List<EncryptionMethod> getUserInfoJWEEncs() {
 
 		return idTokenJWEEncs;
 	}
@@ -619,7 +618,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported displays, {@code null} if not specified.
 	 */
-	public Set<Display> getDisplays() {
+	public List<Display> getDisplays() {
 
 		return displays;
 	}
@@ -631,7 +630,7 @@ public class OIDCProviderMetadata {
 	 * 
 	 * @return The supported claim types, {@code null} if not specified.
 	 */
-	public Set<ClaimType> getClaimTypes() {
+	public List<ClaimType> getClaimTypes() {
 		
 		return claimTypes;
 	}
@@ -643,7 +642,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The supported claims names, {@code null} if not specified.
 	 */
-	public Set<String> getClaims() {
+	public List<String> getClaims() {
 
 		return claims;
 	}
@@ -655,7 +654,7 @@ public class OIDCProviderMetadata {
 	 * 
 	 * @return The supported claims locales, {@code null} if not specified.
 	 */
-	public Set<LangTag> getClaimsLocales() {
+	public List<LangTag> getClaimsLocales() {
 		
 		return claimsLocales;
 	}
@@ -667,7 +666,7 @@ public class OIDCProviderMetadata {
 	 * 
 	 * @return The supported UI locales, {@code null} if not specified.
 	 */
-	public Set<LangTag> getUILocales() {
+	public List<LangTag> getUILocales() {
 		
 		return uiLocales;
 	}
@@ -788,7 +787,7 @@ public class OIDCProviderMetadata {
 
 		// Parse issuer and subject_types_supported first
 		
-		Set<SubjectType> subjectTypes = EnumSet.noneOf(SubjectType.class);
+		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
 		
 		for (String v: JSONObjectUtils.getStringArray(jsonObject, "subject_types_supported")) {
 			subjectTypes.add(SubjectType.parse(v));
@@ -797,7 +796,7 @@ public class OIDCProviderMetadata {
 		Issuer issuer = new Issuer(JSONObjectUtils.getURL(jsonObject, "issuer").toString());
 		
 		
-		OIDCProviderMetadata op = new OIDCProviderMetadata(issuer, Collections.unmodifiableSet(subjectTypes));
+		OIDCProviderMetadata op = new OIDCProviderMetadata(issuer, Collections.unmodifiableList(subjectTypes));
 
 		// Endpoints
 		if (jsonObject.containsKey("authorization_endpoint"))
@@ -837,7 +836,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("response_types_supported")) {
 
-			op.rts = new LinkedHashSet<ResponseType>();
+			op.rts = new ArrayList<ResponseType>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "response_types_supported")) {
 
@@ -848,7 +847,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("grant_types_supported")) {
 			
-			op.gts = new LinkedHashSet<GrantType>();
+			op.gts = new ArrayList<GrantType>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "grant_types_supported")) {
 				
@@ -859,7 +858,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("acr_values_supported")) {
 
-			op.acrValues = new LinkedHashSet<ACR>();
+			op.acrValues = new ArrayList<ACR>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "acr_values_supported")) {
 
@@ -870,7 +869,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("token_endpoint_auth_methods_supported")) {
 			
-			op.tokenEndpointAuthMethods = new LinkedHashSet<ClientAuthenticationMethod>();
+			op.tokenEndpointAuthMethods = new ArrayList<ClientAuthenticationMethod>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "token_endpoint_auth_methods_supported")) {
 				
@@ -881,7 +880,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("token_endpoint_auth_signing_alg_values_supported")) {
 			
-			op.tokenEndpointJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
+			op.tokenEndpointJWSAlgs = new ArrayList<JWSAlgorithm>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "token_endpoint_auth_signing_alg_values_supported")) {
 				
@@ -895,7 +894,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("request_object_signing_alg_values_supported")) {
 
-			op.requestObjectJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
+			op.requestObjectJWSAlgs = new ArrayList<JWSAlgorithm>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "request_object_signing_alg_values_supported")) {
 
@@ -907,7 +906,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("request_object_encryption_alg_values_supported")) {
 
-			op.requestObjectJWEAlgs = new LinkedHashSet<JWEAlgorithm>();
+			op.requestObjectJWEAlgs = new ArrayList<JWEAlgorithm>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "request_object_encryption_alg_values_supported")) {
 
@@ -919,7 +918,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("request_object_encryption_enc_values_supported")) {
 
-			op.requestObjectJWEEncs = new LinkedHashSet<EncryptionMethod>();
+			op.requestObjectJWEEncs = new ArrayList<EncryptionMethod>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "request_object_encryption_enc_values_supported")) {
 
@@ -933,7 +932,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("id_token_signing_alg_values_supported")) {
 
-			op.idTokenJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
+			op.idTokenJWSAlgs = new ArrayList<JWSAlgorithm>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "id_token_signing_alg_values_supported")) {
 
@@ -945,7 +944,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("id_token_encryption_alg_values_supported")) {
 
-			op.idTokenJWEAlgs = new LinkedHashSet<JWEAlgorithm>();
+			op.idTokenJWEAlgs = new ArrayList<JWEAlgorithm>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "id_token_encryption_alg_values_supported")) {
 
@@ -957,7 +956,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("id_token_encryption_enc_values_supported")) {
 
-			op.idTokenJWEEncs = new LinkedHashSet<EncryptionMethod>();
+			op.idTokenJWEEncs = new ArrayList<EncryptionMethod>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "id_token_encryption_enc_values_supported")) {
 
@@ -970,7 +969,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("userinfo_signing_alg_values_supported")) {
 
-			op.userInfoJWSAlgs = new LinkedHashSet<JWSAlgorithm>();
+			op.userInfoJWSAlgs = new ArrayList<JWSAlgorithm>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "userinfo_signing_alg_values_supported")) {
 
@@ -982,7 +981,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("userinfo_encryption_alg_values_supported")) {
 
-			op.userInfoJWEAlgs = new LinkedHashSet<JWEAlgorithm>();
+			op.userInfoJWEAlgs = new ArrayList<JWEAlgorithm>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "userinfo_encryption_alg_values_supported")) {
 
@@ -994,7 +993,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("userinfo_encryption_enc_values_supported")) {
 
-			op.userInfoJWEEncs = new LinkedHashSet<EncryptionMethod>();
+			op.userInfoJWEEncs = new ArrayList<EncryptionMethod>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "userinfo_encryption_enc_values_supported")) {
 
@@ -1008,7 +1007,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("display_values_supported")) {
 
-			op.displays = EnumSet.noneOf(Display.class);
+			op.displays = new ArrayList<Display>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "display_values_supported")) {
 
@@ -1019,7 +1018,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("claim_types_supported")) {
 			
-			op.claimTypes = EnumSet.noneOf(ClaimType.class);
+			op.claimTypes = new ArrayList<ClaimType>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "claim_types_supported")) {
 				
@@ -1031,7 +1030,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("claims_supported")) {
 
-			op.claims = new LinkedHashSet<String>();
+			op.claims = new ArrayList<String>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "claims_supported")) {
 
@@ -1042,7 +1041,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("claims_locales_supported")) {
 			
-			op.claimsLocales = new LinkedHashSet<LangTag>();
+			op.claimsLocales = new ArrayList<LangTag>();
 			
 			for (String v : JSONObjectUtils.getStringArray(jsonObject, "claims_locales_supported")) {
 				
@@ -1061,7 +1060,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("ui_locales_supported")) {
 			
-			op.uiLocales = new LinkedHashSet<LangTag>();
+			op.uiLocales = new ArrayList<LangTag>();
 			
 			for (String v : JSONObjectUtils.getStringArray(jsonObject, "ui_locales_supported")) {
 				
