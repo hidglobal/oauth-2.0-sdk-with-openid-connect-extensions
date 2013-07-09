@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.Collection;
+import java.util.List;
+
 import junit.framework.TestCase;
 
 
@@ -24,12 +27,28 @@ public class ScopeTest extends TestCase {
 		String out = scope.toString();
 
 		System.out.println("Scope: " + out);
+		
+		assertEquals("read write", out);
 
 		Scope scopeParsed = Scope.parse(out);
 
 		assertEquals(2, scopeParsed.size());
 
 		assertTrue(scope.equals(scopeParsed));
+	}
+	
+	
+	public void testListSerializationAndParsing() {
+		
+		Scope scope = Scope.parse("read write");
+		
+		List<String> list = scope.toList();
+		
+		assertEquals("read", list.get(0));
+		assertEquals("write", list.get(1));
+		assertEquals(2, list.size());
+		
+		assertEquals("read write", Scope.parse(list).toString());
 	}
 
 
@@ -42,9 +61,15 @@ public class ScopeTest extends TestCase {
 	}
 
 
-	public void testParseNull() {
+	public void testParseNullString() {
 
-		assertNull(Scope.parse(null));
+		assertNull(Scope.parse((String)null));
+	}
+	
+	
+	public void testParseNullCollection() {
+
+		assertNull(Scope.parse((Collection)null));
 	}
 
 

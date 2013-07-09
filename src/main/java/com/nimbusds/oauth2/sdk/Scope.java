@@ -1,13 +1,16 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import net.jcip.annotations.Immutable;
 import net.jcip.annotations.NotThreadSafe;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
+import java.util.Collection;
 
 
 /**
@@ -32,7 +35,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * @author Vladimir Dzhuvinov
  */
 @NotThreadSafe
-public class Scope extends HashSet<Scope.Value> {
+public class Scope extends LinkedHashSet<Scope.Value> {
 
 	
 	/**
@@ -124,11 +127,28 @@ public class Scope extends HashSet<Scope.Value> {
 	public Scope() {
 		// Nothing to do
 	}
+	
+	
+	/**
+	 * Returns the string list representation of this scope. The scope
+	 * values will be serialised in the order they were added.
+	 * 
+	 * @return The string list representation.
+	 */
+	public List<String> toList() {
+		
+		List<String> list = new ArrayList<String>();
+		
+		for (Scope.Value v: this)
+			list.add(v.getValue());
+		
+		return list;
+	}
 
 	
 	/**
 	 * Returns the string representation of this scope. The scope values 
-	 * may be serialised in any order.
+	 * will be serialised in the order they were added.
 	 *
 	 * @return The string representation.
 	 */
@@ -137,16 +157,38 @@ public class Scope extends HashSet<Scope.Value> {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (Scope.Value token : this) {
+		for (Scope.Value v : this) {
 
 			if (sb.length() > 0) {
 				sb.append(' ');
 			}
 
-			sb.append(token.toString());
+			sb.append(v.toString());
 		}
 
 		return sb.toString();
+	}
+	
+	
+	/**
+	 * Parses a scope from the specified string collection representation.
+	 * 
+	 * @param collection The string collection, {@code null} if not 
+	 *                   specified.
+	 * 
+	 * @return The scope, {@code null} if not specified.
+	 */
+	public static Scope parse(final Collection<String> collection) {
+		
+		if (collection == null)
+			return null;
+		
+		Scope scope = new Scope();
+		
+		for (String v: collection)
+			scope.add(new Scope.Value(v));
+		
+		return scope;
 	}
 
 	
