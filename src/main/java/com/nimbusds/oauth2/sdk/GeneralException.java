@@ -69,6 +69,26 @@ public class GeneralException extends Exception {
 	
 		this(message, error, null, null, cause);
 	}
+	
+	
+	/**
+	 * Creates a new general exception.
+	 *
+	 * @param message     The exception message. May be {@code null}.
+	 * @param error       The associated error, {@code null} if not 
+	 *                    specified.
+	 * @param redirectURI The associated redirection URI, {@code null} if
+	 *                    not specified.
+	 * @param state       The optional associated state parameter, 
+	 *                    {@code null} if not specified.
+	 */
+	public GeneralException(final String message, 
+		                final ErrorObject error,
+		                final URL redirectURI,
+		                final State state) {
+	
+		this(message, error, redirectURI, state, null);
+	}
 
 
 	/**
@@ -110,10 +130,7 @@ public class GeneralException extends Exception {
 
 
 	/**
-	 * Gets the associated redirection URI. 
-	 * 
-	 * <p>Important: Must be verified with the client registry before 
-	 * acting upon it!
+	 * Gets the associated redirection URI.
 	 *
 	 * @return The redirection URI, {@code null} if redirection is not to
 	 *         be performed for this error.

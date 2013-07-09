@@ -378,7 +378,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		// Parse mandatory response type
 		v = params.get("response_type");
 		
-		ResponseType rt = null;
+		ResponseType rt;
 		
 		try {
 			rt = ResponseType.parse(v);

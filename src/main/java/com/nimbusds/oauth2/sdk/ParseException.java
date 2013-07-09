@@ -60,7 +60,27 @@ public class ParseException extends GeneralException {
 		              final ErrorObject error,
 		              final Throwable cause) {
 	
-		super(message, error, cause);
+		this(message, error, null, null, cause);
+	}
+	
+	
+	/**
+	 * Creates a new parse exception.
+	 *
+	 * @param message     The exception message. May be {@code null}.
+	 * @param error       The associated error, {@code null} if not
+	 *                    specified.
+	 * @param redirectURI The associated redirection URI, must not be 
+	 *                    {@code null}.
+	 * @param state       The optional associated state parameter, 
+	 *                    {@code null} if not specified.
+	 */
+	public ParseException(final String message, 
+		              final ErrorObject error,
+		              final URL redirectURI,
+		              final State state) {
+
+		this(message, error, redirectURI, state, null);
 	}
 
 

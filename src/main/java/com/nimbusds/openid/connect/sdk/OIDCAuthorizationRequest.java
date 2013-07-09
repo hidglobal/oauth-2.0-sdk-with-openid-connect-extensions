@@ -835,7 +835,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 			    ! rtValue.equals(OIDCResponseTypeValue.ID_TOKEN) )
 				throw new ParseException("Unsupported \"response_type\" parameter: " + rt, 
 					                 OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
-					                 redirectURI, state, null);
+					                 redirectURI, state);
 		}
 		
 		// Required in OIDC, must include "openid" parameter
@@ -844,12 +844,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (scope == null)
 			throw new ParseException("Missing \"scope\" parameter", 
 				                 OAuth2Error.INVALID_REQUEST, 
-					         redirectURI, state, null);
+					         redirectURI, state);
 
 		if (! scope.contains(OIDCScopeValue.OPENID))
 			throw new ParseException("The scope must include an \"openid\" token",
 				                 OAuth2Error.INVALID_REQUEST, 
-					         redirectURI, state, null);
+					         redirectURI, state);
 
 		ClientID clientID = ar.getClientID();
 
@@ -859,9 +859,9 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		// Nonce required in implicit flow
 		if (rt.impliesImplicitFlow() && nonce == null)
-			throw new ParseException("Missing \"nonce\" parameter",
+			throw new ParseException("Missing \"nonce\" parameter: Required in implicit flow",
 				                 OAuth2Error.INVALID_REQUEST,
-				                 redirectURI, state, null);
+				                 redirectURI, state);
 		
 		Display display = null;
 		

@@ -16,10 +16,12 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
+import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
 
 import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
+import com.nimbusds.openid.connect.sdk.OIDCError;
 import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
 import com.nimbusds.openid.connect.sdk.util.Resource;
 import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
@@ -146,7 +148,7 @@ public class OIDCAuthorizationRequestResolver {
 	 *                          resource couldn't be retrieved, or parsed
 	 *                          to a JWT.
 	 */
-	private JWT retrieveJWT(final URL url)
+	private JWT retrieveRequestObject(final URL url)
 		throws ResolveException {
 	
 		if (jwtRetriever == null) {
@@ -154,15 +156,14 @@ public class OIDCAuthorizationRequestResolver {
 			throw new ResolveException("OpenID Connect request object cannot be resolved: No JWT retriever is configured");
 		}
 
-		Resource resource = null;
+		Resource resource;
 
 		try {
 			resource = jwtRetriever.retrieveResource(url);
 			
 		} catch (IOException e) {
 
-			throw new ResolveException("Couldn't retrieve OpenID Connect request object: " + 
-				                   e.getMessage(), e);
+			throw new ResolveException("Couldn't retrieve OpenID Connect request object: " + e.getMessage(), e);
 		}
 
 		try {
@@ -170,8 +171,7 @@ public class OIDCAuthorizationRequestResolver {
 		
 		} catch (java.text.ParseException e) {
 
-			throw new ResolveException("Couldn't parse OpenID Connect request object: " +
-				                   e.getMessage(), e);
+			throw new ResolveException("Couldn't parse OpenID Connect request object: " +  e.getMessage(), e);
 		}
 	}
 	
@@ -204,12 +204,11 @@ public class OIDCAuthorizationRequestResolver {
 				
 		} catch (JOSEException e) {
 		
-			throw new ResolveException("Couldn't decode OpenID Connect request object JWT: " + 
-				                   e.getMessage(), e);
+			throw new ResolveException("Couldn't decode OpenID Connect request object JWT: " + e.getMessage(), e);
+			
 		} catch (java.text.ParseException e) {
 
-			throw new ResolveException("Couldn't parse OpenID Connect request object JWT claims: " + 
-				                   e.getMessage(), e);
+			throw new ResolveException("Couldn't parse OpenID Connect request object JWT claims: " + e.getMessage(), e);
 		}
 	}
 
@@ -290,63 +289,76 @@ public class OIDCAuthorizationRequestResolver {
 			return request;
 		}
 
-		JWT jwt;
-
-		if (request.getRequestURI() != null) {
-
-			jwt = retrieveJWT(request.getRequestURI());
-
-		} else {
-
-			jwt = request.getRequestObject();
-		}
-
-		ReadOnlyJWTClaimsSet jwtClaims = decodeRequestObject(jwt);
-
-		Map<String,String> requestObjectParams = reformatClaims(jwtClaims);
-
-		Map<String,String> finalParams = new HashMap<String,String>();
-
 		try {
-			finalParams.putAll(request.toParameters());
+			JWT jwt;
 
-		} catch (SerializeException e) {
+			if (request.getRequestURI() != null) {
+				// Download request object
+				jwt = retrieveRequestObject(request.getRequestURI());
+			} else {
+				// Request object inlined
+				jwt = request.getRequestObject();
+			}
 
-			throw new ResolveException("Couldn't resolve final OpenID Connect authorization request: " + e.getMessage(), e);
+			ReadOnlyJWTClaimsSet jwtClaims = decodeRequestObject(jwt);
+
+			Map<String, String> requestObjectParams = reformatClaims(jwtClaims);
+
+			Map<String, String> finalParams = new HashMap<String, String>();
+			
+			try {
+				finalParams.putAll(request.toParameters());
+
+			} catch (SerializeException e) {
+
+				throw new ResolveException("Couldn't resolve final OpenID Connect authorization request: " + e.getMessage(), e);
+			}
+
+			// Merge params from request object
+			finalParams.putAll(requestObjectParams);
+
+
+			// Parse again
+			OIDCAuthorizationRequest finalAuthzRequest;
+
+			try {
+				finalAuthzRequest = OIDCAuthorizationRequest.parse(request.getURI(), finalParams);
+
+			} catch (ParseException e) {
+
+				throw new ResolveException("Couldn't create final OpenID Connect authorization request: " + e.getMessage(), e);
+			}
+			
+			return new OIDCAuthorizationRequest(
+				finalAuthzRequest.getURI(),
+				finalAuthzRequest.getResponseType(),
+				finalAuthzRequest.getScope(),
+				finalAuthzRequest.getClientID(),
+				finalAuthzRequest.getRedirectURI(),
+				finalAuthzRequest.getState(),
+				finalAuthzRequest.getNonce(),
+				finalAuthzRequest.getDisplay(),
+				finalAuthzRequest.getPrompt(),
+				finalAuthzRequest.getMaxAge(),
+				finalAuthzRequest.getUILocales(),
+				finalAuthzRequest.getClaimsLocales(),
+				finalAuthzRequest.getIDTokenHint(),
+				finalAuthzRequest.getLoginHint(),
+				finalAuthzRequest.getACRValues(),
+				finalAuthzRequest.getClaims());
+			
+		} catch (ResolveException e) {
+			
+			// Repackage exception with redirect URI, state, error object
+			
+			ErrorObject err;
+			
+			if (request.getRequestURI() != null)
+				err = OIDCError.INVALID_REQUEST_URI;
+			else
+				err = OIDCError.INVALID_REQUEST_OBJECT;
+			
+			throw new ResolveException(e.getMessage(), err, request.getRedirectURI(), request.getState(), e.getCause());
 		}
-
-		// Merge params from request object
-		finalParams.putAll(requestObjectParams);
-
-
-		// Parse again
-		OIDCAuthorizationRequest finalAuthzRequest = null;
-
-		try {
-			finalAuthzRequest = OIDCAuthorizationRequest.parse(request.getURI(), finalParams);
-
-		} catch (ParseException e) {
-
-			throw new ResolveException("Couldn't create final OpenID Connect authorization request: " + e.getMessage(), e);
-		}
-
-
-		return new OIDCAuthorizationRequest(
-			finalAuthzRequest.getURI(),
-			finalAuthzRequest.getResponseType(),
-			finalAuthzRequest.getScope(),
-			finalAuthzRequest.getClientID(),
-			finalAuthzRequest.getRedirectURI(),
-			finalAuthzRequest.getState(),
-			finalAuthzRequest.getNonce(),
-			finalAuthzRequest.getDisplay(),
-			finalAuthzRequest.getPrompt(),
-			finalAuthzRequest.getMaxAge(),
-			finalAuthzRequest.getUILocales(),
-			finalAuthzRequest.getClaimsLocales(),
-			finalAuthzRequest.getIDTokenHint(),
-			finalAuthzRequest.getLoginHint(),
-			finalAuthzRequest.getACRValues(),
-			finalAuthzRequest.getClaims());
 	}
 }
