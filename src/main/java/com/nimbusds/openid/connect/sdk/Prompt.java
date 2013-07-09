@@ -1,8 +1,11 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.StringTokenizer;
 
 import net.jcip.annotations.NotThreadSafe;
@@ -25,7 +28,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * @author Vladimir Dzhuvinov
  */
 @NotThreadSafe
-public class Prompt extends HashSet<Prompt.Type> {
+public class Prompt extends LinkedHashSet<Prompt.Type> {
 
 
 	/**
@@ -115,7 +118,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 	
 	/**
-	 * Creates a new empty prompt set.
+	 * Creates a new empty prompt.
 	 */
 	public Prompt() {
 	
@@ -124,11 +127,10 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 	
 	/**
-	 * Checks if the prompt set is valid. This is done by examining the set
+	 * Checks if the prompt is valid. This is done by examining the prompt
 	 * for a conflicting {@link Type#NONE} value.
 	 *
-	 * @return {@code true} if this prompt set if valid, else 
-	 *         {@code false}.
+	 * @return {@code true} if this prompt if valid, else {@code false}.
 	 */
 	public boolean isValid() {
 	
@@ -140,7 +142,23 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 	
 	/**
-	 * Returns the string representation of this prompt set. The values are 
+	 * Returns the string list representation of this prompt.
+	 * 
+	 * @return The string list representation.
+	 */
+	public List<String> toList() {
+		
+		List<String> list = new ArrayList<String>(this.size());
+		
+		for (Type t: this)
+			list.add(t.toString());
+		
+		return list;
+	}
+	
+	
+	/**
+	 * Returns the string representation of this prompt. The values are 
 	 * delimited by space.
 	 *
 	 * <p>Example:
@@ -149,7 +167,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 	 * login consent
 	 * </pre>
 	 *
-	 * @return The string representation of this scope.
+	 * @return The string representation.
 	 */
 	@Override
 	public String toString() {
@@ -171,16 +189,46 @@ public class Prompt extends HashSet<Prompt.Type> {
 	
 	
 	/**
-	 * Parses a prompt set from the specified string.
+	 * Parses a prompt from the specified string list.
+	 * 
+	 * @param collection The string list to parse, with one or more
+	 *                   non-conflicting prompt types. May be {@code null}.
+	 *
+	 * @return The prompt, {@code null} if the parsed string list was
+	 *         {@code null} or empty.
+	 * 
+	 * @throws ParseException If the string list couldn't be parsed to a
+	 *                        valid prompt.
+	 */
+	public static Prompt parse(final Collection<String> collection)
+		throws ParseException {
+		
+		if (collection == null)
+			return null;
+		
+		Prompt prompt = new Prompt();
+		
+		for (String s: collection)
+			prompt.add(Prompt.Type.parse(s));
+		
+		if (! prompt.isValid())
+			throw new ParseException("Invalid prompt: " + collection);
+		
+		return prompt;	
+	}
+	
+	
+	/**
+	 * Parses a prompt from the specified string.
 	 *
 	 * @param s The string to parse, with one or more non-conflicting space
 	 *          delimited prompt types. May be {@code null}.
 	 *
-	 * @return The prompt set, {@code null} if the parsed string was 
+	 * @return The prompt, {@code null} if the parsed string was 
 	 *         {@code null} or empty.
 	 *
 	 * @throws ParseException If the string couldn't be parsed to a valid
-	 *                        prompt set.
+	 *                        prompt.
 	 */
 	public static Prompt parse(final String s)
 		throws ParseException {
@@ -196,7 +244,7 @@ public class Prompt extends HashSet<Prompt.Type> {
 			prompt.add(Prompt.Type.parse(st.nextToken()));
 		
 		if (! prompt.isValid())
-			throw new ParseException("Invalid prompt set: " + s);
+			throw new ParseException("Invalid prompt: " + s);
 		
 		return prompt;
 	}
