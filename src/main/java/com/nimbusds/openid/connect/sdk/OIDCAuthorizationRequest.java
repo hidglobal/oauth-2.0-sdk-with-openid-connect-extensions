@@ -152,7 +152,8 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                    {@code null} if the {@link #toHTTPRequest()}
 	 *                    method will not be used.
 	 * @param rt          The response type. Corresponds to the 
-	 *                    {@code response_type} parameter. Must not be
+	 *                    {@code response_type} parameter. Must specify a
+	 *                    valid OpenID Connect response type. Must not be
 	 *                    {@code null}.
 	 * @param scope       The request scope. Corresponds to the
 	 *                    {@code scope} parameter. Must contain an
@@ -193,7 +194,8 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code null} if the {@link #toHTTPRequest()}
 	 *                      method will not be used.
 	 * @param rt            The response type. Corresponds to the 
-	 *                      {@code response_type} parameter. Must not be
+	 *                      {@code response_type} parameter. Must specify a
+	 *                      valid OpenID Connect response type. Must not be
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
@@ -274,7 +276,8 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code null} if the {@link #toHTTPRequest()}
 	 *                      method will not be used.
 	 * @param rt            The response type set. Corresponds to the 
-	 *                      {@code response_type} parameter. Must not be
+	 *                      {@code response_type} parameter. Must specify a
+	 *                      valid OpenID Connect response type. Must not be
 	 *                      {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
@@ -348,6 +351,8 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirect URI must not be null");
+		
+		OIDCResponseTypeValidator.validate(rt);
 
 		if (scope == null)
 			throw new IllegalArgumentException("The scope must not be null");
@@ -399,8 +404,9 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code null} if the {@link #toHTTPRequest()}
 	 *                      method will not be used.
 	 * @param rt            The response type. Corresponds to the 
-	 *                      {@code response_type} parameter. Must not be
-	 *                      {@code null}.
+	 *                      {@code response_type} parameter. Must specify a
+	 *                      a valid OpenID Connect response type. Must not 
+	 *                      be {@code null}.
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
 	 *                      {@link OIDCScopeValue#OPENID openid value}. 
@@ -474,6 +480,8 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirect URI must not be null");
 
+		OIDCResponseTypeValidator.validate(rt);
+		
 		if (scope == null)
 			throw new IllegalArgumentException("The scope must not be null");
 
@@ -827,15 +835,15 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		State state = ar.getState();
 
 		ResponseType rt = ar.getResponseType();
-
-		for (ResponseType.Value rtValue: rt) {
-
-			if (! rtValue.equals(ResponseType.Value.CODE) &&
-			    ! rtValue.equals(ResponseType.Value.TOKEN) &&
-			    ! rtValue.equals(OIDCResponseTypeValue.ID_TOKEN) )
-				throw new ParseException("Unsupported \"response_type\" parameter: " + rt, 
-					                 OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
-					                 redirectURI, state);
+		
+		try {
+			OIDCResponseTypeValidator.validate(rt);
+			
+		} catch (IllegalArgumentException e) {
+			
+			throw new ParseException("Unsupported \"response_type\" parameter: " + e.getMessage(), 
+					         OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
+					         redirectURI, state);
 		}
 		
 		// Required in OIDC, must include "openid" parameter
