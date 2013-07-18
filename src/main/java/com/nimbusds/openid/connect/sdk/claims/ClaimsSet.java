@@ -380,7 +380,7 @@ public abstract class ClaimsSet {
 	 *
 	 * @return The JSON object representation.
 	 */
-	public JSONObject getJSONObject() {
+	public JSONObject toJSONObject() {
 	
 		return claims;
 	}

@@ -825,7 +825,7 @@ public class UserInfo extends ClaimsSet {
 	public void setAddress(final Address address) {
 	
 		if (address != null)
-			setClaim("address", address.getJSONObject());
+			setClaim("address", address.toJSONObject());
 		else
 			setClaim("address", null);
 	}
@@ -844,7 +844,7 @@ public class UserInfo extends ClaimsSet {
 		String key = langTag == null ? "address" : "address#" + langTag;
 
 		if (address != null)
-			setClaim(key, address.getJSONObject());
+			setClaim(key, address.toJSONObject());
 		else
 			setClaim(key, null);
 	}

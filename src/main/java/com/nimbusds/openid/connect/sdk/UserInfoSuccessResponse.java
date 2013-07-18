@@ -152,7 +152,7 @@ public final class UserInfoSuccessResponse
 		
 		if (claimsSet != null) {
 		
-			content = claimsSet.getJSONObject().toString();
+			content = claimsSet.toJSONObject().toString();
 
 		} else {
 			
