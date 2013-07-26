@@ -3,8 +3,6 @@ package com.nimbusds.openid.connect.sdk;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
@@ -45,7 +43,7 @@ public class PromptTest extends TestCase {
 		
 		assertTrue(p.isValid());
 		
-		List<String> list = p.toList();
+		List<String> list = p.toStringList();
 		
 		assertTrue(list.contains("consent"));
 		assertTrue(list.contains("login"));
