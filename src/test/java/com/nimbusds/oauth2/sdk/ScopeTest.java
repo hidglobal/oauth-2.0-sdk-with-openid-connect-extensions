@@ -42,7 +42,7 @@ public class ScopeTest extends TestCase {
 		
 		Scope scope = Scope.parse("read write");
 		
-		List<String> list = scope.toList();
+		List<String> list = scope.toStringList();
 		
 		assertEquals("read", list.get(0));
 		assertEquals("write", list.get(1));

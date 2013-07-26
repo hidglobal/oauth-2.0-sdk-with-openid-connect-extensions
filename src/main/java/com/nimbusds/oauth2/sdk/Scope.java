@@ -135,7 +135,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 	 * 
 	 * @return The string list representation.
 	 */
-	public List<String> toList() {
+	public List<String> toStringList() {
 		
 		List<String> list = new ArrayList<String>(this.size());
 		
