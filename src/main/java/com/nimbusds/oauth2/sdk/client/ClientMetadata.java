@@ -25,6 +25,8 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.oauth2.sdk.id.SoftwareID;
+import com.nimbusds.oauth2.sdk.id.SoftwareVersion;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -130,6 +132,18 @@ public class ClientMetadata {
 	 * responses.
 	 */
 	private URL jwkSetURI;
+
+
+	/**
+	 * Identifier for the OAuth 2.0 client software.
+	 */
+	private SoftwareID softwareID;
+
+
+	/**
+	 * Version identifier for the OAuth 2.0 client software.
+	 */
+	private SoftwareVersion softwareVersion;
 	
 	
 	/** 
@@ -666,6 +680,56 @@ public class ClientMetadata {
 
 		this.jwkSetURI = jwkSetURI;
 	}
+
+
+	/**
+	 * Gets the identifier for the OAuth 2.0 client software. Corresponds
+	 * to the {@code software_id} client metadata field.
+	 *
+	 * @return The software identifier, {@code null} if not specified.
+	 */
+	public SoftwareID getSoftwareID() {
+
+		return softwareID;
+	}
+
+
+	/**
+	 * Sets the identifier for the OAuth 2.0 client software. Corresponds
+	 * to the {@code software_id} client metadata field.
+	 *
+	 * @param softwareID The software identifier, {@code null} if not
+	 *                   specified.
+	 */
+	public void setSoftwareID(final SoftwareID softwareID) {
+
+		this.softwareID = softwareID;
+	}
+
+
+	/**
+	 * Gets the version identifier for the OAuth 2.0 client software.
+	 * Corresponds to the {@code software_version} client metadata field.
+	 *
+	 * @return The version identifier, {@code null} if not specified.
+	 */
+	public SoftwareVersion getSoftwareVersion() {
+
+		return softwareVersion;
+	}
+
+
+	/**
+	 * Sets the version identifier for the OAuth 2.0 client software.
+	 * Corresponds to the {@code software_version} client metadata field.
+	 *
+	 * @param softwareVersion The version identifier, {@code null} if not
+	 *                        specified.
+	 */
+	public void setSoftwareVersion(final SoftwareVersion softwareVersion) {
+
+		this.softwareVersion = softwareVersion;
+	}
 	
 	
 	/**
@@ -851,6 +915,13 @@ public class ClientMetadata {
 		if (jwkSetURI != null)
 			o.put("jwks_uri", jwkSetURI.toString());
 
+
+		if (softwareID != null)
+			o.put("software_id", softwareID.getValue());
+
+		if (softwareVersion != null)
+			o.put("software_version", softwareVersion.getValue());
+
 		return o;
 	}
 	
@@ -1018,6 +1089,12 @@ public class ClientMetadata {
 			
 		if (jsonObject.containsKey("jwks_uri"))
 			metadata.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwks_uri"));
+
+		if (jsonObject.containsKey("software_id"))
+			metadata.setSoftwareID(new SoftwareID(JSONObjectUtils.getString(jsonObject, "software_id")));
+
+		if (jsonObject.containsKey("software_version"))
+			metadata.setSoftwareVersion(new SoftwareVersion(JSONObjectUtils.getString(jsonObject, "software_version")));
 
 		return metadata;
 	}

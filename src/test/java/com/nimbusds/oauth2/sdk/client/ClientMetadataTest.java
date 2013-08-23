@@ -9,6 +9,8 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.oauth2.sdk.id.SoftwareID;
+import com.nimbusds.oauth2.sdk.id.SoftwareVersion;
 import net.minidev.json.JSONObject;
 
 import org.junit.Test;
@@ -94,6 +96,12 @@ public class ClientMetadataTest {
 		
 		URL jwks = new URL("http://example.com/jwks.json");
 		meta.setJWKSetURL(jwks);
+
+		SoftwareID softwareID = new SoftwareID();
+		meta.setSoftwareID(softwareID);
+
+		SoftwareVersion softwareVersion = new SoftwareVersion("1.0");
+		meta.setSoftwareVersion(softwareVersion);
 		
 		// Test getters
 		assertEquals(redirectURIs, meta.getRedirectURIs());
@@ -117,6 +125,8 @@ public class ClientMetadataTest {
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
 		assertEquals(jwks, meta.getJWKSetURI());
+		assertEquals(softwareID, meta.getSoftwareID());
+		assertEquals(softwareVersion, meta.getSoftwareVersion());
 		
 		String json = meta.toJSONObject().toJSONString();
 		
@@ -149,7 +159,8 @@ public class ClientMetadataTest {
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
 		assertEquals(jwks, meta.getJWKSetURI());
-		
+		assertEquals(softwareID, meta.getSoftwareID());
+		assertEquals(softwareVersion, meta.getSoftwareVersion());
 	}
 
 	
