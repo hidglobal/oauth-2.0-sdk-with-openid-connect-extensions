@@ -103,7 +103,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertNull(resp.getAuthorizationCode());
 
 		Map<String,String> params = resp.toParameters();
-		assertEquals(TOKEN.getValue(), params.get("access_token"));
+		assertEquals(TOKEN.value(), params.get("access_token"));
 		assertEquals(STATE, new State(params.get("state")));
 		assertEquals(TOKEN.getType(), new AccessTokenType((String)params.get("token_type")));
 		assertEquals("3600", params.get("expires_in"));

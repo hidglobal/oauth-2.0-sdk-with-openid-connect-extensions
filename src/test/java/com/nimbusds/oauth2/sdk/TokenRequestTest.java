@@ -48,15 +48,15 @@ public class TokenRequestTest extends TestCase {
 	
 		assertEquals("Basic " + authBasicString, authBasic.toHTTPAuthorizationHeader());
 		
-		System.out.println("Access Token request: Client ID: " + authBasic.getClientID().getValue());
-		assertEquals("s6BhdRkqt3", authBasic.getClientID().getValue());
+		System.out.println("Access Token request: Client ID: " + authBasic.getClientID().value());
+		assertEquals("s6BhdRkqt3", authBasic.getClientID().value());
 		
 		System.out.println("Access Token request: Client secret: " + authBasic.getClientSecret());
 		
 		AccessTokenRequest atr = (AccessTokenRequest)tr;
 		
 		AuthorizationCode code = atr.getAuthorizationCode();
-		assertEquals("SplxlOBeZQQYbYS6WxSbIA", code.getValue());
+		assertEquals("SplxlOBeZQQYbYS6WxSbIA", code.value());
 		
 		assertEquals("https://client.example.com/cb", atr.getRedirectURI().toString());
 		
@@ -97,15 +97,15 @@ public class TokenRequestTest extends TestCase {
 	
 		assertEquals("Basic " + authBasicString, authBasic.toHTTPAuthorizationHeader());
 		
-		System.out.println("Access Token request: Client ID: " + authBasic.getClientID().getValue());
-		assertEquals("s6BhdRkqt3", authBasic.getClientID().getValue());
+		System.out.println("Access Token request: Client ID: " + authBasic.getClientID().value());
+		assertEquals("s6BhdRkqt3", authBasic.getClientID().value());
 		
 		System.out.println("Access Token request: Client secret: " + authBasic.getClientSecret());
 		
 		RefreshTokenRequest rtr = (RefreshTokenRequest)tr;
 		
 		RefreshToken token = rtr.getRefreshToken();
-		assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", token.getValue());
+		assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", token.value());
 		
 		httpRequest = rtr.toHTTPRequest();
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));

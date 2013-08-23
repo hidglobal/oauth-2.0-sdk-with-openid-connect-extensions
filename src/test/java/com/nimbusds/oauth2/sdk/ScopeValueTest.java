@@ -16,7 +16,7 @@ public class ScopeValueTest extends TestCase {
 
 		Scope.Value t = new Scope.Value("read");
 
-		assertEquals("read", t.getValue());
+		assertEquals("read", t.value());
 
 		assertNull(t.getRequirement());
 	}
@@ -26,7 +26,7 @@ public class ScopeValueTest extends TestCase {
 
 		Scope.Value t = new Scope.Value("write", Scope.Value.Requirement.OPTIONAL);
 
-		assertEquals("write", t.getValue());
+		assertEquals("write", t.value());
 
 		assertEquals(Scope.Value.Requirement.OPTIONAL, t.getRequirement());
 	}

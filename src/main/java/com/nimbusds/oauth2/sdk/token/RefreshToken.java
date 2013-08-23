@@ -66,7 +66,7 @@ public final class RefreshToken
 
 		JSONObject o = new JSONObject();
 
-		o.put("refresh_token", getValue());
+		o.put("refresh_token", value());
 		
 		return o;
 	}
@@ -108,6 +108,6 @@ public final class RefreshToken
 	@Override
 	public int compareTo(RefreshToken other) {
 
-		return getValue().compareTo(other.getValue());
+		return value().compareTo(other.value());
 	}
 }

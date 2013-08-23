@@ -140,7 +140,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		List<String> list = new ArrayList<String>(this.size());
 		
 		for (Scope.Value v: this)
-			list.add(v.getValue());
+			list.add(v.value());
 		
 		return list;
 	}

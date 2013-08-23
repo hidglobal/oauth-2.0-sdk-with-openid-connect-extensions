@@ -87,11 +87,11 @@ public abstract class Identifier implements JSONAware {
 
 
 	/**
-	 * Gets the value of this identifier.
+	 * Returns the value of this identifier.
 	 *
 	 * @return The value.
 	 */
-	public String getValue() {
+	public String value() {
 
 		return value;
 	}
@@ -113,12 +113,12 @@ public abstract class Identifier implements JSONAware {
 	
 	
 	/**
-	 * @see #getValue
+	 * @see #value
 	 */
 	@Override
 	public String toString() {
 	
-		return getValue();
+		return value();
 	}
 
 

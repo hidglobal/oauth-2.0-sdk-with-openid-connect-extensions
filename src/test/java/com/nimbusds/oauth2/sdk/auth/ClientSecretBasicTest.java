@@ -56,7 +56,7 @@ public class ClientSecretBasicTest extends TestCase {
 
 		ClientSecretBasic csb = ClientSecretBasic.parse(header);
 
-		assertEquals("s6BhdRkqt3", csb.getClientID().getValue());
+		assertEquals("s6BhdRkqt3", csb.getClientID().value());
 		assertEquals("7Fjfp0ZBr1KtDRbnfVdmIw", csb.getClientSecret().getValue());
 	}
 }

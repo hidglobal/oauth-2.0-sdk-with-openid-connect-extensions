@@ -163,7 +163,7 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
 		
 		JSONObject jsonObject = metadata.toJSONObject();
 		
-		jsonObject.put("client_id", id.getValue());
+		jsonObject.put("client_id", id.value());
 		
 		if (secret != null)
 			jsonObject.put("client_secret", secret.getValue());

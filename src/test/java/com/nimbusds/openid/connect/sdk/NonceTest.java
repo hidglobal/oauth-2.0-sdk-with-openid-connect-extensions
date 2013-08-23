@@ -22,7 +22,7 @@ public class NonceTest extends TestCase {
 
 		System.out.println("Generated nonce: " + nonce);
 
-		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, Base64.decodeBase64(nonce.getValue()).length);
+		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, Base64.decodeBase64(nonce.value()).length);
 	}
 
 
@@ -31,7 +31,7 @@ public class NonceTest extends TestCase {
 		Nonce nonce =  new Nonce(1);
 
 		System.out.println("Generated nonce: " + nonce);
-		assertEquals(1, Base64.decodeBase64(nonce.getValue()).length);
+		assertEquals(1, Base64.decodeBase64(nonce.value()).length);
 
 	}
 

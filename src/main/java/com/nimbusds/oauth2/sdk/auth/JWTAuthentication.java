@@ -177,7 +177,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 		params.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
 		
 		if (clientID != null)
-			params.put("client_id", clientID.getValue());
+			params.put("client_id", clientID.value());
 		
 		return params;
 	}

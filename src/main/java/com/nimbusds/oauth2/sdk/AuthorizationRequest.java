@@ -229,7 +229,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		Map <String,String> params = new LinkedHashMap<String,String>();
 		
 		params.put("response_type", rt.toString());
-		params.put("client_id", clientID.getValue());
+		params.put("client_id", clientID.value());
 
 		if (redirectURI != null)
 			params.put("redirect_uri", redirectURI.toString());
@@ -238,7 +238,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			params.put("scope", scope.toString());
 		
 		if (state != null)
-			params.put("state", state.getValue());
+			params.put("state", state.value());
 
 		return params;
 	}

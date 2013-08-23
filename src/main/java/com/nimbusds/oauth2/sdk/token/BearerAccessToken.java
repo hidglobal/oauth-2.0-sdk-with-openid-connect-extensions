@@ -141,7 +141,7 @@ public final class BearerAccessToken extends AccessToken {
 	@Override
 	public String toAuthorizationHeader(){
 	
-		return "Bearer " + getValue();
+		return "Bearer " + value();
 	}
 	
 	

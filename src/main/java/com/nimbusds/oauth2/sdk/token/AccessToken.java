@@ -192,7 +192,7 @@ public abstract class AccessToken
 
 		JSONObject o = new JSONObject();
 
-		o.put("access_token", getValue());
+		o.put("access_token", value());
 		o.put("token_type", type.toString());
 		
 		if (getLifetime() > 0)
@@ -224,7 +224,7 @@ public abstract class AccessToken
 	@Override
 	public int compareTo(AccessToken other) {
 
-		return getValue().compareTo(other.getValue());
+		return value().compareTo(other.value());
 	}
 
 

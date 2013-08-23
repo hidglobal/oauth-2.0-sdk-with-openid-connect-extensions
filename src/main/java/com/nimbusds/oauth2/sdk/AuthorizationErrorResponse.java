@@ -159,7 +159,7 @@ public class AuthorizationErrorResponse
 			params.put("error_uri", error.getURI().toString());
 
 		if (getState() != null)
-			params.put("state", getState().getValue());
+			params.put("state", getState().value());
 
 		return params;
 	}

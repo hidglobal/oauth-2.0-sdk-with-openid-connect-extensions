@@ -169,7 +169,7 @@ public class AuthorizationSuccessResponse
 		Map<String,String> params = new HashMap<String,String>();
 
 		if (code != null)
-			params.put("code", code.getValue());
+			params.put("code", code.value());
 
 		if (accessToken != null) {
 			
@@ -180,7 +180,7 @@ public class AuthorizationSuccessResponse
 		}
 			
 		if (getState() != null)
-			params.put("state", getState().getValue());
+			params.put("state", getState().value());
 
 		return params;
 	}
