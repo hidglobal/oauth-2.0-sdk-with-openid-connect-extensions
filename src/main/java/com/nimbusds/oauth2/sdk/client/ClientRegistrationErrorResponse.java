@@ -58,7 +58,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 5.2.
+ *         (draft-ietf-oauth-dyn-reg-14), section 5.2.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  *
@@ -141,7 +141,7 @@ public class ClientRegistrationErrorResponse
 	@Override
 	public HTTPResponse toHTTPResponse() {
 
-		HTTPResponse httpResponse = null;
+		HTTPResponse httpResponse;
 
 		if (error.getHTTPStatusCode() > 0)
 			httpResponse = new HTTPResponse(error.getHTTPStatusCode());
@@ -194,7 +194,7 @@ public class ClientRegistrationErrorResponse
 		
 		httpResponse.ensureStatusCodeNotOK();
 
-		ErrorObject error = null;
+		ErrorObject error;
 
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		

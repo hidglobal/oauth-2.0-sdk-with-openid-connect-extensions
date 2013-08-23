@@ -47,7 +47,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 4.3.
+ *         (draft-ietf-oauth-dyn-reg-14), section 4.3.
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
@@ -70,10 +70,10 @@ public final class OIDCClientUpdateRequest extends ClientUpdateRequest {
 	 *                    specified.
 	 */
 	public OIDCClientUpdateRequest(final URL uri,
-		                   final ClientID id,
-		                   final BearerAccessToken accessToken,
-				   final OIDCClientMetadata metadata, 
-				   final Secret secret) {
+		                       final ClientID id,
+		                       final BearerAccessToken accessToken,
+				       final OIDCClientMetadata metadata,
+				       final Secret secret) {
 		
 		super(uri, id, accessToken, metadata, secret);
 	}

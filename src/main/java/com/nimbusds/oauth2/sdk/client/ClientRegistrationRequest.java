@@ -45,7 +45,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 3.1.
+ *         (draft-ietf-oauth-dyn-reg-14), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -136,7 +136,7 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 
 		ClientMetadata metadata = ClientMetadata.parse(jsonObject);
 
-		// Parse the optinal bearer access token
+		// Parse the optional bearer access token
 		BearerAccessToken accessToken = null;
 		
 		String authzHeaderValue = httpRequest.getAuthorization();

@@ -32,7 +32,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 2, 3.2 and 5.1.
+ *         (draft-ietf-oauth-dyn-reg-14), section 2, 3.2 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov

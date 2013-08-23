@@ -50,7 +50,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.1.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 3.1.
+ *         (draft-ietf-oauth-dyn-reg-14), section 3.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -111,7 +111,7 @@ public final class OIDCClientRegistrationRequest extends ClientRegistrationReque
 
 		OIDCClientMetadata metadata = OIDCClientMetadata.parse(jsonObject);
 
-		// Parse the optinal bearer access token
+		// Parse the optional bearer access token
 		BearerAccessToken accessToken = null;
 		
 		String authzHeaderValue = httpRequest.getAuthorization();
