@@ -18,7 +18,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagUtil;
+import com.nimbusds.langtag.LangTagUtils;
 
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -50,7 +50,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-12), section 2.
+ *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
  * 
  * @author Vladimir Dzhuvinov
@@ -941,7 +941,7 @@ public class ClientMetadata {
 		}
 
 		// Find lang-tagged client_name params
-		Map<LangTag,Object> matches = LangTagUtil.find("client_name", jsonObject);
+		Map<LangTag,Object> matches = LangTagUtils.find("client_name", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
@@ -955,7 +955,7 @@ public class ClientMetadata {
 		}
 
 
-		matches = LangTagUtil.find("logo_uri", jsonObject);
+		matches = LangTagUtils.find("logo_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
@@ -969,7 +969,7 @@ public class ClientMetadata {
 		}
 		
 		
-		matches = LangTagUtil.find("client_uri", jsonObject);
+		matches = LangTagUtils.find("client_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
@@ -983,7 +983,7 @@ public class ClientMetadata {
 		}
 		
 		
-		matches = LangTagUtil.find("policy_uri", jsonObject);
+		matches = LangTagUtils.find("policy_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
@@ -997,7 +997,7 @@ public class ClientMetadata {
 		}
 		
 		
-		matches = LangTagUtil.find("tos_uri", jsonObject);
+		matches = LangTagUtils.find("tos_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 

@@ -85,7 +85,7 @@
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>lang-tag</artifactId>
-			<version>1.1.1</version>
+			<version>1.1.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nimbusds</groupId>

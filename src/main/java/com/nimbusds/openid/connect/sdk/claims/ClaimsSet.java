@@ -13,7 +13,7 @@ import javax.mail.internet.InternetAddress;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagUtil;
+import com.nimbusds.langtag.LangTagUtils;
 
 
 /**
@@ -124,7 +124,7 @@ public abstract class ClaimsSet {
 	@SuppressWarnings("unchecked")
 	public <T> Map<LangTag,T> getLangTaggedClaim(final String name, final Class<T> clazz) {
 
-		Map<LangTag,Object> matches = LangTagUtil.find(name, claims);
+		Map<LangTag,Object> matches = LangTagUtils.find(name, claims);
 
 		Map<LangTag,T> out = new HashMap<LangTag,T>();
 
