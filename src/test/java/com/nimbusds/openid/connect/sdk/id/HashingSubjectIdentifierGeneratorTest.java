@@ -31,6 +31,6 @@ public class HashingSubjectIdentifierGeneratorTest extends TestCase {
 
 		System.out.println("Pairwise subject: " + pairWiseSubject);
 
-		assertEquals("Consistency check", pairWiseSubject.toString(), gen.generate(sectorID, localSubject));
+		assertEquals("Consistency check", pairWiseSubject.toString(), gen.generate(sectorID, localSubject).toString());
 	}
 }

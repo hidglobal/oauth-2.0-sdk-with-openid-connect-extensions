@@ -27,7 +27,7 @@ import com.nimbusds.oauth2.sdk.id.Subject;
  *
  * @author Vladimir Dzhuvinov
  */
-public final class HashingSubjectIdentifierGenerator implements PairwiseSubjectIdentifierGenerator {
+public final class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifierGenerator {
 
 
 	/**
