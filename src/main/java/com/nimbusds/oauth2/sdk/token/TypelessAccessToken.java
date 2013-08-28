@@ -3,10 +3,12 @@ package com.nimbusds.oauth2.sdk.token;
 
 import net.minidev.json.JSONObject;
 
+import net.jcip.annotations.Immutable;
+
 
 /**
  * Typeless access token, cannot be serialised. Intended to represent parsed
- * access tokens which type cannot be inferred.
+ * access tokens which type cannot be inferred. This class is immutable.
  *
  * <p>Related specifications:
  *
@@ -16,6 +18,7 @@ import net.minidev.json.JSONObject;
  *
  * @author Vladimir Dzhuvinov
  */
+@Immutable
 public class TypelessAccessToken extends AccessToken {
 
 	

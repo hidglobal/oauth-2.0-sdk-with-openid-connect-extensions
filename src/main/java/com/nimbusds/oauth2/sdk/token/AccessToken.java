@@ -8,7 +8,8 @@ import com.nimbusds.oauth2.sdk.Scope;
 
 
 /**
- * The base abstract class for access tokens.
+ * The base abstract class for access tokens. Concrete extending classes should
+ * be immutable.
  *
  * <p>Related specifications:
  *
@@ -155,33 +156,33 @@ public abstract class AccessToken
 
 
 	/**
-	 * Gets the access token type.
+	 * Returns the access token type.
 	 *
 	 * @return The access token type.
 	 */
-	public AccessTokenType getType() {
+	public AccessTokenType type() {
 
 		return type;
 	}
 
 	
 	/**
-	 * Gets the lifetime of this access token.
+	 * Returns the lifetime of this access token.
 	 *
 	 * @return The lifetime in seconds, 0 if not specified.
 	 */
-	public long getLifetime() {
+	public long lifetime() {
 	
 		return lifetime;
 	}
 	
 	
 	/**
-	 * Gets the scope of this access token.
+	 * Returns the scope of this access token.
 	 *
 	 * @return The scope, {@code null} if not specified.
 	 */
-	public Scope getScope() {
+	public Scope scope() {
 	
 		return scope;
 	}
@@ -195,10 +196,10 @@ public abstract class AccessToken
 		o.put("access_token", value());
 		o.put("token_type", type.toString());
 		
-		if (getLifetime() > 0)
+		if (lifetime() > 0)
 			o.put("expires_in", lifetime);
 
-		if (getScope() != null)
+		if (scope() != null)
 			o.put("scope", scope.toString());
 		
 		return o;

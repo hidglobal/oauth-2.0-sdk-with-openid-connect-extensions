@@ -98,14 +98,14 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		assertEquals(ABS_REDIRECT_URL, resp.getRedirectURI());
 		assertEquals(TOKEN, resp.getAccessToken());
-		assertEquals(3600, resp.getAccessToken().getLifetime());
+		assertEquals(3600, resp.getAccessToken().lifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
 
 		Map<String,String> params = resp.toParameters();
 		assertEquals(TOKEN.value(), params.get("access_token"));
 		assertEquals(STATE, new State(params.get("state")));
-		assertEquals(TOKEN.getType(), new AccessTokenType((String)params.get("token_type")));
+		assertEquals(TOKEN.type(), new AccessTokenType((String)params.get("token_type")));
 		assertEquals("3600", params.get("expires_in"));
 		assertEquals(4, params.size());
 
@@ -121,7 +121,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		assertEquals(ABS_REDIRECT_URL, resp.getRedirectURI());
 		assertEquals(TOKEN, resp.getAccessToken());
-		assertEquals(3600, resp.getAccessToken().getLifetime());
+		assertEquals(3600, resp.getAccessToken().lifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
 	}

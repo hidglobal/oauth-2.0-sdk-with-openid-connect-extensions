@@ -7,7 +7,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * The base abstract class for access and refresh tokens.
+ * The base abstract class for access and refresh tokens. Concrete extending
+ * classes should be immutable.
  * 
  * <p>Related specifications:
  *

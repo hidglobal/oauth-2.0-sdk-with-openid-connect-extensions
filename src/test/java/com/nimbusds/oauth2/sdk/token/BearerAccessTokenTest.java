@@ -23,8 +23,8 @@ public class BearerAccessTokenTest extends TestCase {
 		AccessToken token = new BearerAccessToken("abc");
 		
 		assertEquals("abc", token.value());
-		assertEquals(0l, token.getLifetime());
-		assertNull(token.getScope());
+		assertEquals(0l, token.lifetime());
+		assertNull(token.scope());
 		
 		assertEquals("Bearer abc", token.toAuthorizationHeader());
 
@@ -43,8 +43,8 @@ public class BearerAccessTokenTest extends TestCase {
 		}
 
 		assertEquals("abc", token.value());
-		assertEquals(0l, token.getLifetime());
-		assertNull(token.getScope());
+		assertEquals(0l, token.lifetime());
+		assertNull(token.scope());
 	}
 
 
@@ -55,8 +55,8 @@ public class BearerAccessTokenTest extends TestCase {
 		assertNotNull(token);
 
 		assertEquals(12, Base64.decodeBase64(token.value()).length);
-		assertEquals(0l, token.getLifetime());
-		assertNull(token.getScope());
+		assertEquals(0l, token.lifetime());
+		assertNull(token.scope());
 
 		System.out.println(token.toAuthorizationHeader());
 	}
@@ -69,8 +69,8 @@ public class BearerAccessTokenTest extends TestCase {
 		assertNotNull(token);
 
 		assertEquals(32, Base64.decodeBase64(token.value()).length);
-		assertEquals(0l, token.getLifetime());
-		assertNull(token.getScope());
+		assertEquals(0l, token.lifetime());
+		assertNull(token.scope());
 
 		System.out.println(token.toAuthorizationHeader());
 	}
@@ -83,8 +83,8 @@ public class BearerAccessTokenTest extends TestCase {
 		AccessToken token = new BearerAccessToken("abc", 1500, scope);
 		
 		assertEquals("abc", token.value());
-		assertEquals(1500l, token.getLifetime());
-		assertTrue(token.getScope().containsAll(Scope.parse("read write")));
+		assertEquals(1500l, token.lifetime());
+		assertTrue(token.scope().containsAll(Scope.parse("read write")));
 		
 		assertEquals("Bearer abc", token.toAuthorizationHeader());
 
@@ -127,8 +127,8 @@ public class BearerAccessTokenTest extends TestCase {
 		}
 		
 		assertEquals("abc", token.value());
-		assertEquals(0l, token.getLifetime());
-		assertNull(token.getScope());
+		assertEquals(0l, token.lifetime());
+		assertNull(token.scope());
 	}
 	
 	

@@ -3,12 +3,15 @@ package com.nimbusds.oauth2.sdk.token;
 
 import net.minidev.json.JSONObject;
 
+import net.jcip.annotations.Immutable;
+
 
 /**
  * Access and refresh token pair. This class is immutable.
  *
  * @author Vladimir Dzhuvinov
  */
+@Immutable
 public final class TokenPair {
 
 
@@ -42,22 +45,22 @@ public final class TokenPair {
 	
 
 	/**
-	 * Gets the access token.
+	 * Returns the access token.
 	 *
 	 * @return The access token.
 	 */
-	public AccessToken getAccessToken() {
+	public AccessToken accessToken() {
 
 		return accessToken;
 	}
 
 
 	/**
-	 * Gets the refresh token.
+	 * Returns the refresh token.
 	 *
-	 * @return The refresh token. If none {@code null}.
+	 * @return The refresh token, {@code null} if none.
 	 */
-	public RefreshToken getRefreshToken() {
+	public RefreshToken refreshToken() {
 
 		return refreshToken;
 	}

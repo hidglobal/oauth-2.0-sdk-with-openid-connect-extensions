@@ -84,7 +84,7 @@ public class AccessTokenResponse
 	 */
 	public AccessTokenResponse(final TokenPair tokenPair) {
 				   
-		this(tokenPair.getAccessToken(), tokenPair.getRefreshToken());
+		this(tokenPair.accessToken(), tokenPair.refreshToken());
 	}
 	
 	
