@@ -373,7 +373,7 @@ public final class AccessTokenRequest extends TokenRequest {
 		if (getClientAuthentication() != null)
 			getClientAuthentication().applyTo(httpRequest);
 		
-		return httpRequest;	
+		return httpRequest;
 	}
 	
 	
@@ -403,7 +403,7 @@ public final class AccessTokenRequest extends TokenRequest {
 		String grantTypeString = params.get("grant_type");
 		
 		if (grantTypeString == null)
-			throw new ParseException("Missing \"grant_type\" parameter");
+			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
 
 		GrantType grantType = new GrantType(grantTypeString);
 			
@@ -413,7 +413,7 @@ public final class AccessTokenRequest extends TokenRequest {
 			String codeString = params.get("code");
 		
 			if (codeString == null)
-				throw new ParseException("Missing \"code\" parameter");
+				throw new ParseException("Missing \"code\" parameter", OAuth2Error.INVALID_REQUEST);
 		
 			AuthorizationCode code = new AuthorizationCode(codeString);
 		
@@ -430,7 +430,7 @@ public final class AccessTokenRequest extends TokenRequest {
 					
 				} catch (MalformedURLException e) {
 				
-					throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), e);
+					throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
 				}
 			}
 
@@ -454,7 +454,7 @@ public final class AccessTokenRequest extends TokenRequest {
 			} else {
 
 				if (clientID == null)
-					throw new ParseException("Missing \"client_id\" parameter");
+					throw new ParseException("Missing \"client_id\" parameter", OAuth2Error.INVALID_REQUEST);
 
 				// Access token request with no client authentication
 				return new AccessTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), code, redirectURI, clientID);
@@ -465,12 +465,12 @@ public final class AccessTokenRequest extends TokenRequest {
 			String username = params.get("username");
 
 			if (username == null)
-				throw new ParseException("Missing \"username\" parameter");
+				throw new ParseException("Missing \"username\" parameter", OAuth2Error.INVALID_REQUEST);
 
 			String password = params.get("password");
 
 			if (password == null)
-				throw new ParseException("Missing \"password\" parameter");
+				throw new ParseException("Missing \"password\" parameter", OAuth2Error.INVALID_REQUEST);
 
 			Scope scope = Scope.parse(params.get("scope"));
 
@@ -482,14 +482,15 @@ public final class AccessTokenRequest extends TokenRequest {
 
 			ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
 
+			// TODO INVALID_CLIENT or INVALID_REQUEST?
 			if (clientAuth == null)
-				throw new ParseException("Missing client authentication");
+				throw new ParseException("Missing client authentication", OAuth2Error.INVALID_CLIENT);
 
 			return new AccessTokenRequest(URLUtils.getBaseURL(httpRequest.getURL()), scope, clientAuth);
 				
 		} else {
 			
-			throw new ParseException("Unsupported grant type: " + grantType);
+			throw new ParseException("Unsupported grant type: " + grantType, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 		}
 	}
 }
