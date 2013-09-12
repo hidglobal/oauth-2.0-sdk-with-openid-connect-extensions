@@ -95,7 +95,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public UserInfo(final Subject sub) {
 	
-		setClaim("sub", sub.value());
+		setClaim("sub", sub.getValue());
 	}
 
 
@@ -630,7 +630,7 @@ public class UserInfo extends ClaimsSet {
 	public void setGender(final Gender gender) {
 	
 		if (gender != null)
-			setClaim("gender", gender.value());
+			setClaim("gender", gender.getValue());
 		else
 			setClaim("gender", null);
 	}

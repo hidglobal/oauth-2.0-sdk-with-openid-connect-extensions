@@ -212,7 +212,7 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 			if (sb.length() > 0)
 				sb.append(' ');
 
-			sb.append(v.value());
+			sb.append(v.getValue());
 		}
 
 		return sb.toString();

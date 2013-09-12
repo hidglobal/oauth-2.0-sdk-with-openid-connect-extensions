@@ -110,7 +110,7 @@ public final class RefreshTokenRequest extends TokenRequest {
 		
 		Map<String,String> params = new LinkedHashMap<String,String>();
 		params.put("grant_type", getGrantType().toString());
-		params.put("refresh_token", refreshToken.value());
+		params.put("refresh_token", refreshToken.getValue());
 		
 		httpRequest.setQuery(URLUtils.serializeParameters(params));
 		

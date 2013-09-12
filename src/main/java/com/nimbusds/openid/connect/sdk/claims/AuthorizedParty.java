@@ -45,8 +45,7 @@ public final class AuthorizedParty extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof AuthorizedParty && 
+		return object instanceof AuthorizedParty &&
 		       this.toString().equals(object.toString());
 	}
 }

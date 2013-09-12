@@ -100,7 +100,7 @@ public final class HashingSubjectIdentifierGenerator extends PairwiseSubjectIden
 		}
 
 		sha256.update(sectorIdentifier.getBytes(charset));
-		sha256.update(localSub.value().getBytes(charset));
+		sha256.update(localSub.getValue().getBytes(charset));
 		byte[] hash = sha256.digest(salt);
 
 		return new Subject(Base64.encodeBase64URLSafeString(hash));

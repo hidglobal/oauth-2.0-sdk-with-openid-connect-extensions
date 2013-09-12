@@ -51,8 +51,7 @@ public final class JWTID extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof JWTID && 
+		return object instanceof JWTID &&
 		       this.toString().equals(object.toString());
 	}
 }

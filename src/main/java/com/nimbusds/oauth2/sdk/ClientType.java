@@ -2,7 +2,7 @@ package com.nimbusds.oauth2.sdk;
 
 
 /**
- * Enumeration of OAuth 2.0 client types.
+ * Enumeration of the OAuth 2.0 client types.
  *
  * <p>Related specifications:
  *

@@ -147,7 +147,7 @@ public class OIDCAuthorizationErrorResponse
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(redirectURI, params);
 
-		return new OIDCAuthorizationErrorResponse(resp.getRedirectURI(),
+		return new OIDCAuthorizationErrorResponse(resp.getRedirectionURI(),
 			                                  resp.getErrorObject(),
 			                                  resp.getResponseType(),
 			                                  resp.getState());
@@ -180,7 +180,7 @@ public class OIDCAuthorizationErrorResponse
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(uri);
 
-		return new OIDCAuthorizationErrorResponse(resp.getRedirectURI(),
+		return new OIDCAuthorizationErrorResponse(resp.getRedirectionURI(),
 			                                  resp.getErrorObject(),
 			                                  resp.getResponseType(),
 			                                  resp.getState());
@@ -214,7 +214,7 @@ public class OIDCAuthorizationErrorResponse
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(httpResponse);
 
-		return new OIDCAuthorizationErrorResponse(resp.getRedirectURI(),
+		return new OIDCAuthorizationErrorResponse(resp.getRedirectionURI(),
 			                                  resp.getErrorObject(),
 			                                  resp.getResponseType(),
 			                                  resp.getState());

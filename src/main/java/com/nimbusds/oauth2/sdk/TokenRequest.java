@@ -39,7 +39,7 @@ public abstract class TokenRequest extends AbstractRequest {
 
 
 	/**
-	 * The grant type.
+	 * The authorisation grant type.
 	 */
 	private final GrantType grantType;
 	
@@ -75,9 +75,9 @@ public abstract class TokenRequest extends AbstractRequest {
 	
 	
 	/**
-	 * Gets the grant type.
+	 * Gets the authorisation grant type.
 	 *
-	 * @return The grant type.
+	 * @return The authorisation grant type.
 	 */
 	public GrantType getGrantType() {
 	

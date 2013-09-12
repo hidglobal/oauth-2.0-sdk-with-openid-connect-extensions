@@ -44,8 +44,7 @@ public class SoftwareID extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 
-		return object != null &&
-		       object instanceof SoftwareID &&
+		return object instanceof SoftwareID &&
 		       this.toString().equals(object.toString());
 	}
 }

@@ -98,7 +98,7 @@ public class OIDCProviderMetadataTest {
 		
 		OIDCProviderMetadata op = OIDCProviderMetadata.parse(s);
 		
-		assertEquals("https://server.example.com", op.getIssuer().value());
+		assertEquals("https://server.example.com", op.getIssuer().getValue());
 		assertEquals("https://server.example.com/connect/authorize", op.getAuthorizationEndpointURL().toString());
 		assertEquals("https://server.example.com/connect/token", op.getTokenEndpointURL().toString());
 		

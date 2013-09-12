@@ -64,8 +64,7 @@ public class TypelessAccessToken extends AccessToken {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof AccessToken && 
+		return object instanceof AccessToken &&
 		       this.toString().equals(object.toString());
 	}
 }

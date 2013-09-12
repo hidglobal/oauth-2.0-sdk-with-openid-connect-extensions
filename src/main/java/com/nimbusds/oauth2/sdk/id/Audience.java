@@ -51,8 +51,7 @@ public final class Audience extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof Audience && 
+		return object instanceof Audience &&
 		       this.toString().equals(object.toString());
 	}
 }

@@ -159,7 +159,7 @@ public class AuthorizationErrorResponse
 			params.put("error_uri", error.getURI().toString());
 
 		if (getState() != null)
-			params.put("state", getState().value());
+			params.put("state", getState().getValue());
 
 		return params;
 	}
@@ -169,7 +169,7 @@ public class AuthorizationErrorResponse
 	public URL toURI()
 		throws SerializeException {
 		
-		StringBuilder sb = new StringBuilder(getRedirectURI().toString());
+		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 		
 		if (rt == null || rt.contains(ResponseType.Value.TOKEN))
 			sb.append("#");

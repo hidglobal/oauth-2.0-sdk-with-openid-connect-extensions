@@ -65,7 +65,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 									      rts,
 									      state);
 
-		assertEquals(REDIRECT_URL, r.getRedirectURI());
+		assertEquals(REDIRECT_URL, r.getRedirectionURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertEquals(rts, r.getResponseType());
 		assertEquals(state, r.getState());
@@ -102,7 +102,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 
 		r = AuthorizationErrorResponse.parse(httpResponse);
 
-		assertEquals(REDIRECT_URL, r.getRedirectURI());
+		assertEquals(REDIRECT_URL, r.getRedirectionURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertNull(r.getResponseType());
 		assertEquals(state, r.getState());
@@ -124,7 +124,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 			fail(e.getMessage());
 		}
 		
-		assertEquals("https://client.example.com/cb", r.getRedirectURI().toString());
+		assertEquals("https://client.example.com/cb", r.getRedirectionURI().toString());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertEquals(ERROR_PAGE_URL, r.getErrorObject().getURI());
 		assertEquals(new State("123"), r.getState());

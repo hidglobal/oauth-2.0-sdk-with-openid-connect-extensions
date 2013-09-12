@@ -54,17 +54,17 @@ public class AccessTokenResponseTest extends TestCase {
 		}
 		
 		AccessToken accessToken = atr.getAccessToken();
-		assertEquals(accessTokenString, accessToken.value());
-		assertEquals(exp, accessToken.lifetime());
-		assertNull(accessToken.scope());
+		assertEquals(accessTokenString, accessToken.getValue());
+		assertEquals(exp, accessToken.getLifetime());
+		assertNull(accessToken.getScope());
 		
 		RefreshToken refreshToken = atr.getRefreshToken();
-		assertEquals(refreshTokenString, refreshToken.value());
+		assertEquals(refreshTokenString, refreshToken.getValue());
 
 		// Test pair getter
 		TokenPair pair = atr.getTokenPair();
-		assertEquals(accessToken, pair.accessToken());
-		assertEquals(refreshToken, pair.refreshToken());
+		assertEquals(accessToken, pair.getAccessToken());
+		assertEquals(refreshToken, pair.getRefreshToken());
 		
 		try {
 			httpResponse = atr.toHTTPResponse();

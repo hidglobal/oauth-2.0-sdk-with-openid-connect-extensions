@@ -116,7 +116,7 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 			case POST:
 				httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 				httpRequest.setQuery("schema=openid" +
-				                     "&access_token=" + getAccessToken().value());
+				                     "&access_token=" + getAccessToken().getValue());
 				break;
 			
 			default:

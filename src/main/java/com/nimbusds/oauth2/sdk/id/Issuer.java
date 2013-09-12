@@ -51,8 +51,7 @@ public final class Issuer extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof Issuer && 
+		return object instanceof Issuer &&
 		       this.toString().equals(object.toString());
 	}
 }

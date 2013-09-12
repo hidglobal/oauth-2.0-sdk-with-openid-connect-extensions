@@ -32,8 +32,7 @@ public class SoftwareVersion extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 
-		return object != null &&
-			object instanceof SoftwareVersion &&
-			this.toString().equals(object.toString());
+		return object instanceof SoftwareVersion &&
+		       this.toString().equals(object.toString());
 	}
 }

@@ -35,8 +35,7 @@ public final class AccessTokenHash extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof AccessTokenHash && 
+		return object instanceof AccessTokenHash &&
 		       this.toString().equals(object.toString());
 	}
 }

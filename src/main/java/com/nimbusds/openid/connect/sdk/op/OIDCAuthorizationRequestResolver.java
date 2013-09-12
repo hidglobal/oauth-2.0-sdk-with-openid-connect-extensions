@@ -334,7 +334,7 @@ public class OIDCAuthorizationRequestResolver {
 				finalAuthzRequest.getResponseType(),
 				finalAuthzRequest.getScope(),
 				finalAuthzRequest.getClientID(),
-				finalAuthzRequest.getRedirectURI(),
+				finalAuthzRequest.getRedirectionURI(),
 				finalAuthzRequest.getState(),
 				finalAuthzRequest.getNonce(),
 				finalAuthzRequest.getDisplay(),
@@ -358,7 +358,7 @@ public class OIDCAuthorizationRequestResolver {
 			else
 				err = OIDCError.INVALID_REQUEST_OBJECT;
 			
-			throw new ResolveException(e.getMessage(), err, request.getRedirectURI(), request.getState(), e.getCause());
+			throw new ResolveException(e.getMessage(), err, request.getRedirectionURI(), request.getState(), e.getCause());
 		}
 	}
 }

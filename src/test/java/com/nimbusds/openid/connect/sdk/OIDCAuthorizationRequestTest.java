@@ -68,7 +68,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -95,7 +95,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -169,7 +169,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -233,7 +233,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -346,7 +346,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -412,7 +412,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -527,7 +527,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -593,7 +593,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectURI()));
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));

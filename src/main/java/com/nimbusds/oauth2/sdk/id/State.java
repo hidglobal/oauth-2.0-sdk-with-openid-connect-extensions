@@ -54,8 +54,7 @@ public final class State extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof State && 
+		return object instanceof State &&
 		       this.toString().equals(object.toString());
 	}
 	

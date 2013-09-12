@@ -234,8 +234,7 @@ public class ErrorObject {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof ErrorObject && 
+		return object instanceof ErrorObject &&
 		       this.toString().equals(object.toString());
 	}
 }

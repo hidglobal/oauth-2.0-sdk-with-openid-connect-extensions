@@ -40,10 +40,11 @@ public final class GrantType extends Identifier {
 
 
 	/**
-	 * Creates a new OAuth 2.0 grant type with the specified value.
+	 * Creates a new OAuth 2.0 authorisation grant type with the specified
+	 * value.
 	 *
-	 * @param value The grant type value. Must not be {@code null} or 
-	 *              empty string.
+	 * @param value The authorisation grant type value. Must not be
+	 *              {@code null} or empty string.
 	 */
 	public GrantType(final String value) {
 
@@ -54,8 +55,7 @@ public final class GrantType extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof GrantType && 
+		return object instanceof GrantType &&
 		       this.toString().equals(object.toString());
 	}
 }

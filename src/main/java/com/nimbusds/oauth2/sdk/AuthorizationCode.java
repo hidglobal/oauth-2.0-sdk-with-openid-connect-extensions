@@ -60,8 +60,7 @@ public final class AuthorizationCode extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof AuthorizationCode && 
+		return object instanceof AuthorizationCode &&
 		       this.toString().equals(object.toString());
 	}
 }

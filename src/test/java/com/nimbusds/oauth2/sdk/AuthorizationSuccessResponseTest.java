@@ -64,7 +64,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	
 		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URL, CODE, STATE);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectURI());
+		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
@@ -84,7 +84,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectURI());
+		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
@@ -96,16 +96,16 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	
 		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URL, TOKEN, STATE);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectURI());
+		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
 		assertEquals(TOKEN, resp.getAccessToken());
-		assertEquals(3600, resp.getAccessToken().lifetime());
+		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
 
 		Map<String,String> params = resp.toParameters();
-		assertEquals(TOKEN.value(), params.get("access_token"));
+		assertEquals(TOKEN.getValue(), params.get("access_token"));
 		assertEquals(STATE, new State(params.get("state")));
-		assertEquals(TOKEN.type(), new AccessTokenType((String)params.get("token_type")));
+		assertEquals(TOKEN.getType(), new AccessTokenType((String)params.get("token_type")));
 		assertEquals("3600", params.get("expires_in"));
 		assertEquals(4, params.size());
 
@@ -119,9 +119,9 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectURI());
+		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
 		assertEquals(TOKEN, resp.getAccessToken());
-		assertEquals(3600, resp.getAccessToken().lifetime());
+		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
 	}

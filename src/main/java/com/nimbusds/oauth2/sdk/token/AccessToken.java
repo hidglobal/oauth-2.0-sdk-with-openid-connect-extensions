@@ -160,7 +160,7 @@ public abstract class AccessToken
 	 *
 	 * @return The access token type.
 	 */
-	public AccessTokenType type() {
+	public AccessTokenType getType() {
 
 		return type;
 	}
@@ -171,7 +171,7 @@ public abstract class AccessToken
 	 *
 	 * @return The lifetime in seconds, 0 if not specified.
 	 */
-	public long lifetime() {
+	public long getLifetime() {
 	
 		return lifetime;
 	}
@@ -182,7 +182,7 @@ public abstract class AccessToken
 	 *
 	 * @return The scope, {@code null} if not specified.
 	 */
-	public Scope scope() {
+	public Scope getScope() {
 	
 		return scope;
 	}
@@ -193,13 +193,13 @@ public abstract class AccessToken
 
 		JSONObject o = new JSONObject();
 
-		o.put("access_token", value());
+		o.put("access_token", getValue());
 		o.put("token_type", type.toString());
 		
-		if (lifetime() > 0)
+		if (getLifetime() > 0)
 			o.put("expires_in", lifetime);
 
-		if (scope() != null)
+		if (getScope() != null)
 			o.put("scope", scope.toString());
 		
 		return o;
@@ -225,7 +225,7 @@ public abstract class AccessToken
 	@Override
 	public int compareTo(AccessToken other) {
 
-		return value().compareTo(other.value());
+		return getValue().compareTo(other.getValue());
 	}
 
 

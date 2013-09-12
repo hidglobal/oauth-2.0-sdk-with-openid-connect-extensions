@@ -177,7 +177,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 *
 	 * @return The redirection URI, {@code null} if not specified.
 	 */
-	public URL getRedirectURI() {
+	public URL getRedirectionURI() {
 	
 		return redirectURI;
 	}
@@ -229,7 +229,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		Map <String,String> params = new LinkedHashMap<String,String>();
 		
 		params.put("response_type", rt.toString());
-		params.put("client_id", clientID.value());
+		params.put("client_id", clientID.getValue());
 
 		if (redirectURI != null)
 			params.put("redirect_uri", redirectURI.toString());
@@ -238,7 +238,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			params.put("scope", scope.toString());
 		
 		if (state != null)
-			params.put("state", state.value());
+			params.put("state", state.getValue());
 
 		return params;
 	}

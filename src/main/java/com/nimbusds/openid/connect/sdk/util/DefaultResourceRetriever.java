@@ -175,7 +175,6 @@ public class DefaultResourceRetriever implements ResourceRetriever {
 				throw new IOException("Couldn't parse Content-Type header: " + e.getMessage(), e);
 			}
 		}
-
 		
 		return new Resource(sb.toString(), contentType);
 	}

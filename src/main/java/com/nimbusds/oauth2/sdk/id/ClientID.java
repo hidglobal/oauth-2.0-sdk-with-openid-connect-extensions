@@ -63,8 +63,7 @@ public final class ClientID extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof ClientID && 
+		return object instanceof ClientID &&
 		       this.toString().equals(object.toString());
 	}
 }

@@ -40,8 +40,7 @@ public final class AMR extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof AMR && 
+		return object instanceof AMR &&
 		       this.toString().equals(object.toString());
 	}
 }

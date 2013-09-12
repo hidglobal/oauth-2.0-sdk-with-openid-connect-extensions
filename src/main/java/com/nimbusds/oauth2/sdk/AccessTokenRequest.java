@@ -347,7 +347,7 @@ public final class AccessTokenRequest extends TokenRequest {
 				params.put("redirect_uri", redirectURI.toString());
 
 			if (clientID != null)
-				params.put("client_id", clientID.value());
+				params.put("client_id", clientID.getValue());
 		
 		} else if (getGrantType().equals(GrantType.PASSWORD)) {
 

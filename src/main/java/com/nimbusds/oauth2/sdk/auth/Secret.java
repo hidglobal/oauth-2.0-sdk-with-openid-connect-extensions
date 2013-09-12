@@ -208,8 +208,7 @@ public final class Secret {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof Secret && 
+		return object instanceof Secret &&
 		       this.getValue().equals(((Secret)object).getValue());
 	}
 }

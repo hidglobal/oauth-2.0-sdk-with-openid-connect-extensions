@@ -101,8 +101,7 @@ public final class ClientAuthenticationMethod extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof ClientAuthenticationMethod && 
+		return object instanceof ClientAuthenticationMethod &&
 		       this.toString().equals(object.toString());
 	}
 }

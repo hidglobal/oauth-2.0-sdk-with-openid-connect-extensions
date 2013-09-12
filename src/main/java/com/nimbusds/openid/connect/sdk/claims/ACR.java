@@ -46,8 +46,7 @@ public final class ACR extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof ACR && 
+		return object instanceof ACR &&
 		       this.toString().equals(object.toString());
 	}
 }

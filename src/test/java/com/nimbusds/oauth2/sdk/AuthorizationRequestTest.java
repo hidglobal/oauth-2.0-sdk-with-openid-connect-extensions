@@ -36,7 +36,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
-		assertNull(req.getRedirectURI());
+		assertNull(req.getRedirectionURI());
 		assertNull(req.getScope());
 		assertNull(req.getState());
 
@@ -60,7 +60,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
-		assertNull(req.getRedirectURI());
+		assertNull(req.getRedirectionURI());
 		assertNull(req.getScope());
 		assertNull(req.getState());
 	}
@@ -86,7 +86,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(uri, req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
-		assertEquals(redirectURI, req.getRedirectURI());
+		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
 		assertEquals(state, req.getState());
 
@@ -112,7 +112,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(uri, req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
-		assertEquals(redirectURI, req.getRedirectURI());
+		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
 		assertEquals(state, req.getState());
 	}

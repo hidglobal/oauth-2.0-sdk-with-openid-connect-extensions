@@ -65,7 +65,8 @@ public class AuthorizationSuccessResponse
 	 * Creates a new authorisation success response in the code flow 
 	 * (authorisation code grant).
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param code        The authorisation code. Must not be {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
@@ -84,7 +85,8 @@ public class AuthorizationSuccessResponse
 	 * Creates a new authorisation success response in the implicit flow 
 	 * (implicit grant).
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param accessToken The access token. Must not be {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
@@ -102,7 +104,8 @@ public class AuthorizationSuccessResponse
 	/**
 	 * Creates a new authorisation success response.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param code        The authorisation code, {@code null} if not 
 	 *                    requested.
 	 * @param accessToken The access token, {@code null} if not requested.
@@ -169,7 +172,7 @@ public class AuthorizationSuccessResponse
 		Map<String,String> params = new HashMap<String,String>();
 
 		if (code != null)
-			params.put("code", code.value());
+			params.put("code", code.getValue());
 
 		if (accessToken != null) {
 			
@@ -180,7 +183,7 @@ public class AuthorizationSuccessResponse
 		}
 			
 		if (getState() != null)
-			params.put("state", getState().value());
+			params.put("state", getState().getValue());
 
 		return params;
 	}
@@ -190,7 +193,7 @@ public class AuthorizationSuccessResponse
 	public URL toURI()
 		throws SerializeException {
 	
-		StringBuilder sb = new StringBuilder(getRedirectURI().toString());
+		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 		
 		// Fragment or query string?
 		if (accessToken != null)
@@ -215,7 +218,8 @@ public class AuthorizationSuccessResponse
 	/**
 	 * Parses an authorisation success response.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *
@@ -273,8 +277,8 @@ public class AuthorizationSuccessResponse
 	 *
 	 * @return The authorisation success response.
 	 *
-	 * @throws ParseException If the redirect URI couldn't be parsed to an
-	 *                        authorisation success response.
+	 * @throws ParseException If the redirection URI couldn't be parsed to
+	 *                        an authorisation success response.
 	 */
 	public static AuthorizationSuccessResponse parse(final URL uri)
 		throws ParseException {
@@ -327,7 +331,7 @@ public class AuthorizationSuccessResponse
 		URL location = httpResponse.getLocation();
 		
 		if (location == null)
-			throw new ParseException("Missing redirect URL / HTTP Location header");
+			throw new ParseException("Missing redirection URL / HTTP Location header");
 		
 		return parse(location);
 	}

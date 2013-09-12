@@ -19,8 +19,8 @@ public class TokenPairTest extends TestCase {
 
 		TokenPair pair = new TokenPair(accessToken, refreshToken);
 
-		assertEquals(accessToken, pair.accessToken());
-		assertEquals(refreshToken, pair.refreshToken());
+		assertEquals(accessToken, pair.getAccessToken());
+		assertEquals(refreshToken, pair.getRefreshToken());
 
 		System.out.println(pair);
 	}
@@ -32,8 +32,8 @@ public class TokenPairTest extends TestCase {
 
 		TokenPair pair = new TokenPair(accessToken, null);
 
-		assertEquals(accessToken, pair.accessToken());
-		assertNull(pair.refreshToken());
+		assertEquals(accessToken, pair.getAccessToken());
+		assertNull(pair.getRefreshToken());
 
 		System.out.println(pair);
 	}

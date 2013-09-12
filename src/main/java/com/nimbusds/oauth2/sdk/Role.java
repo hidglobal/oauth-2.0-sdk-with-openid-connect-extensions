@@ -2,7 +2,7 @@ package com.nimbusds.oauth2.sdk;
 
 
 /**
- * Enumeration of OAuth 2.0 roles.
+ * Enumeration of the OAuth 2.0 roles.
  *
  * <p>Related specifications:
  *

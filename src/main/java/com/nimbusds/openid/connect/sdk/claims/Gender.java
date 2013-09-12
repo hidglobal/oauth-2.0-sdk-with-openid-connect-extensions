@@ -44,8 +44,7 @@ public class Gender extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof Gender && 
+		return object instanceof Gender &&
 		       this.toString().equals(object.toString());
 	}
 }

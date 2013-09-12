@@ -51,8 +51,7 @@ public final class Subject extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof Subject && 
+		return object instanceof Subject &&
 		       this.toString().equals(object.toString());
 	}
 }

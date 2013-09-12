@@ -135,7 +135,7 @@ public class GeneralException extends Exception {
 	 * @return The redirection URI, {@code null} if redirection is not to
 	 *         be performed for this error.
 	 */
-	public URL getRedirectURI() {
+	public URL getRedirectionURI() {
 
 		return redirectURI;
 	}

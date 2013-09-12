@@ -49,8 +49,7 @@ public final class AccessTokenType extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof AccessTokenType && 
+		return object instanceof AccessTokenType &&
 		       this.toString().equals(object.toString());
 	}
 }

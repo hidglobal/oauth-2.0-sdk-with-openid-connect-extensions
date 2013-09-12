@@ -46,7 +46,6 @@ public final class CommonContentTypes {
 
 
 	static {
-
 		PARAM_LIST.set("charset", DEFAULT_CHARSET);
 	}
 }

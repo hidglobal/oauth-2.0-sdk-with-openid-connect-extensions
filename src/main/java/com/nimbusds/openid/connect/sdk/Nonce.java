@@ -69,8 +69,7 @@ public final class Nonce extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof Nonce && 
+		return object instanceof Nonce &&
 		       this.toString().equals(object.toString());
 	}
 	

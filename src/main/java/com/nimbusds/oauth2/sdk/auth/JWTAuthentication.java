@@ -46,14 +46,14 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	
 
 	/**
-	 * The client assertion, corresponding to the {@link client_assertion}
+	 * The client assertion, corresponding to the {@code client_assertion}
 	 * parameter. The assertion is in the form of a signed JWT.
 	 */
 	private final SignedJWT clientAssertion;
 	
 	
 	/**
-	 * Optional client identifier, corresponding to the {@link client_id}
+	 * Optional client identifier, corresponding to the {@code client_id}
 	 * parameter.
 	 */
 	private final ClientID clientID;
@@ -177,7 +177,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 		params.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
 		
 		if (clientID != null)
-			params.put("client_id", clientID.value());
+			params.put("client_id", clientID.getValue());
 		
 		return params;
 	}

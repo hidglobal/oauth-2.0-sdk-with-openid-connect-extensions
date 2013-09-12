@@ -20,7 +20,7 @@ public class StateTest extends TestCase {
 
 		State state = new State(value);
 
-		assertEquals(value, state.value());
+		assertEquals(value, state.getValue());
 		assertEquals(value, state.toString());
 	}
 

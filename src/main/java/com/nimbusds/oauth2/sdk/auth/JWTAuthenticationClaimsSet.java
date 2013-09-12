@@ -163,9 +163,9 @@ public class JWTAuthenticationClaimsSet {
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
 
-		iss = new Issuer(clientID.value());
+		iss = new Issuer(clientID.getValue());
 
-		sub = new Subject(clientID.value());
+		sub = new Subject(clientID.getValue());
 
 		
 		if (aud == null)
@@ -194,7 +194,7 @@ public class JWTAuthenticationClaimsSet {
 	 */
 	public ClientID getClientID() {
 
-		return new ClientID(iss.value());
+		return new ClientID(iss.getValue());
 	}
 
 	
@@ -289,8 +289,8 @@ public class JWTAuthenticationClaimsSet {
 	
 		JSONObject o = new JSONObject();
 		
-		o.put("iss", iss.value());
-		o.put("sub", sub.value());
+		o.put("iss", iss.getValue());
+		o.put("sub", sub.getValue());
 
 		List<Object> audList = new LinkedList<Object>();
 		audList.add(exp.getTime() / 1000);
@@ -305,7 +305,7 @@ public class JWTAuthenticationClaimsSet {
 			o.put("iat", iat.getTime() / 1000);
 		
 		if (jti != null)
-			o.put("jti", jti.value());
+			o.put("jti", jti.getValue());
 		
 		return o;
 	}
@@ -321,11 +321,11 @@ public class JWTAuthenticationClaimsSet {
 
 		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
 
-		jwtClaimsSet.setIssuer(iss.value());
-		jwtClaimsSet.setSubject(sub.value());
+		jwtClaimsSet.setIssuer(iss.getValue());
+		jwtClaimsSet.setSubject(sub.getValue());
 
 		List<String> audList = new LinkedList<String>();
-		audList.add(aud.value());
+		audList.add(aud.getValue());
 
 		jwtClaimsSet.setAudience(audList);
 		jwtClaimsSet.setExpirationTime(exp);
@@ -337,7 +337,7 @@ public class JWTAuthenticationClaimsSet {
 			jwtClaimsSet.setIssueTime(iat);
 		
 		if (jti != null)
-			jwtClaimsSet.setJWTID(jti.value());
+			jwtClaimsSet.setJWTID(jti.getValue());
 
 		return jwtClaimsSet;
 	}
@@ -399,10 +399,10 @@ public class JWTAuthenticationClaimsSet {
 
 		// Check client ID
 
-		if (iss.value() != sub.value())
+		if (iss.getValue() != sub.getValue())
 			throw new ParseException("JWT issuer and subject must have the same client ID");
 
-		ClientID clientID = new ClientID(iss.value());
+		ClientID clientID = new ClientID(iss.getValue());
 
 		return new JWTAuthenticationClaimsSet(clientID, aud, exp, nbf, iat, jti);
 	}

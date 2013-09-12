@@ -26,7 +26,7 @@ public abstract class AuthorizationResponse implements Response {
 
 
 	/**
-	 * The base redirect URI.
+	 * The base redirection URI.
 	 */
 	private final URL redirectURI;
 
@@ -40,13 +40,14 @@ public abstract class AuthorizationResponse implements Response {
 	/**
 	 * Creates a new authorisation response.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
 	protected AuthorizationResponse(final URL redirectURI, final State state) {
 
 		if (redirectURI == null)
-			throw new IllegalArgumentException("The redirect URI must not be null");
+			throw new IllegalArgumentException("The redirection URI must not be null");
 		
 		this.redirectURI = redirectURI;
 
@@ -55,12 +56,12 @@ public abstract class AuthorizationResponse implements Response {
 
 
 	/**
-	 * Gets the base redirect URI.
+	 * Gets the base redirection URI.
 	 *
-	 * @return The base redirect URI (without the appended error response 
-	 *         parameters).
+	 * @return The base redirection URI (without the appended error
+	 *         response parameters).
 	 */
-	public URL getRedirectURI() {
+	public URL getRedirectionURI() {
 	
 		return redirectURI;
 	}
@@ -99,7 +100,7 @@ public abstract class AuthorizationResponse implements Response {
 
 
 	/**
-	 * Returns the URI representation (redirect URI + fragment / query 
+	 * Returns the URI representation (redirection URI + fragment / query
 	 * string) of this authorisation response.
 	 *
 	 * <p>Example URI:
@@ -153,7 +154,8 @@ public abstract class AuthorizationResponse implements Response {
 	/**
 	 * Parses an authorisation response.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *
@@ -238,7 +240,7 @@ public abstract class AuthorizationResponse implements Response {
 		URL location = httpResponse.getLocation();
 		
 		if (location == null)
-			throw new ParseException("Missing redirect URL / HTTP Location header");
+			throw new ParseException("Missing redirection URL / HTTP Location header");
 		
 		return parse(location);
 	}

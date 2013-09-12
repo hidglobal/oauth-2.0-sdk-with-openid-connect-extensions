@@ -917,10 +917,10 @@ public class ClientMetadata {
 
 
 		if (softwareID != null)
-			o.put("software_id", softwareID.value());
+			o.put("software_id", softwareID.getValue());
 
 		if (softwareVersion != null)
-			o.put("software_version", softwareVersion.value());
+			o.put("software_version", softwareVersion.getValue());
 
 		return o;
 	}

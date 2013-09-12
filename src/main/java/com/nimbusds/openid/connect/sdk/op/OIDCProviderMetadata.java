@@ -284,7 +284,7 @@ public class OIDCProviderMetadata {
 		URL url = null;
 		
 		try {
-			url = new URL(issuer.value());
+			url = new URL(issuer.getValue());
 			
 		} catch (MalformedURLException e) {
 			

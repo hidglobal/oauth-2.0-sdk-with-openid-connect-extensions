@@ -128,7 +128,7 @@ public class OIDCScopeValue extends Scope.Value {
 
 	/**
 	 * Creates a new OpenID Connect scope value. The requirement is set to
-	 * {@link ScopeValue.Requirement#OPTIONAL optional}.
+	 * {@link OIDCScopeValue.Requirement#OPTIONAL optional}.
 	 *
 	 * @param value  The scope value. Must not be {@code null}.
 	 * @param claims The names of the associated claims. Must not be

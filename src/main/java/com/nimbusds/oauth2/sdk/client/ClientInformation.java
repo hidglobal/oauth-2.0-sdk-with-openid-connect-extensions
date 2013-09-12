@@ -210,11 +210,11 @@ public class ClientInformation {
 
 		JSONObject o = metadata.toJSONObject();
 
-		o.put("client_id", id.value());
+		o.put("client_id", id.getValue());
 		
 		o.put("registration_client_uri", registrationURI.toString());
 		
-		o.put("registration_access_token", accessToken.value());
+		o.put("registration_access_token", accessToken.getValue());
 
 		if (secret != null) {
 			o.put("client_secret", secret.getValue());

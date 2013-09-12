@@ -49,9 +49,9 @@ public class ClientUpdateRequestTest {
 		
 		assertEquals(regURI, request.getURI());
 		
-		assertEquals("reg-23410913-abewfq.123483", request.getAccessToken().value());
+		assertEquals("reg-23410913-abewfq.123483", request.getAccessToken().getValue());
 		
-		assertEquals("s6BhdRkqt3", request.getClientID().value());
+		assertEquals("s6BhdRkqt3", request.getClientID().getValue());
 		
 		assertEquals("cf136dc3c1fc93f31185e5885805d", request.getClientSecret().getValue());
 		

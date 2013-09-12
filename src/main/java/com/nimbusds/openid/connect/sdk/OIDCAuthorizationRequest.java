@@ -826,7 +826,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		AuthorizationRequest ar = AuthorizationRequest.parse(uri, params);
 
 		// Required in OIDC
-		URL redirectURI = ar.getRedirectURI();
+		URL redirectURI = ar.getRedirectionURI();
 
 		if (redirectURI == null)
 			throw new ParseException("Missing \"redirect_uri\" parameter", 

@@ -36,8 +36,7 @@ public final class CodeHash extends Identifier {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof CodeHash && 
+		return object instanceof CodeHash &&
 		       this.toString().equals(object.toString());
 	}
 }

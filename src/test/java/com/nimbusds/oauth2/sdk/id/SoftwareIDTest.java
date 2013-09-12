@@ -18,6 +18,6 @@ public class SoftwareIDTest extends TestCase {
 
 		System.out.println("Generated software ID: " + id);
 
-		assertTrue(new SoftwareID(id.value()).equals(id));
+		assertTrue(new SoftwareID(id.getValue()).equals(id));
 	}
 }

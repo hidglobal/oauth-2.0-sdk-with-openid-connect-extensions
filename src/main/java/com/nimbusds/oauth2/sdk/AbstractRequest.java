@@ -36,5 +36,4 @@ public abstract class AbstractRequest implements Request {
 		
 		return uri;
 	}
-	
 }

@@ -49,7 +49,7 @@ public final class TokenPair {
 	 *
 	 * @return The access token.
 	 */
-	public AccessToken accessToken() {
+	public AccessToken getAccessToken() {
 
 		return accessToken;
 	}
@@ -60,7 +60,7 @@ public final class TokenPair {
 	 *
 	 * @return The refresh token, {@code null} if none.
 	 */
-	public RefreshToken refreshToken() {
+	public RefreshToken getRefreshToken() {
 
 		return refreshToken;
 	}
@@ -94,7 +94,6 @@ public final class TokenPair {
 	@Override
 	public String toString() {
 
-		return "TokenPair [accessToken=" + accessToken + 
-		       " refreshToken=" + refreshToken + "]";
+		return "TokenPair [accessToken=" + accessToken + " refreshToken=" + refreshToken + "]";
 	}
 }

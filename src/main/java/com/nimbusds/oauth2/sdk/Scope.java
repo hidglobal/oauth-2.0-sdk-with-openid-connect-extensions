@@ -114,8 +114,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		@Override
 		public boolean equals(final Object object) {
 
-			return object != null && 
-			       object instanceof Value && 
+			return object instanceof Value &&
 			       this.toString().equals(object.toString());
 		}
 	}
@@ -140,7 +139,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		List<String> list = new ArrayList<String>(this.size());
 		
 		for (Scope.Value v: this)
-			list.add(v.value());
+			list.add(v.getValue());
 		
 		return list;
 	}
