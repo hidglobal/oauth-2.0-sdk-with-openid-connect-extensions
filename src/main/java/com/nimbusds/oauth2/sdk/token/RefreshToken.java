@@ -99,8 +99,7 @@ public final class RefreshToken
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof RefreshToken && 
+		return object instanceof RefreshToken &&
 		       this.toString().equals(object.toString());
 	}
 

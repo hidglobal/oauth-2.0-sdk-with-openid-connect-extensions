@@ -86,9 +86,8 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 		@Override
 		public boolean equals(final Object object) {
 
-			return object != null
-				&& object instanceof Value
-				&& this.toString().equals(object.toString());
+			return object instanceof Value &&
+			       this.toString().equals(object.toString());
 		}
 	}
 

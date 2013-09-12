@@ -148,8 +148,7 @@ public final class BearerAccessToken extends AccessToken {
 	@Override
 	public boolean equals(final Object object) {
 	
-		return object != null && 
-		       object instanceof BearerAccessToken && 
+		return object instanceof BearerAccessToken &&
 		       this.toString().equals(object.toString());
 	}
 
