@@ -3,17 +3,20 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.util.*;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.jwt.JWTClaimsSet;
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagUtils;
+
+import com.nimbusds.oauth2.sdk.util.DateUtils;
 
 
 /**
@@ -338,7 +341,7 @@ public abstract class ClaimsSet {
 			return null;
 		
 		try {
-			return new Date(value.longValue());
+			return DateUtils.fromSecondsSinceEpoch(value.longValue());
 			
 		} catch (Exception e) {
 			
@@ -358,9 +361,39 @@ public abstract class ClaimsSet {
 	public void setDateClaim(final String name, final Date value) {
 		
 		if (value != null)
-			setClaim(name, value.getTime());
+			setClaim(name, DateUtils.toSecondsSinceEpoch(value));
 		else
 			claims.remove(name);
+	}
+
+
+	/**
+	 * Gets a string list based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified or parsing
+	 *         failed.
+	 */
+	public List<String> getStringListClaim(final String name) {
+
+		List<Object> rawList = getClaim(name, List.class);
+
+		if (rawList == null)
+			rawList = getClaim(name, JSONArray.class);
+
+		if (rawList == null)
+			return null;
+
+		List<String> outputList = new ArrayList<String>(rawList.size());
+
+		for (Object item: rawList) {
+
+			if (item != null)
+				outputList.add(item.toString());
+		}
+
+		return outputList;
 	}
 	
 	
@@ -383,5 +416,19 @@ public abstract class ClaimsSet {
 	public JSONObject toJSONObject() {
 	
 		return claims;
+	}
+
+
+	/**
+	 * Gets the JSON Web Token (JWT) claims set for this claim set.
+	 *
+	 * @return The JWT claims set.
+	 *
+	 * @throws ParseException If the conversion to a JWT claims set fails.
+	 */
+	public JWTClaimsSet toJWTClaimsSet()
+		throws ParseException {
+
+		return JWTClaimsSet.parse(claims);
 	}
 }

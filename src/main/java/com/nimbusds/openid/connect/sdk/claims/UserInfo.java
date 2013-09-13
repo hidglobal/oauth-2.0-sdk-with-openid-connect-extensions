@@ -11,9 +11,13 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
+
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.id.Subject;
 
@@ -47,32 +51,152 @@ public class UserInfo extends ClaimsSet {
 
 
 	/**
+	 * The subject claim name.
+	 */
+	public static final String SUB_CLAIM_NAME = "sub";
+
+
+	/**
+	 * The name claim name.
+	 */
+	public static final String NAME_CLAIM_NAME = "name";
+
+
+	/**
+	 * The given name claim name.
+	 */
+	public static final String GIVEN_NAME_CLAIM_NAME = "given_name";
+
+
+	/**
+	 * The family name claim name.
+	 */
+	public static final String FAMILY_NAME_CLAIM_NAME = "family_name";
+
+
+	/**
+	 * The middle name claim name.
+	 */
+	public static final String MIDDLE_NAME_CLAIM_NAME = "middle_name";
+
+
+	/**
+	 * The nickname claim name.
+	 */
+	public static final String NICKNAME_CLAIM_NAME = "nickname";
+
+
+	/**
+	 * The preferred username claim name.
+	 */
+	public static final String PREFERRED_USERNAME_CLAIM_NAME = "preferred_username";
+
+
+	/**
+	 * The profile claim name.
+	 */
+	public static final String PROFILE_CLAIM_NAME = "profile";
+
+
+	/**
+	 * The picture claim name.
+	 */
+	public static final String PICTURE_CLAIM_NAME = "picture";
+
+
+	/**
+	 * The website claim name.
+	 */
+	public static final String WEBSITE_CLAIM_NAME = "website";
+
+
+	/**
+	 * The email claim name.
+	 */
+	public static final String EMAIL_CLAIM_NAME = "email";
+
+
+	/**
+	 * The email verified claim name.
+	 */
+	public static final String EMAIL_VERIFIED_CLAIM_NAME = "email_verified";
+
+
+	/**
+	 * The gender claim name.
+	 */
+	public static final String GENDER_CLAIM_NAME = "gender";
+
+
+	/**
+	 * The birth date claim name.
+	 */
+	public static final String BIRTHDATE_CLAIM_NAME = "birthdate";
+
+
+	/**
+	 * The zoneinfo claim name.
+	 */
+	public static final String ZONEINFO_CLAIM_NAME = "zoneinfo";
+
+
+	/**
+	 * The locale claim name.
+	 */
+	public static final String LOCALE_CLAIM_NAME = "locale";
+
+
+	/**
+	 * The phone number claim name.
+	 */
+	public static final String PHONE_NUMBER_CLAIM_NAME = "phone_number";
+
+
+	/**
+	 * The phone number verified claim name.
+	 */
+	public static final String PHONE_NUMBER_VERIFIED_CLAIM_NAME = "phone_number_verified";
+
+
+	/**
+	 * The address claim name.
+	 */
+	public static final String ADDRESS_CLAIM_NAME = "address";
+
+
+	/**
+	 * The updated at claim name.
+	 */
+	public static final String UPDATED_AT_CLAIM_NAME = "updated_at";
+
+
+	/**
 	 * The names of the standard top-level UserInfo claims.
 	 */
 	private static final Set<String> stdClaimNames = new LinkedHashSet<String>();
 	
 	
 	static {
-		stdClaimNames.add("sub");
-		stdClaimNames.add("name");
-		stdClaimNames.add("given_name");
-		stdClaimNames.add("family_name");
-		stdClaimNames.add("middle_name");
-		stdClaimNames.add("nickname");
-		stdClaimNames.add("preferred_username");
-		stdClaimNames.add("profile");
-		stdClaimNames.add("picture");
-		stdClaimNames.add("website");
-		stdClaimNames.add("email");
-		stdClaimNames.add("email_verified");
-		stdClaimNames.add("gender");
-		stdClaimNames.add("birthdate");
-		stdClaimNames.add("zoneinfo");
-		stdClaimNames.add("locale");
-		stdClaimNames.add("phone_number");
-		stdClaimNames.add("phone_number_verified");
-		stdClaimNames.add("address");
-		stdClaimNames.add("updated_at");
+		stdClaimNames.add(SUB_CLAIM_NAME);
+		stdClaimNames.add(NAME_CLAIM_NAME);
+		stdClaimNames.add(GIVEN_NAME_CLAIM_NAME);
+		stdClaimNames.add(FAMILY_NAME_CLAIM_NAME);
+		stdClaimNames.add(MIDDLE_NAME_CLAIM_NAME);
+		stdClaimNames.add(NICKNAME_CLAIM_NAME);
+		stdClaimNames.add(PREFERRED_USERNAME_CLAIM_NAME);
+		stdClaimNames.add(PROFILE_CLAIM_NAME);
+		stdClaimNames.add(PICTURE_CLAIM_NAME);
+		stdClaimNames.add(WEBSITE_CLAIM_NAME);
+		stdClaimNames.add(EMAIL_CLAIM_NAME);
+		stdClaimNames.add(EMAIL_VERIFIED_CLAIM_NAME);
+		stdClaimNames.add(GENDER_CLAIM_NAME);
+		stdClaimNames.add(BIRTHDATE_CLAIM_NAME);
+		stdClaimNames.add(ZONEINFO_CLAIM_NAME);
+		stdClaimNames.add(LOCALE_CLAIM_NAME);
+		stdClaimNames.add(PHONE_NUMBER_CLAIM_NAME);
+		stdClaimNames.add(PHONE_NUMBER_VERIFIED_CLAIM_NAME);
+		stdClaimNames.add(ADDRESS_CLAIM_NAME);
+		stdClaimNames.add(UPDATED_AT_CLAIM_NAME);
 	}
 	
 	
@@ -95,7 +219,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public UserInfo(final Subject sub) {
 	
-		setClaim("sub", sub.getValue());
+		setClaim(SUB_CLAIM_NAME, sub.getValue());
 	}
 
 
@@ -111,24 +235,35 @@ public class UserInfo extends ClaimsSet {
 
 		super(jsonObject);
 
-		if (getSubject() == null)
+		if (getStringClaim(SUB_CLAIM_NAME) == null)
 			throw new IllegalArgumentException("Missing or invalid \"sub\" claim");
+	}
+
+
+	/**
+	 * Creates a new UserInfo claims set from the specified JSON Web Token
+	 * (JWT) claims set.
+	 *
+	 * @param jwtClaimsSet The JWT claims set. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException If the JWT claims set doesn't
+	 *                                  contain a subject {@code sub}
+	 *                                  string claim.
+	 */
+	public UserInfo(final JWTClaimsSet jwtClaimsSet) {
+
+		this(jwtClaimsSet.toJSONObject());
 	}
 	
 	
 	/**
 	 * Gets the UserInfo subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The subject, {@code null} if not specified.
+	 * @return The subject.
 	 */
 	public Subject getSubject() {
 	
-		String value = getStringClaim("sub");
-
-		if (value != null)
-			return new Subject(value);
-		else
-			return null;
+		return new Subject(getStringClaim(SUB_CLAIM_NAME));
 	}
 
 	
@@ -140,7 +275,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getName() {
 	
-		return getStringClaim("name");
+		return getStringClaim(NAME_CLAIM_NAME);
 	}
 	
 	
@@ -155,7 +290,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getName(final LangTag langTag) {
 	
-		return getStringClaim("name", langTag);
+		return getStringClaim(NAME_CLAIM_NAME, langTag);
 	}
 	
 	
@@ -166,7 +301,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getNameEntries() {
 	
-		return getLangTaggedClaim("name", String.class);
+		return getLangTaggedClaim(NAME_CLAIM_NAME, String.class);
 	}
 
 
@@ -179,7 +314,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setName(final String name) {
 	
-		setClaim("name", name);
+		setClaim(NAME_CLAIM_NAME, name);
 	}
 	
 	
@@ -193,7 +328,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setName(final String name, final LangTag langTag) {
 	
-		setClaim("name", name, langTag);
+		setClaim(NAME_CLAIM_NAME, name, langTag);
 	}	
 	
 	
@@ -205,7 +340,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getGivenName() {
 	
-		return getStringClaim("given_name");
+		return getStringClaim(GIVEN_NAME_CLAIM_NAME);
 	}
 	
 	
@@ -220,7 +355,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getGivenName(final LangTag langTag) {
 	
-		return getStringClaim("given_name", langTag);
+		return getStringClaim(GIVEN_NAME_CLAIM_NAME, langTag);
 	}
 	
 	
@@ -232,7 +367,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getGivenNameEntries() {
 	
-		return getLangTaggedClaim("given_name", String.class);
+		return getLangTaggedClaim(GIVEN_NAME_CLAIM_NAME, String.class);
 	}
 
 
@@ -245,7 +380,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setGivenName(final String givenName) {
 	
-		setClaim("given_name", givenName);
+		setClaim(GIVEN_NAME_CLAIM_NAME, givenName);
 	}
 	
 	
@@ -259,7 +394,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setGivenName(final String givenName, final LangTag langTag) {
 	
-		setClaim("given_name", givenName, langTag);
+		setClaim(GIVEN_NAME_CLAIM_NAME, givenName, langTag);
 	}
 
 	
@@ -271,7 +406,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getFamilyName() {
 	
-		return getStringClaim("family_name");
+		return getStringClaim(FAMILY_NAME_CLAIM_NAME);
 	}
 	
 	
@@ -286,7 +421,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getFamilyName(final LangTag langTag) {
 	
-		return getStringClaim("family_name", langTag);
+		return getStringClaim(FAMILY_NAME_CLAIM_NAME, langTag);
 	}
 	
 	
@@ -298,7 +433,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getFamilyNameEntries() {
 	
-		return getLangTaggedClaim("family_name", String.class);
+		return getLangTaggedClaim(FAMILY_NAME_CLAIM_NAME, String.class);
 	}
 
 
@@ -311,7 +446,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setFamilyName(final String familyName) {
 	
-		setClaim("family_name", familyName);
+		setClaim(FAMILY_NAME_CLAIM_NAME, familyName);
 	}
 	
 	
@@ -325,7 +460,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setFamilyName(final String familyName, final LangTag langTag) {
 	
-		setClaim("family_name", familyName, langTag);
+		setClaim(FAMILY_NAME_CLAIM_NAME, familyName, langTag);
 	}
 
 	
@@ -337,7 +472,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getMiddleName() {
 	
-		return getStringClaim("middle_name");
+		return getStringClaim(MIDDLE_NAME_CLAIM_NAME);
 	}
 	
 	
@@ -352,7 +487,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getMiddleName(final LangTag langTag) {
 	
-		return getStringClaim("middle_name", langTag);
+		return getStringClaim(MIDDLE_NAME_CLAIM_NAME, langTag);
 	}
 	
 	
@@ -364,7 +499,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getMiddleNameEntries() {
 	
-		return getLangTaggedClaim("middle_name", String.class);
+		return getLangTaggedClaim(MIDDLE_NAME_CLAIM_NAME, String.class);
 	}
 
 
@@ -377,7 +512,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setMiddleName(final String middleName) {
 	
-		setClaim("middle_name", middleName);
+		setClaim(MIDDLE_NAME_CLAIM_NAME, middleName);
 	}
 	
 	
@@ -391,7 +526,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setMiddleName(final String middleName, final LangTag langTag) {
 	
-		setClaim("middle_name", middleName, langTag);
+		setClaim(MIDDLE_NAME_CLAIM_NAME, middleName, langTag);
 	}
 	
 	
@@ -403,7 +538,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getNickname() {
 	
-		return getStringClaim("nickname");
+		return getStringClaim(NICKNAME_CLAIM_NAME);
 	}
 	
 	
@@ -418,7 +553,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getNickname(final LangTag langTag) {
 	
-		return getStringClaim("nickname", langTag);
+		return getStringClaim(NICKNAME_CLAIM_NAME, langTag);
 	}
 	
 	
@@ -430,7 +565,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,String> getNicknameEntries() {
 	
-		return getLangTaggedClaim("nickname", String.class);
+		return getLangTaggedClaim(NICKNAME_CLAIM_NAME, String.class);
 	}
 
 
@@ -443,7 +578,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setNickname(final String nickname) {
 	
-		setClaim("nickname", nickname);
+		setClaim(NICKNAME_CLAIM_NAME, nickname);
 	}
 	
 	
@@ -457,7 +592,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setNickname(final String nickname, final LangTag langTag) {
 	
-		setClaim("nickname", nickname, langTag);
+		setClaim(NICKNAME_CLAIM_NAME, nickname, langTag);
 	}
 	
 	
@@ -469,7 +604,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getPreferredUsername() {
 	
-		return getStringClaim("preferred_username");
+		return getStringClaim(PREFERRED_USERNAME_CLAIM_NAME);
 	}
 	
 	
@@ -482,7 +617,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setPreferredUsername(final String preferredUsername) {
 	
-		setClaim("preferred_username", preferredUsername);
+		setClaim(PREFERRED_USERNAME_CLAIM_NAME, preferredUsername);
 	}
 	
 	
@@ -493,7 +628,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public URL getProfile() {
 	
-		return getURLClaim("profile");
+		return getURLClaim(PROFILE_CLAIM_NAME);
 	}
 	
 	
@@ -505,7 +640,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setProfile(final URL profile) {
 	
-		setURLClaim("profile", profile);
+		setURLClaim(PROFILE_CLAIM_NAME, profile);
 	}
 	
 	
@@ -516,7 +651,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public URL getPicture() {
 	
-		return getURLClaim("picture");
+		return getURLClaim(PICTURE_CLAIM_NAME);
 	}
 	
 	
@@ -528,7 +663,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setPicture(final URL picture) {
 	
-		setURLClaim("picture", picture);
+		setURLClaim(PICTURE_CLAIM_NAME, picture);
 	}
 	
 	
@@ -539,7 +674,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public URL getWebsite() {
 	
-		return getURLClaim("website");
+		return getURLClaim(WEBSITE_CLAIM_NAME);
 	}
 	
 	
@@ -551,7 +686,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setWebsite(final URL website) {
 	
-		setURLClaim("website", website);
+		setURLClaim(WEBSITE_CLAIM_NAME, website);
 	}
 	
 	
@@ -563,7 +698,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public InternetAddress getEmail() {
 	
-		return getEmailClaim("email");
+		return getEmailClaim(EMAIL_CLAIM_NAME);
 	}
 	
 	
@@ -576,7 +711,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setEmail(final InternetAddress email) {
 	
-		setEmailClaim("email", email);
+		setEmailClaim(EMAIL_CLAIM_NAME, email);
 	}
 	
 	
@@ -589,7 +724,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Boolean getEmailVerified() {
 	
-		return getBooleanClaim("email_verified");
+		return getBooleanClaim(EMAIL_VERIFIED_CLAIM_NAME);
 	}
 	
 	
@@ -602,7 +737,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setEmailVerified(final Boolean emailVerified) {
 	
-		setClaim("email_verified", emailVerified);
+		setClaim(EMAIL_VERIFIED_CLAIM_NAME, emailVerified);
 	}
 	
 	
@@ -613,7 +748,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Gender getGender() {
 	
-		String value = getStringClaim("gender");
+		String value = getStringClaim(GENDER_CLAIM_NAME);
 		
 		if (value == null)
 			return null;
@@ -630,9 +765,9 @@ public class UserInfo extends ClaimsSet {
 	public void setGender(final Gender gender) {
 	
 		if (gender != null)
-			setClaim("gender", gender.getValue());
+			setClaim(GENDER_CLAIM_NAME, gender.getValue());
 		else
-			setClaim("gender", null);
+			setClaim(GENDER_CLAIM_NAME, null);
 	}
 	
 	
@@ -643,7 +778,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getBirthdate() {
 	
-		return getStringClaim("birthdate");
+		return getStringClaim(BIRTHDATE_CLAIM_NAME);
 	}
 	
 	
@@ -655,7 +790,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setBirthdate(final String birthdate) {
 	
-		setClaim("birthdate", birthdate);
+		setClaim(BIRTHDATE_CLAIM_NAME, birthdate);
 	}
 	
 	
@@ -666,7 +801,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getZoneinfo() {
 	
-		return getStringClaim("zoneinfo");
+		return getStringClaim(ZONEINFO_CLAIM_NAME);
 	}
 	
 	
@@ -678,7 +813,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setZoneinfo(final String zoneinfo) {
 	
-		setClaim("zoneinfo", zoneinfo);
+		setClaim(ZONEINFO_CLAIM_NAME, zoneinfo);
 	}
 	
 	
@@ -689,7 +824,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getLocale() {
 	
-		return getStringClaim("locale");
+		return getStringClaim(LOCALE_CLAIM_NAME);
 	}
 	
 	
@@ -701,7 +836,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setLocale(final String locale) {
 	
-		setClaim("locale", locale);
+		setClaim(LOCALE_CLAIM_NAME, locale);
 	}
 	
 	
@@ -714,7 +849,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public String getPhoneNumber() {
 	
-		return getStringClaim("phone_number");
+		return getStringClaim(PHONE_NUMBER_CLAIM_NAME);
 	}
 	
 	
@@ -727,7 +862,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setPhoneNumber(final String phoneNumber) {
 	
-		setClaim("phone_number", phoneNumber);
+		setClaim(PHONE_NUMBER_CLAIM_NAME, phoneNumber);
 	}
 	
 	
@@ -740,7 +875,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Boolean getPhoneNumberVerified() {
 	
-		return getBooleanClaim("phone_number_verified");
+		return getBooleanClaim(PHONE_NUMBER_VERIFIED_CLAIM_NAME);
 	}
 	
 	
@@ -753,7 +888,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setPhoneNumberVerified(final Boolean phoneNumberVerified) {
 	
-		setClaim("phone_number_verified", phoneNumberVerified);
+		setClaim(PHONE_NUMBER_VERIFIED_CLAIM_NAME, phoneNumberVerified);
 	}
 
 
@@ -783,9 +918,9 @@ public class UserInfo extends ClaimsSet {
 		String name;
 
 		if (langTag!= null)
-			name = "address#" + langTag;
+			name = ADDRESS_CLAIM_NAME + "#" + langTag;
 		else
-			name = "address";
+			name = ADDRESS_CLAIM_NAME;
 
 		JSONObject jsonObject = getClaim(name, JSONObject.class);
 
@@ -804,7 +939,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Map<LangTag,Address> getAddressEntries() {
 	
-		Map<LangTag,JSONObject> entriesIn = getLangTaggedClaim("address", JSONObject.class);
+		Map<LangTag,JSONObject> entriesIn = getLangTaggedClaim(ADDRESS_CLAIM_NAME, JSONObject.class);
 
 		Map<LangTag,Address> entriesOut = new HashMap<LangTag,Address>();
 
@@ -825,9 +960,9 @@ public class UserInfo extends ClaimsSet {
 	public void setAddress(final Address address) {
 	
 		if (address != null)
-			setClaim("address", address.toJSONObject());
+			setClaim(ADDRESS_CLAIM_NAME, address.toJSONObject());
 		else
-			setClaim("address", null);
+			setClaim(ADDRESS_CLAIM_NAME, null);
 	}
 	
 	
@@ -841,7 +976,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setAddress(final Address address, final LangTag langTag) {
 
-		String key = langTag == null ? "address" : "address#" + langTag;
+		String key = langTag == null ? ADDRESS_CLAIM_NAME : ADDRESS_CLAIM_NAME + "#" + langTag;
 
 		if (address != null)
 			setClaim(key, address.toJSONObject());
@@ -859,7 +994,7 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public Date getUpdatedTime() {
 	
-		return getDateClaim("updated_at");
+		return getDateClaim(UPDATED_AT_CLAIM_NAME);
 	}
 	
 	
@@ -873,6 +1008,31 @@ public class UserInfo extends ClaimsSet {
 	 */
 	public void setUpdatedTime(final Date updatedTime) {
 	
-		setDateClaim("updated_at", updatedTime);
+		setDateClaim(UPDATED_AT_CLAIM_NAME, updatedTime);
+	}
+
+
+	/**
+	 * Parses a UserInfo claims set from the specified JSON object string.
+	 *
+	 * @param json The JSON object string to parse. Must not be
+	 *             {@code null}.
+	 *
+	 * @return The UserInfo claims set.
+	 *
+	 * @throws ParseException If parsing failed.
+	 */
+	public static UserInfo parse(final String json)
+		throws ParseException {
+
+		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+
+		try {
+			return new UserInfo(jsonObject);
+
+		} catch (IllegalArgumentException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }

@@ -208,11 +208,11 @@ public final class UserInfoSuccessResponse
 		ContentType ct = httpResponse.getContentType();
 		
 		
-		UserInfoSuccessResponse response = null;
+		UserInfoSuccessResponse response;
 		
 		if (ct.match(CommonContentTypes.APPLICATION_JSON)) {
 		
-			UserInfo claimsSet = null;
+			UserInfo claimsSet;
 			
 			try {
 				claimsSet = new UserInfo(httpResponse.getContentAsJSONObject());
@@ -227,7 +227,7 @@ public final class UserInfoSuccessResponse
 		}
 		else if (ct.match(CommonContentTypes.APPLICATION_JWT)) {
 		
-			JWT jwt = null;
+			JWT jwt;
 			
 			try {
 				jwt = httpResponse.getContentAsJWT();
