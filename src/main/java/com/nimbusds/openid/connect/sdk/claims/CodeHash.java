@@ -3,7 +3,9 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.id.Identifier;
+import com.nimbusds.jose.JWSAlgorithm;
+
+import com.nimbusds.oauth2.sdk.AuthorizationCode;
 
 
 /**
@@ -18,7 +20,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public final class CodeHash extends Identifier {
+public final class CodeHash extends HashClaim {
 
 
 	/**
@@ -30,6 +32,27 @@ public final class CodeHash extends Identifier {
 	public CodeHash(final String value) {
 	
 		super(value);
+	}
+
+
+	/**
+	 * Computes the hash for the specified authorisation code and reference
+	 * JSON Web Signature (JWS) algorithm.
+	 *
+	 * @param code The authorisation code. Must not be {@code null}.
+	 * @param alg  The reference JWS algorithm. Must not be {@code null}.
+	 *
+	 * @return The authorisation code hash, or {@code null} if the JWS
+	 *         algorithm is not supported.
+	 */
+	public static CodeHash compute(final AuthorizationCode code, final JWSAlgorithm alg) {
+
+		String value = computeValue(code, alg);
+
+		if (value == null)
+			return null;
+
+		return new CodeHash(value);
 	}
 
 

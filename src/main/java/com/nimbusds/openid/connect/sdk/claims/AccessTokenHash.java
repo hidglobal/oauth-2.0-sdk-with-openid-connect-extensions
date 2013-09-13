@@ -3,7 +3,9 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.id.Identifier;
+import com.nimbusds.jose.JWSAlgorithm;
+
+import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 
 /**
@@ -18,7 +20,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * @author Vladimir Dzhuvinov
  */
 @Immutable
-public final class AccessTokenHash extends Identifier {
+public final class AccessTokenHash extends HashClaim {
 
 
 	/**
@@ -29,6 +31,28 @@ public final class AccessTokenHash extends Identifier {
 	public AccessTokenHash(final String value) {
 	
 		super(value);
+	}
+
+
+	/**
+	 * Computes the hash for the specified access token and reference JSON
+	 * Web Signature (JWS) algorithm.
+	 *
+	 * @param accessToken The access token. Must not be {@code null}.
+	 * @param alg         The reference JWS algorithm. Must not be
+	 *                    {@code null}.
+	 *
+	 * @return The access token hash, or {@code null} if the JWS algorithm
+	 *         is not supported.
+	 */
+	public static AccessTokenHash compute(final AccessToken accessToken, final JWSAlgorithm alg) {
+
+		String value = computeValue(accessToken, alg);
+
+		if (value == null)
+			return null;
+
+		return new AccessTokenHash(value);
 	}
 
 
