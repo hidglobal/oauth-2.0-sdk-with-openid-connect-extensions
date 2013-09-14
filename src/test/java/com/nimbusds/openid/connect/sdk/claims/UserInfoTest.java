@@ -5,6 +5,7 @@ import java.net.URL;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.util.DateUtils;
 import junit.framework.TestCase;
@@ -230,4 +231,87 @@ public class UserInfoTest extends TestCase {
 		assertEquals("country", address.getCountry());
 	}
 
+
+	public void testLanguageTaggedGettersAndSetters()
+		throws Exception {
+
+		UserInfo userInfo = new UserInfo(new Subject("sub"));
+
+		userInfo.setName("name#en", LangTag.parse("en"));
+		userInfo.setName("name#bg", LangTag.parse("bg"));
+
+		userInfo.setGivenName("given_name#en", LangTag.parse("en"));
+		userInfo.setGivenName("given_name#bg", LangTag.parse("bg"));
+
+		userInfo.setFamilyName("family_name#en", LangTag.parse("en"));
+		userInfo.setFamilyName("family_name#bg", LangTag.parse("bg"));
+
+		userInfo.setMiddleName("middle_name#en", LangTag.parse("en"));
+		userInfo.setMiddleName("middle_name#bg", LangTag.parse("bg"));
+
+		userInfo.setNickname("nickname#en", LangTag.parse("en"));
+		userInfo.setNickname("nickname#bg", LangTag.parse("bg"));
+
+		Address address = new Address();
+		address.setFormatted("formatted#en");
+
+		userInfo.setAddress(address, LangTag.parse("en"));
+
+		address = new Address();
+		address.setFormatted("formatted#bg");
+
+		userInfo.setAddress(address, LangTag.parse("bg"));
+
+		assertEquals("name#en", userInfo.getName(LangTag.parse("en")));
+		assertEquals("name#bg", userInfo.getName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getNameEntries().size());
+
+		assertEquals("given_name#en", userInfo.getGivenName(LangTag.parse("en")));
+		assertEquals("given_name#bg", userInfo.getGivenName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getGivenNameEntries().size());
+
+		assertEquals("family_name#en", userInfo.getFamilyName(LangTag.parse("en")));
+		assertEquals("family_name#bg", userInfo.getFamilyName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getFamilyNameEntries().size());
+
+		assertEquals("middle_name#en", userInfo.getMiddleName(LangTag.parse("en")));
+		assertEquals("middle_name#bg", userInfo.getMiddleName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getMiddleNameEntries().size());
+
+		assertEquals("nickname#en", userInfo.getNickname(LangTag.parse("en")));
+		assertEquals("nickname#bg", userInfo.getNickname(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getNicknameEntries().size());
+
+		assertEquals("formatted#en", userInfo.getAddress(LangTag.parse("en")).getFormatted());
+		assertEquals("formatted#bg", userInfo.getAddress(LangTag.parse("bg")).getFormatted());
+		assertEquals(2, userInfo.getAddressEntries().size());
+
+		String json = userInfo.toJSONObject().toJSONString();
+
+		userInfo = UserInfo.parse(json);
+
+		assertEquals("name#en", userInfo.getName(LangTag.parse("en")));
+		assertEquals("name#bg", userInfo.getName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getNameEntries().size());
+
+		assertEquals("given_name#en", userInfo.getGivenName(LangTag.parse("en")));
+		assertEquals("given_name#bg", userInfo.getGivenName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getGivenNameEntries().size());
+
+		assertEquals("family_name#en", userInfo.getFamilyName(LangTag.parse("en")));
+		assertEquals("family_name#bg", userInfo.getFamilyName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getFamilyNameEntries().size());
+
+		assertEquals("middle_name#en", userInfo.getMiddleName(LangTag.parse("en")));
+		assertEquals("middle_name#bg", userInfo.getMiddleName(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getMiddleNameEntries().size());
+
+		assertEquals("nickname#en", userInfo.getNickname(LangTag.parse("en")));
+		assertEquals("nickname#bg", userInfo.getNickname(LangTag.parse("bg")));
+		assertEquals(2, userInfo.getNicknameEntries().size());
+
+		assertEquals("formatted#en", userInfo.getAddress(LangTag.parse("en")).getFormatted());
+		assertEquals("formatted#bg", userInfo.getAddress(LangTag.parse("bg")).getFormatted());
+		assertEquals(2, userInfo.getAddressEntries().size());
+	}
 }
