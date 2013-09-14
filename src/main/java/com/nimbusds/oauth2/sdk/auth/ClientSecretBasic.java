@@ -4,6 +4,7 @@ package com.nimbusds.oauth2.sdk.auth;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 
 import net.jcip.annotations.Immutable;
 
@@ -38,6 +39,12 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {
+
+
+	/**
+	 * The default character set for the client ID and secret encoding.
+	 */
+	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
 
 	/**
@@ -112,25 +119,20 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 * @return The HTTP Authorization header.
 	 */
 	public String toHTTPAuthorizationHeader() {
-		
-		String b64 = null;
-		
+
+		StringBuilder sb = new StringBuilder();
+
 		try {
-			String encodedClientID = URLEncoder.encode(clientID.toString(), "UTF-8");
-			String encodedSecret = URLEncoder.encode(secret.getValue(), "UTF-8");
-
-			StringBuilder sb = new StringBuilder(encodedClientID);
+			sb.append(URLEncoder.encode(clientID.getValue(), UTF8_CHARSET.name()));
 			sb.append(':');
-			sb.append(encodedSecret);
+			sb.append(URLEncoder.encode(secret.getValue(), UTF8_CHARSET.name()));
 
-			b64 = Base64.encodeBase64String(sb.toString().getBytes("UTF-8"));
-			
 		} catch (UnsupportedEncodingException e) {
-		
+
 			// UTF-8 should always be supported
 		}
-		
-		return "Basic " + b64;
+
+		return "Basic " + Base64.encodeBase64String(sb.toString().getBytes(UTF8_CHARSET));
 	}
 	
 	
@@ -164,16 +166,16 @@ public final class ClientSecretBasic extends ClientAuthentication {
 		if (! parts[0].equalsIgnoreCase("Basic"))
 			throw new ParseException("HTTP authentication must be \"Basic\"");
 		
-		try {
-			String credentialsString = new String(Base64.decodeBase64(parts[1]), "utf-8");
+		String credentialsString = new String(Base64.decodeBase64(parts[1]), UTF8_CHARSET);
 
-			String[] credentials = credentialsString.split(":", 2);
+		String[] credentials = credentialsString.split(":", 2);
 		
-			if (credentials.length != 2)
-				throw new ParseException("Missing credentials delimiter \":\"");
+		if (credentials.length != 2)
+			throw new ParseException("Missing credentials delimiter \":\"");
 
-			String decodedClientID = URLDecoder.decode(credentials[0], "utf-8");
-			String decodedSecret = URLDecoder.decode(credentials[1], "utf-8");
+		try {
+			String decodedClientID = URLDecoder.decode(credentials[0], UTF8_CHARSET.name());
+			String decodedSecret = URLDecoder.decode(credentials[1], UTF8_CHARSET.name());
 
 			return new ClientSecretBasic(new ClientID(decodedClientID), new Secret(decodedSecret));
 			

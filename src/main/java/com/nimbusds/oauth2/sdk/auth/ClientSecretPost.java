@@ -108,7 +108,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	
 		Map<String,String> params = new HashMap<String,String>();
 		
-		params.put("client_id", clientID.toString());
+		params.put("client_id", clientID.getValue());
 		params.put("client_secret", secret.getValue());
 		
 		return params;

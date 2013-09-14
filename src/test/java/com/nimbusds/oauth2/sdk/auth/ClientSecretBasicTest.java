@@ -15,7 +15,8 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 public class ClientSecretBasicTest extends TestCase {
 
 
-	public void testSerializeAndParse() {
+	public void testSerializeAndParse()
+		throws ParseException {
 	
 		// Test vectors from OAuth 2.0 RFC
 		
@@ -36,13 +37,7 @@ public class ClientSecretBasicTest extends TestCase {
 		
 		assertEquals("Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3", header);
 		
-		try {
-			csb = ClientSecretBasic.parse(header);
-			
-		} catch (ParseException e) {
-		
-			fail(e.getMessage());
-		}
+		csb = ClientSecretBasic.parse(header);
 		
 		assertEquals(id, csb.getClientID().toString());
 		assertEquals(pw, csb.getClientSecret().getValue());
