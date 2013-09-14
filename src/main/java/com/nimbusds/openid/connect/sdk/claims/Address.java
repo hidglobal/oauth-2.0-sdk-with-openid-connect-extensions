@@ -7,6 +7,9 @@ import java.util.Set;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+
 
 /**
  * UserInfo address claims set, serialisable to a JSON object.
@@ -23,18 +26,54 @@ public class Address extends ClaimsSet {
 
 
 	/**
+	 * The formatted claim name.
+	 */
+	public static final String FORMATTED_CLAIM_NAME = "formatted";
+
+
+	/**
+	 * The street address claim name.
+	 */
+	public static final String STREET_ADDRESS_CLAIM_NAME = "street_address";
+
+
+	/**
+	 * The locality claim name.
+	 */
+	public static final String LOCALITY_CLAIM_NAME = "locality";
+
+
+	/**
+	 * The region claim name.
+	 */
+	public static final String REGION_CLAIM_NAME = "region";
+
+
+	/**
+	 * The postal code claim name.
+	 */
+	public static final String POSTAL_CODE_CLAIM_NAME = "postal_code";
+
+
+	/**
+	 * The country claim name.
+	 */
+	public static final String COUNTRY_CLAIM_NAME = "country";
+
+
+	/**
 	 * The names of the standard UserInfo address claims.
 	 */
 	private static final Set<String> stdClaimNames = new LinkedHashSet<String>();
 	
 	
 	static {
-		stdClaimNames.add("formatted");
-		stdClaimNames.add("street_address");
-		stdClaimNames.add("locality");
-		stdClaimNames.add("region");
-		stdClaimNames.add("postal_code");
-		stdClaimNames.add("country");
+		stdClaimNames.add(FORMATTED_CLAIM_NAME);
+		stdClaimNames.add(STREET_ADDRESS_CLAIM_NAME);
+		stdClaimNames.add(LOCALITY_CLAIM_NAME);
+		stdClaimNames.add(REGION_CLAIM_NAME);
+		stdClaimNames.add(POSTAL_CODE_CLAIM_NAME);
+		stdClaimNames.add(COUNTRY_CLAIM_NAME);
 	}
 	
 	
@@ -78,7 +117,7 @@ public class Address extends ClaimsSet {
 	 */
 	public void setFormatted(final String formatted) {
 	
-		setClaim("formatted", formatted);
+		setClaim(FORMATTED_CLAIM_NAME, formatted);
 	}
 	
 	
@@ -91,7 +130,7 @@ public class Address extends ClaimsSet {
 	 */
 	public String getFormatted() {
 	
-		return getStringClaim("formatted");
+		return getStringClaim(FORMATTED_CLAIM_NAME);
 	}
 	
 	
@@ -106,7 +145,7 @@ public class Address extends ClaimsSet {
 	 */
 	public void setStreetAddress(final String streetAddress) {
 	
-		setClaim("street_address", streetAddress);
+		setClaim(STREET_ADDRESS_CLAIM_NAME, streetAddress);
 	}
 	
 	
@@ -121,7 +160,7 @@ public class Address extends ClaimsSet {
 	 */
 	public String getStreetAddress() {
 	
-		return getStringClaim("street_address");
+		return getStringClaim(STREET_ADDRESS_CLAIM_NAME);
 	}
 	
 	
@@ -134,7 +173,7 @@ public class Address extends ClaimsSet {
 	 */
 	public void setLocality(final String locality) {
 	
-		setClaim("locality", locality);
+		setClaim(LOCALITY_CLAIM_NAME, locality);
 	}
 	
 	
@@ -147,7 +186,7 @@ public class Address extends ClaimsSet {
 	 */
 	public String getLocality() {
 	
-		return getStringClaim("locality");
+		return getStringClaim(LOCALITY_CLAIM_NAME);
 	}
 	
 	
@@ -160,7 +199,7 @@ public class Address extends ClaimsSet {
 	 */
 	public void setRegion(final String region) {
 	
-		setClaim("region", region);
+		setClaim(REGION_CLAIM_NAME, region);
 	}
 	
 	
@@ -173,7 +212,7 @@ public class Address extends ClaimsSet {
 	 */
 	public String getRegion() {
 	
-		return getStringClaim("region");
+		return getStringClaim(REGION_CLAIM_NAME);
 	}
 	
 	
@@ -186,7 +225,7 @@ public class Address extends ClaimsSet {
 	 */
 	public void setPostalCode(final String postalCode) {
 	
-		setClaim("postal_code", postalCode);
+		setClaim(POSTAL_CODE_CLAIM_NAME, postalCode);
 	}
 	
 	
@@ -199,7 +238,7 @@ public class Address extends ClaimsSet {
 	 */
 	public String getPostalCode() {
 	
-		return getStringClaim("postal_code");
+		return getStringClaim(POSTAL_CODE_CLAIM_NAME);
 	}
 	
 	
@@ -212,7 +251,7 @@ public class Address extends ClaimsSet {
 	 */
 	public void setCountry(final String country) {
 	
-		setClaim("country", country);
+		setClaim(COUNTRY_CLAIM_NAME, country);
 	}
 	
 	
@@ -224,6 +263,31 @@ public class Address extends ClaimsSet {
 	 */
 	public String getCountry() {
 	
-		return getStringClaim("country");
+		return getStringClaim(COUNTRY_CLAIM_NAME);
+	}
+
+
+	/**
+	 * Parses an address claims set from the specified JSON object string.
+	 *
+	 * @param json The JSON object string to parse. Must not be
+	 *             {@code null}.
+	 *
+	 * @return The address claims set.
+	 *
+	 * @throws ParseException If parsing failed.
+	 */
+	public static Address parse(final String json)
+		throws ParseException {
+
+		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+
+		try {
+			return new Address(jsonObject);
+
+		} catch (IllegalArgumentException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }
