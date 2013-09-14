@@ -1,6 +1,12 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
+import java.net.URL;
+
+import javax.mail.internet.InternetAddress;
+
+import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.oauth2.sdk.util.DateUtils;
 import junit.framework.TestCase;
 
 
@@ -99,4 +105,129 @@ public class UserInfoTest extends TestCase {
 		assertEquals("1000", address.getPostalCode());
 		assertEquals("Some country", address.getCountry());
 	}
+
+
+	public void testConstructor() {
+
+		Subject subject = new Subject("alice");
+
+		UserInfo userInfo = new UserInfo(subject);
+
+		assertEquals(subject.getValue(), userInfo.getSubject().getValue());
+		assertNull(userInfo.getName());
+		assertNull(userInfo.getGivenName());
+		assertNull(userInfo.getFamilyName());
+		assertNull(userInfo.getMiddleName());
+		assertNull(userInfo.getNickname());
+		assertNull(userInfo.getPreferredUsername());
+		assertNull(userInfo.getProfile());
+		assertNull(userInfo.getPicture());
+		assertNull(userInfo.getWebsite());
+		assertNull(userInfo.getEmail());
+		assertNull(userInfo.getEmailVerified());
+		assertNull(userInfo.getGender());
+		assertNull(userInfo.getBirthdate());
+		assertNull(userInfo.getZoneinfo());
+		assertNull(userInfo.getLocale());
+		assertNull(userInfo.getPhoneNumber());
+		assertNull(userInfo.getPhoneNumberVerified());
+		assertNull(userInfo.getAddress());
+		assertNull(userInfo.getUpdatedTime());
+	}
+
+
+	public void testGettersAndSetters()
+		throws Exception {
+
+		UserInfo userInfo = new UserInfo(new Subject("sub"));
+
+		userInfo.setName("name");
+		userInfo.setGivenName("given_name");
+		userInfo.setFamilyName("family_name");
+		userInfo.setMiddleName("middle_name");
+		userInfo.setNickname("nickname");
+		userInfo.setPreferredUsername("preferred_username");
+		userInfo.setProfile(new URL("https://profile.com"));
+		userInfo.setPicture(new URL("https://picture.com"));
+		userInfo.setWebsite(new URL("https://website.com"));
+		userInfo.setEmail(new InternetAddress("name@domain.com"));
+		userInfo.setEmailVerified(true);
+		userInfo.setGender(Gender.FEMALE);
+		userInfo.setBirthdate("1992-01-31");
+		userInfo.setZoneinfo("Europe/Paris");
+		userInfo.setLocale("en-GB");
+		userInfo.setPhoneNumber("phone_number");
+		userInfo.setPhoneNumberVerified(true);
+
+		Address address = new Address();
+		address.setFormatted("formatted");
+		address.setStreetAddress("street_address");
+		address.setLocality("locality");
+		address.setRegion("region");
+		address.setPostalCode("postal_code");
+		address.setCountry("country");
+
+		userInfo.setAddress(address);
+
+		userInfo.setUpdatedTime(DateUtils.fromSecondsSinceEpoch(100000l));
+
+		assertEquals("sub", userInfo.getSubject().getValue());
+		assertEquals("given_name", userInfo.getGivenName());
+		assertEquals("family_name", userInfo.getFamilyName());
+		assertEquals("middle_name", userInfo.getMiddleName());
+		assertEquals("nickname", userInfo.getNickname());
+		assertEquals("preferred_username", userInfo.getPreferredUsername());
+		assertEquals("https://profile.com", userInfo.getProfile().toString());
+		assertEquals("https://picture.com", userInfo.getPicture().toString());
+		assertEquals("https://website.com", userInfo.getWebsite().toString());
+		assertEquals("name@domain.com", userInfo.getEmail().getAddress());
+		assertTrue(userInfo.getEmailVerified());
+		assertEquals(Gender.FEMALE, userInfo.getGender());
+		assertEquals("1992-01-31", userInfo.getBirthdate());
+		assertEquals("Europe/Paris", userInfo.getZoneinfo());
+		assertEquals("en-GB", userInfo.getLocale());
+		assertEquals("phone_number", userInfo.getPhoneNumber());
+		assertTrue(userInfo.getPhoneNumberVerified());
+
+		address = userInfo.getAddress();
+		assertEquals("formatted", address.getFormatted());
+		assertEquals("street_address", address.getStreetAddress());
+		assertEquals("locality", address.getLocality());
+		assertEquals("region", address.getRegion());
+		assertEquals("postal_code", address.getPostalCode());
+		assertEquals("country", address.getCountry());
+
+		String json = userInfo.toJSONObject().toString();
+
+		System.out.println("Full UserInfo: " + json);
+
+		userInfo = UserInfo.parse(json);
+
+		assertEquals("sub", userInfo.getSubject().getValue());
+		assertEquals("given_name", userInfo.getGivenName());
+		assertEquals("family_name", userInfo.getFamilyName());
+		assertEquals("middle_name", userInfo.getMiddleName());
+		assertEquals("nickname", userInfo.getNickname());
+		assertEquals("preferred_username", userInfo.getPreferredUsername());
+		assertEquals("https://profile.com", userInfo.getProfile().toString());
+		assertEquals("https://picture.com", userInfo.getPicture().toString());
+		assertEquals("https://website.com", userInfo.getWebsite().toString());
+		assertEquals("name@domain.com", userInfo.getEmail().getAddress());
+		assertTrue(userInfo.getEmailVerified());
+		assertEquals(Gender.FEMALE, userInfo.getGender());
+		assertEquals("1992-01-31", userInfo.getBirthdate());
+		assertEquals("Europe/Paris", userInfo.getZoneinfo());
+		assertEquals("en-GB", userInfo.getLocale());
+		assertEquals("phone_number", userInfo.getPhoneNumber());
+		assertTrue(userInfo.getPhoneNumberVerified());
+
+		address = userInfo.getAddress();
+		assertEquals("formatted", address.getFormatted());
+		assertEquals("street_address", address.getStreetAddress());
+		assertEquals("locality", address.getLocality());
+		assertEquals("region", address.getRegion());
+		assertEquals("postal_code", address.getPostalCode());
+		assertEquals("country", address.getCountry());
+	}
+
 }
