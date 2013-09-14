@@ -28,7 +28,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section-3.2.1.
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-04)
+ *         (draft-ietf-oauth-jwt-bearer-06)
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -125,7 +125,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	public JWTAuthenticationClaimsSet getJWTAuthenticationClaimsSet()
 		throws ParseException {
 	
-		JSONObject claimsSet = null;
+		JSONObject claimsSet;
 		
 		try {
 			claimsSet = clientAssertion.getJWTClaimsSet().toJSONObject();

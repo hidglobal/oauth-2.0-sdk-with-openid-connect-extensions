@@ -19,6 +19,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.JWTID;
 import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.oauth2.sdk.util.DateUtils;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -47,7 +48,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section-3.2.1.
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-04)
+ *         (draft-ietf-oauth-jwt-bearer-06)
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -293,16 +294,16 @@ public class JWTAuthenticationClaimsSet {
 		o.put("sub", sub.getValue());
 
 		List<Object> audList = new LinkedList<Object>();
-		audList.add(exp.getTime() / 1000);
+		audList.add(aud);
 		o.put("aud", audList);
 
-		o.put("exp", exp.getTime() / 1000);
+		o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
 
 		if (nbf != null)
-			o.put("nbf", nbf.getTime() / 1000);
+			o.put("nbf", DateUtils.toSecondsSinceEpoch(nbf));
 		
 		if (iat != null)
-			o.put("iat", iat.getTime() / 1000);
+			o.put("iat", DateUtils.toSecondsSinceEpoch(iat));
 		
 		if (jti != null)
 			o.put("jti", jti.getValue());
@@ -361,13 +362,13 @@ public class JWTAuthenticationClaimsSet {
 		Issuer iss = new Issuer(JSONObjectUtils.getString(jsonObject, "iss"));
 		Subject sub = new Subject(JSONObjectUtils.getString(jsonObject, "sub"));
 
-		Audience aud = null;
+		Audience aud;
 
 		if (jsonObject.get("aud") instanceof String) {
 
 			aud = new Audience(JSONObjectUtils.getString(jsonObject, "aud"));
-		}
-		else {
+
+		} else {
 			String[] audList = JSONObjectUtils.getStringArray(jsonObject, "aud");
 
 			if (audList.length > 1)
@@ -376,7 +377,7 @@ public class JWTAuthenticationClaimsSet {
 			aud = new Audience(audList[0]);
 		}
 
-		Date exp = new Date(JSONObjectUtils.getLong(jsonObject, "exp") * 1000);
+		Date exp = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "exp"));
 
 
 		// Parse optional claims
@@ -384,12 +385,12 @@ public class JWTAuthenticationClaimsSet {
 		Date nbf = null;
 
 		if (jsonObject.containsKey("nbf"))
-			nbf = new Date(JSONObjectUtils.getLong(jsonObject, "nbf") * 1000);
+			nbf = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "nbf"));
 
 		Date iat = null;
 
 		if (jsonObject.containsKey("iat"))
-			iat = new Date(JSONObjectUtils.getLong(jsonObject, "iat") * 1000);
+			iat = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "iat"));
 
 		JWTID jti = null;
 
@@ -399,7 +400,7 @@ public class JWTAuthenticationClaimsSet {
 
 		// Check client ID
 
-		if (iss.getValue() != sub.getValue())
+		if (! iss.getValue().equals(sub.getValue()))
 			throw new ParseException("JWT issuer and subject must have the same client ID");
 
 		ClientID clientID = new ClientID(iss.getValue());

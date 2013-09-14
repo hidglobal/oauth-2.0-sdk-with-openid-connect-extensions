@@ -36,7 +36,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-06)
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-04).
+ *         (draft-ietf-oauth-jwt-bearer-06).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -107,7 +107,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
 		
 		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		
-		if (getSupportedJWAs().contains(alg))
+		if (! getSupportedJWAs().contains(alg))
 			throw new ParseException("The client assertion JWT must be HMAC-signed (HS256, HS384 or HS512)");
 		
 		return new ClientSecretJWT(clientAssertion, clientID);

@@ -28,6 +28,9 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>RS256
  *     <li>RS384
  *     <li>RS512
+ *     <li>PS256
+ *     <li>PS384
+ *     <li>PS512
  *     <li>ES256
  *     <li>ES384
  *     <li>ES512
@@ -53,7 +56,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-06)
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-02).
+ *         (draft-ietf-oauth-jwt-bearer-06).
  * </ul>
  *
  * @author Vladimir Dzhuvinov
@@ -76,6 +79,10 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 		supported.add(JWSAlgorithm.RS256);
 		supported.add(JWSAlgorithm.RS384);
 		supported.add(JWSAlgorithm.RS512);
+
+		supported.add(JWSAlgorithm.PS256);
+		supported.add(JWSAlgorithm.PS384);
+		supported.add(JWSAlgorithm.PS512);
 		
 		supported.add(JWSAlgorithm.ES256);
 		supported.add(JWSAlgorithm.ES384);
@@ -129,8 +136,8 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 		
 		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
 		
-		if (getSupportedJWAs().contains(alg))
-			throw new ParseException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, ES256, ES384 or ES512)");
+		if (! getSupportedJWAs().contains(alg))
+			throw new ParseException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384 or ES512)");
 		
 		return new PrivateKeyJWT(clientAssertion, clientID);
 	}
