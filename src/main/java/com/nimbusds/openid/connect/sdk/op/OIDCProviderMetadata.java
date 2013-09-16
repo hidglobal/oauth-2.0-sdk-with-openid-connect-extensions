@@ -95,7 +95,7 @@ public class OIDCProviderMetadata {
 	/**
 	 * The JWK set URL.
 	 */
-	private URL jwkSetURI;
+	private final URL jwkSetURI;
 
 
 	/**
@@ -279,16 +279,18 @@ public class OIDCProviderMetadata {
 	 * @param subjectTypes The supported subject types. At least one must
 	 *                     be specified. Must not be {@code null}.
 	 */
-	protected OIDCProviderMetadata(final Issuer issuer, final List<SubjectType> subjectTypes) {
+	public OIDCProviderMetadata(final Issuer issuer,
+				    final List<SubjectType> subjectTypes,
+				    final URL jwkSetURI) {
 	
-		URL url = null;
+		URL url;
 		
 		try {
 			url = new URL(issuer.getValue());
 			
 		} catch (MalformedURLException e) {
 			
-			throw new IllegalArgumentException("The issuer identifer must be a URL: " + e.getMessage(), e);
+			throw new IllegalArgumentException("The issuer identifier must be a URL: " + e.getMessage(), e);
 		}
 		
 		if (url.getQuery() != null)
@@ -304,6 +306,11 @@ public class OIDCProviderMetadata {
 			throw new IllegalArgumentException("At least one supported subject type must be specified");
 		
 		this.subjectTypes = subjectTypes;
+
+		if (jwkSetURI == null)
+			throw new IllegalArgumentException("The public JWK set URI must not be null");
+
+		this.jwkSetURI = jwkSetURI;
 	}
 
 
@@ -333,6 +340,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the authorisation endpoint URL. Corresponds the
+	 * {@code authorization_endpoint} metadata field.
+	 *
+	 * @param authzEndpoint The authorisation endpoint URL, {@code null} if
+	 *                      not specified.
+	 */
+	public void setAuthorizationEndpointURL(final URL authzEndpoint) {
+
+		this.authzEndpoint = authzEndpoint;
+	}
+
+
+	/**
 	 * Gets the token endpoint URL. Corresponds the {@code token_endpoint}
 	 * metadata field.
 	 *
@@ -341,6 +361,19 @@ public class OIDCProviderMetadata {
 	public URL getTokenEndpointURL() {
 
 		return tokenEndpoint;
+	}
+
+
+	/**
+	 * Sts the token endpoint URL. Corresponds the {@code token_endpoint}
+	 * metadata field.
+	 *
+	 * @param tokenEndpoint The token endpoint URL, {@code null} if not
+	 *                      specified.
+	 */
+	public void setTokenEndpointURL(final URL tokenEndpoint) {
+
+		this.tokenEndpoint = tokenEndpoint;
 	}
 
 
@@ -357,6 +390,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the UserInfo endpoint URL. Corresponds the
+	 * {@code userinfo_endpoint} metadata field.
+	 *
+	 * @param userInfoEndpoint The UserInfo endpoint URL, {@code null} if
+	 *                         not specified.
+	 */
+	public void setUserInfoEndpointURL(final URL userInfoEndpoint) {
+
+		this.userInfoEndpoint = userInfoEndpoint;
+	}
+
+
+	/**
 	 * Gets the client registration endpoint URL. Corresponds to the
 	 * {@code registration_endpoint} metadata field.
 	 *
@@ -366,6 +412,19 @@ public class OIDCProviderMetadata {
 	public URL getRegistrationEndpointURL() {
 
 		return regEndpoint;
+	}
+
+
+	/**
+	 * Sets the client registration endpoint URL. Corresponds to the
+	 * {@code registration_endpoint} metadata field.
+	 *
+	 * @param regEndpoint The client registration endpoint URL,
+	 *                    {@code null} if not specified.
+	 */
+	public void setRegistrationEndpointURL(final URL regEndpoint) {
+
+		this.regEndpoint = regEndpoint;
 	}
 	
 	
@@ -378,6 +437,19 @@ public class OIDCProviderMetadata {
 	public URL getCheckSessionIframeURL() {
 		
 		return checkSessionIframe;
+	}
+
+
+	/**
+	 * Sets the cross-origin check session iframe URL. Corresponds to the
+	 * {@code check_session_iframe} metadata field.
+	 *
+	 * @param checkSessionIframe The check session iframe URL, {@code null}
+	 *                           if not specified.
+	 */
+	public void setCheckSessionIframeURL(final URL checkSessionIframe) {
+
+		this.checkSessionIframe = checkSessionIframe;
 	}
 	
 	
@@ -394,10 +466,23 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the logout endpoint URL. Corresponds to the
+	 * {@code end_session_endpoint} metadata field.
+	 *
+	 * @param endSessionEndpoint The logoout endpoint URL, {@code null} if
+	 *                           not specified.
+	 */
+	public void setEndSessionEndpointURL(final URL endSessionEndpoint) {
+
+		this.endSessionEndpoint = endSessionEndpoint;
+	}
+
+
+	/**
 	 * Gets the JSON Web Key (JWK) set URI. Corresponds to the
 	 * {@code jwks_uri} metadata field.
 	 *
-	 * @return The JWK set URI, {@code null} if not specified.
+	 * @return The JWK set URI.
 	 */
 	public URL getJWKSetURI() {
 
@@ -418,6 +503,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported scope values. Corresponds to the
+	 * {@code scopes_supported} metadata field.
+	 *
+	 * @param scope The supported scope values, {@code null} if not
+	 *              specified.
+	 */
+	public void setScopes(final Scope scope) {
+
+		this.scope = scope;
+	}
+
+
+	/**
 	 * Gets the supported response type values. Corresponds to the
 	 * {@code response_types_supported} metadata field.
 	 *
@@ -427,6 +525,19 @@ public class OIDCProviderMetadata {
 	public List<ResponseType> getResponseTypes() {
 
 		return rts;
+	}
+
+
+	/**
+	 * Sets the supported response type values. Corresponds to the
+	 * {@code response_types_supported} metadata field.
+	 *
+	 * @param rts The supported response type values, {@code null} if not
+	 *            specified.
+	 */
+	public void setResponseTypes(final List<ResponseType> rts) {
+
+		this.rts = rts;
 	}
 	
 	
@@ -443,6 +554,18 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported OAuth 2.0 grant types. Corresponds to the
+	 * {@code grant_types_supported} metadata field.
+	 *
+	 * @param gts The supported grant types, {@code null} if not specified.
+	 */
+	public void setGrantTypes(final List<GrantType> gts) {
+
+		this.gts = gts;
+	}
+
+
+	/**
 	 * Gets the supported Authentication Context Class References (ACRs).
 	 * Corresponds to the {@code acr_values_supported} metadata field.
 	 *
@@ -451,6 +574,18 @@ public class OIDCProviderMetadata {
 	public List<ACR> getACRs() {
 
 		return acrValues;
+	}
+
+
+	/**
+	 * Sets the supported Authentication Context Class References (ACRs).
+	 * Corresponds to the {@code acr_values_supported} metadata field.
+	 *
+	 * @param acrValues The supported ACRs, {@code null} if not specified.
+	 */
+	public void setACRs(final List<ACR> acrValues) {
+
+		this.acrValues = acrValues;
 	}
 
 
@@ -481,6 +616,21 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported token endpoint authentication methods.
+	 * Corresponds to the {@code token_endpoint_auth_methods_supported}
+	 * metadata field.
+	 *
+	 * @param tokenEndpointAuthMethods The supported token endpoint
+	 *                                 authentication methods, {@code null}
+	 *                                 if not specified.
+	 */
+	public void setTokenEndpointAuthMethods(final List<ClientAuthenticationMethod> tokenEndpointAuthMethods) {
+
+		this.tokenEndpointAuthMethods = tokenEndpointAuthMethods;
+	}
+
+
+	/**
 	 * Gets the supported JWS algorithms for the {@code private_key_jwt}
 	 * and {@code client_secret_jwt} token endpoint authentication methods.
 	 * Corresponds to the 
@@ -492,6 +642,22 @@ public class OIDCProviderMetadata {
 	public List<JWSAlgorithm> getTokenEndpointJWSAlgs() {
 
 		return tokenEndpointJWSAlgs;
+	}
+
+
+	/**
+	 * Sets the supported JWS algorithms for the {@code private_key_jwt}
+	 * and {@code client_secret_jwt} token endpoint authentication methods.
+	 * Corresponds to the
+	 * {@code token_endpoint_auth_signing_alg_values_supported} metadata
+	 * field.
+	 *
+	 * @param tokenEndpointJWSAlgs The supported JWS algorithms,
+	 *                             {@code null} if not specified.
+	 */
+	public void setTokenEndpointJWSAlgs(final List<JWSAlgorithm> tokenEndpointJWSAlgs) {
+
+		this.tokenEndpointJWSAlgs = tokenEndpointJWSAlgs;
 	}
 
 
@@ -509,6 +675,20 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported JWS algorithms for OpenID Connect request
+	 * objects. Corresponds to the
+	 * {@code request_object_signing_alg_values_supported} metadata field.
+	 *
+	 * @param requestObjectJWSAlgs The supported JWS algorithms,
+	 *                             {@code null} if not specified.
+	 */
+	public void setRequestObjectJWSAlgs(final List<JWSAlgorithm> requestObjectJWSAlgs) {
+
+		this.requestObjectJWSAlgs = requestObjectJWSAlgs;
+	}
+
+
+	/**
 	 * Gets the supported JWE algorithms for OpenID Connect request 
 	 * objects. Corresponds to the
 	 * {@code request_object_encryption_alg_values_supported} metadata 
@@ -519,6 +699,21 @@ public class OIDCProviderMetadata {
 	public List<JWEAlgorithm> getRequestObjectJWEAlgs() {
 
 		return requestObjectJWEAlgs;
+	}
+
+
+	/**
+	 * Sets the supported JWE algorithms for OpenID Connect request
+	 * objects. Corresponds to the
+	 * {@code request_object_encryption_alg_values_supported} metadata
+	 * field.
+	 *
+	 * @param requestObjectJWEAlgs The supported JWE algorithms,
+	 *                            {@code null} if not specified.
+	 */
+	public void setRequestObjectJWEAlgs(final List<JWEAlgorithm> requestObjectJWEAlgs) {
+
+		this.requestObjectJWEAlgs = requestObjectJWEAlgs;
 	}
 
 
@@ -538,6 +733,21 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported encryption methods for OpenID Connect request
+	 * objects. Corresponds to the
+	 * {@code request_object_encryption_enc_values_supported} metadata
+	 * field.
+	 *
+	 * @param requestObjectJWEEncs The supported encryption methods,
+	 *                             {@code null} if not specified.
+	 */
+	public void setRequestObjectJWEEncs(final List<EncryptionMethod> requestObjectJWEEncs) {
+
+		this.requestObjectJWEEncs = requestObjectJWEEncs;
+	}
+
+
+	/**
 	 * Gets the supported JWS algorithms for ID tokens. Corresponds to the 
 	 * {@code id_token_signing_alg_values_supported} metadata field.
 	 *
@@ -550,6 +760,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported JWS algorithms for ID tokens. Corresponds to the
+	 * {@code id_token_signing_alg_values_supported} metadata field.
+	 *
+	 * @param idTokenJWSAlgs The supported JWS algorithms, {@code null} if
+	 *                       not specified.
+	 */
+	public void setIdTokenJWSAlgs(final List<JWSAlgorithm> idTokenJWSAlgs) {
+
+		this.idTokenJWSAlgs = idTokenJWSAlgs;
+	}
+
+
+	/**
 	 * Gets the supported JWE algorithms for ID tokens. Corresponds to the 
 	 * {@code id_token_encryption_alg_values_supported} metadata field.
 	 *
@@ -558,6 +781,19 @@ public class OIDCProviderMetadata {
 	public List<JWEAlgorithm> getIDTokenJWEAlgs() {
 
 		return idTokenJWEAlgs;
+	}
+
+
+	/**
+	 * Sets the supported JWE algorithms for ID tokens. Corresponds to the
+	 * {@code id_token_encryption_alg_values_supported} metadata field.
+	 *
+	 * @param idTokenJWEAlgs The supported JWE algorithms, {@code null} if
+	 *                       not specified.
+	 */
+	public void setIdTokenJWEAlgs(final List<JWEAlgorithm> idTokenJWEAlgs) {
+
+		this.idTokenJWEAlgs = idTokenJWEAlgs;
 	}
 
 
@@ -575,6 +811,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported encryption methods for ID tokens. Corresponds to
+	 * the {@code id_token_encryption_enc_values_supported} metadata field.
+	 *
+	 * @param idTokenJWEEncs The supported encryption methods, {@code null}
+	 *                       if not specified.
+	 */
+	public void setIdTokenJWEEncs(final List<EncryptionMethod> idTokenJWEEncs) {
+
+		this.idTokenJWEEncs = idTokenJWEEncs;
+	}
+
+
+	/**
 	 * Gets the supported JWS algorithms for UserInfo JWTs. Corresponds to 
 	 * the {@code userinfo_signing_alg_values_supported} metadata field.
 	 *
@@ -582,7 +831,20 @@ public class OIDCProviderMetadata {
 	 */
 	public List<JWSAlgorithm> getUserInfoJWSAlgs() {
 
-		return idTokenJWSAlgs;
+		return userInfoJWSAlgs;
+	}
+
+
+	/**
+	 * Sets the supported JWS algorithms for UserInfo JWTs. Corresponds to
+	 * the {@code userinfo_signing_alg_values_supported} metadata field.
+	 *
+	 * @param userInfoJWSAlgs The supported JWS algorithms, {@code null} if
+	 *                        not specified.
+	 */
+	public void setUserInfoJWSAlgs(final List<JWSAlgorithm> userInfoJWSAlgs) {
+
+		this.userInfoJWSAlgs = userInfoJWSAlgs;
 	}
 
 
@@ -594,7 +856,20 @@ public class OIDCProviderMetadata {
 	 */
 	public List<JWEAlgorithm> getUserInfoJWEAlgs() {
 
-		return idTokenJWEAlgs;
+		return userInfoJWEAlgs;
+	}
+
+
+	/**
+	 * Sets the supported JWE algorithms for UserInfo JWTs. Corresponds to
+	 * the {@code userinfo_encryption_alg_values_supported} metadata field.
+	 *
+	 * @param userInfoJWEAlgs The supported JWE algorithms, {@code null} if
+	 *                        not specified.
+	 */
+	public void setUserInfoJWEAlgs(final List<JWEAlgorithm> userInfoJWEAlgs) {
+
+		this.userInfoJWEAlgs = userInfoJWEAlgs;
 	}
 
 
@@ -608,7 +883,21 @@ public class OIDCProviderMetadata {
 	 */
 	public List<EncryptionMethod> getUserInfoJWEEncs() {
 
-		return idTokenJWEEncs;
+		return userInfoJWEEncs;
+	}
+
+
+	/**
+	 * Sets the supported encryption methods for UserInfo JWTs. Corresponds
+	 * to the {@code userinfo_encryption_enc_values_supported} metadata
+	 * field.
+	 *
+	 * @param userInfoJWEEncs The supported encryption methods,
+	 *                        {@code null} if not specified.
+	 */
+	public void setUserInfoJWEEncs(final List<EncryptionMethod> userInfoJWEEncs) {
+
+		this.userInfoJWEEncs = userInfoJWEEncs;
 	}
 
 
@@ -621,6 +910,19 @@ public class OIDCProviderMetadata {
 	public List<Display> getDisplays() {
 
 		return displays;
+	}
+
+
+	/**
+	 * Sets the supported displays. Corresponds to the
+	 * {@code display_values_supported} metadata field.
+	 *
+	 * @param displays The supported displays, {@code null} if not
+	 *                 specified.
+	 */
+	public void setDisplays(final List<Display> displays) {
+
+		this.displays = displays;
 	}
 	
 	
@@ -637,6 +939,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported claim types. Corresponds to the
+	 * {@code claim_types_supported} metadata field.
+	 *
+	 * @param claimTypes The supported claim types, {@code null} if not
+	 *                   specified.
+	 */
+	public void setClaimTypes(final List<ClaimType> claimTypes) {
+
+		this.claimTypes = claimTypes;
+	}
+
+
+	/**
 	 * Gets the supported claims names. Corresponds to the 
 	 * {@code claims_supported} metadata field.
 	 *
@@ -645,6 +960,19 @@ public class OIDCProviderMetadata {
 	public List<String> getClaims() {
 
 		return claims;
+	}
+
+
+	/**
+	 * Sets the supported claims names. Corresponds to the
+	 * {@code claims_supported} metadata field.
+	 *
+	 * @param claims The supported claims names, {@code null} if not
+	 *               specified.
+	 */
+	public void setClaims(final List<String> claims) {
+
+		this.claims = claims;
 	}
 	
 	
@@ -657,6 +985,19 @@ public class OIDCProviderMetadata {
 	public List<LangTag> getClaimsLocales() {
 		
 		return claimsLocales;
+	}
+
+
+	/**
+	 * Sets the supported claims locales. Corresponds to the
+	 * {@code claims_locales_supported} metadata field.
+	 *
+	 * @param claimsLocales The supported claims locales, {@code null} if
+	 *                      not specified.
+	 */
+	public void setClaimLocales(final List<LangTag> claimsLocales) {
+
+		this.claimsLocales = claimsLocales;
 	}
 	
 	
@@ -673,6 +1014,19 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Sets the supported UI locales. Corresponds to the
+	 * {@code ui_locales_supported} metadata field.
+	 *
+	 * @param uiLocales The supported UI locales, {@code null} if not
+	 *                  specified.
+	 */
+	public void setUILocales(final List<LangTag> uiLocales) {
+
+		this.uiLocales = uiLocales;
+	}
+
+
+	/**
 	 * Gets the service documentation URL. Corresponds to the 
 	 * {@code service_documentation} metadata field.
 	 *
@@ -682,6 +1036,19 @@ public class OIDCProviderMetadata {
 	public URL getServiceDocsURL() {
 
 		return serviceDocsURL;
+	}
+
+
+	/**
+	 * Sets the service documentation URL. Corresponds to the
+	 * {@code service_documentation} metadata field.
+	 *
+	 * @param serviceDocsURL The service documentation URL, {@code null} if
+	 *                       not specified.
+	 */
+	public void setServiceDocsURL(final URL serviceDocsURL) {
+
+		this.serviceDocsURL = serviceDocsURL;
 	}
 	
 	
@@ -695,6 +1062,18 @@ public class OIDCProviderMetadata {
 		
 		return policyURI;
 	}
+
+
+	/**
+	 * Sets the provider's policy regarding relying party use of data.
+	 * Corresponds to the {@code op_policy_uri} metadata field.
+	 *
+	 * @param policyURI The policy URI, {@code null} if not specified.
+	 */
+	public void setPolicyURI(final URL policyURI) {
+
+		this.policyURI = policyURI;
+	}
 	
 	
 	/**
@@ -706,6 +1085,19 @@ public class OIDCProviderMetadata {
 	public URL getTermsOfServiceURI() {
 		
 		return tosURI;
+	}
+
+
+	/**
+	 * Sets the provider's terms of service. Corresponds to the
+	 * {@code op_tos_uri} metadata field.
+	 *
+	 * @param tosURI The terms of service URI, {@code null} if not
+	 *               specified.
+	 */
+	public void setTermsOfServiceURI(final URL tosURI) {
+
+		this.tosURI = tosURI;
 	}
 	
 	
@@ -721,6 +1113,21 @@ public class OIDCProviderMetadata {
 		
 		return claimsParamSupported;
 	}
+
+
+	/**
+	 * Sets the support for the {@code claim} authorisation request
+	 * parameter. Corresponds to the {@code claims_parameter_supported}
+	 * metadata field.
+	 *
+	 * @param claimsParamSupported {@code true} if the {@code claim}
+	 *                             parameter is supported, else
+	 *                             {@code false}.
+	 */
+	public void setSupportsClaimsParams(final boolean claimsParamSupported) {
+
+		this.claimsParamSupported = claimsParamSupported;
+	}
 	
 	
 	/**
@@ -734,6 +1141,21 @@ public class OIDCProviderMetadata {
 	public boolean supportsRequestParam() {
 		
 		return requestParamSupported;
+	}
+
+
+	/**
+	 * Sets the support for the {@code request} authorisation request
+	 * parameter. Corresponds to the {@code request_parameter_supported}
+	 * metadata field.
+	 *
+	 * @param requestParamSupported {@code true} if the {@code reqeust}
+	 *                              parameter is supported, else
+	 *                              {@code false}.
+	 */
+	public void setSupportsRequestParams(final boolean requestParamSupported) {
+
+		this.requestParamSupported = requestParamSupported;
 	}
 	
 	
@@ -749,6 +1171,21 @@ public class OIDCProviderMetadata {
 		
 		return requestURIParamSupported;
 	}
+
+
+	/**
+	 * Sets the support for the {@code request_uri} authorisation request
+	 * parameter. Corresponds the {@code request_uri_parameter_supported}
+	 * metadata field.
+	 *
+	 * @param requestURIParamSupported {@code true} if the
+	 *                                 {@code request_uri} parameter is
+	 *                                 supported, else {@code false}.
+	 */
+	public void setSupportsRequestURIParam(final boolean requestURIParamSupported) {
+
+		this.requestURIParamSupported = requestURIParamSupported;
+	}
 	
 	
 	/**
@@ -763,6 +1200,275 @@ public class OIDCProviderMetadata {
 		
 		return requireRequestURIReg;
 	}
+
+
+	/**
+	 * Sets the requirement for the {@code request_uri} parameter
+	 * pre-registration. Corresponds to the
+	 * {@code require_request_uri_registration} metadata field.
+	 *
+	 * @param requireRequestURIReg {@code true} if the {@code request_uri}
+	 *                             parameter values must be pre-registered,
+	 *                             else {@code false}.
+	 */
+	public void setRequiresRequestURIRegistration(final boolean requireRequestURIReg) {
+
+		this.requireRequestURIReg = requireRequestURIReg;
+	}
+
+
+	/**
+	 * Returns the JSON object representation of this OpenID Connect
+	 * provider metadata.
+	 *
+	 * @return The JSON object representation.
+	 */
+	public JSONObject toJSONObject() {
+
+		JSONObject o = new JSONObject();
+
+		// Mandatory fields
+
+		o.put("version", VERSION);
+
+		o.put("issuer", issuer.getValue());
+
+		List<String> stringList = new ArrayList<String>(subjectTypes.size());
+
+		for (SubjectType st: subjectTypes)
+			stringList.add(st.toString());
+
+		o.put("subject_types_supported", stringList);
+
+		o.put("jwks_uri", jwkSetURI.toString());
+
+		// Optional fields
+
+		if (authzEndpoint != null)
+			o.put("authorization_endpoint", authzEndpoint.toString());
+
+		if (tokenEndpoint != null)
+			o.put("token_endpoint", tokenEndpoint.toString());
+
+		if (userInfoEndpoint != null)
+			o.put("userinfo_endpoint", userInfoEndpoint.toString());
+
+		if (regEndpoint != null)
+			o.put("registration_endpoint", regEndpoint.toString());
+
+		if (checkSessionIframe != null)
+			o.put("check_session_iframe", checkSessionIframe.toString());
+
+		if (endSessionEndpoint != null)
+			o.put("end_session_endpoint", endSessionEndpoint.toString());
+
+		if (scope != null)
+			o.put("scopes_supported", scope.toStringList());
+
+		if (rts != null) {
+
+			stringList = new ArrayList<String>(rts.size());
+
+			for (ResponseType rt: rts)
+				stringList.add(rt.toString());
+
+			o.put("response_types_supported", stringList);
+		}
+
+		if (gts != null) {
+
+			stringList = new ArrayList<String>(gts.size());
+
+			for (GrantType gt: gts)
+				stringList.add(gt.toString());
+
+			o.put("grant_types_supported", stringList);
+		}
+
+		if (acrValues != null) {
+
+			stringList = new ArrayList<String>(acrValues.size());
+
+			for (ACR acr: acrValues)
+				stringList.add(acr.getValue());
+
+			o.put("acr_values_supported", stringList);
+		}
+
+
+		if (tokenEndpointAuthMethods != null) {
+
+			stringList = new ArrayList<String>(tokenEndpointAuthMethods.size());
+
+			for (ClientAuthenticationMethod m: tokenEndpointAuthMethods)
+				stringList.add(m.getValue());
+
+			o.put("token_endpoint_auth_methods_supported", stringList);
+		}
+
+		if (tokenEndpointJWSAlgs != null) {
+
+			stringList = new ArrayList<String>(tokenEndpointJWSAlgs.size());
+
+			for (JWSAlgorithm alg: tokenEndpointJWSAlgs)
+				stringList.add(alg.getName());
+
+			o.put("token_endpoint_auth_signing_alg_values_supported", stringList);
+		}
+
+		if (requestObjectJWSAlgs != null) {
+
+			stringList = new ArrayList<String>(requestObjectJWSAlgs.size());
+
+			for (JWSAlgorithm alg: requestObjectJWSAlgs)
+				stringList.add(alg.getName());
+
+			o.put("request_object_signing_alg_values_supported", stringList);
+		}
+
+		if (requestObjectJWEAlgs != null) {
+
+			stringList = new ArrayList<String>(requestObjectJWEAlgs.size());
+
+			for (JWEAlgorithm alg: requestObjectJWEAlgs)
+				stringList.add(alg.getName());
+
+			o.put("request_object_encryption_alg_values_supported", stringList);
+		}
+
+		if (requestObjectJWEEncs != null) {
+
+			stringList = new ArrayList<String>(requestObjectJWEEncs.size());
+
+			for (EncryptionMethod m: requestObjectJWEEncs)
+				stringList.add(m.getName());
+
+			o.put("request_object_encryption_enc_values_supported", stringList);
+		}
+
+		if (idTokenJWSAlgs != null) {
+
+			stringList = new ArrayList<String>(idTokenJWEAlgs.size());
+
+			for (JWSAlgorithm alg: idTokenJWSAlgs)
+				stringList.add(alg.getName());
+
+			o.put("id_token_signing_alg_values_supported", stringList);
+		}
+
+		if (idTokenJWEAlgs != null) {
+
+			stringList = new ArrayList<String>(idTokenJWEAlgs.size());
+
+			for (JWEAlgorithm alg: idTokenJWEAlgs)
+				stringList.add(alg.getName());
+
+			o.put("id_token_encryption_alg_values_supported", stringList);
+		}
+
+		if (idTokenJWEEncs != null) {
+
+			stringList = new ArrayList<String>(idTokenJWEEncs.size());
+
+			for (EncryptionMethod m: idTokenJWEEncs)
+				stringList.add(m.getName());
+
+			o.put("id_token_encryption_enc_values_supported", stringList);
+		}
+
+		if (userInfoJWSAlgs != null) {
+
+			stringList = new ArrayList<String>(userInfoJWSAlgs.size());
+
+			for (JWSAlgorithm alg: userInfoJWSAlgs)
+				stringList.add(alg.getName());
+
+			o.put("userinfo_signing_alg_values_supported", stringList);
+		}
+
+		if (userInfoJWEAlgs != null) {
+
+			stringList = new ArrayList<String>(userInfoJWEAlgs.size());
+
+			for (JWEAlgorithm alg: userInfoJWEAlgs)
+				stringList.add(alg.getName());
+
+			o.put("userinfo_encryption_alg_values_supported", stringList);
+		}
+
+		if (userInfoJWEEncs != null) {
+
+			stringList = new ArrayList<String>(userInfoJWEEncs.size());
+
+			for (EncryptionMethod m: userInfoJWEEncs)
+				stringList.add(m.getName());
+
+			o.put("userinfo_encryption_enc_values_supported", stringList);
+		}
+
+		if (displays != null) {
+
+			stringList = new ArrayList<String>(displays.size());
+
+			for (Display d: displays)
+				stringList.add(d.toString());
+
+			o.put("display_values_supported", stringList);
+		}
+
+		if (claimTypes != null) {
+
+			stringList = new ArrayList<String>(claimTypes.size());
+
+			for (ClaimType ct: claimTypes)
+				stringList.add(ct.toString());
+
+			o.put("claim_types_supported", stringList);
+		}
+
+		if (claims != null)
+			o.put("claims_supported", claims);
+
+		if (claimsLocales != null) {
+
+			stringList = new ArrayList<String>(claimsLocales.size());
+
+			for (LangTag l: claimsLocales)
+				stringList.add(l.toString());
+
+			o.put("claims_locales_supported", stringList);
+		}
+
+		if (uiLocales != null) {
+
+			stringList = new ArrayList<String>(uiLocales.size());
+
+			for (LangTag l: uiLocales)
+				stringList.add(l.toString());
+
+			o.put("ui_locales_supported", stringList);
+		}
+
+		if (serviceDocsURL != null)
+			o.put("service_documentation", serviceDocsURL.toString());
+
+		if (policyURI != null)
+			o.put("op_policy_uri", policyURI.toString());
+
+		if (tosURI != null)
+			o.put("op_tos_uri", tosURI.toString());
+
+		o.put("claims_parameter_supported", claimsParamSupported);
+
+		o.put("request_parameter_supported", requestParamSupported);
+
+		o.put("request_uri_parameter_supported", requestURIParamSupported);
+
+		o.put("require_request_uri_registration", requireRequestURIReg);
+
+		return o;
+	}
+
 
 
 	/**
@@ -794,9 +1500,11 @@ public class OIDCProviderMetadata {
 		}
 		
 		Issuer issuer = new Issuer(JSONObjectUtils.getURL(jsonObject, "issuer").toString());
+
+		URL jwkSetURI = JSONObjectUtils.getURL(jsonObject, "jwks_uri");
 		
 		
-		OIDCProviderMetadata op = new OIDCProviderMetadata(issuer, Collections.unmodifiableList(subjectTypes));
+		OIDCProviderMetadata op = new OIDCProviderMetadata(issuer, Collections.unmodifiableList(subjectTypes), jwkSetURI);
 
 		// Endpoints
 		if (jsonObject.containsKey("authorization_endpoint"))
@@ -816,11 +1524,6 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("end_session_endpoint"))
 			op.endSessionEndpoint = JSONObjectUtils.getURL(jsonObject, "end_session_endpoint");
-		
-
-		// JWK set
-		if (jsonObject.containsKey("jwks_uri"))
-			op.jwkSetURI = JSONObjectUtils.getURL(jsonObject, "jwks_uri");
 
 		// OIDC capabilities
 		if (jsonObject.containsKey("scopes_supported")) {

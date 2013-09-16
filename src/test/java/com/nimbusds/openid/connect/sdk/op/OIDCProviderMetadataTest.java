@@ -1,10 +1,15 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
+import java.net.URL;
+import java.util.LinkedList;
 import java.util.List;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
+
+import com.nimbusds.jose.util.JSONObjectUtils;
+import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.id.Issuer;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -27,9 +32,9 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimType;
  *
  * @author Vladimir Dzhuvinov
  */
-public class OIDCProviderMetadataTest {
+public class OIDCProviderMetadataTest extends TestCase {
 
-	@Test
+
 	public void testParseExample() throws Exception {
 
 		String s = "{\n"
@@ -241,5 +246,252 @@ public class OIDCProviderMetadataTest {
 		assertTrue(uiLocales.contains(LangTag.parse("fr-FR")));
 		assertTrue(uiLocales.contains(LangTag.parse("fr-CA")));
 		assertEquals(5, uiLocales.size());
+	}
+
+
+	public void testGettersAndSetters()
+		throws Exception {
+
+		Issuer issuer = new Issuer("https://c2id.com");
+
+		List<SubjectType> subjectTypes = new LinkedList<SubjectType>();
+		subjectTypes.add(SubjectType.PAIRWISE);
+		subjectTypes.add(SubjectType.PUBLIC);
+
+		URL jwkSetURI = new URL("https://c2id.com/jwks.json");
+
+		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwkSetURI);
+
+		assertEquals(issuer.getValue(), meta.getIssuer().getValue());
+		assertEquals(SubjectType.PAIRWISE, meta.getSubjectTypes().get(0));
+		assertEquals(SubjectType.PUBLIC, meta.getSubjectTypes().get(1));
+		assertEquals(jwkSetURI.toString(), meta.getJWKSetURI().toString());
+
+		meta.setAuthorizationEndpointURL(new URL("https://c2id.com/authz"));
+		assertEquals("https://c2id.com/authz", meta.getAuthorizationEndpointURL().toString());
+
+		meta.setTokenEndpointURL(new URL("https://c2id.com/token"));
+		assertEquals("https://c2id.com/token", meta.getTokenEndpointURL().toString());
+
+		meta.setUserInfoEndpointURL(new URL("https://c2id.com/userinfo"));
+		assertEquals("https://c2id.com/userinfo", meta.getUserInfoEndpointURL().toString());
+
+		meta.setRegistrationEndpointURL(new URL("https://c2id.com/reg"));
+		assertEquals("https://c2id.com/reg", meta.getRegistrationEndpointURL().toString());
+
+		meta.setCheckSessionIframeURL(new URL("https://c2id.com/session"));
+		assertEquals("https://c2id.com/session", meta.getCheckSessionIframeURL().toString());
+
+		meta.setEndSessionEndpointURL(new URL("https://c2id.com/logout"));
+		assertEquals("https://c2id.com/logout", meta.getEndSessionEndpointURL().toString());
+
+		meta.setScopes(Scope.parse("openid email profile"));
+		assertTrue(Scope.parse("openid email profile").containsAll(meta.getScopes()));
+
+		List<ResponseType> responseTypes = new LinkedList<ResponseType>();
+		ResponseType rt1 = new ResponseType();
+		rt1.add(ResponseType.Value.CODE);
+		responseTypes.add(rt1);
+		meta.setResponseTypes(responseTypes);
+		assertEquals(ResponseType.Value.CODE, responseTypes.iterator().next().iterator().next());
+		assertEquals(1, responseTypes.size());
+
+		List<GrantType> grantTypes = new LinkedList<GrantType>();
+		grantTypes.add(GrantType.AUTHORIZATION_CODE);
+		grantTypes.add(GrantType.REFRESH_TOKEN);
+		meta.setGrantTypes(grantTypes);
+		assertTrue(meta.getGrantTypes().contains(GrantType.AUTHORIZATION_CODE));
+		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
+
+		List<ACR> acrList = new LinkedList<ACR>();
+		acrList.add(new ACR("1"));
+		meta.setACRs(acrList);
+		assertEquals("1", meta.getACRs().get(0).getValue());
+
+		List<ClientAuthenticationMethod> authMethods = new LinkedList<ClientAuthenticationMethod>();
+		authMethods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+		meta.setTokenEndpointAuthMethods(authMethods);
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, meta.getTokenEndpointAuthMethods().get(0));
+
+		List<JWSAlgorithm> tokenEndpointJWSAlgs = new LinkedList<JWSAlgorithm>();
+		tokenEndpointJWSAlgs.add(JWSAlgorithm.HS256);
+		tokenEndpointJWSAlgs.add(JWSAlgorithm.HS384);
+		tokenEndpointJWSAlgs.add(JWSAlgorithm.HS512);
+		meta.setTokenEndpointJWSAlgs(tokenEndpointJWSAlgs);
+		assertEquals(JWSAlgorithm.HS256, meta.getTokenEndpointJWSAlgs().get(0));
+		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointJWSAlgs().get(1));
+		assertEquals(JWSAlgorithm.HS512, meta.getTokenEndpointJWSAlgs().get(2));
+
+		List<JWSAlgorithm> requestObjectJWSAlgs = new LinkedList<JWSAlgorithm>();
+		requestObjectJWSAlgs.add(JWSAlgorithm.HS256);
+		meta.setRequestObjectJWSAlgs(requestObjectJWSAlgs);
+		assertEquals(JWSAlgorithm.HS256, meta.getRequestObjectJWSAlgs().get(0));
+
+		List<JWEAlgorithm> requestObjectJWEAlgs = new LinkedList<JWEAlgorithm>();
+		requestObjectJWEAlgs.add(JWEAlgorithm.A128KW);
+		meta.setRequestObjectJWEAlgs(requestObjectJWEAlgs);
+		assertEquals(JWEAlgorithm.A128KW, meta.getRequestObjectJWEAlgs().get(0));
+
+		List<EncryptionMethod> requestObjectEncs = new LinkedList<EncryptionMethod>();
+		requestObjectEncs.add(EncryptionMethod.A128GCM);
+		meta.setRequestObjectJWEEncs(requestObjectEncs);
+		assertEquals(EncryptionMethod.A128GCM, meta.getRequestObjectJWEEncs().get(0));
+
+		List<JWSAlgorithm> idTokenJWSAlgs = new LinkedList<JWSAlgorithm>();
+		idTokenJWSAlgs.add(JWSAlgorithm.RS256);
+		meta.setIdTokenJWSAlgs(idTokenJWSAlgs);
+		assertEquals(JWSAlgorithm.RS256, meta.getIDTokenJWSAlgs().get(0));
+
+		List<JWEAlgorithm> idTokenJWEalgs = new LinkedList<JWEAlgorithm>();
+		idTokenJWEalgs.add(JWEAlgorithm.A256KW);
+		meta.setIdTokenJWEAlgs(idTokenJWEalgs);
+
+		List<EncryptionMethod> idTokenEncs = new LinkedList<EncryptionMethod>();
+		idTokenEncs.add(EncryptionMethod.A128GCM);
+		meta.setIdTokenJWEEncs(idTokenEncs);
+		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEncs().get(0));
+
+		List<JWSAlgorithm> userInfoJWSAlgs = new LinkedList<JWSAlgorithm>();
+		userInfoJWSAlgs.add(JWSAlgorithm.RS256);
+		meta.setUserInfoJWSAlgs(userInfoJWSAlgs);
+		assertEquals(JWSAlgorithm.RS256, meta.getUserInfoJWSAlgs().get(0));
+
+		List<JWEAlgorithm> userInfoJWEAlgs = new LinkedList<JWEAlgorithm>();
+		userInfoJWEAlgs.add(JWEAlgorithm.RSA1_5);
+		meta.setUserInfoJWEAlgs(userInfoJWEAlgs);
+		assertEquals(JWEAlgorithm.RSA1_5, meta.getUserInfoJWEAlgs().get(0));
+
+		List<EncryptionMethod> userInfoEncs = new LinkedList<EncryptionMethod>();
+		userInfoEncs.add(EncryptionMethod.A128CBC_HS256);
+		meta.setUserInfoJWEEncs(userInfoEncs);
+		assertEquals(EncryptionMethod.A128CBC_HS256, meta.getUserInfoJWEEncs().get(0));
+
+		List<Display> displays = new LinkedList<Display>();
+		displays.add(Display.PAGE);
+		displays.add(Display.POPUP);
+		meta.setDisplays(displays);
+		assertEquals(Display.PAGE, meta.getDisplays().get(0));
+		assertEquals(Display.POPUP, meta.getDisplays().get(1));
+		assertEquals(2, meta.getDisplays().size());
+
+		List<ClaimType> claimTypes = new LinkedList<ClaimType>();
+		claimTypes.add(ClaimType.NORMAL);
+		meta.setClaimTypes(claimTypes);
+		assertEquals(ClaimType.NORMAL, meta.getClaimTypes().get(0));
+
+		List<String> claims = new LinkedList<String>();
+		claims.add("name");
+		claims.add("email");
+		meta.setClaims(claims);
+		assertEquals("name", meta.getClaims().get(0));
+		assertEquals("email", meta.getClaims().get(1));
+		assertEquals(2, meta.getClaims().size());
+
+		List<LangTag> claimLocales = new LinkedList<LangTag>();
+		claimLocales.add(LangTag.parse("en-GB"));
+		meta.setClaimLocales(claimLocales);
+		assertEquals("en-GB", meta.getClaimsLocales().get(0).toString());
+
+		List<LangTag> uiLocales = new LinkedList<LangTag>();
+		uiLocales.add(LangTag.parse("bg-BG"));
+		meta.setUILocales(uiLocales);
+		assertEquals("bg-BG", meta.getUILocales().get(0).toString());
+
+		meta.setServiceDocsURL(new URL("https://c2id.com/docs"));
+		assertEquals("https://c2id.com/docs", meta.getServiceDocsURL().toString());
+
+		meta.setPolicyURI(new URL("https://c2id.com/policy"));
+		assertEquals("https://c2id.com/policy", meta.getPolicyURI().toString());
+
+		meta.setTermsOfServiceURI(new URL("https://c2id.com/tos"));
+		assertEquals("https://c2id.com/tos", meta.getTermsOfServiceURI().toString());
+
+		meta.setSupportsClaimsParams(true);
+		assertTrue(meta.supportsClaimsParam());
+
+		meta.setSupportsRequestParams(true);
+		assertTrue(meta.supportsRequestParam());
+
+		meta.setSupportsRequestURIParam(true);
+		assertTrue(meta.supportsRequestURIParam());
+
+		meta.setRequiresRequestURIRegistration(true);
+		assertTrue(meta.requiresRequestURIRegistration());
+
+		String json = meta.toJSONObject().toJSONString();
+
+		meta = OIDCProviderMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals(issuer.getValue(), meta.getIssuer().getValue());
+		assertEquals(SubjectType.PAIRWISE, meta.getSubjectTypes().get(0));
+		assertEquals(SubjectType.PUBLIC, meta.getSubjectTypes().get(1));
+		assertEquals(jwkSetURI.toString(), meta.getJWKSetURI().toString());
+
+		assertEquals("https://c2id.com/authz", meta.getAuthorizationEndpointURL().toString());
+		assertEquals("https://c2id.com/token", meta.getTokenEndpointURL().toString());
+		assertEquals("https://c2id.com/userinfo", meta.getUserInfoEndpointURL().toString());
+		assertEquals("https://c2id.com/reg", meta.getRegistrationEndpointURL().toString());
+		assertEquals("https://c2id.com/session", meta.getCheckSessionIframeURL().toString());
+		assertEquals("https://c2id.com/logout", meta.getEndSessionEndpointURL().toString());
+
+		assertTrue(Scope.parse("openid email profile").containsAll(meta.getScopes()));
+
+		assertEquals(ResponseType.Value.CODE, responseTypes.iterator().next().iterator().next());
+		assertEquals(1, responseTypes.size());
+
+		assertTrue(meta.getGrantTypes().contains(GrantType.AUTHORIZATION_CODE));
+		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
+
+		assertEquals("1", meta.getACRs().get(0).getValue());
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, meta.getTokenEndpointAuthMethods().get(0));
+
+		assertEquals(JWSAlgorithm.HS256, meta.getTokenEndpointJWSAlgs().get(0));
+		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointJWSAlgs().get(1));
+		assertEquals(JWSAlgorithm.HS512, meta.getTokenEndpointJWSAlgs().get(2));
+
+		assertEquals(JWSAlgorithm.HS256, meta.getRequestObjectJWSAlgs().get(0));
+
+		assertEquals(JWEAlgorithm.A128KW, meta.getRequestObjectJWEAlgs().get(0));
+
+		assertEquals(EncryptionMethod.A128GCM, meta.getRequestObjectJWEEncs().get(0));
+
+		assertEquals(JWSAlgorithm.RS256, meta.getIDTokenJWSAlgs().get(0));
+
+		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEncs().get(0));
+
+		assertEquals(JWSAlgorithm.RS256, meta.getUserInfoJWSAlgs().get(0));
+
+		assertEquals(JWEAlgorithm.RSA1_5, meta.getUserInfoJWEAlgs().get(0));
+
+		assertEquals(EncryptionMethod.A128CBC_HS256, meta.getUserInfoJWEEncs().get(0));
+
+		assertEquals(Display.PAGE, meta.getDisplays().get(0));
+		assertEquals(Display.POPUP, meta.getDisplays().get(1));
+		assertEquals(2, meta.getDisplays().size());
+
+		assertEquals(ClaimType.NORMAL, meta.getClaimTypes().get(0));
+
+		assertEquals("name", meta.getClaims().get(0));
+		assertEquals("email", meta.getClaims().get(1));
+		assertEquals(2, meta.getClaims().size());
+
+		assertEquals("en-GB", meta.getClaimsLocales().get(0).toString());
+
+		assertEquals("bg-BG", meta.getUILocales().get(0).toString());
+
+		assertEquals("https://c2id.com/docs", meta.getServiceDocsURL().toString());
+
+		assertEquals("https://c2id.com/policy", meta.getPolicyURI().toString());
+
+		assertEquals("https://c2id.com/tos", meta.getTermsOfServiceURI().toString());
+
+		assertTrue(meta.supportsClaimsParam());
+
+		assertTrue(meta.supportsRequestParam());
+
+		assertTrue(meta.supportsRequestURIParam());
+
+		assertTrue(meta.requiresRequestURIRegistration());
 	}
 }
