@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.mail.internet.ContentType;
 
+import com.nimbusds.jose.JWSObject;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -50,13 +51,50 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	 * parameter. The assertion is in the form of a signed JWT.
 	 */
 	private final SignedJWT clientAssertion;
-	
-	
+
+
 	/**
-	 * Optional client identifier, corresponding to the {@code client_id}
-	 * parameter.
+	 * The JWT authentication claims set for the client assertion.
 	 */
-	private final ClientID clientID;
+	private final JWTAuthenticationClaimsSet jwtAuthClaimsSet;
+
+
+	/**
+	 * Parses the client identifier from the specified signed JWT that
+	 * represents a client assertion.
+	 *
+	 * @param jwt The signed JWT to parse. Must not be {@code null}.
+	 *
+	 * @return The parsed client identifier.
+	 *
+	 * @throws IllegalArgumentException If the client identifier couldn't
+	 *                                  be parsed.
+	 */
+	private static ClientID parseClientID(final SignedJWT jwt) {
+
+		String subjectValue;
+		String issuerValue;
+
+		try {
+			subjectValue = jwt.getJWTClaimsSet().getSubject();
+			issuerValue = jwt.getJWTClaimsSet().getIssuer();
+
+		} catch (java.text.ParseException e) {
+
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
+
+		if (subjectValue == null)
+			throw new IllegalArgumentException("Missing subject in client JWT assertion");
+
+		if (issuerValue == null)
+			throw new IllegalArgumentException("Missing issuer in client JWT assertion");
+
+		if (!subjectValue.equals(issuerValue))
+			throw new IllegalArgumentException("Issuer and subject in client JWT assertion must designate the same client identifier");
+
+		return new ClientID(subjectValue);
+	}
 	
 	
 	/**
@@ -65,25 +103,31 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	 * @param method          The client authentication method. Must not be
 	 *                        {@code null}.
 	 * @param clientAssertion The client assertion, corresponding to the
-	 *                        {@code client_assertion} parameter, in the 
-	 *                        form of a signed JSON Web Token (JWT). Must 
-	 *                        not be {@code null}.
-	 * @param clientID        Optional client identifier, corresponding to
-	 *                        the {@code client_id} parameter. {@code null}
-	 *                        if not specified.
+	 *                        {@code client_assertion} parameter, in the
+	 *                        form of a signed JSON Web Token (JWT). Must
+	 *                        be signed and not {@code null}.
+	 *
+	 * @throws IllegalArgumentException If the client assertion is not
+	 *                                  signed or doesn't conform to the
+	 *                                  expected format.
 	 */
 	protected JWTAuthentication(final ClientAuthenticationMethod method, 
-	                            final SignedJWT clientAssertion,
-	                            final ClientID clientID) {
+	                            final SignedJWT clientAssertion) {
 	
-		super(method);
-	
-		if (clientAssertion == null)
-			throw new IllegalArgumentException("The client assertion JWT must not be null");
+		super(method, parseClientID(clientAssertion));
+
+		if (! clientAssertion.getState().equals(JWSObject.State.SIGNED))
+			throw new IllegalArgumentException("The client assertion JWT must be signed");
 			
 		this.clientAssertion = clientAssertion;
-		
-		this.clientID = clientID;
+
+		try {
+			jwtAuthClaimsSet = JWTAuthenticationClaimsSet.parse(clientAssertion.getJWTClaimsSet());
+
+		} catch (Exception e) {
+
+			throw new IllegalArgumentException(e.getMessage(), e);
+		}
 	}
 	
 	
@@ -101,44 +145,14 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	
 	
 	/**
-	 * Gets the optional client identifier, corresponding to the
-	 * {@code client_id} parameter.
-	 *
-	 * @return The client identifier, {@code null} if not specified.
-	 */
-	public ClientID getClientID() {
-	
-		return clientID;
-	}
-	
-	
-	/**
 	 * Gets the client authentication claims set contained in the client
 	 * assertion JSON Web Token (JWT).
 	 *
 	 * @return The client authentication claims.
-	 *
-	 * @throws ParseException If the client assertion JSON Web Token (JWT)
-	 *                        doesn't contain a client authentication
-	 *                        claims set.
 	 */
-	public JWTAuthenticationClaimsSet getJWTAuthenticationClaimsSet()
-		throws ParseException {
-	
-		JSONObject claimsSet;
-		
-		try {
-			claimsSet = clientAssertion.getJWTClaimsSet().toJSONObject();
-			
-		} catch (java.text.ParseException e) {
-		
-			throw new ParseException("Couldn't retrieve JSON object from the client assertion JWT");
-		}
-		
-		if (claimsSet == null)
-			throw new ParseException("Couldn't retrieve JSON object from the client assertion JWT");
-		
-		return JWTAuthenticationClaimsSet.parse(claimsSet);
+	public JWTAuthenticationClaimsSet getJWTAuthenticationClaimsSet() {
+
+		return jwtAuthClaimsSet;
 	}
 	
 	
@@ -152,7 +166,6 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	 * <pre>
 	 * "client_assertion" -> [serialised-JWT]
 	 * "client_assertion_type" -> "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
-	 * "client_id" -> [optional-client-id]
 	 * </pre>
 	 *
 	 * @return The parameters map, with keys "client_assertion",
@@ -175,9 +188,6 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 		}	
 		
 		params.put("client_assertion_type", CLIENT_ASSERTION_TYPE);
-		
-		if (clientID != null)
-			params.put("client_id", clientID.getValue());
 		
 		return params;
 	}

@@ -60,9 +60,10 @@ public class ClientSecretJWTTest extends TestCase {
 
 		jwt.sign(signer);
 
-		ClientSecretJWT clientSecretJWT = new ClientSecretJWT(jwt, clientID);
+		ClientSecretJWT clientSecretJWT = new ClientSecretJWT(jwt);
 
 		Map<String,String> params = clientSecretJWT.toParameters();
+		params.put("client_id", clientID.getValue()); // add optional client_id to test parser
 
 		System.out.println("Client secret JWT: " + params);
 

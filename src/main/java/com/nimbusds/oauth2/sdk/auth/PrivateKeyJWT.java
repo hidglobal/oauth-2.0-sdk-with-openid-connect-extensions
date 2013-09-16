@@ -96,16 +96,16 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 	 * Creates a private key JWT authentication.
 	 *
 	 * @param clientAssertion The client assertion, corresponding to the
-	 *                        {@code client_assertion} parameter, as an RSA 
-	 *                        or ECDSA-signed JWT. Must not be 
-	 *                        {@code null}.
-	 * @param clientID        Optional client identifier, corresponding to
-	 *                        the {@code client_id} parameter. {@code null}
-	 *                        if not specified.
+	 *                        {@code client_assertion} parameter, as a
+	 *                        supported RSA or ECDSA-signed JWT. Must be
+	 *                        signed and not {@code null}.
 	 */
-	public PrivateKeyJWT(final SignedJWT clientAssertion, final ClientID clientID) {
+	public PrivateKeyJWT(final SignedJWT clientAssertion) {
 	
-		super(ClientAuthenticationMethod.PRIVATE_KEY_JWT, clientAssertion, clientID);
+		super(ClientAuthenticationMethod.PRIVATE_KEY_JWT, clientAssertion);
+
+		if (! getSupportedJWAs().contains(clientAssertion.getHeader().getAlgorithm()))
+			throw new IllegalArgumentException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384 or ES512)");
 	}
 	
 	
@@ -131,15 +131,28 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 		JWTAuthentication.ensureClientAssertionType(params);
 		
 		SignedJWT clientAssertion = JWTAuthentication.parseClientAssertion(params);
-		
+
+		PrivateKeyJWT privateKeyJWT;
+
+		try {
+			privateKeyJWT = new PrivateKeyJWT(clientAssertion);
+
+		}catch (IllegalArgumentException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		// Check that the top level client_id matches the assertion subject + issuer
+
 		ClientID clientID = JWTAuthentication.parseClientID(params);
-		
-		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
-		
-		if (! getSupportedJWAs().contains(alg))
-			throw new ParseException("The client assertion JWT must be RSA or ECDSA-signed (RS256, RS384, RS512, PS256, PS384, PS512, ES256, ES384 or ES512)");
-		
-		return new PrivateKeyJWT(clientAssertion, clientID);
+
+		if (clientID != null) {
+
+			if (! clientID.equals(privateKeyJWT.getClientID()))
+				throw new ParseException("The client identifier doesn't match the client assertion subject / issuer");
+		}
+
+		return privateKeyJWT;
 	}
 	
 	

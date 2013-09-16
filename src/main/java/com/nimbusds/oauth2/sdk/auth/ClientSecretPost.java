@@ -34,12 +34,6 @@ public final class ClientSecretPost extends ClientAuthentication {
 
 
 	/**
-	 * The client ID.
-	 */
-	private final ClientID clientID;
-	
-	
-	/**
 	 * The client secret.
 	 */
 	private final Secret secret;
@@ -53,28 +47,12 @@ public final class ClientSecretPost extends ClientAuthentication {
 	 */
 	public ClientSecretPost(final ClientID clientID, final Secret secret) {
 	
-		super(ClientAuthenticationMethod.CLIENT_SECRET_POST);
+		super(ClientAuthenticationMethod.CLIENT_SECRET_POST, clientID);
 	
-		if (clientID == null)
-			throw new IllegalArgumentException("The client ID must not be null");
-		
-		this.clientID = clientID;
-		
 		if (secret == null)
 			throw new IllegalArgumentException("The client secret must not be null");
 		
 		this.secret = secret;
-	}
-	
-	
-	/**
-	 * Gets the client identifier.
-	 *
-	 * @return The client identifier.
-	 */
-	public ClientID getClientID() {
-	
-		return clientID;
 	}
 	
 	
@@ -108,7 +86,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	
 		Map<String,String> params = new HashMap<String,String>();
 		
-		params.put("client_id", clientID.getValue());
+		params.put("client_id", getClientID().getValue());
 		params.put("client_secret", secret.getValue());
 		
 		return params;

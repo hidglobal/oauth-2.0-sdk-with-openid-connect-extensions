@@ -7,6 +7,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -28,20 +29,33 @@ public abstract class ClientAuthentication {
 	 * The client authentication method.
 	 */
 	private final ClientAuthenticationMethod method;
+
+
+	/**
+	 * The client ID.
+	 */
+	private final ClientID clientID;
 	
 	
 	/**
 	 * Creates a new abstract client authentication.
 	 *
-	 * @param method The client authentication method. Must not be 
-	 *               {@code null}.
+	 * @param method   The client authentication method. Must not be
+	 *                 {@code null}.
+	 * @param clientID The client identifier. Must not be {@code null}.
 	 */
-	protected ClientAuthentication(final ClientAuthenticationMethod method) {
+	protected ClientAuthentication(final ClientAuthenticationMethod method, final ClientID clientID) {
 	
 		if (method == null)
 			throw new IllegalArgumentException("The client authentication method must not be null");
 		
 		this.method = method;
+
+
+		if (clientID == null)
+			throw new IllegalArgumentException("The client identifier must not be null");
+
+		this.clientID = clientID;
 	}
 	
 	
@@ -53,6 +67,17 @@ public abstract class ClientAuthentication {
 	public ClientAuthenticationMethod getMethod() {
 	
 		return method;
+	}
+
+
+	/**
+	 * Gets the client identifier.
+	 *
+	 * @return The client identifier.
+	 */
+	public ClientID getClientID() {
+
+		return clientID;
 	}
 	
 	

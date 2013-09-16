@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.nimbusds.jose.JWSObject;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -62,21 +63,22 @@ public final class ClientSecretJWT extends JWTAuthentication {
 		
 		return Collections.unmodifiableSet(supported);
 	}
-	
-	 
+
+
 	/**
 	 * Creates a new client secret JWT authentication.
 	 *
 	 * @param clientAssertion The client assertion, corresponding to the
-	 *                        {@code client_assertion_parameter}, as an 
-	 *                        HMAC-signed JWT. Must not be {@code null}.
-	 * @param clientID        Optional client identifier, corresponding to
-	 *                        the {@code client_id} parameter. {@code null}
-	 *                        if not specified.
+	 *                        {@code client_assertion_parameter}, as a
+	 *                        supported HMAC-protected JWT. Must be signed
+	 *                        and not {@code null}.
 	 */
-	public ClientSecretJWT(final SignedJWT clientAssertion, final ClientID clientID) {
-	
-		super(ClientAuthenticationMethod.CLIENT_SECRET_JWT, clientAssertion, clientID);
+	public ClientSecretJWT(final SignedJWT clientAssertion) {
+
+		super(ClientAuthenticationMethod.CLIENT_SECRET_JWT, clientAssertion);
+
+		if (! getSupportedJWAs().contains(clientAssertion.getHeader().getAlgorithm()))
+			throw new IllegalArgumentException("The client assertion JWT must be HMAC-signed (HS256, HS384 or HS512)");
 	}
 	
 	
@@ -102,15 +104,28 @@ public final class ClientSecretJWT extends JWTAuthentication {
 		JWTAuthentication.ensureClientAssertionType(params);
 		
 		SignedJWT clientAssertion = JWTAuthentication.parseClientAssertion(params);
+
+		ClientSecretJWT clientSecretJWT;
+
+		try {
+			clientSecretJWT = new ClientSecretJWT(clientAssertion);
+
+		} catch (IllegalArgumentException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		// Check that the top level client_id matches the assertion subject + issuer
 		
 		ClientID clientID = JWTAuthentication.parseClientID(params);
-		
-		JWSAlgorithm alg = clientAssertion.getHeader().getAlgorithm();
-		
-		if (! getSupportedJWAs().contains(alg))
-			throw new ParseException("The client assertion JWT must be HMAC-signed (HS256, HS384 or HS512)");
-		
-		return new ClientSecretJWT(clientAssertion, clientID);
+
+		if (clientID != null) {
+
+			if (! clientID.equals(clientSecretJWT.getClientID()))
+				throw new ParseException("The client identifier doesn't match the client assertion subject / issuer");
+		}
+
+		return clientSecretJWT;
 	}
 	
 	

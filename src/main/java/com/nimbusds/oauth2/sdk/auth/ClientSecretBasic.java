@@ -45,12 +45,6 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 * The default character set for the client ID and secret encoding.
 	 */
 	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
-
-	/**
-	 * The client ID.
-	 */
-	private final ClientID clientID;
 	
 	
 	/**
@@ -67,28 +61,12 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 */
 	public ClientSecretBasic(final ClientID clientID, final Secret secret) {
 	
-		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
-	
-		if (clientID == null)
-			throw new IllegalArgumentException("The client ID must not be null");
-		
-		this.clientID = clientID;
+		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, clientID);
 		
 		if (secret == null)
 			throw new IllegalArgumentException("The client secret must not be null");
 		
 		this.secret = secret;
-	}
-	
-	
-	/**
-	 * Gets the client identifier.
-	 *
-	 * @return The client identifier.
-	 */
-	public ClientID getClientID() {
-	
-		return clientID;
 	}
 	
 	
@@ -123,7 +101,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 		StringBuilder sb = new StringBuilder();
 
 		try {
-			sb.append(URLEncoder.encode(clientID.getValue(), UTF8_CHARSET.name()));
+			sb.append(URLEncoder.encode(getClientID().getValue(), UTF8_CHARSET.name()));
 			sb.append(':');
 			sb.append(URLEncoder.encode(secret.getValue(), UTF8_CHARSET.name()));
 
