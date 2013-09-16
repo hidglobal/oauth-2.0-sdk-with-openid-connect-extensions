@@ -9,14 +9,14 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.oauth2.sdk.id.SoftwareID;
-import com.nimbusds.oauth2.sdk.id.SoftwareVersion;
+import junit.framework.TestCase;
+
 import net.minidev.json.JSONObject;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import com.nimbusds.langtag.LangTag;
+
+import com.nimbusds.oauth2.sdk.id.SoftwareID;
+import com.nimbusds.oauth2.sdk.id.SoftwareVersion;
 
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -30,11 +30,10 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * 
  * @author Vladimir Dzhuvinov
  */
-public class ClientMetadataTest {
+public class ClientMetadataTest extends TestCase {
 	
 	
-	@Test
-	public void testSerializeAndParse() 
+	public void testSerializeAndParse()
 		throws Exception {
 		
 		ClientMetadata meta = new ClientMetadata();
@@ -42,7 +41,7 @@ public class ClientMetadataTest {
 		Set<URL> redirectURIs = new HashSet<URL>();
 		redirectURIs.add(new URL("http://example.com/1"));
 		redirectURIs.add(new URL("http://example.com/2"));
-		meta.setRedirectURIs(redirectURIs);
+		meta.setRedirectionURIs(redirectURIs);
 		
 		Scope scope = Scope.parse("read write");
 		meta.setScope(scope);
@@ -104,7 +103,7 @@ public class ClientMetadataTest {
 		meta.setSoftwareVersion(softwareVersion);
 		
 		// Test getters
-		assertEquals(redirectURIs, meta.getRedirectURIs());
+		assertEquals(redirectURIs, meta.getRedirectionURIs());
 		assertEquals(scope, meta.getScope());
 		assertEquals(grantTypes, meta.getGrantTypes());
 		assertEquals(contacts, meta.getContacts());
@@ -127,6 +126,7 @@ public class ClientMetadataTest {
 		assertEquals(jwks, meta.getJWKSetURI());
 		assertEquals(softwareID, meta.getSoftwareID());
 		assertEquals(softwareVersion, meta.getSoftwareVersion());
+		assertTrue(meta.getCustomFields().isEmpty());
 		
 		String json = meta.toJSONObject().toJSONString();
 		
@@ -138,7 +138,7 @@ public class ClientMetadataTest {
 		meta = ClientMetadata.parse(jsonObject);
 		
 		// Test getters
-		assertEquals(redirectURIs, meta.getRedirectURIs());
+		assertEquals(redirectURIs, meta.getRedirectionURIs());
 		assertEquals(scope, meta.getScope());
 		assertEquals(grantTypes, meta.getGrantTypes());
 		assertEquals(contacts, meta.getContacts());
@@ -161,10 +161,13 @@ public class ClientMetadataTest {
 		assertEquals(jwks, meta.getJWKSetURI());
 		assertEquals(softwareID, meta.getSoftwareID());
 		assertEquals(softwareVersion, meta.getSoftwareVersion());
+
+		System.out.println("Meta custom fields: " + meta.getCustomFields());
+
+		assertTrue(meta.getCustomFields().isEmpty());
 	}
 
-	
-	@Test
+
 	public void testApplyDefaults() 
 		throws Exception {
 		
@@ -183,5 +186,26 @@ public class ClientMetadataTest {
 		assertTrue(grantTypes.contains(GrantType.AUTHORIZATION_CODE));
 		
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, meta.getTokenEndpointAuthMethod());
+	}
+
+
+	public void testCustomFields()
+		throws Exception {
+
+		ClientMetadata meta = new ClientMetadata();
+
+		meta.setCustomField("x-data", "123");
+
+		assertEquals("123", (String)meta.getCustomField("x-data"));
+		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
+		assertEquals(1, meta.getCustomFields().size());
+
+		String json = meta.toJSONObject().toJSONString();
+
+		meta = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals("123", (String)meta.getCustomField("x-data"));
+		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
+		assertEquals(1, meta.getCustomFields().size());
 	}
 }

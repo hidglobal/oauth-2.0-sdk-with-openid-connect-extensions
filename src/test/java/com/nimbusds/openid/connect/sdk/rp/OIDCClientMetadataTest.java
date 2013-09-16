@@ -2,11 +2,15 @@ package com.nimbusds.openid.connect.sdk.rp;
 
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -55,7 +59,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		
 		assertEquals(ApplicationType.WEB, clientMetadata.getApplicationType());
 		
-		Set<URL> redirectURIs = clientMetadata.getRedirectURIs();
+		Set<URL> redirectURIs = clientMetadata.getRedirectionURIs();
 		
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback2")));
@@ -87,5 +91,143 @@ public class OIDCClientMetadataTest extends TestCase {
 		
 		assertTrue(requestURIs.contains(new URL("https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA")));
 		assertEquals(1, requestURIs.size());
+
+		assertTrue(clientMetadata.getCustomFields().isEmpty());
+	}
+
+
+	public void testGettersAndSetters()
+		throws Exception {
+
+		OIDCClientMetadata meta = new OIDCClientMetadata();
+
+		assertNull(meta.getApplicationType());
+		meta.setApplicationType(ApplicationType.NATIVE);
+		assertEquals(ApplicationType.NATIVE, meta.getApplicationType());
+
+		assertNull(meta.getSubjectType());
+		meta.setSubjectType(SubjectType.PAIRWISE);
+		assertEquals(SubjectType.PAIRWISE, meta.getSubjectType());
+
+		assertNull(meta.getSectorIDURI());
+		URL sectorIDURI = new URL("http://sector.id");
+		meta.setSectorIDURI(sectorIDURI);
+		assertEquals(sectorIDURI.toString(), meta.getSectorIDURI().toString());
+
+		assertNull(meta.getRequestObjectURIs());
+		Set<URL> requestObjURIs = new HashSet<URL>();
+		requestObjURIs.add(new URL("http://client.com/reqobj"));
+		meta.setRequestObjectURIs(requestObjURIs);
+		assertEquals("http://client.com/reqobj", meta.getRequestObjectURIs().iterator().next().toString());
+		assertEquals(1, meta.getRequestObjectURIs().size());
+
+		assertNull(meta.getRequestObjectJWSAlg());
+		meta.setRequestObjectJWSAlg(JWSAlgorithm.HS512);
+		assertEquals(JWSAlgorithm.HS512, meta.getRequestObjectJWSAlg());
+
+		assertNull(meta.getIDTokenJWSAlg());
+		meta.setIDTokenJWSAlg(JWSAlgorithm.PS256);
+		assertEquals(JWSAlgorithm.PS256, meta.getIDTokenJWSAlg());
+
+		assertNull(meta.getIDTokenJWEAlg());
+		meta.setIDTokenJWEAlg(JWEAlgorithm.A128KW);
+		assertEquals(JWEAlgorithm.A128KW, meta.getIDTokenJWEAlg());
+
+		assertNull(meta.getIDTokenJWEEnc());
+		meta.setIDTokenJWEEnc(EncryptionMethod.A128GCM);
+		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEnc());
+
+		assertNull(meta.getUserInfoJWSAlg());
+		meta.setUserInfoJWSAlg(JWSAlgorithm.ES256);
+		assertEquals(JWSAlgorithm.ES256, meta.getUserInfoJWSAlg());
+
+		assertNull(meta.getUserInfoJWEAlg());
+		meta.setUserInfoJWEAlg(JWEAlgorithm.ECDH_ES);
+		assertEquals(JWEAlgorithm.ECDH_ES, meta.getUserInfoJWEAlg());
+
+		assertNull(meta.getUserInfoJWEEnc());
+		meta.setUserInfoJWEEnc(EncryptionMethod.A128CBC_HS256);
+		assertEquals(EncryptionMethod.A128CBC_HS256, meta.getUserInfoJWEEnc());
+
+		assertEquals(0, meta.getDefaultMaxAge());
+		meta.setDefaultMaxAge(3600);
+		assertEquals(3600, meta.getDefaultMaxAge());
+
+		assertFalse(meta.requiresAuthTime());
+		meta.requiresAuthTime(true);
+		assertTrue(meta.requiresAuthTime());
+
+		assertNull(meta.getDefaultACRs());
+		List<ACR> acrList = new LinkedList<ACR>();
+		acrList.add(new ACR("1"));
+		meta.setDefaultACRs(acrList);
+		assertEquals("1", meta.getDefaultACRs().get(0).toString());
+
+		assertNull(meta.getInitiateLoginURI());
+		meta.setInitiateLoginURI(new URL("http://do-login.com"));
+		assertEquals("http://do-login.com", meta.getInitiateLoginURI().toString());
+
+		assertNull(meta.getPostLogoutRedirectURI());
+		meta.setPostLogoutRedirectURI(new URL("http://post-logout.com"));
+		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectURI().toString());
+
+		String json = meta.toJSONObject().toJSONString();
+
+		meta = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals(ApplicationType.NATIVE, meta.getApplicationType());
+
+
+		assertEquals(SubjectType.PAIRWISE, meta.getSubjectType());
+
+		assertEquals(sectorIDURI.toString(), meta.getSectorIDURI().toString());
+
+		assertEquals("http://client.com/reqobj", meta.getRequestObjectURIs().iterator().next().toString());
+		assertEquals(1, meta.getRequestObjectURIs().size());
+
+		assertEquals(JWSAlgorithm.HS512, meta.getRequestObjectJWSAlg());
+
+		assertEquals(JWSAlgorithm.PS256, meta.getIDTokenJWSAlg());
+
+		assertEquals(JWEAlgorithm.A128KW, meta.getIDTokenJWEAlg());
+
+		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEnc());
+
+		assertEquals(JWSAlgorithm.ES256, meta.getUserInfoJWSAlg());
+
+		assertEquals(JWEAlgorithm.ECDH_ES, meta.getUserInfoJWEAlg());
+
+		assertEquals(EncryptionMethod.A128CBC_HS256, meta.getUserInfoJWEEnc());
+
+		assertEquals(3600, meta.getDefaultMaxAge());
+
+		assertTrue(meta.requiresAuthTime());
+
+		assertEquals("1", meta.getDefaultACRs().get(0).toString());
+
+		assertEquals("http://do-login.com", meta.getInitiateLoginURI().toString());
+
+		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectURI().toString());
+	}
+
+
+	public void testCustomFields()
+		throws Exception {
+
+		OIDCClientMetadata meta = new OIDCClientMetadata();
+
+		meta.setCustomField("x-data", "123");
+
+		assertEquals("123", (String)meta.getCustomField("x-data"));
+		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
+		assertEquals(1, meta.getCustomFields().size());
+
+		String json = meta.toJSONObject().toJSONString();
+
+		meta = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals("123", (String)meta.getCustomField("x-data"));
+		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
+		assertEquals(1, meta.getCustomFields().size());
 	}
 }

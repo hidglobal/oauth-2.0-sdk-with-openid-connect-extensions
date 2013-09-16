@@ -613,7 +613,9 @@ public class OIDCClientMetadata extends ClientMetadata {
 	@Override
 	public JSONObject toJSONObject() {
 
-		JSONObject o = super.toJSONObject();
+		JSONObject o = super.toJSONObject(false);
+
+		o.putAll(getCustomFields());
 		
 		if (applicationType != null)
 			o.put("application_type", applicationType.toString());
@@ -713,21 +715,30 @@ public class OIDCClientMetadata extends ClientMetadata {
 		ClientMetadata baseMetadata = ClientMetadata.parse(jsonObject);
 		
 		OIDCClientMetadata metadata = new OIDCClientMetadata(baseMetadata);
+
+		// Parse the OIDC-specific fields from the custom OAuth 2.0 dyn
+		// reg fields
+
+		JSONObject oidcFields = baseMetadata.getCustomFields();
 		
-		if (jsonObject.containsKey("application_type"))
+		if (oidcFields.containsKey("application_type")) {
 			metadata.setApplicationType(JSONObjectUtils.getEnum(jsonObject, 
 				                                          "application_type", 
 				                                          ApplicationType.class));
 
+			oidcFields.remove("application_type");
+		}
 		
-		if (jsonObject.containsKey("subject_type"))
+		if (jsonObject.containsKey("subject_type")) {
 			metadata.setSubjectType(JSONObjectUtils.getEnum(jsonObject, "subject_type", SubjectType.class));
+			oidcFields.remove("subject_type");
+		}
 
-
-		if (jsonObject.containsKey("sector_identifier_uri"))
+		if (jsonObject.containsKey("sector_identifier_uri")) {
 			metadata.setSectorIDURI(JSONObjectUtils.getURL(jsonObject, "sector_identifier_uri"));
+			oidcFields.remove("sector_identifier_uri");
+		}
 
-		
 		if (jsonObject.containsKey("request_uris")) {
 			
 			Set<URL> requestURIs = new LinkedHashSet<URL>();
@@ -744,50 +755,75 @@ public class OIDCClientMetadata extends ClientMetadata {
 			}
 			
 			metadata.setRequestObjectURIs(requestURIs);
+			oidcFields.remove("request_uris");
 		}
 		
 		
-		if (jsonObject.containsKey("request_object_signing_alg"))
+		if (jsonObject.containsKey("request_object_signing_alg")) {
 			metadata.setRequestObjectJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "request_object_signing_alg")));
 
+			oidcFields.remove("request_object_signing_alg");
+		}
 
-		if (jsonObject.containsKey("id_token_signed_response_alg"))
+		if (jsonObject.containsKey("id_token_signed_response_alg")) {
 			metadata.setIDTokenJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "id_token_signed_response_alg")));
 
+			oidcFields.remove("id_token_signed_response_alg");
+		}
 
-		if (jsonObject.containsKey("id_token_encrypted_response_alg"))
+
+		if (jsonObject.containsKey("id_token_encrypted_response_alg")) {
 			metadata.setIDTokenJWEAlg(new JWEAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_alg")));
 
+			oidcFields.remove("id_token_encrypted_response_alg");
+		}
 
-		if (jsonObject.containsKey("id_token_encrypted_response_enc"))
+
+		if (jsonObject.containsKey("id_token_encrypted_response_enc")) {
 			metadata.setIDTokenJWEEnc(new EncryptionMethod(
 				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_enc")));
 
+			oidcFields.remove("id_token_encrypted_response_enc");
+		}
 
-		if (jsonObject.containsKey("userinfo_signed_response_alg"))
+
+		if (jsonObject.containsKey("userinfo_signed_response_alg")) {
 			metadata.setUserInfoJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "userinfo_signed_response_alg")));
 
+			oidcFields.remove("userinfo_signed_response_alg");
+		}
 
-		if (jsonObject.containsKey("userinfo_encrypted_response_alg"))
+
+		if (jsonObject.containsKey("userinfo_encrypted_response_alg")) {
 			metadata.setUserInfoJWEAlg(new JWEAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_alg")));
 
+			oidcFields.remove("userinfo_encrypted_response_alg");
+		}
 
-		if (jsonObject.containsKey("userinfo_encrypted_response_enc"))
+
+		if (jsonObject.containsKey("userinfo_encrypted_response_enc")) {
 			metadata.setUserInfoJWEEnc(new EncryptionMethod(
 				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_enc")));
 
+			oidcFields.remove("userinfo_encrypted_response_enc");
+		}
 
-		if (jsonObject.containsKey("default_max_age"))
+
+		if (jsonObject.containsKey("default_max_age")) {
 			metadata.setDefaultMaxAge(JSONObjectUtils.getInt(jsonObject, "default_max_age"));
+			oidcFields.remove("default_max_age");
+		}
 
 
-		if (jsonObject.containsKey("require_auth_time"))
+		if (jsonObject.containsKey("require_auth_time")) {
 			metadata.requiresAuthTime(JSONObjectUtils.getBoolean(jsonObject, "require_auth_time"));
+			oidcFields.remove("require_auth_time");
+		}
 
 
 		if (jsonObject.containsKey("default_acr_values")) {
@@ -798,15 +834,24 @@ public class OIDCClientMetadata extends ClientMetadata {
 				acrValues.add(new ACR(acrString));
 
 			metadata.setDefaultACRs(acrValues);
+
+			oidcFields.remove("default_acr_values");
 		}
 
 
-		if (jsonObject.containsKey("initiate_login_uri"))
+		if (jsonObject.containsKey("initiate_login_uri")) {
 			metadata.setInitiateLoginURI(JSONObjectUtils.getURL(jsonObject, "initiate_login_uri"));
+			oidcFields.remove("initiate_login_uri");
+		}
 
 
-		if (jsonObject.containsKey("post_logout_redirect_uri"))
+		if (jsonObject.containsKey("post_logout_redirect_uri")) {
 			metadata.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_uri"));
+			oidcFields.remove("post_logout_redirect_uri");
+		}
+
+		// The remaining fields are custom
+		metadata.setCustomFields(oidcFields);
 
 		return metadata;
 	}

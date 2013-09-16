@@ -33,7 +33,7 @@ public class OIDCClientRegistrationRequestTest {
 		
 		Set<URL> redirectURIs = new HashSet<URL>();
 		redirectURIs.add(new URL("https://client.example.org/callback"));
-		metadata.setRedirectURIs(redirectURIs);
+		metadata.setRedirectionURIs(redirectURIs);
 		
 		metadata.setApplicationType(ApplicationType.NATIVE);
 		
@@ -47,7 +47,7 @@ public class OIDCClientRegistrationRequestTest {
 		
 		metadata = request.getOIDCClientMetadata();
 		
-		redirectURIs = metadata.getRedirectURIs();
+		redirectURIs = metadata.getRedirectionURIs();
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
 		assertEquals(1, redirectURIs.size());
 		
@@ -70,7 +70,7 @@ public class OIDCClientRegistrationRequestTest {
 		
 		metadata = request.getOIDCClientMetadata();
 		
-		redirectURIs = metadata.getRedirectURIs();
+		redirectURIs = metadata.getRedirectionURIs();
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
 		assertEquals(1, redirectURIs.size());
 		
@@ -116,7 +116,7 @@ public class OIDCClientRegistrationRequestTest {
 		
 		assertEquals(ApplicationType.WEB, metadata.getApplicationType());
 		
-		Set<URL> redirectURIs = metadata.getRedirectURIs();
+		Set<URL> redirectURIs = metadata.getRedirectionURIs();
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback2")));
 		assertEquals(2, redirectURIs.size());

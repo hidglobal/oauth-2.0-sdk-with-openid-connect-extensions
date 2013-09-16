@@ -48,7 +48,7 @@ public class ClientRegistrationRequestTest {
 		
 		ClientMetadata metadata = request.getClientMetadata();
 		
-		Set<URL> redirectURIs = metadata.getRedirectURIs();
+		Set<URL> redirectURIs = metadata.getRedirectionURIs();
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
 		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback2")));
 		assertEquals(2, redirectURIs.size());

@@ -144,6 +144,12 @@ public class ClientMetadata {
 	 * Version identifier for the OAuth 2.0 client software.
 	 */
 	private SoftwareVersion softwareVersion;
+
+
+	/**
+	 * The custom metadata fields.
+	 */
+	private JSONObject customFields;
 	
 	
 	/** 
@@ -157,6 +163,7 @@ public class ClientMetadata {
 		policyURIEntries = new HashMap<LangTag,URL>();
 		policyURIEntries = new HashMap<LangTag,URL>();
 		tosURIEntries = new HashMap<LangTag,URL>();
+		customFields = new JSONObject();
 	}
 	
 	
@@ -181,29 +188,30 @@ public class ClientMetadata {
 		tosURIEntries = metadata.tosURIEntries;
 		authMethod = metadata.authMethod;
 		jwkSetURI = metadata.jwkSetURI;
+		customFields = metadata.customFields;
 	}
 	
 	
 	/**
-	 * Gets the redirect URIs for this client. Corresponds to the
+	 * Gets the redirection URIs for this client. Corresponds to the
 	 * {@code redirect_uris} client metadata field.
 	 *
-	 * @return The redirect URIs, {@code null} if not specified.
+	 * @return The redirection URIs, {@code null} if not specified.
 	 */
-	public Set<URL> getRedirectURIs() {
+	public Set<URL> getRedirectionURIs() {
 	
 		return redirectURIs;
 	}
 	
 	
 	/**
-	 * Sets the redirect URIs for this client. Corresponds to the
+	 * Sets the redirection URIs for this client. Corresponds to the
 	 * {@code redirect_uris} client metadata field.
 	 *
-	 * @param redirectURIs The redirect URIs, {@code null} if not 
+	 * @param redirectURIs The redirection URIs, {@code null} if not
 	 *                     specified.
 	 */
-	public void setRedirectURIs(final Set<URL> redirectURIs) {
+	public void setRedirectionURIs(final Set<URL> redirectURIs) {
 	
 		this.redirectURIs = redirectURIs;
 	}
@@ -730,6 +738,59 @@ public class ClientMetadata {
 
 		this.softwareVersion = softwareVersion;
 	}
+
+
+	/**
+	 * Gets the specified custom metadata field.
+	 *
+	 * @param name The field name. Must not be {@code null}.
+	 *
+	 * @return The field value, typically serialisable to a JSON entity,
+	 *         {@code null} if none.
+	 */
+	public Object getCustomField(final String name) {
+
+		return customFields.get(name);
+	}
+
+
+	/**
+	 * Gets the custom metadata fields.
+	 *
+	 * @return The custom metadata fields, as a JSON object, empty object
+	 *         if none.
+	 */
+	public JSONObject getCustomFields() {
+
+		return customFields;
+	}
+
+
+	/**
+	 * Sets the specified custom metadata field.
+	 *
+	 * @param name  The field name. Must not be {@code null}.
+	 * @param value The field value. Should serialise to a JSON entity.
+	 */
+	public void setCustomField(final String name, final Object value) {
+
+		customFields.put(name, value);
+	}
+
+
+	/**
+	 * Sets the custom metadata fields.
+	 *
+	 * @param customFields The custom metadata fields, as a JSON object,
+	 *                     empty object if none. Must not be {@code null}.
+	 */
+	public void setCustomFields(final JSONObject customFields) {
+
+		if (customFields == null)
+			throw new IllegalArgumentException("The custom fields JSON object must not be null");
+
+		this.customFields = customFields;
+	}
 	
 	
 	/**
@@ -762,13 +823,35 @@ public class ClientMetadata {
 	
 	
 	/**
-	 * Returns the JSON object representation of this client metadata.
+	 * Returns the JSON object representation of this client metadata,
+	 * including any custom fields.
 	 *
 	 * @return The JSON object.
 	 */
 	public JSONObject toJSONObject() {
 
-		JSONObject o = new JSONObject();
+		return toJSONObject(true);
+	}
+
+
+	/**
+	 * Returns the JSON object representation of this client metadata.
+	 *
+	 * @param includeCustomFields {@code true} to include any custom
+	 *                            metadata fields, {@code false} to omit
+	 *                            them.
+	 *
+	 * @return The JSON object.
+	 */
+	public JSONObject toJSONObject(final boolean includeCustomFields) {
+
+		JSONObject o;
+
+		if (includeCustomFields)
+			o = new JSONObject(customFields);
+		else
+			o = new JSONObject();
+
 
 		if (redirectURIs != null) {
 
@@ -940,6 +1023,25 @@ public class ClientMetadata {
 	public static ClientMetadata parse(final JSONObject jsonObject)
 		throws ParseException {
 
+		// Copy JSON object, then parse
+		return parseFromModifiableJSONObject(new JSONObject(jsonObject));
+	}
+
+
+	/**
+	 * Parses an client metadata instance from the specified JSON object.
+	 *
+	 * @param jsonObject The JSON object to parse, will be modified by
+	 *                   the parse routine. Must not be {@code null}.
+	 *
+	 * @return The client metadata.
+	 *
+	 * @throws ParseException If the JSON object couldn't be parsed to a
+	 *                        client metadata instance.
+	 */
+	private static ClientMetadata parseFromModifiableJSONObject(final JSONObject jsonObject)
+		throws ParseException {
+
 		ClientMetadata metadata = new ClientMetadata();
 
 		if (jsonObject.containsKey("redirect_uris")) {
@@ -958,12 +1060,15 @@ public class ClientMetadata {
 				}
 			}
 
-			metadata.setRedirectURIs(redirectURIs);
+			metadata.setRedirectionURIs(redirectURIs);
+			jsonObject.remove("redirect_uris");
 		}
 		
 		
-		if (jsonObject.containsKey("scope"))
+		if (jsonObject.containsKey("scope")) {
 			metadata.setScope(Scope.parse(JSONObjectUtils.getString(jsonObject, "scope")));
+			jsonObject.remove("scope");
+		}
 		
 		
 		if (jsonObject.containsKey("response_types")) {
@@ -976,6 +1081,7 @@ public class ClientMetadata {
 			}
 			
 			metadata.setResponseTypes(responseTypes);
+			jsonObject.remove("response_types");
 		}
 		
 		
@@ -989,6 +1095,7 @@ public class ClientMetadata {
 			}
 			
 			metadata.setGrantTypes(grantTypes);
+			jsonObject.remove("grant_types");
 		}	
 		
 
@@ -1009,6 +1116,7 @@ public class ClientMetadata {
 			}
 
 			metadata.setContacts(emailList);
+			jsonObject.remove("contacts");
 		}
 
 		// Find lang-tagged client_name params
@@ -1023,6 +1131,8 @@ public class ClientMetadata {
 
 				throw new ParseException("Invalid \"client_name\" (language tag) parameter");
 			}
+
+			removeMember(jsonObject, "client_name", entry.getKey());
 		}
 
 
@@ -1037,6 +1147,8 @@ public class ClientMetadata {
 
 				throw new ParseException("Invalid \"logo_uri\" (language tag) parameter");
 			}
+
+			removeMember(jsonObject, "logo_uri", entry.getKey());
 		}
 		
 		
@@ -1047,10 +1159,13 @@ public class ClientMetadata {
 			try {
 				metadata.setURI(new URL((String)entry.getValue()), entry.getKey());
 
+
 			} catch (Exception e) {
 
 				throw new ParseException("Invalid \"client_uri\" (language tag) parameter");
 			}
+
+			removeMember(jsonObject, "client_uri", entry.getKey());
 		}
 		
 		
@@ -1065,6 +1180,8 @@ public class ClientMetadata {
 
 				throw new ParseException("Invalid \"policy_uri\" (language tag) parameter");
 			}
+
+			removeMember(jsonObject, "policy_uri", entry.getKey());
 		}
 		
 		
@@ -1079,23 +1196,54 @@ public class ClientMetadata {
 
 				throw new ParseException("Invalid \"tos_uri\" (language tag) parameter");
 			}
+
+			removeMember(jsonObject, "tos_uri", entry.getKey());
 		}
 		
 
-		if (jsonObject.containsKey("token_endpoint_auth_method"))
+		if (jsonObject.containsKey("token_endpoint_auth_method")) {
 			metadata.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(
 				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_method")));
 
+			jsonObject.remove("token_endpoint_auth_method");
+		}
+
 			
-		if (jsonObject.containsKey("jwks_uri"))
+		if (jsonObject.containsKey("jwks_uri")) {
 			metadata.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwks_uri"));
+			jsonObject.remove("jwks_uri");
+		}
 
-		if (jsonObject.containsKey("software_id"))
+		if (jsonObject.containsKey("software_id")) {
 			metadata.setSoftwareID(new SoftwareID(JSONObjectUtils.getString(jsonObject, "software_id")));
+			jsonObject.remove("software_id");
+		}
 
-		if (jsonObject.containsKey("software_version"))
+		if (jsonObject.containsKey("software_version")) {
 			metadata.setSoftwareVersion(new SoftwareVersion(JSONObjectUtils.getString(jsonObject, "software_version")));
+			jsonObject.remove("software_version");
+		}
+
+		// The remaining fields are custom
+		metadata.customFields = jsonObject;
 
 		return metadata;
+	}
+
+
+	/**
+	 * Removes a JSON object member with the specified base name and
+	 * optional language tag.
+	 *
+	 * @param jsonObject The JSON object. Must not be {@code null}.
+	 * @param name       The base member name. Must not be {@code null}.
+	 * @param langTag    The language tag, {@code null} if none.
+	 */
+	private static void removeMember(final JSONObject jsonObject, final String name, final LangTag langTag) {
+
+		if (langTag == null)
+			jsonObject.remove(name);
+		else
+			jsonObject.remove(name + "#" + langTag);
 	}
 }
