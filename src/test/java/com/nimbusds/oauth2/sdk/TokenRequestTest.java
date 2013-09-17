@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
 public class TokenRequestTest extends TestCase {
 	
 	
-	public void testAccessTokenRequestWithBasicSecret()
+	public void testCodeGrantWithBasicSecret()
 		throws Exception {
 	
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
@@ -37,31 +37,21 @@ public class TokenRequestTest extends TestCase {
 		httpRequest.setQuery(postBody);
 		
 		TokenRequest tr = TokenRequest.parse(httpRequest);
-		
-		assertTrue(tr instanceof AccessTokenRequest);
+
 		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
-		assertEquals(GrantType.AUTHORIZATION_CODE, tr.getGrantType());
-		assertTrue(tr.getClientAuthentication() instanceof ClientSecretBasic);
-		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
-		
+
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
-	
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
 		assertEquals("Basic " + authBasicString, authBasic.toHTTPAuthorizationHeader());
-		
-		System.out.println("Access Token request: Client ID: " + authBasic.getClientID().getValue());
 		assertEquals("s6BhdRkqt3", authBasic.getClientID().getValue());
+
+		AuthorizationCodeGrant codeGrant = (AuthorizationCodeGrant)tr.getAuthorizationGrant();
+		assertEquals(GrantType.AUTHORIZATION_CODE, codeGrant.getType());
+		assertEquals("SplxlOBeZQQYbYS6WxSbIA", codeGrant.getAuthorizationCode().getValue());
+		assertEquals("https://client.example.com/cb", codeGrant.getRedirectionURI().toString());
+		assertNull(codeGrant.getClientID());
 		
-		System.out.println("Access Token request: Client secret: " + authBasic.getClientSecret());
-		
-		AccessTokenRequest atr = (AccessTokenRequest)tr;
-		
-		AuthorizationCode code = atr.getAuthorizationCode();
-		assertEquals("SplxlOBeZQQYbYS6WxSbIA", code.getValue());
-		
-		assertEquals("https://client.example.com/cb", atr.getRedirectURI().toString());
-		
-		
-		httpRequest = atr.toHTTPRequest();
+		httpRequest = tr.toHTTPRequest();
 		
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
@@ -70,7 +60,7 @@ public class TokenRequestTest extends TestCase {
 	}
 	
 	
-	public void testRefreshTokenRequestWithBasicSecret()
+	public void testRefreshTokenGrantWithBasicSecret()
 		throws Exception {
 	
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
@@ -86,28 +76,92 @@ public class TokenRequestTest extends TestCase {
 		httpRequest.setQuery(postBody);
 		
 		TokenRequest tr = TokenRequest.parse(httpRequest);
-		
-		assertTrue(tr instanceof RefreshTokenRequest);
+
 		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
-		assertEquals(GrantType.REFRESH_TOKEN, tr.getGrantType());
-		assertTrue(tr.getClientAuthentication() instanceof ClientSecretBasic);
-		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, tr.getClientAuthentication().getMethod());
-		
+
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
-	
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
 		assertEquals("Basic " + authBasicString, authBasic.toHTTPAuthorizationHeader());
-		
-		System.out.println("Access Token request: Client ID: " + authBasic.getClientID().getValue());
 		assertEquals("s6BhdRkqt3", authBasic.getClientID().getValue());
+
+		RefreshTokenGrant rtGrant = (RefreshTokenGrant)tr.getAuthorizationGrant();
+		assertEquals(GrantType.REFRESH_TOKEN, rtGrant.getType());
+		assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", rtGrant.getRefreshToken().getValue());
 		
-		System.out.println("Access Token request: Client secret: " + authBasic.getClientSecret());
-		
-		RefreshTokenRequest rtr = (RefreshTokenRequest)tr;
-		
-		RefreshToken token = rtr.getRefreshToken();
-		assertEquals("tGzv3JOkF0XG5Qx2TlKWIA", token.getValue());
-		
-		httpRequest = rtr.toHTTPRequest();
+		httpRequest = tr.toHTTPRequest();
+
+		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
+		assertEquals(postBody, httpRequest.getQuery());
+	}
+
+
+	public void testPasswordCredentialsGrant()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		final String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
+		httpRequest.setAuthorization("Basic " + authBasicString);
+
+		final String postBody = "grant_type=password&username=johndoe&password=A3ddj3w";
+
+		httpRequest.setQuery(postBody);
+
+		TokenRequest tr = TokenRequest.parse(httpRequest);
+
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
+
+		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
+		assertEquals("Basic " + authBasicString, authBasic.toHTTPAuthorizationHeader());
+		assertEquals("s6BhdRkqt3", authBasic.getClientID().getValue());
+
+		ResourceOwnerPasswordCredentialsGrant pwdGrant = (ResourceOwnerPasswordCredentialsGrant)tr.getAuthorizationGrant();
+		assertEquals(GrantType.PASSWORD, pwdGrant.getType());
+		assertEquals("johndoe", pwdGrant.getUsername());
+		assertEquals("A3ddj3w", pwdGrant.getPassword().getValue());
+		assertNull(pwdGrant.getScope());
+
+		httpRequest = tr.toHTTPRequest();
+
+		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
+		assertEquals(postBody, httpRequest.getQuery());
+	}
+
+
+	public void testClientCredentialsGrant()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		final String authBasicString = "czZCaGRSa3F0MzpnWDFmQmF0M2JW";
+		httpRequest.setAuthorization("Basic " + authBasicString);
+
+		final String postBody = "grant_type=client_credentials";
+
+		httpRequest.setQuery(postBody);
+
+		TokenRequest tr = TokenRequest.parse(httpRequest);
+
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
+
+		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
+		assertEquals("Basic " + authBasicString, authBasic.toHTTPAuthorizationHeader());
+		assertEquals("s6BhdRkqt3", authBasic.getClientID().getValue());
+
+		ClientCredentialsGrant clientCredentialsGrant = (ClientCredentialsGrant)tr.getAuthorizationGrant();
+		assertEquals(GrantType.CLIENT_CREDENTIALS, clientCredentialsGrant.getType());
+		assertNull(clientCredentialsGrant.getScope());
+
+		httpRequest = tr.toHTTPRequest();
+
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());

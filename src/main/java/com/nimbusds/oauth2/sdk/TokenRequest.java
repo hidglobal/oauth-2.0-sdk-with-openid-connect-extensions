@@ -2,19 +2,22 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.net.URL;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * The base abstract class for access token and refresh token requests to the
- * Token endpoint. The request type can be inferred by calling 
- * {@link #getGrantType}.
+ * Token request. Used to obtain an
+ * {@link com.nimbusds.oauth2.sdk.token.AccessToken access token} and an
+ * optional {@link com.nimbusds.oauth2.sdk.token.RefreshToken refresh token}
+ * at the Token endpoint of the authorisation server. This class is immutable.
  *
- * <p>Example access token request:
+ * <p>Example token request with an authorisation code grant:
  *
  * <pre>
  * POST /token HTTP/1.1
@@ -30,24 +33,24 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), sections 4.1.3, .
+ *     <li>OAuth 2.0 (RFC 6749), sections 4.1.3, 4.3.2, 4.4.2 and 6.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
-public abstract class TokenRequest extends AbstractRequest {
+public class TokenRequest extends AbstractRequest {
 
 
-	/**
-	 * The authorisation grant type.
-	 */
-	private final GrantType grantType;
-	
-	
 	/**
 	 * The client authentication, {@code null} if none.
 	 */
 	private final ClientAuthentication clientAuth;
+
+
+	/**
+	 * The authorisation grant.
+	 */
+	private final AuthorizationGrant authzGrant;
 	
 	
 	/**
@@ -56,32 +59,21 @@ public abstract class TokenRequest extends AbstractRequest {
 	 * @param uri        The URI of the token endpoint. May be 
 	 *                   {@code null} if the {@link #toHTTPRequest()}
 	 *                   method will not be used.
-	 * @param grantType  The grant type. Must not be {@code null}.
 	 * @param clientAuth The client authentication, {@code null} if none.
+	 * @param authzGrant The authorisation grant. Must not be {@code null}.
 	 */
-	protected TokenRequest(final URL uri, 
-		               final GrantType grantType, 
-			       final ClientAuthentication clientAuth) {
+	public TokenRequest(final URL uri,
+			    final ClientAuthentication clientAuth,
+			    final AuthorizationGrant authzGrant) {
 	
 		super(uri);
 		
-		if (grantType == null)
-			throw new IllegalArgumentException("The grant type must not be null");
-		
-		this.grantType = grantType;
-		
 		this.clientAuth = clientAuth;
-	}
-	
-	
-	/**
-	 * Gets the authorisation grant type.
-	 *
-	 * @return The authorisation grant type.
-	 */
-	public GrantType getGrantType() {
-	
-		return grantType;
+
+		if (authzGrant == null)
+			throw new IllegalArgumentException("The authorization grant must not be null");
+
+		this.authzGrant = authzGrant;
 	}
 	
 	
@@ -93,6 +85,38 @@ public abstract class TokenRequest extends AbstractRequest {
 	public ClientAuthentication getClientAuthentication() {
 	
 		return clientAuth;
+	}
+
+
+	/**
+	 * Gets the authorisation grant.
+	 *
+	 * @return The authorisation grant.
+	 */
+	public AuthorizationGrant getAuthorizationGrant() {
+
+		return authzGrant;
+	}
+
+
+	@Override
+	public HTTPRequest toHTTPRequest()
+		throws SerializeException {
+
+		if (getURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		Map<String,String> params = authzGrant.toParameters();
+
+		httpRequest.setQuery(URLUtils.serializeParameters(params));
+
+		if (getClientAuthentication() != null)
+			getClientAuthentication().applyTo(httpRequest);
+
+		return httpRequest;
 	}
 	
 	
@@ -116,23 +140,13 @@ public abstract class TokenRequest extends AbstractRequest {
 		// No fragment!
 		// May use query component!
 		Map<String,String> params = httpRequest.getQueryParameters();
-		
-		
-		// Parse grant type
-		final String grantTypeString = params.get("grant_type");
-		
-		if (grantTypeString == null)
-			throw new ParseException("Missing \"grant_type\" parameter");
-		
-		GrantType grantType = new GrantType(grantTypeString);
-		
-		if (grantType.equals(GrantType.AUTHORIZATION_CODE))
-			return AccessTokenRequest.parse(httpRequest);
 
-		else if (grantType.equals(GrantType.REFRESH_TOKEN))
-			return RefreshTokenRequest.parse(httpRequest);
-		
-		else
-			throw new ParseException("Unsupported \"grant_type\": " + grantType);
+		// Parse grant
+		AuthorizationGrant authzGrant = AuthorizationGrant.parse(params);
+
+		// Parse client auth
+		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
+
+		return new TokenRequest(httpRequest.getURL(), clientAuth, authzGrant);
 	}
 }

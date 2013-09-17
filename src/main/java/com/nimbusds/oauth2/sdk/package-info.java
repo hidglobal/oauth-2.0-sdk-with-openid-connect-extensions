@@ -22,17 +22,9 @@
  * <p>Token endpoint messages:
  *
  * <ul>
- *     <li>{@link com.nimbusds.oauth2.sdk.TokenRequest} The client 
- *         authenticates with the server and requests and access token based on
- *         a previously issued authorisation code or refresh token:
- *         <ul>
- *             <li>{@link com.nimbusds.oauth2.sdk.AccessTokenRequest} The 
- *                 client requests the authorisation code to be exchanged for 
- *                 an access and refresh token.
- *             <li>{@link com.nimbusds.oauth2.sdk.RefreshTokenRequest} The
- *                 client requests a new access token.
- *         </ul>
- *     </li>
+ *     <li>{@link com.nimbusds.oauth2.sdk.TokenRequest} The client requests an
+ *         access token and optional refresh token using a previously issued
+ *         authorisation code or other valid grant.
  *     <li>{@link com.nimbusds.oauth2.sdk.TokenResponse} The server responds
  *         with an access token or returns an error:
  *         <ul>
