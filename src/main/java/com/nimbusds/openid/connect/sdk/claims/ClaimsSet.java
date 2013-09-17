@@ -377,7 +377,7 @@ public abstract class ClaimsSet {
 	 */
 	public List<String> getStringListClaim(final String name) {
 
-		List<Object> rawList = getClaim(name, List.class);
+		@SuppressWarnings("unchecked") List<Object> rawList = getClaim(name, List.class);
 
 		if (rawList == null)
 			rawList = getClaim(name, JSONArray.class);
