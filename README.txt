@@ -1,6 +1,6 @@
 Nimbus OAuth 2.0 SDK with OpenID Connect extensions
 
-Copyright (c) Nimbus Directory Services / Vladimir Dzhuvinov, 2012 - 2013
+Copyright (c) Nimbus Directory Services, 2012 - 2013
 
 
 README
@@ -69,9 +69,6 @@ Additional features:
 	  Nimbus Language Tags (RFC 5646) library.
 
 
-
-
-
 This SDK version implements the following standards and drafts:
 
 
@@ -80,7 +77,7 @@ This SDK version implements the following standards and drafts:
 	* The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 6750)
 	
 	* OAuth 2.0 Dynamic Client Registration Protocol 
-	  (draft-ietf-oauth-dyn-reg-12)
+	  (draft-ietf-oauth-dyn-reg-14)
 
 	* OpenID Connect Messages, draft 20.
 
@@ -93,9 +90,8 @@ This SDK version implements the following standards and drafts:
 	* OAuth 2.0 Multiple Response Type Encoding Practices, draft 08
 
 
-The Nimbus OpenID Connect SDK is licensed under GPL 2.0. Development licenses
-for integrating the SDK into proprietary products and services are available,
-please get in touch with us at http://nimbusds.com/contact.html
+The Nimbus OAuth 2.0 + OpenID Connect SDK is provided under the terms of the
+Apache 2.0 licence.
 
 
-2013-06-18
+2013-09-17

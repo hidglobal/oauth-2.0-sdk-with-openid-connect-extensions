@@ -49,5 +49,9 @@ version 2.8 (2013-06-30)
 	* Switches Secret generation to java.security.SecureRandom.
 
 version 2.9 (2013-09-17)
+    * Changes the licensing terms to Apache 2.0.
 	* Updates the APIs to draft-ietf-oauth-dyn-reg-14.
 	* Separates the authorisation grant from the token request.
+	* Refactors client authentication.
+	* Numerous bug fixes and improvements.
+	* Upgrades dependencies.
