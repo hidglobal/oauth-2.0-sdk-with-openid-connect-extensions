@@ -16,6 +16,8 @@ public class GrantTypeTest extends TestCase {
 
 		assertEquals("authorization_code", GrantType.AUTHORIZATION_CODE.toString());
 
+		assertEquals("implicit", GrantType.IMPLICIT.toString());
+
 		assertEquals("refresh_token", GrantType.REFRESH_TOKEN.toString());
 
 		assertEquals("password", GrantType.PASSWORD.toString());

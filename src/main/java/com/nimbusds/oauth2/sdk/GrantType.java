@@ -19,6 +19,12 @@ public final class GrantType extends Identifier {
 	 * Authorisation code.
 	 */
 	public static final GrantType AUTHORIZATION_CODE = new GrantType("authorization_code");
+
+
+	/**
+	 * Implicit.
+	 */
+	public static final GrantType IMPLICIT = new GrantType("implicit");
 	
 	
 	/**
