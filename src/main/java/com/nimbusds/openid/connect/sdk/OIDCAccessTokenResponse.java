@@ -7,6 +7,7 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+
 import com.nimbusds.oauth2.sdk.AccessTokenResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
@@ -56,14 +57,32 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  */
 @Immutable
 public final class OIDCAccessTokenResponse 
-	extends AccessTokenResponse
-	implements OIDCTokenResponse {
+	extends AccessTokenResponse {
 
 
 	/**
 	 * Optional ID Token serialised to a JWT.
 	 */
 	private final JWT idToken;
+
+
+	/**
+	 * Optional ID Token as raw string (for more efficient serialisation).
+	 */
+	private final String idTokenString;
+
+
+	/**
+	 * Creates a new OpenID Connect access token response with no ID token.
+	 *
+	 * @param accessToken  The access token. Must not be {@code null}.
+	 * @param refreshToken Optional refresh token, {@code null} if none.
+	 */
+	public OIDCAccessTokenResponse(final AccessToken accessToken,
+				       final RefreshToken refreshToken) {
+
+		this(accessToken, refreshToken, (String)null);
+	}
 	
 	
 	/**
@@ -82,17 +101,85 @@ public final class OIDCAccessTokenResponse
 		super(accessToken, refreshToken);
 		
 		this.idToken = idToken;
+
+		idTokenString = null;
+	}
+
+
+	/**
+	 * Creates a new OpenID Connect access token response.
+	 *
+	 * @param accessToken   The access token. Must not be {@code null}.
+	 * @param refreshToken  Optional refresh token, {@code null} if none.
+	 * @param idTokenString The ID token string. Must be {@code null} if
+	 *                      the request grant type was not
+	 *                      {@link com.nimbusds.oauth2.sdk.GrantType#AUTHORIZATION_CODE}.
+	 */
+	public OIDCAccessTokenResponse(final AccessToken accessToken,
+				       final RefreshToken refreshToken,
+				       final String idTokenString) {
+
+		super(accessToken, refreshToken);
+
+		idToken = null;
+
+		this.idTokenString = idTokenString;
 	}
 	
 	
 	/**
 	 * Gets the ID token.
 	 *
-	 * @return The ID token, {@code null} if none.
+	 * @return The ID token, {@code null} if none or if parsing to a JWT
+	 *         failed.
 	 */
 	public JWT getIDToken() {
-	
-		return idToken;
+
+		if (idToken != null)
+			return idToken;
+
+		if (idTokenString != null) {
+
+			try {
+				return JWTParser.parse(idTokenString);
+
+			} catch (java.text.ParseException e) {
+
+				return null;
+			}
+		}
+
+		return null;
+	}
+
+
+	/**
+	 * Gets the ID token string.
+	 *
+	 * @return The ID token string, {@code null} if none or if
+	 *         serialisation to a string failed.
+	 */
+	public String getIDTokenString() {
+
+		if (idTokenString != null)
+			return idTokenString;
+
+		if (idToken != null) {
+
+			// Reproduce originally parsed string if any
+			if (idToken.getParsedString() != null)
+				return idToken.getParsedString();
+
+			try {
+				return idToken.serialize();
+
+			} catch(IllegalStateException e) {
+
+				return null;
+			}
+		}
+
+		return null;
 	}
 	
 	
@@ -114,7 +201,7 @@ public final class OIDCAccessTokenResponse
 	 *
 	 * @return The JSON object.
 	 *
-	 * @throws SerializeException If this OpenID Connect access token 
+	 * @throws SerializeException If this OpenID Connect access token
 	 *                            response couldn't be serialised to a JSON
 	 *                            object.
 	 */
@@ -124,16 +211,10 @@ public final class OIDCAccessTokenResponse
 	
 		JSONObject o = super.toJSONObject();
 
-		if (idToken != null) {
-			
-			try {
-				o.put("id_token", idToken.serialize());
+		String idTokenOut = getIDTokenString();
 
-			} catch (IllegalStateException e) {
-
-				throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
-			}
-		}
+		if (idTokenOut != null)
+			o.put("id_token", idTokenOut);
 		
 		return o;
 	}
