@@ -24,4 +24,12 @@ public class GrantTypeTest extends TestCase {
 
 		assertEquals("client_credentials", GrantType.CLIENT_CREDENTIALS.toString());
 	}
+
+
+	public void testConstructors() {
+
+		GrantType grantType = new GrantType("x_custom");
+
+		assertEquals("x_custom", grantType.getValue());
+	}
 }
