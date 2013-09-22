@@ -55,3 +55,8 @@ version 2.9 (2013-09-17)
 	* Refactors client authentication.
 	* Numerous bug fixes and improvements.
 	* Upgrades dependencies.
+
+version 2.10 (2013-09-22)
+    * Refactors OpenID Connect token response classes.
+    * Adds implicit grant type constant.
+    * Upgrades Nimbus JOSE+JWT dependency.
