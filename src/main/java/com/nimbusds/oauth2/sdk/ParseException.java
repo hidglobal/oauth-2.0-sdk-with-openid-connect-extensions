@@ -21,7 +21,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message) {
 	
-		this(message, null, null);
+		this(message, null, null, null, null);
 	}
 	
 	
@@ -33,7 +33,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message, final Throwable cause) {
 	
-		this(message, null, cause);
+		this(message, null, null, null, cause);
 	}
 
 
@@ -45,7 +45,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message, final ErrorObject error) {
 	
-		this(message, error, null);
+		this(message, error, null, null, null);
 	}
 
 
