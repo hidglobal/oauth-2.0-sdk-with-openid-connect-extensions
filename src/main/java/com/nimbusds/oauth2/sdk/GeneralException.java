@@ -40,7 +40,7 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message) {
 	
-		this(message, null);
+		this(message, null, null, null, null);
 	}
 	
 	
@@ -52,7 +52,20 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message, final Throwable cause) {
 	
-		this(message, null, cause);
+		this(message, null, null, null, cause);
+	}
+
+
+	/**
+	 * Creates a new general exception.
+	 *
+	 * @param message The exception message. May be {@code null}.
+	 * @param error   The associated error, {@code null} if not specified.
+	 */
+	public GeneralException(final String message,
+				final ErrorObject error) {
+
+		this(message, error, null, null, null);
 	}
 
 
