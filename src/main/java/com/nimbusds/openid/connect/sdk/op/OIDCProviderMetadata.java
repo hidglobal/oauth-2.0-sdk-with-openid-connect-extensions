@@ -1102,7 +1102,7 @@ public class OIDCProviderMetadata {
 	
 	
 	/**
-	 * Gets the support for the {@code claim} authorisation request
+	 * Gets the support for the {@code claims} authorisation request
 	 * parameter. Corresponds to the {@code claims_parameter_supported} 
 	 * metadata field.
 	 * 
@@ -1116,7 +1116,7 @@ public class OIDCProviderMetadata {
 
 
 	/**
-	 * Sets the support for the {@code claim} authorisation request
+	 * Sets the support for the {@code claims} authorisation request
 	 * parameter. Corresponds to the {@code claims_parameter_supported}
 	 * metadata field.
 	 *
