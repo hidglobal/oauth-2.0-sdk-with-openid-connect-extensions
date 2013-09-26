@@ -27,7 +27,6 @@ import com.nimbusds.openid.connect.sdk.util.Resource;
 import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
 
 
-
 /**
  * Resolves the final OpenID Connect authorisation request by superseding its
  * parameters with those found in the optional OpenID Connect request object.
@@ -70,46 +69,65 @@ public class OIDCAuthorizationRequestResolver {
 
 
 	/**
-	 * Creates a new minimal OpenID Connect authorisation request resolver
-	 * without a JWT retriever and a JWT decoder. This resolver will not be
-	 * able to process OpenID Connect request objects and will throw a
-	 * {@link ResolveException} if the authorisation request bears one.
+	 * Creates a new minimal OpenID Connect authorisation request resolver.
+	 * It will not process OpenID Connect request objects and will throw a
+	 * {@link ResolveException} if the authorisation request includes a
+	 * {@code request} or {@code request_uri} parameter.
 	 */
 	public OIDCAuthorizationRequestResolver() {
 
-		this(null, null);
+		jwtDecoder = null;
+		jwtRetriever = null;
 	}
 	
 	
 	/**
-	 * Creates a new OpenID Connect authorisation request resolver without 
-	 * a JWT retriever. This resolver will not be able to process OpenID
-	 * Connect request objects specified by URL.
+	 * Creates a new OpenID Connect authorisation request resolver that
+	 * supports OpenID Connect request objects passed by value (using the
+	 * authorisation {@code request} parameter). It will throw a
+	 * {@link ResolveException} if the authorisation request includes a
+	 * {@code request_uri} parameter.
 	 *
 	 * @param jwtDecoder A configured JWT decoder providing JWS validation 
-	 *                   and optional JWE decryption, {@code null} if not
-	 *                   specified.
+	 *                   and optional JWE decryption of the request
+	 *                   objects. Must not be {@code null}.
 	 */
 	public OIDCAuthorizationRequestResolver(final JWTDecoder jwtDecoder) {
-	
-		this(jwtDecoder, null);
+
+		if (jwtDecoder == null)
+			throw new IllegalArgumentException("The JWT decoder must not be null");
+
+		this.jwtDecoder = jwtDecoder;
+
+		jwtRetriever = null;
 	}
 	
 	
 	/**
-	 * Creates a new OpenID Connect request object resolver.
+	 * Creates a new OpenID Connect request object resolver that supports
+	 * OpenID Connect request objects passed by value (using the
+	 * authorisation {@code request} parameter) or by reference (using the
+	 * authorisation {@code request_uri} parameter).
 	 * 
 	 * @param jwtDecoder   A configured JWT decoder providing JWS 
-	 *                     validation and optional JWE decryption,
-	 *                     {@code null} if not specified.
+	 *                     validation and optional JWE decryption of the
+	 *                     request objects. Must not be {@code null}.
 	 * @param jwtRetriever A configured JWT retriever for OpenID Connect
-	 *                     request objects passed by URL, {@code null} if 
-	 *                     not specified.
+	 *                     request objects passed by URL. Must not be
+	 *                     {@code null}.
 	 */
 	public OIDCAuthorizationRequestResolver(final JWTDecoder jwtDecoder,
 		                                final ResourceRetriever jwtRetriever) {
 
+		if (jwtDecoder == null)
+			throw new IllegalArgumentException("The JWT decoder must not be null");
+
 		this.jwtDecoder = jwtDecoder;
+
+
+		if (jwtRetriever == null)
+			throw new IllegalArgumentException("The JWT retriever must not be null");
+
 		this.jwtRetriever = jwtRetriever;
 	}
 	
