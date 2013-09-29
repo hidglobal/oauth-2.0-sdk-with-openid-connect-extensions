@@ -93,37 +93,59 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * The response type, used to determine redirect URL composition. If
+	 * The response type, used to determine redirection URL composition. If
 	 * unknown {@code null}.
 	 */
 	private final ResponseType rt;
-	
-	
+
+
 	/**
 	 * Creates a new authorisation error response.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
+	 * @param error       The error. Should match one of the
+	 *                    {@link #getStandardErrors standard errors} for an
+	 *                    authorisation error response. Must not be
+	 *                    {@code null}.
+	 * @param rt          The response type, used to determine the
+	 *                    redirection URI composition. If unknown
+	 *                    {@code null}.
+	 * @param state       The state, {@code null} if not requested.
+	 */
+	public AuthorizationErrorResponse(final URL redirectURI,
+					  final ErrorObject error,
+					  final ResponseType rt,
+					  final State state) {
+
+		super(redirectURI, state);
+
+		if (error == null)
+			throw new IllegalArgumentException("The error must not be null");
+
+		this.error = error;
+
+		this.rt = rt;
+	}
+	
+	
+	/**
+	 * Creates a new authorisation error response, with no specified
+	 * response type to determine the redirection URI composition.
+	 *
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param error       The error. Should match one of the 
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    authorisation error response. Must not be 
 	 *                    {@code null}.
-	 * @param rt          The response type, used to determine the redirect
-	 *                    URI composition. If unknown {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
 	public AuthorizationErrorResponse(final URL redirectURI,
 	                                  final ErrorObject error,
-					  final ResponseType rt,
 					  final State state) {
 					  
-		super(redirectURI, state);
-		
-		if (error == null)
-			throw new IllegalArgumentException("The error must not be null");
-			
-		this.error = error;
-		
-		this.rt = rt;
+		this(redirectURI, error, null, state);
 	}
 	
 
