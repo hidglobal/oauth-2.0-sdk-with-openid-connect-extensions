@@ -1,7 +1,12 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.TestCase;
+
+import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
 
 
 /**
@@ -84,5 +89,38 @@ public class ResponseTypeTest extends TestCase {
 
 			// ok
 		}
+	}
+
+
+	public void testContains() {
+
+		List<ResponseType> rtList = new ArrayList<ResponseType>();
+
+		ResponseType rt1 = new ResponseType();
+		rt1.add(ResponseType.Value.CODE);
+		rtList.add(rt1);
+
+		ResponseType rt2 = new ResponseType();
+		rt2.add(ResponseType.Value.TOKEN);
+		rt2.add(OIDCResponseTypeValue.ID_TOKEN);
+		rtList.add(rt2);
+
+		assertEquals(2, rtList.size());
+
+		rt1 = new ResponseType();
+		rt1.add(ResponseType.Value.CODE);
+		rtList.add(rt1);
+		assertTrue(rtList.contains(rt1));
+
+		rt2 = new ResponseType();
+		rt2.add(ResponseType.Value.TOKEN);
+		rt2.add(OIDCResponseTypeValue.ID_TOKEN);
+		rtList.add(rt2);
+		assertTrue(rtList.contains(rt2));
+
+		ResponseType rt3 = new ResponseType();
+		rt3.add(OIDCResponseTypeValue.ID_TOKEN);
+
+		assertFalse(rtList.contains(rt3));
 	}
 }
