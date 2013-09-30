@@ -69,7 +69,7 @@ public class ScopeTest extends TestCase {
 	
 	public void testParseNullCollection() {
 
-		assertNull(Scope.parse((Collection)null));
+		assertNull(Scope.parse((Collection<String>)null));
 	}
 
 

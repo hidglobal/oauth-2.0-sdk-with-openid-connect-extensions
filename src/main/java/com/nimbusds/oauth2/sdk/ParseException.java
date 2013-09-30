@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URL;
 
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
 
@@ -21,7 +22,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message) {
 	
-		this(message, null, null, null, null);
+		this(message, null, null, null, null, null);
 	}
 	
 	
@@ -33,7 +34,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message, final Throwable cause) {
 	
-		this(message, null, null, null, cause);
+		this(message, null, null, null, null, cause);
 	}
 
 
@@ -45,7 +46,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message, final ErrorObject error) {
 	
-		this(message, error, null, null, null);
+		this(message, error, null, null, null, null);
 	}
 
 
@@ -60,7 +61,7 @@ public class ParseException extends GeneralException {
 		              final ErrorObject error,
 		              final Throwable cause) {
 	
-		this(message, error, null, null, cause);
+		this(message, error, null, null, null, cause);
 	}
 	
 	
@@ -70,17 +71,20 @@ public class ParseException extends GeneralException {
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated error, {@code null} if not
 	 *                    specified.
-	 * @param redirectURI The associated redirection URI, must not be 
+	 * @param clientID    The associated client identifier. Must not be
+	 *                    {@code null}.
+	 * @param redirectURI The associated redirection URI. Must not be
 	 *                    {@code null}.
 	 * @param state       The optional associated state parameter, 
 	 *                    {@code null} if not specified.
 	 */
 	public ParseException(final String message, 
 		              final ErrorObject error,
+			      final ClientID clientID,
 		              final URL redirectURI,
 		              final State state) {
 
-		this(message, error, redirectURI, state, null);
+		this(message, error, clientID, redirectURI, state, null);
 	}
 
 
@@ -90,7 +94,9 @@ public class ParseException extends GeneralException {
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated error, {@code null} if not
 	 *                    specified.
-	 * @param redirectURI The associated redirection URI, must not be 
+	 * @param clientID    The associated client identifier. Must not be
+	 *                    {@code null}.
+	 * @param redirectURI The associated redirection URI. Must not be
 	 *                    {@code null}.
 	 * @param state       The optional associated state parameter, 
 	 *                    {@code null} if not specified.
@@ -99,10 +105,11 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message, 
 		              final ErrorObject error,
+			      final ClientID clientID,
 		              final URL redirectURI,
 		              final State state,
 		              final Throwable cause) {
 
-		super(message, error, redirectURI, state, cause);
+		super(message, error, clientID, redirectURI, state, cause);
 	}
 }

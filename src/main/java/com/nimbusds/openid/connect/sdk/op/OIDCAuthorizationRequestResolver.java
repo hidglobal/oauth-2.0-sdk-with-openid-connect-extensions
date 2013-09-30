@@ -376,7 +376,13 @@ public class OIDCAuthorizationRequestResolver {
 			else
 				err = OIDCError.INVALID_REQUEST_OBJECT;
 			
-			throw new ResolveException(e.getMessage(), err, request.getRedirectionURI(), request.getState(), e.getCause());
+			throw new ResolveException(
+				e.getMessage(),
+				err,
+				request.getClientID(),
+				request.getRedirectionURI(),
+				request.getState(),
+				e.getCause());
 		}
 	}
 }

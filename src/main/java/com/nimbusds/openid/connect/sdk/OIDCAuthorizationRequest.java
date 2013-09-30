@@ -825,14 +825,16 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		// the context of OIDC
 		AuthorizationRequest ar = AuthorizationRequest.parse(uri, params);
 
+		ClientID clientID = ar.getClientID();
+		State state = ar.getState();
+
 		// Required in OIDC
 		URL redirectURI = ar.getRedirectionURI();
 
 		if (redirectURI == null)
 			throw new ParseException("Missing \"redirect_uri\" parameter", 
-				                 OAuth2Error.INVALID_REQUEST);
+				                 OAuth2Error.INVALID_REQUEST, clientID, null, state);
 
-		State state = ar.getState();
 
 		ResponseType rt = ar.getResponseType();
 		
@@ -843,7 +845,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 			
 			throw new ParseException("Unsupported \"response_type\" parameter: " + e.getMessage(), 
 					         OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
-					         redirectURI, state);
+					         clientID, redirectURI, state);
 		}
 		
 		// Required in OIDC, must include "openid" parameter
@@ -852,14 +854,14 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (scope == null)
 			throw new ParseException("Missing \"scope\" parameter", 
 				                 OAuth2Error.INVALID_REQUEST, 
-					         redirectURI, state);
+					         clientID, redirectURI, state);
 
 		if (! scope.contains(OIDCScopeValue.OPENID))
 			throw new ParseException("The scope must include an \"openid\" token",
 				                 OAuth2Error.INVALID_REQUEST, 
-					         redirectURI, state);
+					         clientID, redirectURI, state);
 
-		ClientID clientID = ar.getClientID();
+
 
 
 		// Parse the remaining OIDC parameters
@@ -869,7 +871,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		if (rt.impliesImplicitFlow() && nonce == null)
 			throw new ParseException("Missing \"nonce\" parameter: Required in implicit flow",
 				                 OAuth2Error.INVALID_REQUEST,
-				                 redirectURI, state);
+				                 clientID, redirectURI, state);
 		
 		Display display = null;
 		
@@ -880,7 +882,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 			throw new ParseException("Invalid \"display\" parameter: " + e.getMessage(), 
 				                 OAuth2Error.INVALID_REQUEST,
-				                 redirectURI, state, e);
+				                 clientID, redirectURI, state, e);
 		}
 		
 		
@@ -893,7 +895,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 			
 			throw new ParseException("Invalid \"prompt\" parameter: " + e.getMessage(), 
 				                 OAuth2Error.INVALID_REQUEST,
-				                 redirectURI, state, e);
+				                 clientID, redirectURI, state, e);
 		}
 
 
@@ -910,7 +912,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 				throw new ParseException("Invalid \"max_age\" parameter: " + e.getMessage(),
 					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, e);
+					                 clientID, redirectURI, state, e);
 			}
 		}
 
@@ -934,7 +936,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 					throw new ParseException("Invalid \"ui_locales\" parameter: " + e.getMessage(),
 						                 OAuth2Error.INVALID_REQUEST,
-						                 redirectURI, state, e);
+						                 clientID, redirectURI, state, e);
 				}
 			}
 		}
@@ -959,7 +961,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 					throw new ParseException("Invalid \"claims_locales\" parameter: " + e.getMessage(),
 						                 OAuth2Error.INVALID_REQUEST,
-						                 redirectURI, state, e);
+						                 clientID, redirectURI, state, e);
 				}
 			}
 		}
@@ -978,7 +980,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 				throw new ParseException("Invalid \"id_token_hint\" parameter: " + e.getMessage(), 
 					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, e);
+					                 clientID, redirectURI, state, e);
 			}
 		}
 
@@ -1017,7 +1019,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 				throw new ParseException("Invalid \"claims\" parameter: " + e.getMessage(),
 					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, e);
+					                 clientID, redirectURI, state, e);
 			}
 
 			// Parse exceptions silently ignored
@@ -1038,7 +1040,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 			
 				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
 					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, e);
+					                 clientID, redirectURI, state, e);
 			}
 		}
 
@@ -1053,7 +1055,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 				throw new ParseException("Invalid request: Found mutually exclusive \"request\" and \"request_uri\" parameters",
 					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, null);
+					                 clientID, redirectURI, state, null);
 			}
 
 			try {
@@ -1063,7 +1065,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 				throw new ParseException("Invalid \"request_object\" parameter: " + e.getMessage(), 
 					                 OAuth2Error.INVALID_REQUEST,
-					                 redirectURI, state, e);
+					                 clientID, redirectURI, state, e);
 			}
 		}
 		

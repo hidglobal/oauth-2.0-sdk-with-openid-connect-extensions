@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URL;
 
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 
 
@@ -18,6 +19,12 @@ public class GeneralException extends Exception {
 	 * The associated error, {@code null} if not specified.
 	 */
 	private final ErrorObject error;
+
+
+	/**
+	 * The associated client identifier, {@code null} if not specified.
+	 */
+	private final ClientID clientID;
 
 
 	/**
@@ -40,7 +47,7 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message) {
 	
-		this(message, null, null, null, null);
+		this(message, null, null, null, null, null);
 	}
 	
 	
@@ -52,7 +59,7 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message, final Throwable cause) {
 	
-		this(message, null, null, null, cause);
+		this(message, null, null, null, null, cause);
 	}
 
 
@@ -65,7 +72,7 @@ public class GeneralException extends Exception {
 	public GeneralException(final String message,
 				final ErrorObject error) {
 
-		this(message, error, null, null, null);
+		this(message, error, null, null, null, null);
 	}
 
 
@@ -80,7 +87,7 @@ public class GeneralException extends Exception {
 		                final ErrorObject error,
 		                final Throwable cause) {
 	
-		this(message, error, null, null, cause);
+		this(message, error, null, null, null, cause);
 	}
 	
 	
@@ -90,6 +97,8 @@ public class GeneralException extends Exception {
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated error, {@code null} if not 
 	 *                    specified.
+	 * @param clientID    The associated client identifier, {@code null} if
+	 *                    not specified.
 	 * @param redirectURI The associated redirection URI, {@code null} if
 	 *                    not specified.
 	 * @param state       The optional associated state parameter, 
@@ -97,10 +106,11 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message, 
 		                final ErrorObject error,
+				final ClientID clientID,
 		                final URL redirectURI,
 		                final State state) {
 	
-		this(message, error, redirectURI, state, null);
+		this(message, error, clientID, redirectURI, state, null);
 	}
 
 
@@ -110,6 +120,8 @@ public class GeneralException extends Exception {
 	 * @param message     The exception message. May be {@code null}.
 	 * @param error       The associated error, {@code null} if not 
 	 *                    specified.
+	 * @param clientID    The associated client identifier, {@code null} if
+	 *                    not specified.
 	 * @param redirectURI The associated redirection URI, {@code null} if
 	 *                    not specified.
 	 * @param state       The optional associated state parameter, 
@@ -119,6 +131,7 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message, 
 		                final ErrorObject error,
+				final ClientID clientID,
 		                final URL redirectURI,
 		                final State state,
 		                final Throwable cause) {
@@ -126,6 +139,7 @@ public class GeneralException extends Exception {
 		super(message, cause);
 
 		this.error = error;
+		this.clientID = clientID;
 		this.redirectURI = redirectURI;
 		this.state = state;
 	}
@@ -139,6 +153,17 @@ public class GeneralException extends Exception {
 	public ErrorObject getErrorObject() {
 
 		return error;
+	}
+
+
+	/**
+	 * Gets the associated client identifier.
+	 *
+	 * @return The client ID, {@code null} if not specified.
+	 */
+	public ClientID getClientID() {
+
+		return clientID;
 	}
 
 

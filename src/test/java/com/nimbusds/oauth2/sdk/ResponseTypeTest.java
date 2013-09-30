@@ -1,7 +1,6 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import static junit.framework.Assert.*;
 import junit.framework.TestCase;
 
 

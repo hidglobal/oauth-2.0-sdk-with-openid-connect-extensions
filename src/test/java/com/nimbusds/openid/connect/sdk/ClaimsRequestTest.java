@@ -1,13 +1,13 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 import java.util.Collection;
 import java.util.Set;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+
 import junit.framework.TestCase;
+
+import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 
 /**

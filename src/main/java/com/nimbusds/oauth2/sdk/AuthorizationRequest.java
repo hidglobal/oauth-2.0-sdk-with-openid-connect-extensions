@@ -366,7 +366,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			} catch (MalformedURLException e) {
 			
 				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
-					                 OAuth2Error.INVALID_REQUEST, e);
+					                 OAuth2Error.INVALID_REQUEST, clientID, null, null, e);
 			}
 		}
 
@@ -387,7 +387,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			
 			throw new ParseException(e.getMessage(), 
 				                 OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
-				                 redirectURI, state, e);
+				                 clientID, redirectURI, state, e);
 		}
 			
 		

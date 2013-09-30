@@ -3,8 +3,10 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URL;
 
-import com.nimbusds.oauth2.sdk.id.State;
 import junit.framework.TestCase;
+
+import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.State;
 
 
 /**
@@ -21,6 +23,7 @@ public class GeneralExceptionTest extends TestCase {
 		assertEquals("message", e.getMessage());
 
 		assertNull(e.getErrorObject());
+		assertNull(e.getClientID());
 		assertNull(e.getRedirectionURI());
 		assertNull(e.getState());
 	}
@@ -32,6 +35,7 @@ public class GeneralExceptionTest extends TestCase {
 		assertEquals("message", e.getMessage());
 
 		assertNull(e.getErrorObject());
+		assertNull(e.getClientID());
 		assertNull(e.getRedirectionURI());
 		assertNull(e.getState());
 	}
@@ -43,6 +47,7 @@ public class GeneralExceptionTest extends TestCase {
 		assertEquals("message", e.getMessage());
 
 		assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
+		assertNull(e.getClientID());
 		assertNull(e.getRedirectionURI());
 		assertNull(e.getState());
 	}
@@ -54,12 +59,13 @@ public class GeneralExceptionTest extends TestCase {
 		GeneralException e = new GeneralException(
 			"message",
 			OAuth2Error.INVALID_REQUEST,
+			new ClientID("abc"),
 			new URL("https://redirect.com"),
 			new State("123"));
 
 		assertEquals("message", e.getMessage());
-
 		assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
+		assertEquals("abc", e.getClientID().getValue());
 		assertEquals("https://redirect.com", e.getRedirectionURI().toString());
 		assertEquals("123", e.getState().getValue());
 	}
@@ -71,13 +77,14 @@ public class GeneralExceptionTest extends TestCase {
 		GeneralException e = new GeneralException(
 			"message",
 			OAuth2Error.INVALID_REQUEST,
+			new ClientID("abc"),
 			new URL("https://redirect.com"),
 			new State("123"),
 			new IllegalArgumentException());
 
 		assertEquals("message", e.getMessage());
-
 		assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
+		assertEquals("abc", e.getClientID().getValue());
 		assertEquals("https://redirect.com", e.getRedirectionURI().toString());
 		assertEquals("123", e.getState().getValue());
 	}
