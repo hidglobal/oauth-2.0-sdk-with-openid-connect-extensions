@@ -79,7 +79,7 @@ public final class ACRRequest {
 	 * @return {@code true} if this ACR request doesn't specify any 
 	 *         essential or voluntary values, else {@code false}.
 	 */
-	public boolean noValuesSpecified() {
+	public boolean isEmpty() {
 		
 		if (essentialACRs != null && ! essentialACRs.isEmpty())
 			return false;
