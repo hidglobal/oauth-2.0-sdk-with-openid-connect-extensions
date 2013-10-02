@@ -52,6 +52,19 @@ public class ClaimsRequestTest extends TestCase {
 		
 		return false;
 	}
+
+
+	public void testForOpenIDScope() {
+
+		Scope scope = Scope.parse("openid");
+
+		ClaimsRequest cr = ClaimsRequest.forScope(scope);
+
+		System.out.println("Claims request for scope openid: " + cr.toJSONObject());
+
+		assertTrue(cr.getIDTokenClaims().isEmpty());
+		assertTrue(cr.getUserInfoClaims().isEmpty());
+	}
 	
 	
 	public void testForScope() {
@@ -60,7 +73,7 @@ public class ClaimsRequestTest extends TestCase {
 		
 		ClaimsRequest cr = ClaimsRequest.forScope(scope);
 		
-		System.out.println(cr.toJSONObject());
+		System.out.println("Claims request for scope openid email profile phone address: " + cr.toJSONObject());
 		
 		assertTrue(cr.getIDTokenClaims().isEmpty());
 		
@@ -125,8 +138,8 @@ public class ClaimsRequestTest extends TestCase {
 		Scope scope = Scope.parse("openid profile");
 		
 		ClaimsRequest cr = ClaimsRequest.forScope(scope);
-		
-		System.out.println(cr.toJSONObject());
+
+		System.out.println("Claims request for scope openid profile: " + cr.toJSONObject());
 		
 		assertTrue(cr.getIDTokenClaims().isEmpty());
 		

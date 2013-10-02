@@ -873,7 +873,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 				                 OAuth2Error.INVALID_REQUEST,
 				                 clientID, redirectURI, state);
 		
-		Display display = null;
+		Display display;
 		
 		try {
 			display = Display.parse(params.get("display"));
@@ -886,7 +886,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		}
 		
 		
-		Prompt prompt = null;
+		Prompt prompt;
 		
 		try {
 			prompt = Prompt.parse(params.get("prompt"));
@@ -1010,7 +1010,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 		if (StringUtils.isNotBlank(v)) {
 
-			JSONObject jsonObject = null;
+			JSONObject jsonObject;
 
 			try {
 				jsonObject = JSONObjectUtils.parseJSONObject(v);
