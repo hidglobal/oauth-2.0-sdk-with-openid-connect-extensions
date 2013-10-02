@@ -4,6 +4,7 @@ package com.nimbusds.openid.connect.sdk.claims;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -22,6 +23,28 @@ import com.nimbusds.openid.connect.sdk.Nonce;
  * @author Vladimir Dzhuvinov
  */
 public class IDTokenClaimsSetTest extends TestCase {
+
+
+	public void testStdClaims() {
+
+		Set<String> stdClaimNames = IDTokenClaimsSet.getStandardClaimNames();
+
+		assertTrue(stdClaimNames.contains("iss"));
+		assertTrue(stdClaimNames.contains("sub"));
+		assertTrue(stdClaimNames.contains("aud"));
+		assertTrue(stdClaimNames.contains("exp"));
+		assertTrue(stdClaimNames.contains("iat"));
+		assertTrue(stdClaimNames.contains("auth_time"));
+		assertTrue(stdClaimNames.contains("nonce"));
+		assertTrue(stdClaimNames.contains("at_hash"));
+		assertTrue(stdClaimNames.contains("c_hash"));
+		assertTrue(stdClaimNames.contains("acr"));
+		assertTrue(stdClaimNames.contains("amr"));
+		assertTrue(stdClaimNames.contains("azp"));
+		assertTrue(stdClaimNames.contains("sub_jwk"));
+
+		assertEquals(13, stdClaimNames.size());
+	}
 
 
 	public void testParseRoundTrip()
