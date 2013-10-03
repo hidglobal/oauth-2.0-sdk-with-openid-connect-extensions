@@ -11,15 +11,15 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -253,6 +253,29 @@ public class UserInfo extends ClaimsSet {
 	public UserInfo(final JWTClaimsSet jwtClaimsSet) {
 
 		this(jwtClaimsSet.toJSONObject());
+	}
+
+
+	/**
+	 * Puts all claims from the specified other UserInfo claims set.
+	 *
+	 * @param other The other UserInfo. Must have the same
+	 *              {@link #getSubject subject}. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException If the other UserInfo claims set
+	 *                                  doesn't have an identical subject.
+	 */
+	public void putAll(final UserInfo other) {
+
+		Subject otherSubject = other.getSubject();
+
+		if (otherSubject == null)
+			throw new IllegalArgumentException("The subject of the other UserInfo is missing");
+
+		if (! otherSubject.equals(getSubject()))
+			throw new IllegalArgumentException("The subject of the other UserInfo must be identical");
+
+		putAll((ClaimsSet)other);
 	}
 	
 	

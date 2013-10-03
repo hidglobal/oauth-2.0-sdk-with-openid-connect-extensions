@@ -314,4 +314,46 @@ public class UserInfoTest extends TestCase {
 		assertEquals("formatted#bg", userInfo.getAddress(LangTag.parse("bg")).getFormatted());
 		assertEquals(2, userInfo.getAddressEntries().size());
 	}
+
+
+	public void testPutAll()
+		throws Exception {
+
+		Subject alice = new Subject("alice");
+
+		UserInfo userInfo = new UserInfo(alice);
+		userInfo.setGivenName("Alice");
+
+		UserInfo other = new UserInfo(alice);
+		other.setFamilyName("Adams");
+
+		userInfo.putAll(other);
+		assertEquals(alice, userInfo.getSubject());
+		assertEquals("Alice", userInfo.getGivenName());
+		assertEquals("Adams", userInfo.getFamilyName());
+		assertEquals(3, userInfo.toJSONObject().size());
+	}
+
+
+	public void testPullAllSubjectMismatch() {
+
+		Subject alice = new Subject("alice");
+		Subject bob = new Subject("bob");
+
+		UserInfo userInfoAlice = new UserInfo(alice);
+		userInfoAlice.setGivenName("Alice");
+
+		UserInfo userInfoBob = new UserInfo(bob);
+		userInfoBob.setGivenName("Bob");
+
+		try {
+			userInfoAlice.putAll(userInfoBob);
+
+			fail("Failed to raise exception");
+
+		} catch (IllegalArgumentException e) {
+
+			// ok
+		}
+	}
 }

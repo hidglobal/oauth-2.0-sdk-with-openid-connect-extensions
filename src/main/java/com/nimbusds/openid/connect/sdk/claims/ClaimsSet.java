@@ -9,12 +9,13 @@ import java.util.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.jwt.JWTClaimsSet;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagUtils;
+
+import com.nimbusds.jwt.JWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.util.DateUtils;
 
@@ -53,6 +54,17 @@ public abstract class ClaimsSet {
 			throw new IllegalArgumentException("The JSON object must not be null");
 
 		claims = jsonObject;
+	}
+
+
+	/**
+	 * Puts all claims from the specified other claims set.
+	 *
+	 * @param other The other claims set. Must not be {@code null}.
+	 */
+	public void putAll(final ClaimsSet other) {
+
+		claims.putAll(other.claims);
 	}
 
 
