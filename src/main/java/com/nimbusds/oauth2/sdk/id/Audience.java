@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.jcip.annotations.Immutable;
 
 
@@ -45,6 +48,19 @@ public final class Audience extends Identifier {
 	public Audience() {
 
 		super();
+	}
+
+
+	/**
+	 * Returns a list consisting of this audience only.
+	 *
+	 * @return A list consisting of this audience only.
+	 */
+	public List<Audience> toSingleAudienceList() {
+
+		List<Audience> audienceList = new ArrayList<Audience>(1);
+		audienceList.add(this);
+		return audienceList;
 	}
 
 
