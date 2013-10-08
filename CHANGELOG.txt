@@ -60,3 +60,10 @@ version 2.10 (2013-09-22)
     * Refactors OpenID Connect token response classes.
     * Adds implicit grant type constant.
     * Upgrades Nimbus JOSE+JWT dependency.
+
+version 2.11 (2013-10-07)
+    * Adds ClaimsSet.addAll and UseInfo.addAll methods.
+    * Adds Audience.toSingleAudienceList method.
+    * Renames ACRRequest empty check method.
+    * Refactors GeneralException and extending classes.
+    * Upgrades Nimbus JOSE+JWT dependency.

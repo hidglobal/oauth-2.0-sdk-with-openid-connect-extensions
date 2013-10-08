@@ -94,4 +94,4 @@ The Nimbus OAuth 2.0 + OpenID Connect SDK is provided under the terms of the
 Apache 2.0 licence.
 
 
-2013-09-17
+2013-10-07
