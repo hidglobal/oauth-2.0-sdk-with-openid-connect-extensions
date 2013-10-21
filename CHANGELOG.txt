@@ -1,60 +1,60 @@
 version 1.0 (2012-05-29)
-	* First official release with authorisation endpoint, token endpoint,
-	  check ID endpoint and UserInfo endpoint support.
-	* JSON Web Tokens (JWTs) support through the Nimbus-JWT library.
-	* Language Tags (RFC 5646) support through the Nimbus-LangTag library.
-	* JSON support through the JSON Smart library.
+    * First official release with authorisation endpoint, token endpoint, check 
+      ID endpoint and UserInfo endpoint support.
+    * JSON Web Tokens (JWTs) support through the Nimbus-JWT library.
+    * Language Tags (RFC 5646) support through the Nimbus-LangTag library.
+    * JSON support through the JSON Smart library.
 
 
 version 2.0 (2013-05-13)
-	* Intermediary development release with Maven build, published to 
-	  Maven Central.
+    * Intermediary development release with Maven build, published to 
+      Maven Central.
 
 version 2.1 (2013-06-06)
-	* Updates the APIs to OpenID Connect Messages draft 20, OpenID Connect 
-	  Standard draft 21, OpenID Connect Discovery draft 17 and OpenID 
-	  Connect Registration draft 19.
-	* Major refactoring of the APIs for greater simplicity.
-	* Adds JUnit tests.
-	
+    * Updates the APIs to OpenID Connect Messages draft 20, OpenID Connect 
+      Standard draft 21, OpenID Connect Discovery draft 17 and OpenID 
+      Connect Registration draft 19.
+    * Major refactoring of the APIs for greater simplicity.
+    * Adds JUnit tests.
+    
 version 2.2 (2013-06-18)
-	* Refactors dynamic OpenID Connect client registration.
-	* Adds partial support of the OAuth 2.0 Dynamic Client Registration 
-	  Protocol (draft-ietf-oauth-dyn-reg-12).
-	* Optimises parsing of request parameters consisting of one or more
-	  tokens (scope, response type, etc).
+    * Refactors dynamic OpenID Connect client registration.
+    * Adds partial support of the OAuth 2.0 Dynamic Client Registration 
+      Protocol (draft-ietf-oauth-dyn-reg-12).
+    * Optimises parsing of request parameters consisting of one or more
+      tokens (scope, response type, etc).
 
 version 2.3 (2013-06-19)
-	* Renames OAuth 2.0 dynamic client registration package.
-	* Adds ClientInformation.getClientMetadata() method.
-	* Adds OIDCClientInformation class.
+    * Renames OAuth 2.0 dynamic client registration package.
+    * Adds ClientInformation.getClientMetadata() method.
+    * Adds OIDCClientInformation class.
 
 version 2.4 (2013-06-20)
-	* Adds static OIDCClientInformation.parse(JSONObject) method.
+    * Adds static OIDCClientInformation.parse(JSONObject) method.
 
 version 2.5 (2013-06-22)
-	* Adds support OAuth 2.0 dynamic client update.
-	* Adds OpenID Connect dynamic client registration classes.
+    * Adds support OAuth 2.0 dynamic client update.
+    * Adds OpenID Connect dynamic client registration classes.
 
 version 2.6 (2013-06-25)
-	* Enforces order of preference of ACR values in OpenID Connect client
-	  metadata, as required by the specification.
-	* Documentation and performance improvements.
+    * Enforces order of preference of ACR values in OpenID Connect client
+      metadata, as required by the specification.
+    * Documentation and performance improvements.
 
 version 2.7 (2013-06-26)
-	* Switches Identifier generation to java.security.SecureRandom.
+    * Switches Identifier generation to java.security.SecureRandom.
 
 version 2.8 (2013-06-30)
-	* Fixes serialisation and assignment bugs in ClientMetadata.
-	* Switches Secret generation to java.security.SecureRandom.
+    * Fixes serialisation and assignment bugs in ClientMetadata.
+    * Switches Secret generation to java.security.SecureRandom.
 
 version 2.9 (2013-09-17)
     * Changes the licensing terms to Apache 2.0.
-	* Updates the APIs to draft-ietf-oauth-dyn-reg-14.
-	* Separates the authorisation grant from the token request.
-	* Refactors client authentication.
-	* Numerous bug fixes and improvements.
-	* Upgrades dependencies.
+    * Updates the APIs to draft-ietf-oauth-dyn-reg-14.
+    * Separates the authorisation grant from the token request.
+    * Refactors client authentication.
+    * Numerous bug fixes and improvements.
+    * Upgrades dependencies.
 
 version 2.10 (2013-09-22)
     * Refactors OpenID Connect token response classes.
@@ -72,3 +72,7 @@ version 2.12 (2013-10-21)
     * Refactors ClaimsRequest resolution methods, fixes bugs that affected the
       correct parsing, serialisation and proper  ID token claims redirection.
     * Upgrades Nimbus JOSE+JWT dependency.
+
+version 2.13 (2013-10-21)
+    * Adds helper static ClaimsRequest.resolve(ResponseType, Scope,
+      ClaimsRequest) method.
