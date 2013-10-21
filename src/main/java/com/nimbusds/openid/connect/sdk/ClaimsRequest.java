@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.nimbusds.oauth2.sdk.ResponseType;
 import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -871,17 +872,24 @@ public class ClaimsRequest {
 	
 	
 	/**
-	 * Gets the claims request for the specified scope. The scope values
-	 * that are {@link OIDCScopeValue standard OpenID Connect scope values}
-	 * are resolved to their respective individual claims requests, any
-	 * other scope values are ignored.
-	 * 
-	 * @param scope The scope. Must not be {@code null}.
+	 * Resolves the claims request for the specified response type and
+	 * scope. The scope values that are {@link OIDCScopeValue standard
+	 * OpenID Connect scope values} are resolved to their respective
+	 * individual claims requests, any other scope values are ignored.
+	 *
+	 * @param responseType The response type. Must not be {@code null}.
+	 * @param scope        The scope. Must not be {@code null}.
 	 * 
 	 * @return The claims request.
 	 */
-	public static ClaimsRequest forScope(final Scope scope) {
-		
+	public static ClaimsRequest resolve(final ResponseType responseType, final Scope scope) {
+
+		// Determine the claims target (ID token or UserInfo)
+		final boolean switchToIDToken =
+			(responseType.contains(OIDCResponseTypeValue.ID_TOKEN) &&
+				! responseType.contains(ResponseType.Value.CODE) &&
+				! responseType.contains(ResponseType.Value.TOKEN)) ? true : false;
+
 		ClaimsRequest claimsRequest = new ClaimsRequest();
 		
 		for (Scope.Value value: scope) {
@@ -909,8 +917,13 @@ public class ClaimsRequest {
 				continue; // skip
 			}
 			
-			for (ClaimsRequest.Entry en: entries)
-				claimsRequest.addUserInfoClaim(en);
+			for (ClaimsRequest.Entry en: entries) {
+
+				if (switchToIDToken)
+					claimsRequest.addIDTokenClaim(en);
+				else
+					claimsRequest.addUserInfoClaim(en);
+			}
 		}
 		
 		return claimsRequest;
