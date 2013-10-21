@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.nimbusds.oauth2.sdk.ResponseType;
 import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -21,6 +20,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
@@ -400,7 +400,6 @@ public class ClaimsRequest {
 							requirement = ClaimRequirement.ESSENTIAL;
 					}
 
-
 					if (entrySpec.containsKey("value")) {
 
 						String expectedValue = (String)entrySpec.get("value");
@@ -408,7 +407,6 @@ public class ClaimsRequest {
 						entries.add(new Entry(claimName, requirement, langTag, expectedValue));
 
 					} else if (entrySpec.containsKey("values")) {
-
 
 						List<String> expectedValues = new LinkedList<String>();
 
@@ -418,6 +416,9 @@ public class ClaimsRequest {
 						}
 
 						entries.add(new Entry(claimName, requirement, langTag, expectedValues));
+
+					} else {
+						entries.add(new Entry(claimName, requirement, langTag, (String)null));
 					}
 
 				} catch (Exception e) {
@@ -857,7 +858,7 @@ public class ClaimsRequest {
 
 		if (! userInfoEntries.isEmpty()) {
 
-			o.put("user_info", Entry.toJSONObject(userInfoEntries));
+			o.put("userinfo", Entry.toJSONObject(userInfoEntries));
 		}
 
 		return o;
@@ -886,9 +887,9 @@ public class ClaimsRequest {
 
 		// Determine the claims target (ID token or UserInfo)
 		final boolean switchToIDToken =
-			(responseType.contains(OIDCResponseTypeValue.ID_TOKEN) &&
-				! responseType.contains(ResponseType.Value.CODE) &&
-				! responseType.contains(ResponseType.Value.TOKEN)) ? true : false;
+			responseType.contains(OIDCResponseTypeValue.ID_TOKEN) &&
+			! responseType.contains(ResponseType.Value.CODE) &&
+			! responseType.contains(ResponseType.Value.TOKEN);
 
 		ClaimsRequest claimsRequest = new ClaimsRequest();
 		
@@ -931,6 +932,28 @@ public class ClaimsRequest {
 
 
 	/**
+	 * Resolves the merged claims request for the specified OpenID Connect
+	 * authorisation request. The scope values that are
+	 * {@link OIDCScopeValue standard OpenID Connect scope values} are
+	 * resolved to their respective individual claims requests, any other
+	 * scope values are ignored.
+	 *
+	 * @param authzRequest The OpenID Connect authorisation request. Must
+	 *                     not be {@code null}.
+	 *
+	 * @return The claims request.
+	 */
+	public static ClaimsRequest resolve(final OIDCAuthorizationRequest authzRequest) {
+
+		ClaimsRequest mergedClaimsRequest = resolve(authzRequest.getResponseType(), authzRequest.getScope());
+
+		mergedClaimsRequest.add(authzRequest.getClaims());
+
+		return mergedClaimsRequest;
+	}
+
+
+	/**
 	 * Parses a claims request from the specified JSON object 
 	 * representation. Unexpected members in the JSON object are silently
 	 * ignored.
@@ -956,9 +979,9 @@ public class ClaimsRequest {
 			}
 
 
-			if (jsonObject.containsKey("user_info")) {
+			if (jsonObject.containsKey("userinfo")) {
 
-				JSONObject userInfoObject = (JSONObject)jsonObject.get("user_info");
+				JSONObject userInfoObject = (JSONObject)jsonObject.get("userinfo");
 
 				Collection<Entry> userInfoClaims = Entry.parseEntries(userInfoObject);
 

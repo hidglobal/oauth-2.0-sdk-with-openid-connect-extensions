@@ -1,13 +1,20 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
-import com.nimbusds.oauth2.sdk.ResponseType;
 import junit.framework.TestCase;
 
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 
@@ -310,5 +317,245 @@ public class ClaimsRequestTest extends TestCase {
 		assertTrue(claimNames.contains("updated_at"));
 		
 		assertEquals(16, claimNames.size());
+	}
+
+
+	public void resolveSimpleOIDCRequest()
+		throws Exception {
+
+		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
+			new URL("https://c2id.com/login"),
+			ResponseType.parse("code"),
+			Scope.parse("openid email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb"),
+			new State(),
+			new Nonce());
+
+		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authzRequest);
+
+		assertTrue(claimsRequest.getIDTokenClaims().isEmpty());
+
+		Set<String> userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+		assertTrue(userInfoClaims.contains("email"));
+		assertTrue(userInfoClaims.contains("email_verified"));
+		assertEquals(2, userInfoClaims.size());
+
+		Map<String,String> authzRequestParams = authzRequest.toParameters();
+
+		authzRequest = OIDCAuthorizationRequest.parse(new URL("https://c2id.com/login"), authzRequestParams);
+
+		claimsRequest = ClaimsRequest.resolve(authzRequest);
+
+		assertTrue(claimsRequest.getIDTokenClaims().isEmpty());
+
+		userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+		assertTrue(userInfoClaims.contains("email"));
+		assertTrue(userInfoClaims.contains("email_verified"));
+		assertEquals(2, userInfoClaims.size());
+	}
+
+
+	public void resolveSimpleIDTokenRequest()
+		throws Exception {
+
+		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
+			new URL("https://c2id.com/login"),
+			ResponseType.parse("id_token"),
+			Scope.parse("openid email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb"),
+			new State(),
+			new Nonce());
+
+		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authzRequest);
+
+		assertTrue(claimsRequest.getUserInfoClaims().isEmpty());
+
+		Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+		assertTrue(idTokenClaims.contains("email"));
+		assertTrue(idTokenClaims.contains("email_verified"));
+		assertEquals(2, idTokenClaims.size());
+
+		Map<String,String> authzRequestParams = authzRequest.toParameters();
+
+		authzRequest = OIDCAuthorizationRequest.parse(new URL("https://c2id.com/login"), authzRequestParams);
+
+		claimsRequest = ClaimsRequest.resolve(authzRequest);
+
+		assertTrue(claimsRequest.getUserInfoClaims().isEmpty());
+
+		idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+		assertTrue(idTokenClaims.contains("email"));
+		assertTrue(idTokenClaims.contains("email_verified"));
+		assertEquals(2, idTokenClaims.size());
+	}
+
+
+	public void resolveComplexOIDCRequest()
+		throws Exception {
+
+		ClaimsRequest cr = new ClaimsRequest();
+		cr.addIDTokenClaim(new ClaimsRequest.Entry("email", ClaimRequirement.ESSENTIAL));
+
+		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
+			new URL("https://c2id.com/login"),
+			ResponseType.parse("id_token"),
+			Scope.parse("openid email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb"),
+			new State(),
+			new Nonce(),
+			Display.POPUP,
+			null,
+			0,
+			null,
+			null,
+			null,
+			null,
+			null,
+			cr);
+
+		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authzRequest);
+
+		Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+		assertTrue(idTokenClaims.contains("email"));
+		assertEquals(1, idTokenClaims.size());
+
+		Collection<ClaimsRequest.Entry> idTokenEntries = claimsRequest.getIDTokenClaims();
+		assertEquals(1, idTokenEntries.size());
+		ClaimsRequest.Entry entry = idTokenEntries.iterator().next();
+		assertEquals("email", entry.getClaimName());
+		assertNull(entry.getValue());
+		assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+
+		Set<String> userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+		assertTrue(userInfoClaims.contains("email"));
+		assertTrue(userInfoClaims.contains("email_verified"));
+		assertEquals(2, userInfoClaims.size());
+
+
+		Map<String,String> authzRequestParams = authzRequest.toParameters();
+
+		authzRequest = OIDCAuthorizationRequest.parse(new URL("https://c2id.com/login"), authzRequestParams);
+
+		claimsRequest = ClaimsRequest.resolve(authzRequest);
+
+		idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
+		assertTrue(idTokenClaims.contains("email"));
+		assertEquals(1, idTokenClaims.size());
+
+		idTokenEntries = claimsRequest.getIDTokenClaims();
+		assertEquals(1, idTokenEntries.size());
+		entry = idTokenEntries.iterator().next();
+		assertEquals("email", entry.getClaimName());
+		assertNull(entry.getValue());
+		assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+
+		userInfoClaims = claimsRequest.getUserInfoClaimNames(false);
+		assertTrue(userInfoClaims.contains("email"));
+		assertTrue(userInfoClaims.contains("email_verified"));
+		assertEquals(2, userInfoClaims.size());
+	}
+
+
+	public void testParseCoreSpecExample()
+		throws Exception {
+
+		String json = "{\n" +
+			"   \"userinfo\":\n" +
+			"    {\n" +
+			"     \"given_name\": {\"essential\": true},\n" +
+			"     \"nickname\": null,\n" +
+			"     \"email\": {\"essential\": true},\n" +
+			"     \"email_verified\": {\"essential\": true},\n" +
+			"     \"picture\": null,\n" +
+			"     \"http://example.info/claims/groups\": null\n" +
+			"    },\n" +
+			"   \"id_token\":\n" +
+			"    {\n" +
+			"     \"auth_time\": {\"essential\": true},\n" +
+			"     \"acr\": {\"values\": [\"urn:mace:incommon:iap:silver\"] }\n" +
+			"    }\n" +
+			"  }\n";
+
+		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+
+		ClaimsRequest claimsRequest = ClaimsRequest.parse(jsonObject);
+
+		Set<String> idTokenClaimNames = claimsRequest.getIDTokenClaimNames(false);
+		assertTrue(idTokenClaimNames.contains("auth_time"));
+		assertTrue(idTokenClaimNames.contains("acr"));
+		assertEquals(2, idTokenClaimNames.size());
+
+		ClaimsRequest.Entry entry = claimsRequest.removeIDTokenClaim("auth_time", null);
+		assertEquals("auth_time", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+
+		entry = claimsRequest.removeIDTokenClaim("acr", null);
+		assertEquals("acr", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertTrue(entry.getValues().contains("urn:mace:incommon:iap:silver"));
+		assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+
+		assertTrue(claimsRequest.getIDTokenClaims().isEmpty());
+
+
+		Set<String> userInfoClaimNames = claimsRequest.getUserInfoClaimNames(false);
+		assertTrue(userInfoClaimNames.contains("given_name"));
+		assertTrue(userInfoClaimNames.contains("nickname"));
+		assertTrue(userInfoClaimNames.contains("email"));
+		assertTrue(userInfoClaimNames.contains("email_verified"));
+		assertTrue(userInfoClaimNames.contains("picture"));
+		assertTrue(userInfoClaimNames.contains("http://example.info/claims/groups"));
+		assertEquals(6, userInfoClaimNames.size());
+
+		entry = claimsRequest.removeUserInfoClaim("given_name", null);
+		assertEquals("given_name", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+
+		entry = claimsRequest.removeUserInfoClaim("nickname", null);
+		assertEquals("nickname", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+
+		entry = claimsRequest.removeUserInfoClaim("email", null);
+		assertEquals("email", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+
+		entry = claimsRequest.removeUserInfoClaim("email_verified", null);
+		assertEquals("email_verified", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+
+		entry = claimsRequest.removeUserInfoClaim("picture", null);
+		assertEquals("picture", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+
+		entry = claimsRequest.removeUserInfoClaim("http://example.info/claims/groups", null);
+		assertEquals("http://example.info/claims/groups", entry.getClaimName());
+		assertNull(entry.getLangTag());
+		assertNull(entry.getValue());
+		assertNull(entry.getValues());
+		assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+
+		assertTrue(claimsRequest.getUserInfoClaims().isEmpty());
 	}
 }
