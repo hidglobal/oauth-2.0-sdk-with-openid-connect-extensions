@@ -69,4 +69,6 @@ version 2.11 (2013-10-07)
     * Upgrades Nimbus JOSE+JWT dependency.
     
 version 2.12 (2013-10-21)
-    * Fixes ClaimsRequest resolve method to support ID token claims redirection.
+    * Refactors ClaimsRequest resolution methods, fixes bugs that affected the
+      correct parsing, serialisation and proper  ID token claims redirection.
+    * Upgrades Nimbus JOSE+JWT dependency.
