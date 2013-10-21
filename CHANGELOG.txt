@@ -67,3 +67,6 @@ version 2.11 (2013-10-07)
     * Renames ACRRequest empty check method.
     * Refactors GeneralException and extending classes.
     * Upgrades Nimbus JOSE+JWT dependency.
+    
+version 2.12 (2013-10-21)
+    * Fixes ClaimsRequest resolve method to support ID token claims redirection.
