@@ -37,69 +37,68 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 	public void testParseExample() throws Exception {
 
-		String s = "{\n"
-			+ "   \"version\": \"3.0\",\n"
-			+ "   \"issuer\":\n"
-			+ "     \"https://server.example.com\",\n"
-			+ "   \"authorization_endpoint\":\n"
-			+ "     \"https://server.example.com/connect/authorize\",\n"
-			+ "   \"token_endpoint\":\n"
-			+ "     \"https://server.example.com/connect/token\",\n"
-			+ "   \"token_endpoint_auth_methods_supported\":\n"
-			+ "     [\"client_secret_basic\", \"private_key_jwt\"],\n"
-			+ "   \"token_endpoint_auth_signing_alg_values_supported\":\n"
-			+ "     [\"RS256\", \"ES256\"],\n"
-			+ "   \"userinfo_endpoint\":\n"
-			+ "     \"https://server.example.com/connect/userinfo\",\n"
-			+ "   \"check_session_iframe\":\n"
-			+ "     \"https://server.example.com/connect/check_session\",\n"
-			+ "   \"end_session_endpoint\":\n"
-			+ "     \"https://server.example.com/connect/end_session\",\n"
-			+ "   \"jwks_uri\":\n"
-			+ "     \"https://server.example.com/jwks.json\",\n"
-			+ "   \"registration_endpoint\":\n"
-			+ "     \"https://server.example.com/connect/register\",\n"
-			+ "   \"scopes_supported\":\n"
-			+ "     [\"openid\", \"profile\", \"email\", \"address\",\n"
-			+ "      \"phone\", \"offline_access\"],\n"
-			+ "   \"response_types_supported\":\n"
-			+ "     [\"code\", \"code id_token\", \"id_token\", \"token id_token\"],\n"
-			+ "   \"acr_values_supported\":\n"
-			+ "     [\"urn:mace:incommon:iap:silver\",\n"
-			+ "      \"urn:mace:incommon:iap:bronze\"],\n"
-			+ "   \"subject_types_supported\":\n"
-			+ "     [\"public\", \"pairwise\"],\n"
-			+ "   \"userinfo_signing_alg_values_supported\":\n"
-			+ "     [\"RS256\", \"ES256\", \"HS256\"],\n"
-			+ "   \"userinfo_encryption_alg_values_supported\":\n"
-			+ "     [\"RSA1_5\", \"A128KW\"],\n"
-			+ "   \"userinfo_encryption_enc_values_supported\":\n"
-			+ "     [\"A128CBC-HS256\", \"A128GCM\"],\n"
-			+ "   \"id_token_signing_alg_values_supported\":\n"
-			+ "     [\"RS256\", \"ES256\", \"HS256\"],\n"
-			+ "   \"id_token_encryption_alg_values_supported\":\n"
-			+ "     [\"RSA1_5\", \"A128KW\"],\n"
-			+ "   \"id_token_encryption_enc_values_supported\":\n"
-			+ "     [\"A128CBC-HS256\", \"A128GCM\"],\n"
-			+ "   \"request_object_signing_alg_values_supported\":\n"
-			+ "     [\"none\", \"RS256\", \"ES256\"],\n"
-			+ "   \"display_values_supported\":\n"
-			+ "     [\"page\", \"popup\"],\n"
-			+ "   \"claim_types_supported\":\n"
-			+ "     [\"normal\", \"distributed\"],\n"
-			+ "   \"claims_supported\":\n"
-			+ "     [\"sub\", \"iss\", \"auth_time\", \"acr\",\n"
-			+ "      \"name\", \"given_name\", \"family_name\", \"nickname\",\n"
-			+ "      \"profile\", \"picture\", \"website\",\n"
-			+ "      \"email\", \"email_verified\", \"locale\", \"zoneinfo\",\n"
-			+ "      \"http://example.info/claims/groups\"],\n"
-			+ "   \"claims_parameter_supported\":\n"
-			+ "     true,\n"
-			+ "   \"service_documentation\":\n"
-			+ "     \"http://server.example.com/connect/service_documentation.html\",\n"
-			+ "   \"ui_locales_supported\":\n"
-			+ "     [\"en-US\", \"en-GB\", \"en-CA\", \"fr-FR\", \"fr-CA\"]\n"
-			+ "  }";
+		String s = "{\n" +
+			"   \"issuer\":\n" +
+			"     \"https://server.example.com\",\n" +
+			"   \"authorization_endpoint\":\n" +
+			"     \"https://server.example.com/connect/authorize\",\n" +
+			"   \"token_endpoint\":\n" +
+			"     \"https://server.example.com/connect/token\",\n" +
+			"   \"token_endpoint_auth_methods_supported\":\n" +
+			"     [\"client_secret_basic\", \"private_key_jwt\"],\n" +
+			"   \"token_endpoint_auth_signing_alg_values_supported\":\n" +
+			"     [\"RS256\", \"ES256\"],\n" +
+			"   \"userinfo_endpoint\":\n" +
+			"     \"https://server.example.com/connect/userinfo\",\n" +
+			"   \"check_session_iframe\":\n" +
+			"     \"https://server.example.com/connect/check_session\",\n" +
+			"   \"end_session_endpoint\":\n" +
+			"     \"https://server.example.com/connect/end_session\",\n" +
+			"   \"jwks_uri\":\n" +
+			"     \"https://server.example.com/jwks.json\",\n" +
+			"   \"registration_endpoint\":\n" +
+			"     \"https://server.example.com/connect/register\",\n" +
+			"   \"scopes_supported\":\n" +
+			"     [\"openid\", \"profile\", \"email\", \"address\",\n" +
+			"      \"phone\", \"offline_access\"],\n" +
+			"   \"response_types_supported\":\n" +
+			"     [\"code\", \"code id_token\", \"id_token\", \"token id_token\"],\n" +
+			"   \"acr_values_supported\":\n" +
+			"     [\"urn:mace:incommon:iap:silver\",\n" +
+			"      \"urn:mace:incommon:iap:bronze\"],\n" +
+			"   \"subject_types_supported\":\n" +
+			"     [\"public\", \"pairwise\"],\n" +
+			"   \"userinfo_signing_alg_values_supported\":\n" +
+			"     [\"RS256\", \"ES256\", \"HS256\"],\n" +
+			"   \"userinfo_encryption_alg_values_supported\":\n" +
+			"     [\"RSA1_5\", \"A128KW\"],\n" +
+			"   \"userinfo_encryption_enc_values_supported\":\n" +
+			"     [\"A128CBC-HS256\", \"A128GCM\"],\n" +
+			"   \"id_token_signing_alg_values_supported\":\n" +
+			"     [\"RS256\", \"ES256\", \"HS256\"],\n" +
+			"   \"id_token_encryption_alg_values_supported\":\n" +
+			"     [\"RSA1_5\", \"A128KW\"],\n" +
+			"   \"id_token_encryption_enc_values_supported\":\n" +
+			"     [\"A128CBC-HS256\", \"A128GCM\"],\n" +
+			"   \"request_object_signing_alg_values_supported\":\n" +
+			"     [\"none\", \"RS256\", \"ES256\"],\n" +
+			"   \"display_values_supported\":\n" +
+			"     [\"page\", \"popup\"],\n" +
+			"   \"claim_types_supported\":\n" +
+			"     [\"normal\", \"distributed\"],\n" +
+			"   \"claims_supported\":\n" +
+			"     [\"sub\", \"iss\", \"auth_time\", \"acr\",\n" +
+			"      \"name\", \"given_name\", \"family_name\", \"nickname\",\n" +
+			"      \"profile\", \"picture\", \"website\",\n" +
+			"      \"email\", \"email_verified\", \"locale\", \"zoneinfo\",\n" +
+			"      \"http://example.info/claims/groups\"],\n" +
+			"   \"claims_parameter_supported\":\n" +
+			"     true,\n" +
+			"   \"service_documentation\":\n" +
+			"     \"http://server.example.com/connect/service_documentation.html\",\n" +
+			"   \"ui_locales_supported\":\n" +
+			"     [\"en-US\", \"en-GB\", \"en-CA\", \"fr-FR\", \"fr-CA\"]\n" +
+			"  }";
 		
 		OIDCProviderMetadata op = OIDCProviderMetadata.parse(s);
 		

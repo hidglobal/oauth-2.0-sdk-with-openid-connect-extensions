@@ -45,12 +45,6 @@ public class OIDCProviderMetadata {
 
 
 	/**
-	 * The version, set to "3.0".
-	 */
-	public final static String VERSION = "3.0";
-
-
-	/**
 	 * The issuer.
 	 */
 	private final Issuer issuer;
@@ -1229,8 +1223,6 @@ public class OIDCProviderMetadata {
 
 		// Mandatory fields
 
-		o.put("version", VERSION);
-
 		o.put("issuer", issuer.getValue());
 
 		List<String> stringList = new ArrayList<String>(subjectTypes.size());
@@ -1485,11 +1477,6 @@ public class OIDCProviderMetadata {
 	 */
 	public static OIDCProviderMetadata parse(final JSONObject jsonObject)
 		throws ParseException {
-
-		String version = JSONObjectUtils.getString(jsonObject, "version");
-
-		if(! version.equals(VERSION))
-			throw new ParseException("The version must be \"3.0\"");
 
 		// Parse issuer and subject_types_supported first
 		
