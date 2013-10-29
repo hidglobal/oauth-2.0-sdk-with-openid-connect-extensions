@@ -4,6 +4,7 @@ package com.nimbusds.openid.connect.sdk.op;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -33,6 +34,52 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimType;
  * @author Vladimir Dzhuvinov
  */
 public class OIDCProviderMetadataTest extends TestCase {
+
+
+	public void testRegisteredParameters() {
+
+		Set<String> paramNames = OIDCProviderMetadata.getRegisteredParameterNames();
+
+		assertTrue(paramNames.contains("issuer"));
+		assertTrue(paramNames.contains("authorization_endpoint"));
+		assertTrue(paramNames.contains("token_endpoint"));
+		assertTrue(paramNames.contains("userinfo_endpoint"));
+		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("registration_endpoint"));
+		assertTrue(paramNames.contains("scopes_supported"));
+		assertTrue(paramNames.contains("response_types_supported"));
+		assertTrue(paramNames.contains("response_modes_supported"));
+		assertTrue(paramNames.contains("grant_types_supported"));
+		assertTrue(paramNames.contains("acr_values_supported"));
+		assertTrue(paramNames.contains("subject_types_supported"));
+		assertTrue(paramNames.contains("id_token_signing_alg_values_supported"));
+		assertTrue(paramNames.contains("id_token_encryption_alg_values_supported"));
+		assertTrue(paramNames.contains("id_token_encryption_enc_values_supported"));
+		assertTrue(paramNames.contains("userinfo_signing_alg_values_supported"));
+		assertTrue(paramNames.contains("userinfo_encryption_alg_values_supported"));
+		assertTrue(paramNames.contains("userinfo_encryption_enc_values_supported"));
+		assertTrue(paramNames.contains("request_object_signing_alg_values_supported"));
+		assertTrue(paramNames.contains("request_object_encryption_alg_values_supported"));
+		assertTrue(paramNames.contains("request_object_encryption_enc_values_supported"));
+		assertTrue(paramNames.contains("token_endpoint_auth_methods_supported"));
+		assertTrue(paramNames.contains("token_endpoint_auth_signing_alg_values_supported"));
+		assertTrue(paramNames.contains("display_values_supported"));
+		assertTrue(paramNames.contains("claim_types_supported"));
+		assertTrue(paramNames.contains("claims_supported"));
+		assertTrue(paramNames.contains("service_documentation"));
+		assertTrue(paramNames.contains("claims_locales_supported"));
+		assertTrue(paramNames.contains("ui_locales_supported"));
+		assertTrue(paramNames.contains("claims_parameter_supported"));
+		assertTrue(paramNames.contains("request_parameter_supported"));
+		assertTrue(paramNames.contains("request_uri_parameter_supported"));
+		assertTrue(paramNames.contains("require_request_uri_registration"));
+		assertTrue(paramNames.contains("op_policy_uri"));
+		assertTrue(paramNames.contains("op_tos_uri"));
+		assertTrue(paramNames.contains("check_session_iframe"));
+		assertTrue(paramNames.contains("end_session_endpoint"));
+
+		assertEquals(37, paramNames.size());
+	}
 
 
 	public void testParseExample() throws Exception {
@@ -343,7 +390,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		List<JWEAlgorithm> idTokenJWEalgs = new LinkedList<JWEAlgorithm>();
 		idTokenJWEalgs.add(JWEAlgorithm.A256KW);
-		meta.setIdTokenJWEAlgs(idTokenJWEalgs);
+		meta.setIDTokenJWEAlgs(idTokenJWEalgs);
 
 		List<EncryptionMethod> idTokenEncs = new LinkedList<EncryptionMethod>();
 		idTokenEncs.add(EncryptionMethod.A128GCM);
@@ -408,7 +455,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		meta.setSupportsClaimsParams(true);
 		assertTrue(meta.supportsClaimsParam());
 
-		meta.setSupportsRequestParams(true);
+		meta.setSupportsRequestParam(true);
 		assertTrue(meta.supportsRequestParam());
 
 		meta.setSupportsRequestURIParam(true);

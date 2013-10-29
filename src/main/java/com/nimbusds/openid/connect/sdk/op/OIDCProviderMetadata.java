@@ -3,9 +3,7 @@ package com.nimbusds.openid.connect.sdk.op;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import net.minidev.json.JSONObject;
 
@@ -42,6 +40,60 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimType;
  * @author Vladimir Dzhuvinov
  */
 public class OIDCProviderMetadata {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<String>();
+
+		p.add("issuer");
+		p.add("authorization_endpoint");
+		p.add("token_endpoint");
+		p.add("userinfo_endpoint");
+		p.add("registration_endpoint");
+		p.add("check_session_iframe");
+		p.add("end_session_endpoint");
+		p.add("jwks_uri");
+		p.add("scopes_supported");
+		p.add("response_types_supported");
+		p.add("response_modes_supported");
+		p.add("grant_types_supported");
+		p.add("acr_values_supported");
+		p.add("subject_types_supported");
+		p.add("token_endpoint_auth_methods_supported");
+		p.add("token_endpoint_auth_signing_alg_values_supported");
+		p.add("request_object_signing_alg_values_supported");
+		p.add("request_object_encryption_alg_values_supported");
+		p.add("request_object_encryption_enc_values_supported");
+		p.add("id_token_signing_alg_values_supported");
+		p.add("id_token_encryption_alg_values_supported");
+		p.add("id_token_encryption_enc_values_supported");
+		p.add("userinfo_signing_alg_values_supported");
+		p.add("userinfo_encryption_alg_values_supported");
+		p.add("userinfo_encryption_enc_values_supported");
+		p.add("display_values_supported");
+		p.add("claim_types_supported");
+		p.add("claims_supported");
+		p.add("claims_locales_supported");
+		p.add("ui_locales_supported");
+		p.add("service_documentation");
+		p.add("op_policy_uri");
+		p.add("op_tos_uri");
+		p.add("claims_parameter_supported");
+		p.add("request_parameter_supported");
+		p.add("request_uri_parameter_supported");
+		p.add("require_request_uri_registration");
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 
 
 	/**
@@ -240,28 +292,28 @@ public class OIDCProviderMetadata {
 	/**
 	 * If {@code true} the {@code claims} parameter is supported, else not.
 	 */
-	private boolean claimsParamSupported;
+	private boolean claimsParamSupported = false;
 	
 	
 	/**
 	 * If {@code true} the {@code request} parameter is supported, else 
 	 * not.
 	 */
-	private boolean requestParamSupported;
+	private boolean requestParamSupported = false;
 	
 	
 	/**
 	 * If {@code true} the {@code request_uri} parameter is supported, else
 	 * not.
 	 */
-	private boolean requestURIParamSupported;
+	private boolean requestURIParamSupported = true;
 	
 	
 	/**
 	 * If {@code true} the {@code request_uri} parameters must be
 	 * pre-registered with the provider, else not.
 	 */
-	private boolean requireRequestURIReg;
+	private boolean requireRequestURIReg = false;
 
 
 	/**
@@ -305,6 +357,19 @@ public class OIDCProviderMetadata {
 			throw new IllegalArgumentException("The public JWK set URI must not be null");
 
 		this.jwkSetURI = jwkSetURI;
+	}
+
+
+	/**
+	 * Gets the registered OpenID Connect provider metadata parameter
+	 * names.
+	 *
+	 * @return The registered OpenID Connect provider metadata parameter
+	 *         names, as an unmodifiable set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 
 
@@ -785,7 +850,7 @@ public class OIDCProviderMetadata {
 	 * @param idTokenJWEAlgs The supported JWE algorithms, {@code null} if
 	 *                       not specified.
 	 */
-	public void setIdTokenJWEAlgs(final List<JWEAlgorithm> idTokenJWEAlgs) {
+	public void setIDTokenJWEAlgs(final List<JWEAlgorithm> idTokenJWEAlgs) {
 
 		this.idTokenJWEAlgs = idTokenJWEAlgs;
 	}
@@ -1147,7 +1212,7 @@ public class OIDCProviderMetadata {
 	 *                              parameter is supported, else
 	 *                              {@code false}.
 	 */
-	public void setSupportsRequestParams(final boolean requestParamSupported) {
+	public void setSupportsRequestParam(final boolean requestParamSupported) {
 
 		this.requestParamSupported = requestParamSupported;
 	}
