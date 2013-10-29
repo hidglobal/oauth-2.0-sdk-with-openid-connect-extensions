@@ -125,6 +125,10 @@ public class OIDCClientMetadataTest extends TestCase {
 		meta.setRequestObjectJWSAlg(JWSAlgorithm.HS512);
 		assertEquals(JWSAlgorithm.HS512, meta.getRequestObjectJWSAlg());
 
+		assertNull(meta.getTokenEndpointAuthJWSAlg());
+		meta.setTokenEndpointAuthJWSAlg(JWSAlgorithm.HS384);
+		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointAuthJWSAlg());
+
 		assertNull(meta.getIDTokenJWSAlg());
 		meta.setIDTokenJWSAlg(JWSAlgorithm.PS256);
 		assertEquals(JWSAlgorithm.PS256, meta.getIDTokenJWSAlg());
@@ -186,6 +190,8 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(1, meta.getRequestObjectURIs().size());
 
 		assertEquals(JWSAlgorithm.HS512, meta.getRequestObjectJWSAlg());
+
+		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointAuthJWSAlg());
 
 		assertEquals(JWSAlgorithm.PS256, meta.getIDTokenJWSAlg());
 

@@ -71,6 +71,14 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
+	 * The JSON Web Signature (JWS) algorithm required for
+	 * {@code private_key_jwt} and {@code client_secret_jwt}
+	 * authentication at the Token endpoint.
+	 */
+	private JWSAlgorithm authJWSAlg;
+
+
+	/**
 	 * The JSON Web Signature (JWS) algorithm required for the ID Tokens
 	 * issued to this client.
 	 */
@@ -290,6 +298,34 @@ public class OIDCClientMetadata extends ClientMetadata {
 	public void setRequestObjectJWSAlg(final JWSAlgorithm requestObjectJWSAlg) {
 
 		this.requestObjectJWSAlg = requestObjectJWSAlg;
+	}
+
+
+	/**
+	 * Gets the JSON Web Signature (JWS) algorithm required for
+	 * {@code private_key_jwt} and {@code client_secret_jwt}
+	 * authentication at the Token endpoint. Corresponds to the
+	 * {@code token_endpoint_auth_signing_alg} client metadata field.
+	 *
+	 * @return The JWS algorithm, {@code null} if not specified.
+	 */
+	public JWSAlgorithm getTokenEndpointAuthJWSAlg() {
+
+		return authJWSAlg;
+	}
+
+
+	/**
+	 * Sets the JSON Web Signature (JWS) algorithm required for
+	 * {@code private_key_jwt} and {@code client_secret_jwt}
+	 * authentication at the Token endpoint. Corresponds to the
+	 * {@code token_endpoint_auth_signing_alg} client metadata field.
+	 *
+	 * @param authJWSAlg The JWS algorithm, {@code null} if not specified.
+	 */
+	public void setTokenEndpointAuthJWSAlg(final JWSAlgorithm authJWSAlg) {
+
+		this.authJWSAlg = authJWSAlg;
 	}
 
 
@@ -643,6 +679,9 @@ public class OIDCClientMetadata extends ClientMetadata {
 		if (requestObjectJWSAlg != null)
 			o.put("request_object_signing_alg", requestObjectJWSAlg.getName());
 
+		if (authJWSAlg != null)
+			o.put("token_endpoint_auth_signing_alg", authJWSAlg.getName());
+
 
 		if (idTokenJWSAlg != null)
 			o.put("id_token_signed_response_alg", idTokenJWSAlg.getName());
@@ -758,12 +797,18 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("request_uris");
 		}
 		
-		
 		if (jsonObject.containsKey("request_object_signing_alg")) {
 			metadata.setRequestObjectJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "request_object_signing_alg")));
 
 			oidcFields.remove("request_object_signing_alg");
+		}
+
+		if (jsonObject.containsKey("token_endpoint_auth_signing_alg")) {
+			metadata.setTokenEndpointAuthJWSAlg(new JWSAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_signing_alg")));
+
+			oidcFields.remove("token_endpoint_auth_signing_alg");
 		}
 
 		if (jsonObject.containsKey("id_token_signed_response_alg")) {
@@ -773,14 +818,12 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("id_token_signed_response_alg");
 		}
 
-
 		if (jsonObject.containsKey("id_token_encrypted_response_alg")) {
 			metadata.setIDTokenJWEAlg(new JWEAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_alg")));
 
 			oidcFields.remove("id_token_encrypted_response_alg");
 		}
-
 
 		if (jsonObject.containsKey("id_token_encrypted_response_enc")) {
 			metadata.setIDTokenJWEEnc(new EncryptionMethod(
@@ -789,14 +832,12 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("id_token_encrypted_response_enc");
 		}
 
-
 		if (jsonObject.containsKey("userinfo_signed_response_alg")) {
 			metadata.setUserInfoJWSAlg(new JWSAlgorithm(
 				JSONObjectUtils.getString(jsonObject, "userinfo_signed_response_alg")));
 
 			oidcFields.remove("userinfo_signed_response_alg");
 		}
-
 
 		if (jsonObject.containsKey("userinfo_encrypted_response_alg")) {
 			metadata.setUserInfoJWEAlg(new JWEAlgorithm(
@@ -805,7 +846,6 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("userinfo_encrypted_response_alg");
 		}
 
-
 		if (jsonObject.containsKey("userinfo_encrypted_response_enc")) {
 			metadata.setUserInfoJWEEnc(new EncryptionMethod(
 				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_enc")));
@@ -813,18 +853,15 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("userinfo_encrypted_response_enc");
 		}
 
-
 		if (jsonObject.containsKey("default_max_age")) {
 			metadata.setDefaultMaxAge(JSONObjectUtils.getInt(jsonObject, "default_max_age"));
 			oidcFields.remove("default_max_age");
 		}
 
-
 		if (jsonObject.containsKey("require_auth_time")) {
 			metadata.requiresAuthTime(JSONObjectUtils.getBoolean(jsonObject, "require_auth_time"));
 			oidcFields.remove("require_auth_time");
 		}
-
 
 		if (jsonObject.containsKey("default_acr_values")) {
 
@@ -838,12 +875,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("default_acr_values");
 		}
 
-
 		if (jsonObject.containsKey("initiate_login_uri")) {
 			metadata.setInitiateLoginURI(JSONObjectUtils.getURL(jsonObject, "initiate_login_uri"));
 			oidcFields.remove("initiate_login_uri");
 		}
-
 
 		if (jsonObject.containsKey("post_logout_redirect_uri")) {
 			metadata.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_uri"));
