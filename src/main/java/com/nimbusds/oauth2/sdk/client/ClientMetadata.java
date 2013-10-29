@@ -3,13 +3,7 @@ package com.nimbusds.oauth2.sdk.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -58,6 +52,37 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * @author Vladimir Dzhuvinov
  */
 public class ClientMetadata {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<String>();
+
+		p.add("redirect_uris");
+		p.add("scope");
+		p.add("response_types");
+		p.add("grant_types");
+		p.add("contacts");
+		p.add("client_name");
+		p.add("logo_uri");
+		p.add("client_uri");
+		p.add("policy_uri");
+		p.add("tos_uri");
+		p.add("token_endpoint_auth_method");
+		p.add("jwks_uri");
+		p.add("software_id");
+		p.add("software_version");
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 	
 	
 	/**
@@ -189,6 +214,17 @@ public class ClientMetadata {
 		authMethod = metadata.authMethod;
 		jwkSetURI = metadata.jwkSetURI;
 		customFields = metadata.customFields;
+	}
+
+
+	/**
+	 * Gets the registered client metadata parameter names.
+	 *
+	 * @return The registered parameter names, as an unmodifiable set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 	
 	
@@ -520,7 +556,7 @@ public class ClientMetadata {
 
 	/**
 	 * Gets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_url} client metadata field, with an optional
+	 * {@code policy_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The policy URI, {@code null} if not specified.

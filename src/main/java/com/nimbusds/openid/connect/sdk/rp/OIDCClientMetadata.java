@@ -3,10 +3,7 @@ package com.nimbusds.openid.connect.sdk.rp;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
@@ -37,6 +34,59 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * @author Vladimir Dzhuvinov
  */
 public class OIDCClientMetadata extends ClientMetadata {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<String>();
+
+		// Base OAuth 2.0 client params
+		p.add("redirect_uris");
+		p.add("scope");
+		p.add("response_types");
+		p.add("grant_types");
+		p.add("contacts");
+		p.add("client_name");
+		p.add("logo_uri");
+		p.add("client_uri");
+		p.add("policy_uri");
+		p.add("tos_uri");
+		p.add("token_endpoint_auth_method");
+		p.add("jwks_uri");
+		p.add("software_id");
+		p.add("software_version");
+
+		// OIDC params
+		p.add("application_type");
+		p.add("subject_type");
+		p.add("sector_identifier_uri");
+		p.add("request_uris");
+		p.add("request_object_signing_alg");
+		p.add("token_endpoint_auth_signing_alg");
+		p.add("id_token_signed_response_alg");
+		p.add("id_token_encrypted_response_alg");
+		p.add("id_token_encrypted_response_enc");
+		p.add("userinfo_signed_response_alg");
+		p.add("userinfo_encrypted_response_alg");
+		p.add("userinfo_encrypted_response_enc");
+		p.add("default_max_age");
+		p.add("require_auth_time");
+		p.add("default_acr_values");
+		p.add("initiate_login_uri");
+
+		// OIDC session
+		p.add("post_logout_redirect_uris");
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 	
 	
 	/**
@@ -171,6 +221,18 @@ public class OIDCClientMetadata extends ClientMetadata {
 	public OIDCClientMetadata(final ClientMetadata metadata) {
 		
 		super(metadata);
+	}
+
+
+	/**
+	 * Gets the registered OpenID Connect client metadata parameter names.
+	 *
+	 * @return The registered OpenID Connect parameter names, as an
+	 *         unmodifiable set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 	
 	

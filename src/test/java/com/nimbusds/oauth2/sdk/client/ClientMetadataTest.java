@@ -31,6 +31,29 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * @author Vladimir Dzhuvinov
  */
 public class ClientMetadataTest extends TestCase {
+
+
+	public void testRegisteredParameters() {
+
+		Set<String> paramNames = ClientMetadata.getRegisteredParameterNames();
+
+		assertTrue(paramNames.contains("redirect_uris"));
+		assertTrue(paramNames.contains("client_name"));
+		assertTrue(paramNames.contains("client_uri"));
+		assertTrue(paramNames.contains("logo_uri"));
+		assertTrue(paramNames.contains("contacts"));
+		assertTrue(paramNames.contains("tos_uri"));
+		assertTrue(paramNames.contains("policy_uri"));
+		assertTrue(paramNames.contains("token_endpoint_auth_method"));
+		assertTrue(paramNames.contains("scope"));
+		assertTrue(paramNames.contains("grant_types"));
+		assertTrue(paramNames.contains("response_types"));
+		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("software_id"));
+		assertTrue(paramNames.contains("software_version"));
+
+		assertEquals(14, ClientMetadata.getRegisteredParameterNames().size());
+	}
 	
 	
 	public void testSerializeAndParse()

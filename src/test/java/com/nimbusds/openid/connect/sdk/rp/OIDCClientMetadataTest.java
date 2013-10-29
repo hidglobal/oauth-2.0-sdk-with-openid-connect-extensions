@@ -31,6 +31,49 @@ import com.nimbusds.openid.connect.sdk.SubjectType;
  * @author Vladimir Dzhuvinov
  */
 public class OIDCClientMetadataTest extends TestCase {
+
+
+	public void testRegisteredParameters() {
+
+		Set<String> paramNames = OIDCClientMetadata.getRegisteredParameterNames();
+
+		// Base OAuth 2.0 params
+		assertTrue(paramNames.contains("redirect_uris"));
+		assertTrue(paramNames.contains("client_name"));
+		assertTrue(paramNames.contains("client_uri"));
+		assertTrue(paramNames.contains("logo_uri"));
+		assertTrue(paramNames.contains("contacts"));
+		assertTrue(paramNames.contains("tos_uri"));
+		assertTrue(paramNames.contains("policy_uri"));
+		assertTrue(paramNames.contains("token_endpoint_auth_method"));
+		assertTrue(paramNames.contains("scope"));
+		assertTrue(paramNames.contains("grant_types"));
+		assertTrue(paramNames.contains("response_types"));
+		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("software_id"));
+		assertTrue(paramNames.contains("software_version"));
+
+		// OIDC specifid params
+		assertTrue(paramNames.contains("application_type"));
+		assertTrue(paramNames.contains("sector_identifier_uri"));
+		assertTrue(paramNames.contains("subject_type"));
+		assertTrue(paramNames.contains("id_token_signed_response_alg"));
+		assertTrue(paramNames.contains("id_token_encrypted_response_alg"));
+		assertTrue(paramNames.contains("id_token_encrypted_response_enc"));
+		assertTrue(paramNames.contains("userinfo_signed_response_alg"));
+		assertTrue(paramNames.contains("userinfo_encrypted_response_alg"));
+		assertTrue(paramNames.contains("userinfo_encrypted_response_enc"));
+		assertTrue(paramNames.contains("request_object_signing_alg"));
+		assertTrue(paramNames.contains("token_endpoint_auth_signing_alg"));
+		assertTrue(paramNames.contains("default_max_age"));
+		assertTrue(paramNames.contains("require_auth_time"));
+		assertTrue(paramNames.contains("default_acr_values"));
+		assertTrue(paramNames.contains("initiate_login_uri"));
+		assertTrue(paramNames.contains("request_uris"));
+		assertTrue(paramNames.contains("post_logout_redirect_uris"));
+
+		assertEquals(31, OIDCClientMetadata.getRegisteredParameterNames().size());
+	}
 	
 	
 	public void testParseSpecExample()
