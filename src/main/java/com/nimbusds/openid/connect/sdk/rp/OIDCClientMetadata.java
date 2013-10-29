@@ -27,6 +27,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  *
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.
+ *     <li>OpenID Connect Session Management 1.0, section 5.1.1.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
  *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
@@ -197,9 +198,9 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Logout redirect URL.
+	 * Logout redirect URLs.
 	 */
-	private URL postLogoutRedirectURI;
+	private Set<URL> postLogoutRedirectURIs;
 
 
 	/** 
@@ -662,26 +663,27 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Gets the post logout redirect URI. Corresponds to the 
-	 * {@code post_logout_redirect_uri} client metadata field.
+	 * Gets the post logout redirection URIs. Corresponds to the
+	 * {@code post_logout_redirect_uris} client metadata field.
 	 *
-	 * @return The logout URI, {@code null} if not specified.
+	 * @return The logout redirection URIs, {@code null} if not specified.
 	 */
-	public URL getPostLogoutRedirectURI() {
+	public Set<URL> getPostLogoutRedirectionURIs() {
 
-		return postLogoutRedirectURI;
+		return postLogoutRedirectURIs;
 	}
 
 
 	/**
-	 * Sets the post logout redirect URI. Corresponds to the 
-	 * {@code post_logout_redirect_uri} client metadata field.
+	 * Sets the post logout redirection URIs. Corresponds to the
+	 * {@code post_logout_redirect_uris} client metadata field.
 	 *
-	 * @param logoutURI The logout URI, {@code null} if not specified.
+	 * @param logoutURIs The logout redirection URIs, {@code null} if not
+	 *                   specified.
 	 */
-	public void setPostLogoutRedirectURI(final URL logoutURI) {
+	public void setPostLogoutRedirectionURIs(final Set<URL> logoutURIs) {
 
-		this.postLogoutRedirectURI = logoutURI;
+		postLogoutRedirectURIs = logoutURIs;
 	}
 	
 	
@@ -791,8 +793,15 @@ public class OIDCClientMetadata extends ClientMetadata {
 			o.put("initiate_login_uri", initiateLoginURI.toString());
 
 
-		if (postLogoutRedirectURI != null)
-			o.put("post_logout_redirect_uri", postLogoutRedirectURI.toString());
+		if (postLogoutRedirectURIs != null) {
+
+			JSONArray uriList = new JSONArray();
+
+			for (URL uri: postLogoutRedirectURIs)
+				uriList.add(uri.toString());
+
+			o.put("post_logout_redirect_uris", uriList);
+		}
 
 		return o;
 	}
@@ -942,9 +951,23 @@ public class OIDCClientMetadata extends ClientMetadata {
 			oidcFields.remove("initiate_login_uri");
 		}
 
-		if (jsonObject.containsKey("post_logout_redirect_uri")) {
-			metadata.setPostLogoutRedirectURI(JSONObjectUtils.getURL(jsonObject, "post_logout_redirect_uri"));
-			oidcFields.remove("post_logout_redirect_uri");
+		if (jsonObject.containsKey("post_logout_redirect_uris")) {
+
+			Set<URL> logoutURIs = new LinkedHashSet<URL>();
+
+			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "post_logout_redirect_uris")) {
+
+				try {
+					logoutURIs.add(new URL(uriString));
+
+				} catch (MalformedURLException e) {
+
+					throw new ParseException("Invalid \"post_logout_redirect_uris\" parameter");
+				}
+			}
+
+			metadata.setPostLogoutRedirectionURIs(logoutURIs);
+			oidcFields.remove("post_logout_redirect_uris");
 		}
 
 		// The remaining fields are custom

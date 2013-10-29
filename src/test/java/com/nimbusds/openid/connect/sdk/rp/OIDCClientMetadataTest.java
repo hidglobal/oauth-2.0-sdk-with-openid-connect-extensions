@@ -214,9 +214,11 @@ public class OIDCClientMetadataTest extends TestCase {
 		meta.setInitiateLoginURI(new URL("http://do-login.com"));
 		assertEquals("http://do-login.com", meta.getInitiateLoginURI().toString());
 
-		assertNull(meta.getPostLogoutRedirectURI());
-		meta.setPostLogoutRedirectURI(new URL("http://post-logout.com"));
-		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectURI().toString());
+		assertNull(meta.getPostLogoutRedirectionURIs());
+		Set<URL> logoutURIs = new HashSet<URL>();
+		logoutURIs.add(new URL("http://post-logout.com"));
+		meta.setPostLogoutRedirectionURIs(logoutURIs);
+		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectionURIs().iterator().next().toString());
 
 		String json = meta.toJSONObject().toJSONString();
 
@@ -256,7 +258,7 @@ public class OIDCClientMetadataTest extends TestCase {
 
 		assertEquals("http://do-login.com", meta.getInitiateLoginURI().toString());
 
-		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectURI().toString());
+		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectionURIs().iterator().next().toString());
 	}
 
 
