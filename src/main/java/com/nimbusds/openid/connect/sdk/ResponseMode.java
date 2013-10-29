@@ -85,6 +85,14 @@ public final class ResponseMode extends Identifier {
 		if (StringUtils.isBlank(s))
 			return null;
 
-		return new ResponseMode(s);
+		if (s.equals(ResponseMode.QUERY)) {
+			return ResponseMode.QUERY;
+		} else if (s.equals(ResponseMode.FRAGMENT)) {
+			return ResponseMode.FRAGMENT;
+		} else if (s.equals(ResponseMode.FORM_POST)) {
+			return ResponseMode.FORM_POST;
+		} else {
+			return new ResponseMode(s);
+		}
 	}
 }
