@@ -2,10 +2,12 @@ package com.nimbusds.openid.connect.sdk.op;
 
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.nimbusds.oauth2.sdk.ParseException;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.util.JSONObjectUtils;
@@ -26,6 +28,7 @@ import com.nimbusds.openid.connect.sdk.OIDCScopeValue;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -539,5 +542,50 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(meta.supportsRequestURIParam());
 
 		assertTrue(meta.requiresRequestURIRegistration());
+	}
+
+
+	public void testRejectNoneAlgForTokenJWTAuth()
+		throws Exception {
+
+		Issuer issuer = new Issuer("https://c2id.com");
+
+		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
+		subjectTypes.add(SubjectType.PUBLIC);
+
+		URL jwksURL = new URL("https://c2id.com/jwks.json");
+
+		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURL);
+
+		List<JWSAlgorithm> tokenEndpointJWTAlgs = new ArrayList<JWSAlgorithm>();
+		tokenEndpointJWTAlgs.add(new JWSAlgorithm("none"));
+
+		try {
+			meta.setTokenEndpointJWSAlgs(tokenEndpointJWTAlgs);
+
+			fail("Failed to raise IllegalArgumentException");
+
+		} catch (IllegalArgumentException e) {
+			// ok
+		}
+
+
+		// Simulate JSON object with none token endpoint JWT algs
+		JSONObject jsonObject = meta.toJSONObject();
+
+		List<String> stringList = new ArrayList<String>();
+		stringList.add("none");
+
+		jsonObject.put("token_endpoint_auth_signing_alg_values_supported", stringList);
+
+
+		try {
+			OIDCProviderMetadata.parse(jsonObject.toJSONString());
+
+			fail("Failed to raise ParseException");
+
+		} catch (ParseException e) {
+			// ok
+		}
 	}
 }

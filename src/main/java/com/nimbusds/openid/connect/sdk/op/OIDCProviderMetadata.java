@@ -7,6 +7,7 @@ import java.util.*;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.jose.Algorithm;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -712,9 +713,13 @@ public class OIDCProviderMetadata {
 	 * field.
 	 *
 	 * @param tokenEndpointJWSAlgs The supported JWS algorithms,
-	 *                             {@code null} if not specified.
+	 *                             {@code null} if not specified. Must not
+	 *                             contain the {@code none} algorithm.
 	 */
 	public void setTokenEndpointJWSAlgs(final List<JWSAlgorithm> tokenEndpointJWSAlgs) {
+
+		if (tokenEndpointJWSAlgs != null && tokenEndpointJWSAlgs.contains(Algorithm.NONE))
+			throw new IllegalArgumentException("The none algorithm is not accepted");
 
 		this.tokenEndpointJWSAlgs = tokenEndpointJWSAlgs;
 	}
@@ -1638,6 +1643,9 @@ public class OIDCProviderMetadata {
 			op.tokenEndpointJWSAlgs = new ArrayList<JWSAlgorithm>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "token_endpoint_auth_signing_alg_values_supported")) {
+
+				if (v != null && v.equals(Algorithm.NONE.getName()))
+					throw new ParseException("The none algorithm is not accepted");
 				
 				if (v != null)
 					op.tokenEndpointJWSAlgs.add(new JWSAlgorithm(v));
