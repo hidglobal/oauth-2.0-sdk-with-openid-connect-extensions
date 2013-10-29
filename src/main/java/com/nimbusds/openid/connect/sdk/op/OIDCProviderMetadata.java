@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
+import com.nimbusds.openid.connect.sdk.ResponseMode;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.Algorithm;
@@ -155,6 +156,12 @@ public class OIDCProviderMetadata {
 	 * The supported response types.
 	 */
 	private List<ResponseType> rts;
+
+
+	/**
+	 * The supported response modes.
+	 */
+	private List<ResponseMode> rms;
 	
 	
 	/**
@@ -598,6 +605,32 @@ public class OIDCProviderMetadata {
 	public void setResponseTypes(final List<ResponseType> rts) {
 
 		this.rts = rts;
+	}
+
+
+	/**
+	 * Gets the supported response mode values. Corresponds to the
+	 * {@code response_modes_supported}.
+	 *
+	 * @return The supported response mode values, {@code null} if not
+	 *         specified.
+	 */
+	public List<ResponseMode> getResponseModes() {
+
+		return rms;
+	}
+
+
+	/**
+	 * Sets the supported response mode values. Corresponds to the
+	 * {@code response_modes_supported}.
+	 *
+	 * @param rms The supported response mode values, {@code null} if not
+	 *            specified.
+	 */
+	public void setResponseModes(final List<ResponseMode> rms) {
+
+		this.rms = rms;
 	}
 	
 	
@@ -1282,6 +1315,40 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Applies the OpenID Connect provider metadata defaults where no
+	 * values have been specified.
+	 *
+	 * <ul>
+	 *     <li>The response modes default to {@code ["query", "fragment"]}.
+	 *     <li>The grant types default to {@code ["authorization_code",
+	 *         "implicit"]}.
+	 *     <li>The token endpoint authentication methods default to
+	 *         {@code ["client_secret_basic"]}.
+	 *     <li>The claim types default to {@code ["normal]}.
+	 * </ul>
+	 */
+	public void applyDefaults() {
+
+		if (rms == null) {
+			rms = new ArrayList<ResponseMode>(2);
+			rms.add(ResponseMode.QUERY);
+			rms.add(ResponseMode.FRAGMENT);
+		}
+
+		if (gts == null) {
+			gts = new ArrayList<GrantType>(2);
+			gts.add(GrantType.AUTHORIZATION_CODE);
+			gts.add(GrantType.IMPLICIT);
+		}
+
+		if (claimTypes == null) {
+			claimTypes = new ArrayList<ClaimType>(1);
+			claimTypes.add(ClaimType.NORMAL);
+		}
+	}
+
+
+	/**
 	 * Returns the JSON object representation of this OpenID Connect
 	 * provider metadata.
 	 *
@@ -1335,6 +1402,16 @@ public class OIDCProviderMetadata {
 				stringList.add(rt.toString());
 
 			o.put("response_types_supported", stringList);
+		}
+
+		if (rms != null) {
+
+			stringList = new ArrayList<String>(rms.size());
+
+			for (ResponseMode rm: rms)
+				stringList.add(rm.getValue());
+
+			o.put("response_modes_supported", stringList);
 		}
 
 		if (gts != null) {
@@ -1602,6 +1679,17 @@ public class OIDCProviderMetadata {
 
 				if (v != null)
 					op.rts.add(ResponseType.parse(v));
+			}
+		}
+
+		if (jsonObject.containsKey("response_modes_supported")) {
+
+			op.rms = new ArrayList<ResponseMode>();
+
+			for (String v: JSONObjectUtils.getStringArray(jsonObject, "response_modes_supported")) {
+
+				if (v != null)
+					op.rms.add(ResponseMode.parse(v));
 			}
 		}
 		

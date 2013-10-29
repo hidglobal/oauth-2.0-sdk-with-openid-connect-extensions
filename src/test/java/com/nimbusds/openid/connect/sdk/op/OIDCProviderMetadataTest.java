@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.openid.connect.sdk.*;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.util.JSONObjectUtils;
@@ -22,10 +23,6 @@ import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 
-import com.nimbusds.openid.connect.sdk.Display;
-import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
-import com.nimbusds.openid.connect.sdk.OIDCScopeValue;
-import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
 import net.minidev.json.JSONObject;
@@ -342,8 +339,17 @@ public class OIDCProviderMetadataTest extends TestCase {
 		rt1.add(ResponseType.Value.CODE);
 		responseTypes.add(rt1);
 		meta.setResponseTypes(responseTypes);
+		responseTypes = meta.getResponseTypes();
 		assertEquals(ResponseType.Value.CODE, responseTypes.iterator().next().iterator().next());
 		assertEquals(1, responseTypes.size());
+
+		List<ResponseMode> responseModes = new LinkedList<ResponseMode>();
+		responseModes.add(ResponseMode.QUERY);
+		responseModes.add(ResponseMode.FRAGMENT);
+		meta.setResponseModes(responseModes);
+		assertTrue(meta.getResponseModes().contains(ResponseMode.QUERY));
+		assertTrue(meta.getResponseModes().contains(ResponseMode.FRAGMENT));
+		assertEquals(2, meta.getResponseModes().size());
 
 		List<GrantType> grantTypes = new LinkedList<GrantType>();
 		grantTypes.add(GrantType.AUTHORIZATION_CODE);
@@ -351,6 +357,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		meta.setGrantTypes(grantTypes);
 		assertTrue(meta.getGrantTypes().contains(GrantType.AUTHORIZATION_CODE));
 		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
+		assertEquals(2, meta.getGrantTypes().size());
 
 		List<ACR> acrList = new LinkedList<ACR>();
 		acrList.add(new ACR("1"));
@@ -488,8 +495,13 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals(ResponseType.Value.CODE, responseTypes.iterator().next().iterator().next());
 		assertEquals(1, responseTypes.size());
 
+		assertTrue(meta.getResponseModes().contains(ResponseMode.QUERY));
+		assertTrue(meta.getResponseModes().contains(ResponseMode.FRAGMENT));
+		assertEquals(2, meta.getResponseModes().size());
+
 		assertTrue(meta.getGrantTypes().contains(GrantType.AUTHORIZATION_CODE));
 		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
+		assertEquals(2, meta.getGrantTypes().size());
 
 		assertEquals("1", meta.getACRs().get(0).getValue());
 
@@ -587,5 +599,35 @@ public class OIDCProviderMetadataTest extends TestCase {
 		} catch (ParseException e) {
 			// ok
 		}
+	}
+
+
+	public void testApplyDefaults()
+		throws Exception {
+
+		Issuer issuer = new Issuer("https://c2id.com");
+
+		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
+		subjectTypes.add(SubjectType.PUBLIC);
+
+		URL jwksURL = new URL("https://c2id.com/jwks.json");
+
+		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURL);
+
+		meta.applyDefaults();
+
+		List<ResponseMode> responseModes = meta.getResponseModes();
+		assertTrue(responseModes.contains(ResponseMode.QUERY));
+		assertTrue(responseModes.contains(ResponseMode.FRAGMENT));
+		assertEquals(2, responseModes.size());
+
+		List<GrantType> grantTypes = meta.getGrantTypes();
+		assertTrue(grantTypes.contains(GrantType.AUTHORIZATION_CODE));
+		assertTrue(grantTypes.contains(GrantType.IMPLICIT));
+		assertEquals(2, grantTypes.size());
+
+		List<ClaimType> claimTypes = meta.getClaimTypes();
+		assertTrue(claimTypes.contains(ClaimType.NORMAL));
+		assertEquals(1, claimTypes.size());
 	}
 }
