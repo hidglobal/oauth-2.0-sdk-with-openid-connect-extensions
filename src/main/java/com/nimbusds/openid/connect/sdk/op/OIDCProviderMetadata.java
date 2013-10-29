@@ -5,7 +5,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-import com.nimbusds.openid.connect.sdk.ResponseMode;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.Algorithm;
@@ -25,6 +24,7 @@ import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.Display;
+import com.nimbusds.openid.connect.sdk.ResponseMode;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
