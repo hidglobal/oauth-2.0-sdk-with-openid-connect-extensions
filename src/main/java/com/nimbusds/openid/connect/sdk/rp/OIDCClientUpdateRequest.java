@@ -101,7 +101,7 @@ public final class OIDCClientUpdateRequest extends ClientUpdateRequest {
 	 * @throws ParseException If the HTTP request couldn't be parsed to an
 	 *                        OpenID Connect client update request.
 	 */
-	public static ClientUpdateRequest parse(final HTTPRequest httpRequest)
+	public static OIDCClientUpdateRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.PUT);
