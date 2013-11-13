@@ -25,8 +25,7 @@ public final class OIDCError {
 	 * displaying a user interface for end-user interaction.
 	 */
 	public static final ErrorObject INTERACTION_REQUIRED =
-		new ErrorObject("interaction_required", "User interaction required",
-			        HTTPResponse.SC_FOUND);
+		new ErrorObject("interaction_required", "User interaction required", HTTPResponse.SC_FOUND);
 
 	/**
 	 * The authorisation server requires end-user authentication. This 
@@ -38,8 +37,7 @@ public final class OIDCError {
 	 * authentication.
 	 */
 	public static final ErrorObject LOGIN_REQUIRED =
-		new ErrorObject("login_required", "Login required", 
-			        HTTPResponse.SC_FOUND);
+		new ErrorObject("login_required", "Login required", HTTPResponse.SC_FOUND);
 
 	
 	/**
@@ -54,8 +52,7 @@ public final class OIDCError {
 	 * displaying a user interface to prompt for a session to use.
 	 */
 	public static final ErrorObject SESSION_SELECTION_REQUIRED =
-		new ErrorObject("session_selection_required", "Session selection required",
-			        HTTPResponse.SC_FOUND);
+		new ErrorObject("session_selection_required", "Session selection required", HTTPResponse.SC_FOUND);
 
 	
 	/**
@@ -68,7 +65,7 @@ public final class OIDCError {
 	 * displaying a user interface for end-user consent.
 	 */
 	public static final ErrorObject	CONSENT_REQUIRED =
-		new ErrorObject("consent_required", "Consent required");
+		new ErrorObject("consent_required", "Consent required", HTTPResponse.SC_FOUND);
 
 
 	/**
@@ -76,8 +73,7 @@ public final class OIDCError {
 	 * returns an error or invalid data.
 	 */
 	public static final ErrorObject INVALID_REQUEST_URI =
-		new ErrorObject("invalid_request_uri", "Invalid request URI",
-			        HTTPResponse.SC_FOUND);
+		new ErrorObject("invalid_request_uri", "Invalid request URI", HTTPResponse.SC_FOUND);
 
 	
 	/**
@@ -85,8 +81,7 @@ public final class OIDCError {
 	 * contains an invalid OpenID Connect request object.
 	 */
 	public static final ErrorObject	INVALID_REQUEST_OBJECT =
-		new ErrorObject("invalid_request_object", "Invalid OpenID Connect request object",
-			        HTTPResponse.SC_FOUND);
+		new ErrorObject("invalid_request_object", "Invalid OpenID Connect request object", HTTPResponse.SC_FOUND);
 
 	
 	/**
@@ -95,8 +90,7 @@ public final class OIDCError {
 	 * self-issued OpenID providers.
 	 */
 	public static final ErrorObject REGISTRATION_NOT_SUPPORTED =
-		new ErrorObject("registration_not_supported", "Registration parameter not supported",
-		                HTTPResponse.SC_FOUND);
+		new ErrorObject("registration_not_supported", "Registration parameter not supported", HTTPResponse.SC_FOUND);
 	
 	
 	/**
@@ -104,8 +98,7 @@ public final class OIDCError {
 	 * {@link OIDCAuthorizationRequest} is not supported.
 	 */
 	public static final ErrorObject REQUEST_NOT_SUPPORTED =
-		new ErrorObject("request_not_supported", "Request parameter not supported",
-		                HTTPResponse.SC_FOUND);
+		new ErrorObject("request_not_supported", "Request parameter not supported", HTTPResponse.SC_FOUND);
 	
 	
 	/**
@@ -113,8 +106,7 @@ public final class OIDCError {
 	 * {@link OIDCAuthorizationRequest} is not supported.
 	 */
 	public static final ErrorObject REQUEST_URI_NOT_SUPPORTED =
-		new ErrorObject("request_uri_not_supported", "Request URI parameter not supported",
-		                HTTPResponse.SC_FOUND);
+		new ErrorObject("request_uri_not_supported", "Request URI parameter not supported", HTTPResponse.SC_FOUND);
 
 	
 	/**

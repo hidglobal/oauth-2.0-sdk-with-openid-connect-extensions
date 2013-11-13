@@ -18,8 +18,7 @@ public final class RegistrationError {
 	 * is invalid. 
 	 */
 	public static final ErrorObject INVALID_REDIRECT_URI =
-		new ErrorObject("invalid_redirect_uri", "Invalid redirection URI(s)",
-			        HTTPResponse.SC_BAD_REQUEST);
+		new ErrorObject("invalid_redirect_uri", "Invalid redirection URI(s)", HTTPResponse.SC_BAD_REQUEST);
 	
 	
 	/**
@@ -29,8 +28,7 @@ public final class RegistrationError {
 	 * requested parameter of a client's meta data. 
 	 */
 	public static final ErrorObject	INVALID_CLIENT_METADATA =
-		new ErrorObject("invalid_client_metadata", "Invalid client metadata field",
-			        HTTPResponse.SC_BAD_REQUEST);
+		new ErrorObject("invalid_client_metadata", "Invalid client metadata field", HTTPResponse.SC_BAD_REQUEST);
 	
 	
 	/**

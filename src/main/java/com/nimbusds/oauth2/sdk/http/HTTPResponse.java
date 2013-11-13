@@ -31,6 +31,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *     <li>{@link #SC_BAD_REQUEST HTTP 400 Bad request}
  *     <li>{@link #SC_UNAUTHORIZED HTTP 401 Unauthorized}
  *     <li>{@link #SC_FORBIDDEN HTTP 403 Forbidden}
+ *     <li>{@link #SC_SERVER_ERROR HTTP 500 Server error}
  * </ul>
  *
  * <p>Supported response headers:
@@ -80,6 +81,18 @@ public final class HTTPResponse extends HTTPMessage {
 	 * forbidden.
 	 */
 	public static final int SC_FORBIDDEN = 403;
+
+
+	/**
+	 * HTTP status code (500) indicating an internal server error.
+	 */
+	public static final int SC_SERVER_ERROR = 500;
+
+
+	/**
+	 * HTTP status code (503) indicating the server is unavailable.
+	 */
+	public static final int SC_SERVICE_UNAVAILABLE = 503;
 
 
 	/**
