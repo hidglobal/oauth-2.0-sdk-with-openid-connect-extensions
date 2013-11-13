@@ -129,10 +129,12 @@ public final class HTTPRequest extends HTTPMessage {
 	 * @param sr The servlet request. Must not be {@code null}.
 	 *
 	 * @throws IllegalArgumentException The the servlet request method is
-	 *                                  not GET or POST, or the content type
-	 *                                  header value couldn't be parsed.
-	 * @throws IOException              For a POST body that couldn't be 
-	 *                                  read due to an I/O exception.
+	 *                                  not GET, POST, PUT or DELETE or the
+	 *                                  content type header value couldn't
+	 *                                  be parsed.
+	 * @throws IOException              For a POST or PUT body that
+	 *                                  couldn't be read due to an I/O
+	 *                                  exception.
 	 */
 	public HTTPRequest(final HttpServletRequest sr)
 		throws IOException {
@@ -147,8 +149,6 @@ public final class HTTPRequest extends HTTPMessage {
 			throw new IllegalArgumentException("Invalid request URL: " + e.getMessage(), e);
 		}
 		
-		String ct = sr.getContentType();
-		
 		try {
 			setContentType(sr.getContentType());
 		
@@ -159,11 +159,11 @@ public final class HTTPRequest extends HTTPMessage {
 		
 		setAuthorization(sr.getHeader("Authorization"));
 		
-		if (method.equals(Method.GET)) {
+		if (method.equals(Method.GET) || method.equals(Method.DELETE)) {
 		
 			setQuery(sr.getQueryString());
 
-		} else if (method.equals(Method.POST)) {
+		} else if (method.equals(Method.POST) || method.equals(Method.PUT)) {
 		
 			// read body
 			
