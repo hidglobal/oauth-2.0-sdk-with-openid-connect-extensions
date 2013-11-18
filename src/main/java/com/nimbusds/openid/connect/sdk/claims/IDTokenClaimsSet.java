@@ -3,6 +3,7 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 import java.util.*;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.jwk.JWK;
@@ -181,7 +182,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 		setClaim(ISS_CLAIM_NAME, iss.getValue());
 		setClaim(SUB_CLAIM_NAME, sub.getValue());
 
-		List<String> audList = new ArrayList<String>(aud.size());
+		JSONArray audList = new JSONArray();
 
 		for (Audience a: aud)
 			audList.add(a.getValue());
@@ -274,7 +275,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token issuer. Corresponds to the {@code iss} claim.
 	 *
-	 * @return The issuer.
+	 * @return The issuer, {@code null} if not specified or parsing failed.
 	 */
 	public Issuer getIssuer() {
 
@@ -285,7 +286,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The subject.
+	 * @return The subject, {@code null} if not specified or parsing
+	 *         failed.
 	 */
 	public Subject getSubject() {
 
@@ -296,21 +298,33 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token audience. Corresponds to the {@code aud} claim.
 	 *
-	 * @return The audience.
+	 * @return The audience, {@code null} if not specified or parsing
+	 *         failed.
 	 */
 	public List<Audience> getAudience() {
 
-		List<String> rawList = getStringListClaim(AUD_CLAIM_NAME);
+		if (getClaim(AUD_CLAIM_NAME) instanceof String) {
 
-		if (rawList == null || rawList.isEmpty())
+			return new Audience(getStringClaim(AUD_CLAIM_NAME)).toSingleAudienceList();
+
+		} else if (getClaim(AUD_CLAIM_NAME) instanceof List) {
+
+			List<String> rawList = getStringListClaim(AUD_CLAIM_NAME);
+
+			if (rawList == null || rawList.isEmpty())
+				return null;
+
+			List<Audience> audList = new ArrayList<Audience>(rawList.size());
+
+			for (String s: rawList)
+				audList.add(new Audience(s));
+
+			return audList;
+
+		} else {
+
 			return null;
-
-		List<Audience> audList = new ArrayList<Audience>(rawList.size());
-
-		for (String s: rawList)
-			audList.add(new Audience(s));
-
-		return audList;
+		}
 	}
 
 
@@ -318,7 +332,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the ID token expiration time. Corresponds to the {@code exp}
 	 * claim.
 	 *
-	 * @return The expiration time.
+	 * @return The expiration time, {@code null} if not specified or
+	 *         parsing failed.
 	 */
 	public Date getExpirationTime() {
 
@@ -329,7 +344,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token issue time. Corresponds to the {@code iss} claim.
 	 *
-	 * @return The issue time.
+	 * @return The issue time, {@code null} if not specified or parsing
+	 *         failed.
 	 */
 	public Date getIssueTime() {
 
@@ -341,7 +357,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the subject authentication time. Corresponds to the
 	 * {@code auth_time} claim.
 	 *
-	 * @return The authentication time, {@code null} if not specified.
+	 * @return The authentication time, {@code null} if not specified or
+	 *         parsing failed.
 	 */
 	public Date getAuthenticationTime() {
 
@@ -365,7 +382,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token nonce. Corresponds to the {@code nonce} claim.
 	 *
-	 * @return The nonce, {@code null} if not specified.
+	 * @return The nonce, {@code null} if not specified or parsing failed.
 	 */
 	public Nonce getNonce() {
 
@@ -396,7 +413,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the access token hash. Corresponds to the {@code at_hash}
 	 * claim.
 	 *
-	 * @return The access token hash, {@code null} if not specified.
+	 * @return The access token hash, {@code null} if not specified or
+	 *         parsing failed.
 	 */
 	public AccessTokenHash getAccessTokenHash() {
 
@@ -428,7 +446,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the authorisation code hash. Corresponds to the {@code c_hash}
 	 * claim.
 	 *
-	 * @return The authorisation code hash, {@code null} if not specified.
+	 * @return The authorisation code hash, {@code null} if not specified
+	 *         or parsing failed.
 	 */
 	public CodeHash getCodeHash() {
 
@@ -462,7 +481,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * to the {@code acr} claim.
 	 *
 	 * @return The Authentication Context Class Reference (ACR),
-	 *         {@code null} if not specified.
+	 *         {@code null} if not specified or parsing failed.
 	 */
 	public ACR getACR() {
 
@@ -496,7 +515,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * the {@code amr} claim.
 	 *
 	 * @return The Authentication Methods Reference (AMR) list,
-	 *         {@code null} if not specified.
+	 *         {@code null} if not specified or parsing failed.
 	 */
 	public List<AMR> getAMR() {
 
@@ -542,7 +561,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the authorised party for the ID token. Corresponds to the
 	 * {@code azp} claim.
 	 *
-	 * @return The authorised party, {@code null} if not specified.
+	 * @return The authorised party, {@code null} if not specified or
+	 *         parsing failed.
 	 */
 	public AuthorizedParty getAuthorizedParty() {
 
@@ -574,7 +594,8 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the subject's JSON Web Key (JWK) for a self-issued OpenID
 	 * Connect provider. Corresponds to the {@code sub_jwk} claim.
 	 *
-	 * @return The subject's JWK, {@code null} if not specified.
+	 * @return The subject's JWK, {@code null} if not specified or parsing
+	 *         failed.
 	 */
 	public JWK getSubjectJWK() {
 

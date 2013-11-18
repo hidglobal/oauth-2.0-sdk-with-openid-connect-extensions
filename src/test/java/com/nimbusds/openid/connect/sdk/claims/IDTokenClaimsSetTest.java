@@ -150,6 +150,9 @@ public class IDTokenClaimsSetTest extends TestCase {
 
 		String json = idTokenClaimsSet.toJSONObject().toJSONString();
 
+		// Try to JWT claims set too
+		idTokenClaimsSet.toJWTClaimsSet();
+
 		idTokenClaimsSet = IDTokenClaimsSet.parse(json);
 
 		// Mandatory claims
@@ -167,5 +170,25 @@ public class IDTokenClaimsSetTest extends TestCase {
 		assertEquals(acr.getValue(), idTokenClaimsSet.getACR().getValue());
 		assertEquals("A", idTokenClaimsSet.getAMR().get(0).getValue());
 		assertEquals(authorizedParty.getValue(), idTokenClaimsSet.getAuthorizedParty().getValue());
+	}
+
+
+	public void testSingleAudSetAndGetWorkaround()
+		throws Exception {
+
+		Issuer issuer = new Issuer("iss");
+		Subject subject = new Subject("sub");
+
+		List<Audience> audList = new LinkedList<Audience>();
+		audList.add(new Audience("aud"));
+
+		Date expirationTime = DateUtils.fromSecondsSinceEpoch(100000l);
+		Date issueTime = DateUtils.fromSecondsSinceEpoch(200000l);
+
+		IDTokenClaimsSet idTokenClaimsSet = new IDTokenClaimsSet(issuer, subject, audList, expirationTime, issueTime);
+
+		idTokenClaimsSet.setClaim("aud", "client-1");
+
+		assertEquals("client-1", idTokenClaimsSet.getAudience().get(0).getValue());
 	}
 }

@@ -1,9 +1,7 @@
 package com.nimbusds.oauth2.sdk.util;
 
 
-import java.net.URL;
-
-import javax.mail.internet.InternetAddress;
+import java.util.Arrays;
 
 import junit.framework.TestCase;
 
@@ -35,6 +33,7 @@ public class JSONObjectUtilsTest extends TestCase {
 		o.put("url", "http://server.example.com/cb/");
 		o.put("email", "alice@wonderland.net");
 		o.put("client_type", "public");
+		o.put("aud", Arrays.asList("client-1", "client-2"));
 		
 		JSONParser parser = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT);
 		
@@ -163,6 +162,9 @@ public class JSONObjectUtilsTest extends TestCase {
 			assertEquals("http://server.example.com/cb/", JSONObjectUtils.getURL(o, "url").toString());
 			assertEquals("alice@wonderland.net", JSONObjectUtils.getEmail(o, "email").toString());
 			assertEquals(ClientType.PUBLIC, JSONObjectUtils.getEnum(o, "client_type", ClientType.class));
+
+			assertTrue(Arrays.asList("client-1", "client-2").containsAll(JSONObjectUtils.getList(o, "aud")));
+			assertTrue(Arrays.asList("client-1", "client-2").containsAll(JSONObjectUtils.getJSONArray(o, "aud")));
 			
 		} catch (ParseException e) {
 		

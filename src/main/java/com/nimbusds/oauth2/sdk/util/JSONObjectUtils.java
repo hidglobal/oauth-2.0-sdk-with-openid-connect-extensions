@@ -63,7 +63,7 @@ public class JSONObjectUtils {
 	public static JSONObject parseJSONObject(final String s) 
 		throws ParseException {
 		
-		Object o = null;
+		Object o;
 		
 		try {
 			o = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT).parse(s);
