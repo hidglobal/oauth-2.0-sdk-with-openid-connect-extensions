@@ -1,6 +1,10 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,13 +12,17 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.util.DateUtils;
+
 import com.nimbusds.openid.connect.sdk.Nonce;
+import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
 
 
 /**
@@ -23,6 +31,24 @@ import com.nimbusds.openid.connect.sdk.Nonce;
  * @author Vladimir Dzhuvinov
  */
 public class IDTokenClaimsSetTest extends TestCase {
+
+
+	public void testClaimNameConstants() {
+
+		assertEquals("acr", IDTokenClaimsSet.ACR_CLAIM_NAME);
+		assertEquals("amr", IDTokenClaimsSet.AMR_CLAIM_NAME);
+		assertEquals("at_hash", IDTokenClaimsSet.AT_HASH_CLAIM_NAME);
+		assertEquals("aud", IDTokenClaimsSet.AUD_CLAIM_NAME);
+		assertEquals("auth_time", IDTokenClaimsSet.AUTH_TIME_CLAIM_NAME);
+		assertEquals("azp", IDTokenClaimsSet.AZP_CLAIM_NAME);
+		assertEquals("c_hash", IDTokenClaimsSet.C_HASH_CLAIM_NAME);
+		assertEquals("exp", IDTokenClaimsSet.EXP_CLAIM_NAME);
+		assertEquals("iat", IDTokenClaimsSet.IAT_CLAIM_NAME);
+		assertEquals("iss", IDTokenClaimsSet.ISS_CLAIM_NAME);
+		assertEquals("nonce", IDTokenClaimsSet.NONCE_CLAIM_NAME);
+		assertEquals("sub", IDTokenClaimsSet.SUB_CLAIM_NAME);
+		assertEquals("sub_jwk", IDTokenClaimsSet.SUB_JWK_CLAIM_NAME);
+	}
 
 
 	public void testStdClaims() {
@@ -190,5 +216,149 @@ public class IDTokenClaimsSetTest extends TestCase {
 		idTokenClaimsSet.setClaim("aud", "client-1");
 
 		assertEquals("client-1", idTokenClaimsSet.getAudience().get(0).getValue());
+	}
+
+
+	public void testHasRequiredClaimsImplicitFlow() {
+
+		ResponseType responseType = new ResponseType();
+		responseType.add(ResponseType.Value.TOKEN);
+		responseType.add(OIDCResponseTypeValue.ID_TOKEN);
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		assertFalse(claimsSet.hasRequiredClaims(responseType));
+
+		claimsSet.setNonce(new Nonce());
+		claimsSet.setAccessTokenHash(new AccessTokenHash("at_hash"));
+
+		assertTrue(claimsSet.hasRequiredClaims(responseType));
+	}
+
+
+	public void testHasRequiredClaimsCodeFlow() {
+
+		ResponseType responseType = new ResponseType();
+		responseType.add(ResponseType.Value.CODE);
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		assertFalse(claimsSet.hasRequiredClaims(responseType));
+
+		claimsSet.setCodeHash(new CodeHash("c_hash"));
+
+		assertTrue(claimsSet.hasRequiredClaims(responseType));
+	}
+
+
+	public void testHasRequiredClaimsHybridFlow() {
+
+		ResponseType responseType = new ResponseType();
+		responseType.add(ResponseType.Value.CODE);
+		responseType.add(ResponseType.Value.TOKEN);
+		responseType.add(OIDCResponseTypeValue.ID_TOKEN);
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		assertFalse(claimsSet.hasRequiredClaims(responseType));
+
+		claimsSet.setCodeHash(new CodeHash("c_hash"));
+
+		claimsSet.setNonce(new Nonce());
+		claimsSet.setAccessTokenHash(new AccessTokenHash("at_hash"));
+
+		assertTrue(claimsSet.hasRequiredClaims(responseType));
+	}
+
+
+	public void testSubjectJWK()
+		throws Exception {
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		assertNull(claimsSet.getSubjectJWK());
+
+		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+		keyGen.initialize(512);
+
+		KeyPair keyPair = keyGen.generateKeyPair();
+
+		RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
+
+		RSAKey rsaJWK = new RSAKey.Builder(publicKey).setKeyID("1").build();
+
+		claimsSet.setSubjectJWK(rsaJWK);
+
+		RSAKey rsaJWKOut = (RSAKey)claimsSet.getSubjectJWK();
+
+		assertEquals(rsaJWK.getModulus(), rsaJWKOut.getModulus());
+		assertEquals(rsaJWK.getPublicExponent(), rsaJWKOut.getPublicExponent());
+		assertEquals(rsaJWK.getKeyID(), rsaJWKOut.getKeyID());
+
+
+		String json = claimsSet.toJSONObject().toJSONString();
+
+		System.out.println("ID token with subject JWK: " + json);
+
+		claimsSet = IDTokenClaimsSet.parse(json);
+
+		rsaJWKOut = (RSAKey)claimsSet.getSubjectJWK();
+
+		assertEquals(rsaJWK.getModulus(), rsaJWKOut.getModulus());
+		assertEquals(rsaJWK.getPublicExponent(), rsaJWKOut.getPublicExponent());
+		assertEquals(rsaJWK.getKeyID(), rsaJWKOut.getKeyID());
+	}
+
+
+	public void testRejectPrivateSubjectJWK()
+		throws Exception {
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		assertNull(claimsSet.getSubjectJWK());
+
+		KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+		keyGen.initialize(512);
+
+		KeyPair keyPair = keyGen.generateKeyPair();
+
+		RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
+		RSAPrivateKey privateKey = (RSAPrivateKey)keyPair.getPrivate();
+
+		RSAKey rsaJWK = new RSAKey.Builder(publicKey).setPrivateKey(privateKey).build();
+
+		try {
+			claimsSet.setSubjectJWK(rsaJWK);
+
+			fail();
+
+		} catch (IllegalArgumentException e) {
+			// ok
+		}
 	}
 }

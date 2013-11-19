@@ -265,7 +265,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 		if (rt.impliesImplicitFlow() && rt.contains(ResponseType.Value.TOKEN) && getAccessTokenHash() == null)
 			return false;
 
-		if (rt.impliesImplicitFlow() && rt.contains(ResponseType.Value.CODE) && getCodeHash() == null)
+		if (rt.impliesCodeFlow() && getCodeHash() == null)
 			return false;
 
 		return true;
