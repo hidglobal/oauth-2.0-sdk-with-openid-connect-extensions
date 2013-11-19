@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
@@ -111,6 +112,20 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 	 */
 	public ResponseType() {
 		
+	}
+
+
+	/**
+	 * Creates a new response type with the specified values.
+	 *
+	 * @param values The values.
+	 */
+	public ResponseType(final Value ... values) {
+
+		if (values == null)
+			return;
+
+		addAll(Arrays.asList(values));
 	}
 	
 	

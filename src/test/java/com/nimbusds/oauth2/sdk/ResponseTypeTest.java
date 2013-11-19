@@ -24,6 +24,25 @@ public class ResponseTypeTest extends TestCase {
 	}
 
 
+	public void testVarargConstructor() {
+
+		ResponseType rts = new ResponseType(ResponseType.Value.CODE, OIDCResponseTypeValue.ID_TOKEN);
+
+		assertTrue(rts.contains(ResponseType.Value.CODE));
+		assertTrue(rts.contains(OIDCResponseTypeValue.ID_TOKEN));
+		assertEquals(2, rts.size());
+	}
+
+
+	public void testVarargConstructorNull() {
+
+		ResponseType rts = new ResponseType(null);
+
+		assertTrue(rts.isEmpty());
+		assertEquals(0, rts.size());
+	}
+
+
 	public void testCodeFlowDetection() {
 
 		ResponseType rts = new ResponseType();
@@ -122,5 +141,11 @@ public class ResponseTypeTest extends TestCase {
 		rt3.add(OIDCResponseTypeValue.ID_TOKEN);
 
 		assertFalse(rtList.contains(rt3));
+	}
+
+
+	public void testValueComparison() {
+
+		assertEquals(ResponseType.Value.CODE, new ResponseType.Value("code"));
 	}
 }
