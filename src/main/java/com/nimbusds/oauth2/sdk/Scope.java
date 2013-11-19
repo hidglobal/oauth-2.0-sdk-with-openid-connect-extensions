@@ -1,16 +1,12 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import net.jcip.annotations.Immutable;
 import net.jcip.annotations.NotThreadSafe;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
-import java.util.Collection;
 
 
 /**
@@ -125,6 +121,20 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 	 */
 	public Scope() {
 		// Nothing to do
+	}
+
+
+	/**
+	 * Creates a new authorisation scope with the specified values.
+	 *
+	 * @param values The values.
+	 */
+	public Scope(final Value ... values) {
+
+		if (values == null)
+			return;
+
+		addAll(Arrays.asList(values));
 	}
 	
 	

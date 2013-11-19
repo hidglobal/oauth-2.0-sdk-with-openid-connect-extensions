@@ -15,6 +15,16 @@ import junit.framework.TestCase;
 public class ScopeTest extends TestCase {
 
 
+	public void testVarargConstructor() {
+
+		Scope scope = new Scope(new Scope.Value("read"), new Scope.Value("write"));
+
+		assertTrue(scope.contains(new Scope.Value("read")));
+		assertTrue(scope.contains(new Scope.Value("write")));
+		assertEquals(2, scope.size());
+	}
+
+
 	public void testRun() {
 
 		Scope scope = new Scope();
@@ -22,6 +32,8 @@ public class ScopeTest extends TestCase {
 		scope.add(new Scope.Value("read"));
 		scope.add(new Scope.Value("write"));
 
+		assertTrue(scope.contains(new Scope.Value("read")));
+		assertTrue(scope.contains(new Scope.Value("write")));
 		assertEquals(2, scope.size());
 
 		String out = scope.toString();
@@ -32,6 +44,8 @@ public class ScopeTest extends TestCase {
 
 		Scope scopeParsed = Scope.parse(out);
 
+		assertTrue(scope.contains(new Scope.Value("read")));
+		assertTrue(scope.contains(new Scope.Value("write")));
 		assertEquals(2, scopeParsed.size());
 
 		assertTrue(scope.equals(scopeParsed));
