@@ -10,6 +10,8 @@ import java.util.Set;
 import javax.mail.internet.InternetAddress;
 
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import junit.framework.TestCase;
 
@@ -280,5 +282,32 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals("123", (String)meta.getCustomField("x-data"));
 		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
 		assertEquals(1, meta.getCustomFields().size());
+	}
+
+
+	public void testApplyDefaults() {
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+
+		assertNull(metadata.getResponseTypes());
+		assertNull(metadata.getGrantTypes());
+		assertNull(metadata.getTokenEndpointAuthMethod());
+		assertNull(metadata.getIDTokenJWSAlg());
+		assertNull(metadata.getApplicationType());
+
+		metadata.applyDefaults();
+
+		assertTrue(metadata.getResponseTypes().contains(ResponseType.getDefault()));
+		assertTrue(metadata.getResponseTypes().contains(new ResponseType(ResponseType.Value.CODE)));
+		assertEquals(1, metadata.getResponseTypes().size());
+
+		assertTrue(metadata.getGrantTypes().contains(GrantType.AUTHORIZATION_CODE));
+		assertEquals(1, metadata.getGrantTypes().size());
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
+
+		assertEquals(JWSAlgorithm.RS256, metadata.getIDTokenJWSAlg());
+
+		assertEquals(ApplicationType.WEB, metadata.getApplicationType());
 	}
 }

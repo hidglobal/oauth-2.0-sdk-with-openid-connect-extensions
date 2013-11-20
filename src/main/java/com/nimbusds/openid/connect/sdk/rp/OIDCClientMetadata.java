@@ -697,6 +697,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *     <li>The client authentication method defaults to 
 	 *         "client_secret_basic".
 	 *     <li>The ID token JWS algorithm defaults to "RS256".
+	 *     <li>The application type defaults to
+	 *         {@link ApplicationType#WEB}.
 	 * </ul>
 	 */
 	@Override
@@ -706,6 +708,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 		
 		if (idTokenJWSAlg == null) {
 			idTokenJWSAlg = JWSAlgorithm.RS256;
+		}
+
+		if (applicationType == null) {
+			applicationType = ApplicationType.WEB;
 		}
 	}
 
