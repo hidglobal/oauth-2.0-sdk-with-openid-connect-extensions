@@ -2,7 +2,10 @@ package com.nimbusds.oauth2.sdk.client;
 
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
@@ -32,13 +35,36 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 2, 3.2 and 5.1.
+ *         (draft-ietf-oauth-dyn-reg-14), sections 2, 3.2 and 5.1.
  * </ul>
  *
  * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class ClientInformation {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<String>(ClientMetadata.getRegisteredParameterNames());
+
+		p.add("client_id");
+		p.add("client_id_issued_at");
+		p.add("registration_access_token");
+		p.add("registration_client_uri");
+		p.add("client_secret");
+		p.add("client_secret_expires_at");
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 
 
 	/**
@@ -125,6 +151,17 @@ public class ClientInformation {
 		this.secret = secret;
 		
 		this.issueDate = issueDate;
+	}
+
+
+	/**
+	 * Gets the registered client metadata parameter names.
+	 *
+	 * @return The registered parameter names, as an unmodifiable set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 
 

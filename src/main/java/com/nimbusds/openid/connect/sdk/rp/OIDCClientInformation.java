@@ -2,7 +2,10 @@ package com.nimbusds.openid.connect.sdk.rp;
 
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
@@ -35,12 +38,30 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 2, 3.2 and 5.1.
+ *         (draft-ietf-oauth-dyn-reg-14), sections 2, 3.2 and 5.1.
  * </ul>
  * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class OIDCClientInformation extends ClientInformation {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<String>(ClientInformation.getRegisteredParameterNames());
+
+		p.addAll(OIDCClientMetadata.getRegisteredParameterNames());
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 
 	
 	/**
@@ -67,6 +88,17 @@ public final class OIDCClientInformation extends ClientInformation {
 				     final Date issueDate) {
 		
 		super(id, registrationURI, accessToken, metadata, secret, issueDate);
+	}
+
+
+	/**
+	 * Gets the registered client metadata parameter names.
+	 *
+	 * @return The registered parameter names, as an unmodifiable set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 	
 	

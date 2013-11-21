@@ -47,23 +47,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * Initialises the registered parameter name set.
 	 */
 	static {
-		Set<String> p = new HashSet<String>();
-
-		// Base OAuth 2.0 client params
-		p.add("redirect_uris");
-		p.add("scope");
-		p.add("response_types");
-		p.add("grant_types");
-		p.add("contacts");
-		p.add("client_name");
-		p.add("logo_uri");
-		p.add("client_uri");
-		p.add("policy_uri");
-		p.add("tos_uri");
-		p.add("token_endpoint_auth_method");
-		p.add("jwks_uri");
-		p.add("software_id");
-		p.add("software_version");
+		// Start with the base OAuth 2.0 client params
+		Set<String> p = new HashSet<String>(ClientMetadata.getRegisteredParameterNames());
 
 		// OIDC params
 		p.add("application_type");
