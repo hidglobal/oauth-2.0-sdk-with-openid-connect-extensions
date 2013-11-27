@@ -1,12 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 import net.jcip.annotations.NotThreadSafe;
 
@@ -123,6 +118,17 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
 	public Prompt() {
 	
 		// Nothing to do
+	}
+
+
+	/**
+	 * Creates a new prompt with the specified types.
+	 *
+	 * @param type The prompt types.
+	 */
+	public Prompt(final Type ... type) {
+
+		addAll(Arrays.asList(type));
 	}
 	
 	

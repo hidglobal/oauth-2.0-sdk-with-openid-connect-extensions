@@ -1,10 +1,11 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import com.nimbusds.oauth2.sdk.ParseException;
 import java.util.List;
 
 import junit.framework.TestCase;
+
+import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
@@ -31,6 +32,20 @@ public class PromptTest extends TestCase {
 		assertTrue(p.contains(Prompt.Type.CONSENT));
 		assertTrue(p.contains(Prompt.Type.LOGIN));
 		assertEquals(2, p.size());
+	}
+
+
+	public void testVarargConstructor() {
+
+		Prompt p = new Prompt(Prompt.Type.LOGIN, Prompt.Type.CONSENT, Prompt.Type.SELECT_ACCOUNT);
+
+		assertTrue(p.contains(Prompt.Type.LOGIN));
+		assertTrue(p.contains(Prompt.Type.CONSENT));
+		assertTrue(p.contains(Prompt.Type.SELECT_ACCOUNT));
+
+		assertEquals(3, p.size());
+
+		assertTrue(p.isValid());
 	}
 	
 	
