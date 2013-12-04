@@ -313,8 +313,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * Sets the pre-registered OpenID Connect request object URIs.
 	 * Corresponds to the {@code request_uris} client metadata field.
 	 *
-	 * @param requestObjectURIs The request object URIs, {@code null} if not
-	 * specified.
+	 * @param requestObjectURIs The request object URIs, {@code null} if
+	 *                          not specified.
 	 */
 	public void setRequestObjectURIs(final Set<URL> requestObjectURIs) {
 

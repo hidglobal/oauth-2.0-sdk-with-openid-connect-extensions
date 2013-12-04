@@ -251,6 +251,23 @@ public class ClientMetadata {
 	
 		this.redirectURIs = redirectURIs;
 	}
+
+
+	/**
+	 * Sets a single redirection URI for this client. Corresponds to the
+	 * {@code redirect_uris} client metadata field.
+	 *
+	 * @param redirectURI The redirection URIs, {@code null} if not
+	 *                    specified.
+	 */
+	public void setRedirectionURI(final URL redirectURI) {
+
+		if (redirectURI != null) {
+			redirectURIs = new HashSet<URL>(Arrays.asList(redirectURI));
+		} else {
+			redirectURIs = null;
+		}
+	}
 	
 	
 	/**

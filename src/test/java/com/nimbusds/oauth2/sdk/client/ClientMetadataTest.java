@@ -231,4 +231,21 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
 		assertEquals(1, meta.getCustomFields().size());
 	}
+
+
+	public void testSetSingleRedirectURI()
+		throws Exception {
+
+		ClientMetadata meta = new ClientMetadata();
+
+		URL uri = new URL("https://client.com/callback");
+
+		meta.setRedirectionURI(uri);
+
+		assertTrue(meta.getRedirectionURIs().contains(uri));
+		assertEquals(1, meta.getRedirectionURIs().size());
+
+		meta.setRedirectionURI(null);
+		assertNull(meta.getRedirectionURIs());
+	}
 }
