@@ -396,9 +396,7 @@ public final class HTTPResponse extends HTTPMessage {
 		if (content != null) {
 		
 			PrintWriter writer = sr.getWriter();
-		
-			writer.println(content);
-			
+			writer.print(content);
 			writer.close();
 		}
 	}

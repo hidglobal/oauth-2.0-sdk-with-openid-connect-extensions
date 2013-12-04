@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
+import javax.mail.internet.ContentType;
 import javax.servlet.http.HttpServletRequest;
 
 import net.jcip.annotations.ThreadSafe;
@@ -358,9 +359,9 @@ public final class HTTPRequest extends HTTPMessage {
 	public HTTPResponse send()
 		throws IOException {
 
-		URL finalURL;
+		URL finalURL = url;
 
-		if (method.equals(HTTPRequest.Method.GET) && query != null) {
+		if (query != null && method.equals(HTTPRequest.Method.GET) || method.equals(Method.DELETE)) {
 
 			// Append query string
 
@@ -371,10 +372,6 @@ public final class HTTPRequest extends HTTPMessage {
 
 				throw new IOException("Couldn't append query string: " + e.getMessage(), e);
 			}
-
-		} else {
-
-			finalURL = url;
 		}
 
 		HttpURLConnection conn = (HttpURLConnection)finalURL.openConnection();
@@ -382,11 +379,12 @@ public final class HTTPRequest extends HTTPMessage {
 		if (authorization != null)
 			conn.setRequestProperty("Authorization", authorization);
 
-		if (method.equals(HTTPRequest.Method.POST)) {
+		if (method.equals(HTTPRequest.Method.POST) || method.equals(Method.PUT)) {
 
 			conn.setDoOutput(true);
-			
-			conn.setRequestProperty("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString());
+
+			if (getContentType() != null)
+				conn.setRequestProperty("Content-Type", getContentType().toString());
 
 			if (query != null) {
 
