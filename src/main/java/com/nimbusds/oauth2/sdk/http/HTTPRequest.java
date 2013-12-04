@@ -361,7 +361,7 @@ public final class HTTPRequest extends HTTPMessage {
 
 		URL finalURL = url;
 
-		if (query != null && method.equals(HTTPRequest.Method.GET) || method.equals(Method.DELETE)) {
+		if (query != null && (method.equals(HTTPRequest.Method.GET) || method.equals(Method.DELETE))) {
 
 			// Append query string
 
@@ -379,6 +379,8 @@ public final class HTTPRequest extends HTTPMessage {
 		if (authorization != null)
 			conn.setRequestProperty("Authorization", authorization);
 
+		conn.setRequestMethod(method.name());
+
 		if (method.equals(HTTPRequest.Method.POST) || method.equals(Method.PUT)) {
 
 			conn.setDoOutput(true);
@@ -393,7 +395,6 @@ public final class HTTPRequest extends HTTPMessage {
 				writer.flush();	
 			}
 		}
-
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
        
@@ -423,7 +424,6 @@ public final class HTTPRequest extends HTTPMessage {
 
 				throw new IOException("Couldn't parse Location header: " + e.getMessage(), e);
 			}
-			
 		}
 
 
