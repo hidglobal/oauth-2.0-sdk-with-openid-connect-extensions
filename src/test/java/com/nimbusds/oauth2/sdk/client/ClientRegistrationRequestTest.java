@@ -1,15 +1,21 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
+import java.net.URL;
+import java.util.List;
+import java.util.Set;
+
+import junit.framework.TestCase;
+
+import net.minidev.json.JSONObject;
+
 import com.nimbusds.langtag.LangTag;
+
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import java.net.URL;
-import java.util.Set;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
 /**
@@ -17,11 +23,54 @@ import static org.junit.Assert.*;
  * 
  * @author Vladimir Dzhuvinov
  */
-public class ClientRegistrationRequestTest {
+public class ClientRegistrationRequestTest extends TestCase {
+
+
+	@SuppressWarnings("unchecked")
+	public void testSerializeAndParse()
+		throws Exception {
+
+		URL uri = new URL("https://c2id.com/client-reg");
+
+		ClientMetadata metadata = new ClientMetadata();
+		metadata.setName("My test app");
+		metadata.setRedirectionURI(new URL("https://client.com/callback"));
+		metadata.applyDefaults();
+
+		BearerAccessToken accessToken = new BearerAccessToken();
+
+		ClientRegistrationRequest request = new ClientRegistrationRequest(uri, metadata, accessToken);
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		assertEquals(uri.toString(), httpRequest.getURL().toString());
+		assertTrue(httpRequest.getContentType().toString().startsWith("application/json"));
+
+		JSONObject jsonObject = httpRequest.getQueryAsJSONObject();
+
+		System.out.println(jsonObject);
+
+		List<String> stringList = (List<String>)jsonObject.get("redirect_uris");
+		assertEquals(metadata.getRedirectionURIs().iterator().next().toString(), stringList.get(0));
+		assertEquals(metadata.getName(), (String) jsonObject.get("client_name"));
+		assertEquals("client_secret_basic", (String)jsonObject.get("token_endpoint_auth_method"));
+		stringList = (List<String>)jsonObject.get("response_types");
+		assertEquals("code", stringList.get(0));
+		stringList = (List<String>)jsonObject.get("grant_types");
+		assertEquals("authorization_code", stringList.get(0));
+
+		request = ClientRegistrationRequest.parse(httpRequest);
+
+		assertEquals(metadata.getName(), request.getClientMetadata().getName());
+		assertEquals(metadata.getRedirectionURIs().iterator().next().toString(), request.getClientMetadata().getRedirectionURIs().iterator().next().toString());
+		assertEquals(metadata.getTokenEndpointAuthMethod(), request.getClientMetadata().getTokenEndpointAuthMethod());
+		assertEquals("code", request.getClientMetadata().getResponseTypes().iterator().next().toString());
+		assertEquals("authorization_code", request.getClientMetadata().getGrantTypes().iterator().next().toString());
+	}
 	
-	
-	@Test
-	public void testParse() throws Exception {
+
+	public void testParse()
+		throws Exception {
 		
 		URL uri = new URL("https://server.example.com/register/");
 		
