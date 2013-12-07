@@ -364,9 +364,12 @@ public final class HTTPRequest extends HTTPMessage {
 		if (query != null && (method.equals(HTTPRequest.Method.GET) || method.equals(Method.DELETE))) {
 
 			// Append query string
+			StringBuilder sb = new StringBuilder(url.toString());
+			sb.append('?');
+			sb.append(query);
 
 			try {
-				finalURL = new URL(url.toString() + "?" + query);
+				finalURL = new URL(sb.toString());
 
 			} catch (MalformedURLException e) {
 
@@ -389,10 +392,9 @@ public final class HTTPRequest extends HTTPMessage {
 				conn.setRequestProperty("Content-Type", getContentType().toString());
 
 			if (query != null) {
-
 				OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 				writer.write(query);
-				writer.flush();	
+				writer.close();
 			}
 		}
 
