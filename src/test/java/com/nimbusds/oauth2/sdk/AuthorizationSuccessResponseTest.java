@@ -16,8 +16,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 /**
  * Tests authorisation response serialisation and parsing.
- *
- * @author Vladimir Dzhuvinov
  */
 public class AuthorizationSuccessResponseTest extends TestCase {
 	

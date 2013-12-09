@@ -20,8 +20,6 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 4.1.3.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class AuthorizationCodeGrant extends AuthorizationGrant {

@@ -6,8 +6,6 @@ import net.jcip.annotations.Immutable;
 
 /**
  * Subject identifier. This class is immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class Subject extends Identifier {

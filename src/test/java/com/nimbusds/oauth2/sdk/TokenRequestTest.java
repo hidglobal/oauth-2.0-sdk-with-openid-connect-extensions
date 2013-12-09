@@ -9,13 +9,10 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import com.nimbusds.oauth2.sdk.token.RefreshToken;
 
 
 /**
  * Tests access and refresh token request serialisation and parsing.
- *
- * @author Vladimir Dzhuvinov
  */
 public class TokenRequestTest extends TestCase {
 	

@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the OAuth 2.0 error constants.
- *
- * @author Vladimir Dzhuvinov
  */
 public class OAuth2ErrorTest extends TestCase {
 

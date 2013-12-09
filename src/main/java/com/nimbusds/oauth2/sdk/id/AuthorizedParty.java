@@ -6,8 +6,6 @@ import net.jcip.annotations.Immutable;
 
 /**
  * Authorised party. This class is immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class AuthorizedParty extends Identifier {

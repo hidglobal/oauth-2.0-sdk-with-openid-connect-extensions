@@ -10,8 +10,6 @@ package com.nimbusds.oauth2.sdk.id;
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol
  *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class SoftwareVersion extends Identifier {
 

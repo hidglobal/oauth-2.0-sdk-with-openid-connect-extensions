@@ -17,8 +17,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 1.5.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class RefreshToken

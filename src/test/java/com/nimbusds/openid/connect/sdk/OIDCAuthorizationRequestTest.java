@@ -18,8 +18,6 @@ import com.nimbusds.openid.connect.sdk.claims.*;
 
 /**
  * Tests the OIDC authorisation request class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCAuthorizationRequestTest extends TestCase {
 

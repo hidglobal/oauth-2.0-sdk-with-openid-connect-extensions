@@ -25,10 +25,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <p>Related specifications:
  *
  * <ul>
- * <li>OAuth 2.0 (RFC 6749), section 3.3.
+ *     <li>OAuth 2.0 (RFC 6749), section 3.3.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @NotThreadSafe
 public class Scope extends LinkedHashSet<Scope.Value> {

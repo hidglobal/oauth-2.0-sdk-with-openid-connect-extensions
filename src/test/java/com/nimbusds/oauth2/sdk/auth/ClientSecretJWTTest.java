@@ -18,8 +18,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the client secret JWT authentication class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ClientSecretJWTTest extends TestCase {
 

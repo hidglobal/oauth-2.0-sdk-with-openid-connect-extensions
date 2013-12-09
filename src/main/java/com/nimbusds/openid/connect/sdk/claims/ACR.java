@@ -24,8 +24,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *     <li>RFC 6711
  *     <li>See ISO/IEC DIS 29115
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class ACR extends Identifier {

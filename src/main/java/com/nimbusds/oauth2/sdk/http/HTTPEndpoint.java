@@ -3,8 +3,6 @@ package com.nimbusds.oauth2.sdk.http;
 
 /**
  * HTTP endpoint.
- *
- * @author Vladimir Dzhuvinov
  */
 public interface HTTPEndpoint {
 

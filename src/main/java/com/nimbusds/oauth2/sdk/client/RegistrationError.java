@@ -7,8 +7,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 /**
  * OAuth 2.0 client registration errors.
- * 
- * @author Vladimir Dzhuvinov
  */
 public final class RegistrationError {
 	
@@ -35,5 +33,4 @@ public final class RegistrationError {
 	 * Prevents public instantiation.
 	 */
 	private RegistrationError() { }
-	
 }

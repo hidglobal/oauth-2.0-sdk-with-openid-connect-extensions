@@ -3,8 +3,6 @@ package com.nimbusds.oauth2.sdk;
 
 /**
  * Serialization exception.
- *
- * @author Vladimir Dzhuvinov
  */
 public class SerializeException extends GeneralException {
 

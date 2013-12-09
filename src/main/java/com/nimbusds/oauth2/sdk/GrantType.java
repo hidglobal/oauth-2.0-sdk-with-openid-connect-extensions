@@ -8,8 +8,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 /**
  * Authorisation grant type. This class is immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class GrantType extends Identifier {

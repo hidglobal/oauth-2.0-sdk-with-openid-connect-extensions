@@ -7,8 +7,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 /**
  * OpenID Connect specific errors.
- *
- * @author Vladimir Dzhuvinov
  */
 public final class OIDCError {
 

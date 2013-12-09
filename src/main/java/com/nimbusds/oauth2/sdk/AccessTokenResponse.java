@@ -37,8 +37,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.4, 4.3.3,  4.4.3 and 5.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class AccessTokenResponse 

@@ -21,8 +21,6 @@ import java.util.Map;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 1.3.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public abstract class AuthorizationGrant {
 

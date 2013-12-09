@@ -35,8 +35,6 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
  * <ul>
  *     <li>OpenID Connect Messages, section 2.6.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class ClaimsRequest {
 

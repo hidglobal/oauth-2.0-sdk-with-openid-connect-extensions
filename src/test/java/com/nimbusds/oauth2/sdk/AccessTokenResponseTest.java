@@ -14,8 +14,6 @@ import com.nimbusds.oauth2.sdk.token.TokenPair;
 
 /**
  * Tests access token response serialisation and parsing.
- *
- * @author Vladimir Dzhuvinov
  */
 public class AccessTokenResponseTest extends TestCase {
 	

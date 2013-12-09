@@ -9,8 +9,6 @@ import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
 
 /**
  * The base abstract class for HTTP requests and responses.
- *
- * @author Vladimir Dzhuvinov
  */
 abstract class HTTPMessage {
 

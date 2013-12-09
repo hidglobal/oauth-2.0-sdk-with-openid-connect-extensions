@@ -6,8 +6,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 /**
  * Response message, serialises to an HTTP response.
- *
- * @author Vladimir Dzhuvinov
  */
 public interface Response extends Message {
 

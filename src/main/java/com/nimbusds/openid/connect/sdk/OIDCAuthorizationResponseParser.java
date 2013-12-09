@@ -17,8 +17,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, sections 2.1.2 and 2.1.3.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCAuthorizationResponseParser { 
 

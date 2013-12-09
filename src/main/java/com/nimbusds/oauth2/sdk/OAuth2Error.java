@@ -11,8 +11,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * HTTP redirection. Errors that are only used by at the authorisation endpoint
  * are supplied with a matching HTTP status code in case they are used in a
  * different context.
- *
- * @author Vladimir Dzhuvinov
  */
 public final class OAuth2Error {
 

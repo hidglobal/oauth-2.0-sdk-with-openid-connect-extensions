@@ -13,8 +13,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the URL utility methods.
- *
- * @author Vladimir Dzhuvinov
  */
 public class URLUtilsTest extends TestCase {
 	

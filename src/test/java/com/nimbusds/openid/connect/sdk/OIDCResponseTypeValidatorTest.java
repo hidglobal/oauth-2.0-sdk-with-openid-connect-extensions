@@ -7,8 +7,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the OIDC response type validator.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class OIDCResponseTypeValidatorTest extends TestCase {
 

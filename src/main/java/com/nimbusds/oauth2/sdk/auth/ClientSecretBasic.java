@@ -34,8 +34,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  *     <li>HTTP Authentication: Basic and Digest Access Authentication 
  *         (RFC 2617).
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class ClientSecretBasic extends ClientAuthentication {

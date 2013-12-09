@@ -20,8 +20,6 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 6.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class RefreshTokenGrant extends AuthorizationGrant {

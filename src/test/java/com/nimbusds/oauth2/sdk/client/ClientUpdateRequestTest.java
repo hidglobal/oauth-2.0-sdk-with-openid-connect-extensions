@@ -16,8 +16,6 @@ import java.util.Set;
 
 /**
  * Tests the client update request class.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class ClientUpdateRequestTest {
 	

@@ -14,8 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * Secret or password. The secret should be {@link #erase erased} when no 
  * longer in use.
- *
- * @author Vladimir Dzhuvinov
  */
 public final class Secret {
 	

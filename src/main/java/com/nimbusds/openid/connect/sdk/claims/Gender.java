@@ -11,8 +11,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * are {@link #FEMALE} and {@link #MALE} ({@code gender}). Other values may be
  * used when neither of the defined values are applicable. This class is
  * immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class Gender extends Identifier {

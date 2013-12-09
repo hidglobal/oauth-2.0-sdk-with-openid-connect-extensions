@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the software ID class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class SoftwareIDTest extends TestCase {
 

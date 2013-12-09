@@ -45,8 +45,6 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
  *     <li>OpenID Connect Messages 1.0, section 2.3.2.
  *     <li>OpenID Connect Standard 1.0, section 4.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class UserInfoSuccessResponse 

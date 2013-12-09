@@ -3,14 +3,13 @@ package com.nimbusds.openid.connect.sdk.id;
 
 import java.nio.charset.Charset;
 
-import com.nimbusds.oauth2.sdk.id.Subject;
 import junit.framework.TestCase;
+
+import com.nimbusds.oauth2.sdk.id.Subject;
 
 
 /**
  * Tests the SHA-256 based generator of pairwise subject identifiers.
- *
- * @author Vladimir Dzhuvinov
  */
 public class HashingSubjectIdentifierGeneratorTest extends TestCase {
 

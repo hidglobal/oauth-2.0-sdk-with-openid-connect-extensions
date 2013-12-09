@@ -15,8 +15,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 1.3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class AuthorizationCode extends Identifier {

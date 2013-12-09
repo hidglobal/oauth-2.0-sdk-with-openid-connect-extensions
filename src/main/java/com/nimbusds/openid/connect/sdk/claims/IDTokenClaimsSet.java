@@ -43,8 +43,6 @@ import com.nimbusds.openid.connect.sdk.Nonce;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class IDTokenClaimsSet extends ClaimsSet {
 

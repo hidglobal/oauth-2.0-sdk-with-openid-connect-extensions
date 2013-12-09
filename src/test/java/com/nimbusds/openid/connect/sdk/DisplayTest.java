@@ -8,8 +8,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * Tests the Display class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class DisplayTest extends TestCase {
 

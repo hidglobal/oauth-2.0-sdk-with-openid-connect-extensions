@@ -11,8 +11,6 @@ import com.nimbusds.oauth2.sdk.id.State;
 
 /**
  * Tests the general exception class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class GeneralExceptionTest extends TestCase {
 

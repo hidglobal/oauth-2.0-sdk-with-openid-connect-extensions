@@ -6,8 +6,6 @@ import java.net.URL;
 
 /**
  * The base abstract class for requests.
- * 
- * @author Vladimir Dzhuvinov
  */
 public abstract class AbstractRequest implements Request {
 	

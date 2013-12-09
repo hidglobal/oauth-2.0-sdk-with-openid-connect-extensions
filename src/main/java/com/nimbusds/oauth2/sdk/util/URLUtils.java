@@ -7,15 +7,12 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 
 /**
  * URL operations.
- *
- * @author Vladimir Dzhuvinov
  */
 public class URLUtils {
 
@@ -81,11 +78,7 @@ public class URLUtils {
 		
 		StringBuilder sb = new StringBuilder();
 		
-		Iterator <Map.Entry<String,String>> it = params.entrySet().iterator();
-		
-		while (it.hasNext()) {
-		
-			Map.Entry<String,String> entry = it.next();
+		for (Map.Entry<String,String> entry: params.entrySet()) {
 			
 			if (entry.getKey() == null || entry.getValue() == null)
 				continue;

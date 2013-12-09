@@ -34,8 +34,6 @@ import com.nimbusds.jwt.SignedJWT;
  * </ul>
  *
  * <p>Not supported: JWS-signed and then JWE-encrypted (nested) objects.
- *
- * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
 public class DefaultJWTDecoder implements JWTDecoder {

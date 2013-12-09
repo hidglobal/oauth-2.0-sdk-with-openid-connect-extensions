@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the base abstract JWT authentication class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class JWTAuthenticationTest extends TestCase {
 

@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests client authentication method class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ClientAuthenticationMethodTest extends TestCase {
 

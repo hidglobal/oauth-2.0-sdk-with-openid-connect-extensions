@@ -7,8 +7,6 @@ import java.net.URL;
 
 /**
  * Retriever of resources specified by URL.
- *
- * @author Vladimir Dzhuvinov
  */
 public interface ResourceRetriever {
 

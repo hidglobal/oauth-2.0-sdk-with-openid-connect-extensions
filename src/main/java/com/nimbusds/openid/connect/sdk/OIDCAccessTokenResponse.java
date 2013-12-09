@@ -52,8 +52,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *     <li>OpenID Connect Standard 1.0, section 3.1.2.
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.4 and 5.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class OIDCAccessTokenResponse 

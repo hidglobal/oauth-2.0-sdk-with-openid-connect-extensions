@@ -49,8 +49,6 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.9.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
 public class OIDCAuthorizationRequestResolver {

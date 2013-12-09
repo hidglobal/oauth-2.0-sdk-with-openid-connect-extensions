@@ -61,8 +61,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *         (draft-ietf-oauth-dyn-reg-14), section 5.2.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class ClientRegistrationErrorResponse 

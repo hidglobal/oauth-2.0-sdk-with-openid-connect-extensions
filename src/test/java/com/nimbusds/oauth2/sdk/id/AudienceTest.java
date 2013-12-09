@@ -8,8 +8,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the audience class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class AudienceTest extends TestCase {
 

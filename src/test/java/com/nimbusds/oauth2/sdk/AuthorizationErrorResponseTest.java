@@ -15,8 +15,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Tests authorisation error response serialisation and parsing.
- *
- * @author Vladimir Dzhuvinov
  */
 public class AuthorizationErrorResponseTest extends TestCase {
 	

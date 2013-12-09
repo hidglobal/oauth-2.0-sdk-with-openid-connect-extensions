@@ -8,8 +8,6 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Tests random state value generation.
- *
- * @author Vladimir Dzhuvinov
  */
 public class StateTest extends TestCase {
 	

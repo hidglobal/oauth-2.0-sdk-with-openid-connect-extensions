@@ -18,8 +18,6 @@ import net.jcip.annotations.Immutable;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 2.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class ClientID extends Identifier {

@@ -18,8 +18,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class AMR extends Identifier {

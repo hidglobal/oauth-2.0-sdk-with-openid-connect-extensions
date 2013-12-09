@@ -16,8 +16,6 @@ import net.jcip.annotations.Immutable;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 4.4.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class ClientCredentialsGrant extends AuthorizationGrant {

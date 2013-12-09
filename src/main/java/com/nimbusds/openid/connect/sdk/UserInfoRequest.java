@@ -32,8 +32,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  *     <li>OpenID Connect Standard 1.0, section 4.1.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC6750), section 2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class UserInfoRequest extends ProtectedResourceRequest {

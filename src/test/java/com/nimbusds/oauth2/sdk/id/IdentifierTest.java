@@ -7,8 +7,6 @@ import static org.junit.Assert.*;
 
 /**
  * Tests the base Identifier class.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class IdentifierTest {
 	

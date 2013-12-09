@@ -2,7 +2,6 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.net.URL;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
@@ -35,8 +34,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.3, 4.3.2, 4.4.2 and 6.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class TokenRequest extends AbstractRequest {
 

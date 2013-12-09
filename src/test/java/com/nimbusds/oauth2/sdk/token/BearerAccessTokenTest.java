@@ -12,8 +12,6 @@ import org.apache.commons.codec.binary.Base64;
 
 /**
  * Tests the bearer access token class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class BearerAccessTokenTest extends TestCase {
 

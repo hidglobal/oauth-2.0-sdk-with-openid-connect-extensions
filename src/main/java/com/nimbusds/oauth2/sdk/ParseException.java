@@ -9,8 +9,6 @@ import com.nimbusds.oauth2.sdk.id.State;
 
 /**
  * Parse exception.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ParseException extends GeneralException {
 

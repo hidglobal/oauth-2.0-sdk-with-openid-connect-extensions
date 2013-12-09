@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the software version class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class SoftwareVersionTest extends TestCase {
 

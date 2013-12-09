@@ -43,8 +43,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *     <li>Pragma
  *     <li>Www-Authenticate
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
 public final class HTTPResponse extends HTTPMessage {

@@ -22,8 +22,6 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.4.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCScopeValue extends Scope.Value {
 

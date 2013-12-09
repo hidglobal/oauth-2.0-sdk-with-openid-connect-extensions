@@ -14,8 +14,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * Tests the JSON object utility methods.
- *
- * @author Vladimir Dzhuvinov
  */
 public class JSONObjectUtilsTest extends TestCase {
 	

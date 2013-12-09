@@ -11,8 +11,6 @@ import com.nimbusds.oauth2.sdk.id.State;
 
 /**
  * Resolve exception.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ResolveException extends GeneralException {
 

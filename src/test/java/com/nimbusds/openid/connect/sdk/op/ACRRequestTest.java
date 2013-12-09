@@ -1,6 +1,12 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import junit.framework.TestCase;
+
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -12,22 +18,14 @@ import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
 import com.nimbusds.openid.connect.sdk.Prompt;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 
 /**
  * Tests the ACR request class.
- * 
- * @author Vladimir Dzhuvinov
  */
-public class ACRRequestTest {
+public class ACRRequestTest extends TestCase {
 	
 	
-	@Test
 	public void testConstructAndGet() {
 		
 		List<ACR> essentialACRs = new ArrayList<ACR>();
@@ -46,7 +44,6 @@ public class ACRRequestTest {
 	}
 	
 	
-	@Test
 	public void testConstructAndGetNull() {
 		
 		ACRRequest req = new ACRRequest(null, null);
@@ -56,7 +53,6 @@ public class ACRRequestTest {
 	}
 	
 	
-	@Test
 	public void testResolveNone()
 		throws Exception {
 		
@@ -82,7 +78,6 @@ public class ACRRequestTest {
 	}
 	
 	
-	@Test
 	public void testResolveTopLevelACRRequest()
 		throws Exception {
 		
@@ -121,7 +116,6 @@ public class ACRRequestTest {
 	}
 	
 	
-	@Test
 	public void testResolveClaimsLevelEssentialACRRequest()
 		throws Exception {
 		
@@ -161,7 +155,6 @@ public class ACRRequestTest {
 	}
 	
 	
-	@Test
 	public void testResolveClaimsLevelVoluntaryACRRequest()
 		throws Exception {
 		
@@ -201,7 +194,6 @@ public class ACRRequestTest {
 	}
 	
 	
-	@Test
 	public void testResolveMixedACRRequest()
 		throws Exception {
 		

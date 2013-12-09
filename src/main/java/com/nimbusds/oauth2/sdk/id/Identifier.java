@@ -17,8 +17,6 @@ import net.minidev.json.JSONValue;
  * identifier values.
  *
  * <p>Extending classes must override the {@link #equals} method.
- *
- * @author Vladimir Dzhuvinov
  */
 public abstract class Identifier implements JSONAware {
 	

@@ -14,8 +14,6 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 /**
  *  Resolved authentication Context Class Reference (ACR) request.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable 
 public final class ACRRequest {

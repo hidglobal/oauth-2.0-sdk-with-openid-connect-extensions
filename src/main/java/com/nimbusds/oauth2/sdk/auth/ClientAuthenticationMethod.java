@@ -25,8 +25,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 2.3.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class ClientAuthenticationMethod extends Identifier {

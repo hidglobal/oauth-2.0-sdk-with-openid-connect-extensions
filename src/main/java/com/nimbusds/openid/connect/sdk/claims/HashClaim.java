@@ -15,8 +15,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 /**
  * The base class for SHA-2 based claims.
- *
- * @author Vladimir Dzhuvinov
  */
 public abstract class HashClaim extends Identifier {
 

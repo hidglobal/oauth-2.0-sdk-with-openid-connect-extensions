@@ -44,8 +44,6 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
  *     <li>OpenID Connect Standard 1.0, section 4.3.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class UserInfoErrorResponse 

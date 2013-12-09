@@ -12,8 +12,6 @@ import net.jcip.annotations.Immutable;
  *
  * <p>Valid issuer identifiers are URLs with "https" schema and no query or
  * fragment component.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class Issuer extends Identifier {

@@ -38,8 +38,6 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimType;
  * <ul>
  *     <li>OpenID Connect Discovery 1.0, section 3.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCProviderMetadata {
 

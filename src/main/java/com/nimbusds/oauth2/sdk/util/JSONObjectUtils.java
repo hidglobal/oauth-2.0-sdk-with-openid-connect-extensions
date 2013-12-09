@@ -17,8 +17,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * JSON object helper methods for parsing and typed retrieval of member values.
- *
- * @author Vladimir Dzhuvinov
  */
 public class JSONObjectUtils {
 	
@@ -34,11 +32,8 @@ public class JSONObjectUtils {
 	 *         specified key, else {@code false}.
 	 */
 	public static boolean containsKey(final JSONObject jsonObject, final String key) {
-	
-		if (jsonObject != null && jsonObject.containsKey(key))
-			return true;
-		else 
-			return false;
+
+		return jsonObject != null && jsonObject.containsKey(key);
 	}
 	
 	

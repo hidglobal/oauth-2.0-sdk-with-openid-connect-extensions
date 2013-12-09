@@ -15,8 +15,6 @@ import net.jcip.annotations.Immutable;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 1.4 and 5.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class TypelessAccessToken extends AccessToken {

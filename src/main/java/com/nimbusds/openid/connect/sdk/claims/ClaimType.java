@@ -13,8 +13,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  *     <li>OpenID Connect Messages 1.0, section 2.7.
  *     <li>OpenID Connect Discovery, section 3.
  * </ul>
- * 
- * @author Vladimir Dzhuvinov
  */
 public enum ClaimType {
 	

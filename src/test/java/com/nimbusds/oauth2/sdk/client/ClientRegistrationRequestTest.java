@@ -20,8 +20,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 /**
  * Tests the client registration request class.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class ClientRegistrationRequestTest extends TestCase {
 

@@ -48,8 +48,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
  *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
- * 
- * @author Vladimir Dzhuvinov
  */
 public class ClientMetadata {
 

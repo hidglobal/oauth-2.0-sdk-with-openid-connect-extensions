@@ -19,8 +19,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.5.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class Address extends ClaimsSet {
 

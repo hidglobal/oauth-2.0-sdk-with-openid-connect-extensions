@@ -30,8 +30,6 @@ import net.minidev.json.JSONObject;
 
 /**
  * Tests the OIDC provider metadata class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCProviderMetadataTest extends TestCase {
 

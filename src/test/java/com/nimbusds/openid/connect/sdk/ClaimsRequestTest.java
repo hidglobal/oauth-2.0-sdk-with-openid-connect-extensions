@@ -20,8 +20,6 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 /**
  * Tests the claims request class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ClaimsRequestTest extends TestCase {
 	

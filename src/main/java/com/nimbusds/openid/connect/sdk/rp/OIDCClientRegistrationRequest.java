@@ -52,8 +52,6 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
  *         (draft-ietf-oauth-dyn-reg-14), section 3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class OIDCClientRegistrationRequest extends ClientRegistrationRequest {

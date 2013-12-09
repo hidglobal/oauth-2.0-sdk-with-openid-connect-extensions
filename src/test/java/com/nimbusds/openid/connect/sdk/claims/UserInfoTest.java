@@ -13,8 +13,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the UserInfo claims set.
- *
- * @author Vladimir Dzhuvinov
  */
 public class UserInfoTest extends TestCase {
 

@@ -24,8 +24,6 @@ import com.nimbusds.oauth2.sdk.id.Subject;
  * <ul>
  *     <li>OpenID Connect Messages, section 2.8.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public final class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifierGenerator {
 

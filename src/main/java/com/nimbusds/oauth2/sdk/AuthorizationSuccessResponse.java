@@ -40,8 +40,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.2 and 4.2.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class AuthorizationSuccessResponse 

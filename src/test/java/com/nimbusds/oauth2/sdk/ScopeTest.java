@@ -9,8 +9,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the scope class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ScopeTest extends TestCase {
 

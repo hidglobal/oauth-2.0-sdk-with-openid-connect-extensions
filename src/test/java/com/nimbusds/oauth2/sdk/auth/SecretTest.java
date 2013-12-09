@@ -8,8 +8,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the secret / password class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class SecretTest extends TestCase {
 

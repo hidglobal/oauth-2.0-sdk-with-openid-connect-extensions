@@ -1,5 +1,14 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
+
+import java.net.URL;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.mail.internet.InternetAddress;
+
+import junit.framework.TestCase;
+
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.langtag.LangTag;
@@ -7,24 +16,14 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.openid.connect.sdk.SubjectType;
-import java.net.URL;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import javax.mail.internet.InternetAddress;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 
 /**
  * Tests the OIDC client registration class.
- * 
- * @author Vladimir Dzhuvinov
  */
-public class OIDCClientRegistrationRequestTest {
+public class OIDCClientRegistrationRequestTest extends TestCase {
 	
 	
-	@Test
 	public void testRoundtrip() throws Exception {
 		
 		URL uri = new URL("https://server.example.com/connect/register");
@@ -80,7 +79,6 @@ public class OIDCClientRegistrationRequestTest {
 	}
 		
 	
-	@Test
 	public void testParse() throws Exception {
 		
 		URL uri = new URL("https://server.example.com/connect/register");

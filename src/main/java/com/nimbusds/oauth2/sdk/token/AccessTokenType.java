@@ -8,8 +8,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 /**
  * Access token type. This class is immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class AccessTokenType extends Identifier {

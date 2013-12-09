@@ -16,8 +16,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the client information class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ClientInformationTest extends TestCase {
 

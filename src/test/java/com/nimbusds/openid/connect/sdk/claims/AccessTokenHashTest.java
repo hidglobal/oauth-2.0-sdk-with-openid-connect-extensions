@@ -11,8 +11,6 @@ import com.nimbusds.oauth2.sdk.token.TypelessAccessToken;
 
 /**
  * Tests the access token hash.
- *
- * @author Vladimir Dzhuvinov
  */
 public class AccessTokenHashTest extends TestCase {
 

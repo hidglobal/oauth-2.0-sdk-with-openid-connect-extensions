@@ -50,8 +50,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>OpenID Connect Messages 1.0, section 2.1.2.
  *     <li>OpenID Connect Standard 1.0, section 2.3.5.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class OIDCAuthorizationSuccessResponse 

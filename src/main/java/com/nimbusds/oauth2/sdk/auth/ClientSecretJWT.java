@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.nimbusds.jose.JWSObject;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -39,8 +38,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
  *         (draft-ietf-oauth-jwt-bearer-06).
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class ClientSecretJWT extends JWTAuthentication {

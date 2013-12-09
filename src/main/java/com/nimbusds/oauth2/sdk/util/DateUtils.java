@@ -6,8 +6,6 @@ import java.util.Date;
 
 /**
  * Date utilities.
- *
- * @author Vladimir Dzhuvinov
  */
 public class DateUtils {
 

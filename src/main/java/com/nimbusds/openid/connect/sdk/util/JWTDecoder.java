@@ -13,8 +13,6 @@ import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
  * secured by means of JSON Web Signature (JWS) and / or JSON Web Encryption 
  * (JWE). If the object is secured performs the necessary JWS validation and /
  * or JWE decryption.
- *
- * @author Vladimir Dzhuvinov
  */
 public interface JWTDecoder {
 

@@ -27,8 +27,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 /**
  * Tests the OAuth 2.0 client metadata class.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class ClientMetadataTest extends TestCase {
 

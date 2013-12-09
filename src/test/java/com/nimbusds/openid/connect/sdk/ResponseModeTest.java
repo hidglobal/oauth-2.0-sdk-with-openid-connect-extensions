@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the response mode class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ResponseModeTest extends TestCase {
 

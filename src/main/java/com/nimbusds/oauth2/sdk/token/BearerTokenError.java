@@ -44,8 +44,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <ul>
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class BearerTokenError extends ErrorObject {
@@ -351,7 +349,7 @@ public class BearerTokenError extends ErrorObject {
 		if (! wwwAuth.regionMatches(true, 0, "Bearer", 0, "Bearer".length()))
 			throw new ParseException("WWW-Authenticate scheme must be OAuth 2.0 Bearer");
 		
-		Matcher m = null;
+		Matcher m;
 		
 		// Parse optional realm
 		m = realmPattern.matcher(wwwAuth);

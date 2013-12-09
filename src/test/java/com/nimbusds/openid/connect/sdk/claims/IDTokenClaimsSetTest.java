@@ -27,8 +27,6 @@ import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
 
 /**
  * Tests the ID token claims set.
- *
- * @author Vladimir Dzhuvinov
  */
 public class IDTokenClaimsSetTest extends TestCase {
 

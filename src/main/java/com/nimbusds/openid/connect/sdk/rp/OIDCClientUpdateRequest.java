@@ -1,5 +1,14 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
+
+import java.net.URL;
+
+import net.jcip.annotations.Immutable;
+
+import net.minidev.json.JSONObject;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.client.ClientUpdateRequest;
@@ -7,10 +16,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import java.net.URL;
-import net.jcip.annotations.Immutable;
-import net.minidev.json.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -49,8 +54,6 @@ import org.apache.commons.lang3.StringUtils;
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
  *         (draft-ietf-oauth-dyn-reg-14), section 4.3.
  * </ul>
- * 
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class OIDCClientUpdateRequest extends ClientUpdateRequest {

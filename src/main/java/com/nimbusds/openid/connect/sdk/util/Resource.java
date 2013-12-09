@@ -8,8 +8,6 @@ import net.jcip.annotations.Immutable;
 
 /**
  * Resource with optional associated content type. This class is immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class Resource {

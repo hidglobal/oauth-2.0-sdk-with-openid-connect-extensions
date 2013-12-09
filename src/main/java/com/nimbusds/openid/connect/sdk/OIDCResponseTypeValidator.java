@@ -6,8 +6,6 @@ import com.nimbusds.oauth2.sdk.ResponseType;
 
 /**
  * OpenID Connect response type validator.
- * 
- * @author Vladimir Dzhuvinov
  */
 class OIDCResponseTypeValidator {
 	

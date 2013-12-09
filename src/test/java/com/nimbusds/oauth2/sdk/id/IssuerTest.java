@@ -9,8 +9,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the issuer identifier class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class IssuerTest extends TestCase {
 

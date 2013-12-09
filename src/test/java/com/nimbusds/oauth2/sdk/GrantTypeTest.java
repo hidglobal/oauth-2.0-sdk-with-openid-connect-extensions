@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the grant type class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class GrantTypeTest extends TestCase {
 

@@ -10,8 +10,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * Tests the prompt class.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class PromptTest extends TestCase {
 

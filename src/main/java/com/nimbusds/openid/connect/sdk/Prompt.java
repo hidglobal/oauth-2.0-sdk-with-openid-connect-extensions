@@ -19,8 +19,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.1.
  * </ul>
- * 
- * @author Vladimir Dzhuvinov
  */
 @NotThreadSafe
 public class Prompt extends LinkedHashSet<Prompt.Type> {
@@ -139,11 +137,8 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
 	 * @return {@code true} if this prompt if valid, else {@code false}.
 	 */
 	public boolean isValid() {
-	
-		if (size() > 1 && contains(Type.NONE))
-			return false;
-		else
-			return true;
+
+		return !(size() > 1 && contains(Type.NONE));
 	}
 	
 	

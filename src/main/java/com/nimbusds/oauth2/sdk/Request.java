@@ -8,8 +8,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 /**
  * Request message, serialises to an HTTP request.
- *
- * @author Vladimir Dzhuvinov
  */
 public interface Request extends Message {
 

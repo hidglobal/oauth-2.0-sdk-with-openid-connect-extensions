@@ -18,8 +18,6 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 4.3.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {

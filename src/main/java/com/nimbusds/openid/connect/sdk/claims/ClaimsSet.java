@@ -22,8 +22,6 @@ import com.nimbusds.oauth2.sdk.util.DateUtils;
 
 /**
  * Claims set serialisable to a JSON object.
- *
- * @author Vladimir Dzhuvinov
  */
 public abstract class ClaimsSet {
 

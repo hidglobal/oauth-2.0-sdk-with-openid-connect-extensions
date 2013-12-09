@@ -11,8 +11,6 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 
 /**
  * Tests client secret basic authentication.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ClientSecretPostTest extends TestCase {
 

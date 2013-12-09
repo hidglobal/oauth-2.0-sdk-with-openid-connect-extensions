@@ -48,8 +48,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 5.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public class TokenErrorResponse 

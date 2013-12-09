@@ -6,8 +6,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * Enumeration of the subject identifier types.
- *
- * @author Vladimir Dzhuvinov
  */
 public enum SubjectType {
 

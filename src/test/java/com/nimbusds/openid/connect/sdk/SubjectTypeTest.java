@@ -8,10 +8,9 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * Tests the SubjectType class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class SubjectTypeTest extends TestCase {
+
 
 	public void testToString() {
 

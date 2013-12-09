@@ -9,8 +9,6 @@ package com.nimbusds.oauth2.sdk;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 1.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public enum Role {
 

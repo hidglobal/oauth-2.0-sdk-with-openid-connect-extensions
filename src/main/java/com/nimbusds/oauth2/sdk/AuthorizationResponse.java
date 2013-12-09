@@ -19,8 +19,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public abstract class AuthorizationResponse implements Response {
 

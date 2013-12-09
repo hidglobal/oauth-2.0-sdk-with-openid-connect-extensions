@@ -8,8 +8,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the date utilities.
- *
- * @author Vladimir Dzhuvinov
  */
 public class DateUtilsTest extends TestCase {
 

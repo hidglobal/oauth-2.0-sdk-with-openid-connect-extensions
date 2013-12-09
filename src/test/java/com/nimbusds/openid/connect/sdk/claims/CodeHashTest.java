@@ -10,8 +10,6 @@ import com.nimbusds.oauth2.sdk.AuthorizationCode;
 
 /**
  * Tests the authorisation code hash.
- *
- * @author Vladimir Dzhuvinov
  */
 public class CodeHashTest extends TestCase {
 

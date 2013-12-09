@@ -10,8 +10,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 /**
  * Tests the Nonce class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class NonceTest extends TestCase {
 

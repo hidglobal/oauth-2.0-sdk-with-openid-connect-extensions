@@ -6,8 +6,6 @@ import junit.framework.TestCase;
 
 /**
  * Tests the token pair class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class TokenPairTest extends TestCase {
 

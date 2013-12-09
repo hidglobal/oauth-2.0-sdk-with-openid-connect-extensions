@@ -17,8 +17,6 @@ import net.jcip.annotations.ThreadSafe;
  * The default retriever of resources specified by URL. Provides setting of
  * HTTP connect and read timeouts. Caching header directives are not honoured. 
  * This class is thread-safe.
- *
- * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
 public class DefaultResourceRetriever implements ResourceRetriever {
@@ -143,7 +141,7 @@ public class DefaultResourceRetriever implements ResourceRetriever {
 		
 		BufferedReader input = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		
-		String line = null;
+		String line;
 		
 		while ((line = input.readLine()) != null) {
 		

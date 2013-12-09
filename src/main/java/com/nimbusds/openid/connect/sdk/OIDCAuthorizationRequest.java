@@ -59,8 +59,6 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  *     <li>OpenID Connect Messages 1.0, section 2.1.1.
  *     <li>OpenID Connect Standard 1.0, section 2.3.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class OIDCAuthorizationRequest extends AuthorizationRequest {

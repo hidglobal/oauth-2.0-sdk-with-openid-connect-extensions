@@ -17,8 +17,6 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
 
 /**
  * Tests the OpenID Connect token response parser.
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCTokenResponseParserTest extends TestCase {
 

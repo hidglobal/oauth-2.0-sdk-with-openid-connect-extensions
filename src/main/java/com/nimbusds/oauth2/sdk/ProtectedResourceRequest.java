@@ -15,8 +15,6 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
  * <ul>
  *     <li>RFC 6749
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
  public abstract class ProtectedResourceRequest extends AbstractRequest {
 

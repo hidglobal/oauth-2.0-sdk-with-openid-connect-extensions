@@ -11,8 +11,6 @@ import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
 
 /**
  * Tests the response type class.
- *
- * @author Vladimir Dzhuvinov
  */
 public class ResponseTypeTest extends TestCase {
 	

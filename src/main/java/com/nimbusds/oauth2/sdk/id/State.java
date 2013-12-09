@@ -1,5 +1,6 @@
 package com.nimbusds.oauth2.sdk.id;
 
+
 import net.jcip.annotations.Immutable;
 
 import org.apache.commons.lang3.StringUtils;
@@ -9,8 +10,6 @@ import org.apache.commons.lang3.StringUtils;
  * Opaque value used to maintain state between a request and a callback. Also
  * serves as a protection against XSRF attacks, among other uses. This class is
  * immutable.
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class State extends Identifier {

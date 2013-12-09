@@ -16,8 +16,6 @@ import com.nimbusds.oauth2.sdk.AuthorizationCode;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, section 2.1.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class CodeHash extends HashClaim {

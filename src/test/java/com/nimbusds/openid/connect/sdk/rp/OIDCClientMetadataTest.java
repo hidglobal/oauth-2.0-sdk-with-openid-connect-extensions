@@ -29,8 +29,6 @@ import com.nimbusds.openid.connect.sdk.SubjectType;
 
 /**
  * Tests the OIDC client metadata class.
- * 
- * @author Vladimir Dzhuvinov
  */
 public class OIDCClientMetadataTest extends TestCase {
 

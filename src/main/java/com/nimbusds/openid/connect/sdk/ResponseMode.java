@@ -16,8 +16,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <ul>
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices, section 2.1.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class ResponseMode extends Identifier {
@@ -85,11 +83,11 @@ public final class ResponseMode extends Identifier {
 		if (StringUtils.isBlank(s))
 			return null;
 
-		if (s.equals(ResponseMode.QUERY)) {
+		if (s.equals(ResponseMode.QUERY.getValue())) {
 			return ResponseMode.QUERY;
-		} else if (s.equals(ResponseMode.FRAGMENT)) {
+		} else if (s.equals(ResponseMode.FRAGMENT.getValue())) {
 			return ResponseMode.FRAGMENT;
-		} else if (s.equals(ResponseMode.FORM_POST)) {
+		} else if (s.equals(ResponseMode.FORM_POST.getValue())) {
 			return ResponseMode.FORM_POST;
 		} else {
 			return new ResponseMode(s);

@@ -47,8 +47,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *     <li>OAuth 2.0 (RFC 6749), sections 3.1.1 and 4.1.1.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @NotThreadSafe
 public class ResponseType extends HashSet<ResponseType.Value> {
@@ -176,11 +174,8 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 	 * @return {@code true} if a code flow is implied, else {@code false}.
 	 */
 	public boolean impliesCodeFlow() {
-	
-		if (this.contains(ResponseType.Value.CODE))
-			return true;
-		else
-			return false;
+
+		return this.contains(Value.CODE);
 	}
 	
 	

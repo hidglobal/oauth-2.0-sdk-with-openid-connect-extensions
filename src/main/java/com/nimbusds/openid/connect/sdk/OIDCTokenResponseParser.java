@@ -17,8 +17,6 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <ul>
  *     <li>OpenID Connect Messages 1.0, sections 2.2.3 and 2.2.4.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 public class OIDCTokenResponseParser { 
 

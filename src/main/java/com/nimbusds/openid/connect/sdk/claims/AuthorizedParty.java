@@ -23,8 +23,6 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
  *     <li>OAuth 2.0 (RFC 6749), section 2.2.
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @Immutable
 public final class AuthorizedParty extends Identifier {

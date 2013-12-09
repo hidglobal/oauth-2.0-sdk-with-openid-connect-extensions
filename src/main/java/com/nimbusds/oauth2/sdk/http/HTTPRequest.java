@@ -41,8 +41,6 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>Content-Type
  *     <li>Authorization
  * </ul>
- *
- * @author Vladimir Dzhuvinov
  */
 @ThreadSafe
 public final class HTTPRequest extends HTTPMessage {
