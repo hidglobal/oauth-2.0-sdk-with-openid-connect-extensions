@@ -22,8 +22,9 @@ public abstract class AbstractRequest implements Request {
 	 * Creates a new base abstract request.
 	 * 
 	 * @param uri The URI of the endpoint (HTTP or HTTPS) for which the 
-	 *            request is intended. May be {@code null} if the
-	 *            {@link #toHTTPRequest()} method will not be used.
+	 *            request is intended, {@code null} if not specified (if,
+	 *            for example, the {@link #toHTTPRequest()} method will not
+	 *            be used).
 	 */
 	public AbstractRequest(final URL uri) {
 		

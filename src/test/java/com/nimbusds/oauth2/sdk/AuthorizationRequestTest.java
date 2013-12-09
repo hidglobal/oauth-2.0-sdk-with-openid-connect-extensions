@@ -66,6 +66,32 @@ public class AuthorizationRequestTest extends TestCase {
 	}
 
 
+	public void testMinimalAltParse()
+		throws Exception {
+
+		URL uri = new URL("https://c2id.com/authz/");
+
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
+
+		ClientID clientID = new ClientID("123456");
+
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID);
+
+		String query = req.toQueryString();
+
+		req = AuthorizationRequest.parse(query);
+
+		assertNull(req.getURI());
+		assertEquals(rts, req.getResponseType());
+		assertEquals(clientID, req.getClientID());
+
+		assertNull(req.getRedirectionURI());
+		assertNull(req.getScope());
+		assertNull(req.getState());
+	}
+
+
 	public void testFull()
 		throws Exception {
 
@@ -110,6 +136,43 @@ public class AuthorizationRequestTest extends TestCase {
 		req = AuthorizationRequest.parse(uri, query);
 
 		assertEquals(uri, req.getURI());
+		assertEquals(rts, req.getResponseType());
+		assertEquals(clientID, req.getClientID());
+		assertEquals(redirectURI, req.getRedirectionURI());
+		assertEquals(scope, req.getScope());
+		assertEquals(state, req.getState());
+	}
+
+
+	public void testFullAltParse()
+		throws Exception {
+
+		URL uri = new URL("https://c2id.com/authz/");
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
+
+		ClientID clientID = new ClientID("123456");
+
+		URL redirectURI = new URL("https://example.com/oauth2/");
+
+		Scope scope = Scope.parse("read write");
+
+		State state = new State();
+
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID, redirectURI, scope, state);
+
+		assertEquals(uri, req.getURI());
+		assertEquals(rts, req.getResponseType());
+		assertEquals(clientID, req.getClientID());
+		assertEquals(redirectURI, req.getRedirectionURI());
+		assertEquals(scope, req.getScope());
+		assertEquals(state, req.getState());
+
+		String query = req.toQueryString();
+
+		req = AuthorizationRequest.parse(query);
+
+		assertNull(req.getURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());

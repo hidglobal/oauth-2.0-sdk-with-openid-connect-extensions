@@ -102,6 +102,55 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	}
 
 
+	public void testAltParse()
+		throws Exception {
+
+		URL uri = new URL("https://c2id.com/authz/");
+
+		ResponseType rts = new ResponseType();
+		rts.add(ResponseType.Value.CODE);
+
+		Scope scope = new Scope();
+		scope.add(OIDCScopeValue.OPENID);
+		scope.add(OIDCScopeValue.EMAIL);
+		scope.add(OIDCScopeValue.PROFILE);
+
+		ClientID clientID = new ClientID("123456789");
+
+		URL redirectURI = new URL("http://www.deezer.com/en/");
+
+		State state = new State("abc");
+		Nonce nonce = new Nonce("xyz");
+
+		OIDCAuthorizationRequest request =
+			new OIDCAuthorizationRequest(uri, rts, scope, clientID, redirectURI, state, nonce);
+
+		// Check the resulting query string
+		String queryString = request.toQueryString();
+
+		request = OIDCAuthorizationRequest.parse(queryString);
+
+		assertNull(request.getURI());
+
+		ResponseType rtsOut = request.getResponseType();
+		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
+		assertEquals(1, rtsOut.size());
+
+		Scope scopeOut = request.getScope();
+		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
+		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
+		assertTrue(scopeOut.contains(OIDCScopeValue.PROFILE));
+		assertEquals(3, scopeOut.size());
+
+		assertTrue(new ClientID("123456789").equals(request.getClientID()));
+
+		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+
+		assertTrue(new State("abc").equals(request.getState()));
+		assertTrue(new Nonce("xyz").equals(request.getNonce()));
+	}
+
+
 	public void testExtendedConstructor()
 		throws Exception {
 

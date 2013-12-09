@@ -794,6 +794,35 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
+	 * Parses an OpenID Connect authorisation request from the specified
+	 * parameters.
+	 *
+	 * <p>Example parameters:
+	 *
+	 * <pre>
+	 * response_type = token id_token
+	 * client_id     = s6BhdRkqt3
+	 * redirect_uri  = https://client.example.com/cb
+	 * scope         = openid profile
+	 * state         = af0ifjsldkj
+	 * nonce         = -0S6_WzA2Mj
+	 * </pre>
+	 *
+	 * @param params The parameters. Must not be {@code null}.
+	 *
+	 * @return The OpenID Connect authorisation request.
+	 *
+	 * @throws ParseException If the parameters couldn't be parsed to an
+	 *                        OpenID Connect authorisation request.
+	 */
+	public static OIDCAuthorizationRequest parse(final Map<String,String> params)
+		throws ParseException {
+
+		return parse(null, params);
+	}
+
+
+	/**
 	 * Parses an OpenID Connect authorisation request from the specified 
 	 * parameters.
 	 *
@@ -1106,9 +1135,6 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * &amp;nonce=n-0S6_WzA2Mj
 	 * </pre>
 	 *
-	 * @param uri   The URI of the authorisation endpoint. May be 
-	 *              {@code null} if the {@link #toHTTPRequest()} method 
-	 *              will not be used.
 	 * @param query The URL query string. Must not be {@code null}.
 	 *
 	 * @return The OpenID Connect authorisation request.
@@ -1116,9 +1142,41 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * @throws ParseException If the query string couldn't be parsed to an 
 	 *                        OpenID Connect authorisation request.
 	 */
-	public static OIDCAuthorizationRequest parse(final URL uri, final String query)
+	public static OIDCAuthorizationRequest parse(final String query)
 		throws ParseException {
 	
+		return parse(null, URLUtils.parseParameters(query));
+	}
+
+
+	/**
+	 * Parses an OpenID Connect authorisation request from the specified
+	 * URL query string.
+	 *
+	 * <p>Example URL query string:
+	 *
+	 * <pre>
+	 * response_type=token%20id_token
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &amp;scope=openid%20profile
+	 * &amp;state=af0ifjsldkj
+	 * &amp;nonce=n-0S6_WzA2Mj
+	 * </pre>
+	 *
+	 * @param uri   The URI of the authorisation endpoint. May be
+	 *              {@code null} if the {@link #toHTTPRequest()} method
+	 *              will not be used.
+	 * @param query The URL query string. Must not be {@code null}.
+	 *
+	 * @return The OpenID Connect authorisation request.
+	 *
+	 * @throws ParseException If the query string couldn't be parsed to an
+	 *                        OpenID Connect authorisation request.
+	 */
+	public static OIDCAuthorizationRequest parse(final URL uri, final String query)
+		throws ParseException {
+
 		return parse(uri, URLUtils.parseParameters(query));
 	}
 	

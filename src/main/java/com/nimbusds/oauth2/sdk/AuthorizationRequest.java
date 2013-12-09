@@ -330,8 +330,34 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * redirect_uri  = https://client.example.com/cb
 	 * </pre>
 	 *
-	 * @param uri    The URI of the authorisation endpoint. May be 
-	 *               {@code null} if the {@link #toHTTPRequest()} method 
+	 * @param params The parameters. Must not be {@code null}.
+	 *
+	 * @return The authorisation request.
+	 *
+	 * @throws ParseException If the parameters couldn't be parsed to an
+	 *                        authorisation request.
+	 */
+	public static AuthorizationRequest parse(final Map<String,String> params)
+		throws ParseException {
+
+		return parse(null, params);
+	}
+
+
+	/**
+	 * Parses an authorisation request from the specified parameters.
+	 *
+	 * <p>Example parameters:
+	 *
+	 * <pre>
+	 * response_type = code
+	 * client_id     = s6BhdRkqt3
+	 * state         = xyz
+	 * redirect_uri  = https://client.example.com/cb
+	 * </pre>
+	 *
+	 * @param uri    The URI of the authorisation endpoint. May be
+	 *               {@code null} if the {@link #toHTTPRequest()} method
 	 *               will not be used.
 	 * @param params The parameters. Must not be {@code null}.
 	 *
@@ -345,10 +371,10 @@ public class AuthorizationRequest extends AbstractRequest {
 
 		// Parse mandatory client ID first
 		String v = params.get("client_id");
-		
+
 		if (StringUtils.isBlank(v))
-			throw new ParseException("Missing \"client_id\" parameter", 
-				                 OAuth2Error.INVALID_REQUEST);
+			throw new ParseException("Missing \"client_id\" parameter",
+				OAuth2Error.INVALID_REQUEST);
 
 		ClientID clientID = new ClientID(v);
 
@@ -359,49 +385,74 @@ public class AuthorizationRequest extends AbstractRequest {
 		URL redirectURI = null;
 
 		if (StringUtils.isNotBlank(v)) {
-			
+
 			try {
 				redirectURI = new URL(v);
-				
+
 			} catch (MalformedURLException e) {
-			
-				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
-					                 OAuth2Error.INVALID_REQUEST, clientID, null, null, e);
+
+				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(),
+					OAuth2Error.INVALID_REQUEST, clientID, null, null, e);
 			}
 		}
 
 
 		// Parse optional state third
 		State state = State.parse(params.get("state"));
-		
+
 
 		// Parse mandatory response type
 		v = params.get("response_type");
-		
+
 		ResponseType rt;
-		
+
 		try {
 			rt = ResponseType.parse(v);
-		
+
 		} catch (ParseException e) {
-			
-			throw new ParseException(e.getMessage(), 
-				                 OAuth2Error.UNSUPPORTED_RESPONSE_TYPE, 
-				                 clientID, redirectURI, state, e);
+
+			throw new ParseException(e.getMessage(),
+				OAuth2Error.UNSUPPORTED_RESPONSE_TYPE,
+				clientID, redirectURI, state, e);
 		}
-			
-		
+
+
 		// Parse optional scope
 		v = params.get("scope");
 
 		Scope scope = null;
-		
+
 		if (StringUtils.isNotBlank(v))
 			scope = Scope.parse(v);
 
 
 		return new AuthorizationRequest(uri, rt, clientID, redirectURI, scope, state);
+	}
 
+
+	/**
+	 * Parses an authorisation request from the specified URL query string.
+	 *
+	 * <p>Example URL query string:
+	 *
+	 * <pre>
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+	 * </pre>
+	 *
+	 * @param query The URL query string. Must not be {@code null}.
+	 *
+	 * @return The authorisation request.
+	 *
+	 * @throws ParseException If the query string couldn't be parsed to an
+	 *                        authorisation request.
+	 */
+	public static AuthorizationRequest parse(final String query)
+		throws ParseException {
+
+		return parse(null, URLUtils.parseParameters(query));
 	}
 	
 	
