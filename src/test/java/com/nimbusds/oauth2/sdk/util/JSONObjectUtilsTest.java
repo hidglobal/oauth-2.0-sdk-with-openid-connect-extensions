@@ -169,4 +169,18 @@ public class JSONObjectUtilsTest extends TestCase {
 			fail(e.getMessage());
 		}
 	}
+
+
+	public void testParseBadStringArray() {
+
+		JSONObject o = new JSONObject();
+		o.put("array", Arrays.asList("apples", 10, true));
+
+		try {
+			JSONObjectUtils.getStringArray(o, "array");
+			fail();
+		} catch (ParseException e) {
+			// ok
+		}
+	}
 }
