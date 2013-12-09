@@ -381,15 +381,15 @@ public final class HTTPRequest extends HTTPMessage {
 
 
 	/**
-	 * Sends this HTTP request to the request URL and retrieves the 
-	 * resulting HTTP response.
+	 * Returns an established HTTP URL connection for this HTTP request.
 	 *
-	 * @return The resulting HTTP response.
+	 * @return The HTTP URL connection, with the request sent and ready to
+	 *         read the response.
 	 *
-	 * @throws IOException If the HTTP request couldn't be made, due to a 
+	 * @throws IOException If the HTTP request couldn't be made, due to a
 	 *                     network or other error.
 	 */
-	public HTTPResponse send()
+	public HttpURLConnection toHttpURLConnection()
 		throws IOException {
 
 		URL finalURL = url;
@@ -430,6 +430,24 @@ public final class HTTPRequest extends HTTPMessage {
 				writer.close();
 			}
 		}
+
+		return conn;
+	}
+
+
+	/**
+	 * Sends this HTTP request to the request URL and retrieves the 
+	 * resulting HTTP response.
+	 *
+	 * @return The resulting HTTP response.
+	 *
+	 * @throws IOException If the HTTP request couldn't be made, due to a 
+	 *                     network or other error.
+	 */
+	public HTTPResponse send()
+		throws IOException {
+
+		HttpURLConnection conn = toHttpURLConnection();
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
        
