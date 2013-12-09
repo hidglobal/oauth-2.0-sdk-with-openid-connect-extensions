@@ -18,7 +18,7 @@ import net.minidev.json.JSONValue;
  *
  * <p>Extending classes must override the {@link #equals} method.
  */
-public abstract class Identifier implements JSONAware {
+public abstract class Identifier implements Comparable<Identifier>, JSONAware {
 	
 	
 	/**
@@ -117,6 +117,13 @@ public abstract class Identifier implements JSONAware {
 	public String toString() {
 	
 		return getValue();
+	}
+
+
+	@Override
+	public int compareTo(final Identifier other) {
+
+		return getValue().compareTo(other.getValue());
 	}
 
 

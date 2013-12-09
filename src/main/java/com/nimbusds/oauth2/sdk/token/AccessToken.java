@@ -17,9 +17,7 @@ import com.nimbusds.oauth2.sdk.Scope;
  *     <li>OAuth 2.0 (RFC 6749), sections 1.4 and 5.1.
  * </ul>
  */
-public abstract class AccessToken 
-	extends Token
-	implements Comparable<AccessToken> {
+public abstract class AccessToken extends Token {
 
 	
 	/**
@@ -218,13 +216,6 @@ public abstract class AccessToken
 	 * @return The {@code Authorization} header value.
 	 */
 	public abstract String toAuthorizationHeader();
-
-
-	@Override
-	public int compareTo(AccessToken other) {
-
-		return getValue().compareTo(other.getValue());
-	}
 
 
 	/**

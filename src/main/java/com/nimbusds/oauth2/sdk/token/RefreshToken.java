@@ -19,9 +19,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
  * </ul>
  */
 @Immutable
-public final class RefreshToken
-	extends Token
-	implements Comparable<RefreshToken> {
+public final class RefreshToken extends Token {
 
 
 	/**
@@ -99,12 +97,5 @@ public final class RefreshToken
 	
 		return object instanceof RefreshToken &&
 		       this.toString().equals(object.toString());
-	}
-
-
-	@Override
-	public int compareTo(RefreshToken other) {
-
-		return getValue().compareTo(other.getValue());
 	}
 }
