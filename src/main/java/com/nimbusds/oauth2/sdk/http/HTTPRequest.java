@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
-import javax.mail.internet.ContentType;
 import javax.servlet.http.HttpServletRequest;
 
 import net.jcip.annotations.ThreadSafe;
@@ -122,6 +121,43 @@ public final class HTTPRequest extends HTTPMessage {
 
 		this.url = url;
 	}
+
+
+	/**
+	 * Reconstructs the request URL for the specified servlet request. The
+	 * host part is always the local IP address. The query string and
+	 * fragment is always omitted.
+	 *
+	 * @param request The servlet request. Must not be {@code null}.
+	 *
+	 * @return The reconstructed request URL.
+	 *
+	 * @throws MalformedURLException If the reconstructed URL is illegal.
+	 */
+	private static URL reconstructRequestURL(final HttpServletRequest request)
+		throws MalformedURLException {
+
+		StringBuilder sb = new StringBuilder("http");
+
+		if (request.isSecure())
+			sb.append('s');
+
+		sb.append("://");
+
+		sb.append(request.getLocalAddr());
+
+		if (request.getLocalPort() > 0 && request.getLocalPort() != 80 && request.getLocalPort() != 443) {
+			sb.append(':');
+			sb.append(request.getLocalPort());
+		}
+
+		String path = request.getRequestURI();
+
+		if (path != null)
+			sb.append(path);
+
+		return new URL(sb.toString());
+	}
 	
 	
 	/**
@@ -143,7 +179,7 @@ public final class HTTPRequest extends HTTPMessage {
 		method = HTTPRequest.Method.valueOf(sr.getMethod().toUpperCase());
 
 		try {
-			url = new URL(sr.getRequestURL().toString());
+			url = reconstructRequestURL(sr);
 
 		} catch (MalformedURLException e) {
 
@@ -167,7 +203,6 @@ public final class HTTPRequest extends HTTPMessage {
 		} else if (method.equals(Method.POST) || method.equals(Method.PUT)) {
 		
 			// read body
-			
 			StringBuilder body = new StringBuilder(256);
 			
 			BufferedReader reader = sr.getReader();
