@@ -16,6 +16,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *     <li>{@link #CLIENT_SECRET_POST}
  *     <li>{@link #CLIENT_SECRET_JWT}
  *     <li>{@link #PRIVATE_KEY_JWT}
+ *     <li>{@link #NONE}
  * </ul>
  *
  * <p>Use the constructor to define a custom client authentication method.
@@ -24,6 +25,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 2.3.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol
+ *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
  */
 @Immutable
@@ -71,6 +74,14 @@ public final class ClientAuthenticationMethod extends Identifier {
 	 */
 	public static final ClientAuthenticationMethod PRIVATE_KEY_JWT =
 		new ClientAuthenticationMethod("private_key_jwt");
+
+
+	/**
+	 * The client is a public client as defined in OAuth 2.0 and does not
+	 * have a client secret.
+	 */
+	public static final ClientAuthenticationMethod NONE =
+		new ClientAuthenticationMethod("none");
 
 
 	/**

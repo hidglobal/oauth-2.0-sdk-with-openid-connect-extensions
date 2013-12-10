@@ -16,6 +16,7 @@ public class ClientAuthenticationMethodTest extends TestCase {
 		assertEquals("client_secret_post", ClientAuthenticationMethod.CLIENT_SECRET_POST.getValue());
 		assertEquals("client_secret_jwt", ClientAuthenticationMethod.CLIENT_SECRET_JWT.getValue());
 		assertEquals("private_key_jwt", ClientAuthenticationMethod.PRIVATE_KEY_JWT.getValue());
+		assertEquals("none", ClientAuthenticationMethod.NONE.getValue());
 	}
 
 
