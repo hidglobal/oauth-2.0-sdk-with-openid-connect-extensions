@@ -24,4 +24,12 @@ public class SubjectTest extends TestCase {
 		assertEquals("bob", list.get(1).getValue());
 		assertEquals("claire", list.get(2).getValue());
 	}
+
+
+	public void testCastToComparable() {
+
+		Subject subject = new Subject("alice");
+
+		assertTrue(subject instanceof Comparable);
+	}
 }
