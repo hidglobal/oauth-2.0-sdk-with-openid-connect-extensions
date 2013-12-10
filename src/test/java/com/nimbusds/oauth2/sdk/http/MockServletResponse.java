@@ -1,0 +1,269 @@
+package com.nimbusds.oauth2.sdk.http;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.*;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+
+/**
+ * Mock servlet response.
+ */
+class MockServletResponse implements HttpServletResponse {
+
+
+	private int status;
+
+
+	private Map<String,String> headers = new HashMap<String, String>();
+
+
+	private ByteArrayOutputStream content = new ByteArrayOutputStream();
+
+
+	@Override
+	public void addCookie(Cookie cookie) {
+
+	}
+
+
+	@Override
+	public boolean containsHeader(String s) {
+		return false;
+	}
+
+
+	@Override
+	public String encodeURL(String s) {
+		return null;
+	}
+
+
+	@Override
+	public String encodeRedirectURL(String s) {
+		return null;
+	}
+
+
+	@Override
+	public String encodeUrl(String s) {
+		return null;
+	}
+
+
+	@Override
+	public String encodeRedirectUrl(String s) {
+		return null;
+	}
+
+
+	@Override
+	public void sendError(int i, String s) throws IOException {
+
+	}
+
+
+	@Override
+	public void sendError(int i) throws IOException {
+
+	}
+
+
+	@Override
+	public void sendRedirect(String s) throws IOException {
+
+	}
+
+
+	@Override
+	public void setDateHeader(String s, long l) {
+
+	}
+
+
+	@Override
+	public void addDateHeader(String s, long l) {
+
+	}
+
+
+	@Override
+	public void setHeader(String s, String s2) {
+
+		headers.put(s, s2);
+	}
+
+
+	@Override
+	public void addHeader(String s, String s2) {
+
+		headers.put(s, s2);
+	}
+
+
+	@Override
+	public void setIntHeader(String s, int i) {
+
+		headers.put(s, Integer.toString(i));
+	}
+
+
+	@Override
+	public void addIntHeader(String s, int i) {
+
+		headers.put(s, Integer.toString(i));
+	}
+
+
+	@Override
+	public void setStatus(int i) {
+
+		status = i;
+	}
+
+
+	@Override
+	public void setStatus(int i, String s) {
+
+		status = i;
+	}
+
+
+	@Override
+	public int getStatus() {
+
+		return status;
+	}
+
+
+	@Override
+	public String getHeader(String s) {
+
+		return headers.get(s);
+	}
+
+
+	@Override
+	public Collection<String> getHeaders(String s) {
+
+		Collection<String> h = new ArrayList<String>(1);
+
+		String value = headers.get(s);
+
+		if (value != null)
+			h.add(value);
+
+		return h;
+	}
+
+
+	@Override
+	public Collection<String> getHeaderNames() {
+		return null;
+	}
+
+
+	@Override
+	public String getCharacterEncoding() {
+		return null;
+	}
+
+
+	@Override
+	public String getContentType() {
+
+		return headers.get("Content-Type");
+	}
+
+
+	@Override
+	public ServletOutputStream getOutputStream() throws IOException {
+		return null;
+	}
+
+
+	@Override
+	public PrintWriter getWriter() throws IOException {
+
+		return new PrintWriter(content);
+	}
+
+
+	public String getContent() throws UnsupportedEncodingException {
+
+		return content.toString("UTF-8");
+	}
+
+
+	@Override
+	public void setCharacterEncoding(String s) {
+
+	}
+
+
+	@Override
+	public void setContentLength(int i) {
+
+	}
+
+
+	@Override
+	public void setContentType(String s) {
+
+		headers.put("Content-Type", s);
+	}
+
+
+	@Override
+	public void setBufferSize(int i) {
+
+	}
+
+
+	@Override
+	public int getBufferSize() {
+		return 0;
+	}
+
+
+	@Override
+	public void flushBuffer() throws IOException {
+
+	}
+
+
+	@Override
+	public void resetBuffer() {
+
+	}
+
+
+	@Override
+	public boolean isCommitted() {
+		return false;
+	}
+
+
+	@Override
+	public void reset() {
+
+	}
+
+
+	@Override
+	public void setLocale(Locale locale) {
+
+	}
+
+
+	@Override
+	public Locale getLocale() {
+		return null;
+	}
+}
