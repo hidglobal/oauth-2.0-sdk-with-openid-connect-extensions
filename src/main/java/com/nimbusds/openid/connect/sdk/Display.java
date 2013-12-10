@@ -26,8 +26,9 @@ public enum Display {
 	
 	
 	/**
-	 * Popup user-agent window. The popup user-agent window should be 450 
-	 * pixels wide and 500 pixels tall. 
+	 * Popup user-agent window. The popup User Agent window should be of an
+	 * appropriate size for a login-focused dialog and should not obscure
+	 * the entire window that it is popping up over.
 	 */
 	POPUP,
 	
