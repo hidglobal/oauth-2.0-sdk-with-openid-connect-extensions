@@ -24,60 +24,70 @@ public class ResponseTypeTest extends TestCase {
 
 	public void testVarargConstructor() {
 
-		ResponseType rts = new ResponseType(ResponseType.Value.CODE, OIDCResponseTypeValue.ID_TOKEN);
+		ResponseType rt = new ResponseType(ResponseType.Value.CODE, OIDCResponseTypeValue.ID_TOKEN);
 
-		assertTrue(rts.contains(ResponseType.Value.CODE));
-		assertTrue(rts.contains(OIDCResponseTypeValue.ID_TOKEN));
-		assertEquals(2, rts.size());
+		assertTrue(rt.contains(ResponseType.Value.CODE));
+		assertTrue(rt.contains(OIDCResponseTypeValue.ID_TOKEN));
+		assertEquals(2, rt.size());
 	}
 
 
-	public void testVarargConstructorNull() {
+	public void testStringVarargConstructor() {
 
-		ResponseType rts = new ResponseType(null);
+		ResponseType rt = new ResponseType("code", "id_token");
 
-		assertTrue(rts.isEmpty());
-		assertEquals(0, rts.size());
+		assertTrue(rt.contains(ResponseType.Value.CODE));
+		assertTrue(rt.contains(OIDCResponseTypeValue.ID_TOKEN));
+		assertEquals(2, rt.size());
+	}
+
+
+	public void testStringVarargConstructorNull() {
+
+		try {
+			new ResponseType((String)null);
+			fail();
+		} catch (IllegalArgumentException e) {
+			// ok
+		}
 	}
 
 
 	public void testCodeFlowDetection() {
 
-		ResponseType rts = new ResponseType();
-		rts.add(ResponseType.Value.CODE);
-		assertTrue(rts.impliesCodeFlow());
-		assertFalse(rts.impliesImplicitFlow());
+		ResponseType rt = new ResponseType();
+		rt.add(ResponseType.Value.CODE);
+		assertTrue(rt.impliesCodeFlow());
+		assertFalse(rt.impliesImplicitFlow());
 	}
 
 
 	public void testImplicitFlowDetection() {
 
-		ResponseType rts = new ResponseType();
-		rts.add(ResponseType.Value.TOKEN);
-		assertTrue(rts.impliesImplicitFlow());
-		assertFalse(rts.impliesCodeFlow());
+		ResponseType rt = new ResponseType();
+		rt.add(ResponseType.Value.TOKEN);
+		assertTrue(rt.impliesImplicitFlow());
+		assertFalse(rt.impliesCodeFlow());
 	}
 
 
 	public void testSerializeAndParse() {
 
-		ResponseType rts = new ResponseType();
-		rts.add(ResponseType.Value.CODE);
-		rts.add(new ResponseType.Value("id_token"));
-
-		System.out.println("response_type: " + rts);
+		ResponseType rt = new ResponseType();
+		rt.add(ResponseType.Value.CODE);
+		rt.add(new ResponseType.Value("id_token"));
 
 		try {
-			rts = ResponseType.parse(rts.toString());
+			rt = ResponseType.parse(rt.toString());
 
 		} catch (ParseException e) {
 
 			fail(e.getMessage());
 		}
 
-		assertTrue(rts.contains(ResponseType.Value.CODE));
-		assertTrue(rts.contains(new ResponseType.Value("id_token")));
-		assertEquals(2, rts.size());
+		assertTrue(rt.contains(ResponseType.Value.CODE));
+		assertTrue(rt.contains(new ResponseType.Value("id_token")));
+		assertEquals(2, rt.size());
 	}
 
 

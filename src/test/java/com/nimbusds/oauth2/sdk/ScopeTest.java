@@ -23,6 +23,16 @@ public class ScopeTest extends TestCase {
 	}
 
 
+	public void testStringVarargConstructor() {
+
+		Scope scope = new Scope("read", "write");
+
+		assertTrue(scope.contains(new Scope.Value("read")));
+		assertTrue(scope.contains(new Scope.Value("write")));
+		assertEquals(2, scope.size());
+	}
+
+
 	public void testRun() {
 
 		Scope scope = new Scope();

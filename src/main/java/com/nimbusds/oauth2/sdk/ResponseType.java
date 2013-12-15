@@ -114,14 +114,23 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 
 
 	/**
+	 * Creates a new response type with the specified string values.
+	 *
+	 * @param values The string values. Must not be {@code null}.
+	 */
+	public ResponseType(final String ... values) {
+
+		for (String v: values)
+			add(new Value(v));
+	}
+
+
+	/**
 	 * Creates a new response type with the specified values.
 	 *
-	 * @param values The values.
+	 * @param values The values. Must not be {@code null}.
 	 */
 	public ResponseType(final Value ... values) {
-
-		if (values == null)
-			return;
 
 		addAll(Arrays.asList(values));
 	}

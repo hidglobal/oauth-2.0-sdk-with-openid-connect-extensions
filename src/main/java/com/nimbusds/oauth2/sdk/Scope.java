@@ -123,14 +123,23 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 
 
 	/**
+	 * Creates a new authorisation scope with the specified string values.
+	 *
+	 * @param values The string values.
+	 */
+	public Scope(final String ... values) {
+
+		for (String v: values)
+			add(new Value(v));
+	}
+
+
+	/**
 	 * Creates a new authorisation scope with the specified values.
 	 *
 	 * @param values The values.
 	 */
 	public Scope(final Value ... values) {
-
-		if (values == null)
-			return;
 
 		addAll(Arrays.asList(values));
 	}
