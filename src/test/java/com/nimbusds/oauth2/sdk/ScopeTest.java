@@ -41,8 +41,13 @@ public class ScopeTest extends TestCase {
 		scope.add(new Scope.Value("write"));
 
 		assertTrue(scope.contains(new Scope.Value("read")));
+		assertTrue(scope.contains("read"));
 		assertTrue(scope.contains(new Scope.Value("write")));
+		assertTrue(scope.contains("write"));
 		assertEquals(2, scope.size());
+
+		assertFalse(scope.contains(new Scope.Value("no-such-value")));
+		assertFalse(scope.contains("no-such-value"));
 
 		String out = scope.toString();
 

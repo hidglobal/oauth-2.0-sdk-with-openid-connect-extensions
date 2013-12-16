@@ -161,6 +161,19 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		return list;
 	}
 
+
+	/**
+	 * Checks if this scope contains the specified string value.
+	 *
+	 * @param value The string value. Must not be {@code null}.
+	 *
+	 * @return {@code true} if the value is contained, else {@code false}.
+	 */
+	public boolean contains(final String value) {
+
+		return contains(new Value(value));
+	}
+
 	
 	/**
 	 * Returns the string representation of this scope. The scope values 
