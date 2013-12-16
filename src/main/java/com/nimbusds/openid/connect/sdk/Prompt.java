@@ -128,6 +128,29 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
 
 		addAll(Arrays.asList(type));
 	}
+
+
+	/**
+	 * Creates a new prompt with the specified type values.
+	 *
+	 * @param values The prompt type values.
+	 *
+	 * @throws java.lang.IllegalArgumentException If the type value is
+	 *                                            invalid.
+	 */
+	public Prompt(final String ... values) {
+
+		for (String v: values) {
+
+			try {
+				add(Type.parse(v));
+
+			} catch (ParseException e) {
+
+				throw new IllegalArgumentException(e.getMessage(), e);
+			}
+		}
+	}
 	
 	
 	/**

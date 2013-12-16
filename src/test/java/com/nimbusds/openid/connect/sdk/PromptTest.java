@@ -45,6 +45,20 @@ public class PromptTest extends TestCase {
 
 		assertTrue(p.isValid());
 	}
+
+
+	public void testVarargStringConstructor() {
+
+		Prompt p = new Prompt("login", "consent", "select_account");
+
+		assertTrue(p.contains(Prompt.Type.LOGIN));
+		assertTrue(p.contains(Prompt.Type.CONSENT));
+		assertTrue(p.contains(Prompt.Type.SELECT_ACCOUNT));
+
+		assertEquals(3, p.size());
+
+		assertTrue(p.isValid());
+	}
 	
 	
 	public void testListSerializationAndParsing()
