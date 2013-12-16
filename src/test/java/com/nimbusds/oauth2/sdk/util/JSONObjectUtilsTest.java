@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk.util;
 
 
 import java.util.Arrays;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -47,19 +48,12 @@ public class JSONObjectUtilsTest extends TestCase {
 	}
 	
 	
-	public void testJSONObjectParse() {
+	public void testJSONObjectParse()
+		throws Exception {
 	
 		String s = "{\"apples\":3, \"pears\":\"none\"}";
 		
-		JSONObject o = null;
-		
-		try {
-			o = JSONObjectUtils.parseJSONObject(s);
-			
-		} catch (ParseException e) {
-		
-			fail(e.getMessage());
-		}
+		JSONObject o = JSONObjectUtils.parseJSONObject(s);
 		
 		assertNotNull(o);
 		
@@ -70,17 +64,11 @@ public class JSONObjectUtilsTest extends TestCase {
 	
 	public void testJSONObjectParseException() {
 	
-		String s = "{\"apples\":3, ";
-		
-		JSONObject o = null;
-		
 		try {
-			o = JSONObjectUtils.parseJSONObject(s);
-			
-			fail("Failed to raise exception");
+			JSONObjectUtils.parseJSONObject("{\"apples\":3, ");
+			fail();
 			
 		} catch (ParseException e) {
-		
 			// ok
 		}
 	}
@@ -90,12 +78,11 @@ public class JSONObjectUtilsTest extends TestCase {
 	
 		try {
 			JSONObjectUtils.parseJSONObject(null);
-			
-			fail("Failed to raise exception");
+			fail();
 			
 		} catch (ParseException e) {
 		
-			fail("Parse exception not expected here");
+			fail();
 		
 		} catch (NullPointerException e) {
 		
@@ -108,8 +95,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	
 		try {
 			JSONObjectUtils.parseJSONObject("null");
-			
-			fail("Failed to raise exception");
+			fail();
 		
 		} catch (ParseException e) {
 		
@@ -136,8 +122,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	
 		try {
 			JSONObjectUtils.parseJSONObject(" ");
-			
-			fail("Failed to raise exception");
+			fail();
 		
 		} catch (ParseException e) {
 		
@@ -146,28 +131,23 @@ public class JSONObjectUtilsTest extends TestCase {
 	}
 	
 	
-	public void testGetters() {
+	public void testGetters()
+		throws Exception {
 	
 		JSONObject o = getTestJSONObject();
 		
-		try {
-			assertEquals(true, JSONObjectUtils.getBoolean(o, "bool"));
-			assertEquals(100, JSONObjectUtils.getInt(o, "int"));
-			assertEquals(500l, JSONObjectUtils.getLong(o, "long"));
-			assertEquals(3.14f, JSONObjectUtils.getFloat(o, "float"));
-			assertEquals(3.1415d, JSONObjectUtils.getDouble(o, "double"));
-			assertEquals("Alice", JSONObjectUtils.getString(o, "string"));
-			assertEquals("http://server.example.com/cb/", JSONObjectUtils.getURL(o, "url").toString());
-			assertEquals("alice@wonderland.net", JSONObjectUtils.getEmail(o, "email").toString());
-			assertEquals(ClientType.PUBLIC, JSONObjectUtils.getEnum(o, "client_type", ClientType.class));
+		assertEquals(true, JSONObjectUtils.getBoolean(o, "bool"));
+		assertEquals(100, JSONObjectUtils.getInt(o, "int"));
+		assertEquals(500l, JSONObjectUtils.getLong(o, "long"));
+		assertEquals(3.14f, JSONObjectUtils.getFloat(o, "float"));
+		assertEquals(3.1415d, JSONObjectUtils.getDouble(o, "double"));
+		assertEquals("Alice", JSONObjectUtils.getString(o, "string"));
+		assertEquals("http://server.example.com/cb/", JSONObjectUtils.getURL(o, "url").toString());
+		assertEquals("alice@wonderland.net", JSONObjectUtils.getEmail(o, "email").toString());
+		assertEquals(ClientType.PUBLIC, JSONObjectUtils.getEnum(o, "client_type", ClientType.class));
 
-			assertTrue(Arrays.asList("client-1", "client-2").containsAll(JSONObjectUtils.getList(o, "aud")));
-			assertTrue(Arrays.asList("client-1", "client-2").containsAll(JSONObjectUtils.getJSONArray(o, "aud")));
-			
-		} catch (ParseException e) {
-		
-			fail(e.getMessage());
-		}
+		assertTrue(Arrays.asList("client-1", "client-2").containsAll(JSONObjectUtils.getList(o, "aud")));
+		assertTrue(Arrays.asList("client-1", "client-2").containsAll(JSONObjectUtils.getJSONArray(o, "aud")));
 	}
 
 
@@ -178,6 +158,42 @@ public class JSONObjectUtilsTest extends TestCase {
 
 		try {
 			JSONObjectUtils.getStringArray(o, "array");
+			fail();
+		} catch (ParseException e) {
+			// ok
+		}
+	}
+
+
+	public void testParseStringSet()
+		throws Exception {
+
+		JSONObject o = new JSONObject();
+		o.put("fruit", Arrays.asList("apples", "pears", "plums"));
+
+		String json = o.toJSONString();
+
+		Set<String> fruit = JSONObjectUtils.getStringSet(JSONObjectUtils.parseJSONObject(json), "fruit");
+
+		assertTrue(fruit.contains("apples"));
+		assertTrue(fruit.contains("pears"));
+		assertTrue(fruit.contains("plums"));
+		assertEquals(3, fruit.size());
+	}
+
+
+	public void testParseBadStringSet()
+		throws Exception {
+
+		JSONObject o = new JSONObject();
+		o.put("fruit", Arrays.asList("apples", 10, true));
+
+		String json = o.toJSONString();
+
+		o = JSONObjectUtils.parseJSONObject(json);
+
+		try {
+			JSONObjectUtils.getStringSet(o, "fruit");
 			fail();
 		} catch (ParseException e) {
 			// ok

@@ -3,7 +3,9 @@ package com.nimbusds.oauth2.sdk.util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
@@ -356,6 +358,40 @@ public class JSONObjectUtils {
 
 			throw new ParseException("JSON object member with key \"" + key + "\" is not an array of strings");
 		}
+	}
+
+
+	/**
+	 * Gets a string array member of a JSON object as a string set.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static Set<String> getStringSet(final JSONObject o, final String key)
+		throws ParseException {
+
+		List<Object> list = getList(o, key);
+
+		Set<String> set = new HashSet<String>();
+
+		for (Object item: list) {
+
+			try {
+				set.add((String)item);
+
+			} catch (Exception e) {
+
+				throw new ParseException("JSON object member wit key \"" + key + "\" is not an array of strings");
+			}
+
+		}
+
+		return set;
 	}
 	
 	
