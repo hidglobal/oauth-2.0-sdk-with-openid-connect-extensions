@@ -27,8 +27,13 @@ public class ResponseTypeTest extends TestCase {
 		ResponseType rt = new ResponseType(ResponseType.Value.CODE, OIDCResponseTypeValue.ID_TOKEN);
 
 		assertTrue(rt.contains(ResponseType.Value.CODE));
+		assertTrue(rt.contains("code"));
 		assertTrue(rt.contains(OIDCResponseTypeValue.ID_TOKEN));
+		assertTrue(rt.contains("id_token"));
 		assertEquals(2, rt.size());
+
+		assertFalse(rt.contains(ResponseType.Value.TOKEN));
+		assertFalse(rt.contains("token"));
 	}
 
 

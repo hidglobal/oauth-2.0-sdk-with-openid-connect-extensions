@@ -199,6 +199,19 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 	
 		return ! impliesCodeFlow();
 	}
+
+
+	/**
+	 * Checks if this response type contains the specified string value.
+	 *
+	 * @param value The string value. Must not be {@code null}.
+	 *
+	 * @return {@code true} if the value is contained, else {@code false}.
+	 */
+	public boolean contains(final String value) {
+
+		return contains(new Value(value));
+	}
 	
 	
 	/**
