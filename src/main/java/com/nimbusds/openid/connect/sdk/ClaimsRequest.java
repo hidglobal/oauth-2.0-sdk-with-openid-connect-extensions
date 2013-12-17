@@ -92,7 +92,7 @@ public class ClaimsRequest {
 		 */
 		public Entry(final String claimName, final LangTag langTag) {
 
-			this(claimName, ClaimRequirement.VOLUNTARY, langTag, (String)null, null);
+			this(claimName, ClaimRequirement.VOLUNTARY, langTag, null, null);
 		}
 		
 		
@@ -420,9 +420,7 @@ public class ClaimsRequest {
 					}
 
 				} catch (Exception e) {
-
 					// Ignore and continue
-					continue;
 				}
 			}
 
@@ -1018,5 +1016,4 @@ public class ClaimsRequest {
 
 		return claimsRequest;
 	}
-
 }
