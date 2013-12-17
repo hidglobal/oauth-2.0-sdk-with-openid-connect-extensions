@@ -556,4 +556,72 @@ public class ClaimsRequestTest extends TestCase {
 
 		assertTrue(claimsRequest.getUserInfoClaims().isEmpty());
 	}
+
+
+	public void testAddAndRemoveIDTokenClaims()
+		throws Exception {
+
+		ClaimsRequest r = new ClaimsRequest();
+
+		r.addIDTokenClaim("email");
+		r.addIDTokenClaim("name");
+
+		assertTrue(r.getIDTokenClaimNames(false).contains("email"));
+		assertTrue(r.getIDTokenClaimNames(false).contains("name"));
+		assertEquals(2, r.getIDTokenClaims().size());
+
+		JSONObject object = r.toJSONObject();
+		assertEquals(1, object.size());
+
+		JSONObject idTokenObject = (JSONObject)object.get("id_token");
+		assertTrue(idTokenObject.containsKey("email"));
+		assertNull(idTokenObject.get("email"));
+		assertTrue(idTokenObject.containsKey("name"));
+		assertNull(idTokenObject.get("name"));
+		assertEquals(2, idTokenObject.size());
+
+		r.removeIDTokenClaims("email");
+		r.removeIDTokenClaims("name");
+
+		assertFalse(r.getIDTokenClaimNames(false).contains("email"));
+		assertFalse(r.getIDTokenClaimNames(false).contains("name"));
+		assertEquals(0, r.getIDTokenClaims().size());
+
+		object = r.toJSONObject();
+		assertTrue(object.isEmpty());
+	}
+
+
+	public void testAddAndRemoveUserInfoClaims()
+		throws Exception {
+
+		ClaimsRequest r = new ClaimsRequest();
+
+		r.addUserInfoClaim("email");
+		r.addUserInfoClaim("name");
+
+		assertTrue(r.getUserInfoClaimNames(false).contains("email"));
+		assertTrue(r.getUserInfoClaimNames(false).contains("name"));
+		assertEquals(2, r.getUserInfoClaims().size());
+
+		JSONObject object = r.toJSONObject();
+		assertEquals(1, object.size());
+
+		JSONObject userInfoObject = (JSONObject)object.get("userinfo");
+		assertTrue(userInfoObject.containsKey("email"));
+		assertNull(userInfoObject.get("email"));
+		assertTrue(userInfoObject.containsKey("name"));
+		assertNull(userInfoObject.get("name"));
+		assertEquals(2, userInfoObject.size());
+
+		r.removeUserInfoClaims("email");
+		r.removeUserInfoClaims("name");
+
+		assertFalse(r.getUserInfoClaimNames(false).contains("email"));
+		assertFalse(r.getUserInfoClaimNames(false).contains("name"));
+		assertEquals(0, r.getUserInfoClaims().size());
+
+		object = r.toJSONObject();
+		assertTrue(object.isEmpty());
+	}
 }
