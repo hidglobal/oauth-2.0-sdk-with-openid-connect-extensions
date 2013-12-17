@@ -318,7 +318,7 @@ public class ClaimsRequestTest extends TestCase {
 	}
 
 
-	public void resolveSimpleOIDCRequest()
+	public void testResolveSimpleOIDCRequest()
 		throws Exception {
 
 		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
@@ -354,7 +354,7 @@ public class ClaimsRequestTest extends TestCase {
 	}
 
 
-	public void resolveSimpleIDTokenRequest()
+	public void testResolveSimpleIDTokenRequest()
 		throws Exception {
 
 		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
@@ -390,7 +390,7 @@ public class ClaimsRequestTest extends TestCase {
 	}
 
 
-	public void resolveComplexOIDCRequest()
+	public void testResolveComplexOIDCRequest()
 		throws Exception {
 
 		ClaimsRequest cr = new ClaimsRequest();
@@ -398,7 +398,7 @@ public class ClaimsRequestTest extends TestCase {
 
 		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
 			new URL("https://c2id.com/login"),
-			ResponseType.parse("id_token"),
+			ResponseType.parse("code"),
 			Scope.parse("openid email"),
 			new ClientID("123"),
 			new URL("https://client.com/cb"),
