@@ -45,8 +45,8 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 	 * Creates a new UserInfo HTTP GET request.
 	 *
 	 * @param uri         The URI of the UserInfo endpoint. May be
-	 *                    {@code null} if the {@link #toHTTPRequest()}
-	 *                    method will not be used.
+	 *                    {@code null} if the {@link #toHTTPRequest} method
+	 *                    will not be used.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request.
 	 *                    Must not be {@code null}.
 	 */
@@ -60,8 +60,8 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 	 * Creates a new UserInfo request.
 	 *
 	 * @param uri         The URI of the UserInfo endpoint. May be
-	 *                    {@code null} if the {@link #toHTTPRequest()}
-	 *                    method will not be used.
+	 *                    {@code null} if the {@link #toHTTPRequest} method
+	 *                    will not be used.
 	 * @param httpMethod  The HTTP method. Must be HTTP GET or POST and not 
 	 *                    {@code null}.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request.
@@ -105,14 +105,12 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 		switch (httpMethod) {
 		
 			case GET:
-				httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());	
-				httpRequest.setQuery("schema=openid");
+				httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 				break;
 				
 			case POST:
 				httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-				httpRequest.setQuery("schema=openid" +
-				                     "&access_token=" + getAccessToken().getValue());
+				httpRequest.setQuery("access_token=" + getAccessToken().getValue());
 				break;
 			
 			default:

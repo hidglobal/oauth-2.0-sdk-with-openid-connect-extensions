@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -16,6 +17,62 @@ import com.nimbusds.oauth2.sdk.token.TokenPair;
  * Tests access token response serialisation and parsing.
  */
 public class AccessTokenResponseTest extends TestCase {
+
+
+	public void testConstructor() {
+
+		AccessToken accessToken = new BearerAccessToken();
+		RefreshToken refreshToken = new RefreshToken();
+
+		AccessTokenResponse response = new AccessTokenResponse(accessToken, refreshToken);
+
+		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(refreshToken, response.getRefreshToken());
+		assertEquals(accessToken, response.getTokenPair().getAccessToken());
+		assertEquals(refreshToken, response.getTokenPair().getRefreshToken());
+	}
+
+
+	public void testConstructorMinimal() {
+
+		AccessToken accessToken = new BearerAccessToken();
+
+		AccessTokenResponse response = new AccessTokenResponse(accessToken, null);
+
+		assertEquals(accessToken, response.getAccessToken());
+		assertNull(response.getRefreshToken());
+		assertEquals(accessToken, response.getTokenPair().getAccessToken());
+		assertNull(response.getTokenPair().getRefreshToken());
+	}
+
+
+	public void testAltConstructor() {
+
+		AccessToken accessToken = new BearerAccessToken();
+		RefreshToken refreshToken = new RefreshToken();
+		TokenPair tokenPair = new TokenPair(accessToken, refreshToken);
+
+		AccessTokenResponse response = new AccessTokenResponse(tokenPair);
+
+		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(refreshToken, response.getRefreshToken());
+		assertEquals(accessToken, response.getTokenPair().getAccessToken());
+		assertEquals(refreshToken, response.getTokenPair().getRefreshToken());
+	}
+
+
+	public void testAltConstructorMinimal() {
+
+		AccessToken accessToken = new BearerAccessToken();
+		TokenPair tokenPair = new TokenPair(accessToken, null);
+
+		AccessTokenResponse response = new AccessTokenResponse(tokenPair);
+
+		assertEquals(accessToken, response.getAccessToken());
+		assertNull(response.getRefreshToken());
+		assertEquals(accessToken, response.getTokenPair().getAccessToken());
+		assertNull(response.getTokenPair().getRefreshToken());
+	}
 	
 	
 	public void testAccessTokenResponse() {

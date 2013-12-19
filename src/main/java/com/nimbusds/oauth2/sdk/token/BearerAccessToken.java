@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk.token;
 
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
@@ -279,12 +281,14 @@ public final class BearerAccessToken extends AccessToken {
 			throw new ParseException("Missing Bearer access token");
 			
 		} else if (request.getMethod().equals(HTTPRequest.Method.POST)) {
+
+			ContentTypeUtils.ensureContentType(CommonContentTypes.APPLICATION_URLENCODED, request.getContentType());
 			
 			Map<String,String> params = request.getQueryParameters();	
 			
 			if (params.get("access_token") != null) {
 				
-				return parse(params.get("access_token"));
+				return new BearerAccessToken(params.get("access_token"));
 			}
 			
 			throw new ParseException("Missing Bearer access token");

@@ -36,7 +36,7 @@ public class AuthenticationResponseParser {
 	 *                        error response.
 	 */
 	public static AuthenticationResponse parse(final URL redirectURI,
-		                                      final Map<String,String> params)
+						   final Map<String,String> params)
 		throws ParseException {
 
 
