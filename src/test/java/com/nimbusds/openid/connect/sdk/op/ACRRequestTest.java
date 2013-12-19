@@ -11,11 +11,8 @@ import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.openid.connect.sdk.ClaimsRequest;
-import com.nimbusds.openid.connect.sdk.Display;
-import com.nimbusds.openid.connect.sdk.Nonce;
-import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
-import com.nimbusds.openid.connect.sdk.Prompt;
+
+import com.nimbusds.openid.connect.sdk.*;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
@@ -56,7 +53,7 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveNone()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/authz");
+		URL requestURI = new URL("https://c2id.com/login");
 		ResponseType rt = new ResponseType();
 		rt.add(ResponseType.Value.CODE);
 		Scope scope = Scope.parse("openid profile");
@@ -64,12 +61,11 @@ public class ACRRequestTest extends TestCase {
 		URL redirectURI = new URL("https://example.com/in");
 		State state = new State();
 		Nonce nonce = new Nonce();
-		
-		
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(requestURI, 
+
+		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
 			rt, scope, clientID, redirectURI, state, nonce);
 		
-		ACRRequest acrRequest = ACRRequest.resolve(authzRequest);
+		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
 		assertNull(acrRequest.getEssentialACRs());
 		assertNull(acrRequest.getVoluntaryACRs());
@@ -81,7 +77,7 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveTopLevelACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/authz");
+		URL requestURI = new URL("https://c2id.com/login");
 		ResponseType rt = new ResponseType();
 		rt.add(ResponseType.Value.CODE);
 		Scope scope = Scope.parse("openid profile");
@@ -97,11 +93,11 @@ public class ACRRequestTest extends TestCase {
 		acrValues.add(new ACR("2"));
 		ClaimsRequest claims = null;
 		
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(requestURI, 
+		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
 			rt, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, null, null, null, null, acrValues, claims);
 		
-		ACRRequest acrRequest = ACRRequest.resolve(authzRequest);
+		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
 		assertNull(acrRequest.getEssentialACRs());
 		
@@ -119,7 +115,7 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveClaimsLevelEssentialACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/authz");
+		URL requestURI = new URL("https://c2id.com/login");
 		ResponseType rt = new ResponseType();
 		rt.add(ResponseType.Value.CODE);
 		Scope scope = Scope.parse("openid profile");
@@ -139,11 +135,11 @@ public class ACRRequestTest extends TestCase {
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
 		
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(requestURI, 
+		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
 			rt, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, null, null, null, null, acrValues, claims);
 		
-		ACRRequest acrRequest = ACRRequest.resolve(authzRequest);
+		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
 		assertTrue(acrRequest.getEssentialACRs().contains(new ACR("A")));
 		assertTrue(acrRequest.getEssentialACRs().contains(new ACR("B")));
@@ -158,7 +154,7 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveClaimsLevelVoluntaryACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/authz");
+		URL requestURI = new URL("https://c2id.com/login");
 		ResponseType rt = new ResponseType();
 		rt.add(ResponseType.Value.CODE);
 		Scope scope = Scope.parse("openid profile");
@@ -178,11 +174,11 @@ public class ACRRequestTest extends TestCase {
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.VOLUNTARY, null, essentialACRs);
 		
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(requestURI, 
+		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
 			rt, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, null, null, null, null, acrValues, claims);
 		
-		ACRRequest acrRequest = ACRRequest.resolve(authzRequest);
+		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
 		assertNull(acrRequest.getEssentialACRs());
 		
@@ -197,7 +193,7 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveMixedACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/authz");
+		URL requestURI = new URL("https://c2id.com/login");
 		ResponseType rt = new ResponseType();
 		rt.add(ResponseType.Value.CODE);
 		Scope scope = Scope.parse("openid profile");
@@ -219,11 +215,11 @@ public class ACRRequestTest extends TestCase {
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
 		
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(requestURI, 
+		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
 			rt, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, null, null, null, null, acrValues, claims);
 		
-		ACRRequest acrRequest = ACRRequest.resolve(authzRequest);
+		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
 		assertTrue(acrRequest.getEssentialACRs().contains(new ACR("A")));
 		assertTrue(acrRequest.getEssentialACRs().contains(new ACR("B")));

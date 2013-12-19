@@ -321,7 +321,7 @@ public class ClaimsRequestTest extends TestCase {
 	public void testResolveSimpleOIDCRequest()
 		throws Exception {
 
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
+		AuthenticationRequest authRequest = new AuthenticationRequest(
 			new URL("https://c2id.com/login"),
 			ResponseType.parse("code"),
 			Scope.parse("openid email"),
@@ -330,7 +330,7 @@ public class ClaimsRequestTest extends TestCase {
 			new State(),
 			new Nonce());
 
-		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authzRequest);
+		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authRequest);
 
 		assertTrue(claimsRequest.getIDTokenClaims().isEmpty());
 
@@ -339,11 +339,11 @@ public class ClaimsRequestTest extends TestCase {
 		assertTrue(userInfoClaims.contains("email_verified"));
 		assertEquals(2, userInfoClaims.size());
 
-		Map<String,String> authzRequestParams = authzRequest.toParameters();
+		Map<String,String> authRequestParams = authRequest.toParameters();
 
-		authzRequest = OIDCAuthorizationRequest.parse(new URL("https://c2id.com/login"), authzRequestParams);
+		authRequest = AuthenticationRequest.parse(new URL("https://c2id.com/login"), authRequestParams);
 
-		claimsRequest = ClaimsRequest.resolve(authzRequest);
+		claimsRequest = ClaimsRequest.resolve(authRequest);
 
 		assertTrue(claimsRequest.getIDTokenClaims().isEmpty());
 
@@ -357,7 +357,7 @@ public class ClaimsRequestTest extends TestCase {
 	public void testResolveSimpleIDTokenRequest()
 		throws Exception {
 
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
+		AuthenticationRequest authRequest = new AuthenticationRequest(
 			new URL("https://c2id.com/login"),
 			ResponseType.parse("id_token"),
 			Scope.parse("openid email"),
@@ -366,7 +366,7 @@ public class ClaimsRequestTest extends TestCase {
 			new State(),
 			new Nonce());
 
-		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authzRequest);
+		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authRequest);
 
 		assertTrue(claimsRequest.getUserInfoClaims().isEmpty());
 
@@ -375,11 +375,11 @@ public class ClaimsRequestTest extends TestCase {
 		assertTrue(idTokenClaims.contains("email_verified"));
 		assertEquals(2, idTokenClaims.size());
 
-		Map<String,String> authzRequestParams = authzRequest.toParameters();
+		Map<String,String> authRequestParams = authRequest.toParameters();
 
-		authzRequest = OIDCAuthorizationRequest.parse(new URL("https://c2id.com/login"), authzRequestParams);
+		authRequest = AuthenticationRequest.parse(new URL("https://c2id.com/login"), authRequestParams);
 
-		claimsRequest = ClaimsRequest.resolve(authzRequest);
+		claimsRequest = ClaimsRequest.resolve(authRequest);
 
 		assertTrue(claimsRequest.getUserInfoClaims().isEmpty());
 
@@ -396,7 +396,7 @@ public class ClaimsRequestTest extends TestCase {
 		ClaimsRequest cr = new ClaimsRequest();
 		cr.addIDTokenClaim(new ClaimsRequest.Entry("email", ClaimRequirement.ESSENTIAL));
 
-		OIDCAuthorizationRequest authzRequest = new OIDCAuthorizationRequest(
+		AuthenticationRequest authRequest = new AuthenticationRequest(
 			new URL("https://c2id.com/login"),
 			ResponseType.parse("code"),
 			Scope.parse("openid email"),
@@ -414,7 +414,7 @@ public class ClaimsRequestTest extends TestCase {
 			null,
 			cr);
 
-		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authzRequest);
+		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authRequest);
 
 		Set<String> idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
 		assertTrue(idTokenClaims.contains("email"));
@@ -433,11 +433,11 @@ public class ClaimsRequestTest extends TestCase {
 		assertEquals(2, userInfoClaims.size());
 
 
-		Map<String,String> authzRequestParams = authzRequest.toParameters();
+		Map<String,String> authRequestParams = authRequest.toParameters();
 
-		authzRequest = OIDCAuthorizationRequest.parse(new URL("https://c2id.com/login"), authzRequestParams);
+		authRequest = AuthenticationRequest.parse(new URL("https://c2id.com/login"), authRequestParams);
 
-		claimsRequest = ClaimsRequest.resolve(authzRequest);
+		claimsRequest = ClaimsRequest.resolve(authRequest);
 
 		idTokenClaims = claimsRequest.getIDTokenClaimNames(false);
 		assertTrue(idTokenClaims.contains("email"));

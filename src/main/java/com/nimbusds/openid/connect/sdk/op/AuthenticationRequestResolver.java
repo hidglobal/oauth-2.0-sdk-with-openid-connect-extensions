@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
 
-import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
+import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.OIDCError;
 import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
 import com.nimbusds.openid.connect.sdk.util.Resource;
@@ -28,7 +28,7 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
 
 
 /**
- * Resolves the final OpenID Connect authorisation request by superseding its
+ * Resolves the final OpenID Connect authentication request by superseding its
  * parameters with those found in the optional OpenID Connect request object.
  * The request object is encoded as a JSON Web Token (JWT) and can be specified 
  * directly (inline) using the {@code request} parameter, or by URL using the 
@@ -42,8 +42,6 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * {@link com.nimbusds.openid.connect.sdk.util.ResourceRetriever JWT retriever}
  * must be provided, otherwise only inlined request objects can be processed.
  *
- * <p>This class is thread-safe.
- *
  * <p>Related specifications:
  *
  * <ul>
@@ -51,7 +49,7 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * </ul>
  */
 @ThreadSafe
-public class OIDCAuthorizationRequestResolver {
+public class AuthenticationRequestResolver {
 
 
 	/**
@@ -67,12 +65,12 @@ public class OIDCAuthorizationRequestResolver {
 
 
 	/**
-	 * Creates a new minimal OpenID Connect authorisation request resolver.
-	 * It will not process OpenID Connect request objects and will throw a
-	 * {@link ResolveException} if the authorisation request includes a
-	 * {@code request} or {@code request_uri} parameter.
+	 * Creates a new minimal OpenID Connect authentication request
+	 * resolver. It will not process OpenID Connect request objects and
+	 * will throw a {@link ResolveException} if the authentication request
+	 * includes a {@code request} or {@code request_uri} parameter.
 	 */
-	public OIDCAuthorizationRequestResolver() {
+	public AuthenticationRequestResolver() {
 
 		jwtDecoder = null;
 		jwtRetriever = null;
@@ -80,17 +78,17 @@ public class OIDCAuthorizationRequestResolver {
 	
 	
 	/**
-	 * Creates a new OpenID Connect authorisation request resolver that
+	 * Creates a new OpenID Connect authentication request resolver that
 	 * supports OpenID Connect request objects passed by value (using the
-	 * authorisation {@code request} parameter). It will throw a
-	 * {@link ResolveException} if the authorisation request includes a
+	 * authentication {@code request} parameter). It will throw a
+	 * {@link ResolveException} if the authentication request includes a
 	 * {@code request_uri} parameter.
 	 *
 	 * @param jwtDecoder A configured JWT decoder providing JWS validation 
 	 *                   and optional JWE decryption of the request
 	 *                   objects. Must not be {@code null}.
 	 */
-	public OIDCAuthorizationRequestResolver(final JWTDecoder jwtDecoder) {
+	public AuthenticationRequestResolver(final JWTDecoder jwtDecoder) {
 
 		if (jwtDecoder == null)
 			throw new IllegalArgumentException("The JWT decoder must not be null");
@@ -104,8 +102,8 @@ public class OIDCAuthorizationRequestResolver {
 	/**
 	 * Creates a new OpenID Connect request object resolver that supports
 	 * OpenID Connect request objects passed by value (using the
-	 * authorisation {@code request} parameter) or by reference (using the
-	 * authorisation {@code request_uri} parameter).
+	 * authentication {@code request} parameter) or by reference (using the
+	 * authentication {@code request_uri} parameter).
 	 * 
 	 * @param jwtDecoder   A configured JWT decoder providing JWS 
 	 *                     validation and optional JWE decryption of the
@@ -114,8 +112,8 @@ public class OIDCAuthorizationRequestResolver {
 	 *                     request objects passed by URL. Must not be
 	 *                     {@code null}.
 	 */
-	public OIDCAuthorizationRequestResolver(final JWTDecoder jwtDecoder,
-		                                final ResourceRetriever jwtRetriever) {
+	public AuthenticationRequestResolver(final JWTDecoder jwtDecoder,
+					     final ResourceRetriever jwtRetriever) {
 
 		if (jwtDecoder == null)
 			throw new IllegalArgumentException("The JWT decoder must not be null");
@@ -231,7 +229,7 @@ public class OIDCAuthorizationRequestResolver {
 
 	/**
 	 * Reformats the specified JWT claims set to a 
-	 * {@code java.util.Map<String,String>} instance.
+	 * {@literal java.util.Map&<String,String>} instance.
 	 *
 	 * @param claimsSet The JWT claims set to reformat. Must not be
 	 *                  {@code null}.
@@ -284,20 +282,20 @@ public class OIDCAuthorizationRequestResolver {
 
 
 	/**
-	 * Resolves the specified OpenID Connect authorisation request by 
+	 * Resolves the specified OpenID Connect authentication request by
 	 * superseding its parameters with those found in the optional OpenID 
 	 * Connect request object (if any).
 	 * 
-	 * @param request The OpenID Connect authorisation request. Must not be
+	 * @param request The OpenID Connect authentication request. Must not be
 	 *                {@code null}.
 	 * 
-	 * @return The resolved authorisation request, or the original 
+	 * @return The resolved authentication request, or the original
 	 *         unmodified request if no OpenID Connect request object was
 	 *         specified.
 	 * 
 	 * @throws ResolveException If the request couldn't be resolved.
 	 */
-	public OIDCAuthorizationRequest resolve(final OIDCAuthorizationRequest request)
+	public AuthenticationRequest resolve(final AuthenticationRequest request)
 		throws ResolveException {
 
 		if (! request.specifiesRequestObject()) {
@@ -327,7 +325,7 @@ public class OIDCAuthorizationRequestResolver {
 
 			} catch (SerializeException e) {
 
-				throw new ResolveException("Couldn't resolve final OpenID Connect authorization request: " + e.getMessage(), e);
+				throw new ResolveException("Couldn't resolve final OpenID Connect authentication request: " + e.getMessage(), e);
 			}
 
 			// Merge params from request object
@@ -335,33 +333,33 @@ public class OIDCAuthorizationRequestResolver {
 
 
 			// Parse again
-			OIDCAuthorizationRequest finalAuthzRequest;
+			AuthenticationRequest finalAuthRequest;
 
 			try {
-				finalAuthzRequest = OIDCAuthorizationRequest.parse(request.getURI(), finalParams);
+				finalAuthRequest = AuthenticationRequest.parse(request.getURI(), finalParams);
 
 			} catch (ParseException e) {
 
-				throw new ResolveException("Couldn't create final OpenID Connect authorization request: " + e.getMessage(), e);
+				throw new ResolveException("Couldn't create final OpenID Connect authentication request: " + e.getMessage(), e);
 			}
 			
-			return new OIDCAuthorizationRequest(
-				finalAuthzRequest.getURI(),
-				finalAuthzRequest.getResponseType(),
-				finalAuthzRequest.getScope(),
-				finalAuthzRequest.getClientID(),
-				finalAuthzRequest.getRedirectionURI(),
-				finalAuthzRequest.getState(),
-				finalAuthzRequest.getNonce(),
-				finalAuthzRequest.getDisplay(),
-				finalAuthzRequest.getPrompt(),
-				finalAuthzRequest.getMaxAge(),
-				finalAuthzRequest.getUILocales(),
-				finalAuthzRequest.getClaimsLocales(),
-				finalAuthzRequest.getIDTokenHint(),
-				finalAuthzRequest.getLoginHint(),
-				finalAuthzRequest.getACRValues(),
-				finalAuthzRequest.getClaims());
+			return new AuthenticationRequest(
+				finalAuthRequest.getURI(),
+				finalAuthRequest.getResponseType(),
+				finalAuthRequest.getScope(),
+				finalAuthRequest.getClientID(),
+				finalAuthRequest.getRedirectionURI(),
+				finalAuthRequest.getState(),
+				finalAuthRequest.getNonce(),
+				finalAuthRequest.getDisplay(),
+				finalAuthRequest.getPrompt(),
+				finalAuthRequest.getMaxAge(),
+				finalAuthRequest.getUILocales(),
+				finalAuthRequest.getClaimsLocales(),
+				finalAuthRequest.getIDTokenHint(),
+				finalAuthRequest.getLoginHint(),
+				finalAuthRequest.getACRValues(),
+				finalAuthRequest.getClaims());
 			
 		} catch (ResolveException e) {
 			

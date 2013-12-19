@@ -6,14 +6,14 @@ import java.util.List;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.ClaimsRequest;
-import com.nimbusds.openid.connect.sdk.OIDCAuthorizationRequest;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
 
 /**
- *  Resolved authentication Context Class Reference (ACR) request.
+ * Resolved authentication Context Class Reference (ACR) request.
  */
 @Immutable 
 public final class ACRRequest {
@@ -78,33 +78,28 @@ public final class ACRRequest {
 	 *         essential or voluntary values, else {@code false}.
 	 */
 	public boolean isEmpty() {
-		
-		if (essentialACRs != null && ! essentialACRs.isEmpty())
-			return false;
-		
-		if (voluntaryACRs != null && ! voluntaryACRs.isEmpty())
-			return false;
-		
-		return true;
+
+		return !(essentialACRs != null && !essentialACRs.isEmpty()) &&
+		       !(voluntaryACRs != null && !voluntaryACRs.isEmpty());
 	}
 	
 	
 	
 	/**
 	 * Resolves the requested essential and voluntary ACR values from the
-	 * specified OpenID Connect authorisation request.
+	 * specified OpenID Connect authentication request.
 	 * 
-	 * @param authzRequest The OpenID Connect authorisation request. Should
-	 *                     be resolved. Must not be {@code null}.
+	 * @param authRequest The OpenID Connect authentication request. Should
+	 *                    be resolved. Must not be {@code null}.
 	 * 
 	 * @return The resolved ACR request.
 	 */
-	public static ACRRequest resolve(final OIDCAuthorizationRequest authzRequest) {
+	public static ACRRequest resolve(final AuthenticationRequest authRequest) {
 		
 		List<ACR> essentialACRs = null;
 		List<ACR> voluntaryACRs = null;
 		
-		ClaimsRequest claimsRequest = authzRequest.getClaims();
+		ClaimsRequest claimsRequest = authRequest.getClaims();
 		
 		if (claimsRequest != null) {
 			
@@ -142,7 +137,7 @@ public final class ACRRequest {
 		}
 		
 		
-		List<ACR> topLevelACRs = authzRequest.getACRValues();
+		List<ACR> topLevelACRs = authRequest.getACRValues();
 		
 		if (topLevelACRs != null) {
 			

@@ -957,19 +957,19 @@ public class ClaimsRequest {
 
 	/**
 	 * Resolves the merged claims request for the specified OpenID Connect
-	 * authorisation request. The scope values that are
+	 * authentication request. The scope values that are
 	 * {@link OIDCScopeValue standard OpenID Connect scope values} are
 	 * resolved to their respective individual claims requests, any other
 	 * scope values are ignored.
 	 *
-	 * @param authzRequest The OpenID Connect authorisation request. Must
-	 *                     not be {@code null}.
+	 * @param authRequest The OpenID Connect authentication request. Must
+	 *                    not be {@code null}.
 	 *
 	 * @return The merged claims request.
 	 */
-	public static ClaimsRequest resolve(final OIDCAuthorizationRequest authzRequest) {
+	public static ClaimsRequest resolve(final AuthenticationRequest authRequest) {
 
-		return resolve(authzRequest.getResponseType(), authzRequest.getScope(), authzRequest.getClaims());
+		return resolve(authRequest.getResponseType(), authRequest.getScope(), authRequest.getClaims());
 	}
 
 

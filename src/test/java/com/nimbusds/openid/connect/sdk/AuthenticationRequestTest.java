@@ -19,7 +19,7 @@ import com.nimbusds.openid.connect.sdk.claims.*;
 /**
  * Tests the OIDC authorisation request class.
  */
-public class OIDCAuthorizationRequestTest extends TestCase {
+public class AuthenticationRequestTest extends TestCase {
 
 
 	private final static String EXAMPLE_JWT_STRING = 
@@ -32,7 +32,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testMinimalConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URL uri = new URL("https://c2id.com/login/");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -49,8 +49,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
 
-		OIDCAuthorizationRequest request = 
-			new OIDCAuthorizationRequest(uri, rts, scope, clientID, redirectURI, state, nonce);
+		AuthenticationRequest request =
+			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce);
 
 		assertEquals(uri, request.getURI());
 		
@@ -74,10 +74,10 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
-		System.out.println("OIDC authz query string: " + queryString);
+		System.out.println("OIDC login query string: " + queryString);
 
 
-		request = OIDCAuthorizationRequest.parse(uri, queryString);
+		request = AuthenticationRequest.parse(uri, queryString);
 		
 		assertEquals(uri, request.getURI());
 
@@ -103,7 +103,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testAltParse()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URL uri = new URL("https://c2id.com/login/");
 
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -120,13 +120,13 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
 
-		OIDCAuthorizationRequest request =
-			new OIDCAuthorizationRequest(uri, rts, scope, clientID, redirectURI, state, nonce);
+		AuthenticationRequest request =
+			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce);
 
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
-		request = OIDCAuthorizationRequest.parse(queryString);
+		request = AuthenticationRequest.parse(queryString);
 
 		assertNull(request.getURI());
 
@@ -152,7 +152,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testExtendedConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URL uri = new URL("https://c2id.com/login/");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -198,8 +198,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		claims.addUserInfoClaim("given_name");
 		claims.addUserInfoClaim("family_name");
 
-		OIDCAuthorizationRequest request = 
-			new OIDCAuthorizationRequest(uri, rts, scope, clientID, redirectURI, state, nonce, 
+		AuthenticationRequest request =
+			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims);
 
 		assertEquals(uri, request.getURI());
@@ -253,7 +253,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		ClaimsRequest claimsOut = request.getClaims();
 
-		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 
@@ -261,10 +261,10 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
-		System.out.println("OIDC authz query string: " + queryString);
+		System.out.println("OIDC login query string: " + queryString);
 
 
-		request = OIDCAuthorizationRequest.parse(uri, queryString);
+		request = AuthenticationRequest.parse(uri, queryString);
 
 		assertEquals(uri, request.getURI());
 		
@@ -317,7 +317,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		claimsOut = request.getClaims();
 
-		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 	}
@@ -326,7 +326,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testRequestObjectConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz");
+		URL uri = new URL("https://c2id.com/login");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -374,8 +374,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		JWT requestObject = JWTParser.parse(EXAMPLE_JWT_STRING);
 
-		OIDCAuthorizationRequest request = 
-			new OIDCAuthorizationRequest(uri, rts, scope, clientID, redirectURI, state, nonce, 
+		AuthenticationRequest request =
+			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
 				                     requestObject);
 
@@ -430,7 +430,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		ClaimsRequest claimsOut = request.getClaims();
 
-		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 
@@ -440,10 +440,10 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
-		System.out.println("OIDC authz query string: " + queryString);
+		System.out.println("OIDC login query string: " + queryString);
 
 
-		request = OIDCAuthorizationRequest.parse(uri, queryString);
+		request = AuthenticationRequest.parse(uri, queryString);
 		
 		assertEquals(uri, request.getURI());
 
@@ -496,7 +496,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		claimsOut = request.getClaims();
 
-		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 
@@ -507,7 +507,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 	public void testRequestURIConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URL uri = new URL("https://c2id.com/login/");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -555,8 +555,8 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		URL requestURI = new URL("http://example.com/request-object.jwt#1234");
 
-		OIDCAuthorizationRequest request = 
-			new OIDCAuthorizationRequest(uri, rts, scope, clientID, redirectURI, state, nonce, 
+		AuthenticationRequest request =
+			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
 				                     requestURI);
 
@@ -611,7 +611,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		ClaimsRequest claimsOut = request.getClaims();
 
-		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 
@@ -621,10 +621,10 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
-		System.out.println("OIDC authz query string: " + queryString);
+		System.out.println("OIDC login query string: " + queryString);
 
 
-		request = OIDCAuthorizationRequest.parse(uri, queryString);
+		request = AuthenticationRequest.parse(uri, queryString);
 		
 		assertEquals(uri, request.getURI());
 
@@ -677,7 +677,7 @@ public class OIDCAuthorizationRequestTest extends TestCase {
 
 		claimsOut = request.getClaims();
 
-		System.out.println("OIDC authz request claims: " + claimsOut.toJSONObject().toString());
+		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 

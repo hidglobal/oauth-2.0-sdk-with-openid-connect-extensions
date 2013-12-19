@@ -37,9 +37,9 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
 
 
 /**
- * OpenID Connect authorisation request. Used to authenticate (if required) an 
- * end-user and request the end-user's authorisation to release information to 
- * the client. This class is immutable.
+ * OpenID Connect authentication request. Intended to authenticate an end-user
+ * and request the end-user's authorisation to release information to the
+ * client.
  *
  * <p>Example HTTP request (code flow):
  *
@@ -56,12 +56,11 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
- *     <li>OpenID Connect Standard 1.0, section 2.3.1.
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.1.
  * </ul>
  */
 @Immutable
-public final class OIDCAuthorizationRequest extends AuthorizationRequest {
+public final class AuthenticationRequest extends AuthorizationRequest {
 	
 	
 	/**
@@ -144,10 +143,10 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Creates a new minimal OpenID Connect authorisation request.
+	 * Creates a new minimal OpenID Connect authentication request.
 	 *
-	 * @param uri         The URI of the authorisation endpoint. May be 
-	 *                    {@code null} if the {@link #toHTTPRequest()}
+	 * @param uri         The URI of the OAuth 2.0 authorisation endpoint.
+	 *                    May be {@code null} if the {@link #toHTTPRequest}
 	 *                    method will not be used.
 	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must specify a
@@ -168,13 +167,13 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * @param nonce       The nonce. Corresponds to the {@code nonce} 
 	 *                    parameter. May be {@code null} for code flow.
 	 */
-	public OIDCAuthorizationRequest(final URL uri,
-		                        final ResponseType rt,
-	                                final Scope scope,
-				        final ClientID clientID,
-				        final URL redirectURI,
-				        final State state,
-				        final Nonce nonce) {
+	public AuthenticationRequest(final URL uri,
+				     final ResponseType rt,
+				     final Scope scope,
+				     final ClientID clientID,
+				     final URL redirectURI,
+				     final State state,
+				     final Nonce nonce) {
 
 		// Not specified: display, prompt, maxAge, uiLocales, claimsLocales, 
 		// idTokenHint, loginHint, acrValues, claims
@@ -185,12 +184,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Creates a new OpenID Connect authorisation request without a request
+	 * Creates a new OpenID Connect authentication request without a request
 	 * object.
 	 *
-	 * @param uri           The URI of the authorisation endpoint. May be 
-	 *                      {@code null} if the {@link #toHTTPRequest()}
-	 *                      method will not be used.
+	 * @param uri           The URI of the OAuth 2.0 authorisation
+	 *                      endpoint. May be {@code null} if the
+	 *                      {@link #toHTTPRequest} method will not be used.
 	 * @param rt            The response type. Corresponds to the 
 	 *                      {@code response_type} parameter. Must specify a
 	 *                      valid OpenID Connect response type. Must not be
@@ -242,22 +241,22 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 */
-	public OIDCAuthorizationRequest(final URL uri,
-		                        final ResponseType rt,
-	                                final Scope scope,
-				        final ClientID clientID,
-				        final URL redirectURI,
-				        final State state,
-				        final Nonce nonce,
-				        final Display display,
-				        final Prompt prompt,
-				        final int maxAge,
-				        final List<LangTag> uiLocales,
-				        final List<LangTag> claimsLocales,
-				        final JWT idTokenHint,
-				        final String loginHint,
-				        final List<ACR> acrValues,
-				        final ClaimsRequest claims) {
+	public AuthenticationRequest(final URL uri,
+				     final ResponseType rt,
+				     final Scope scope,
+				     final ClientID clientID,
+				     final URL redirectURI,
+				     final State state,
+				     final Nonce nonce,
+				     final Display display,
+				     final Prompt prompt,
+				     final int maxAge,
+				     final List<LangTag> uiLocales,
+				     final List<LangTag> claimsLocales,
+				     final JWT idTokenHint,
+				     final String loginHint,
+				     final List<ACR> acrValues,
+				     final ClaimsRequest claims) {
 				    
 				    
 		this(uri, rt, scope, clientID, redirectURI, state, nonce, display, prompt,
@@ -267,12 +266,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Creates a new OpenID Connect authorisation request with a request 
+	 * Creates a new OpenID Connect authentication request with a request
 	 * object specified by value.
 	 *
-	 * @param uri           The URI of the authorisation endpoint. May be 
-	 *                      {@code null} if the {@link #toHTTPRequest()}
-	 *                      method will not be used.
+	 * @param uri           The URI of the OAuth 2.0 authorisation
+	 *                      endpoint. May be {@code null} if the
+	 *                      {@link #toHTTPRequest} method will not be used.
 	 * @param rt            The response type set. Corresponds to the 
 	 *                      {@code response_type} parameter. Must specify a
 	 *                      valid OpenID Connect response type. Must not be
@@ -327,23 +326,23 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      {@code request} parameter. {@code null} if not
 	 *                      specified.
 	 */
-	public OIDCAuthorizationRequest(final URL uri,
-		                        final ResponseType rt,
-	                                final Scope scope,
-				        final ClientID clientID,
-				        final URL redirectURI,
-				        final State state,
-				        final Nonce nonce,
-				        final Display display,
-				        final Prompt prompt,
-				        final int maxAge,
-				        final List<LangTag> uiLocales,
-				        final List<LangTag> claimsLocales,
-				        final JWT idTokenHint,
-				        final String loginHint,
-				        final List<ACR> acrValues,
-				        final ClaimsRequest claims,
-				        final JWT requestObject) {
+	public AuthenticationRequest(final URL uri,
+				     final ResponseType rt,
+				     final Scope scope,
+				     final ClientID clientID,
+				     final URL redirectURI,
+				     final State state,
+				     final Nonce nonce,
+				     final Display display,
+				     final Prompt prompt,
+				     final int maxAge,
+				     final List<LangTag> uiLocales,
+				     final List<LangTag> claimsLocales,
+				     final JWT idTokenHint,
+				     final String loginHint,
+				     final List<ACR> acrValues,
+				     final ClaimsRequest claims,
+				     final JWT requestObject) {
 				    
 		super(uri, rt, clientID, redirectURI, scope, state);
 
@@ -395,12 +394,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Creates a new OpenID Connect authorisation request with a request 
+	 * Creates a new OpenID Connect authentication request with a request
 	 * object specified by URL.
 	 *
-	 * @param uri           The URI of the authorisation endpoint. May be 
-	 *                      {@code null} if the {@link #toHTTPRequest()}
-	 *                      method will not be used.
+	 * @param uri           The URI of the OAuth 2.00 authorisation
+	 *                      endpoint. May be {@code null} if the
+	 *                      {@link #toHTTPRequest} method will not be used.
 	 * @param rt            The response type. Corresponds to the 
 	 *                      {@code response_type} parameter. Must specify a
 	 *                      a valid OpenID Connect response type. Must not 
@@ -455,23 +454,23 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *                      optional {@code request_uri} parameter. 
 	 *                      {@code null} if not specified.
 	 */
-	public OIDCAuthorizationRequest(final URL uri,
-		                        final ResponseType rt,
-	                                final Scope scope,
-				        final ClientID clientID,
-				        final URL redirectURI,
-				        final State state,
-				        final Nonce nonce,
-				        final Display display,
-				        final Prompt prompt,
-				        final int maxAge,
-				        final List<LangTag> uiLocales,
-				        final List<LangTag> claimsLocales,
-				        final JWT idTokenHint,
-				        final String loginHint,
-				        final List<ACR> acrValues,
-				        final ClaimsRequest claims,
-				        final URL requestURI) {
+	public AuthenticationRequest(final URL uri,
+				     final ResponseType rt,
+				     final Scope scope,
+				     final ClientID clientID,
+				     final URL redirectURI,
+				     final State state,
+				     final Nonce nonce,
+				     final Display display,
+				     final Prompt prompt,
+				     final int maxAge,
+				     final List<LangTag> uiLocales,
+				     final List<LangTag> claimsLocales,
+				     final JWT idTokenHint,
+				     final String loginHint,
+				     final List<ACR> acrValues,
+				     final ClaimsRequest claims,
+				     final URL requestURI) {
 				    
 		super(uri, rt, clientID, redirectURI, scope, state);
 
@@ -672,7 +671,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Returns {@code true} if this authorisation request specifies an
+	 * Returns {@code true} if this authentication request specifies an
 	 * OpenID Connect request object (directly through the {@code request} 
 	 * parameter or by reference through the {@code request_uri} parameter).
 	 *
@@ -792,7 +791,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Parses an OpenID Connect authorisation request from the specified
+	 * Parses an OpenID Connect authentication request from the specified
 	 * parameters.
 	 *
 	 * <p>Example parameters:
@@ -808,12 +807,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *
 	 * @param params The parameters. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation request.
+	 * @return The OpenID Connect authentication request.
 	 *
 	 * @throws ParseException If the parameters couldn't be parsed to an
-	 *                        OpenID Connect authorisation request.
+	 *                        OpenID Connect authentication request.
 	 */
-	public static OIDCAuthorizationRequest parse(final Map<String,String> params)
+	public static AuthenticationRequest parse(final Map<String,String> params)
 		throws ParseException {
 
 		return parse(null, params);
@@ -821,7 +820,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Parses an OpenID Connect authorisation request from the specified 
+	 * Parses an OpenID Connect authentication request from the specified
 	 * parameters.
 	 *
 	 * <p>Example parameters:
@@ -835,17 +834,17 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * nonce         = -0S6_WzA2Mj
 	 * </pre>
 	 *
-	 * @param uri    The URI of the authorisation endpoint. May be 
-	 *               {@code null} if the {@link #toHTTPRequest()} method 
+	 * @param uri    The URI of the OAuth 2.0 authorisation endpoint. May
+	 *               be {@code null} if the {@link #toHTTPRequest} method
 	 *               will not be used.
 	 * @param params The parameters. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation request.
+	 * @return The OpenID Connect authentication request.
 	 *
 	 * @throws ParseException If the parameters couldn't be parsed to an
-	 *                        OpenID Connect authorisation request.
+	 *                        OpenID Connect authentication request.
 	 */
-	public static OIDCAuthorizationRequest parse(final URL uri, final Map<String,String> params)
+	public static AuthenticationRequest parse(final URL uri, final Map<String,String> params)
 		throws ParseException {
 
 		// Parse and validate the core OAuth 2.0 autz request params in 
@@ -1101,25 +1100,25 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 		
 		// Inline request object
 		if (requestObject != null)
-			return new OIDCAuthorizationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
+			return new AuthenticationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
 			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
 			                                    idTokenHint, loginHint, acrValues, claims, requestObject);
 	
 		// Request object by URL reference
 		if (requestURI != null)
-			return new OIDCAuthorizationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
+			return new AuthenticationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
 			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
 			                                    idTokenHint, loginHint, acrValues, claims, requestURI);
 		
 		// No request object or URI
-		return new OIDCAuthorizationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
+		return new AuthenticationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
 			                            display, prompt, maxAge, uiLocales, claimsLocales, 
 			                            idTokenHint, loginHint, acrValues, claims);
 	}
 	
 	
 	/**
-	 * Parses an OpenID Connect authorisation request from the specified 
+	 * Parses an OpenID Connect authentication request from the specified
 	 * URL query string.
 	 *
 	 * <p>Example URL query string:
@@ -1135,12 +1134,12 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *
 	 * @param query The URL query string. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation request.
+	 * @return The OpenID Connect authentication request.
 	 *
 	 * @throws ParseException If the query string couldn't be parsed to an 
-	 *                        OpenID Connect authorisation request.
+	 *                        OpenID Connect authentication request.
 	 */
-	public static OIDCAuthorizationRequest parse(final String query)
+	public static AuthenticationRequest parse(final String query)
 		throws ParseException {
 	
 		return parse(null, URLUtils.parseParameters(query));
@@ -1148,7 +1147,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Parses an OpenID Connect authorisation request from the specified
+	 * Parses an OpenID Connect authentication request from the specified
 	 * URL query string.
 	 *
 	 * <p>Example URL query string:
@@ -1162,17 +1161,17 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 * &amp;nonce=n-0S6_WzA2Mj
 	 * </pre>
 	 *
-	 * @param uri   The URI of the authorisation endpoint. May be
-	 *              {@code null} if the {@link #toHTTPRequest()} method
-	 *              will not be used.
+	 * @param uri   The URI of the OAuth 2.0 authorisation endpoint. May be
+	 *              {@code null} if the {@link #toHTTPRequest} method will
+	 *              not be used.
 	 * @param query The URL query string. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation request.
+	 * @return The OpenID Connect authentication request.
 	 *
 	 * @throws ParseException If the query string couldn't be parsed to an
-	 *                        OpenID Connect authorisation request.
+	 *                        OpenID Connect authentication request.
 	 */
-	public static OIDCAuthorizationRequest parse(final URL uri, final String query)
+	public static AuthenticationRequest parse(final URL uri, final String query)
 		throws ParseException {
 
 		return parse(uri, URLUtils.parseParameters(query));
@@ -1180,7 +1179,7 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Parses an authorisation request from the specified HTTP GET or HTTP
+	 * Parses an authentication request from the specified HTTP GET or HTTP
 	 * POST request.
 	 *
 	 * <p>Example HTTP request (GET):
@@ -1197,10 +1196,10 @@ public final class OIDCAuthorizationRequest extends AuthorizationRequest {
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation request.
+	 * @return The OpenID Connect authentication request.
 	 *
 	 * @throws ParseException If the HTTP request couldn't be parsed to an 
-	 *                        OpenID Connect authorisation request.
+	 *                        OpenID Connect authentication request.
 	 */
 	public static AuthorizationRequest parse(final HTTPRequest httpRequest) 
 		throws ParseException {
