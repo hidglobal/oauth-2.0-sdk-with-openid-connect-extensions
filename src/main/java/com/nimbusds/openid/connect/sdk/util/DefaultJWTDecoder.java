@@ -149,7 +149,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 		}
 			
 		
-		boolean verified = false;
+		boolean verified;
 
 		try {
 			verified = signedJWT.verify(verifier);
