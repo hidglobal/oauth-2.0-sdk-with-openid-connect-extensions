@@ -45,7 +45,7 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.9.
+ *     <li>OpenID Connect Core 1.0, section 6.
  * </ul>
  */
 @ThreadSafe

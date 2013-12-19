@@ -30,8 +30,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *     <li>The client OpenID Connect metadata.
  *     <li>The optional client secret for a confidential client.
  * </ul>
- * 
- * <p>This class is immutable.
  *
  * <p>Related specifications:
  *

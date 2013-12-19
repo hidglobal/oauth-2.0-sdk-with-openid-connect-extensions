@@ -4,6 +4,8 @@ package com.nimbusds.oauth2.sdk;
 import java.net.URL;
 import java.util.Map;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -14,7 +16,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Token request. Used to obtain an
  * {@link com.nimbusds.oauth2.sdk.token.AccessToken access token} and an
  * optional {@link com.nimbusds.oauth2.sdk.token.RefreshToken refresh token}
- * at the Token endpoint of the authorisation server. This class is immutable.
+ * at the Token endpoint of the authorisation server.
  *
  * <p>Example token request with an authorisation code grant:
  *
@@ -35,6 +37,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.3, 4.3.2, 4.4.2 and 6.
  * </ul>
  */
+@Immutable
 public class TokenRequest extends AbstractRequest {
 
 
@@ -54,8 +57,8 @@ public class TokenRequest extends AbstractRequest {
 	 * Creates a new token request.
 	 *
 	 * @param uri        The URI of the token endpoint. May be 
-	 *                   {@code null} if the {@link #toHTTPRequest()}
-	 *                   method will not be used.
+	 *                   {@code null} if the {@link #toHTTPRequest} method
+	 *                   will not be used.
 	 * @param clientAuth The client authentication, {@code null} if none.
 	 * @param authzGrant The authorisation grant. Must not be {@code null}.
 	 */

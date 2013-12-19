@@ -18,8 +18,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Authorisation request. Used to authenticate an end-user and request the
- * end-user's consent to grant the client access to a protected resource. 
- * This class is immutable.
+ * end-user's consent to grant the client access to a protected resource.
  *
  * <p>Extending classes may define additional request parameters as well as 
  * enforce tighter requirements on the base parameters.

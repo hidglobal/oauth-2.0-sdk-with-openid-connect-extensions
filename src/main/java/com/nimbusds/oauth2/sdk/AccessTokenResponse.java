@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * Access token response from the Token endpoint. This class is immutable.
+ * Access token response from the Token endpoint.
  *
  * <p>Example HTTP response:
  *

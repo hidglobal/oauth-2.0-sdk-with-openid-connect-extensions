@@ -7,7 +7,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * Client authentication method at the Token endpoint. This class is immutable.
+ * Client authentication method at the Token endpoint.
  *
  * <p>Constants are provided for four client authentication methods:
  *

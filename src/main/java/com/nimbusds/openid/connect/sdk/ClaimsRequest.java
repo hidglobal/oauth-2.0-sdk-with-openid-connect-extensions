@@ -33,19 +33,19 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
  * <p>Related specifications: 
  * 
  * <ul>
- *     <li>OpenID Connect Messages, section 2.6.
+ *     <li>OpenID Connect Core 1.0, section 5.5.
  * </ul>
  */
 public class ClaimsRequest {
 
 
 	/**
-	 * Individual claim request. This class is immutable.
+	 * Individual claim request.
 	 *
 	 * <p>Related specifications: 
 	 * 
 	 * <ul>
-	 *     <li>OpenID Connect Messages, section 2.6.1.
+	 *     <li>OpenID Connect Core 1.0, section 5.5.1.
 	 * </ul>
 	 */
 	@Immutable

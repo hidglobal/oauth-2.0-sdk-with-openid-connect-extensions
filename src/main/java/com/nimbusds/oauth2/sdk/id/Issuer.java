@@ -8,7 +8,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Issuer identifier. This class is immutable.
+ * Issuer identifier.
  *
  * <p>Valid issuer identifiers are URLs with "https" schema and no query or
  * fragment component.

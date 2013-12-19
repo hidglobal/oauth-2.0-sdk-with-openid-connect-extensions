@@ -18,7 +18,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Authorisation success response. Used to return an authorisation code or 
- * access token at the Authorisation endpoint. This class is immutable.
+ * access token at the Authorisation endpoint.
  *
  * <p>Example HTTP response with code (code flow):
  *
@@ -281,7 +281,7 @@ public class AuthorizationSuccessResponse
 	public static AuthorizationSuccessResponse parse(final URL uri)
 		throws ParseException {
 		
-		String paramString = null;
+		String paramString;
 		
 		if (uri.getQuery() != null)
 			paramString = uri.getQuery();

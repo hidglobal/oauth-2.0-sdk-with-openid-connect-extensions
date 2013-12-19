@@ -20,7 +20,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.4.
+ *     <li>OpenID Connect Core 1.0, section 5.2.
  * </ul>
  */
 public class OIDCScopeValue extends Scope.Value {
@@ -155,7 +155,7 @@ public class OIDCScopeValue extends Scope.Value {
 	 * Gets the claims request JSON object for this OpenID Connect scope 
 	 * value.
 	 * 
-	 * <p>See OpenID Connect Messages 1.0, section 2.6.1.
+	 * <p>See OpenID Connect Core 1.0, section 5.1.
 	 * 
 	 * <p>Example JSON object for "openid" scope value:
 	 * 
@@ -203,7 +203,7 @@ public class OIDCScopeValue extends Scope.Value {
 	/**
 	 * Gets the claims request entries for this OpenID Connect scope value.
 	 * 
-	 * <p>See OpenID Connect Messages 1.0, section 2.6.1.
+	 * <p>See OpenID Connect Core 1.0, section 5.1.
 	 * 
 	 * @return The claims request entries, {@code null} if not applicable 
 	 *         (for scope values {@link #OPENID} and 

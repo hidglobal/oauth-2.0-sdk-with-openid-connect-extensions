@@ -19,9 +19,9 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OpenID Connect client registration request. This class is immutable.
+ * OpenID Connect client registration request.
  * 
- * Note that the update operation is not specified in OpenID Connect Dynamic
+ * <p>Note that the update operation is not specified in OpenID Connect Dynamic
  * Client Registration.
  * 
  * <p>Example HTTP request:

@@ -14,8 +14,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
 /**
- * UserInfo request. Used to retrieve the consented claims about the end-user. 
- * This class is immutable.
+ * UserInfo request. Used to retrieve the consented claims about the end-user.
  *
  * <p>Example HTTP GET request:
  *
@@ -28,8 +27,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.1.
- *     <li>OpenID Connect Standard 1.0, section 4.1.
+ *     <li>OpenID Connect Core 1.0, section 5.3.1.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC6750), section 2.
  * </ul>
  */

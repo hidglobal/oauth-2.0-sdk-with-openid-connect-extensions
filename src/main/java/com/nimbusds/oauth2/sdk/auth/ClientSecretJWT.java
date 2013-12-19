@@ -20,8 +20,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Client secret JWT authentication at the Token endpoint. Implements
- * {@link ClientAuthenticationMethod#CLIENT_SECRET_JWT}. This class is 
- * immutable.
+ * {@link ClientAuthenticationMethod#CLIENT_SECRET_JWT}.
  *
  * <p>Supported signature JSON Web Algorithms (JWAs) by this implementation:
  *

@@ -15,8 +15,7 @@ import net.jcip.annotations.ThreadSafe;
 
 /**
  * The default retriever of resources specified by URL. Provides setting of
- * HTTP connect and read timeouts. Caching header directives are not honoured. 
- * This class is thread-safe.
+ * HTTP connect and read timeouts. Caching header directives are not honoured.
  */
 @ThreadSafe
 public class DefaultResourceRetriever implements ResourceRetriever {

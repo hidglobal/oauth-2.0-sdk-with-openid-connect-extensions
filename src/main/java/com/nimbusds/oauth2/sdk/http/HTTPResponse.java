@@ -20,8 +20,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 /**
  * HTTP response with support for the parameters required to construct an 
- * {@link com.nimbusds.oauth2.sdk.Response OAuth 2.0 response message}. This
- * class is thread-safe.
+ * {@link com.nimbusds.oauth2.sdk.Response OAuth 2.0 response message}.
  *
  * <p>Provided HTTP status code constants:
  *

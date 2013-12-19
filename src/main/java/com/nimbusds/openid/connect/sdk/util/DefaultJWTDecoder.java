@@ -23,7 +23,7 @@ import com.nimbusds.jwt.SignedJWT;
 
 
 /**
- * The default decoder of JSON Web Tokens (JWTs). This class is thread-safe.
+ * The default decoder of JSON Web Tokens (JWTs).
  *
  * <p>Supports:
  *

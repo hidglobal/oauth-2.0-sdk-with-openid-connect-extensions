@@ -9,8 +9,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 /**
  * The end-user's gender: Values defined by the OpenID Connect specification 
  * are {@link #FEMALE} and {@link #MALE} ({@code gender}). Other values may be
- * used when neither of the defined values are applicable. This class is
- * immutable.
+ * used when neither of the defined values are applicable.
  */
 @Immutable
 public class Gender extends Identifier {

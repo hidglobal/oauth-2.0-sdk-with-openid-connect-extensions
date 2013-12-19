@@ -7,7 +7,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * Access token type. This class is immutable.
+ * Access token type.
  */
 @Immutable
 public final class AccessTokenType extends Identifier {
@@ -21,7 +21,7 @@ public final class AccessTokenType extends Identifier {
 	
 	/**
 	 * MAC, see OAuth 2.0 Message Authentication Code (MAC) Tokens 
-	 * (draft-ietf-oauth-v2-http-mac-02).
+	 * (draft-ietf-oauth-v2-http-mac-04).
 	 */
 	public static final AccessTokenType MAC = new AccessTokenType("mac");
 

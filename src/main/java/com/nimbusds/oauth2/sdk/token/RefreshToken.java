@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
- * Refresh token. This class is immutable.
+ * Refresh token.
  *
  * <p>Related specifications:
  *

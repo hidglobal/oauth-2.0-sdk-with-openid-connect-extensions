@@ -15,7 +15,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, sections 2.2.3 and 2.2.4.
+ *     <li>OpenID Connect Core 1.0, sections 3.1.3.3 and 3.1.3.4.
  * </ul>
  */
 public class OIDCTokenResponseParser { 

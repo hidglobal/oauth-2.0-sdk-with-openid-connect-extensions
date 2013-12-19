@@ -9,7 +9,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * OpenID Connect client information response. This class is immutable.
+ * OpenID Connect client information response.
  *
  * <p>Example HTTP response:
  *

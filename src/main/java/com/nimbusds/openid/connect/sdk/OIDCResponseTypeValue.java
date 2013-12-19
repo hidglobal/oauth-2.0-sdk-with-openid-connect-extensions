@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.ResponseType;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages, section 2.1.1.
+ *     <li>OpenID Connect Core 1.0, sections 2 and 3.1.2.1.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices
  *     <li>OAuth 2.0 (RFC 6749), sections 3.1.1 and 4.1.1.
  * </ul>

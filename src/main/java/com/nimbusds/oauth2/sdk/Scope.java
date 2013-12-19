@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * Authorisation scope. This class is not thread-safe.
+ * Authorisation scope.
  *
  * <p>Example scope from OpenID Connect indicating access to the user's email
  * and profile details:
@@ -33,7 +33,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 
 	
 	/**
-	 * Authorisation scope value. This class is immutable.
+	 * Authorisation scope value.
 	 */
 	@Immutable
 	public static class Value extends Identifier {

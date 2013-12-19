@@ -12,8 +12,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.3.
- *     <li>OpenID Connect Standard 1.0, section 4.3.
+ *     <li>OpenID Connect Core 1.0, section 5.3.2 and 5.3.3.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  */

@@ -18,8 +18,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * Client secret post authentication at the Token endpoint. Implements
- * {@link ClientAuthenticationMethod#CLIENT_SECRET_POST}. This class is
- * immutable.
+ * {@link ClientAuthenticationMethod#CLIENT_SECRET_POST}.
  *
  * <p>Related specifications:
  *

@@ -31,7 +31,7 @@ import com.nimbusds.openid.connect.sdk.claims.ClaimType;
 
 
 /**
- * OpenID Connect provider metadata. This class is immutable.
+ * OpenID Connect provider metadata.
  *
  * <p>Related specifications:
  *

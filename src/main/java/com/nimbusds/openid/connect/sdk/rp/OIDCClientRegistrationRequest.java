@@ -16,7 +16,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
 /**
- * OpenID Connect client registration request. This class is immutable.
+ * OpenID Connect client registration request.
  *
  * <p>Example HTTP request:
  *

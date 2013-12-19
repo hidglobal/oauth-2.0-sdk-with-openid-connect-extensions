@@ -12,15 +12,14 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * must contain the {@link com.nimbusds.oauth2.sdk.id.ClientID client 
  * identifier} of the authorised party.
  *
- * <p>The client identifier can be a URL or an arbitrary string. This class is
- * immutable.
+ * <p>The client identifier can be a URL or an arbitrary string.
  *
  * <p>See also {@link com.nimbusds.oauth2.sdk.id.ClientID}.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
+ *     <li>OpenID Connect Core 1.0, section 2.
  *     <li>OAuth 2.0 (RFC 6749), section 2.2.
  * </ul>
  */

@@ -17,7 +17,7 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 
 
 /**
- * UserInfo error response. This class is immutable.
+ * UserInfo error response.
  *
  * <p>Standard OAuth 2.0 Bearer Token errors:
  *
@@ -40,8 +40,7 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.3.
- *     <li>OpenID Connect Standard 1.0, section 4.3.
+ *     <li>OpenID Connect Core 1.0, section 5.3.3.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  */
@@ -124,7 +123,7 @@ public final class UserInfoErrorResponse
 	@Override
 	public HTTPResponse toHTTPResponse() {
 
-		HTTPResponse httpResponse = null;
+		HTTPResponse httpResponse;
 
 		if (error.getHTTPStatusCode() > 0)
 			httpResponse = new HTTPResponse(error.getHTTPStatusCode());

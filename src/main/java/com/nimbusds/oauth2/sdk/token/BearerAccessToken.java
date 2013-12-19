@@ -1,6 +1,8 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.util.Map;
+
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
@@ -9,11 +11,10 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import java.util.Map;
 
 
 /**
- * Bearer access token. This class is immutable.
+ * Bearer access token.
  *
  * <p>Example bearer access token serialised to JSON:
  *

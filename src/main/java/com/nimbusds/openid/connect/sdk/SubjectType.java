@@ -6,6 +6,12 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 /**
  * Enumeration of the subject identifier types.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Core 1.0, section 8.
+ * </ul>
  */
 public enum SubjectType {
 

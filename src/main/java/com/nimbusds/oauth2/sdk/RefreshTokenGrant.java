@@ -10,8 +10,7 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
 
 
 /**
- * Refresh token grant. Used in refresh token requests. This class is
- * immutable.
+ * Refresh token grant. Used in refresh token requests.
  *
  * <p>Note that the optional scope parameter is not supported.
  *

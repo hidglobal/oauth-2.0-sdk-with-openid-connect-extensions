@@ -28,8 +28,6 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *     <li>The client metadata.
  *     <li>The optional client secret for a confidential client.
  * </ul>
- * 
- * <p>This class is immutable.
  *
  * <p>Related specifications:
  *

@@ -25,7 +25,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 /**
  * JWT client authentication claims set, serialisable to a JSON object and JWT 
- * claims set. This class is immutable.
+ * claims set.
  *
  * <p>Used for {@link ClientSecretJWT client secret JWT} and 
  * {@link PrivateKeyJWT private key JWT} authentication at the Token endpoint.

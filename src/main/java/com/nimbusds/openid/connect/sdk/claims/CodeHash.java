@@ -9,12 +9,12 @@ import com.nimbusds.oauth2.sdk.AuthorizationCode;
 
 
 /**
- * Authorisation code hash ({@code c_hash}). This class is immutable.
+ * Authorisation code hash ({@code c_hash}).
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>OpenID Connect Core 1.0, section 3.3.2.11.
  * </ul>
  */
 @Immutable

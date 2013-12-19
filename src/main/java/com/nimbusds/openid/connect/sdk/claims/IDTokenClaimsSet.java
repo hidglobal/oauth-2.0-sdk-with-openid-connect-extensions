@@ -41,7 +41,7 @@ import com.nimbusds.openid.connect.sdk.Nonce;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.1.
+ *     <li>OpenID Connect Core 1.0, section 2.
  * </ul>
  */
 public class IDTokenClaimsSet extends ClaimsSet {

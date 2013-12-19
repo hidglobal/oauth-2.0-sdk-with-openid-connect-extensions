@@ -8,7 +8,7 @@ import net.jcip.annotations.Immutable;
 
 /**
  * Typeless access token, cannot be serialised. Intended to represent parsed
- * access tokens which type cannot be inferred. This class is immutable.
+ * access tokens which type cannot be inferred.
  *
  * <p>Related specifications:
  *

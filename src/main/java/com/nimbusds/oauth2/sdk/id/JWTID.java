@@ -5,7 +5,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * JSON Web Token (JWT) identifier. This class is immutable.
+ * JSON Web Token (JWT) identifier.
  */
 @Immutable
 public final class JWTID extends Identifier {

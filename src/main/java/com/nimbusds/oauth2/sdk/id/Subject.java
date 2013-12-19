@@ -5,7 +5,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Subject identifier. This class is immutable.
+ * Subject (user) identifier.
  */
 @Immutable
 public final class Subject extends Identifier {

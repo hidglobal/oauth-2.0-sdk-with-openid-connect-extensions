@@ -17,8 +17,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 /**
  * Client secret basic authentication at the Token endpoint. Implements
- * {@link ClientAuthenticationMethod#CLIENT_SECRET_BASIC}. This class is
- * immutable.
+ * {@link ClientAuthenticationMethod#CLIENT_SECRET_BASIC}.
  *
  * <p>Example HTTP Authorization header (for client identifier "s6BhdRkqt3" and
  * secret "7Fjfp0ZBr1KtDRbnfVdmIw"):

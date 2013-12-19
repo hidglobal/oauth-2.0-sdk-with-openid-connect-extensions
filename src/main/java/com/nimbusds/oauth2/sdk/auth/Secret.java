@@ -5,6 +5,8 @@ import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.Date;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.commons.codec.binary.Base64;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -15,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
  * Secret or password. The secret should be {@link #erase erased} when no 
  * longer in use.
  */
+@Immutable
 public final class Secret {
 	
 	
@@ -187,10 +190,7 @@ public final class Secret {
 
 		final Date now = new Date();
 
-		if (expDate.after(now))
-			return false;
-		else
-			return true;
+		return expDate.before(now);
 	}
 
 	

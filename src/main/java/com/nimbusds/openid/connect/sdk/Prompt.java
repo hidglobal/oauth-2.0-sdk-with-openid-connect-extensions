@@ -11,13 +11,12 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
- * Prompts for end-user re-authentication and consent. This class is not
- * thread-safe.
+ * Prompts for end-user re-authentication and consent.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.1.
  * </ul>
  */
 @NotThreadSafe

@@ -7,13 +7,12 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
- * Enumeration of the display types for authentication and consent UIs. This
- * class is immutable.
+ * Enumeration of the display types for authentication and consent UIs.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.1.
  * </ul>
  */
 public enum Display {

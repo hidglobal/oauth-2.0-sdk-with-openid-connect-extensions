@@ -18,7 +18,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OpenID Connect access token response. This class is immutable.
+ * OpenID Connect access token response.
  *
  * <p>Example HTTP response:
  *
@@ -48,8 +48,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.2.3.
- *     <li>OpenID Connect Standard 1.0, section 3.1.2.
+ *     <li>OpenID Connect Core 1.0, section 3.1.3.3.
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.4 and 5.1.
  * </ul>
  */

@@ -11,7 +11,7 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
 
 /**
  * Resource owner password credentials grant. Used in access token requests
- * with the resource owner's username and password. This class is immutable.
+ * with the resource owner's username and password.
  *
  * <p>Related specifications:
  *

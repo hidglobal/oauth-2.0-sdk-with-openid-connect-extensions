@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * Client information response. This class is immutable.
+ * Client information response.
  *
  * <p>Example HTTP response:
  *

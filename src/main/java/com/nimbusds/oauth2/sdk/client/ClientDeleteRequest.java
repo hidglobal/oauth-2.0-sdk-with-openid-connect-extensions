@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
 /**
- * Client delete request. This class is immutable.
+ * Client delete request.
  *
  * <p>Example HTTP request:
  *

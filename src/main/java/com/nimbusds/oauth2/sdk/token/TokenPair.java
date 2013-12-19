@@ -7,7 +7,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Access and refresh token pair. This class is immutable.
+ * Access and refresh token pair.
  */
 @Immutable
 public final class TokenPair {

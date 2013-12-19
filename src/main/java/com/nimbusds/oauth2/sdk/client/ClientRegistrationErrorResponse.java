@@ -21,7 +21,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * Client registration error response. This class is immutable.
+ * Client registration error response.
  *
  * <p>Standard errors:
  *

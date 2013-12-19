@@ -8,7 +8,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Audience identifier. This class is immutable.
+ * Audience identifier.
  */
 @Immutable
 public final class Audience extends Identifier {

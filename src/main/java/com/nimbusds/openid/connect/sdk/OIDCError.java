@@ -7,11 +7,17 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 /**
  * OpenID Connect specific errors.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.6.
+ * </ul>
  */
 public final class OIDCError {
 
 	
-	// Authorisation endpoint
+	// Authentication endpoint
 	
 	/**
 	 * The authorisation server requires end-user interaction of some form 
@@ -49,8 +55,8 @@ public final class OIDCError {
 	 * {@link AuthenticationRequest} cannot be completed without
 	 * displaying a user interface to prompt for a session to use.
 	 */
-	public static final ErrorObject SESSION_SELECTION_REQUIRED =
-		new ErrorObject("session_selection_required", "Session selection required", HTTPResponse.SC_FOUND);
+	public static final ErrorObject ACCOUNT_SELECTION_REQUIRED =
+		new ErrorObject("account_selection_required", "Session selection required", HTTPResponse.SC_FOUND);
 
 	
 	/**

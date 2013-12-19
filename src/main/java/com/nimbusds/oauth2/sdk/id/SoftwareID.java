@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk.id;
 
 import java.util.UUID;
 
+import net.jcip.annotations.Immutable;
+
 
 /**
  * Identifier for an OAuth 2.0 client software.
@@ -14,7 +16,8 @@ import java.util.UUID;
  *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
  */
-public class SoftwareID extends Identifier {
+@Immutable
+public final class SoftwareID extends Identifier {
 
 
 	/**

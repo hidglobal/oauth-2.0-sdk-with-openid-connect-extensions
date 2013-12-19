@@ -19,7 +19,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * Authorisation error response. This class is immutable.
+ * Authorisation error response.
  *
  * <p>Standard authorisation errors:
  *
@@ -283,7 +283,7 @@ public class AuthorizationErrorResponse
 	public static AuthorizationErrorResponse parse(final URL uri)
 		throws ParseException {
 		
-		Map<String,String> params = null;
+		Map<String,String> params;
 		
 		if (uri.getRef() != null)
 			params = URLUtils.parseParameters(uri.getRef());

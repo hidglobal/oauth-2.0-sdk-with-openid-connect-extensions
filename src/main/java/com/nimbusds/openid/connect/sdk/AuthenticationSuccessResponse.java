@@ -21,9 +21,9 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * OpenID Connect authorisation success response. Used to return an 
+ * OpenID Connect authentication success response. Used to return an
  * authorization code, access token and / or ID Token at the Authorisation 
- * endpoint. This class is immutable. 
+ * endpoint.
  *
  * <p>Example HTTP response with code and ID Token (code flow):
  *
@@ -47,14 +47,14 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.2.
- *     <li>OpenID Connect Standard 1.0, section 2.3.5.1.
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.5, 3.1.2.6, 3.2.2.5, 3.2.2.6,
+ *         3.3.2.5 and 3.3.2.6.
  * </ul>
  */
 @Immutable
-public class OIDCAuthorizationSuccessResponse 
+public class AuthenticationSuccessResponse
 	extends AuthorizationSuccessResponse
-	implements OIDCAuthorizationResponse {
+	implements AuthenticationResponse {
 
 
 	/**
@@ -64,7 +64,7 @@ public class OIDCAuthorizationSuccessResponse
 	
 	
 	/**
-	 * Creates a new OpenID Connect authorisation success response.
+	 * Creates a new OpenID Connect authentication success response.
 	 *
 	 * @param redirectURI The requested redirect URI. Must not be 
 	 *                    {@code null}.
@@ -76,11 +76,11 @@ public class OIDCAuthorizationSuccessResponse
 	 *                    requested.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public OIDCAuthorizationSuccessResponse(final URL redirectURI,
-	                                        final AuthorizationCode code,
-				                final JWT idToken,
-				                final AccessToken accessToken,
-				                final State state) {
+	public AuthenticationSuccessResponse(final URL redirectURI,
+					     final AuthorizationCode code,
+					     final JWT idToken,
+					     final AccessToken accessToken,
+					     final State state) {
 		
 		super(redirectURI, code, accessToken, state);
 
@@ -142,20 +142,20 @@ public class OIDCAuthorizationSuccessResponse
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success response from the
+	 * Parses an OpenID Connect authentication success response from the
 	 * specified redirect URI and parameters.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation success response.
+	 * @return The OpenID Connect authentication success response.
 	 *
 	 * @throws ParseException If the parameters couldn't be parsed to an
-	 *                        OpenID Connect authorisation success 
+	 *                        OpenID Connect authentication success
 	 *                        response.
 	 */
-	public static OIDCAuthorizationSuccessResponse parse(final URL redirectURI, 
+	public static AuthenticationSuccessResponse parse(final URL redirectURI,
 		                                             final Map<String,String> params)
 		throws ParseException {
 
@@ -176,7 +176,7 @@ public class OIDCAuthorizationSuccessResponse
 			}
 		}
 
-		return new OIDCAuthorizationSuccessResponse(redirectURI,
+		return new AuthenticationSuccessResponse(redirectURI,
 			                                    asr.getAuthorizationCode(),
 			                                    idToken,
 			                                    asr.getAccessToken(),
@@ -185,7 +185,7 @@ public class OIDCAuthorizationSuccessResponse
 	
 	
 	/**
-	 * Parses an OpenID Connect authorisation success response from the
+	 * Parses an OpenID Connect authentication success response from the
 	 * specified URI.
 	 *
 	 * <p>Example URI:
@@ -195,16 +195,16 @@ public class OIDCAuthorizationSuccessResponse
 	 * </pre>
 	 *
 	 * @param uri The URI to parse. Can be absolute or relative, with a
-	 *            fragment or query string containing the authorisation
+	 *            fragment or query string containing the authentication
 	 *            response parameters. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation success response.
+	 * @return The OpenID Connect authentication success response.
 	 *
 	 * @throws ParseException If the redirect URI couldn't be parsed to an
-	 *                        OpenID Connect authorisation success 
+	 *                        OpenID Connect authentication success
 	 *                        response.
 	 */
-	public static OIDCAuthorizationSuccessResponse parse(final URL uri)
+	public static AuthenticationSuccessResponse parse(final URL uri)
 		throws ParseException {
 		
 		String paramString = null;
@@ -228,7 +228,7 @@ public class OIDCAuthorizationSuccessResponse
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success response from the
+	 * Parses an OpenID Connect authentication success response from the
 	 * specified HTTP response.
 	 *
 	 * <p>Example HTTP response:
@@ -241,13 +241,13 @@ public class OIDCAuthorizationSuccessResponse
 	 * @param httpResponse The HTTP response to parse. Must not be 
 	 *                     {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation success response.
+	 * @return The OpenID Connect authentication success response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to an 
-	 *                        OpenID Connect authorisation success 
+	 *                        OpenID Connect authentication success
 	 *                        response.
 	 */
-	public static OIDCAuthorizationSuccessResponse parse(final HTTPResponse httpResponse)
+	public static AuthenticationSuccessResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
 		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)

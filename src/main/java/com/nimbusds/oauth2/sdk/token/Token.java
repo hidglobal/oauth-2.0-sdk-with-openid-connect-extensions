@@ -59,7 +59,7 @@ public abstract class Token extends Identifier {
 	 * composition of an access token response. See OAuth 2.0 (RFC 6749), 
 	 * section 5.1.
 	 *
-	 * <p>Note that JSONObject implements {@code Map<String,Object>}.
+	 * <p>Note that JSONObject implements {@literal Map<String,Object>}.
 	 *
 	 * <p>Example:
 	 *

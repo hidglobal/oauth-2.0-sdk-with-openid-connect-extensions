@@ -14,8 +14,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * Authorisation response type. Can be single-valued or multiple-valued. This
- * class is not thread-safe.
+ * Authorisation response type. Can be single-valued or multiple-valued.
  *
  * <p>The following helper methods can be used to find out the OAuth 2.0
  * protocol flow that a particular response type implies:
@@ -53,7 +52,7 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 	
 	
 	/**
-	 * Authorisation response type value. This class is immutable.
+	 * Authorisation response type value.
 	 */
 	@Immutable
 	public static final class Value extends Identifier {

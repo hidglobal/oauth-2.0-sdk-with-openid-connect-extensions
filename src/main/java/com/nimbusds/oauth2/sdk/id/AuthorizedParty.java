@@ -5,7 +5,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Authorised party. This class is immutable.
+ * Authorised party.
  */
 @Immutable
 public final class AuthorizedParty extends Identifier {

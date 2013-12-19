@@ -5,13 +5,13 @@ import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
- * Enumeration of the claim types. This class is immutable.
+ * Enumeration of the claim types.
  * 
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.7.
- *     <li>OpenID Connect Discovery, section 3.
+ *     <li>OpenID Connect Core 1.0, section 5.6.
+ *     <li>OpenID Connect Discovery 1.0, section 3.
  * </ul>
  */
 public enum ClaimType {

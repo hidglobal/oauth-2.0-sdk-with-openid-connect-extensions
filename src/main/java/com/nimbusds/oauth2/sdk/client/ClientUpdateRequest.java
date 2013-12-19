@@ -21,7 +21,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * Client registration request. This class is immutable.
+ * Client registration request.
  * 
  * <p>Example HTTP request:
  *

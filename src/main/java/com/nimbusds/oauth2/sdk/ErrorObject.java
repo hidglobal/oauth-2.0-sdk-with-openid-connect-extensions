@@ -7,8 +7,7 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Error object, used to encapsulate OAuth 2.0 and other errors. This class is 
- * immutable.
+ * Error object, used to encapsulate OAuth 2.0 and other errors.
  */
 @Immutable
 public class ErrorObject {

@@ -8,7 +8,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 /**
  * Authorisation code. A maximum authorization code lifetime of 10 minutes is 
- * recommended. This class is immutable.
+ * recommended.
  *
  * <p>Related specifications:
  *

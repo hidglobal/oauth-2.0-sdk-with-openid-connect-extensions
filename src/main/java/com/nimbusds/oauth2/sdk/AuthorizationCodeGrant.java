@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 
 /**
  * Authorisation code grant. Used in access token requests with an
- * authorisation code. This class is immutable.
+ * authorisation code.
  *
  * <p>Related specifications:
  *

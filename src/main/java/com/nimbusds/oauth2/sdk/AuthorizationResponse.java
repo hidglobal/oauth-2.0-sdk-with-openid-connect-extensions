@@ -196,7 +196,7 @@ public abstract class AuthorizationResponse implements Response {
 	public static AuthorizationResponse parse(final URL uri)
 		throws ParseException {
 
-		Map<String,String> params = null;
+		Map<String,String> params;
 		
 		if (uri.getRef() != null)
 			params = URLUtils.parseParameters(uri.getRef());

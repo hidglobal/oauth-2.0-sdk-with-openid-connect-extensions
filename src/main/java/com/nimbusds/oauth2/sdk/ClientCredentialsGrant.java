@@ -9,7 +9,7 @@ import net.jcip.annotations.Immutable;
 
 /**
  * Client credentials grant. Used in access token requests with a client's
- * identifier and secret. This class is immutable.
+ * identifier and secret.
  *
  * <p>Related specifications:
  *

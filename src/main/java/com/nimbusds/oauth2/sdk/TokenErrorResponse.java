@@ -17,7 +17,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OAuth 2.0 Token error response. This class is immutable.
+ * OAuth 2.0 Token error response.
  *
  * <p>Standard token errors:
  *

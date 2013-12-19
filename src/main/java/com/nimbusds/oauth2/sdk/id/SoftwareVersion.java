@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
+import net.jcip.annotations.Immutable;
+
+
 /**
  * Version identifier for an OAuth 2.0 client software.
  *
@@ -11,7 +14,8 @@ package com.nimbusds.oauth2.sdk.id;
  *         (draft-ietf-oauth-dyn-reg-14), section 2.
  * </ul>
  */
-public class SoftwareVersion extends Identifier {
+@Immutable
+public final class SoftwareVersion extends Identifier {
 
 
 	/**

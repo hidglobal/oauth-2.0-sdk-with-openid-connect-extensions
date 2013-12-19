@@ -18,7 +18,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * OpenID Connect authorisation error response. This class is immutable.
+ * OpenID Connect authentication error response.
  *
  * <p>Standard errors:
  *
@@ -37,7 +37,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *         <ul>
  *             <li>{@link OIDCError#INTERACTION_REQUIRED}
  *             <li>{@link OIDCError#LOGIN_REQUIRED}
- *             <li>{@link OIDCError#SESSION_SELECTION_REQUIRED}
+ *             <li>{@link OIDCError#ACCOUNT_SELECTION_REQUIRED}
  *             <li>{@link OIDCError#CONSENT_REQUIRED}
  *             <li>{@link OIDCError#INVALID_REQUEST_URI}
  *             <li>{@link OIDCError#INVALID_REQUEST_OBJECT}
@@ -61,18 +61,17 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.3.
- *     <li>OpenID Connect Standard 1.0, section 2.3.5.2.
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.6.
  * </ul>
  */
 @Immutable
-public class OIDCAuthorizationErrorResponse 
+public class AuthenticationErrorResponse
 	extends AuthorizationErrorResponse
-	implements OIDCAuthorizationResponse { 
+	implements AuthenticationResponse {
 
 
 	/**
-	 * The standard errors for an OpenID Connect Authorisation error 
+	 * The standard errors for an OpenID Connect authentication error
 	 * response.
 	 */
 	private static Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
@@ -83,7 +82,7 @@ public class OIDCAuthorizationErrorResponse
 
 		stdErrors.add(OIDCError.INTERACTION_REQUIRED);
 		stdErrors.add(OIDCError.LOGIN_REQUIRED);
-		stdErrors.add(OIDCError.SESSION_SELECTION_REQUIRED);
+		stdErrors.add(OIDCError.ACCOUNT_SELECTION_REQUIRED);
 		stdErrors.add(OIDCError.CONSENT_REQUIRED);
 		stdErrors.add(OIDCError.INVALID_REQUEST_URI);
 		stdErrors.add(OIDCError.INVALID_REQUEST_OBJECT);
@@ -94,7 +93,7 @@ public class OIDCAuthorizationErrorResponse
 
 
 	/**
-	 * Gets the standard errors for an OpenID Connect Authorisation error 
+	 * Gets the standard errors for an OpenID Connect authentication error
 	 * response.
 	 *
 	 * @return The standard errors, as a read-only set.
@@ -106,46 +105,46 @@ public class OIDCAuthorizationErrorResponse
 
 
 	/**
-	 * Creates a new OpenID Connect authorisation error response.
+	 * Creates a new OpenID Connect authentication error response.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param error       The error. Should match one of the 
 	 *                    {@link #getStandardErrors standard errors} for an 
-	 *                    OpenID Connect authorisation error response. Must 
-	 *                    not be {@code null}.
+	 *                    OpenID Connect authentication error response.
+	 *                    Must not be {@code null}.
 	 * @param rt          The response type, used to determine the redirect
 	 *                    URI composition. If unknown {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public OIDCAuthorizationErrorResponse(final URL redirectURI,
-	                                      final ErrorObject error,
-					      final ResponseType rt,
-					      final State state) {
+	public AuthenticationErrorResponse(final URL redirectURI,
+					   final ErrorObject error,
+					   final ResponseType rt,
+					   final State state) {
 					  
 		super(redirectURI, error, rt, state);
 	}
 
 
 	/**
-	 * Parses an OpenID Connect authorisation error response from the 
+	 * Parses an OpenID Connect authentication error response from the
 	 * specified redirect URI and parameters.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation error response.
+	 * @return The OpenID Connect authentication error response.
 	 *
 	 * @throws ParseException If the parameters couldn't be parsed to an
-	 *                        OpenID Connect authorisation error response.
+	 *                        OpenID Connect authentication error response.
 	 */
-	public static OIDCAuthorizationErrorResponse parse(final URL redirectURI, 
-		                                           final Map<String,String> params)
+	public static AuthenticationErrorResponse parse(final URL redirectURI,
+							final Map<String,String> params)
 		throws ParseException {
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(redirectURI, params);
 
-		return new OIDCAuthorizationErrorResponse(resp.getRedirectionURI(),
+		return new AuthenticationErrorResponse(resp.getRedirectionURI(),
 			                                  resp.getErrorObject(),
 			                                  resp.getResponseType(),
 			                                  resp.getState());
@@ -153,7 +152,7 @@ public class OIDCAuthorizationErrorResponse
 
 
 	/**
-	 * Parses an OpenID Connect authorisation error response from the 
+	 * Parses an OpenID Connect authentication error response from the
 	 * specified URI.
 	 *
 	 * <p>Example URI:
@@ -168,17 +167,17 @@ public class OIDCAuthorizationErrorResponse
 	 * @param uri The URI to parse. Can be absolute or relative. Must not 
 	 *            be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation error response.
+	 * @return The OpenID Connect authentication error response.
 	 *
 	 * @throws ParseException If the URI couldn't be parsed to an OpenID
-	 *                        Connect authorisation error response.
+	 *                        Connect authentication error response.
 	 */
-	public static OIDCAuthorizationErrorResponse parse(final URL uri)
+	public static AuthenticationErrorResponse parse(final URL uri)
 		throws ParseException {
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(uri);
 
-		return new OIDCAuthorizationErrorResponse(resp.getRedirectionURI(),
+		return new AuthenticationErrorResponse(resp.getRedirectionURI(),
 			                                  resp.getErrorObject(),
 			                                  resp.getResponseType(),
 			                                  resp.getState());
@@ -186,7 +185,7 @@ public class OIDCAuthorizationErrorResponse
 
 
 	/**
-	 * Parses an OpenID Connect authorisation error response from the 
+	 * Parses an OpenID Connect authentication error response from the
 	 * specified HTTP response.
 	 *
 	 * <p>Example HTTP response:
@@ -202,17 +201,17 @@ public class OIDCAuthorizationErrorResponse
 	 * @param httpResponse The HTTP response to parse. Must not be 
 	 *                     {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation error response.
+	 * @return The OpenID Connect authentication error response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to an 
-	 *                        OpenID Connect authorisation error response.
+	 *                        OpenID Connect authentication error response.
 	 */
-	public static OIDCAuthorizationErrorResponse parse(final HTTPResponse httpResponse)
+	public static AuthenticationErrorResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(httpResponse);
 
-		return new OIDCAuthorizationErrorResponse(resp.getRedirectionURI(),
+		return new AuthenticationErrorResponse(resp.getRedirectionURI(),
 			                                  resp.getErrorObject(),
 			                                  resp.getResponseType(),
 			                                  resp.getState());

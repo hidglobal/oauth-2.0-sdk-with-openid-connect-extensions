@@ -29,5 +29,5 @@ public enum ClientType {
 	 * browser-based application), and incapable of secure client
 	 * authentication via any other means.
 	 */
-	PUBLIC;
+	PUBLIC
 }

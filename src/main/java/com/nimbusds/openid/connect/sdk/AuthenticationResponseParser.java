@@ -10,45 +10,45 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
- * Parser of OpenID Connect authorisation response messages.
+ * Parser of OpenID Connect authentication response messages.
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, sections 2.1.2 and 2.1.3.
+ *     <li>OpenID Connect Core 1.0, sections 3.1.2.5. and 3.1.2.6.
  * </ul>
  */
-public class OIDCAuthorizationResponseParser { 
+public class AuthenticationResponseParser {
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success or error response
+	 * Parses an OpenID Connect authentication success or error response
 	 * from the specified redirect URI and parameters.
 	 *
 	 * @param redirectURI The base redirect URI. Must not be {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation success or error response.
+	 * @return The OpenID Connect authentication success or error response.
 	 *
 	 * @throws ParseException If the parameters couldn't be parsed to an
-	 *                        OpenID Connect authorisation success or error
-	 *                        response.
+	 *                        OpenID Connect authentication success or
+	 *                        error response.
 	 */
-	public static OIDCAuthorizationResponse parse(final URL redirectURI, 
+	public static AuthenticationResponse parse(final URL redirectURI,
 		                                      final Map<String,String> params)
 		throws ParseException {
 
 
 		if (params.containsKey("error"))
-			return OIDCAuthorizationErrorResponse.parse(redirectURI, params);
+			return AuthenticationErrorResponse.parse(redirectURI, params);
 		else
-			return OIDCAuthorizationSuccessResponse.parse(redirectURI, params);
+			return AuthenticationSuccessResponse.parse(redirectURI, params);
 	}
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success or error response
+	 * Parses an OpenID Connect authentication success or error response
 	 * from the specified URI.
 	 *
 	 * <p>Example URI:
@@ -58,19 +58,19 @@ public class OIDCAuthorizationResponseParser {
 	 * </pre>
 	 *
 	 * @param uri The URI to parse. Can be absolute or relative, with a
-	 *            fragment or query string containing the authorisation
+	 *            fragment or query string containing the authentication
 	 *            response parameters. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation success or error response.
+	 * @return The OpenID Connect authentication success or error response.
 	 *
 	 * @throws ParseException If the redirect URI couldn't be parsed to an
-	 *                        OpenID Connect authorisation success or error
-	 *                        response.
+	 *                        OpenID Connect authentication success or
+	 *                        error response.
 	 */
-	public static OIDCAuthorizationResponse parse(final URL uri)
+	public static AuthenticationResponse parse(final URL uri)
 		throws ParseException {
 
-		String paramString = null;
+		String paramString;
 		
 		if (uri.getQuery() != null)
 			paramString = uri.getQuery();
@@ -91,7 +91,7 @@ public class OIDCAuthorizationResponseParser {
 
 
 	/**
-	 * Parses an OpenID Connect authorisation success or error response 
+	 * Parses an OpenID Connect authentication success or error response
 	 * from the specified HTTP response.
 	 *
 	 * <p>Example HTTP response:
@@ -104,13 +104,13 @@ public class OIDCAuthorizationResponseParser {
 	 * @param httpResponse The HTTP response to parse. Must not be 
 	 *                     {@code null}.
 	 *
-	 * @return The OpenID Connect authorisation success or error response.
+	 * @return The OpenID Connect authentication success or error response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to an 
-	 *                        OpenID Connect authorisation success or error
-	 *                        response.
+	 *                        OpenID Connect authentication success or
+	 *                        error response.
 	 */
-	public static OIDCAuthorizationResponse parse(final HTTPResponse httpResponse)
+	public static AuthenticationResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
 		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)
@@ -129,5 +129,5 @@ public class OIDCAuthorizationResponseParser {
 	/**
 	 * Prevents public instantiation.
 	 */
-	private OIDCAuthorizationResponseParser() { }
+	private AuthenticationResponseParser() { }
 }

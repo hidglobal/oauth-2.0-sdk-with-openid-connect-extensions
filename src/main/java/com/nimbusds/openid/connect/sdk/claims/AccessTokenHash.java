@@ -9,12 +9,12 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 
 /**
- * Access token hash ({@code at_hash}). This class is immutable.
+ * Access token hash ({@code at_hash}).
  *
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1.
+ *     <li>OpenID Connect Core 1.0, section 3.1.3.6.
  * </ul>
  */
 @Immutable

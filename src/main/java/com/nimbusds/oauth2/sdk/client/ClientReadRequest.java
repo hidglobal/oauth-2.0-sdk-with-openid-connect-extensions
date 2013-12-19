@@ -15,7 +15,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 
 
 /**
- * Client read request. This class is immutable.
+ * Client read request.
  *
  * <p>Example HTTP request:
  *

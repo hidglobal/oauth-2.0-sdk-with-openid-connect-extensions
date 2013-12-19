@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 /**
  * Nonce. This is a random, unique string value to associate a user-session 
- * with an ID Token and to mitigate replay attacks. This class is immutable.
+ * with an ID Token and to mitigate replay attacks.
  *
  * <p>Example generation of a nonce with eight random mixed-case alphanumeric
  * characters:
@@ -22,7 +22,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.1.1 and 2.1.2.1.
+ *     <li>OpenID Connect Core 1.0, section 3.1.2.1. and 15.5.2.
  * </ul>
  */
 @Immutable

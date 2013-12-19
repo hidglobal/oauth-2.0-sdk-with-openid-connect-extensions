@@ -17,7 +17,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
 
 
 /**
- * UserInfo success response. This class is immutable.
+ * UserInfo success response.
  *
  * <p>The UserInfo claims may be passed as an unprotected JSON object or as a 
  * plain, signed or encrypted JSON Web Token (JWT). Use the appropriate 
@@ -42,8 +42,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OpenID Connect Messages 1.0, section 2.3.2.
- *     <li>OpenID Connect Standard 1.0, section 4.2.
+ *     <li>OpenID Connect Core 1.0, section 5.3.2.
  * </ul>
  */
 @Immutable
@@ -146,7 +145,7 @@ public final class UserInfoSuccessResponse
 		
 		httpResponse.setContentType(getContentType());
 		
-		String content = null;
+		String content;
 		
 		if (claimsSet != null) {
 		

@@ -23,8 +23,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * HTTP request with support for the parameters required to construct an 
- * {@link com.nimbusds.oauth2.sdk.Request OAuth 2.0 request message}. This
- * class is thread-safe.
+ * {@link com.nimbusds.oauth2.sdk.Request OAuth 2.0 request message}.
  *
  * <p>Supported HTTP methods:
  *

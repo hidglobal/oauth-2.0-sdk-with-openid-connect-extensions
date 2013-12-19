@@ -9,9 +9,9 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * OAuth 2.0 response mode. This class is immutable.
+ * OAuth 2.0 response mode.
  *
- *  <p>Related specifications:
+ * <p>Related specifications:
  *
  * <ul>
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices, section 2.1.
