@@ -45,6 +45,7 @@ public class OIDCClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("grant_types"));
 		assertTrue(paramNames.contains("response_types"));
 		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("jwks"));
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
@@ -67,7 +68,7 @@ public class OIDCClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("request_uris"));
 		assertTrue(paramNames.contains("post_logout_redirect_uris"));
 
-		assertEquals(37, paramNames.size());
+		assertEquals(38, paramNames.size());
 	}
 
 

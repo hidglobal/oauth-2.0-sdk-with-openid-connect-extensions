@@ -9,6 +9,9 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.util.Base64URL;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -47,10 +50,11 @@ public class ClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("grant_types"));
 		assertTrue(paramNames.contains("response_types"));
 		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("jwks"));
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
-		assertEquals(14, ClientMetadata.getRegisteredParameterNames().size());
+		assertEquals(15, ClientMetadata.getRegisteredParameterNames().size());
 	}
 	
 	
@@ -114,8 +118,12 @@ public class ClientMetadataTest extends TestCase {
 		ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
 		meta.setTokenEndpointAuthMethod(authMethod);
 		
-		URL jwks = new URL("http://example.com/jwks.json");
-		meta.setJWKSetURL(jwks);
+		URL jwksURL = new URL("http://example.com/jwks.json");
+		meta.setJWKSetURL(jwksURL);
+
+		RSAKey rsaKey = new RSAKey.Builder(new Base64URL("nabc"), new Base64URL("eabc")).build();
+		JWKSet jwkSet = new JWKSet(rsaKey);
+		meta.setJWKSet(jwkSet);
 
 		SoftwareID softwareID = new SoftwareID();
 		meta.setSoftwareID(softwareID);
@@ -144,7 +152,10 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(tosDE, meta.getTermsOfServiceURI(LangTag.parse("de")));
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
-		assertEquals(jwks, meta.getJWKSetURI());
+		assertEquals(jwksURL, meta.getJWKSetURI());
+		assertEquals("nabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getModulus().toString());
+		assertEquals("eabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
+		assertEquals(1, meta.getJWKSet().getKeys().size());
 		assertEquals(softwareID, meta.getSoftwareID());
 		assertEquals(softwareVersion, meta.getSoftwareVersion());
 		assertTrue(meta.getCustomFields().isEmpty());
@@ -179,7 +190,10 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(tosDE, meta.getTermsOfServiceURI(LangTag.parse("de")));
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
-		assertEquals(jwks, meta.getJWKSetURI());
+		assertEquals(jwksURL, meta.getJWKSetURI());
+		assertEquals("nabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getModulus().toString());
+		assertEquals("eabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
+		assertEquals(1, meta.getJWKSet().getKeys().size());
 		assertEquals(softwareID, meta.getSoftwareID());
 		assertEquals(softwareVersion, meta.getSoftwareVersion());
 

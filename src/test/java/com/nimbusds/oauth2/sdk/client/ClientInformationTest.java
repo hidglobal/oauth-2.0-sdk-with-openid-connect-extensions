@@ -43,10 +43,11 @@ public class ClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("grant_types"));
 		assertTrue(paramNames.contains("response_types"));
 		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("jwks"));
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
-		assertEquals(20, paramNames.size());
+		assertEquals(21, paramNames.size());
 	}
 
 

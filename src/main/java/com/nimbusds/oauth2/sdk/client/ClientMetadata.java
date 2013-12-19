@@ -14,6 +14,8 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagUtils;
 
+import com.nimbusds.jose.jwk.JWKSet;
+
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -76,6 +78,7 @@ public class ClientMetadata {
 		p.add("tos_uri");
 		p.add("token_endpoint_auth_method");
 		p.add("jwks_uri");
+		p.add("jwks");
 		p.add("software_id");
 		p.add("software_version");
 
@@ -158,6 +161,14 @@ public class ClientMetadata {
 
 
 	/**
+	 * Client's JSON Web Key (JWK) set containing key(s) that are used in
+	 * signing requests to the server and key(s) for encrypting responses.
+	 * Intended as an alternative to {@link #jwkSetURI} for native clients.
+	 */
+	private JWKSet jwkSet;
+
+
+	/**
 	 * Identifier for the OAuth 2.0 client software.
 	 */
 	private SoftwareID softwareID;
@@ -211,6 +222,7 @@ public class ClientMetadata {
 		tosURIEntries = metadata.tosURIEntries;
 		authMethod = metadata.authMethod;
 		jwkSetURI = metadata.jwkSetURI;
+		jwkSet = metadata.getJWKSet();
 		customFields = metadata.customFields;
 	}
 
@@ -742,6 +754,36 @@ public class ClientMetadata {
 
 
 	/**
+	 * Gets this client's JSON Web Key (JWK) set containing key(s) that are
+	 * used in signing requests to the server and key(s) for encrypting
+	 * responses. Intended as an alternative to {@link #getJWKSetURI} for
+	 * native clients. Corresponds to the {@code jwks} client metadata
+	 * field.
+	 *
+	 * @return The JWK set, {@code null} if not specified.
+	 */
+	public JWKSet getJWKSet() {
+
+		return jwkSet;
+	}
+
+
+	/**
+	 * Sets this client's JSON Web Key (JWK) set containing key(s) that are
+	 * used in signing requests to the server and key(s) for encrypting
+	 * responses. Intended as an alternative to {@link #getJWKSetURI} for
+	 * native clients. Corresponds to the {@code jwks} client metadata
+	 * field.
+	 *
+	 * @param jwkSet The JWK set, {@code null} if not specified.
+	 */
+	public void setJWKSet(final JWKSet jwkSet) {
+
+		this.jwkSet = jwkSet;
+	}
+
+
+	/**
 	 * Gets the identifier for the OAuth 2.0 client software. Corresponds
 	 * to the {@code software_id} client metadata field.
 	 *
@@ -1050,6 +1092,10 @@ public class ClientMetadata {
 			o.put("jwks_uri", jwkSetURI.toString());
 
 
+		if (jwkSet != null)
+			o.put("jwks", jwkSet.toJSONObject(true)); // prevent private keys from leaking
+
+
 		if (softwareID != null)
 			o.put("software_id", softwareID.getValue());
 
@@ -1263,6 +1309,18 @@ public class ClientMetadata {
 		if (jsonObject.containsKey("jwks_uri")) {
 			metadata.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwks_uri"));
 			jsonObject.remove("jwks_uri");
+		}
+
+		if (jsonObject.containsKey("jwks")) {
+
+			try {
+				metadata.setJWKSet(JWKSet.parse(JSONObjectUtils.getJSONObject(jsonObject, "jwks")));
+
+			} catch (java.text.ParseException e) {
+				throw new ParseException(e.getMessage(), e);
+			}
+
+			jsonObject.remove("jwks");
 		}
 
 		if (jsonObject.containsKey("software_id")) {

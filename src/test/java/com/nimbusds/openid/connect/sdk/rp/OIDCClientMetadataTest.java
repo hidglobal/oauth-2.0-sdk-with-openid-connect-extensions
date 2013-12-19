@@ -50,6 +50,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("grant_types"));
 		assertTrue(paramNames.contains("response_types"));
 		assertTrue(paramNames.contains("jwks_uri"));
+		assertTrue(paramNames.contains("jwks"));
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
@@ -72,7 +73,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("request_uris"));
 		assertTrue(paramNames.contains("post_logout_redirect_uris"));
 
-		assertEquals(31, OIDCClientMetadata.getRegisteredParameterNames().size());
+		assertEquals(32, OIDCClientMetadata.getRegisteredParameterNames().size());
 	}
 	
 	
