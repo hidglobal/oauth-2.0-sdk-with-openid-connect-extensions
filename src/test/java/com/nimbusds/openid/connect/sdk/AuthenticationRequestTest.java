@@ -2,6 +2,7 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -198,9 +199,10 @@ public class AuthenticationRequestTest extends TestCase {
 		claims.addUserInfoClaim("given_name");
 		claims.addUserInfoClaim("family_name");
 
-		AuthenticationRequest request =
-			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
-				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims);
+		AuthenticationRequest request = new AuthenticationRequest(
+			uri, rts, scope, clientID, redirectURI, state, nonce,
+			display, prompt, maxAge, uiLocales, claimsLocales,
+			idTokenHint, loginHint, acrValues, claims, null, null);
 
 		assertEquals(uri, request.getEndpointURI());
 		
@@ -374,10 +376,10 @@ public class AuthenticationRequestTest extends TestCase {
 
 		JWT requestObject = JWTParser.parse(EXAMPLE_JWT_STRING);
 
-		AuthenticationRequest request =
-			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
-				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
-				                     requestObject);
+		AuthenticationRequest request = new AuthenticationRequest(
+			uri, rts, scope, clientID, redirectURI, state, nonce,
+			display, prompt, maxAge, uiLocales, claimsLocales,
+			idTokenHint, loginHint, acrValues, claims, requestObject, null);
 
 		assertEquals(uri, request.getEndpointURI());
 		
@@ -555,10 +557,10 @@ public class AuthenticationRequestTest extends TestCase {
 
 		URL requestURI = new URL("http://example.com/request-object.jwt#1234");
 
-		AuthenticationRequest request =
-			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
-				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
-				                     requestURI);
+		AuthenticationRequest request = new AuthenticationRequest(
+			uri, rts, scope, clientID, redirectURI, state, nonce,
+			display, prompt, maxAge, uiLocales, claimsLocales,
+			idTokenHint, loginHint, acrValues, claims, null, requestURI);
 
 		assertEquals(uri, request.getEndpointURI());
 		
@@ -682,5 +684,97 @@ public class AuthenticationRequestTest extends TestCase {
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 
 		assertEquals(requestURI, request.getRequestURI());
+	}
+
+
+	public void testBuilderMinimal()
+		throws Exception {
+
+		AuthenticationRequest request = new AuthenticationRequest.Builder(
+			new ResponseType("code", "id_token"),
+			new Scope("openid", "email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb")).build();
+
+		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertTrue(new Scope("openid", "email").equals(request.getScope()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertNull(request.getState());
+		assertNull(request.getNonce());
+		assertNull(request.getDisplay());
+		assertNull(request.getPrompt());
+		assertEquals(0, request.getMaxAge());
+		assertNull(request.getUILocales());
+		assertNull(request.getClaimsLocales());
+		assertNull(request.getIDTokenHint());
+		assertNull(request.getLoginHint());
+		assertNull(request.getACRValues());
+		assertNull(request.getClaims());
+		assertNull(request.getRequestObject());
+		assertNull(request.getRequestURI());
+	}
+
+
+	public void testBuilderFull()
+		throws Exception {
+
+		List<ACR> acrValues = new LinkedList<ACR>();
+		acrValues.add(new ACR("1"));
+		acrValues.add(new ACR("2"));
+
+		ClaimsRequest claims = new ClaimsRequest();
+		claims.addUserInfoClaim("given_name");
+		claims.addUserInfoClaim("family_name");
+
+		AuthenticationRequest request = new AuthenticationRequest.Builder(
+			new ResponseType("code", "id_token"),
+			new Scope("openid", "email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb")).
+			state(new State("abc")).
+			nonce(new Nonce("def")).
+			display(Display.POPUP).
+			prompt(new Prompt(Prompt.Type.NONE)).
+			maxAge(3600).
+			uiLocales(Arrays.asList(LangTag.parse("en-GB"), LangTag.parse("en-US"))).
+			claimsLocales(Arrays.asList(LangTag.parse("bg-BG"), LangTag.parse("fr-FR"))).
+			idTokenHint(JWTParser.parse(EXAMPLE_JWT_STRING)).
+			loginHint("alice@wonderland.net").
+			acrValues(acrValues).
+			claims(claims).
+			endpointURI(new URL("https://c2id.com/login")).
+			build();
+
+		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertTrue(new Scope("openid", "email").equals(request.getScope()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new State("abc").equals(request.getState()));
+		assertTrue(new Nonce("def").equals(request.getNonce()));
+		assertTrue(Display.POPUP.equals(request.getDisplay()));
+		assertTrue(new Prompt(Prompt.Type.NONE).equals(request.getPrompt()));
+		assertEquals(3600, request.getMaxAge());
+		assertTrue(Arrays.asList(LangTag.parse("en-GB"), LangTag.parse("en-US")).equals(request.getUILocales()));
+		assertTrue(Arrays.asList(LangTag.parse("bg-BG"), LangTag.parse("fr-FR")).equals(request.getClaimsLocales()));
+		assertEquals(EXAMPLE_JWT_STRING, request.getIDTokenHint().getParsedString());
+		assertEquals("alice@wonderland.net", request.getLoginHint());
+		assertEquals(acrValues, request.getACRValues());
+		assertEquals(claims, request.getClaims());
+		assertTrue(new URL("https://c2id.com/login").equals(request.getEndpointURI()));
+	}
+
+
+	public void testBuilderWithWithRequestObject()
+		throws Exception {
+
+		// TODO
+	}
+
+
+	public void testBuilderWithRequestURI()
+		throws Exception {
+
+		// TODO
 	}
 }

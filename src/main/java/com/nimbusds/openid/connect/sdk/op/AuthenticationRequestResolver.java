@@ -359,7 +359,9 @@ public class AuthenticationRequestResolver {
 				finalAuthRequest.getIDTokenHint(),
 				finalAuthRequest.getLoginHint(),
 				finalAuthRequest.getACRValues(),
-				finalAuthRequest.getClaims());
+				finalAuthRequest.getClaims(),
+				null, // request object
+				null); // request URI
 			
 		} catch (ResolveException e) {
 			

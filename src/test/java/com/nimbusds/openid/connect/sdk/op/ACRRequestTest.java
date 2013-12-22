@@ -53,17 +53,14 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveNone()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/login");
-		ResponseType rt = new ResponseType();
-		rt.add(ResponseType.Value.CODE);
-		Scope scope = Scope.parse("openid profile");
-		ClientID clientID = new ClientID("abc");
-		URL redirectURI = new URL("https://example.com/in");
-		State state = new State();
-		Nonce nonce = new Nonce();
-
-		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
-			rt, scope, clientID, redirectURI, state, nonce);
+		AuthenticationRequest authRequest = new AuthenticationRequest(
+			new URL("https://c2id.com/login"),
+			new ResponseType("code"),
+			Scope.parse("openid profile"),
+			new ClientID("abc"),
+			new URL("https://example.com/in"),
+			new State(),
+			new Nonce());
 		
 		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
@@ -76,26 +73,18 @@ public class ACRRequestTest extends TestCase {
 	
 	public void testResolveTopLevelACRRequest()
 		throws Exception {
-		
-		URL requestURI = new URL("https://c2id.com/login");
-		ResponseType rt = new ResponseType();
-		rt.add(ResponseType.Value.CODE);
-		Scope scope = Scope.parse("openid profile");
-		ClientID clientID = new ClientID("abc");
-		URL redirectURI = new URL("https://example.com/in");
-		State state = new State();
-		Nonce nonce = new Nonce();
-		Display display = Display.POPUP;
-		Prompt prompt = Prompt.parse("login");
-		int maxAge = 3600;
+
 		List<ACR> acrValues = new ArrayList<ACR>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
-		ClaimsRequest claims = null;
 		
-		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
-			rt, scope, clientID, redirectURI, state, nonce,
-			display, prompt, maxAge, null, null, null, null, acrValues, claims);
+		AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
+			new ResponseType("code"),
+			new Scope("openid", "profile"),
+			new ClientID("123"),
+			new URL("https://example.com/in")).
+			acrValues(acrValues).
+			build();
 		
 		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
@@ -115,19 +104,6 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveClaimsLevelEssentialACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/login");
-		ResponseType rt = new ResponseType();
-		rt.add(ResponseType.Value.CODE);
-		Scope scope = Scope.parse("openid profile");
-		ClientID clientID = new ClientID("abc");
-		URL redirectURI = new URL("https://example.com/in");
-		State state = new State();
-		Nonce nonce = new Nonce();
-		Display display = Display.POPUP;
-		Prompt prompt = Prompt.parse("login");
-		int maxAge = 3600;
-		List<ACR> acrValues = null;
-		
 		ClaimsRequest claims = new ClaimsRequest();
 		
 		List<String> essentialACRs = new ArrayList<String>();
@@ -135,9 +111,13 @@ public class ACRRequestTest extends TestCase {
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
 		
-		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
-			rt, scope, clientID, redirectURI, state, nonce,
-			display, prompt, maxAge, null, null, null, null, acrValues, claims);
+		AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
+			new ResponseType("code"),
+			new Scope("openid", "profile"),
+			new ClientID("123"),
+			new URL("https://example.com/in")).
+			claims(claims).
+			build();
 		
 		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
@@ -154,29 +134,20 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveClaimsLevelVoluntaryACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/login");
-		ResponseType rt = new ResponseType();
-		rt.add(ResponseType.Value.CODE);
-		Scope scope = Scope.parse("openid profile");
-		ClientID clientID = new ClientID("abc");
-		URL redirectURI = new URL("https://example.com/in");
-		State state = new State();
-		Nonce nonce = new Nonce();
-		Display display = Display.POPUP;
-		Prompt prompt = Prompt.parse("login");
-		int maxAge = 3600;
-		List<ACR> acrValues = null;
-		
 		ClaimsRequest claims = new ClaimsRequest();
 		
 		List<String> essentialACRs = new ArrayList<String>();
 		essentialACRs.add("A");
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.VOLUNTARY, null, essentialACRs);
-		
-		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
-			rt, scope, clientID, redirectURI, state, nonce,
-			display, prompt, maxAge, null, null, null, null, acrValues, claims);
+
+		AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
+			new ResponseType("code"),
+			new Scope("openid", "profile"),
+			new ClientID("123"),
+			new URL("https://example.com/in")).
+			claims(claims).
+			build();
 		
 		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		
@@ -193,17 +164,6 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveMixedACRRequest()
 		throws Exception {
 		
-		URL requestURI = new URL("https://c2id.com/login");
-		ResponseType rt = new ResponseType();
-		rt.add(ResponseType.Value.CODE);
-		Scope scope = Scope.parse("openid profile");
-		ClientID clientID = new ClientID("abc");
-		URL redirectURI = new URL("https://example.com/in");
-		State state = new State();
-		Nonce nonce = new Nonce();
-		Display display = Display.POPUP;
-		Prompt prompt = Prompt.parse("login");
-		int maxAge = 3600;
 		List<ACR> acrValues = new ArrayList<ACR>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
@@ -214,10 +174,15 @@ public class ACRRequestTest extends TestCase {
 		essentialACRs.add("A");
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
-		
-		AuthenticationRequest authRequest = new AuthenticationRequest(requestURI,
-			rt, scope, clientID, redirectURI, state, nonce,
-			display, prompt, maxAge, null, null, null, null, acrValues, claims);
+
+		AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
+			new ResponseType("code"),
+			new Scope("openid", "profile"),
+			new ClientID("123"),
+			new URL("https://example.com/in")).
+			acrValues(acrValues).
+			claims(claims).
+			build();
 		
 		ACRRequest acrRequest = ACRRequest.resolve(authRequest);
 		

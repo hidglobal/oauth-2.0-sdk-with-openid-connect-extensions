@@ -396,23 +396,11 @@ public class ClaimsRequestTest extends TestCase {
 		ClaimsRequest cr = new ClaimsRequest();
 		cr.addIDTokenClaim(new ClaimsRequest.Entry("email", ClaimRequirement.ESSENTIAL));
 
-		AuthenticationRequest authRequest = new AuthenticationRequest(
-			new URL("https://c2id.com/login"),
-			ResponseType.parse("code"),
-			Scope.parse("openid email"),
+		AuthenticationRequest authRequest = new AuthenticationRequest.Builder(
+			new ResponseType("code"),
+			new Scope("openid", "email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb"),
-			new State(),
-			new Nonce(),
-			Display.POPUP,
-			null,
-			0,
-			null,
-			null,
-			null,
-			null,
-			null,
-			cr);
+			new URL("https://client.com/cb")).claims(cr).build();
 
 		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authRequest);
 

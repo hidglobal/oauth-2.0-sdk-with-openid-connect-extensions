@@ -140,6 +140,404 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 	 * Request object URL (optional).
 	 */
 	private final URL requestURI;
+
+
+	/**
+	 * Builder for constructing OpenID Connect authentication requests.
+	 */
+	public static class Builder {
+
+
+		/**
+		 * The endpoint URI (optional).
+		 */
+		private URL uri;
+
+
+		/**
+		 * The response type (required).
+		 */
+		private final ResponseType rt;
+
+
+		/**
+		 * The client identifier (required).
+		 */
+		private final ClientID clientID;
+
+
+		/**
+		 * The redirection URI where the response will be sent
+		 * (required).
+		 */
+		private final URL redirectURI;
+
+
+		/**
+		 * The scope (required).
+		 */
+		private final Scope scope;
+
+
+		/**
+		 * The opaque value to maintain state between the request and
+		 * the callback (recommended).
+		 */
+		private State state;
+
+
+		/**
+		 * The nonce (required for implicit flow, optional for code
+		 * flow).
+		 */
+		private Nonce nonce;
+
+
+		/**
+		 * The requested display type (optional).
+		 */
+		private Display display;
+
+
+		/**
+		 * The requested prompt (optional).
+		 */
+		private Prompt prompt;
+
+
+		/**
+		 * The required maximum authentication age, in seconds, 0 if
+		 * not specified (optional).
+		 */
+		private int maxAge;
+
+
+		/**
+		 * The end-user's preferred languages and scripts for the user
+		 * interface (optional).
+		 */
+		private List<LangTag> uiLocales;
+
+
+		/**
+		 * The end-user's preferred languages and scripts for claims
+		 * being returned (optional).
+		 */
+		private List<LangTag> claimsLocales;
+
+
+		/**
+		 * Previously issued ID Token passed to the authorisation
+		 * server as a hint about the end-user's current or past
+		 * authenticated session with the client (optional). Should be
+		 * present when {@code prompt=none} is used.
+		 */
+		private JWT idTokenHint;
+
+
+		/**
+		 * Hint to the authorisation server about the login identifier
+		 * the end-user may use to log in (optional).
+		 */
+		private String loginHint;
+
+
+		/**
+		 * Requested Authentication Context Class Reference values
+		 * (optional).
+		 */
+		private List<ACR> acrValues;
+
+
+		/**
+		 * Individual claims to be returned (optional).
+		 */
+		private ClaimsRequest claims;
+
+
+		/**
+		 * Request object (optional).
+		 */
+		private JWT requestObject;
+
+
+		/**
+		 * Request object URL (optional).
+		 */
+		private URL requestURI;
+
+
+		/**
+		 * Creates a new OpenID Connect authentication request builder.
+		 *
+		 * @param rt          The response type. Corresponds to the
+		 *                    {@code response_type} parameter. Must
+		 *                    specify a valid OpenID Connect response
+		 *                    type. Must not be {@code null}.
+		 * @param scope       The request scope. Corresponds to the
+		 *                    {@code scope} parameter. Must contain an
+		 *                    {@link OIDCScopeValue#OPENID openid
+		 *                    value}. Must not be {@code null}.
+		 * @param clientID    The client identifier. Corresponds to the
+		 *                    {@code client_id} parameter. Must not be
+		 *                    {@code null}.
+		 * @param redirectURI The redirection URI. Corresponds to the
+		 *                    {@code redirect_uri} parameter. Must not
+		 *                    be {@code null}.
+		 */
+		public Builder(final ResponseType rt,
+			       final Scope scope,
+			       final ClientID clientID,
+			       final URL redirectURI) {
+
+			if (rt == null)
+				throw new IllegalArgumentException("The response type must not be null");
+
+			OIDCResponseTypeValidator.validate(rt);
+
+			this.rt = rt;
+
+			if (scope == null)
+				throw new IllegalArgumentException("The scope must not be null");
+
+			if (! scope.contains(OIDCScopeValue.OPENID))
+				throw new IllegalArgumentException("The scope must include an \"openid\" token");
+
+			this.scope = scope;
+
+			if (clientID == null)
+				throw new IllegalArgumentException("The client ID must not be null");
+
+			this.clientID = clientID;
+
+			if (redirectURI == null)
+				throw new IllegalArgumentException("The redirect URI must not be null");
+
+			this.redirectURI = redirectURI;
+		}
+
+
+		/**
+		 * Sets the state. Corresponds to the recommended {@code state}
+		 * parameter.
+		 *
+		 * @param state The state, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder state(final State state) {
+
+			this.state = state;
+			return this;
+		}
+
+
+		/**
+		 * Sets the URI of the endpoint (HTTP or HTTPS) for which the
+		 * request is intended.
+		 *
+		 * @param uri The endpoint URI, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder endpointURI(final URL uri) {
+
+			this.uri = uri;
+			return this;
+		}
+
+
+		/**
+		 * Sets the nonce. Corresponds to the conditionally optional
+		 * {@code nonce} parameter.
+		 *
+		 * @param nonce The nonce, {@code null} if not specified.
+		 */
+		public Builder nonce(final Nonce nonce) {
+
+			this.nonce = nonce;
+			return this;
+		}
+
+
+		/**
+		 * Sets the requested display type. Corresponds to the optional
+		 * {@code display} parameter.
+		 *
+		 * @param display The requested display type, {@code null} if
+		 *                not specified.
+		 */
+		public Builder display(final Display display) {
+
+			this.display = display;
+			return this;
+		}
+
+
+		/**
+		 * Sets the requested prompt. Corresponds to the optional
+		 * {@code prompt} parameter.
+		 *
+		 * @param prompt The requested prompt, {@code null} if not
+		 *               specified.
+		 */
+		public Builder prompt(final Prompt prompt) {
+
+			this.prompt = prompt;
+			return this;
+		}
+
+
+		/**
+		 * Sets the required maximum authentication age. Corresponds to
+		 * the optional {@code max_age} parameter.
+		 *
+		 * @param maxAge The maximum authentication age, in seconds; 0
+		 *               if not specified.
+		 */
+		public Builder maxAge(final int maxAge) {
+
+			this.maxAge = maxAge;
+			return this;
+		}
+
+
+		/**
+		 * Sets the end-user's preferred languages and scripts for the
+		 * user interface, ordered by preference. Corresponds to the
+		 * optional {@code ui_locales} parameter.
+		 *
+		 * @param uiLocales The preferred UI locales, {@code null} if
+		 *                  not specified.
+		 */
+		public Builder uiLocales(final List<LangTag> uiLocales) {
+
+			this.uiLocales = uiLocales;
+			return this;
+		}
+
+
+		/**
+		 * Sets the end-user's preferred languages and scripts for the
+		 * claims being returned, ordered by preference. Corresponds to
+		 * the optional {@code claims_locales} parameter.
+		 *
+		 * @param claimsLocales The preferred claims locales,
+		 *                      {@code null} if not specified.
+		 */
+		public Builder claimsLocales(final List<LangTag> claimsLocales) {
+
+			this.claimsLocales = claimsLocales;
+			return this;
+		}
+
+
+		/**
+		 * Sets the ID Token hint. Corresponds to the conditionally
+		 * optional {@code id_token_hint} parameter.
+		 *
+		 * @param idTokenHint The ID Token hint, {@code null} if not
+		 *                    specified.
+		 */
+		public Builder idTokenHint(final JWT idTokenHint) {
+
+			this.idTokenHint = idTokenHint;
+			return this;
+		}
+
+
+		/**
+		 * Sets the login hint. Corresponds to the optional
+		 * {@code login_hint} parameter.
+		 *
+		 * @param loginHint The login hint, {@code null} if not
+		 *                  specified.
+		 */
+		public Builder loginHint(final String loginHint) {
+
+			this.loginHint = loginHint;
+			return this;
+		}
+
+
+		/**
+		 * Sets the requested Authentication Context Class Reference
+		 * values. Corresponds to the optional {@code acr_values}
+		 * parameter.
+		 *
+		 * @param acrValues The requested ACR values, {@code null} if
+		 *                  not specified.
+		 */
+		public Builder acrValues(final List<ACR> acrValues) {
+
+			this.acrValues = acrValues;
+			return this;
+		}
+
+
+		/**
+		 * Sets the individual claims to be returned. Corresponds to
+		 * the optional {@code claims} parameter.
+		 *
+		 * @param claims The individual claims to be returned,
+		 *               {@code null} if not specified.
+		 */
+		public Builder claims(final ClaimsRequest claims) {
+
+			this.claims = claims;
+			return this;
+		}
+
+
+		/**
+		 * Sets the request object. Corresponds to the optional
+		 * {@code request} parameter. Must not be specified together
+		 * with a request object URL.
+		 *
+		 * @return The request object, {@code null} if not specified.
+		 */
+		public Builder requestObject(final JWT requestObject) {
+
+			this.requestObject = requestObject;
+			return this;
+		}
+
+
+		/**
+		 * Sets the request object URL. Corresponds to the optional
+		 * {@code request_uri} parameter. Must not be specified
+		 * together with a request object.
+		 *
+		 * @param requestURI The request object URL, {@code null} if
+		 *                   not specified.
+		 */
+		public Builder requestURI(final URL requestURI) {
+
+			this.requestURI = requestURI;
+			return this;
+		}
+
+
+		/**
+		 * Builds a new authentication request.
+		 *
+		 * @return The authentication request.
+		 */
+		public AuthenticationRequest build() {
+
+			try {
+				return new AuthenticationRequest(
+					uri, rt, scope, clientID, redirectURI, state, nonce,
+					display, prompt, maxAge, uiLocales, claimsLocales,
+					idTokenHint, loginHint, acrValues, claims,
+					requestObject, requestURI);
+
+			} catch (IllegalArgumentException e) {
+
+				throw new IllegalStateException(e.getMessage(), e);
+			}
+		}
+	}
 	
 	
 	/**
@@ -179,95 +577,12 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 		// idTokenHint, loginHint, acrValues, claims
 		this(uri, rt, scope, clientID, redirectURI, state, nonce, 
 		     null, null, 0, null, null, 
-		     null, null, null, null);
+		     null, null, null, null, null, null);
 	}
 	
 	
 	/**
-	 * Creates a new OpenID Connect authentication request without a request
-	 * object.
-	 *
-	 * @param uri           The URI of the OAuth 2.0 authorisation
-	 *                      endpoint. May be {@code null} if the
-	 *                      {@link #toHTTPRequest} method will not be used.
-	 * @param rt            The response type. Corresponds to the 
-	 *                      {@code response_type} parameter. Must specify a
-	 *                      valid OpenID Connect response type. Must not be
-	 *                      {@code null}.
-	 * @param scope         The request scope. Corresponds to the
-	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeValue#OPENID openid value}. 
-	 *                      Must not be {@code null}.
-	 * @param clientID      The client identifier. Corresponds to the
-	 *                      {@code client_id} parameter. Must not be 
-	 *                      {@code null}.
-	 * @param redirectURI   The redirection URI. Corresponds to the
-	 *                      {@code redirect_uri} parameter. Must not be 
-	 *                      {@code null}.
-	 * @param state         The state. Corresponds to the recommended 
-	 *                      {@code state} parameter. {@code null} if not 
-	 *                      specified.
-	 * @param nonce         The nonce. Corresponds to the {@code nonce} 
-	 *                      parameter. May be {@code null} for code flow.
-	 * @param display       The requested display type. Corresponds to the 
-	 *                      optional {@code display} parameter. 
-	 *                      {@code null} if not specified.
-	 * @param prompt        The requested prompt. Corresponds to the 
-	 *                      optional {@code prompt} parameter. {@code null} 
-	 *                      if not specified.
-	 * @param maxAge        The required maximum authentication age, in
-	 *                      seconds. Corresponds to the optional 
-	 *                      {@code max_age} parameter. Zero if not 
-	 *                      specified.
-	 * @param uiLocales     The preferred languages and scripts for the 
-	 *                      user interface. Corresponds to the optional 
-	 *                      {@code ui_locales} parameter. {@code null} if 
-	 *                      not specified.
-	 * @param claimsLocales The preferred languages and scripts for claims
-	 *                      being returned. Corresponds to the optional
-	 *                      {@code claims_locales} parameter. {@code null}
-	 *                      if not specified.
-	 * @param idTokenHint   The ID Token hint. Corresponds to the optional 
-	 *                      {@code id_token_hint} parameter. {@code null} 
-	 *                      if not specified.
-	 * @param loginHint     The login hint. Corresponds to the optional
-	 *                      {@code login_hint} parameter. {@code null} if 
-	 *                      not specified.
-	 * @param acrValues     The requested Authentication Context Class
-	 *                      Reference values. Corresponds to the optional
-	 *                      {@code acr_values} parameter. {@code null} if
-	 *                      not specified.
-	 * @param claims        The individual claims to be returned. 
-	 *                      Corresponds to the optional {@code claims} 
-	 *                      parameter. {@code null} if not specified.
-	 */
-	public AuthenticationRequest(final URL uri,
-				     final ResponseType rt,
-				     final Scope scope,
-				     final ClientID clientID,
-				     final URL redirectURI,
-				     final State state,
-				     final Nonce nonce,
-				     final Display display,
-				     final Prompt prompt,
-				     final int maxAge,
-				     final List<LangTag> uiLocales,
-				     final List<LangTag> claimsLocales,
-				     final JWT idTokenHint,
-				     final String loginHint,
-				     final List<ACR> acrValues,
-				     final ClaimsRequest claims) {
-				    
-				    
-		this(uri, rt, scope, clientID, redirectURI, state, nonce, display, prompt,
-		     maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues,
-		     claims, (JWT)null);
-	}
-	
-	
-	/**
-	 * Creates a new OpenID Connect authentication request with a request
-	 * object specified by value.
+	 * Creates a new OpenID Connect authentication request.
 	 *
 	 * @param uri           The URI of the OAuth 2.0 authorisation
 	 *                      endpoint. May be {@code null} if the
@@ -323,8 +638,13 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 	 *                      Corresponds to the optional {@code claims} 
 	 *                      parameter. {@code null} if not specified.
 	 * @param requestObject The request object. Corresponds to the optional
-	 *                      {@code request} parameter. {@code null} if not
-	 *                      specified.
+	 *                      {@code request} parameter. Must not be
+	 *                      specified together with a request object URL.
+	 *                      {@code null} if not specified.
+	 * @param requestURI    The request object URL. Corresponds to the
+	 *                      optional {@code request_uri} parameter. Must
+	 *                      not be specified together with a request
+	 *                      object. {@code null} if not specified.
 	 */
 	public AuthenticationRequest(final URL uri,
 				     final ResponseType rt,
@@ -342,143 +662,16 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 				     final String loginHint,
 				     final List<ACR> acrValues,
 				     final ClaimsRequest claims,
-				     final JWT requestObject) {
-				    
-		super(uri, rt, clientID, redirectURI, scope, state);
-
-		if (redirectURI == null)
-			throw new IllegalArgumentException("The redirect URI must not be null");
-		
-		OIDCResponseTypeValidator.validate(rt);
-
-		if (scope == null)
-			throw new IllegalArgumentException("The scope must not be null");
-
-		if (! scope.contains(OIDCScopeValue.OPENID))
-			throw new IllegalArgumentException("The scope must include an \"openid\" token");
-		
-		
-		// Nonce required for implicit protocol flow
-		if (rt.impliesImplicitFlow() && nonce == null)
-			throw new IllegalArgumentException("Nonce is required in implicit protocol flow");
-		
-		this.nonce = nonce;
-		
-		// Optional parameters
-		this.display = display;
-		this.prompt = prompt;
-		this.maxAge = maxAge;
-
-		if (uiLocales != null)
-			this.uiLocales = Collections.unmodifiableList(uiLocales);
-		else
-			this.uiLocales = null;
-
-		if (claimsLocales != null)
-			this.claimsLocales = Collections.unmodifiableList(claimsLocales);
-		else
-			this.claimsLocales = null;
-
-		this.idTokenHint = idTokenHint;
-		this.loginHint = loginHint;
-
-		if (acrValues != null)
-			this.acrValues = Collections.unmodifiableList(acrValues);
-		else
-			this.acrValues = null;
-
-		this.claims = claims;
-		this.requestObject = requestObject;
-		this.requestURI = null;
-	}
-	
-	
-	/**
-	 * Creates a new OpenID Connect authentication request with a request
-	 * object specified by URL.
-	 *
-	 * @param uri           The URI of the OAuth 2.00 authorisation
-	 *                      endpoint. May be {@code null} if the
-	 *                      {@link #toHTTPRequest} method will not be used.
-	 * @param rt            The response type. Corresponds to the 
-	 *                      {@code response_type} parameter. Must specify a
-	 *                      a valid OpenID Connect response type. Must not 
-	 *                      be {@code null}.
-	 * @param scope         The request scope. Corresponds to the
-	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeValue#OPENID openid value}. 
-	 *                      Must not be {@code null}.
-	 * @param clientID      The client identifier. Corresponds to the
-	 *                      {@code client_id} parameter. Must not be 
-	 *                      {@code null}.
-	 * @param redirectURI   The redirection URI. Corresponds to the
-	 *                      {@code redirect_uri} parameter. Must not be 
-	 *                      {@code null}.
-	 * @param state         The state. Corresponds to the recommended 
-	 *                      {@code state} parameter. {@code null} if not 
-	 *                      specified.
-	 * @param nonce         The nonce. Corresponds to the {@code nonce} 
-	 *                      parameter. May be {@code null} for code flow.
-	 * @param display       The requested display type. Corresponds to the 
-	 *                      optional {@code display} parameter. 
-	 *                      {@code null} if not specified.
-	 * @param prompt        The requested prompt. Corresponds to the 
-	 *                      optional {@code prompt} parameter. {@code null} 
-	 *                      if not specified.
-	 * @param maxAge        The required maximum authentication age, in
-	 *                      seconds. Corresponds to the optional 
-	 *                      {@code max_age} parameter. Zero if not 
-	 *                      specified.
-	 * @param uiLocales     The preferred languages and scripts for the 
-	 *                      user interface. Corresponds to the optional 
-	 *                      {@code ui_locales} parameter. {@code null} if 
-	 *                      not specified.
-	 * @param claimsLocales The preferred languages and scripts for claims
-	 *                      being returned. Corresponds to the optional
-	 *                      {@code claims_locales} parameter. {@code null}
-	 *                      if not specified.
-	 * @param idTokenHint   The ID Token hint. Corresponds to the optional 
-	 *                      {@code id_token_hint} parameter. {@code null} 
-	 *                      if not specified.
-	 * @param loginHint     The login hint. Corresponds to the optional
-	 *                      {@code login_hint} parameter. {@code null} if 
-	 *                      not specified.
-	 * @param acrValues     The requested Authentication Context Class
-	 *                      Reference values. Corresponds to the optional
-	 *                      {@code acr_values} parameter. {@code null} if
-	 *                      not specified.
-	 * @param claims        The individual claims to be returned. 
-	 *                      Corresponds to the optional {@code claims} 
-	 *                      parameter. {@code null} if not specified.
-	 * @param requestURI    The request object URL. Corresponds to the 
-	 *                      optional {@code request_uri} parameter. 
-	 *                      {@code null} if not specified.
-	 */
-	public AuthenticationRequest(final URL uri,
-				     final ResponseType rt,
-				     final Scope scope,
-				     final ClientID clientID,
-				     final URL redirectURI,
-				     final State state,
-				     final Nonce nonce,
-				     final Display display,
-				     final Prompt prompt,
-				     final int maxAge,
-				     final List<LangTag> uiLocales,
-				     final List<LangTag> claimsLocales,
-				     final JWT idTokenHint,
-				     final String loginHint,
-				     final List<ACR> acrValues,
-				     final ClaimsRequest claims,
+				     final JWT requestObject,
 				     final URL requestURI) {
 				    
 		super(uri, rt, clientID, redirectURI, scope, state);
 
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirect URI must not be null");
-
-		OIDCResponseTypeValidator.validate(rt);
 		
+		OIDCResponseTypeValidator.validate(rt);
+
 		if (scope == null)
 			throw new IllegalArgumentException("The scope must not be null");
 
@@ -492,7 +685,6 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 		
 		this.nonce = nonce;
 		
-		// Optional parameters
 		// Optional parameters
 		this.display = display;
 		this.prompt = prompt;
@@ -517,7 +709,11 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 			this.acrValues = null;
 
 		this.claims = claims;
-		this.requestObject = null;
+
+		if (requestObject != null && requestURI != null)
+			throw new IllegalArgumentException("Either a request object or a request URI must be specified, but not both");
+
+		this.requestObject = requestObject;
 		this.requestURI = requestURI;
 	}
 	
@@ -680,14 +876,7 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 	 */
 	public boolean specifiesRequestObject() {
 	
-		if (requestObject != null || requestURI != null) {
-
-			return true;
-
-		} else {
-			
-			return false;
-		}
+		return requestObject != null || requestURI != null;
 	}
 
 
@@ -1096,24 +1285,10 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 		}
 		
 		
-		// Select the appropriate constructor
-		
-		// Inline request object
-		if (requestObject != null)
-			return new AuthenticationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
-			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
-			                                    idTokenHint, loginHint, acrValues, claims, requestObject);
-	
-		// Request object by URL reference
-		if (requestURI != null)
-			return new AuthenticationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
-			                                    display, prompt, maxAge, uiLocales, claimsLocales, 
-			                                    idTokenHint, loginHint, acrValues, claims, requestURI);
-		
-		// No request object or URI
-		return new AuthenticationRequest(uri, rt, scope, clientID, redirectURI, state, nonce,
-			                            display, prompt, maxAge, uiLocales, claimsLocales, 
-			                            idTokenHint, loginHint, acrValues, claims);
+		return new AuthenticationRequest(
+			uri, rt, scope, clientID, redirectURI, state, nonce,
+			display, prompt, maxAge, uiLocales, claimsLocales,
+			idTokenHint, loginHint, acrValues, claims, requestObject, requestURI);
 	}
 	
 	

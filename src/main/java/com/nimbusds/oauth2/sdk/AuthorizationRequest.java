@@ -89,13 +89,13 @@ public class AuthorizationRequest extends AbstractRequest {
 		/**
 		 * The response type (required).
 		 */
-		private ResponseType rt;
+		private final ResponseType rt;
 
 
 		/**
 		 * The client identifier (required).
 		 */
-		private ClientID clientID;
+		private final ClientID clientID;
 
 
 		/**
