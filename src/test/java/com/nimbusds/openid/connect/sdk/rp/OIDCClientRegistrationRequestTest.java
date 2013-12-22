@@ -40,7 +40,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		OIDCClientRegistrationRequest request = new OIDCClientRegistrationRequest(uri, metadata, null);
 		
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		assertNull(request.getAccessToken());
 		
@@ -63,7 +63,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		request = OIDCClientRegistrationRequest.parse(httpRequest);
 		
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		assertNull(request.getAccessToken());
 		
@@ -108,7 +108,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		OIDCClientRegistrationRequest req = OIDCClientRegistrationRequest.parse(httpRequest);
 		
-		assertEquals(uri, req.getURI());
+		assertEquals(uri, req.getEndpointURI());
 		
 		OIDCClientMetadata metadata = req.getOIDCClientMetadata();
 		

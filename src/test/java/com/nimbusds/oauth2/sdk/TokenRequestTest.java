@@ -35,7 +35,7 @@ public class TokenRequestTest extends TestCase {
 		
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
@@ -74,7 +74,7 @@ public class TokenRequestTest extends TestCase {
 		
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
@@ -109,7 +109,7 @@ public class TokenRequestTest extends TestCase {
 
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
@@ -146,7 +146,7 @@ public class TokenRequestTest extends TestCase {
 
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getURI()));
+		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());

@@ -150,10 +150,10 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException{
 		
-		if (getURI() == null)
+		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, getURI());
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, getEndpointURI());
 
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 

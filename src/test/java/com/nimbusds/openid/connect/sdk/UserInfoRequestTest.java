@@ -23,7 +23,7 @@ public class UserInfoRequestTest extends TestCase {
 
 		UserInfoRequest request = new UserInfoRequest(url, token);
 
-		assertEquals(url, request.getURI());
+		assertEquals(url, request.getEndpointURI());
 		assertEquals(token, request.getAccessToken());
 		assertEquals(HTTPRequest.Method.GET, request.getMethod());
 
@@ -36,7 +36,7 @@ public class UserInfoRequestTest extends TestCase {
 
 		request = UserInfoRequest.parse(httpRequest);
 
-		assertEquals(url, request.getURI());
+		assertEquals(url, request.getEndpointURI());
 		assertEquals(token, request.getAccessToken());
 		assertEquals(HTTPRequest.Method.GET, request.getMethod());
 	}
@@ -50,7 +50,7 @@ public class UserInfoRequestTest extends TestCase {
 
 		UserInfoRequest request = new UserInfoRequest(url, HTTPRequest.Method.POST, token);
 
-		assertEquals(url, request.getURI());
+		assertEquals(url, request.getEndpointURI());
 		assertEquals(token, request.getAccessToken());
 		assertEquals(HTTPRequest.Method.POST, request.getMethod());
 
@@ -64,7 +64,7 @@ public class UserInfoRequestTest extends TestCase {
 
 		request = UserInfoRequest.parse(httpRequest);
 
-		assertEquals(url, request.getURI());
+		assertEquals(url, request.getEndpointURI());
 		assertEquals(token, request.getAccessToken());
 		assertEquals(HTTPRequest.Method.POST, request.getMethod());
 	}

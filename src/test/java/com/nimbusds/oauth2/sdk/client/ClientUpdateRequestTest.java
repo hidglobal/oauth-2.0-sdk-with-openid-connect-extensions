@@ -45,7 +45,7 @@ public class ClientUpdateRequestTest {
 		
 		ClientUpdateRequest request = ClientUpdateRequest.parse(httpRequest);
 		
-		assertEquals(regURI, request.getURI());
+		assertEquals(regURI, request.getEndpointURI());
 		
 		assertEquals("reg-23410913-abewfq.123483", request.getAccessToken().getValue());
 		

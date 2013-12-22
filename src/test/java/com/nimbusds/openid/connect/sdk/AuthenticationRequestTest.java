@@ -52,7 +52,7 @@ public class AuthenticationRequestTest extends TestCase {
 		AuthenticationRequest request =
 			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce);
 
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		ResponseType rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -79,7 +79,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		request = AuthenticationRequest.parse(uri, queryString);
 		
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 
 		rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -128,7 +128,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		request = AuthenticationRequest.parse(queryString);
 
-		assertNull(request.getURI());
+		assertNull(request.getEndpointURI());
 
 		ResponseType rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -202,7 +202,7 @@ public class AuthenticationRequestTest extends TestCase {
 			new AuthenticationRequest(uri, rts, scope, clientID, redirectURI, state, nonce,
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims);
 
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		ResponseType rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -266,7 +266,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		request = AuthenticationRequest.parse(uri, queryString);
 
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -379,7 +379,7 @@ public class AuthenticationRequestTest extends TestCase {
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
 				                     requestObject);
 
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		ResponseType rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -445,7 +445,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		request = AuthenticationRequest.parse(uri, queryString);
 		
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 
 		rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -560,7 +560,7 @@ public class AuthenticationRequestTest extends TestCase {
 				                     display, prompt, maxAge, uiLocales, claimsLocales, idTokenHint, loginHint, acrValues, claims,
 				                     requestURI);
 
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		
 		ResponseType rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
@@ -626,7 +626,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		request = AuthenticationRequest.parse(uri, queryString);
 		
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 
 		rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));

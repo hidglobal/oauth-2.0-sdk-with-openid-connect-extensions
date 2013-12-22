@@ -5,7 +5,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
 
 /**
- * OAuth 2.0 authorisation and token endpoint errors.
+ * Standard OAuth 2.0 authorisation and token endpoint errors.
  *
  * <p>The set HTTP status code is ignored for authorisation errors passed by
  * HTTP redirection. Errors that are only used by at the authorisation endpoint

@@ -35,7 +35,7 @@ public class OIDCClientUpdateRequestTest extends TestCase {
 			metadata,
 			secret);
 
-		assertEquals(uri, request.getURI());
+		assertEquals(uri, request.getEndpointURI());
 		assertEquals(clientID, request.getClientID());
 		assertEquals(accessToken, request.getAccessToken());
 		assertEquals(metadata, request.getOIDCClientMetadata());
@@ -47,7 +47,7 @@ public class OIDCClientUpdateRequestTest extends TestCase {
 
 		request = OIDCClientUpdateRequest.parse(httpRequest);
 
-		assertEquals(uri.toString(), request.getURI().toString());
+		assertEquals(uri.toString(), request.getEndpointURI().toString());
 		assertEquals(clientID.getValue(), request.getClientID().getValue());
 		assertEquals(accessToken.getValue(), request.getAccessToken().getValue());
 		assertEquals("https://client.com/cb", request.getClientMetadata().getRedirectionURIs().iterator().next().toString());

@@ -336,7 +336,7 @@ public class AuthenticationRequestResolver {
 			AuthenticationRequest finalAuthRequest;
 
 			try {
-				finalAuthRequest = AuthenticationRequest.parse(request.getURI(), finalParams);
+				finalAuthRequest = AuthenticationRequest.parse(request.getEndpointURI(), finalParams);
 
 			} catch (ParseException e) {
 
@@ -344,7 +344,7 @@ public class AuthenticationRequestResolver {
 			}
 			
 			return new AuthenticationRequest(
-				finalAuthRequest.getURI(),
+				finalAuthRequest.getEndpointURI(),
 				finalAuthRequest.getResponseType(),
 				finalAuthRequest.getScope(),
 				finalAuthRequest.getClientID(),

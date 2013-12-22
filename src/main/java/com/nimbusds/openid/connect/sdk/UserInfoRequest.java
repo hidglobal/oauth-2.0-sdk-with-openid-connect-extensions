@@ -97,10 +97,10 @@ public final class UserInfoRequest extends ProtectedResourceRequest {
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 		
-		if (getURI() == null)
+		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(httpMethod, getURI());
+		HTTPRequest httpRequest = new HTTPRequest(httpMethod, getEndpointURI());
 		
 		switch (httpMethod) {
 		

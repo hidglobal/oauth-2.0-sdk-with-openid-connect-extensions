@@ -103,10 +103,10 @@ public class TokenRequest extends AbstractRequest {
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException {
 
-		if (getURI() == null)
+		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getEndpointURI());
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
 		Map<String,String> params = authzGrant.toParameters();

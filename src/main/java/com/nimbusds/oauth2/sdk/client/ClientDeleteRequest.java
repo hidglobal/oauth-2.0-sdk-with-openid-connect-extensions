@@ -57,10 +57,10 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
 	public HTTPRequest toHTTPRequest() 
 		throws SerializeException {
 		
-		if (getURI() == null)
+		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.DELETE, getURI());
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.DELETE, getEndpointURI());
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 		return httpRequest;
 	}

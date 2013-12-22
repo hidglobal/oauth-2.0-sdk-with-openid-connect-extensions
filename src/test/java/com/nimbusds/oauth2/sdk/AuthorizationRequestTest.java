@@ -30,7 +30,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID);
 
-		assertEquals(uri, req.getURI());
+		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
@@ -54,7 +54,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		req = AuthorizationRequest.parse(uri, query);
 
-		assertEquals(uri, req.getURI());
+		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
@@ -80,7 +80,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		req = AuthorizationRequest.parse(query);
 
-		assertNull(req.getURI());
+		assertNull(req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 
@@ -107,7 +107,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID, redirectURI, scope, state);
 
-		assertEquals(uri, req.getURI());
+		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
@@ -133,7 +133,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		req = AuthorizationRequest.parse(uri, query);
 
-		assertEquals(uri, req.getURI());
+		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
@@ -159,7 +159,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID, redirectURI, scope, state);
 
-		assertEquals(uri, req.getURI());
+		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
@@ -170,11 +170,44 @@ public class AuthorizationRequestTest extends TestCase {
 
 		req = AuthorizationRequest.parse(query);
 
-		assertNull(req.getURI());
+		assertNull(req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
 		assertEquals(state, req.getState());
+	}
+
+
+	public void testBuilderMinimal()
+		throws Exception {
+
+		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123")).build();
+
+		assertTrue(new ResponseType("code").equals(request.getResponseType()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertNull(request.getEndpointURI());
+		assertNull(request.getRedirectionURI());
+		assertNull(request.getScope());
+		assertNull(request.getState());
+	}
+
+
+	public void testBuilderFull()
+		throws Exception {
+
+		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123")).
+			endpointURI(new URL("https://c2id.com/login")).
+			redirectionURI(new URL("https://client.com/cb")).
+			scope(new Scope("openid", "email")).
+			state(new State("123")).
+			build();
+
+		assertTrue(new ResponseType("code").equals(request.getResponseType()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertEquals("https://c2id.com/login", request.getEndpointURI().toString());
+		assertEquals("https://client.com/cb", request.getRedirectionURI().toString());
+		assertTrue(new Scope("openid", "email").equals(request.getScope()));
+		assertTrue(new State("123").equals(request.getState()));
 	}
 }

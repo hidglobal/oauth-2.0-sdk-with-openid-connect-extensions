@@ -97,10 +97,10 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 	public HTTPRequest toHTTPRequest()
 		throws SerializeException{
 		
-		if (getURI() == null)
+		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getEndpointURI());
 
 		if (getAccessToken() != null)
 			httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());

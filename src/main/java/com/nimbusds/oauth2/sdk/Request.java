@@ -18,7 +18,7 @@ public interface Request extends Message {
 	 * 
 	 * @return The endpoint URI, {@code null} if not specified.
 	 */
-	public URL getURI();
+	public URL getEndpointURI();
 	
 	
 	/**

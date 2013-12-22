@@ -75,17 +75,159 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
+	 * Builder for constructing authorisation requests.
+	 */
+	public static class Builder {
+
+
+		/**
+		 * The endpoint URI (optional).
+		 */
+		private URL uri;
+
+
+		/**
+		 * The response type (required).
+		 */
+		private ResponseType rt;
+
+
+		/**
+		 * The client identifier (required).
+		 */
+		private ClientID clientID;
+
+
+		/**
+		 * The redirection URI where the response will be sent
+		 * (optional).
+		 */
+		private URL redirectURI;
+
+
+		/**
+		 * The scope (optional).
+		 */
+		private Scope scope;
+
+
+		/**
+		 * The opaque value to maintain state between the request and
+		 * the callback (recommended).
+		 */
+		private State state;
+
+
+		/**
+		 * Creates a new authorisation request builder.
+		 *
+		 * @param rt       The response type. Corresponds to the
+		 *                 {@code response_type} parameter. Must not be
+		 *                 {@code null}.
+		 * @param clientID The client identifier. Corresponds to the
+		 *                 {@code client_id} parameter. Must not be
+		 *                 {@code null}.
+		 */
+		public Builder(final ResponseType rt, final ClientID clientID) {
+
+			if (rt == null)
+				throw new IllegalArgumentException("The response type must not be null");
+
+			this.rt = rt;
+
+
+			if (clientID == null)
+				throw new IllegalArgumentException("The client ID must not be null");
+
+			this.clientID = clientID;
+		}
+
+
+		/**
+		 * Sets the redirection URI. Corresponds to the optional
+		 * {@code redirection_uri} parameter.
+		 *
+		 * @param redirectURI The redirection URI, {@code null} if not
+		 *                    specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder redirectionURI(final URL redirectURI) {
+
+			this.redirectURI = redirectURI;
+			return this;
+		}
+
+
+		/**
+		 * Sets the scope. Corresponds to the optional {@code scope}
+		 * parameter.
+		 *
+		 * @param scope The scope, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder scope(final Scope scope) {
+
+			this.scope = scope;
+			return this;
+		}
+
+
+		/**
+		 * Sets the state. Corresponds to the recommended {@code state}
+		 * parameter.
+		 *
+		 * @param state The state, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder state(final State state) {
+
+			this.state = state;
+			return this;
+		}
+
+
+		/**
+		 * Sets the URI of the endpoint (HTTP or HTTPS) for which the
+		 * request is intended.
+		 *
+		 * @param uri The endpoint URI, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder endpointURI(final URL uri) {
+
+			this.uri = uri;
+			return this;
+		}
+
+
+		/**
+		 * Builds a new authorisation request.
+		 *
+		 * @return The authorisation request.
+		 */
+		public AuthorizationRequest build() {
+
+			return new AuthorizationRequest(uri, rt, clientID, redirectURI, scope, state);
+		}
+	}
+
+
+	/**
 	 * Creates a new minimal authorisation request.
 	 *
-	 * @param uri         The URI of the authorisation endpoint. May be 
-	 *                    {@code null} if the {@link #toHTTPRequest()}
-	 *                    method will not be used.
-	 * @param rt          The response type. Corresponds to the 
-	 *                    {@code response_type} parameter. Must not be
-	 *                    {@code null}.
-	 * @param clientID    The client identifier. Corresponds to the
-	 *                    {@code client_id} parameter. Must not be 
-	 *                    {@code null}.
+	 * @param uri      The URI of the authorisation endpoint. May be
+	 *                 {@code null} if the {@link #toHTTPRequest} method
+	 *                 will not be used.
+	 * @param rt       The response type. Corresponds to the
+	 *                 {@code response_type} parameter. Must not be
+	 *                 {@code null}.
+	 * @param clientID The client identifier. Corresponds to the
+	 *                 {@code client_id} parameter. Must not be
+	 *                 {@code null}.
 	 */
 	public AuthorizationRequest(final URL uri,
 		                    final ResponseType rt,
@@ -99,8 +241,8 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * Creates a new authorisation request.
 	 *
 	 *  @param uri        The URI of the authorisation endpoint. May be 
-	 *                    {@code null} if the {@link #toHTTPRequest()}
-	 *                    method will not be used.
+	 *                    {@code null} if the {@link #toHTTPRequest} method
+	 *                    will not be used.
 	 * @param rt          The response type. Corresponds to the 
 	 *                    {@code response_type} parameter. Must not be
 	 *                    {@code null}.
@@ -283,18 +425,18 @@ public class AuthorizationRequest extends AbstractRequest {
 	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method)
 		throws SerializeException {
 		
-		if (getURI() == null)
+		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 		
 		HTTPRequest httpRequest;
 		
 		if (method.equals(HTTPRequest.Method.GET)) {
 
-			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, getURI());
+			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, getEndpointURI());
 
 		} else if (method.equals(HTTPRequest.Method.POST)) {
 
-			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getURI());
+			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getEndpointURI());
 
 		} else {
 

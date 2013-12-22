@@ -31,7 +31,7 @@ public abstract class AbstractRequest implements Request {
 	
 	
 	@Override
-	public URL getURI() {
+	public URL getEndpointURI() {
 		
 		return uri;
 	}
