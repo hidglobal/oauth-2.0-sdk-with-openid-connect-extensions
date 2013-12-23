@@ -768,13 +768,37 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testBuilderWithWithRequestObject()
 		throws Exception {
 
-		// TODO
+		AuthenticationRequest request = new AuthenticationRequest.Builder(
+			new ResponseType("code", "id_token"),
+			new Scope("openid", "email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb")).
+			requestObject(JWTParser.parse(EXAMPLE_JWT_STRING)).
+			build();
+
+		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertTrue(new Scope("openid", "email").equals(request.getScope()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertEquals(EXAMPLE_JWT_STRING, request.getRequestObject().getParsedString());
 	}
 
 
 	public void testBuilderWithRequestURI()
 		throws Exception {
 
-		// TODO
+		AuthenticationRequest request = new AuthenticationRequest.Builder(
+			new ResponseType("code", "id_token"),
+			new Scope("openid", "email"),
+			new ClientID("123"),
+			new URL("https://client.com/cb")).
+			requestURI(new URL("https://client.com/request#123")).
+			build();
+
+		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertTrue(new Scope("openid", "email").equals(request.getScope()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new URL("https://client.com/request#123").equals(request.getRequestURI()));
 	}
 }
