@@ -5,28 +5,48 @@
 </head>
 
 <body>
-<h3>OAuth 2.0 client / server SDK for Java with OpenID Connect 1.0
-    extensions</h3>
+<h3>OAuth 2.0 client / server SDK for Java with OpenID Connect 1.0 extensions</h3>
 
-<p>OpenID Connect 1.0 is a suite of lightweight specifications for
-    providing and consuming identity information on the web. It
-    allows for clients of all types including browser-based, mobile,
-    and JavaScript clients, to request and receive information
-    about identities and currently authenticated sessions. The
-    specification suite is extensible, allowing participants to
-    optionally also support encryption of identity data, discovery
-    of the OpenID Provider, and advanced session management,
-    including logout.</p>
+<h4>About OAuth 2.0</h4>
 
-<p>This SDK allows the creation of concrete OpenID Connect client and
-    server (IdP) implementations. It is based on 2nd implementers' draft
-    from 5 July 2013.</p>
+<p>OAuth 2.0 is an authorisation framework which enables a third-party
+    application to obtain limited access to an HTTP service, either on
+    behalf of a resource owner (the user), or by allowing the third-party
+    application to obtain access on its own behalf.</p>
+
+<p>OAuth 2.0 is specified in <a href="http://tools.ietf.org/html/rfc6749">RFC 6749</a>
+    and its companion specifications.</p>
+
+
+<h4>About OpenID Connect 1.0</h4>
+
+<p>OpenID Connect 1.0 is a simple identity layer on top of the OAuth 2.0
+    protocol. It allows clients to verify the identity of the user based on the
+    authentication performed by an authorisation server, as well as to obtain
+    basic profile information about the user in an interoperable and REST-like
+    manner.</p>
+
+<p>OpenID Connect allows clients of all types, including Web-based, mobile, and
+    JavaScript clients, to request and receive information about authenticated
+    sessions and end-users. The specification suite is extensible, allowing
+    optional encryption of identity data, discovery of OpenID Providers, and
+    session management.</p>
+
+<p>Go to the <a href="http://openid.net/connect/">OpenID Connect specifications
+    page</a> for more details.</p>
+
+<h4>About this SDK</h4>
+
+<p>This SDK allows the creation of concrete OpenID Connect client and server
+    implementations. It is based on proposed final specifications from 19
+    December 2013.</p>
 
 <p>Supported OpenID Connect endpoints:</p>
 
 <ul>
+    <li>Discovery endpoint.</li>
     <li>Client registration endpoint.</li>
-    <li>Authorisation endpoint.</li>
+    <li>Authentication (OAuth 2.0 authorisation) endpoint.</li>
     <li>Token endpoint.</li>
     <li>UserInfo endpoint.</li>
 </ul>
