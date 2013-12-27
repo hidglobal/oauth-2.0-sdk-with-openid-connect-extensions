@@ -79,19 +79,17 @@ This SDK version implements the following standards and drafts:
 	* OAuth 2.0 Dynamic Client Registration Protocol 
 	  (draft-ietf-oauth-dyn-reg-14)
 
-	* OpenID Connect Messages, draft 20.
+	* OpenID Connect Core, draft 17.
 
-	* OpenID Connect Standard, draft 21.
+	* OpenID Connect Discovery, draft 21.
 
-	* OpenID Connect Discovery, draft 17.
+	* OpenID Connect Registration, draft 23.
 
-	* OpenID Connect Registration, draft 19.
-
-	* OAuth 2.0 Multiple Response Type Encoding Practices, draft 08
+	* OAuth 2.0 Multiple Response Type Encoding Practices, draft 11.
 
 
 The Nimbus OAuth 2.0 + OpenID Connect SDK is provided under the terms of the
 Apache 2.0 licence.
 
 
-2013-10-07
+2013-12-27
