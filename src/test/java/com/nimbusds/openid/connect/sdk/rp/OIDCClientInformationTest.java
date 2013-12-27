@@ -68,7 +68,7 @@ public class OIDCClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("request_uris"));
 		assertTrue(paramNames.contains("post_logout_redirect_uris"));
 
-		assertEquals(38, paramNames.size());
+		assertEquals(40, paramNames.size());
 	}
 
 
