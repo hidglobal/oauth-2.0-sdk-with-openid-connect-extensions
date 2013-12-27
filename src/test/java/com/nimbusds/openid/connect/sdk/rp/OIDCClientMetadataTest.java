@@ -9,22 +9,22 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.oauth2.sdk.GrantType;
-import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.openid.connect.sdk.claims.ACR;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.util.JSONObjectUtils;
 
 import com.nimbusds.langtag.LangTag;
 
+import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.openid.connect.sdk.SubjectType;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
 
 
 /**
@@ -65,6 +65,8 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("userinfo_encrypted_response_alg"));
 		assertTrue(paramNames.contains("userinfo_encrypted_response_enc"));
 		assertTrue(paramNames.contains("request_object_signing_alg"));
+		assertTrue(paramNames.contains("request_object_encryption_alg"));
+		assertTrue(paramNames.contains("request_object_encryption_enc"));
 		assertTrue(paramNames.contains("token_endpoint_auth_signing_alg"));
 		assertTrue(paramNames.contains("default_max_age"));
 		assertTrue(paramNames.contains("require_auth_time"));
@@ -73,7 +75,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("request_uris"));
 		assertTrue(paramNames.contains("post_logout_redirect_uris"));
 
-		assertEquals(32, OIDCClientMetadata.getRegisteredParameterNames().size());
+		assertEquals(34, OIDCClientMetadata.getRegisteredParameterNames().size());
 	}
 	
 	
@@ -169,6 +171,14 @@ public class OIDCClientMetadataTest extends TestCase {
 		meta.setRequestObjectJWSAlg(JWSAlgorithm.HS512);
 		assertEquals(JWSAlgorithm.HS512, meta.getRequestObjectJWSAlg());
 
+		assertNull(meta.getRequestObjectJWEAlg());
+		meta.setRequestObjectJWEAlg(JWEAlgorithm.A128KW);
+		assertEquals(JWEAlgorithm.A128KW, meta.getRequestObjectJWEAlg());
+
+		assertNull(meta.getRequestObjectJWEEnc());
+		meta.setRequestObjectJWEEnc(EncryptionMethod.A128GCM);
+		assertEquals(EncryptionMethod.A128GCM, meta.getRequestObjectJWEEnc());
+
 		assertNull(meta.getTokenEndpointAuthJWSAlg());
 		meta.setTokenEndpointAuthJWSAlg(JWSAlgorithm.HS384);
 		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointAuthJWSAlg());
@@ -236,19 +246,16 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(1, meta.getRequestObjectURIs().size());
 
 		assertEquals(JWSAlgorithm.HS512, meta.getRequestObjectJWSAlg());
+		assertEquals(JWEAlgorithm.A128KW, meta.getRequestObjectJWEAlg());
+		assertEquals(EncryptionMethod.A128GCM, meta.getRequestObjectJWEEnc());
 
 		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointAuthJWSAlg());
-
 		assertEquals(JWSAlgorithm.PS256, meta.getIDTokenJWSAlg());
-
 		assertEquals(JWEAlgorithm.A128KW, meta.getIDTokenJWEAlg());
-
 		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEnc());
 
 		assertEquals(JWSAlgorithm.ES256, meta.getUserInfoJWSAlg());
-
 		assertEquals(JWEAlgorithm.ECDH_ES, meta.getUserInfoJWEAlg());
-
 		assertEquals(EncryptionMethod.A128CBC_HS256, meta.getUserInfoJWEEnc());
 
 		assertEquals(3600, meta.getDefaultMaxAge());

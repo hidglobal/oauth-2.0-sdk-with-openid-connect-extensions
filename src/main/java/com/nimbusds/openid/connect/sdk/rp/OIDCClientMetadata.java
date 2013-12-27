@@ -54,6 +54,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 		p.add("sector_identifier_uri");
 		p.add("request_uris");
 		p.add("request_object_signing_alg");
+		p.add("request_object_encryption_alg");
+		p.add("request_object_encryption_enc");
 		p.add("token_endpoint_auth_signing_alg");
 		p.add("id_token_signed_response_alg");
 		p.add("id_token_encrypted_response_alg");
@@ -105,6 +107,20 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
+	 * The JSON Web Encryption (JWE) algorithm required for the OpenID
+	 * Connect request objects sent by this client.
+	 */
+	private JWEAlgorithm requestObjectJWEAlg;
+
+
+	/**
+	 * The JSON Web Encryption (JWE) method required for the OpenID Connect
+	 * request objects sent by this client.
+	 */
+	private EncryptionMethod requestObjectJWEEnc;
+
+
+	/**
 	 * The JSON Web Signature (JWS) algorithm required for
 	 * {@code private_key_jwt} and {@code client_secret_jwt}
 	 * authentication at the Token endpoint.
@@ -127,8 +143,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * The encryption method (JWE enc) required for the ID Tokens issued to
-	 * this client.
+	 * The JSON Web Encryption (JWE) method required for the ID Tokens
+	 * issued to this client.
 	 */
 	private EncryptionMethod idTokenJWEEnc;
 
@@ -148,8 +164,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * The encryption method (JWE enc) required for the UserInfo responses
-	 * to this client.
+	 * The JSON Web Encryption (JWE) method required for the UserInfo
+	 * responses to this client.
 	 */
 	private EncryptionMethod userInfoJWEEnc;
 
@@ -348,6 +364,60 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
+	 * Gets the JSON Web Encryption (JWE) algorithm required for the OpenID
+	 * Connect request objects sent by this client. Corresponds to the
+	 * {@code request_object_encryption_alg} client metadata field.
+	 *
+	 * @return The JWE algorithm, {@code null} if not specified.
+	 */
+	public JWEAlgorithm getRequestObjectJWEAlg() {
+
+		return requestObjectJWEAlg;
+	}
+
+
+	/**
+	 * Sets the JSON Web Encryption (JWE) algorithm required for the OpenID
+	 * Connect request objects sent by this client. Corresponds to the
+	 * {@code request_object_encryption_alg} client metadata field.
+	 *
+	 * @param requestObjectJWEAlg The JWE algorithm, {@code null} if not
+	 *                            specified.
+	 */
+	public void setRequestObjectJWEAlg(final JWEAlgorithm requestObjectJWEAlg) {
+
+		this.requestObjectJWEAlg = requestObjectJWEAlg;
+	}
+
+
+	/**
+	 * Gets the JSON Web Encryption (JWE) method required for the OpenID
+	 * Connect request objects sent by this client. Corresponds to the
+	 * {@code request_object_encryption_enc} client metadata field.
+	 *
+	 * @return The JWE method, {@code null} if not specified.
+	 */
+	public EncryptionMethod getRequestObjectJWEEnc() {
+
+		return requestObjectJWEEnc;
+	}
+
+
+	/**
+	 * Sets the JSON Web Encryption (JWE) method required for the OpenID
+	 * Connect request objects sent by this client. Corresponds to the
+	 * {@code request_object_encryption_enc} client metadata field.
+	 *
+	 * @param requestObjectJWEEnc The JWE method, {@code null} if not
+	 *                            specified.
+	 */
+	public void setRequestObjectJWEEnc(final EncryptionMethod requestObjectJWEEnc) {
+
+		this.requestObjectJWEEnc = requestObjectJWEEnc;
+	}
+
+
+	/**
 	 * Gets the JSON Web Signature (JWS) algorithm required for
 	 * {@code private_key_jwt} and {@code client_secret_jwt}
 	 * authentication at the Token endpoint. Corresponds to the
@@ -430,11 +500,11 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Gets the encryption method (JWE enc) required for the ID Tokens 
+	 * Gets the JSON Web Encryption (JWE) method required for the ID Tokens
 	 * issued to this client. Corresponds to the 
 	 * {@code id_token_encrypted_response_enc} client metadata field.
 	 *
-	 * @return The JWE encryption method, {@code null} if not specified.
+	 * @return The JWE method, {@code null} if not specified.
 	 */
 	public EncryptionMethod getIDTokenJWEEnc() {
 
@@ -443,12 +513,11 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Sets the encryption method (JWE enc) required for the ID Tokens 
+	 * Sets the JSON Web Encryption (JWE) method required for the ID Tokens
 	 * issued to this client. Corresponds to the 
 	 * {@code id_token_encrypted_response_enc} client metadata field.
 	 *
-	 * @param idTokenJWEEnc The JWE encryption method, {@code null} if not 
-	 *                      specified.
+	 * @param idTokenJWEEnc The JWE method, {@code null} if not specified.
 	 */
 	public void setIDTokenJWEEnc(final EncryptionMethod idTokenJWEEnc) {
 
@@ -511,11 +580,11 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Gets the encryption method (JWE enc) required for the UserInfo 
+	 * Gets the JSON Web Encryption (JWE) method required for the UserInfo
 	 * responses to this client. Corresponds to the 
 	 * {@code userinfo_encrypted_response_enc} client metadata field.
 	 *
-	 * @return The JWE encryption method, {@code null} if not specified.
+	 * @return The JWE method, {@code null} if not specified.
 	 */
 	public EncryptionMethod getUserInfoJWEEnc() {
 
@@ -524,12 +593,11 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Sets the encryption method (JWE enc) required for the UserInfo 
+	 * Sets the JSON Web Encryption (JWE) method required for the UserInfo
 	 * responses to this client. Corresponds to the 
 	 * {@code userinfo_encrypted_response_enc} client metadata field.
 	 *
-	 * @param userInfoJWEEnc The JWE encryption method, {@code null} if not 
-	 *                       specified.
+	 * @param userInfoJWEEnc The JWE method, {@code null} if not specified.
 	 */
 	public void setUserInfoJWEEnc(final EncryptionMethod userInfoJWEEnc) {
 
@@ -732,6 +800,12 @@ public class OIDCClientMetadata extends ClientMetadata {
 		if (requestObjectJWSAlg != null)
 			o.put("request_object_signing_alg", requestObjectJWSAlg.getName());
 
+		if (requestObjectJWEAlg != null)
+			o.put("request_object_encryption_alg", requestObjectJWEAlg.getName());
+
+		if (requestObjectJWEEnc != null)
+			o.put("request_object_encryption_enc", requestObjectJWEEnc.getName());
+
 		if (authJWSAlg != null)
 			o.put("token_endpoint_auth_signing_alg", authJWSAlg.getName());
 
@@ -862,6 +936,20 @@ public class OIDCClientMetadata extends ClientMetadata {
 				JSONObjectUtils.getString(jsonObject, "request_object_signing_alg")));
 
 			oidcFields.remove("request_object_signing_alg");
+		}
+
+		if (jsonObject.containsKey("request_object_encryption_alg")) {
+			metadata.setRequestObjectJWEAlg(new JWEAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "request_object_encryption_alg")));
+
+			oidcFields.remove("request_object_encryption_alg");
+		}
+
+		if (jsonObject.containsKey("request_object_encryption_enc")) {
+			metadata.setRequestObjectJWEEnc(new EncryptionMethod(
+				JSONObjectUtils.getString(jsonObject, "request_object_encryption_enc")));
+
+			oidcFields.remove("request_object_encryption_enc");
 		}
 
 		if (jsonObject.containsKey("token_endpoint_auth_signing_alg")) {
