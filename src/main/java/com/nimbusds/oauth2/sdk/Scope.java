@@ -143,22 +143,19 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 
 		addAll(Arrays.asList(values));
 	}
-	
-	
+
+
 	/**
-	 * Returns the string list representation of this scope. The scope
-	 * values will be serialised in the order they were added.
-	 * 
-	 * @return The string list representation.
+	 * Adds the specified string value to this scope.
+	 *
+	 * @param value The string value. Must not be {@code null}.
+	 *
+	 * @return {@code true} if this scope did not already contain the
+	 *         specified value.
 	 */
-	public List<String> toStringList() {
-		
-		List<String> list = new ArrayList<String>(this.size());
-		
-		for (Scope.Value v: this)
-			list.add(v.getValue());
-		
-		return list;
+	public boolean add(final String value) {
+
+		return add(new Value(value));
 	}
 
 
@@ -196,6 +193,23 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		}
 
 		return sb.toString();
+	}
+
+
+	/**
+	 * Returns the string list representation of this scope. The scope
+	 * values will be serialised in the order they were added.
+	 *
+	 * @return The string list representation.
+	 */
+	public List<String> toStringList() {
+
+		List<String> list = new ArrayList<String>(this.size());
+
+		for (Scope.Value v: this)
+			list.add(v.getValue());
+
+		return list;
 	}
 	
 	

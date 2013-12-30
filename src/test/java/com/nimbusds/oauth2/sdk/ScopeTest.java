@@ -106,4 +106,18 @@ public class ScopeTest extends TestCase {
 
 		assertEquals(0, s.size());
 	}
+
+
+	public void testAddString() {
+
+		Scope scope = new Scope();
+
+		assertTrue(scope.add("openid"));
+		assertTrue(scope.contains("openid"));
+		assertEquals(1, scope.size());
+
+		assertFalse(scope.add("openid"));
+		assertTrue(scope.contains("openid"));
+		assertEquals(1, scope.size());
+	}
 }
