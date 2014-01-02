@@ -260,4 +260,29 @@ public class ClientMetadataTest extends TestCase {
 		meta.setRedirectionURI(null);
 		assertNull(meta.getRedirectionURIs());
 	}
+
+
+	public void testGetRedirectionURIStrings()
+		throws Exception {
+
+		ClientMetadata meta = new ClientMetadata();
+
+		assertNull(meta.getRedirectionURIStrings());
+
+		Set<URL> redirectURIs = new HashSet<URL>();
+		redirectURIs.add(new URL("https://cliemt.com/cb-1"));
+		redirectURIs.add(new URL("https://cliemt.com/cb-2"));
+		redirectURIs.add(new URL("https://cliemt.com/cb-3"));
+
+		meta.setRedirectionURIs(redirectURIs);
+
+		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb-1"));
+		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb-2"));
+		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb-3"));
+		assertEquals(3, meta.getRedirectionURIStrings().size());
+
+		meta.setRedirectionURI(new URL("https://cliemt.com/cb"));
+		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb"));
+		assertEquals(1, meta.getRedirectionURIStrings().size());
+	}
 }

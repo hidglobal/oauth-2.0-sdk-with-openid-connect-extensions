@@ -248,6 +248,30 @@ public class ClientMetadata {
 	
 		return redirectURIs;
 	}
+
+
+	/**
+	 * Gets the redirection URIs for this client as strings. Corresponds to
+	 * the {@code redirect_uris} client metadata field.
+	 *
+	 * <p>This short-hand method is intended to enable string-based URI
+	 * comparison.
+	 *
+	 * @return The redirection URIs as strings, {@code null} if not
+	 *         specified.
+	 */
+	public Set<String> getRedirectionURIStrings() {
+
+		if (redirectURIs == null)
+			return null;
+
+		Set<String> uriStrings = new HashSet<String>();
+
+		for (URL uri: redirectURIs)
+			uriStrings.add(uri.toString());
+
+		return uriStrings;
+	}
 	
 	
 	/**
