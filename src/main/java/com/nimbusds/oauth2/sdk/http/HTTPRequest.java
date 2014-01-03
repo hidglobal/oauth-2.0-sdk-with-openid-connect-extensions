@@ -121,18 +121,15 @@ public final class HTTPRequest extends HTTPMessage {
 
 
 	/**
-	 * Reconstructs the request URL for the specified servlet request. The
-	 * host part is always the local IP address. The query string and
-	 * fragment is always omitted.
+	 * Reconstructs the request URL string for the specified servlet
+	 * request. The host part is always the local IP address. The query
+	 * string and fragment is always omitted.
 	 *
 	 * @param request The servlet request. Must not be {@code null}.
 	 *
-	 * @return The reconstructed request URL.
-	 *
-	 * @throws MalformedURLException If the reconstructed URL is illegal.
+	 * @return The reconstructed request URL string.
 	 */
-	private static URL reconstructRequestURL(final HttpServletRequest request)
-		throws MalformedURLException {
+	private static String reconstructRequestURLString(final HttpServletRequest request) {
 
 		StringBuilder sb = new StringBuilder("http");
 
@@ -141,9 +138,28 @@ public final class HTTPRequest extends HTTPMessage {
 
 		sb.append("://");
 
-		sb.append(request.getLocalAddr());
+		String localAddress = request.getLocalAddr();
 
-		if (request.getLocalPort() > 0 && request.getLocalPort() != 80 && request.getLocalPort() != 443) {
+		if (localAddress.contains(".")) {
+			// IPv3 address
+			sb.append(localAddress);
+		} else if (localAddress.contains(":")) {
+			// IPv6 address, see RFC 2732
+			sb.append('[');
+			sb.append(localAddress);
+			sb.append(']');
+		} else {
+			// Don't know what to do
+		}
+
+		if (! request.isSecure() && request.getLocalPort() != 80) {
+			// HTTP plain at port other than 80
+			sb.append(':');
+			sb.append(request.getLocalPort());
+		}
+
+		if (request.isSecure() && request.getLocalPort() != 443) {
+			// HTTPS at port other than 443 (default TLS)
 			sb.append(':');
 			sb.append(request.getLocalPort());
 		}
@@ -153,7 +169,7 @@ public final class HTTPRequest extends HTTPMessage {
 		if (path != null)
 			sb.append(path);
 
-		return new URL(sb.toString());
+		return sb.toString();
 	}
 	
 	
@@ -175,12 +191,14 @@ public final class HTTPRequest extends HTTPMessage {
 	
 		method = HTTPRequest.Method.valueOf(sr.getMethod().toUpperCase());
 
+		String urlString = reconstructRequestURLString(sr);
+
 		try {
-			url = reconstructRequestURL(sr);
+			url = new URL(urlString);
 
 		} catch (MalformedURLException e) {
 
-			throw new IllegalArgumentException("Invalid request URL: " + e.getMessage(), e);
+			throw new IllegalArgumentException("Invalid request URL: " + e.getMessage() + ": " + urlString, e);
 		}
 		
 		try {
