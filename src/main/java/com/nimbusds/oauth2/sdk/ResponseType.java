@@ -44,7 +44,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 3.1.1 and 4.1.1.
- *     <li>OAuth 2.0 Multiple Response Type Encoding Practices
+ *     <li>OAuth 2.0 Multiple Response Type Encoding Practices.
  * </ul>
  */
 @NotThreadSafe
