@@ -115,19 +115,17 @@ public class AuthorizationSuccessResponse
 				            final State state) {
 	
 		super(redirectURI, state);
-		
 		this.code = code;
-		
 		this.accessToken = accessToken;
 	}
 	
 	
 	/**
-	 * Gets the implied response type.
+	 * Returns the implied response type.
 	 *
 	 * @return The implied response type.
 	 */
-	public ResponseType getImpliedResponseType() {
+	public ResponseType impliedResponseType() {
 	
 		ResponseType rt = new ResponseType();
 		
@@ -194,14 +192,13 @@ public class AuthorizationSuccessResponse
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 		
 		// Fragment or query string?
-		if (accessToken != null)
+		if (accessToken != null) {
 			sb.append('#');
-		else
+		} else {
 			sb.append('?');
-		
+		}
 		
 		sb.append(URLUtils.serializeParameters(toParameters()));
-
 
 		try {
 			return new URL(sb.toString());
@@ -237,7 +234,6 @@ public class AuthorizationSuccessResponse
 		if (params.get("code") != null)
 			code = new AuthorizationCode(params.get("code"));
 		
-		
 		// Parse access_token parameters
 		
 		AccessToken accessToken = null;
@@ -245,16 +241,12 @@ public class AuthorizationSuccessResponse
 		if (params.get("access_token") != null) {
 
 			JSONObject jsonObject = new JSONObject();
-
 			jsonObject.putAll(params);
-
 			accessToken = AccessToken.parse(jsonObject);
 		}
 		
-		
 		// Parse optional state parameter
 		State state = State.parse(params.get("state"));
-
 		
 		return new AuthorizationSuccessResponse(redirectURI, code, accessToken, state);
 	}
@@ -283,14 +275,18 @@ public class AuthorizationSuccessResponse
 		
 		String paramString;
 		
-		if (uri.getQuery() != null)
+		if (uri.getQuery() != null) {
+
 			paramString = uri.getQuery();
-				
-		else if (uri.getRef() != null)
+
+		} else if (uri.getRef() != null) {
+
 			paramString = uri.getRef();
-		
-		else
+
+		} else {
+
 			throw new ParseException("Missing authorization response parameters");
+		}
 		
 		Map<String,String> params = URLUtils.parseParameters(paramString);
 

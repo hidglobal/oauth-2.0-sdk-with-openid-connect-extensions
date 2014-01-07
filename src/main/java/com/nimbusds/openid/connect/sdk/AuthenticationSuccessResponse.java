@@ -89,7 +89,7 @@ public class AuthenticationSuccessResponse
 	
 	
 	@Override
-	public ResponseType getImpliedResponseType() {
+	public ResponseType impliedResponseType() {
 	
 		ResponseType rt = new ResponseType();
 		

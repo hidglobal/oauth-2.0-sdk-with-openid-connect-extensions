@@ -67,6 +67,9 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
 
+		ResponseType responseType = resp.impliedResponseType();
+		assertTrue(new ResponseType("code").equals(responseType));
+
 		Map<String,String> params = resp.toParameters();
 		assertEquals(CODE, new AuthorizationCode(params.get("code")));
 		assertEquals(STATE, new State(params.get("state")));
@@ -100,10 +103,13 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
 
+		ResponseType responseType = resp.impliedResponseType();
+		assertTrue(new ResponseType("token").equals(responseType));
+
 		Map<String,String> params = resp.toParameters();
 		assertEquals(TOKEN.getValue(), params.get("access_token"));
 		assertEquals(STATE, new State(params.get("state")));
-		assertEquals(TOKEN.getType(), new AccessTokenType((String)params.get("token_type")));
+		assertEquals(TOKEN.getType(), new AccessTokenType(params.get("token_type")));
 		assertEquals("3600", params.get("expires_in"));
 		assertEquals(4, params.size());
 
@@ -122,5 +128,33 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
+	}
+
+
+	public void testParseCodeResponse()
+		throws Exception {
+
+		URL redirectionURI = new URL(RESPONSE_CODE);
+
+		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
+		assertEquals("https://client.example.org/cb", response.getRedirectionURI().toString());
+		assertEquals("SplxlOBeZQQYbYS6WxSbIA", response.getAuthorizationCode().getValue());
+		assertEquals("xyz", response.getState().getValue());
+		assertNull(response.getAccessToken());
+	}
+
+
+	public void testParseTokenResponse()
+		throws Exception {
+
+		URL redirectionURI = new URL(RESPONSE_TOKEN);
+
+		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
+		assertEquals("https://client.example.org/cb", response.getRedirectionURI().toString());
+		assertNull(response.getAuthorizationCode());
+		assertEquals("xyz", response.getState().getValue());
+		BearerAccessToken accessToken = (BearerAccessToken)response.getAccessToken();
+		assertEquals("2YotnFZFEjr1zCsicMWpAA", accessToken.getValue());
+		assertEquals(3600l, accessToken.getLifetime());
 	}
 }
