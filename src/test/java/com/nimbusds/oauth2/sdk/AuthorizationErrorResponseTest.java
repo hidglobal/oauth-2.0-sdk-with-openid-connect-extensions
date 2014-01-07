@@ -105,6 +105,66 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertNull(r.getResponseType());
 		assertEquals(state, r.getState());
 	}
+
+
+	public void testCodeErrorResponse()
+		throws Exception {
+
+		URL redirectURI = new URL("https://client.com/cb");
+		ErrorObject error = OAuth2Error.ACCESS_DENIED;
+		ResponseType responseType = new ResponseType("code");
+		State state = new State();
+
+		AuthorizationErrorResponse response = new AuthorizationErrorResponse(
+			redirectURI, error, responseType, state);
+
+		assertEquals(redirectURI, response.getRedirectionURI());
+		assertEquals(error, response.getErrorObject());
+		assertEquals(responseType, response.getResponseType());
+		assertEquals(state, response.getState());
+
+		URL responseURI = response.toURI();
+
+		assertNotNull(responseURI.getQuery());
+		assertNull(responseURI.getRef());
+
+		response = AuthorizationErrorResponse.parse(responseURI);
+
+		assertEquals(redirectURI, response.getRedirectionURI());
+		assertEquals(error, response.getErrorObject());
+		assertNull(response.getResponseType());
+		assertEquals(state, response.getState());
+	}
+
+
+	public void testTokenErrorResponse()
+		throws Exception {
+
+		URL redirectURI = new URL("https://client.com/cb");
+		ErrorObject error = OAuth2Error.ACCESS_DENIED;
+		ResponseType responseType = new ResponseType("token");
+		State state = new State();
+
+		AuthorizationErrorResponse response = new AuthorizationErrorResponse(
+			redirectURI, error, responseType, state);
+
+		assertEquals(redirectURI, response.getRedirectionURI());
+		assertEquals(error, response.getErrorObject());
+		assertEquals(responseType, response.getResponseType());
+		assertEquals(state, response.getState());
+
+		URL responseURI = response.toURI();
+
+		assertNull(responseURI.getQuery());
+		assertNotNull(responseURI.getRef());
+
+		response = AuthorizationErrorResponse.parse(responseURI);
+
+		assertEquals(redirectURI, response.getRedirectionURI());
+		assertEquals(error, response.getErrorObject());
+		assertNull(response.getResponseType());
+		assertEquals(state, response.getState());
+	}
 	
 	
 	public void testParse()
