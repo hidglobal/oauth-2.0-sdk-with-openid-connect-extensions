@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 /**
  * OpenID Connect authentication success response. Used to return an
- * authorization code, access token and / or ID Token at the Authorisation 
+ * authorisation code, access token and / or ID Token at the Authorisation
  * endpoint.
  *
  * <p>Example HTTP response with code and ID Token (code flow):
@@ -93,14 +94,17 @@ public class AuthenticationSuccessResponse
 	
 		ResponseType rt = new ResponseType();
 		
-		if (getAuthorizationCode() != null)
+		if (getAuthorizationCode() != null) {
 			rt.add(ResponseType.Value.CODE);
-			
-		if (getIDToken() != null)
+		}
+
+		if (getIDToken() != null) {
 			rt.add(OIDCResponseTypeValue.ID_TOKEN);
+		}
 		
-		if (getAccessToken() != null)
+		if (getAccessToken() != null) {
 			rt.add(ResponseType.Value.TOKEN);
+		}
 			
 		return rt;
 	}
@@ -127,7 +131,6 @@ public class AuthenticationSuccessResponse
 		if (idToken != null) {
 
 			try {
-		
 				params.put("id_token", idToken.serialize());		
 				
 			} catch (IllegalStateException e) {
@@ -138,6 +141,31 @@ public class AuthenticationSuccessResponse
 		}
 
 		return params;
+	}
+
+
+	@Override
+	public URL toURI()
+		throws SerializeException {
+
+		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
+
+		// Fragment or query string?
+		if (idToken != null || getAccessToken() != null) {
+			sb.append('#');
+		} else {
+			sb.append('?');
+		}
+
+		sb.append(URLUtils.serializeParameters(toParameters()));
+
+		try {
+			return new URL(sb.toString());
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
+		}
 	}
 
 
@@ -156,13 +184,12 @@ public class AuthenticationSuccessResponse
 	 *                        response.
 	 */
 	public static AuthenticationSuccessResponse parse(final URL redirectURI,
-		                                             final Map<String,String> params)
+							  final Map<String,String> params)
 		throws ParseException {
 
 		AuthorizationSuccessResponse asr = AuthorizationSuccessResponse.parse(redirectURI, params);
 
 		// Parse id_token parameter
-		
 		JWT idToken = null;
 		
 		if (params.get("id_token") != null) {
@@ -207,21 +234,25 @@ public class AuthenticationSuccessResponse
 	public static AuthenticationSuccessResponse parse(final URL uri)
 		throws ParseException {
 		
-		String paramString = null;
+		String paramString;
 		
-		if (uri.getQuery() != null)
+		if (uri.getQuery() != null) {
+
 			paramString = uri.getQuery();
 				
-		else if (uri.getRef() != null)
+		} else if (uri.getRef() != null) {
+
 			paramString = uri.getRef();
 		
-		else
+		} else {
 			throw new ParseException("Missing authorization response parameters");
+		}
 		
 		Map<String,String> params = URLUtils.parseParameters(paramString);
 
-		if (params == null)
+		if (params == null) {
 			throw new ParseException("Missing or invalid authorization response parameters");
+		}
 
 		return parse(URLUtils.getBaseURL(uri), params);
 	}
