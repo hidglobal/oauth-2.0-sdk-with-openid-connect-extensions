@@ -35,6 +35,9 @@ public class AuthenticationErrorResponseTest extends TestCase {
 
 		URL responseURI = response.toURI();
 
+		String[] parts = responseURI.toString().split("\\?");
+		assertEquals(redirectURI.toString(), parts[0]);
+
 		assertNotNull(responseURI.getQuery());
 		assertNull(responseURI.getRef());
 
@@ -64,6 +67,9 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		assertEquals(state, response.getState());
 
 		URL responseURI = response.toURI();
+
+		String[] parts = responseURI.toString().split("#");
+		assertEquals(redirectURI.toString(), parts[0]);
 
 		assertNull(responseURI.getQuery());
 		assertNotNull(responseURI.getRef());
