@@ -213,7 +213,8 @@ public class AuthorizationErrorResponse
 	 * Parses an authorisation error response from the specified redirect
 	 * URI and parameters.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *

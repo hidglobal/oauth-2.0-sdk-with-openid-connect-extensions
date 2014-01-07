@@ -365,7 +365,7 @@ public class AuthenticationRequestResolver {
 			
 		} catch (ResolveException e) {
 			
-			// Repackage exception with redirect URI, state, error object
+			// Repackage exception with redirection URI, state, error object
 			
 			ErrorObject err;
 			

@@ -518,7 +518,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		ClientID clientID = new ClientID(v);
 
 
-		// Parse optional redirect URI second
+		// Parse optional redirection URI second
 		v = params.get("redirect_uri");
 
 		URL redirectURI = null;

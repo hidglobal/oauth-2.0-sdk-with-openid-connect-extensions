@@ -107,7 +107,8 @@ public class AuthenticationErrorResponse
 	/**
 	 * Creates a new OpenID Connect authentication error response.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param error       The error. Should match one of the 
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    OpenID Connect authentication error response.
@@ -155,9 +156,10 @@ public class AuthenticationErrorResponse
 
 	/**
 	 * Parses an OpenID Connect authentication error response from the
-	 * specified redirect URI and parameters.
+	 * specified redirection URI and parameters.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *

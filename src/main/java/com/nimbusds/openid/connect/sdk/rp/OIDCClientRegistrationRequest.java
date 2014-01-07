@@ -64,8 +64,8 @@ public final class OIDCClientRegistrationRequest extends ClientRegistrationReque
 	 *                    be {@code null} if the {@link #toHTTPRequest()}
 	 *                    method will not be used.
 	 * @param metadata    The OpenID Connect client metadata. Must not be 
-	 *                    {@code null} and must specify one or more redirect 
-	 *                    URIs.
+	 *                    {@code null} and must specify one or more
+	 *                    redirection URIs.
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
 	 *                    {@code null} if none.
 	 */

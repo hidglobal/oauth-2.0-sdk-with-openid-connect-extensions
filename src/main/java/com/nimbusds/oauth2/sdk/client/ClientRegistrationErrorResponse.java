@@ -50,7 +50,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * {
  *  "error":"invalid_redirect_uri",
- *  "error_description":"The redirect URI of http://sketchy.example.com is not allowed for this server."
+ *  "error_description":"The redirection URI of http://sketchy.example.com is not allowed for this server."
  * }
  * </pre>
  *
@@ -130,7 +130,7 @@ public class ClientRegistrationErrorResponse
 	 *
 	 * {
 	 *  "error":"invalid_redirect_uri",
-	 *  "error_description":"The redirect URI of http://sketchy.example.com is not allowed for this server."
+	 *  "error_description":"The redirection URI of http://sketchy.example.com is not allowed for this server."
 	 * }
 	 * </pre>
 	 *

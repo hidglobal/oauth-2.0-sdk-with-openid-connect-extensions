@@ -68,7 +68,7 @@ public final class OIDCClientUpdateRequest extends ClientUpdateRequest {
 	 * @param accessToken The client registration access token. Must not be
 	 *                    {@code null}.
 	 * @param metadata    The client metadata. Must not be {@code null} and 
-	 *                    must specify one or more redirect URIs.
+	 *                    must specify one or more redirection URIs.
 	 * @param secret      The optional client secret, {@code null} if not
 	 *                    specified.
 	 */

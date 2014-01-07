@@ -23,9 +23,10 @@ public class AuthenticationResponseParser {
 
 	/**
 	 * Parses an OpenID Connect authentication success or error response
-	 * from the specified redirect URI and parameters.
+	 * from the specified redirection URI and parameters.
 	 *
-	 * @param redirectURI The base redirect URI. Must not be {@code null}.
+	 * @param redirectURI The base redirection URI. Must not be
+	 *                    {@code null}.
 	 * @param params      The response parameters to parse. Must not be 
 	 *                    {@code null}.
 	 *
@@ -63,8 +64,8 @@ public class AuthenticationResponseParser {
 	 *
 	 * @return The OpenID Connect authentication success or error response.
 	 *
-	 * @throws ParseException If the redirect URI couldn't be parsed to an
-	 *                        OpenID Connect authentication success or
+	 * @throws ParseException If the redirection URI couldn't be parsed to
+	 *                        an OpenID Connect authentication success or
 	 *                        error response.
 	 */
 	public static AuthenticationResponse parse(final URL uri)
@@ -120,7 +121,7 @@ public class AuthenticationResponseParser {
 		URL location = httpResponse.getLocation();
 		
 		if (location == null)
-			throw new ParseException("Missing redirect URL / HTTP Location header");
+			throw new ParseException("Missing redirection URI / HTTP Location header");
 		
 		return parse(location);
 	}

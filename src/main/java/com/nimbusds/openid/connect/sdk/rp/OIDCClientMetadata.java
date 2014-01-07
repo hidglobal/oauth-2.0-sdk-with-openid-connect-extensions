@@ -191,13 +191,13 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Authorisation server initiated login HTTPS URL.
+	 * Authorisation server initiated login HTTPS URI.
 	 */
 	private URL initiateLoginURI;
 
 
 	/**
-	 * Logout redirect URLs.
+	 * Logout redirection URIs.
 	 */
 	private Set<URL> postLogoutRedirectURIs;
 

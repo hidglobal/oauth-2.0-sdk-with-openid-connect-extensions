@@ -311,7 +311,7 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 			this.clientID = clientID;
 
 			if (redirectURI == null)
-				throw new IllegalArgumentException("The redirect URI must not be null");
+				throw new IllegalArgumentException("The redirection URI must not be null");
 
 			this.redirectURI = redirectURI;
 		}
@@ -668,7 +668,7 @@ public final class AuthenticationRequest extends AuthorizationRequest {
 		super(uri, rt, clientID, redirectURI, scope, state);
 
 		if (redirectURI == null)
-			throw new IllegalArgumentException("The redirect URI must not be null");
+			throw new IllegalArgumentException("The redirection URI must not be null");
 		
 		OIDCResponseTypeValidator.validate(rt);
 
