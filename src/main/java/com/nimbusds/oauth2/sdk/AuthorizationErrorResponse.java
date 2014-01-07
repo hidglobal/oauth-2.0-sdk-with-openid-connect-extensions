@@ -191,10 +191,11 @@ public class AuthorizationErrorResponse
 		
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 		
-		if (rt == null || rt.contains(ResponseType.Value.TOKEN))
+		if (rt == null || rt.contains(ResponseType.Value.TOKEN)) {
 			sb.append("#");
-		else
+		} else {
 			sb.append("?");
+		}
 
 		sb.append(URLUtils.serializeParameters(toParameters()));
 		
@@ -203,7 +204,7 @@ public class AuthorizationErrorResponse
 			
 		} catch (MalformedURLException e) {
 		
-			throw new SerializeException("Couldn't serialize redirect URL: " + e.getMessage(), e);
+			throw new SerializeException("Couldn't serialize redirection URI: " + e.getMessage(), e);
 		}
 	}
 
@@ -292,7 +293,7 @@ public class AuthorizationErrorResponse
 			params = URLUtils.parseParameters(uri.getQuery());
 
 		else
-			throw new ParseException("Missing URL fragment or query string");
+			throw new ParseException("Missing URI fragment or query string");
 
 		
 		return parse(URLUtils.getBaseURL(uri), params);
@@ -331,7 +332,7 @@ public class AuthorizationErrorResponse
 		URL location = httpResponse.getLocation();
 		
 		if (location == null)
-			throw new ParseException("Missing redirect URL / HTTP Location header");
+			throw new ParseException("Missing redirection URI / HTTP Location header");
 		
 		return parse(location);
 	}

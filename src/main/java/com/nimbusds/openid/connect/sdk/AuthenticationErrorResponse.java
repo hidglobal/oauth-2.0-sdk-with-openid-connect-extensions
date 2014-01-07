@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashSet;
@@ -9,10 +10,9 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.oauth2.sdk.AuthorizationErrorResponse;
-import com.nimbusds.oauth2.sdk.ErrorObject;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.*;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
+
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
@@ -122,6 +122,34 @@ public class AuthenticationErrorResponse
 					   final State state) {
 					  
 		super(redirectURI, error, rt, state);
+	}
+
+
+	@Override
+	public URL toURI()
+		throws SerializeException {
+
+		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
+
+		if (getResponseType() == null ||
+		    getResponseType().contains(ResponseType.Value.TOKEN) ||
+		    getResponseType().contains(OIDCResponseTypeValue.ID_TOKEN)) {
+
+			sb.append("#");
+		} else {
+
+			sb.append("?");
+		}
+
+		sb.append(URLUtils.serializeParameters(toParameters()));
+
+		try {
+			return new URL(sb.toString());
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException("Couldn't serialize redirection URI: " + e.getMessage(), e);
+		}
 	}
 
 
