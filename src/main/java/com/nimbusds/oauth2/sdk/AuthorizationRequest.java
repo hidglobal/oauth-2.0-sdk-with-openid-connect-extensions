@@ -408,6 +408,43 @@ public class AuthorizationRequest extends AbstractRequest {
 		
 		return URLUtils.serializeParameters(toParameters());
 	}
+
+
+	/**
+	 * Returns the request URI representation for this authorisation
+	 * request, consisting of the authorization endpoint URI with the query
+	 * string appended.
+	 *
+	 * <p>Example request URI:
+	 *
+	 * <pre>
+	 * https://server.example.com/authorize?
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+	 * </pre>
+	 *
+	 * @return The request URI representation.
+	 *
+	 * @throws SerializeException If this authorisation request couldn't be
+	 *                            serialised to a request URI.
+	 */
+	public URL toRequestURI()
+		throws SerializeException {
+
+		if (getEndpointURI() == null)
+			throw new SerializeException("The authorization endpoint URI is not specified");
+
+		StringBuilder sb = new StringBuilder(getEndpointURI().toString());
+		sb.append('?');
+		sb.append(toQueryString());
+		try {
+			return new URL(sb.toString());
+		} catch (MalformedURLException e) {
+			throw new SerializeException("Couldn't append query string: " + e.getMessage(), e);
+		}
+	}
 	
 	
 	/**
@@ -621,6 +658,59 @@ public class AuthorizationRequest extends AbstractRequest {
 		throws ParseException {
 	
 		return parse(uri, URLUtils.parseParameters(query));
+	}
+
+
+	/**
+	 * Parses an authorisation request from the specified request URI.
+	 *
+	 * <p>Example request URI:
+	 *
+	 * <pre>
+	 * https://server.example.com/authorize?
+	 * response_type=code
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;state=xyz
+	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
+	 * </pre>
+	 *
+	 * @param requestURI The request URI. Must not be {@code null}.
+	 *
+	 * @return The authorisation request.
+	 *
+	 * @throws ParseException If the request URI couldn't be parsed to an
+	 *                        authorisation request.
+	 */
+	public static AuthorizationRequest parse(final URL requestURI)
+		throws ParseException {
+
+		StringBuilder sb = new StringBuilder(requestURI.getProtocol());
+		sb.append("://");
+
+		if (requestURI.getHost() != null) {
+			sb.append(requestURI.getHost());
+		}
+
+		if (requestURI.getPort() > 0) {
+			sb.append(':');
+			sb.append(requestURI.getPort());
+		}
+
+		if (requestURI.getPath() != null) {
+			sb.append(requestURI.getPath());
+		}
+
+		URL endpointURI;
+
+		try {
+			endpointURI = new URL(sb.toString());
+
+		} catch (MalformedURLException e) {
+
+			throw new ParseException("Couldn't parse endpoint URI: " + e.getMessage(), e);
+		}
+
+		return parse(endpointURI, URLUtils.parseParameters(requestURI.getQuery()));
 	}
 	
 	

@@ -90,6 +90,33 @@ public class AuthorizationRequestTest extends TestCase {
 	}
 
 
+	public void testToRequestURIWithParse()
+		throws Exception {
+
+		URL redirectURI = new URL("https://client.com/cb");
+		ResponseType rts = new ResponseType("code");
+		ClientID clientID = new ClientID("123456");
+		URL endpointURI = new URL("https://c2id.com/login");
+
+		AuthorizationRequest req = new AuthorizationRequest.Builder(rts, clientID).
+			redirectionURI(redirectURI).
+			endpointURI(endpointURI).
+			build();
+
+		URL requestURI = req.toRequestURI();
+
+		assertTrue(requestURI.toString().startsWith(endpointURI.toString() + "?"));
+		req = AuthorizationRequest.parse(requestURI);
+
+		assertEquals(endpointURI, req.getEndpointURI());
+		assertEquals(rts, req.getResponseType());
+		assertEquals(clientID, req.getClientID());
+		assertEquals(redirectURI, req.getRedirectionURI());
+		assertNull(req.getScope());
+		assertNull(req.getState());
+	}
+
+
 	public void testFull()
 		throws Exception {
 
