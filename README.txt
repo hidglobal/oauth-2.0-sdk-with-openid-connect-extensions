@@ -1,12 +1,12 @@
 Nimbus OAuth 2.0 SDK with OpenID Connect extensions
 
-Copyright (c) Nimbus Directory Services, 2012 - 2013
+Copyright (c) Nimbus Directory Services, 2012 - 2014
 
 
 README
 
 This open source Java library is your starting point for developing OAuth 2.0
-based applications:
+and OpenID Connect based applications:
 
 	* Developing OAuth 2.0 servers:
 
@@ -92,4 +92,4 @@ The Nimbus OAuth 2.0 + OpenID Connect SDK is provided under the terms of the
 Apache 2.0 licence.
 
 
-2013-12-27
+2014-01-12
