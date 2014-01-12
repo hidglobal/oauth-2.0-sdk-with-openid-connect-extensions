@@ -103,7 +103,7 @@ public class AuthorizationRequestTest extends TestCase {
 			endpointURI(endpointURI).
 			build();
 
-		URL requestURI = req.toRequestURI();
+		URL requestURI = req.toURI();
 
 		assertTrue(requestURI.toString().startsWith(endpointURI.toString() + "?"));
 		req = AuthorizationRequest.parse(requestURI);

@@ -411,11 +411,11 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
-	 * Returns the request URI representation for this authorisation
-	 * request, consisting of the authorization endpoint URI with the query
-	 * string appended.
+	 * Returns the complete URI representation for this authorisation
+	 * request, consisting of the {@link #getEndpointURI authorization
+	 * endpoint URI} with the {@link #toQueryString query string} appended.
 	 *
-	 * <p>Example request URI:
+	 * <p>Example URI:
 	 *
 	 * <pre>
 	 * https://server.example.com/authorize?
@@ -425,12 +425,12 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
-	 * @return The request URI representation.
+	 * @return The URI representation.
 	 *
 	 * @throws SerializeException If this authorisation request couldn't be
-	 *                            serialised to a request URI.
+	 *                            serialised to a URI.
 	 */
-	public URL toRequestURI()
+	public URL toURI()
 		throws SerializeException {
 
 		if (getEndpointURI() == null)
@@ -662,9 +662,9 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
-	 * Parses an authorisation request from the specified request URI.
+	 * Parses an authorisation request from the specified URI.
 	 *
-	 * <p>Example request URI:
+	 * <p>Example URI:
 	 *
 	 * <pre>
 	 * https://server.example.com/authorize?
@@ -674,30 +674,30 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
-	 * @param requestURI The request URI. Must not be {@code null}.
+	 * @param uri The URI. Must not be {@code null}.
 	 *
 	 * @return The authorisation request.
 	 *
-	 * @throws ParseException If the request URI couldn't be parsed to an
+	 * @throws ParseException If the URI couldn't be parsed to an
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final URL requestURI)
+	public static AuthorizationRequest parse(final URL uri)
 		throws ParseException {
 
-		StringBuilder sb = new StringBuilder(requestURI.getProtocol());
+		StringBuilder sb = new StringBuilder(uri.getProtocol());
 		sb.append("://");
 
-		if (requestURI.getHost() != null) {
-			sb.append(requestURI.getHost());
+		if (uri.getHost() != null) {
+			sb.append(uri.getHost());
 		}
 
-		if (requestURI.getPort() > 0) {
+		if (uri.getPort() > 0) {
 			sb.append(':');
-			sb.append(requestURI.getPort());
+			sb.append(uri.getPort());
 		}
 
-		if (requestURI.getPath() != null) {
-			sb.append(requestURI.getPath());
+		if (uri.getPath() != null) {
+			sb.append(uri.getPath());
 		}
 
 		URL endpointURI;
@@ -706,11 +706,10 @@ public class AuthorizationRequest extends AbstractRequest {
 			endpointURI = new URL(sb.toString());
 
 		} catch (MalformedURLException e) {
-
 			throw new ParseException("Couldn't parse endpoint URI: " + e.getMessage(), e);
 		}
 
-		return parse(endpointURI, URLUtils.parseParameters(requestURI.getQuery()));
+		return parse(endpointURI, URLUtils.parseParameters(uri.getQuery()));
 	}
 	
 	
