@@ -98,6 +98,18 @@ public class OIDCScopeValue extends Scope.Value {
 
 
 	/**
+	 * Returns the standard OpenID Connect scope values declared in this
+	 * class.
+	 *
+	 * @return The standard OpenID Connect scope values.
+	 */
+	public static OIDCScopeValue[] values() {
+
+		return new OIDCScopeValue[]{ OPENID, PROFILE, EMAIL, ADDRESS, PHONE, OFFLINE_ACCESS };
+	}
+
+
+	/**
 	 * The names of the associated claims, {@code null} if not applicable.
 	 */
 	private final Set<String> claims;
@@ -161,7 +173,7 @@ public class OIDCScopeValue extends Scope.Value {
 	 * 
 	 * <pre>
 	 * {
-	 *   "openid" : { "essential" : true }
+	 *   "sub" : { "essential" : true }
 	 * }
 	 * </pre>
 	 * 
@@ -180,6 +192,9 @@ public class OIDCScopeValue extends Scope.Value {
 	public JSONObject toClaimsRequestJSONObject() {
 
 		JSONObject req = new JSONObject();
+
+		if (claims == null)
+			return null;
 		
 		for (String claim: claims) {
 		
