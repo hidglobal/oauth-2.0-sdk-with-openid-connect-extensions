@@ -76,3 +76,17 @@ version 2.12 (2013-10-21)
 version 2.13 (2013-10-21)
     * Adds helper static ClaimsRequest.resolve(ResponseType, Scope,
       ClaimsRequest) method.
+
+version 2.14 (2014-01-14)
+    * Renames classes and methods in openid package to reflect terminology
+      changes in the latest round of the OpenID Connect drafts.
+    * Adds builder to OAuth 2.0 authorisation request and OpenID Connect
+      authentication request classes.
+    * Fixes fragment encoding of OpenID Connect authentication responses that
+      contain an ID token.
+    * Adds support for "none" response type value.
+    * Fixes URL reconstruction with IPv6 address in HTTPRequest.
+    * Adds short-hand methods to Scope and ResponseType classes.
+    * Adds support for OpenID Connect registration parameters introduced in the
+      latest round of the OpenID Connect drafts.
+    * Extends JUnit tests, fixes numerous discovered bugs.
