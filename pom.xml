@@ -11,7 +11,7 @@
     
 	<groupId>com.nimbusds</groupId>
 	<artifactId>oauth2-oidc-sdk</artifactId>
-	<version>2.15-SNAPSHOT</version>
+	<version>2.14.1</version>
 	<packaging>jar</packaging>
     
 	<name>OAuth 2.0 SDK with OpenID Connect extensions</name>
@@ -39,7 +39,7 @@
 		<connection>scm:git:https://bitbucket.org/nimbusds/oauth-2.0-sdk-with-openid-connect-extensions.git</connection>
 		<developerConnection>scm:git:git@bitbucket.org:nimbusds/oauth-2.0-sdk-with-openid-connect-extensions.git</developerConnection>
 		<url>https://bitbucket.org/nimbusds/oauth-2.0-sdk-with-openid-connect-extensions</url>
-		<tag>HEAD</tag>
+		<tag>2.14.1</tag>
 	</scm>
     
 	<developers>
