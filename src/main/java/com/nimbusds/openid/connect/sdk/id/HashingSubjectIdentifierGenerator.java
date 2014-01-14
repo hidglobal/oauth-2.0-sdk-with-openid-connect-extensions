@@ -25,7 +25,7 @@ import com.nimbusds.oauth2.sdk.id.Subject;
  *     <li>OpenID Connect Core 1.0, section 8.1.
  * </ul>
  */
-public final class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifierGenerator {
+public class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifierGenerator {
 
 
 	/**

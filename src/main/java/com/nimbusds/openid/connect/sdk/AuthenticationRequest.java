@@ -60,7 +60,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  * </ul>
  */
 @Immutable
-public final class AuthenticationRequest extends AuthorizationRequest {
+public class AuthenticationRequest extends AuthorizationRequest {
 	
 	
 	/**

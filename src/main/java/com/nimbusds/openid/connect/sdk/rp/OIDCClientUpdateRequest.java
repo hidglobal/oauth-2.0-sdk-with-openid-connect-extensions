@@ -56,7 +56,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  */
 @Immutable
-public final class OIDCClientUpdateRequest extends ClientUpdateRequest {
+public class OIDCClientUpdateRequest extends ClientUpdateRequest {
 	
 	
 	/**

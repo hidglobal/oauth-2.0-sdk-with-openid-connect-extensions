@@ -10,7 +10,7 @@ import net.jcip.annotations.Immutable;
  * Resource with optional associated content type.
  */
 @Immutable
-public final class Resource {
+public class Resource {
 
 
 	/**

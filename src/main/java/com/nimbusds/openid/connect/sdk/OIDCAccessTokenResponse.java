@@ -53,7 +53,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  */
 @Immutable
-public final class OIDCAccessTokenResponse 
+public class OIDCAccessTokenResponse
 	extends AccessTokenResponse {
 
 

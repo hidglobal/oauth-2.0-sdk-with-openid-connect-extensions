@@ -54,7 +54,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * </ul>
  */
 @Immutable
-public final class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
+public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
 	
 	
 	/**

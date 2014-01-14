@@ -32,7 +32,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * </ul>
  */
 @Immutable
-public final class UserInfoRequest extends ProtectedResourceRequest {
+public class UserInfoRequest extends ProtectedResourceRequest {
 
 
 	/**

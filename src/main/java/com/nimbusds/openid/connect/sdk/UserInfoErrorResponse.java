@@ -45,7 +45,7 @@ import com.nimbusds.oauth2.sdk.token.BearerTokenError;
  * </ul>
  */
 @Immutable
-public final class UserInfoErrorResponse 
+public class UserInfoErrorResponse
 	extends UserInfoResponse
 	implements ErrorResponse {
 

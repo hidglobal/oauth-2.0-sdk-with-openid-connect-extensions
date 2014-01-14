@@ -50,7 +50,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  */
 @Immutable
-public final class OIDCClientInformationResponse extends ClientInformationResponse {
+public class OIDCClientInformationResponse extends ClientInformationResponse {
 	
 	
 	/**

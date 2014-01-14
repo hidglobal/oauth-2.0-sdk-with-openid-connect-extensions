@@ -46,7 +46,7 @@ import com.nimbusds.openid.connect.sdk.claims.UserInfo;
  * </ul>
  */
 @Immutable
-public final class UserInfoSuccessResponse 
+public class UserInfoSuccessResponse
 	extends UserInfoResponse
 	implements SuccessResponse {
 
