@@ -90,3 +90,6 @@ version 2.14 (2014-01-14)
     * Adds support for OpenID Connect registration parameters introduced in the
       latest round of the OpenID Connect drafts.
     * Extends JUnit tests, fixes numerous discovered bugs.
+
+version 2.14.1 (2014-01-14)
+    * Upgrades to Nimbus LangTag 1.4.
