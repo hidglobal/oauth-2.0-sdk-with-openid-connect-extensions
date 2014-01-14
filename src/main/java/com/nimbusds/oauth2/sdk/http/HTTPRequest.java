@@ -42,7 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  */
 @ThreadSafe
-public final class HTTPRequest extends HTTPMessage {
+public class HTTPRequest extends HTTPMessage {
 
 
 	/**
