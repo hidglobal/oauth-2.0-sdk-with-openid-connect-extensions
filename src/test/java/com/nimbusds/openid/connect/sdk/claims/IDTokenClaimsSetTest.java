@@ -303,7 +303,7 @@ public class IDTokenClaimsSetTest extends TestCase {
 
 		RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
 
-		RSAKey rsaJWK = new RSAKey.Builder(publicKey).setKeyID("1").build();
+		RSAKey rsaJWK = new RSAKey.Builder(publicKey).keyID("1").build();
 
 		claimsSet.setSubjectJWK(rsaJWK);
 
@@ -348,7 +348,7 @@ public class IDTokenClaimsSetTest extends TestCase {
 		RSAPublicKey publicKey = (RSAPublicKey)keyPair.getPublic();
 		RSAPrivateKey privateKey = (RSAPrivateKey)keyPair.getPrivate();
 
-		RSAKey rsaJWK = new RSAKey.Builder(publicKey).setPrivateKey(privateKey).build();
+		RSAKey rsaJWK = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
 
 		try {
 			claimsSet.setSubjectJWK(rsaJWK);
