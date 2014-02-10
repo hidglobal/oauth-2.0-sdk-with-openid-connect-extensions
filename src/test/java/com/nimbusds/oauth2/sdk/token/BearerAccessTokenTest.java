@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.net.URL;
+
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -97,7 +100,7 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals(4, json.size());
 
 		try {
-			token = BearerAccessToken.parse(json);
+			BearerAccessToken.parse(json);
 
 		} catch (ParseException e) {
 
@@ -167,6 +170,53 @@ public class BearerAccessTokenTest extends TestCase {
 			
 			fail();
 			
+		} catch (ParseException e) {
+
+			assertEquals(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode(), e.getErrorObject().getHTTPStatusCode());
+			assertEquals(BearerTokenError.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+		}
+	}
+
+
+	public void testParseFromHTTPRequest()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
+		httpRequest.setAuthorization("Bearer abc");
+
+		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest);
+
+		assertEquals("abc", accessToken.getValue());
+	}
+
+
+	public void testParseFromHTTPRequestMissing()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
+
+		try {
+			BearerAccessToken.parse(httpRequest);
+			fail();
+
+		} catch (ParseException e) {
+
+			assertEquals(401, e.getErrorObject().getHTTPStatusCode());
+			assertNull(e.getErrorObject().getCode());
+		}
+	}
+
+
+	public void testParseFromHTTPRequestInvalid()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://c2id.com/reg/123"));
+		httpRequest.setAuthorization("Bearer");
+
+		try {
+			BearerAccessToken.parse(httpRequest);
+			fail();
+
 		} catch (ParseException e) {
 
 			assertEquals(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode(), e.getErrorObject().getHTTPStatusCode());

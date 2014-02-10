@@ -256,8 +256,7 @@ public final class BearerAccessToken extends AccessToken {
 	/**
 	 * Parses an HTTP request for a bearer access token.
 	 * 
-	 * @param request The HTTP request to parse. Must be GET or POST, and
-	 *                not {@code null}.
+	 * @param request The HTTP request to parse. Must not be {@code null}.
 	 * 
 	 * @return The bearer access token.
 	 * 
@@ -266,40 +265,26 @@ public final class BearerAccessToken extends AccessToken {
 	 */
 	public static BearerAccessToken parse(final HTTPRequest request)
 		throws ParseException {
-		
-		if (request.getMethod().equals(HTTPRequest.Method.GET)) {
-			
-			String authzHeader = request.getAuthorization();
-				
-			if (authzHeader != null) {
-				
-				return parse(authzHeader);
-			}
-			
-			Map<String,String> params = request.getQueryParameters();	
-			
-			if (params.get("access_token") != null) {
-				
-				return parse(params.get("access_token"));
-			}
-			
-			throw new ParseException("Missing Bearer access token");
-			
-		} else if (request.getMethod().equals(HTTPRequest.Method.POST)) {
 
-			ContentTypeUtils.ensureContentType(CommonContentTypes.APPLICATION_URLENCODED, request.getContentType());
-			
-			Map<String,String> params = request.getQueryParameters();	
-			
-			if (params.get("access_token") != null) {
-				
-				return new BearerAccessToken(params.get("access_token"));
-			}
-			
-			throw new ParseException("Missing Bearer access token");
-			
-		} else {
-			throw new ParseException("Unexpected HTTP method: " + request.getMethod());
+		// See http://tools.ietf.org/html/rfc6750#section-2
+
+		String authzHeader = request.getAuthorization();
+
+		if (authzHeader != null) {
+
+			return parse(authzHeader);
 		}
+
+		// Try alternative token locations, form and query string are
+		// parameters are not differentiated here
+
+		Map<String,String> params = request.getQueryParameters();
+
+		String accessTokenValue = params.get("access_token");
+
+		if (StringUtils.isBlank(accessTokenValue))
+			throw new ParseException("Missing access token value", BearerTokenError.MISSING_TOKEN);
+			
+		return new BearerAccessToken(accessTokenValue);
 	}
 }
