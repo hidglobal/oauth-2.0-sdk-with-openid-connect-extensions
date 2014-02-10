@@ -82,10 +82,7 @@ public class ClientDeleteRequest extends ProtectedResourceRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.DELETE);
 		
-		// Parse the bearer access token
-		String authzHeaderValue = httpRequest.getAuthorization();
-		
-		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
+		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest.getAuthorization());
 		
 		return new ClientDeleteRequest(httpRequest.getURL(), accessToken);
 	}

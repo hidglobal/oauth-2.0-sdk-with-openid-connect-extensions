@@ -13,6 +13,7 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -219,8 +220,9 @@ public final class BearerAccessToken extends AccessToken {
 	/**
 	 * Parses an HTTP Authorization header for a bearer access token.
 	 *
-	 * @param header The HTTP Authorization header value to parse. Must not
-	 *               be {@code null}.
+	 * @param header The HTTP Authorization header value to parse. May be
+	 *               {@code null} if the header is missing, in which case
+	 *               an exception will be thrown.
 	 *
 	 * @return The bearer access token.
 	 *
@@ -229,21 +231,24 @@ public final class BearerAccessToken extends AccessToken {
 	 */
 	public static BearerAccessToken parse(final String header)
 		throws ParseException {
+
+		if (StringUtils.isBlank(header))
+			throw new ParseException("Missing HTTP Authorization header", BearerTokenError.MISSING_TOKEN);
 	
 		String[] parts = header.split("\\s", 2);
 	
 		if (parts.length != 2)
-			throw new ParseException("Invalid HTTP Authorization header value");
+			throw new ParseException("Invalid HTTP Authorization header value", BearerTokenError.INVALID_REQUEST);
 		
 		if (! parts[0].equals("Bearer"))
-			throw new ParseException("Token type must be \"Bearer\"");
+			throw new ParseException("Token type must be \"Bearer\"", BearerTokenError.INVALID_REQUEST);
 		
 		try {
 			return new BearerAccessToken(parts[1]);
 			
 		} catch (IllegalArgumentException e) {
 		
-			throw new ParseException(e.getMessage());
+			throw new ParseException(e.getMessage(), BearerTokenError.INVALID_REQUEST);
 		}
 	}
 	

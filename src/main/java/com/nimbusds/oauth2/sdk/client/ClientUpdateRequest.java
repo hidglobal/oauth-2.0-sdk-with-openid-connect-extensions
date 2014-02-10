@@ -187,12 +187,7 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.PUT);
 		
-		String authzHeaderValue = httpRequest.getAuthorization();
-		
-		if (StringUtils.isBlank(authzHeaderValue))
-			throw new ParseException("Missing HTTP Authorization header");
-		
-		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
+		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest.getAuthorization());
 		
 		JSONObject jsonObject = httpRequest.getQueryAsJSONObject();
 		

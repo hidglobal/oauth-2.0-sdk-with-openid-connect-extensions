@@ -3,6 +3,8 @@ package com.nimbusds.oauth2.sdk.client;
 
 import java.net.URL;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -36,5 +38,28 @@ public class ClientReadRequestTest extends TestCase {
 
 		assertEquals(url.toString(), request.getEndpointURI().toString());
 		assertEquals(accessToken.getValue(), request.getAccessToken().getValue());
+	}
+
+
+	public void testParseWithMissingAuthorizationHeader()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("https://c2id.com/client-reg/123"));
+
+		try {
+			ClientReadRequest.parse(httpRequest);
+
+			fail();
+
+		} catch (ParseException e) {
+
+			assertTrue(e.getErrorObject() instanceof BearerTokenError);
+
+			BearerTokenError bte = (BearerTokenError)e.getErrorObject();
+
+			assertEquals(401, bte.getHTTPStatusCode());
+			assertNull(bte.getCode());
+			assertEquals("Bearer", bte.toWWWAuthenticateHeader());
+		}
 	}
 }

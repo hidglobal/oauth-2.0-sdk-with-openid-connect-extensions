@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk.client;
 
 import java.net.URL;
 
+import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 import org.apache.commons.lang3.StringUtils;
 
 import net.jcip.annotations.Immutable;
@@ -83,12 +84,7 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.GET);
 
-		String authzHeaderValue = httpRequest.getAuthorization();
-		
-		if (StringUtils.isBlank(authzHeaderValue))
-			throw new ParseException("Missing HTTP Authorization header");
-		
-		BearerAccessToken accessToken = BearerAccessToken.parse(authzHeaderValue);
+		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest.getAuthorization());
 		
 		return new ClientReadRequest(httpRequest.getURL(), accessToken);
 	}

@@ -128,38 +128,49 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 	}
+
+
+	public void testParseExceptionMissingAuthorizationHeader() {
+
+		try {
+			AccessToken.parse((String)null);
+
+			fail();
+
+		} catch (ParseException e) {
+
+			assertEquals(BearerTokenError.MISSING_TOKEN.getHTTPStatusCode(), e.getErrorObject().getHTTPStatusCode());
+			assertEquals(BearerTokenError.MISSING_TOKEN.getCode(), e.getErrorObject().getCode());
+		}
+	}
 	
 	
 	public void testParseExceptionMissingBearerIdentifier() {
 	
-		AccessToken token = null;
-	
 		try {
-			token = AccessToken.parse("abc");
+			AccessToken.parse("abc");
 			
-			fail("Failed to raise exception");
+			fail();
 			
 		} catch (ParseException e) {
 		
-			// ok
-			System.out.println(e.getMessage());
+			assertEquals(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode(), e.getErrorObject().getHTTPStatusCode());
+			assertEquals(BearerTokenError.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 		}
 	}
 	
 	
 	public void testParseExceptionMissingTokenValue() {
 	
-		AccessToken token = null;
-	
 		try {
-			token = AccessToken.parse("Bearer ");
+			AccessToken.parse("Bearer ");
 			
-			fail("Failed to raise exception");
+			fail();
 			
 		} catch (ParseException e) {
-		
-			// ok
-			System.out.println(e.getMessage());
+
+			assertEquals(BearerTokenError.INVALID_REQUEST.getHTTPStatusCode(), e.getErrorObject().getHTTPStatusCode());
+			assertEquals(BearerTokenError.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 		}
 	}
 }

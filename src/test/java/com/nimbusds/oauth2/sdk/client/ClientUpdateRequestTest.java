@@ -1,26 +1,30 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
+import java.net.URL;
+import java.util.Set;
+
+import junit.framework.TestCase;
+
 import com.nimbusds.langtag.LangTag;
+
 import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-import java.net.URL;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
-import java.util.Set;
+import com.nimbusds.oauth2.sdk.token.BearerTokenError;
 
 
 /**
  * Tests the client update request class.
  */
-public class ClientUpdateRequestTest {
+public class ClientUpdateRequestTest extends TestCase {
 	
-	@Test
-	public void testParse() throws Exception {
+
+	public void testParse()
+		throws Exception {
 		
 		URL regURI = new URL("https://server.example.com/register/s6BhdRkqt3");
 		
@@ -84,5 +88,45 @@ public class ClientUpdateRequestTest {
 		assertEquals(new URL("https://client.example.org/fr/newlogo.png"), metadata.getLogoURI(LangTag.parse("fr")));
 		
 		assertEquals(2, metadata.getLogoURIEntries().size());
+	}
+
+
+	public void testParseWithMissingAuthorizationHeader()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, new URL("https://c2id.com/client-reg/123"));
+
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
+
+		String json = "{\"client_id\":\"123\","
+			+ "    \"client_secret\": \"cf136dc3c1fc93f31185e5885805d\","
+			+ "    \"redirect_uris\":[\"https://client.example.org/callback\",\"https://client.example.org/alt\"],"
+			+ "    \"scope\": \"read write dolphin\","
+			+ "    \"grant_types\": [\"authorization_code\", \"refresh_token\"],"
+			+ "    \"token_endpoint_auth_method\": \"client_secret_basic\","
+			+ "    \"jwks_uri\": \"https://client.example.org/my_public_keys.jwks\","
+			+ "    \"client_name\":\"My New Example\","
+			+ "    \"client_name#fr\":\"Mon Nouvel Exemple\","
+			+ "    \"logo_uri\":\"https://client.example.org/newlogo.png\","
+			+ "    \"logo_uri#fr\":\"https://client.example.org/fr/newlogo.png\""
+			+ "   }";
+
+		httpRequest.setQuery(json);
+
+		try {
+			ClientUpdateRequest.parse(httpRequest);
+
+			fail();
+
+		} catch (ParseException e) {
+
+			assertTrue(e.getErrorObject() instanceof BearerTokenError);
+
+			BearerTokenError bte = (BearerTokenError)e.getErrorObject();
+
+			assertEquals(401, bte.getHTTPStatusCode());
+			assertNull(bte.getCode());
+			assertEquals("Bearer", bte.toWWWAuthenticateHeader());
+		}
 	}
 }
