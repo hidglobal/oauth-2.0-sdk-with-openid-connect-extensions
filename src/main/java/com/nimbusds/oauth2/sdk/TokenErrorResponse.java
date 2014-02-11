@@ -151,9 +151,13 @@ public class TokenErrorResponse
 	@Override
 	public HTTPResponse toHTTPResponse() {
 
-		int statusCode = error.getHTTPStatusCode() > 0 ? error.getHTTPStatusCode() : HTTPResponse.SC_BAD_REQUEST;
+		int statusCode = (error != null && error.getHTTPStatusCode() > 0) ?
+			error.getHTTPStatusCode() : HTTPResponse.SC_BAD_REQUEST;
 
 		HTTPResponse httpResponse = new HTTPResponse(statusCode);
+
+		if (error == null)
+			return httpResponse;
 		
 		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
 		httpResponse.setCacheControl("no-store");
