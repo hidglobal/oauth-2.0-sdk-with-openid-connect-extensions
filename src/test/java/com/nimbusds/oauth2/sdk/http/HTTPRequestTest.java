@@ -56,4 +56,21 @@ public class HTTPRequestTest extends TestCase {
 		JSONObject jsonObject = request.getQueryAsJSONObject();
 		assertEquals("123", (String)jsonObject.get("apples"));
 	}
+
+	// TODO Enable when connect2is server is available
+	public void _test401Response()
+		throws Exception {
+
+		// Simulate token request with invalid token
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:8080/c2id/token"));
+		httpRequest.setAuthorization("Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW");
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+		httpRequest.setQuery("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
+			"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
+
+		HTTPResponse httpResponse = httpRequest.send();
+
+		assertEquals(401, httpResponse.getStatusCode());
+
+	}
 }

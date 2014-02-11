@@ -466,22 +466,52 @@ public class HTTPRequest extends HTTPMessage {
 
 		HttpURLConnection conn = toHttpURLConnection();
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		int statusCode;
+
+		BufferedReader reader = null;
+
+		try {
+			// Open a connection, then send method and headers
+			reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+			// The step is to get the status
+			statusCode = conn.getResponseCode();
+
+		} catch (IOException e) {
+
+			// HttpUrlConnection will throw an IOException if any 4XX
+			// response is sent. If we request the status again, this
+			// time the internal status will be properly set, and we'll be
+			// able to retrieve it.
+			statusCode = conn.getResponseCode();
+
+			if (statusCode / 100 != 4) {
+				// Rethrow IO exception
+				throw e;
+			}
+		}
        
 		StringBuilder body = new StringBuilder();
 
-		String line;
-			
-		while ((line = reader.readLine()) != null) {
-			
-			body.append(line);
-			body.append(System.getProperty("line.separator"));
+		if (reader != null) {
+
+			try {
+				String line;
+
+				while ((line = reader.readLine()) != null) {
+
+					body.append(line);
+					body.append(System.getProperty("line.separator"));
+				}
+
+				reader.close();
+
+			} finally {
+				conn.disconnect();
+			}
 		}
-			
-		reader.close();
 
-
-		HTTPResponse response = new HTTPResponse(conn.getResponseCode());
+		HTTPResponse response = new HTTPResponse(statusCode);
 
 		String location = conn.getHeaderField("Location");
 
