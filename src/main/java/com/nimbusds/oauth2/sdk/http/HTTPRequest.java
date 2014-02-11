@@ -468,48 +468,52 @@ public class HTTPRequest extends HTTPMessage {
 
 		int statusCode;
 
-		BufferedReader reader = null;
+		BufferedReader reader;
 
 		try {
 			// Open a connection, then send method and headers
 			reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
-			// The step is to get the status
+			// The next step is to get the status
 			statusCode = conn.getResponseCode();
 
 		} catch (IOException e) {
 
-			// HttpUrlConnection will throw an IOException if any 4XX
-			// response is sent. If we request the status again, this
-			// time the internal status will be properly set, and we'll be
-			// able to retrieve it.
+			// HttpUrlConnection will throw an IOException if any
+			// 4XX response is sent. If we request the status
+			// again, this time the internal status will be
+			// properly set, and we'll be able to retrieve it.
 			statusCode = conn.getResponseCode();
 
-			if (statusCode / 100 != 4) {
+			if (statusCode == -1) {
 				// Rethrow IO exception
 				throw e;
+			} else {
+				// HTTP status code indicates the response got
+				// through, read the content but using error
+				// stream
+				reader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
 			}
 		}
-       
+
 		StringBuilder body = new StringBuilder();
 
-		if (reader != null) {
 
-			try {
-				String line;
+		try {
+			String line;
 
-				while ((line = reader.readLine()) != null) {
+			while ((line = reader.readLine()) != null) {
 
-					body.append(line);
-					body.append(System.getProperty("line.separator"));
-				}
-
-				reader.close();
-
-			} finally {
-				conn.disconnect();
+				body.append(line);
+				body.append(System.getProperty("line.separator"));
 			}
+
+			reader.close();
+
+		} finally {
+			conn.disconnect();
 		}
+
 
 		HTTPResponse response = new HTTPResponse(statusCode);
 

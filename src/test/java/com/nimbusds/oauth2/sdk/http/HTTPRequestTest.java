@@ -58,7 +58,7 @@ public class HTTPRequestTest extends TestCase {
 	}
 
 	// TODO Enable when connect2is server is available
-	public void _test401Response()
+	public void test401Response()
 		throws Exception {
 
 		// Simulate token request with invalid token
@@ -71,6 +71,8 @@ public class HTTPRequestTest extends TestCase {
 		HTTPResponse httpResponse = httpRequest.send();
 
 		assertEquals(401, httpResponse.getStatusCode());
+		assertEquals("Bearer", httpResponse.getWWWAuthenticate());
 
+		System.out.println("Token error: " + httpResponse.getContent());
 	}
 }
