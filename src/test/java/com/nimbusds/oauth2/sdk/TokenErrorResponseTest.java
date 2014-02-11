@@ -86,4 +86,18 @@ public class TokenErrorResponseTest extends TestCase {
 
 		assertNull(errorResponse.getErrorObject());
 	}
+
+
+	public void testParseInvalidClient()
+		throws Exception {
+
+		HTTPResponse httpResponse = new HTTPResponse(401);
+		httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
+		httpResponse.setContent("{\"error\":\"invalid_client\", \"error_description\":\"Client authentication failed\"}");
+
+		TokenErrorResponse errorResponse = TokenErrorResponse.parse(httpResponse);
+
+		assertEquals(OAuth2Error.INVALID_CLIENT.getCode(), errorResponse.getErrorObject().getCode());
+		assertEquals("Client authentication failed", errorResponse.getErrorObject().getDescription());
+	}
 }
