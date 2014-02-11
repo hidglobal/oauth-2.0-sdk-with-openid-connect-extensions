@@ -103,3 +103,8 @@ version 2.15 (2014-02-10)
 
 version 2.15.1 (2014-02-11)
     * Fixes HTTPRequest.send throwing IOException on 4xx status code.
+
+version 2.15.2 (2014-02-12)
+    * Fixes content retrieval in HTTPRequest.send for HTTP 4xx errors.
+    * Token error parsing supports general HTTP error codes.
+    * TokenErrorResponse.toHTTPRequest can now handle null error objects.
