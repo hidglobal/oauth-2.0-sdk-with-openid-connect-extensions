@@ -58,7 +58,7 @@ public class HTTPRequestTest extends TestCase {
 	}
 
 	// TODO Enable when connect2is server is available
-	public void test401Response()
+	public void _test401Response()
 		throws Exception {
 
 		// Simulate token request with invalid token
