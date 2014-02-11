@@ -75,4 +75,15 @@ public class TokenErrorResponseTest extends TestCase {
 		
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 	}
+
+
+	public void testParseEmpty()
+		throws Exception {
+
+		HTTPResponse httpResponse = new HTTPResponse(404);
+
+		TokenErrorResponse errorResponse = TokenErrorResponse.parse(httpResponse);
+
+		assertNull(errorResponse.getErrorObject());
+	}
 }

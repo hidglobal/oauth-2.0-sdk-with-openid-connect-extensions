@@ -14,6 +14,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -230,8 +231,14 @@ public class TokenErrorResponse
 		
 		httpResponse.ensureStatusCodeNotOK();
 
-		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
+		if (StringUtils.isNotEmpty(httpResponse.getContent()) &&
+		    CommonContentTypes.APPLICATION_JSON.match(httpResponse.getContentType())) {
 
-		return parse(jsonObject);
+			JSONObject jsonObject = httpResponse.getContentAsJSONObject();
+
+			return parse(jsonObject);
+		}
+
+		return new TokenErrorResponse();
 	}
 }

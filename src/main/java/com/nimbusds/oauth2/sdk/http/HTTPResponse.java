@@ -301,9 +301,9 @@ public class HTTPResponse extends HTTPMessage {
 	 * @return The response content as a JSON object.
 	 *
 	 * @throws ParseException If the Content-Type header isn't 
-	 *                        {@code application/json}, the response content
-	 *                        is {@code null}, empty or couldn't be parsed
-	 *                        to a valid JSON object.
+	 *                        {@code application/json}, the response
+	 *                        content is {@code null}, empty or couldn't be
+	 *                        parsed to a valid JSON object.
 	 */
 	public JSONObject getContentAsJSONObject()
 		throws ParseException {
