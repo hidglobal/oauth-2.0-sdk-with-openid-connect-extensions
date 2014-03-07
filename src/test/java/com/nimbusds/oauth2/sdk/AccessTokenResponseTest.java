@@ -146,4 +146,64 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(refreshTokenString, o.get("refresh_token"));
 		assertEquals(3600l, o.get("expires_in"));
 	}
+
+
+  public void testAltAccessTokenResponse() {
+
+    HTTPResponse httpResponse = new HTTPResponse(HTTPResponse.SC_OK);
+    httpResponse.setContentType(CommonContentTypes.APPLICATION_JSON);
+    httpResponse.setCacheControl("no-store");
+    httpResponse.setPragma("no-cache");
+
+    JSONObject o = new JSONObject();
+
+    final String accessTokenString = "SlAV32hkKG";
+    o.put("access_token", accessTokenString);
+
+    o.put("token_type", "bearer");
+
+    httpResponse.setContent(o.toString());
+
+
+    AccessTokenResponse atr = null;
+
+    try {
+      atr = AccessTokenResponse.parse(httpResponse);
+
+    } catch (ParseException e) {
+
+      fail(e.getMessage());
+    }
+
+    AccessToken accessToken = atr.getAccessToken();
+    assertEquals(accessTokenString, accessToken.getValue());
+    assertNull(accessToken.getScope());
+
+    // Test pair getter
+    TokenPair pair = atr.getTokenPair();
+    assertEquals(accessToken, pair.getAccessToken());
+
+    try {
+      httpResponse = atr.toHTTPResponse();
+
+    } catch (SerializeException e) {
+
+      fail(e.getMessage());
+    }
+
+    assertEquals(CommonContentTypes.APPLICATION_JSON, httpResponse.getContentType());
+    assertEquals("no-store", httpResponse.getCacheControl());
+    assertEquals("no-cache", httpResponse.getPragma());
+
+    try {
+      o = httpResponse.getContentAsJSONObject();
+
+    } catch (ParseException e) {
+
+      fail(e.getMessage());
+    }
+
+    assertEquals(accessTokenString, o.get("access_token"));
+    assertEquals("Bearer", o.get("token_type"));
+  }
 }
