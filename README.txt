@@ -10,11 +10,11 @@ and OpenID Connect based applications:
 
 	* Developing OAuth 2.0 servers:
 
-		- Parse and process requests at the Authorisation Endpoint, 
-		  then generate the appropriate responses with an authorisation
+		- Parse and process requests at the Authorisation Endpoint, then
+		  generate the appropriate responses with an authorisation
 		  code or access token;
 
-		- Parse and process requests at the Token Endpoint, then 
+		- Parse and process requests at the Token Endpoint, then
 		  generate the appropriate responses.
 
 	* Developing OAuth 2.0 clients:
@@ -79,20 +79,19 @@ This SDK version implements the following standards and drafts:
 	* OAuth 2.0 Dynamic Client Registration Protocol 
 	  (draft-ietf-oauth-dyn-reg-14)
 
-	* OpenID Connect Core, draft 17.
+	* OpenID Connect Core 1.0 (2014-02-25).
 
-	* OpenID Connect Discovery, draft 21.
+	* OpenID Connect Discovery 1.0 (2014-02-25).
 
-	* OpenID Connect Registration, draft 23.
+	* OpenID Connect Registration 1.0 (2014-02-25).
 
-	* OAuth 2.0 Multiple Response Type Encoding Practices, draft 11.
+	* OAuth 2.0 Multiple Response Type Encoding Practices 1.0 (2014-02-25).
 
 
-The Nimbus OAuth 2.0 + OpenID Connect SDK is provided under the terms of the
-Apache 2.0 licence.
+This SDK is provided under the terms of the Apache 2.0 licence.
 
 
 Questions or comments? Email support@connect2id.com
 
 
-2014-02-12
+2014-03-08
