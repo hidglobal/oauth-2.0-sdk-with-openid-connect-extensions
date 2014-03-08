@@ -48,6 +48,6 @@ public final class AccessTokenType extends Identifier {
 	public boolean equals(final Object object) {
 	
 		return object instanceof AccessTokenType &&
-		       this.toString().toLowerCase().equals(object.toString().toLowerCase());
+		       this.toString().equalsIgnoreCase(object.toString());
 	}
 }
