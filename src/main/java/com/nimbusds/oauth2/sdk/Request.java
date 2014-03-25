@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
@@ -18,7 +18,7 @@ public interface Request extends Message {
 	 * 
 	 * @return The endpoint URI, {@code null} if not specified.
 	 */
-	public URL getEndpointURI();
+	public URI getEndpointURI();
 	
 	
 	/**
