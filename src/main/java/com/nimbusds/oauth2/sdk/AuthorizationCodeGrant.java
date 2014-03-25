@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -41,7 +41,7 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 	 * The conditionally required redirection URI in the initial
 	 * authorisation request.
 	 */
-	private final URL redirectURI;
+	private final URI redirectURI;
 
 
 	/**
@@ -62,7 +62,7 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 	 *                    request, else {@code null}.
 	 */
 	public AuthorizationCodeGrant(final AuthorizationCode code,
-				      final URL redirectURI) {
+				      final URI redirectURI) {
 
 		super(GRANT_TYPE);
 
@@ -90,7 +90,7 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 	 * @param clientID    The client identifier. Must not be {@code null}.
 	 */
 	public AuthorizationCodeGrant(final AuthorizationCode code,
-				      final URL redirectURI,
+				      final URI redirectURI,
 				      final ClientID clientID) {
 
 		super(GrantType.AUTHORIZATION_CODE);
@@ -124,10 +124,10 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 	 * Gets the redirection URI of the original authorisation request.
 	 *
 	 * @return The redirection URI, {@code null} if the
-	 *        {@code redirect_uri} parameter was not included in the
-	 *        original authorisation request.
+	 *         {@code redirect_uri} parameter was not included in the
+	 *         original authorisation request.
 	 */
-	public URL getRedirectionURI() {
+	public URI getRedirectionURI() {
 
 		return redirectURI;
 	}
@@ -208,14 +208,14 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 		// Parse optional redirection URI
 		String redirectURIString = params.get("redirect_uri");
 
-		URL redirectURI = null;
+		URI redirectURI = null;
 
 		if (redirectURIString != null) {
 
 			try {
-				redirectURI = new URL(redirectURIString);
+				redirectURI = new URI(redirectURIString);
 
-			} catch (MalformedURLException e) {
+			} catch (URISyntaxException e) {
 
 				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
 			}
