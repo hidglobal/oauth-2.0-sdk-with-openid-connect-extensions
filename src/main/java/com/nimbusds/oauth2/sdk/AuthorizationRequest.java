@@ -620,9 +620,9 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
-	 * Parses an authorisation request from the specified URL query string.
+	 * Parses an authorisation request from the specified URI query string.
 	 *
-	 * <p>Example URL query string:
+	 * <p>Example URI query string:
 	 *
 	 * <pre>
 	 * response_type=code
@@ -631,7 +631,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 *
-	 * @param query The URL query string. Must not be {@code null}.
+	 * @param query The URI query string. Must not be {@code null}.
 	 *
 	 * @return The authorisation request.
 	 *

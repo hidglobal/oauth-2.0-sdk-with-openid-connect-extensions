@@ -3,7 +3,6 @@ package com.nimbusds.oauth2.sdk.util;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 
 /**

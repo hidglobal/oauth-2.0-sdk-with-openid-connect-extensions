@@ -194,7 +194,7 @@ public abstract class AuthorizationResponse implements Response {
 	 * AuthorizationResponse = AuthorizationResponse.parse(relURL);
 	 * </pre>
 	 *
-	 * @param uri The URL to parse. May be absolute or relative, with a
+	 * @param uri The URI to parse. May be absolute or relative, with a
 	 *            fragment or query string containing the authorisation
 	 *            response parameters. Must not be {@code null}.
 	 *
@@ -215,7 +215,7 @@ public abstract class AuthorizationResponse implements Response {
 			params = URLUtils.parseParameters(uri.getQuery());
 
 		else
-			throw new ParseException("Missing URL fragment or query string");
+			throw new ParseException("Missing URI fragment or query string");
 
 		
 		return parse(URIUtils.getBaseURI(uri), params);
@@ -248,7 +248,7 @@ public abstract class AuthorizationResponse implements Response {
 		URL location = httpResponse.getLocation();
 		
 		if (location == null)
-			throw new ParseException("Missing redirection URL / HTTP Location header");
+			throw new ParseException("Missing redirection URI / HTTP Location header");
 
 		try {
 			return parse(location.toURI());

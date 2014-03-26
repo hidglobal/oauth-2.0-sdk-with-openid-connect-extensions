@@ -110,7 +110,7 @@ public class AuthenticationRequestResolver {
 	 *                     validation and optional JWE decryption of the
 	 *                     request objects. Must not be {@code null}.
 	 * @param jwtRetriever A configured JWT retriever for OpenID Connect
-	 *                     request objects passed by URL. Must not be
+	 *                     request objects passed by URI. Must not be
 	 *                     {@code null}.
 	 */
 	public AuthenticationRequestResolver(final JWTDecoder jwtDecoder,
