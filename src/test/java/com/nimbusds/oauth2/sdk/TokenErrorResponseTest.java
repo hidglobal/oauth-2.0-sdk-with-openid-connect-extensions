@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -20,13 +20,13 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 public class TokenErrorResponseTest extends TestCase {
 	
 	
-	private static URL ERROR_PAGE_URL = null;
+	private static URI ERROR_PAGE_URI = null;
 	
 	
 	public void setUp()
-		throws MalformedURLException {
+		throws URISyntaxException {
 		
-		ERROR_PAGE_URL = new URL("http://server.example.com/error/123");
+		ERROR_PAGE_URI = new URI("http://server.example.com/error/123");
 	}
 
 
@@ -48,7 +48,7 @@ public class TokenErrorResponseTest extends TestCase {
 	public void testSerializeAndParse()
 		throws Exception {
 	
-		ErrorObject err = OAuth2Error.INVALID_REQUEST.setURI(ERROR_PAGE_URL);
+		ErrorObject err = OAuth2Error.INVALID_REQUEST.setURI(ERROR_PAGE_URI);
 
 		TokenErrorResponse r = new TokenErrorResponse(err);
 		
@@ -67,7 +67,7 @@ public class TokenErrorResponseTest extends TestCase {
 
 		assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), (String)jsonObject.get("error"));
 		assertEquals(OAuth2Error.INVALID_REQUEST.getDescription(), (String)jsonObject.get("error_description"));
-		assertEquals(ERROR_PAGE_URL.toString(), (String)jsonObject.get("error_uri"));
+		assertEquals(ERROR_PAGE_URI.toString(), (String)jsonObject.get("error_uri"));
 		assertEquals(3, jsonObject.size());
 		
 		

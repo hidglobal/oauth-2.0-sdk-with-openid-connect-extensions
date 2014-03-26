@@ -1,12 +1,10 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -52,11 +50,11 @@ public class ClientInformationTest extends TestCase {
 
 
 	public void testConstructor()
-		throws MalformedURLException {
+		throws Exception {
 
 		ClientID clientID = new ClientID("123");
 
-		URL regURL = new URL("https://c2id.com/client-reg/123");
+		URI regURI = new URI("https://c2id.com/client-reg/123");
 
 		BearerAccessToken accessToken = new BearerAccessToken("xyz");
 
@@ -67,10 +65,10 @@ public class ClientInformationTest extends TestCase {
 
 		Date now = new Date();
 
-		ClientInformation info = new ClientInformation(clientID, regURL, accessToken, metadata, secret, now);
+		ClientInformation info = new ClientInformation(clientID, regURI, accessToken, metadata, secret, now);
 
 		assertEquals(clientID, info.getID());
-		assertEquals(regURL, info.getRegistrationURI());
+		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());
 		assertEquals(metadata, info.getClientMetadata());
 		assertEquals("Example app", info.getClientMetadata().getName());
@@ -80,11 +78,11 @@ public class ClientInformationTest extends TestCase {
 
 
 	public void testSerializeAndParse()
-		throws MalformedURLException, ParseException {
+		throws Exception {
 
 		ClientID clientID = new ClientID("123");
 
-		URL regURL = new URL("https://c2id.com/client-reg/123");
+		URI regURI = new URI("https://c2id.com/client-reg/123");
 
 		BearerAccessToken accessToken = new BearerAccessToken("xyz");
 
@@ -95,14 +93,14 @@ public class ClientInformationTest extends TestCase {
 
 		Date now = new Date(new Date().getTime() / 1000 * 1000);
 
-		ClientInformation info = new ClientInformation(clientID, regURL, accessToken, metadata, secret, now);
+		ClientInformation info = new ClientInformation(clientID, regURI, accessToken, metadata, secret, now);
 
 		String json = info.toJSONObject().toJSONString();
 
 		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
 
 		assertEquals(clientID, info.getID());
-		assertEquals(regURL.toString(), info.getRegistrationURI().toString());
+		assertEquals(regURI.toString(), info.getRegistrationURI().toString());
 		assertEquals(accessToken.getValue(), info.getRegistrationAccessToken().getValue());
 		assertEquals(metadata.getName(), info.getClientMetadata().getName());
 		assertEquals(now.getTime(), info.getIssueDate().getTime());

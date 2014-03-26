@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -21,7 +21,7 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testMinimal()
 		throws Exception {
 		
-		URL uri = new URL("https://c2id.com/authz/");
+		URI uri = new URI("https://c2id.com/authz/");
 
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -67,7 +67,7 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testMinimalAltParse()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URI uri = new URI("https://c2id.com/authz/");
 
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -93,17 +93,17 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testToRequestURIWithParse()
 		throws Exception {
 
-		URL redirectURI = new URL("https://client.com/cb");
+		URI redirectURI = new URI("https://client.com/cb");
 		ResponseType rts = new ResponseType("code");
 		ClientID clientID = new ClientID("123456");
-		URL endpointURI = new URL("https://c2id.com/login");
+		URI endpointURI = new URI("https://c2id.com/login");
 
 		AuthorizationRequest req = new AuthorizationRequest.Builder(rts, clientID).
 			redirectionURI(redirectURI).
 			endpointURI(endpointURI).
 			build();
 
-		URL requestURI = req.toURI();
+		URI requestURI = req.toURI();
 
 		assertTrue(requestURI.toString().startsWith(endpointURI.toString() + "?"));
 		req = AuthorizationRequest.parse(requestURI);
@@ -120,13 +120,13 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testFull()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URI uri = new URI("https://c2id.com/authz/");
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
 
 		ClientID clientID = new ClientID("123456");
 
-		URL redirectURI = new URL("https://example.com/oauth2/");
+		URI redirectURI = new URI("https://example.com/oauth2/");
 
 		Scope scope = Scope.parse("read write");
 
@@ -172,13 +172,13 @@ public class AuthorizationRequestTest extends TestCase {
 	public void testFullAltParse()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/authz/");
+		URI uri = new URI("https://c2id.com/authz/");
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
 
 		ClientID clientID = new ClientID("123456");
 
-		URL redirectURI = new URL("https://example.com/oauth2/");
+		URI redirectURI = new URI("https://example.com/oauth2/");
 
 		Scope scope = Scope.parse("read write");
 
@@ -224,8 +224,8 @@ public class AuthorizationRequestTest extends TestCase {
 		throws Exception {
 
 		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123")).
-			endpointURI(new URL("https://c2id.com/login")).
-			redirectionURI(new URL("https://client.com/cb")).
+			endpointURI(new URI("https://c2id.com/login")).
+			redirectionURI(new URI("https://client.com/cb")).
 			scope(new Scope("openid", "email")).
 			state(new State("123")).
 			build();

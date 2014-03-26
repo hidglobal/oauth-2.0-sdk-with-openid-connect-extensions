@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
+import java.net.URI;
 import java.net.URL;
 import java.util.Set;
 
@@ -26,9 +27,9 @@ public class ClientUpdateRequestTest extends TestCase {
 	public void testParse()
 		throws Exception {
 		
-		URL regURI = new URL("https://server.example.com/register/s6BhdRkqt3");
+		URI regURI = new URI("https://server.example.com/register/s6BhdRkqt3");
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, regURI);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, regURI.toURL());
 		httpRequest.setAuthorization("Bearer reg-23410913-abewfq.123483");
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
 
@@ -59,9 +60,9 @@ public class ClientUpdateRequestTest extends TestCase {
 		
 		ClientMetadata metadata = request.getClientMetadata();
 		
-		Set<URL> redirectURIs = metadata.getRedirectionURIs();
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/alt")));
+		Set<URI> redirectURIs = metadata.getRedirectionURIs();
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/alt")));
 		assertEquals(2, redirectURIs.size());
 		
 		assertEquals(Scope.parse("read write dolphin"), metadata.getScope());
@@ -73,7 +74,7 @@ public class ClientUpdateRequestTest extends TestCase {
 		
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
 		
-		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+		assertEquals(new URI("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
 		
 		assertEquals("My New Example", metadata.getName());
 		assertEquals("My New Example", metadata.getName(null));
@@ -82,10 +83,10 @@ public class ClientUpdateRequestTest extends TestCase {
 		
 		assertEquals(2, metadata.getNameEntries().size());
 		
-		assertEquals(new URL("https://client.example.org/newlogo.png"), metadata.getLogoURI());
-		assertEquals(new URL("https://client.example.org/newlogo.png"), metadata.getLogoURI(null));
+		assertEquals(new URI("https://client.example.org/newlogo.png"), metadata.getLogoURI());
+		assertEquals(new URI("https://client.example.org/newlogo.png"), metadata.getLogoURI(null));
 		
-		assertEquals(new URL("https://client.example.org/fr/newlogo.png"), metadata.getLogoURI(LangTag.parse("fr")));
+		assertEquals(new URI("https://client.example.org/fr/newlogo.png"), metadata.getLogoURI(LangTag.parse("fr")));
 		
 		assertEquals(2, metadata.getLogoURIEntries().size());
 	}

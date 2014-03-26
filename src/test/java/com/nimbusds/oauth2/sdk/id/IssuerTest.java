@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URISyntaxException;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
@@ -50,18 +50,18 @@ public class IssuerTest extends TestCase {
 	}
 
 
-	public void testStaticURLValidationMethods()
-		throws MalformedURLException {
+	public void testStaticURIValidationMethods()
+		throws URISyntaxException {
 
-		assertTrue(Issuer.isValid(new URL("https://c2id.com/")));
-		assertTrue(Issuer.isValid(new URL("https://c2id.com/oidc/")));
+		assertTrue(Issuer.isValid(new URI("https://c2id.com/")));
+		assertTrue(Issuer.isValid(new URI("https://c2id.com/oidc/")));
 
-		assertFalse(Issuer.isValid((URL)null));
-		assertFalse(Issuer.isValid(new URL("http://c2id.com")));
-		assertFalse(Issuer.isValid(new URL("https://c2id.com?query=abc")));
-		assertFalse(Issuer.isValid(new URL("https://c2id.com/oidc/#abc")));
-		assertFalse(Issuer.isValid(new URL("https://c2id.com/oidc/?query=abc#abc")));
-		assertFalse(Issuer.isValid(new URL("ftp://c2id.com/oidc/?query=abc#abc")));
+		assertFalse(Issuer.isValid((URI)null));
+		assertFalse(Issuer.isValid(new URI("http://c2id.com")));
+		assertFalse(Issuer.isValid(new URI("https://c2id.com?query=abc")));
+		assertFalse(Issuer.isValid(new URI("https://c2id.com/oidc/#abc")));
+		assertFalse(Issuer.isValid(new URI("https://c2id.com/oidc/?query=abc#abc")));
+		assertFalse(Issuer.isValid(new URI("ftp://c2id.com/oidc/?query=abc#abc")));
 	}
 
 

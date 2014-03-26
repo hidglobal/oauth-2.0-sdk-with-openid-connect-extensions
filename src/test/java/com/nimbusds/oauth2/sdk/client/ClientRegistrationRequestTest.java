@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
@@ -28,11 +28,11 @@ public class ClientRegistrationRequestTest extends TestCase {
 	public void testSerializeAndParse()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/client-reg");
+		URI uri = new URI("https://c2id.com/client-reg");
 
 		ClientMetadata metadata = new ClientMetadata();
 		metadata.setName("My test app");
-		metadata.setRedirectionURI(new URL("https://client.com/callback"));
+		metadata.setRedirectionURI(new URI("https://client.com/callback"));
 		metadata.applyDefaults();
 
 		BearerAccessToken accessToken = new BearerAccessToken();
@@ -70,9 +70,9 @@ public class ClientRegistrationRequestTest extends TestCase {
 	public void testParse()
 		throws Exception {
 		
-		URL uri = new URL("https://server.example.com/register/");
+		URI endpointURI = new URI("https://server.example.com/register/");
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, uri);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, endpointURI.toURL());
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
 		
 		String json = "{"
@@ -95,9 +95,9 @@ public class ClientRegistrationRequestTest extends TestCase {
 		
 		ClientMetadata metadata = request.getClientMetadata();
 		
-		Set<URL> redirectURIs = metadata.getRedirectionURIs();
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback2")));
+		Set<URI> redirectURIs = metadata.getRedirectionURIs();
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback2")));
 		assertEquals(2, redirectURIs.size());
 		
 		assertEquals("My Example Client", metadata.getName());
@@ -107,8 +107,8 @@ public class ClientRegistrationRequestTest extends TestCase {
 		
 		assertEquals(Scope.parse("read write dolphin"), metadata.getScope());
 		
-		assertEquals(new URL("https://client.example.org/logo.png"), metadata.getLogoURI());
+		assertEquals(new URI("https://client.example.org/logo.png"), metadata.getLogoURI());
 		
-		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+		assertEquals(new URI("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
 	}
 }

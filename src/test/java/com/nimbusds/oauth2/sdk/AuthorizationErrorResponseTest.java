@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,18 +19,18 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 public class AuthorizationErrorResponseTest extends TestCase {
 	
 	
-	private static URL REDIRECT_URL = null;
+	private static URI REDIRECT_URI = null;
 	
 	
-	private static URL ERROR_PAGE_URL = null;
+	private static URI ERROR_PAGE_URL = null;
 	
 	
 	public void setUp()
-		throws MalformedURLException {
+		throws URISyntaxException {
 		
-		REDIRECT_URL = new URL("https://client.example.com/cb");
+		REDIRECT_URI = new URI("https://client.example.com/cb");
 		
-		ERROR_PAGE_URL = new URL("http://server.example.com/error/123");
+		ERROR_PAGE_URL = new URI("http://server.example.com/error/123");
 	}
 
 
@@ -58,12 +58,12 @@ public class AuthorizationErrorResponseTest extends TestCase {
 
 		State state = new State("xyz");
 	
-		AuthorizationErrorResponse r = new AuthorizationErrorResponse(REDIRECT_URL, 
+		AuthorizationErrorResponse r = new AuthorizationErrorResponse(REDIRECT_URI,
 		                                                              OAuth2Error.INVALID_REQUEST,
 									      rts,
 									      state);
 
-		assertEquals(REDIRECT_URL, r.getRedirectionURI());
+		assertEquals(REDIRECT_URI, r.getRedirectionURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertEquals(rts, r.getResponseType());
 		assertEquals(state, r.getState());
@@ -75,16 +75,16 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertEquals(state.toString(), params.get("state"));
 		assertEquals(3, params.size());
 
-		URL location = r.toURI();
+		URI location = r.toURI();
 			
 		System.out.println(location.toString());
-		assertNull(location.getRef());
+		assertNull(location.getFragment());
 		assertNotNull(location.getQuery());
 			
-		assertEquals(REDIRECT_URL.getProtocol(), location.getProtocol());
-		assertEquals(REDIRECT_URL.getPort(), location.getPort());
-		assertEquals(REDIRECT_URL.getHost(), location.getHost());
-		assertEquals(REDIRECT_URL.getPath(), location.getPath());
+		assertEquals(REDIRECT_URI.getScheme(), location.getScheme());
+		assertEquals(REDIRECT_URI.getPort(), location.getPort());
+		assertEquals(REDIRECT_URI.getHost(), location.getHost());
+		assertEquals(REDIRECT_URI.getPath(), location.getPath());
 			
 		params = URLUtils.parseParameters(location.getQuery());
 			
@@ -100,7 +100,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 
 		r = AuthorizationErrorResponse.parse(httpResponse);
 
-		assertEquals(REDIRECT_URL, r.getRedirectionURI());
+		assertEquals(REDIRECT_URI, r.getRedirectionURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		assertNull(r.getResponseType());
 		assertEquals(state, r.getState());
@@ -110,7 +110,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 	public void testCodeErrorResponse()
 		throws Exception {
 
-		URL redirectURI = new URL("https://client.com/cb");
+		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
 		ResponseType responseType = new ResponseType("code");
 		State state = new State();
@@ -123,10 +123,10 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertEquals(responseType, response.getResponseType());
 		assertEquals(state, response.getState());
 
-		URL responseURI = response.toURI();
+		URI responseURI = response.toURI();
 
 		assertNotNull(responseURI.getQuery());
-		assertNull(responseURI.getRef());
+		assertNull(responseURI.getFragment());
 
 		response = AuthorizationErrorResponse.parse(responseURI);
 
@@ -140,7 +140,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 	public void testTokenErrorResponse()
 		throws Exception {
 
-		URL redirectURI = new URL("https://client.com/cb");
+		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
 		ResponseType responseType = new ResponseType("token");
 		State state = new State();
@@ -153,10 +153,10 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertEquals(responseType, response.getResponseType());
 		assertEquals(state, response.getState());
 
-		URL responseURI = response.toURI();
+		URI responseURI = response.toURI();
 
 		assertNull(responseURI.getQuery());
-		assertNotNull(responseURI.getRef());
+		assertNotNull(responseURI.getFragment());
 
 		response = AuthorizationErrorResponse.parse(responseURI);
 
@@ -168,14 +168,14 @@ public class AuthorizationErrorResponseTest extends TestCase {
 	
 	
 	public void testParse()
-		throws MalformedURLException {
+		throws URISyntaxException {
 	
 		String s = "https://client.example.com/cb?error=invalid_request&error_description=Invalid+request&error_uri=http%3A%2F%2Fserver.example.com%2Ferror%2F123&state=123";
 
 		AuthorizationErrorResponse r = null;
 		
 		try {
-			r = AuthorizationErrorResponse.parse(new URL(s));
+			r = AuthorizationErrorResponse.parse(new URI(s));
 			
 		} catch (ParseException e) {
 		
@@ -192,12 +192,12 @@ public class AuthorizationErrorResponseTest extends TestCase {
 	
 	
 	public void testParseExceptions()
-		throws MalformedURLException {
+		throws URISyntaxException {
 		
 		String s1 = "https://client.example.com/cb";
 		
 		try {
-			AuthorizationErrorResponse.parse(new URL(s1));
+			AuthorizationErrorResponse.parse(new URI(s1));
 			fail("Failed to raise exception: No params");
 			
 		} catch (ParseException e) {
@@ -209,7 +209,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		String s2 = "https://client.example.com/cb?error=invalid_request&error_uri=example.html";
 		
 		try {
-			AuthorizationErrorResponse.parse(new URL(s2));
+			AuthorizationErrorResponse.parse(new URI(s2));
 			fail("Failed to raise exception: Invalid error URI");
 			
 		} catch (ParseException e) {

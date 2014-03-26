@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -20,10 +20,10 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 public class AuthorizationSuccessResponseTest extends TestCase {
 	
 	
-	private static URL ABS_REDIRECT_URL = null;
+	private static URI ABS_REDIRECT_URI = null;
 	
 	
-	private static URL REL_REDIRECT_URL = null;
+	private static URI REL_REDIRECT_URI = null;
 
 
 	private static AuthorizationCode CODE = new AuthorizationCode("SplxlOBeZQQYbYS6WxSbIA");
@@ -48,21 +48,21 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	
 	
 	public void setUp()
-		throws MalformedURLException, 
+		throws URISyntaxException,
 		       java.text.ParseException {
 		
-		ABS_REDIRECT_URL = new URL("https://client.example.org/cb");
+		ABS_REDIRECT_URI = new URI("https://client.example.org/cb");
 		
-		REL_REDIRECT_URL = new URL("https://");
+		REL_REDIRECT_URI = new URI("https://");
 	}
 	
 	
 	public void testCodeFlow()
 		throws Exception {
 	
-		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URL, CODE, STATE);
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, CODE, STATE);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
+		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
@@ -75,7 +75,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(STATE, new State(params.get("state")));
 		assertEquals(2, params.size());
 
-		URL uri = resp.toURI();
+		URI uri = resp.toURI();
 
 		System.out.println("Location: " + uri);
 
@@ -85,7 +85,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
+		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
@@ -95,9 +95,9 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	public void testImplicitFlow()
 		throws Exception {
 	
-		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URL, TOKEN, STATE);
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, TOKEN, STATE);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
+		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(TOKEN, resp.getAccessToken());
 		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
@@ -113,7 +113,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals("3600", params.get("expires_in"));
 		assertEquals(4, params.size());
 
-		URL uri = resp.toURI();
+		URI uri = resp.toURI();
 
 		System.out.println("Location: " + uri);
 
@@ -123,7 +123,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
-		assertEquals(ABS_REDIRECT_URL, resp.getRedirectionURI());
+		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(TOKEN, resp.getAccessToken());
 		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
@@ -134,7 +134,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	public void testParseCodeResponse()
 		throws Exception {
 
-		URL redirectionURI = new URL(RESPONSE_CODE);
+		URI redirectionURI = new URI(RESPONSE_CODE);
 
 		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
 		assertEquals("https://client.example.org/cb", response.getRedirectionURI().toString());
@@ -147,7 +147,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	public void testParseTokenResponse()
 		throws Exception {
 
-		URL redirectionURI = new URL(RESPONSE_TOKEN);
+		URI redirectionURI = new URI(RESPONSE_TOKEN);
 
 		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
 		assertEquals("https://client.example.org/cb", response.getRedirectionURI().toString());

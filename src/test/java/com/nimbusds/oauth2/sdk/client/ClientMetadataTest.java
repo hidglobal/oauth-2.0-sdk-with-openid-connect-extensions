@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,9 +63,9 @@ public class ClientMetadataTest extends TestCase {
 		
 		ClientMetadata meta = new ClientMetadata();
 		
-		Set<URL> redirectURIs = new HashSet<URL>();
-		redirectURIs.add(new URL("http://example.com/1"));
-		redirectURIs.add(new URL("http://example.com/2"));
+		Set<URI> redirectURIs = new HashSet<URI>();
+		redirectURIs.add(new URI("http://example.com/1"));
+		redirectURIs.add(new URI("http://example.com/2"));
 		meta.setRedirectionURIs(redirectURIs);
 		
 		Scope scope = Scope.parse("read write");
@@ -91,35 +91,35 @@ public class ClientMetadataTest extends TestCase {
 		String nameDE = "Mein Beispiel App";
 		meta.setName(nameDE, LangTag.parse("de"));
 		
-		URL logo = new URL("http://example.com/logo.png");
+		URI logo = new URI("http://example.com/logo.png");
 		meta.setLogoURI(logo);
 		
-		URL logoDE = new URL("http://example.com/de/logo.png");
+		URI logoDE = new URI("http://example.com/de/logo.png");
 		meta.setLogoURI(logoDE, LangTag.parse("de"));
 		
-		URL uri = new URL("http://example.com");
+		URI uri = new URI("http://example.com");
 		meta.setURI(uri);
 		
-		URL uriDE = new URL("http://example.com/de");
+		URI uriDE = new URI("http://example.com/de");
 		meta.setURI(uriDE, LangTag.parse("de"));
 		
-		URL policy = new URL("http://example.com/policy");
+		URI policy = new URI("http://example.com/policy");
 		meta.setPolicyURI(policy);
 		
-		URL policyDE = new URL("http://example.com/de/policy");
+		URI policyDE = new URI("http://example.com/de/policy");
 		meta.setPolicyURI(policyDE, LangTag.parse("de"));
 		
-		URL tos = new URL("http://example.com/tos");
+		URI tos = new URI("http://example.com/tos");
 		meta.setTermsOfServiceURI(tos);
 		
-		URL tosDE = new URL("http://example.com/de/tos");
+		URI tosDE = new URI("http://example.com/de/tos");
 		meta.setTermsOfServiceURI(tosDE, LangTag.parse("de"));
 		
 		ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
 		meta.setTokenEndpointAuthMethod(authMethod);
 		
-		URL jwksURL = new URL("http://example.com/jwks.json");
-		meta.setJWKSetURL(jwksURL);
+		URI jwksURI = new URI("http://example.com/jwks.json");
+		meta.setJWKSetURI(jwksURI);
 
 		RSAKey rsaKey = new RSAKey.Builder(new Base64URL("nabc"), new Base64URL("eabc")).build();
 		JWKSet jwkSet = new JWKSet(rsaKey);
@@ -152,7 +152,7 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(tosDE, meta.getTermsOfServiceURI(LangTag.parse("de")));
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
-		assertEquals(jwksURL, meta.getJWKSetURI());
+		assertEquals(jwksURI, meta.getJWKSetURI());
 		assertEquals("nabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getModulus().toString());
 		assertEquals("eabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
 		assertEquals(1, meta.getJWKSet().getKeys().size());
@@ -190,7 +190,7 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(tosDE, meta.getTermsOfServiceURI(LangTag.parse("de")));
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
-		assertEquals(jwksURL, meta.getJWKSetURI());
+		assertEquals(jwksURI, meta.getJWKSetURI());
 		assertEquals("nabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getModulus().toString());
 		assertEquals("eabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
 		assertEquals(1, meta.getJWKSet().getKeys().size());
@@ -250,7 +250,7 @@ public class ClientMetadataTest extends TestCase {
 
 		ClientMetadata meta = new ClientMetadata();
 
-		URL uri = new URL("https://client.com/callback");
+		URI uri = new URI("https://client.com/callback");
 
 		meta.setRedirectionURI(uri);
 
@@ -269,10 +269,10 @@ public class ClientMetadataTest extends TestCase {
 
 		assertNull(meta.getRedirectionURIStrings());
 
-		Set<URL> redirectURIs = new HashSet<URL>();
-		redirectURIs.add(new URL("https://cliemt.com/cb-1"));
-		redirectURIs.add(new URL("https://cliemt.com/cb-2"));
-		redirectURIs.add(new URL("https://cliemt.com/cb-3"));
+		Set<URI> redirectURIs = new HashSet<URI>();
+		redirectURIs.add(new URI("https://cliemt.com/cb-1"));
+		redirectURIs.add(new URI("https://cliemt.com/cb-2"));
+		redirectURIs.add(new URI("https://cliemt.com/cb-3"));
 
 		meta.setRedirectionURIs(redirectURIs);
 
@@ -281,7 +281,7 @@ public class ClientMetadataTest extends TestCase {
 		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb-3"));
 		assertEquals(3, meta.getRedirectionURIStrings().size());
 
-		meta.setRedirectionURI(new URL("https://cliemt.com/cb"));
+		meta.setRedirectionURI(new URI("https://cliemt.com/cb"));
 		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb"));
 		assertEquals(1, meta.getRedirectionURIStrings().size());
 	}

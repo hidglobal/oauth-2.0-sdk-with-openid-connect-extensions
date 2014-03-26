@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
@@ -58,7 +58,7 @@ public class GeneralExceptionTest extends TestCase {
 			"message",
 			OAuth2Error.INVALID_REQUEST,
 			new ClientID("abc"),
-			new URL("https://redirect.com"),
+			new URI("https://redirect.com"),
 			new State("123"));
 
 		assertEquals("message", e.getMessage());
@@ -76,7 +76,7 @@ public class GeneralExceptionTest extends TestCase {
 			"message",
 			OAuth2Error.INVALID_REQUEST,
 			new ClientID("abc"),
-			new URL("https://redirect.com"),
+			new URI("https://redirect.com"),
 			new State("123"),
 			new IllegalArgumentException());
 
