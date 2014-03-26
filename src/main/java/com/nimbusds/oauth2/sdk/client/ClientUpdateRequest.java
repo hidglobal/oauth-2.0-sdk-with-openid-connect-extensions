@@ -1,9 +1,10 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-
-import org.apache.commons.lang3.StringUtils;
 
 import net.jcip.annotations.Immutable;
 
@@ -89,7 +90,7 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
 	 * @param secret      The optional client secret, {@code null} if not
 	 *                    specified.
 	 */
-	public ClientUpdateRequest(final URL uri,
+	public ClientUpdateRequest(final URI uri,
 		                   final ClientID id,
 		                   final BearerAccessToken accessToken,
 				   final ClientMetadata metadata, 
@@ -152,8 +153,18 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
 		
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
-	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, getEndpointURI());
+
+		URL endpointURL;
+
+		try {
+			endpointURL = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.PUT, endpointURL);
 
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 
@@ -200,7 +211,16 @@ public class ClientUpdateRequest extends ProtectedResourceRequest {
 		if (jsonObject.get("client_secret") != null)
 			clientSecret = new Secret(JSONObjectUtils.getString(jsonObject, "client_secret"));
 			
-		
-		return new ClientUpdateRequest(httpRequest.getURL(), id, accessToken, metadata, clientSecret);
+		URI endpointURI;
+
+		try {
+			endpointURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		return new ClientUpdateRequest(endpointURI, id, accessToken, metadata, clientSecret);
 	}
 }

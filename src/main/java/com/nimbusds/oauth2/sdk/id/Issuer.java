@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import net.jcip.annotations.Immutable;
 
@@ -32,9 +32,9 @@ public final class Issuer extends Identifier {
 			return false;
 
 		try {
-			return isValid(new URL(value));
+			return isValid(new URI(value));
 
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 
 			return false;
 		}
@@ -56,9 +56,9 @@ public final class Issuer extends Identifier {
 			return false;
 
 		try {
-			return isValid(new URL(value.getValue()));
+			return isValid(new URI(value.getValue()));
 
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 
 			return false;
 		}
@@ -66,26 +66,26 @@ public final class Issuer extends Identifier {
 
 
 	/**
-	 * Checks if the specified URL represents a valid issuer identifier.
+	 * Checks if the specified URI represents a valid issuer identifier.
 	 * This method is {@code null}-safe.
 	 *
-	 * @param value The URL.
+	 * @param value The URI.
 	 *
 	 * @return {@code true} if the values represents a valid issuer
 	 *         identifier, else {@code false}.
 	 */
-	public static boolean isValid(final URL value) {
+	public static boolean isValid(final URI value) {
 
 		if (value == null)
 			return false;
 
-		if (value.getProtocol() == null || ! value.getProtocol().equalsIgnoreCase("https"))
+		if (value.getScheme() == null || ! value.getScheme().equalsIgnoreCase("https"))
 			return false;
 
 		if (value.getQuery() != null)
 			return false;
 
-		if (value.getRef() != null)
+		if (value.getFragment() != null)
 			return false;
 
 		return true;

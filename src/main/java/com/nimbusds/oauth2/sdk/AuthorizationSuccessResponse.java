@@ -1,7 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -68,7 +70,7 @@ public class AuthorizationSuccessResponse
 	 * @param code        The authorisation code. Must not be {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthorizationSuccessResponse(final URL redirectURI,
+	public AuthorizationSuccessResponse(final URI redirectURI,
 	                                    final AuthorizationCode code,
 				            final State state) {
 	
@@ -88,7 +90,7 @@ public class AuthorizationSuccessResponse
 	 * @param accessToken The access token. Must not be {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthorizationSuccessResponse(final URL redirectURI,
+	public AuthorizationSuccessResponse(final URI redirectURI,
 				            final AccessToken accessToken,
 				            final State state) {
 	
@@ -109,7 +111,7 @@ public class AuthorizationSuccessResponse
 	 * @param accessToken The access token, {@code null} if not requested.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthorizationSuccessResponse(final URL redirectURI,
+	public AuthorizationSuccessResponse(final URI redirectURI,
 	                                    final AuthorizationCode code,
 				            final AccessToken accessToken,
 				            final State state) {
@@ -186,7 +188,7 @@ public class AuthorizationSuccessResponse
 	
 	
 	@Override
-	public URL toURI()
+	public URI toURI()
 		throws SerializeException {
 	
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
@@ -201,9 +203,9 @@ public class AuthorizationSuccessResponse
 		sb.append(URLUtils.serializeParameters(toParameters()));
 
 		try {
-			return new URL(sb.toString());
+			return new URI(sb.toString());
 			
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 		
 			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
 		}
@@ -223,7 +225,7 @@ public class AuthorizationSuccessResponse
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation success response.
 	 */
-	public static AuthorizationSuccessResponse parse(final URL redirectURI, 
+	public static AuthorizationSuccessResponse parse(final URI redirectURI,
 		                                         final Map<String,String> params)
 		throws ParseException {
 	
@@ -270,7 +272,7 @@ public class AuthorizationSuccessResponse
 	 * @throws ParseException If the redirection URI couldn't be parsed to
 	 *                        an authorisation success response.
 	 */
-	public static AuthorizationSuccessResponse parse(final URL uri)
+	public static AuthorizationSuccessResponse parse(final URI uri)
 		throws ParseException {
 		
 		String paramString;
@@ -279,9 +281,9 @@ public class AuthorizationSuccessResponse
 
 			paramString = uri.getQuery();
 
-		} else if (uri.getRef() != null) {
+		} else if (uri.getFragment() != null) {
 
-			paramString = uri.getRef();
+			paramString = uri.getFragment();
 
 		} else {
 
@@ -293,7 +295,7 @@ public class AuthorizationSuccessResponse
 		if (params == null)
 			throw new ParseException("Missing or invalid authorization response parameters");
 
-		return parse(URLUtils.getBaseURL(uri), params);
+		return parse(URIUtils.getBaseURI(uri), params);
 	}
 
 
@@ -326,7 +328,13 @@ public class AuthorizationSuccessResponse
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URL / HTTP Location header");
-		
-		return parse(location);
+
+		try {
+			return parse(location.toURI());
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }

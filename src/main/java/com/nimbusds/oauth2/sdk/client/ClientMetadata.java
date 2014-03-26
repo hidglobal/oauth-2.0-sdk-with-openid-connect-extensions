@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import javax.mail.internet.AddressException;
@@ -89,27 +89,27 @@ public class ClientMetadata {
 	/**
 	 * Redirect URIs.
 	 */
-	private Set<URL> redirectURIs;
-	
-	
+	private Set<URI> redirectURIs;
+
+
 	/**
 	 * The client OAuth 2.0 scope.
 	 */
 	private Scope scope;
-	
-	
+
+
 	/**
 	 * The expected OAuth 2.0 response types.
 	 */
 	private Set<ResponseType> responseTypes;
-	
-	
+
+
 	/**
 	 * The expected OAuth 2.0 grant types.
 	 */
 	private Set<GrantType> grantTypes;
-	
-	
+
+
 	/**
 	 * Administrator contacts for the client.
 	 */
@@ -125,39 +125,39 @@ public class ClientMetadata {
 	/**
 	 * The client application logo.
 	 */
-	private Map<LangTag,URL> logoURIEntries;
-	
-	
+	private Map<LangTag,URI> logoURIEntries;
+
+
 	/**
 	 * The client URI entries.
 	 */
-	private Map<LangTag,URL> uriEntries;
+	private Map<LangTag,URI> uriEntries;
 
 
 	/**
 	 * The client policy for use of end-user data.
 	 */
-	private Map<LangTag,URL> policyURIEntries;
+	private Map<LangTag,URI> policyURIEntries;
 
 
 	/**
 	 * The client terms of service.
 	 */
-	private Map<LangTag,URL> tosURIEntries;
-	
-	
+	private Map<LangTag,URI> tosURIEntries;
+
+
 	/**
 	 * Token endpoint authentication method.
 	 */
 	private ClientAuthenticationMethod authMethod;
-	
-	
+
+
 	/**
 	 * URI for this client's JSON Web Key (JWK) set containing key(s) that
 	 * are used in signing requests to the server and key(s) for encrypting
 	 * responses.
 	 */
-	private URL jwkSetURI;
+	private URI jwkSetURI;
 
 
 	/**
@@ -184,32 +184,32 @@ public class ClientMetadata {
 	 * The custom metadata fields.
 	 */
 	private JSONObject customFields;
-	
-	
-	/** 
+
+
+	/**
 	 * Creates a new OAuth 2.0 client metadata instance.
 	 */
 	public ClientMetadata() {
 
 		nameEntries = new HashMap<LangTag,String>();
-		logoURIEntries = new HashMap<LangTag,URL>();
-		uriEntries = new HashMap<LangTag,URL>();
-		policyURIEntries = new HashMap<LangTag,URL>();
-		policyURIEntries = new HashMap<LangTag,URL>();
-		tosURIEntries = new HashMap<LangTag,URL>();
+		logoURIEntries = new HashMap<LangTag,URI>();
+		uriEntries = new HashMap<LangTag,URI>();
+		policyURIEntries = new HashMap<LangTag,URI>();
+		policyURIEntries = new HashMap<LangTag,URI>();
+		tosURIEntries = new HashMap<LangTag,URI>();
 		customFields = new JSONObject();
 	}
-	
-	
+
+
 	/**
 	 * Creates a shallow copy of the specified OAuth 2.0 client metadata
 	 * instance.
-	 * 
-	 * @param metadata The client metadata to copy. Must not be 
+	 *
+	 * @param metadata The client metadata to copy. Must not be
 	 *                 {@code null}.
 	 */
 	public ClientMetadata(final ClientMetadata metadata) {
-		
+
 		redirectURIs = metadata.redirectURIs;
 		scope = metadata.scope;
 		responseTypes = metadata.responseTypes;
@@ -236,16 +236,16 @@ public class ClientMetadata {
 
 		return REGISTERED_PARAMETER_NAMES;
 	}
-	
-	
+
+
 	/**
 	 * Gets the redirection URIs for this client. Corresponds to the
 	 * {@code redirect_uris} client metadata field.
 	 *
 	 * @return The redirection URIs, {@code null} if not specified.
 	 */
-	public Set<URL> getRedirectionURIs() {
-	
+	public Set<URI> getRedirectionURIs() {
+
 		return redirectURIs;
 	}
 
@@ -267,13 +267,13 @@ public class ClientMetadata {
 
 		Set<String> uriStrings = new HashSet<String>();
 
-		for (URL uri: redirectURIs)
+		for (URI uri: redirectURIs)
 			uriStrings.add(uri.toString());
 
 		return uriStrings;
 	}
-	
-	
+
+
 	/**
 	 * Sets the redirection URIs for this client. Corresponds to the
 	 * {@code redirect_uris} client metadata field.
@@ -281,8 +281,8 @@ public class ClientMetadata {
 	 * @param redirectURIs The redirection URIs, {@code null} if not
 	 *                     specified.
 	 */
-	public void setRedirectionURIs(final Set<URL> redirectURIs) {
-	
+	public void setRedirectionURIs(final Set<URI> redirectURIs) {
+
 		this.redirectURIs = redirectURIs;
 	}
 
@@ -294,89 +294,89 @@ public class ClientMetadata {
 	 * @param redirectURI The redirection URIs, {@code null} if not
 	 *                    specified.
 	 */
-	public void setRedirectionURI(final URL redirectURI) {
+	public void setRedirectionURI(final URI redirectURI) {
 
 		if (redirectURI != null) {
-			redirectURIs = new HashSet<URL>(Arrays.asList(redirectURI));
+			redirectURIs = new HashSet<URI>(Arrays.asList(redirectURI));
 		} else {
 			redirectURIs = null;
 		}
 	}
-	
-	
+
+
 	/**
-	 * Gets the scope values that the client can use when requesting access 
+	 * Gets the scope values that the client can use when requesting access
 	 * tokens. Corresponds to the {@code scope} client metadata field.
-	 * 
+	 *
 	 * @return The scope, {@code null} if not specified.
 	 */
 	public Scope getScope() {
-		
+
 		return scope;
 	}
-	
-	
+
+
 	/**
-	 * Sets the scope values that the client can use when requesting access 
+	 * Sets the scope values that the client can use when requesting access
 	 * tokens. Corresponds to the {@code scope} client metadata field.
-	 * 
+	 *
 	 * @param scope The scope, {@code null} if not specified.
 	 */
 	public void setScope(final Scope scope) {
-		
+
 		this.scope = scope;
 	}
-	
-	
+
+
 	/**
 	 * Gets the expected OAuth 2.0 response types. Corresponds to the
 	 * {@code response_types} client metadata field.
-	 * 
+	 *
 	 * @return The response types, {@code null} if not specified.
 	 */
 	public Set<ResponseType> getResponseTypes() {
-		
+
 		return responseTypes;
 	}
-	
-	
+
+
 	/**
 	 * Sets the expected OAuth 2.0 response types. Corresponds to the
 	 * {@code response_types} client metadata field.
-	 * 
-	 * @param responseTypes The response types, {@code null} if not 
+	 *
+	 * @param responseTypes The response types, {@code null} if not
 	 *                      specified.
 	 */
 	public void setResponseTypes(final Set<ResponseType> responseTypes) {
-		
+
 		this.responseTypes = responseTypes;
 	}
-	
-	
+
+
 	/**
 	 * Gets the expected OAuth 2.0 grant types. Corresponds to the
 	 * {@code grant_types} client metadata field.
-	 * 
+	 *
 	 * @return The grant types, {@code null} if not specified.
 	 */
 	public Set<GrantType> getGrantTypes() {
-		
+
 		return grantTypes;
 	}
-	
-	
+
+
 	/**
 	 * Sets the expected OAuth 2.0 grant types. Corresponds to the
 	 * {@code grant_types} client metadata field.
-	 * 
+	 *
 	 * @param grantTypes The grant types, {@code null} if not specified.
 	 */
 	public void setGrantTypes(final Set<GrantType> grantTypes) {
-		
+
 		this.grantTypes = grantTypes;
 	}
-	
-	
+
+
 	/**
 	 * Gets the administrator contacts for the client. Corresponds to the
 	 * {@code contacts} client metadata field.
@@ -400,10 +400,10 @@ public class ClientMetadata {
 
 		this.contacts = contacts;
 	}
-	
-	
+
+
 	/**
-	 * Gets the client name. Corresponds to the {@code client_name} client 
+	 * Gets the client name. Corresponds to the {@code client_name} client
 	 * metadata field, with no language tag.
 	 *
 	 * @return The client name, {@code null} if not specified.
@@ -418,7 +418,7 @@ public class ClientMetadata {
 	 * Gets the client name. Corresponds to the {@code client_name} client
 	 * metadata field, with an optional language tag.
 	 *
-	 * @param langTag The language tag of the entry, {@code null} to get 
+	 * @param langTag The language tag of the entry, {@code null} to get
 	 *                the non-tagged entry.
 	 *
 	 * @return The client name, {@code null} if not specified.
@@ -467,264 +467,264 @@ public class ClientMetadata {
 
 
 	/**
-	 * Gets the client application logo. Corresponds to the 
-	 * {@code logo_uri} client metadata field, with no language 
+	 * Gets the client application logo. Corresponds to the
+	 * {@code logo_uri} client metadata field, with no language
 	 * tag.
 	 *
 	 * @return The logo URI, {@code null} if not specified.
 	 */
-	public URL getLogoURI() {
+	public URI getLogoURI() {
 
 		return getLogoURI(null);
 	}
 
 
 	/**
-	 * Gets the client application logo. Corresponds to the 
+	 * Gets the client application logo. Corresponds to the
 	 * {@code logo_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The logo URI, {@code null} if not specified.
 	 */
-	public URL getLogoURI(final LangTag langTag) {
+	public URI getLogoURI(final LangTag langTag) {
 
 		return logoURIEntries.get(langTag);
 	}
 
 
 	/**
-	 * Gets the client application logo entries. Corresponds to the 
+	 * Gets the client application logo entries. Corresponds to the
 	 * {@code logo_uri} client metadata field.
 	 *
 	 * @return The logo URI entries, empty map if none.
 	 */
-	public Map<LangTag,URL> getLogoURIEntries() {
+	public Map<LangTag,URI> getLogoURIEntries() {
 
 		return logoURIEntries;
 	}
 
 
 	/**
-	 * Sets the client application logo. Corresponds to the 
-	 * {@code logo_uri} client metadata field, with no language 
+	 * Sets the client application logo. Corresponds to the
+	 * {@code logo_uri} client metadata field, with no language
 	 * tag.
 	 *
 	 * @param logoURI The logo URI, {@code null} if not specified.
 	 */
-	public void setLogoURI(final URL logoURI) {
+	public void setLogoURI(final URI logoURI) {
 
 		logoURIEntries.put(null, logoURI);
 	}
 
 
 	/**
-	 * Sets the client application logo. Corresponds to the 
+	 * Sets the client application logo. Corresponds to the
 	 * {@code logo_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @param logoURI The logo URI. Must not be {@code null}.
 	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public void setLogoURI(final URL logoURI, final LangTag langTag) {
+	public void setLogoURI(final URI logoURI, final LangTag langTag) {
 
 		logoURIEntries.put(langTag, logoURI);
 	}
-	
-	
+
+
 	/**
-	 * Gets the client home page. Corresponds to the {@code client_uri} 
+	 * Gets the client home page. Corresponds to the {@code client_uri}
 	 * client metadata field, with no language tag.
 	 *
 	 * @return The client URI, {@code null} if not specified.
 	 */
-	public URL getURI() {
+	public URI getURI() {
 
 		return getURI(null);
 	}
 
 
 	/**
-	 * Gets the client home page. Corresponds to the {@code client_uri} 
+	 * Gets the client home page. Corresponds to the {@code client_uri}
 	 * client metadata field, with an optional language tag.
 	 *
 	 * @return The client URI, {@code null} if not specified.
 	 */
-	public URL getURI(final LangTag langTag) {
+	public URI getURI(final LangTag langTag) {
 
 		return uriEntries.get(langTag);
 	}
 
 
 	/**
-	 * Gets the client home page entries. Corresponds to the 
+	 * Gets the client home page entries. Corresponds to the
 	 * {@code client_uri} client metadata field.
 	 *
 	 * @return The client URI entries, empty map if none.
 	 */
-	public Map<LangTag,URL> getURIEntries() {
+	public Map<LangTag,URI> getURIEntries() {
 
 		return uriEntries;
 	}
 
 
 	/**
-	 * Sets the client home page. Corresponds to the {@code client_uri} 
+	 * Sets the client home page. Corresponds to the {@code client_uri}
 	 * client metadata field, with no language tag.
 	 *
 	 * @param uri The client URI, {@code null} if not specified.
 	 */
-	public void setURI(final URL uri) {
+	public void setURI(final URI uri) {
 
 		uriEntries.put(null, uri);
 	}
 
 
 	/**
-	 * Sets the client home page. Corresponds to the {@code client_uri} 
+	 * Sets the client home page. Corresponds to the {@code client_uri}
 	 * client metadata field, with an optional language tag.
 	 *
 	 * @param uri     The URI. Must not be {@code null}.
 	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public void setURI(final URL uri, final LangTag langTag) {
+	public void setURI(final URI uri, final LangTag langTag) {
 
 		uriEntries.put(langTag, uri);
 	}
-	
+
 
 	/**
-	 * Gets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_uri} client metadata field, with no language 
+	 * Gets the client policy for use of end-user data. Corresponds to the
+	 * {@code policy_uri} client metadata field, with no language
 	 * tag.
 	 *
 	 * @return The policy URI, {@code null} if not specified.
 	 */
-	public URL getPolicyURI() {
+	public URI getPolicyURI() {
 
 		return getPolicyURI(null);
 	}
 
 
 	/**
-	 * Gets the client policy for use of end-user data. Corresponds to the 
+	 * Gets the client policy for use of end-user data. Corresponds to the
 	 * {@code policy_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The policy URI, {@code null} if not specified.
 	 */
-	public URL getPolicyURI(final LangTag langTag) {
+	public URI getPolicyURI(final LangTag langTag) {
 
 		return policyURIEntries.get(langTag);
 	}
 
 
 	/**
-	 * Gets the client policy entries for use of end-user data. 
+	 * Gets the client policy entries for use of end-user data.
 	 * Corresponds to the {@code policy_uri} client metadata field.
 	 *
 	 * @return The policy URI entries, empty map if none.
 	 */
-	public Map<LangTag,URL> getPolicyURIEntries() {
+	public Map<LangTag,URI> getPolicyURIEntries() {
 
 		return policyURIEntries;
 	}
 
 
 	/**
-	 * Sets the client policy for use of end-user data. Corresponds to the 
-	 * {@code policy_uri} client metadata field, with no language 
+	 * Sets the client policy for use of end-user data. Corresponds to the
+	 * {@code policy_uri} client metadata field, with no language
 	 * tag.
 	 *
 	 * @param policyURI The policy URI, {@code null} if not specified.
 	 */
-	public void setPolicyURI(final URL policyURI) {
+	public void setPolicyURI(final URI policyURI) {
 
 		policyURIEntries.put(null, policyURI);
 	}
 
 
 	/**
-	 * Sets the client policy for use of end-user data. Corresponds to the 
+	 * Sets the client policy for use of end-user data. Corresponds to the
 	 * {@code policy_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @param policyURI The policy URI. Must not be {@code null}.
 	 * @param langTag   The language tag, {@code null} if not specified.
 	 */
-	public void setPolicyURI(final URL policyURI, final LangTag langTag) {
+	public void setPolicyURI(final URI policyURI, final LangTag langTag) {
 
 		policyURIEntries.put(langTag, policyURI);
 	}
 
 
 	/**
-	 * Gets the client's terms of service. Corresponds to the 
-	 * {@code tos_uri} client metadata field, with no language 
+	 * Gets the client's terms of service. Corresponds to the
+	 * {@code tos_uri} client metadata field, with no language
 	 * tag.
 	 *
 	 * @return The terms of service URI, {@code null} if not specified.
 	 */
-	public URL getTermsOfServiceURI() {
+	public URI getTermsOfServiceURI() {
 
 		return getTermsOfServiceURI(null);
 	}
 
 
 	/**
-	 * Gets the client's terms of service. Corresponds to the 
+	 * Gets the client's terms of service. Corresponds to the
 	 * {@code tos_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @return The terms of service URI, {@code null} if not specified.
 	 */
-	public URL getTermsOfServiceURI(final LangTag langTag) {
+	public URI getTermsOfServiceURI(final LangTag langTag) {
 
 		return tosURIEntries.get(langTag);
 	}
 
 
 	/**
-	 * Gets the client's terms of service entries. Corresponds to the 
+	 * Gets the client's terms of service entries. Corresponds to the
 	 * {@code tos_uri} client metadata field.
 	 *
 	 * @return The terms of service URI entries, empty map if none.
 	 */
-	public Map<LangTag,URL> getTermsOfServiceURIEntries() {
+	public Map<LangTag,URI> getTermsOfServiceURIEntries() {
 
 		return tosURIEntries;
 	}
 
 
 	/**
-	 * Sets the client's terms of service. Corresponds to the 
-	 * {@code tos_uri} client metadata field, with no language 
+	 * Sets the client's terms of service. Corresponds to the
+	 * {@code tos_uri} client metadata field, with no language
 	 * tag.
 	 *
-	 * @param tosURI The terms of service URI, {@code null} if not 
+	 * @param tosURI The terms of service URI, {@code null} if not
 	 *               specified.
 	 */
-	public void setTermsOfServiceURI(final URL tosURI) {
+	public void setTermsOfServiceURI(final URI tosURI) {
 
 		tosURIEntries.put(null, tosURI);
 	}
 
 
 	/**
-	 * Sets the client's terms of service. Corresponds to the 
+	 * Sets the client's terms of service. Corresponds to the
 	 * {@code tos_uri} client metadata field, with an optional
 	 * language tag.
 	 *
 	 * @param tosURI  The terms of service URI. Must not be {@code null}.
 	 * @param langTag The language tag, {@code null} if not specified.
 	 */
-	public void setTermsOfServiceURI(final URL tosURI, final LangTag langTag) {
+	public void setTermsOfServiceURI(final URI tosURI, final LangTag langTag) {
 
 		tosURIEntries.put(langTag, tosURI);
 	}
-	
-	
+
+
 	/**
-	 * Gets the Token endpoint authentication method. Corresponds to the 
+	 * Gets the Token endpoint authentication method. Corresponds to the
 	 * {@code token_endpoint_auth_method} client metadata field.
 	 *
 	 * @return The Token endpoint authentication method, {@code null} if
@@ -737,41 +737,41 @@ public class ClientMetadata {
 
 
 	/**
-	 * Sets the Token endpoint authentication method. Corresponds to the 
+	 * Sets the Token endpoint authentication method. Corresponds to the
 	 * {@code token_endpoint_auth_method} client metadata field.
 	 *
-	 * @param authMethod The Token endpoint authentication  method, 
+	 * @param authMethod The Token endpoint authentication  method,
 	 *                   {@code null} if not specified.
 	 */
 	public void setTokenEndpointAuthMethod(final ClientAuthenticationMethod authMethod) {
 
 		this.authMethod = authMethod;
 	}
-	
-	
+
+
 	/**
-	 * Gets the URI for this client's JSON Web Key (JWK) set containing 
-	 * key(s) that are used in signing requests to the server and key(s) 
-	 * for encrypting responses. Corresponds to the {@code jwks_uri} client 
+	 * Gets the URI for this client's JSON Web Key (JWK) set containing
+	 * key(s) that are used in signing requests to the server and key(s)
+	 * for encrypting responses. Corresponds to the {@code jwks_uri} client
 	 * metadata field.
 	 *
 	 * @return The JWK set URI, {@code null} if not specified.
 	 */
-	public URL getJWKSetURI() {
+	public URI getJWKSetURI() {
 
 		return jwkSetURI;
 	}
 
 
 	/**
-	 * Sets the URI for this client's JSON Web Key (JWK) set containing 
-	 * key(s) that are used in signing requests to the server and key(s) 
-	 * for encrypting responses. Corresponds to the {@code jwks_uri} client 
+	 * Sets the URI for this client's JSON Web Key (JWK) set containing
+	 * key(s) that are used in signing requests to the server and key(s)
+	 * for encrypting responses. Corresponds to the {@code jwks_uri} client
 	 * metadata field.
 	 *
 	 * @param jwkSetURI The JWK set URI, {@code null} if not specified.
 	 */
-	public void setJWKSetURL(final URL jwkSetURI) {
+	public void setJWKSetURI(final URI jwkSetURI) {
 
 		this.jwkSetURI = jwkSetURI;
 	}
@@ -908,37 +908,37 @@ public class ClientMetadata {
 
 		this.customFields = customFields;
 	}
-	
-	
+
+
 	/**
 	 * Applies the client metadata defaults where no values have been
 	 * specified.
-	 * 
+	 *
 	 * <ul>
 	 *     <li>The response types default to {@code ["code"]}.
 	 *     <li>The grant types default to {@code "authorization_code".}
-	 *     <li>The client authentication method defaults to 
+	 *     <li>The client authentication method defaults to
 	 *         "client_secret_basic".
 	 * </ul>
 	 */
 	public void applyDefaults() {
-		
+
 		if (responseTypes == null) {
 			responseTypes = new HashSet<ResponseType>();
 			responseTypes.add(ResponseType.getDefault());
 		}
-		
+
 		if (grantTypes == null) {
 			grantTypes = new HashSet<GrantType>();
 			grantTypes.add(GrantType.AUTHORIZATION_CODE);
 		}
-		
+
 		if (authMethod == null) {
 			authMethod = ClientAuthenticationMethod.getDefault();
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns the JSON object representation of this client metadata,
 	 * including any custom fields.
@@ -974,35 +974,35 @@ public class ClientMetadata {
 
 			JSONArray uriList = new JSONArray();
 
-			for (URL uri: redirectURIs)
+			for (URI uri: redirectURIs)
 				uriList.add(uri.toString());
 
 			o.put("redirect_uris", uriList);
 		}
-		
-		
+
+
 		if (scope != null)
 			o.put("scope", scope.toString());
-		
-		
+
+
 		if (responseTypes != null) {
-			
+
 			JSONArray rtList = new JSONArray();
-			
+
 			for (ResponseType rt: responseTypes)
 				rtList.add(rt.toString());
-			
+
 			o.put("response_types", rtList);
 		}
-		
-		
+
+
 		if (grantTypes != null) {
-			
+
 			JSONArray grantList = new JSONArray();
-			
+
 			for (GrantType grant: grantTypes)
 				grantList.add(grant.toString());
-			
+
 			o.put("grant_types", grantList);
 		}
 
@@ -1024,7 +1024,7 @@ public class ClientMetadata {
 
 				LangTag langTag = entry.getKey();
 				String name = entry.getValue();
-				
+
 				if (name == null)
 					continue;
 
@@ -1032,17 +1032,17 @@ public class ClientMetadata {
 					o.put("client_name", entry.getValue());
 				else
 					o.put("client_name#" + langTag, entry.getValue());
-			} 
+			}
 		}
-		
-		
+
+
 		if (! logoURIEntries.isEmpty()) {
 
-			for (Map.Entry<LangTag,URL> entry: logoURIEntries.entrySet()) {
+			for (Map.Entry<LangTag,URI> entry: logoURIEntries.entrySet()) {
 
 				LangTag langTag = entry.getKey();
-				URL uri = entry.getValue();
-				
+				URI uri = entry.getValue();
+
 				if (uri == null)
 					continue;
 
@@ -1050,17 +1050,17 @@ public class ClientMetadata {
 					o.put("logo_uri", entry.getValue().toString());
 				else
 					o.put("logo_uri#" + langTag, entry.getValue().toString());
-			} 
+			}
 		}
-		
-		
+
+
 		if (! uriEntries.isEmpty()) {
 
-			for (Map.Entry<LangTag,URL> entry: uriEntries.entrySet()) {
+			for (Map.Entry<LangTag,URI> entry: uriEntries.entrySet()) {
 
 				LangTag langTag = entry.getKey();
-				URL uri = entry.getValue();
-				
+				URI uri = entry.getValue();
+
 				if (uri == null)
 					continue;
 
@@ -1068,17 +1068,17 @@ public class ClientMetadata {
 					o.put("client_uri", entry.getValue().toString());
 				else
 					o.put("client_uri#" + langTag, entry.getValue().toString());
-			} 
+			}
 		}
-		
-		
+
+
 		if (! policyURIEntries.isEmpty()) {
 
-			for (Map.Entry<LangTag,URL> entry: policyURIEntries.entrySet()) {
+			for (Map.Entry<LangTag,URI> entry: policyURIEntries.entrySet()) {
 
 				LangTag langTag = entry.getKey();
-				URL uri = entry.getValue();
-				
+				URI uri = entry.getValue();
+
 				if (uri == null)
 					continue;
 
@@ -1086,17 +1086,17 @@ public class ClientMetadata {
 					o.put("policy_uri", entry.getValue().toString());
 				else
 					o.put("policy_uri#" + langTag, entry.getValue().toString());
-			} 
+			}
 		}
-		
-		
+
+
 		if (! tosURIEntries.isEmpty()) {
 
-			for (Map.Entry<LangTag,URL> entry: tosURIEntries.entrySet()) {
+			for (Map.Entry<LangTag,URI> entry: tosURIEntries.entrySet()) {
 
 				LangTag langTag = entry.getKey();
-				URL uri = entry.getValue();
-				
+				URI uri = entry.getValue();
+
 				if (uri == null)
 					continue;
 
@@ -1104,7 +1104,7 @@ public class ClientMetadata {
 					o.put("tos_uri", entry.getValue().toString());
 				else
 					o.put("tos_uri#" + langTag, entry.getValue().toString());
-			} 
+			}
 		}
 
 
@@ -1128,12 +1128,12 @@ public class ClientMetadata {
 
 		return o;
 	}
-	
-	
+
+
 	/**
 	 * Parses an client metadata instance from the specified JSON object.
 	 *
-	 * @param jsonObject The JSON object to parse. Must not be  
+	 * @param jsonObject The JSON object to parse. Must not be
 	 *                   {@code null}.
 	 *
 	 * @return The client metadata.
@@ -1167,14 +1167,14 @@ public class ClientMetadata {
 
 		if (jsonObject.containsKey("redirect_uris")) {
 
-			Set<URL> redirectURIs = new LinkedHashSet<URL>();
+			Set<URI> redirectURIs = new LinkedHashSet<URI>();
 
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "redirect_uris")) {
 
 				try {
-					redirectURIs.add(new URL(uriString));
+					redirectURIs.add(new URI(uriString));
 
-				} catch (MalformedURLException e) {
+				} catch (URISyntaxException e) {
 
 					throw new ParseException("Invalid \"redirect_uris\" parameter: " +
 						                  e.getMessage());
@@ -1184,41 +1184,41 @@ public class ClientMetadata {
 			metadata.setRedirectionURIs(redirectURIs);
 			jsonObject.remove("redirect_uris");
 		}
-		
-		
+
+
 		if (jsonObject.containsKey("scope")) {
 			metadata.setScope(Scope.parse(JSONObjectUtils.getString(jsonObject, "scope")));
 			jsonObject.remove("scope");
 		}
-		
-		
+
+
 		if (jsonObject.containsKey("response_types")) {
-			
+
 			Set<ResponseType> responseTypes = new LinkedHashSet<ResponseType>();
-			
+
 			for (String rt: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
-				
+
 				responseTypes.add(ResponseType.parse(rt));
 			}
-			
+
 			metadata.setResponseTypes(responseTypes);
 			jsonObject.remove("response_types");
 		}
-		
-		
+
+
 		if (jsonObject.containsKey("grant_types")) {
-			
+
 			Set<GrantType> grantTypes = new LinkedHashSet<GrantType>();
-			
+
 			for (String grant: JSONObjectUtils.getStringArray(jsonObject, "grant_types")) {
-				
+
 				grantTypes.add(new GrantType(grant));
 			}
-			
+
 			metadata.setGrantTypes(grantTypes);
 			jsonObject.remove("grant_types");
-		}	
-		
+		}
+
 
 		if (jsonObject.containsKey("contacts")) {
 
@@ -1262,7 +1262,7 @@ public class ClientMetadata {
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
 			try {
-				metadata.setLogoURI(new URL((String)entry.getValue()), entry.getKey());
+				metadata.setLogoURI(new URI((String)entry.getValue()), entry.getKey());
 
 			} catch (Exception e) {
 
@@ -1271,14 +1271,14 @@ public class ClientMetadata {
 
 			removeMember(jsonObject, "logo_uri", entry.getKey());
 		}
-		
-		
+
+
 		matches = LangTagUtils.find("client_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
 			try {
-				metadata.setURI(new URL((String)entry.getValue()), entry.getKey());
+				metadata.setURI(new URI((String)entry.getValue()), entry.getKey());
 
 
 			} catch (Exception e) {
@@ -1288,14 +1288,14 @@ public class ClientMetadata {
 
 			removeMember(jsonObject, "client_uri", entry.getKey());
 		}
-		
-		
+
+
 		matches = LangTagUtils.find("policy_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
 			try {
-				metadata.setPolicyURI(new URL((String)entry.getValue()), entry.getKey());
+				metadata.setPolicyURI(new URI((String)entry.getValue()), entry.getKey());
 
 			} catch (Exception e) {
 
@@ -1304,14 +1304,14 @@ public class ClientMetadata {
 
 			removeMember(jsonObject, "policy_uri", entry.getKey());
 		}
-		
-		
+
+
 		matches = LangTagUtils.find("tos_uri", jsonObject);
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
 			try {
-				metadata.setTermsOfServiceURI(new URL((String)entry.getValue()), entry.getKey());
+				metadata.setTermsOfServiceURI(new URI((String)entry.getValue()), entry.getKey());
 
 			} catch (Exception e) {
 
@@ -1320,7 +1320,7 @@ public class ClientMetadata {
 
 			removeMember(jsonObject, "tos_uri", entry.getKey());
 		}
-		
+
 
 		if (jsonObject.containsKey("token_endpoint_auth_method")) {
 			metadata.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(
@@ -1329,9 +1329,9 @@ public class ClientMetadata {
 			jsonObject.remove("token_endpoint_auth_method");
 		}
 
-			
+
 		if (jsonObject.containsKey("jwks_uri")) {
-			metadata.setJWKSetURL(JSONObjectUtils.getURL(jsonObject, "jwks_uri"));
+			metadata.setJWKSetURI(JSONObjectUtils.getURI(jsonObject, "jwks_uri"));
 			jsonObject.remove("jwks_uri");
 		}
 

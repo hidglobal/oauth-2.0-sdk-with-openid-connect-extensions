@@ -1,6 +1,9 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import net.jcip.annotations.Immutable;
@@ -50,7 +53,7 @@ public class UserInfoRequest extends ProtectedResourceRequest {
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request.
 	 *                    Must not be {@code null}.
 	 */
-	public UserInfoRequest(final URL uri, final BearerAccessToken accessToken) {
+	public UserInfoRequest(final URI uri, final BearerAccessToken accessToken) {
 	
 		this(uri, HTTPRequest.Method.GET, accessToken);
 	}
@@ -67,7 +70,7 @@ public class UserInfoRequest extends ProtectedResourceRequest {
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request.
 	 *                    Must not be {@code null}.
 	 */
-	public UserInfoRequest(final URL uri, final HTTPRequest.Method httpMethod, final BearerAccessToken accessToken) {
+	public UserInfoRequest(final URI uri, final HTTPRequest.Method httpMethod, final BearerAccessToken accessToken) {
 	
 		super(uri, accessToken);
 		
@@ -99,8 +102,18 @@ public class UserInfoRequest extends ProtectedResourceRequest {
 		
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
+
+		URL endpointURL;
+
+		try {
+			endpointURL = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
 	
-		HTTPRequest httpRequest = new HTTPRequest(httpMethod, getEndpointURI());
+		HTTPRequest httpRequest = new HTTPRequest(httpMethod, endpointURL);
 		
 		switch (httpMethod) {
 		
@@ -137,7 +150,18 @@ public class UserInfoRequest extends ProtectedResourceRequest {
 		HTTPRequest.Method httpMethod = httpRequest.getMethod();
 		
 		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest);
+
+		URI endpointURI;
+
+		try {
+
+			endpointURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	
-		return new UserInfoRequest(httpRequest.getURL(), httpMethod, accessToken);
+		return new UserInfoRequest(endpointURI, httpMethod, accessToken);
 	}
 }

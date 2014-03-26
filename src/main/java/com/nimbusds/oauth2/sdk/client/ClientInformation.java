@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -72,7 +72,7 @@ public class ClientInformation {
 	/**
 	 * The client registration URI.
 	 */
-	private final URL registrationURI;
+	private final URI registrationURI;
 	
 	
 	/**
@@ -116,7 +116,7 @@ public class ClientInformation {
 	 *                        {@code null} if not specified.
 	 */
 	public ClientInformation(final ClientID id,
-		                 final URL registrationURI,
+		                 final URI registrationURI,
 				 final BearerAccessToken accessToken,
 				 final ClientMetadata metadata,
 				 final Secret secret,
@@ -179,7 +179,7 @@ public class ClientInformation {
 	 * 
 	 * @return The registration URI, {@code null} if not specified.
 	 */
-	public URL getRegistrationURI() {
+	public URI getRegistrationURI() {
 		
 		return registrationURI;
 	}
@@ -282,7 +282,7 @@ public class ClientInformation {
 		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
 		
 		
-		URL registrationURI = JSONObjectUtils.getURL(jsonObject, "registration_client_uri");
+		URI registrationURI = JSONObjectUtils.getURI(jsonObject, "registration_client_uri");
 		
 		
 		BearerAccessToken accessToken = new BearerAccessToken(

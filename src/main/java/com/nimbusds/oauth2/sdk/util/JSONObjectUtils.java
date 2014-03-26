@@ -2,6 +2,8 @@ package com.nimbusds.oauth2.sdk.util;
 
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
@@ -244,6 +246,30 @@ public class JSONObjectUtils {
 		}
 
 		throw new ParseException("Unexpected value of JSON object member with key \"" + key + "\"");
+	}
+
+
+	/**
+	 * Gets a string member of a JSON object as {@code java.net.URI}.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static URI getURI(final JSONObject o, final String key)
+		throws ParseException {
+
+		try {
+			return new URI(getGeneric(o, key, String.class));
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 	
 	

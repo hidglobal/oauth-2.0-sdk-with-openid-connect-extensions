@@ -1,8 +1,8 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -117,7 +117,7 @@ public class AuthenticationErrorResponse
 	 *                    URI composition. If unknown {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthenticationErrorResponse(final URL redirectURI,
+	public AuthenticationErrorResponse(final URI redirectURI,
 					   final ErrorObject error,
 					   final ResponseType rt,
 					   final State state) {
@@ -127,7 +127,7 @@ public class AuthenticationErrorResponse
 
 
 	@Override
-	public URL toURI()
+	public URI toURI()
 		throws SerializeException {
 
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
@@ -145,9 +145,9 @@ public class AuthenticationErrorResponse
 		sb.append(URLUtils.serializeParameters(toParameters()));
 
 		try {
-			return new URL(sb.toString());
+			return new URI(sb.toString());
 
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 
 			throw new SerializeException("Couldn't serialize redirection URI: " + e.getMessage(), e);
 		}
@@ -168,7 +168,7 @@ public class AuthenticationErrorResponse
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        OpenID Connect authentication error response.
 	 */
-	public static AuthenticationErrorResponse parse(final URL redirectURI,
+	public static AuthenticationErrorResponse parse(final URI redirectURI,
 							final Map<String,String> params)
 		throws ParseException {
 
@@ -202,7 +202,7 @@ public class AuthenticationErrorResponse
 	 * @throws ParseException If the URI couldn't be parsed to an OpenID
 	 *                        Connect authentication error response.
 	 */
-	public static AuthenticationErrorResponse parse(final URL uri)
+	public static AuthenticationErrorResponse parse(final URI uri)
 		throws ParseException {
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(uri);

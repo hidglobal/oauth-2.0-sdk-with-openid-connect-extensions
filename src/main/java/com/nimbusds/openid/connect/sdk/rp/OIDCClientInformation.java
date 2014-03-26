@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -78,7 +78,7 @@ public final class OIDCClientInformation extends ClientInformation {
 	 *                        {@code null} if not specified.
 	 */
 	public OIDCClientInformation(final ClientID id,
-		                     final URL registrationURI,
+		                     final URI registrationURI,
 				     final BearerAccessToken accessToken,
 				     final ClientMetadata metadata,
 				     final Secret secret,
@@ -128,7 +128,7 @@ public final class OIDCClientInformation extends ClientInformation {
 		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
 		
 		
-		URL registrationURI = JSONObjectUtils.getURL(jsonObject, "registration_client_uri");
+		URI registrationURI = JSONObjectUtils.getURI(jsonObject, "registration_client_uri");
 		
 		
 		BearerAccessToken accessToken = new BearerAccessToken(

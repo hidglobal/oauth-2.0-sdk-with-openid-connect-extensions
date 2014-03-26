@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 
 /**
@@ -13,7 +13,7 @@ public abstract class AbstractRequest implements Request {
 	/**
 	 * The request endpoint.
 	 */
-	private URL uri;
+	private URI uri;
 	
 	
 	/**
@@ -24,14 +24,14 @@ public abstract class AbstractRequest implements Request {
 	 *            for example, the {@link #toHTTPRequest()} method will not
 	 *            be used).
 	 */
-	public AbstractRequest(final URL uri) {
+	public AbstractRequest(final URI uri) {
 		
 		this.uri = uri;
 	}
 	
 	
 	@Override
-	public URL getEndpointURI() {
+	public URI getEndpointURI() {
 		
 		return uri;
 	}

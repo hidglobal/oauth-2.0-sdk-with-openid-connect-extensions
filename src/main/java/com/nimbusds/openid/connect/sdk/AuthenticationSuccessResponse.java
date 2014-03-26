@@ -1,7 +1,8 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -77,7 +79,7 @@ public class AuthenticationSuccessResponse
 	 *                    requested.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthenticationSuccessResponse(final URL redirectURI,
+	public AuthenticationSuccessResponse(final URI redirectURI,
 					     final AuthorizationCode code,
 					     final JWT idToken,
 					     final AccessToken accessToken,
@@ -145,7 +147,7 @@ public class AuthenticationSuccessResponse
 
 
 	@Override
-	public URL toURI()
+	public URI toURI()
 		throws SerializeException {
 
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
@@ -160,9 +162,9 @@ public class AuthenticationSuccessResponse
 		sb.append(URLUtils.serializeParameters(toParameters()));
 
 		try {
-			return new URL(sb.toString());
+			return new URI(sb.toString());
 
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 
 			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
 		}
@@ -184,7 +186,7 @@ public class AuthenticationSuccessResponse
 	 *                        OpenID Connect authentication success
 	 *                        response.
 	 */
-	public static AuthenticationSuccessResponse parse(final URL redirectURI,
+	public static AuthenticationSuccessResponse parse(final URI redirectURI,
 							  final Map<String,String> params)
 		throws ParseException {
 
@@ -232,7 +234,7 @@ public class AuthenticationSuccessResponse
 	 *                        an OpenID Connect authentication success
 	 *                        response.
 	 */
-	public static AuthenticationSuccessResponse parse(final URL uri)
+	public static AuthenticationSuccessResponse parse(final URI uri)
 		throws ParseException {
 		
 		String paramString;
@@ -241,9 +243,9 @@ public class AuthenticationSuccessResponse
 
 			paramString = uri.getQuery();
 				
-		} else if (uri.getRef() != null) {
+		} else if (uri.getFragment() != null) {
 
-			paramString = uri.getRef();
+			paramString = uri.getFragment();
 		
 		} else {
 			throw new ParseException("Missing authorization response parameters");
@@ -255,7 +257,7 @@ public class AuthenticationSuccessResponse
 			throw new ParseException("Missing or invalid authorization response parameters");
 		}
 
-		return parse(URLUtils.getBaseURL(uri), params);
+		return parse(URIUtils.getBaseURI(uri), params);
 	}
 
 
@@ -290,7 +292,13 @@ public class AuthenticationSuccessResponse
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URI / HTTP Location header");
-		
-		return parse(location);
+
+		try {
+			return parse(location.toURI());
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }

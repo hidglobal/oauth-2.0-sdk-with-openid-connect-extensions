@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -187,7 +187,7 @@ public class BearerTokenError extends ErrorObject {
 	public BearerTokenError(final String code, 
 		                final String description, 
 		                final int httpStatusCode, 
-		                final URL uri,
+		                final URI uri,
 		                final String realm,
 		                final Scope scope) {
 	
@@ -363,7 +363,7 @@ public class BearerTokenError extends ErrorObject {
 		// Parse optional error 
 		String errorCode = null;
 		String errorDescription = null;
-		URL errorURI = null;
+		URI errorURI = null;
 
 		m = errorPattern.matcher(wwwAuth);
 		
@@ -384,9 +384,9 @@ public class BearerTokenError extends ErrorObject {
 			if (m.find()) {
 			
 				try {
-					errorURI = new URL(m.group(1));
+					errorURI = new URI(m.group(1));
 					
-				} catch (MalformedURLException e) {
+				} catch (URISyntaxException e) {
 				
 					throw new ParseException("Invalid error URI: " + m.group(1), e);
 				}

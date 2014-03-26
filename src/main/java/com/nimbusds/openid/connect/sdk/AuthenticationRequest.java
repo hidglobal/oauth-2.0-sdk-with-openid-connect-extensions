@@ -1,8 +1,8 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -137,9 +137,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Request object URL (optional).
+	 * Request object URI (optional).
 	 */
-	private final URL requestURI;
+	private final URI requestURI;
 
 
 	/**
@@ -151,7 +151,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		/**
 		 * The endpoint URI (optional).
 		 */
-		private URL uri;
+		private URI uri;
 
 
 		/**
@@ -170,7 +170,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		 * The redirection URI where the response will be sent
 		 * (required).
 		 */
-		private final URL redirectURI;
+		private final URI redirectURI;
 
 
 		/**
@@ -262,9 +262,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 		/**
-		 * Request object URL (optional).
+		 * Request object URI (optional).
 		 */
-		private URL requestURI;
+		private URI requestURI;
 
 
 		/**
@@ -288,7 +288,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		public Builder(final ResponseType rt,
 			       final Scope scope,
 			       final ClientID clientID,
-			       final URL redirectURI) {
+			       final URI redirectURI) {
 
 			if (rt == null)
 				throw new IllegalArgumentException("The response type must not be null");
@@ -340,7 +340,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder endpointURI(final URL uri) {
+		public Builder endpointURI(final URI uri) {
 
 			this.uri = uri;
 			return this;
@@ -511,7 +511,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		 * @param requestURI The request object URL, {@code null} if
 		 *                   not specified.
 		 */
-		public Builder requestURI(final URL requestURI) {
+		public Builder requestURI(final URI requestURI) {
 
 			this.requestURI = requestURI;
 			return this;
@@ -565,11 +565,11 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 * @param nonce       The nonce. Corresponds to the {@code nonce} 
 	 *                    parameter. May be {@code null} for code flow.
 	 */
-	public AuthenticationRequest(final URL uri,
+	public AuthenticationRequest(final URI uri,
 				     final ResponseType rt,
 				     final Scope scope,
 				     final ClientID clientID,
-				     final URL redirectURI,
+				     final URI redirectURI,
 				     final State state,
 				     final Nonce nonce) {
 
@@ -646,11 +646,11 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 *                      not be specified together with a request
 	 *                      object. {@code null} if not specified.
 	 */
-	public AuthenticationRequest(final URL uri,
+	public AuthenticationRequest(final URI uri,
 				     final ResponseType rt,
 				     final Scope scope,
 				     final ClientID clientID,
-				     final URL redirectURI,
+				     final URI redirectURI,
 				     final State state,
 				     final Nonce nonce,
 				     final Display display,
@@ -663,7 +663,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				     final List<ACR> acrValues,
 				     final ClaimsRequest claims,
 				     final JWT requestObject,
-				     final URL requestURI) {
+				     final URI requestURI) {
 				    
 		super(uri, rt, clientID, redirectURI, scope, state);
 
@@ -855,12 +855,12 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	
 	
 	/**
-	 * Gets the request object URL. Corresponds to the optional 
+	 * Gets the request object URI. Corresponds to the optional
 	 * {@code request_uri} parameter.
 	 *
-	 * @return The request object URL, {@code null} if not specified.
+	 * @return The request object URI, {@code null} if not specified.
 	 */
-	public URL getRequestURI() {
+	public URI getRequestURI() {
 	
 		return requestURI;
 	}
@@ -1033,7 +1033,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        OpenID Connect authentication request.
 	 */
-	public static AuthenticationRequest parse(final URL uri, final Map<String,String> params)
+	public static AuthenticationRequest parse(final URI uri, final Map<String,String> params)
 		throws ParseException {
 
 		// Parse and validate the core OAuth 2.0 autz request params in 
@@ -1044,7 +1044,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		State state = ar.getState();
 
 		// Required in OIDC
-		URL redirectURI = ar.getRedirectionURI();
+		URI redirectURI = ar.getRedirectionURI();
 
 		if (redirectURI == null)
 			throw new ParseException("Missing \"redirect_uri\" parameter", 
@@ -1244,14 +1244,14 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		
 		v = params.get("request_uri");
 		
-		URL requestURI = null;
+		URI requestURI = null;
 		
 		if (StringUtils.isNotBlank(v)) {
 
 			try {
-				requestURI = new URL(v);
+				requestURI = new URI(v);
 		
-			} catch (MalformedURLException e) {
+			} catch (URISyntaxException e) {
 			
 				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
 					                 OAuth2Error.INVALID_REQUEST,
@@ -1323,9 +1323,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 	/**
 	 * Parses an OpenID Connect authentication request from the specified
-	 * URL query string.
+	 * URI query string.
 	 *
-	 * <p>Example URL query string:
+	 * <p>Example URI query string:
 	 *
 	 * <pre>
 	 * response_type=token%20id_token
@@ -1346,7 +1346,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 * @throws ParseException If the query string couldn't be parsed to an
 	 *                        OpenID Connect authentication request.
 	 */
-	public static AuthenticationRequest parse(final URL uri, final String query)
+	public static AuthenticationRequest parse(final URI uri, final String query)
 		throws ParseException {
 
 		return parse(uri, URLUtils.parseParameters(query));
@@ -1383,7 +1383,17 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		
 		if (query == null)
 			throw new ParseException("Missing URL query string");
+
+		URI endpointURI;
+
+		try {
+			endpointURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 		
-		return parse(httpRequest.getURL(), query);
+		return parse(endpointURI, query);
 	}
 }

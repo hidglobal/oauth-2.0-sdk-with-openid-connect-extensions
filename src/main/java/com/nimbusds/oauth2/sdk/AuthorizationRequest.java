@@ -2,6 +2,8 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -58,7 +61,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	/**
 	 * The redirection URI where the response will be sent (optional). 
 	 */
-	private final URL redirectURI;
+	private final URI redirectURI;
 	
 	
 	/**
@@ -83,7 +86,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		/**
 		 * The endpoint URI (optional).
 		 */
-		private URL uri;
+		private URI uri;
 
 
 		/**
@@ -102,7 +105,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		 * The redirection URI where the response will be sent
 		 * (optional).
 		 */
-		private URL redirectURI;
+		private URI redirectURI;
 
 
 		/**
@@ -152,7 +155,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder redirectionURI(final URL redirectURI) {
+		public Builder redirectionURI(final URI redirectURI) {
 
 			this.redirectURI = redirectURI;
 			return this;
@@ -197,7 +200,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		 *
 		 * @return This builder.
 		 */
-		public Builder endpointURI(final URL uri) {
+		public Builder endpointURI(final URI uri) {
 
 			this.uri = uri;
 			return this;
@@ -229,7 +232,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 *                 {@code client_id} parameter. Must not be
 	 *                 {@code null}.
 	 */
-	public AuthorizationRequest(final URL uri,
+	public AuthorizationRequest(final URI uri,
 		                    final ResponseType rt,
 	                            final ClientID clientID) {
 
@@ -259,10 +262,10 @@ public class AuthorizationRequest extends AbstractRequest {
 	 *                    {@code state} parameter. {@code null} if not 
 	 *                    specified.
 	 */
-	public AuthorizationRequest(final URL uri,
+	public AuthorizationRequest(final URI uri,
 		                    final ResponseType rt,
 	                            final ClientID clientID,
-				    final URL redirectURI,
+				    final URI redirectURI,
 	                            final Scope scope,
 				    final State state) {
 
@@ -316,7 +319,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 *
 	 * @return The redirection URI, {@code null} if not specified.
 	 */
-	public URL getRedirectionURI() {
+	public URI getRedirectionURI() {
 	
 		return redirectURI;
 	}
@@ -430,7 +433,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @throws SerializeException If this authorisation request couldn't be
 	 *                            serialised to a URI.
 	 */
-	public URL toURI()
+	public URI toURI()
 		throws SerializeException {
 
 		if (getEndpointURI() == null)
@@ -440,8 +443,8 @@ public class AuthorizationRequest extends AbstractRequest {
 		sb.append('?');
 		sb.append(toQueryString());
 		try {
-			return new URL(sb.toString());
-		} catch (MalformedURLException e) {
+			return new URI(sb.toString());
+		} catch (URISyntaxException e) {
 			throw new SerializeException("Couldn't append query string: " + e.getMessage(), e);
 		}
 	}
@@ -466,14 +469,24 @@ public class AuthorizationRequest extends AbstractRequest {
 			throw new SerializeException("The endpoint URI is not specified");
 		
 		HTTPRequest httpRequest;
+
+		URL endpointURL;
+
+		try {
+			endpointURL = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
 		
 		if (method.equals(HTTPRequest.Method.GET)) {
 
-			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, getEndpointURI());
+			httpRequest = new HTTPRequest(HTTPRequest.Method.GET, endpointURL);
 
 		} else if (method.equals(HTTPRequest.Method.POST)) {
 
-			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getEndpointURI());
+			httpRequest = new HTTPRequest(HTTPRequest.Method.POST, endpointURL);
 
 		} else {
 
@@ -542,7 +555,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final URL uri, final Map<String,String> params)
+	public static AuthorizationRequest parse(final URI uri, final Map<String,String> params)
 		throws ParseException {
 
 		// Parse mandatory client ID first
@@ -558,14 +571,14 @@ public class AuthorizationRequest extends AbstractRequest {
 		// Parse optional redirection URI second
 		v = params.get("redirect_uri");
 
-		URL redirectURI = null;
+		URI redirectURI = null;
 
 		if (StringUtils.isNotBlank(v)) {
 
 			try {
-				redirectURI = new URL(v);
+				redirectURI = new URI(v);
 
-			} catch (MalformedURLException e) {
+			} catch (URISyntaxException e) {
 
 				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(),
 					OAuth2Error.INVALID_REQUEST, clientID, null, null, e);
@@ -654,7 +667,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @throws ParseException If the query string couldn't be parsed to an 
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final URL uri, final String query)
+	public static AuthorizationRequest parse(final URI uri, final String query)
 		throws ParseException {
 	
 		return parse(uri, URLUtils.parseParameters(query));
@@ -681,10 +694,10 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @throws ParseException If the URI couldn't be parsed to an
 	 *                        authorisation request.
 	 */
-	public static AuthorizationRequest parse(final URL uri)
+	public static AuthorizationRequest parse(final URI uri)
 		throws ParseException {
 
-		StringBuilder sb = new StringBuilder(uri.getProtocol());
+		StringBuilder sb = new StringBuilder(uri.getScheme());
 		sb.append("://");
 
 		if (uri.getHost() != null) {
@@ -700,12 +713,12 @@ public class AuthorizationRequest extends AbstractRequest {
 			sb.append(uri.getPath());
 		}
 
-		URL endpointURI;
+		URI endpointURI;
 
 		try {
-			endpointURI = new URL(sb.toString());
+			endpointURI = new URI(sb.toString());
 
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 			throw new ParseException("Couldn't parse endpoint URI: " + e.getMessage(), e);
 		}
 
@@ -741,6 +754,6 @@ public class AuthorizationRequest extends AbstractRequest {
 		if (query == null)
 			throw new ParseException("Missing URL query string");
 		
-		return parse(URLUtils.getBaseURL(httpRequest.getURL()), query);
+		return parse(URIUtils.getBaseURI(httpRequest.getURL()), query);
 	}
 }

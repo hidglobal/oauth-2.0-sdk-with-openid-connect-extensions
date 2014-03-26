@@ -2,6 +2,7 @@ package com.nimbusds.openid.connect.sdk.op;
 
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -307,8 +308,19 @@ public class AuthenticationRequestResolver {
 			JWT jwt;
 
 			if (request.getRequestURI() != null) {
+
 				// Download request object
-				jwt = retrieveRequestObject(request.getRequestURI());
+				URL requestURL;
+
+				try {
+					requestURL = request.getRequestURI().toURL();
+
+				} catch (MalformedURLException e) {
+
+					throw new ResolveException(e.getMessage(), e);
+				}
+
+				jwt = retrieveRequestObject(requestURL);
 			} else {
 				// Request object inlined
 				jwt = request.getRequestObject();

@@ -1,7 +1,8 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -69,7 +70,7 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	public OIDCClientRegistrationRequest(final URL uri,
+	public OIDCClientRegistrationRequest(final URI uri,
 		                             final OIDCClientMetadata metadata, 
 		                             final BearerAccessToken accessToken) {
 
@@ -116,7 +117,17 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
 		
 		if (StringUtils.isNotBlank(authzHeaderValue))
 			accessToken = BearerAccessToken.parse(authzHeaderValue);
+
+		URI endpointURI;
+
+		try {
+			endpointURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 		
-		return new OIDCClientRegistrationRequest(httpRequest.getURL(), metadata, accessToken);
+		return new OIDCClientRegistrationRequest(endpointURI, metadata, accessToken);
 	}
 }

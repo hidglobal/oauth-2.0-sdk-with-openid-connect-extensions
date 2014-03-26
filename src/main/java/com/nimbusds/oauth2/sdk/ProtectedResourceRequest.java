@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
@@ -34,7 +34,7 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
 	 * @param accessToken An OAuth 2.0 access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	protected ProtectedResourceRequest(final URL uri, final AccessToken accessToken) {
+	protected ProtectedResourceRequest(final URI uri, final AccessToken accessToken) {
 		
 		super(uri);
 

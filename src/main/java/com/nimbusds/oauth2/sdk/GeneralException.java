@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
@@ -29,7 +29,7 @@ public class GeneralException extends Exception {
 	 * The redirection URI, {@code null} if not specified or redirection is
 	 * not to be performed for this error. Implies a HTTP status code 302.
 	 */
-	private final URL redirectURI;
+	private final URI redirectURI;
 
 
 	/**
@@ -105,7 +105,7 @@ public class GeneralException extends Exception {
 	public GeneralException(final String message, 
 		                final ErrorObject error,
 				final ClientID clientID,
-		                final URL redirectURI,
+		                final URI redirectURI,
 		                final State state) {
 	
 		this(message, error, clientID, redirectURI, state, null);
@@ -130,7 +130,7 @@ public class GeneralException extends Exception {
 	public GeneralException(final String message, 
 		                final ErrorObject error,
 				final ClientID clientID,
-		                final URL redirectURI,
+		                final URI redirectURI,
 		                final State state,
 		                final Throwable cause) {
 	
@@ -171,7 +171,7 @@ public class GeneralException extends Exception {
 	 * @return The redirection URI, {@code null} if redirection is not to
 	 *         be performed for this error.
 	 */
-	public URL getRedirectionURI() {
+	public URI getRedirectionURI() {
 
 		return redirectURI;
 	}

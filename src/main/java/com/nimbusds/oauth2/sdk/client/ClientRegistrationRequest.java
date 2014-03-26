@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.apache.commons.lang3.StringUtils;
@@ -69,7 +72,7 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request, 
 	 *                    {@code null} if none.
 	 */
-	public ClientRegistrationRequest(final URL uri,
+	public ClientRegistrationRequest(final URI uri,
 		                         final ClientMetadata metadata, 
 		                         final BearerAccessToken accessToken) {
 
@@ -99,8 +102,17 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 		
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
+
+		URL endpointURL;
+
+		try {
+			endpointURL = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+			throw new SerializeException(e.getMessage(), e);
+		}
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getEndpointURI());
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, endpointURL);
 
 		if (getAccessToken() != null)
 			httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
@@ -141,7 +153,17 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 		
 		if (StringUtils.isNotBlank(authzHeaderValue))
 			accessToken = BearerAccessToken.parse(authzHeaderValue);
+
+		URI endpointURI;
+
+		try {
+			endpointURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 		
-		return new ClientRegistrationRequest(httpRequest.getURL(), metadata, accessToken);
+		return new ClientRegistrationRequest(endpointURI, metadata, accessToken);
 	}
 }

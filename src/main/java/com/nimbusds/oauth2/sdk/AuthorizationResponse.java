@@ -1,6 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ public abstract class AuthorizationResponse implements Response {
 	/**
 	 * The base redirection URI.
 	 */
-	private final URL redirectURI;
+	private final URI redirectURI;
 
 
 	/**
@@ -42,7 +44,7 @@ public abstract class AuthorizationResponse implements Response {
 	 *                    {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	protected AuthorizationResponse(final URL redirectURI, final State state) {
+	protected AuthorizationResponse(final URI redirectURI, final State state) {
 
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirection URI must not be null");
@@ -59,7 +61,7 @@ public abstract class AuthorizationResponse implements Response {
 	 * @return The base redirection URI (without the appended error
 	 *         response parameters).
 	 */
-	public URL getRedirectionURI() {
+	public URI getRedirectionURI() {
 	
 		return redirectURI;
 	}
@@ -115,7 +117,7 @@ public abstract class AuthorizationResponse implements Response {
 	 * @throws SerializeException If this response couldn't be serialised 
 	 *                            to a URI.
 	 */
-	public abstract URL toURI()
+	public abstract URI toURI()
 		throws SerializeException;
 
 
@@ -142,8 +144,14 @@ public abstract class AuthorizationResponse implements Response {
 		throws SerializeException {
 	
 		HTTPResponse response = new HTTPResponse(HTTPResponse.SC_FOUND);
-		
-		response.setLocation(toURI());
+
+		try {
+			response.setLocation(redirectURI.toURL());
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
 		
 		return response;
 	}

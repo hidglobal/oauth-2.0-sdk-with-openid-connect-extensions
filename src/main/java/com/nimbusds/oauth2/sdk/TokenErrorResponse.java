@@ -1,20 +1,21 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -199,10 +200,10 @@ public class TokenErrorResponse
 				description = JSONObjectUtils.getString(jsonObject, "error_description");
 
 			// Parse URI
-			URL uri = null;
+			URI uri = null;
 
 			if (jsonObject.containsKey("error_uri"))
-				uri = new URL(JSONObjectUtils.getString(jsonObject, "error_uri"));
+				uri = new URI(JSONObjectUtils.getString(jsonObject, "error_uri"));
 
 
 			error = new ErrorObject(code, description, HTTPResponse.SC_BAD_REQUEST, uri);
@@ -211,7 +212,7 @@ public class TokenErrorResponse
 		
 			throw new ParseException("Missing or invalid token error response parameter: " + e.getMessage(), e);
 			
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 		
 			throw new ParseException("Invalid error URI: " + e.getMessage(), e);
 		}

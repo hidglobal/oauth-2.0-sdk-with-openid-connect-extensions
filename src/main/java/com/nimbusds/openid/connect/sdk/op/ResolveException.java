@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.GeneralException;
@@ -73,7 +73,7 @@ public class ResolveException extends GeneralException {
 	public ResolveException(final String message, 
 		                final ErrorObject error,
 				final ClientID clientID,
-		                final URL redirectURI,
+		                final URI redirectURI,
 		                final State state,
 		                final Throwable cause) {
 

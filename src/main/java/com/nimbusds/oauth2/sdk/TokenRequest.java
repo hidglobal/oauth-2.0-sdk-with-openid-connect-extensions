@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
@@ -23,7 +26,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <pre>
  * POST /token HTTP/1.1
  * Host: server.example.com
- * Content-Type: application/x-www-form-urlencoded
+ * Content-Type: application/x-www-form-URIencoded
  * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
  * 
  * grant_type=authorization_code
@@ -62,7 +65,7 @@ public class TokenRequest extends AbstractRequest {
 	 * @param clientAuth The client authentication, {@code null} if none.
 	 * @param authzGrant The authorisation grant. Must not be {@code null}.
 	 */
-	public TokenRequest(final URL uri,
+	public TokenRequest(final URI uri,
 			    final ClientAuthentication clientAuth,
 			    final AuthorizationGrant authzGrant) {
 	
@@ -106,7 +109,17 @@ public class TokenRequest extends AbstractRequest {
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
 
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, getEndpointURI());
+		URL url;
+
+		try {
+			url = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
 		Map<String,String> params = authzGrant.toParameters();
@@ -147,6 +160,16 @@ public class TokenRequest extends AbstractRequest {
 		// Parse client auth
 		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
 
-		return new TokenRequest(httpRequest.getURL(), clientAuth, authzGrant);
+		URI uri;
+
+		try {
+			uri = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		return new TokenRequest(uri, clientAuth, authzGrant);
 	}
 }

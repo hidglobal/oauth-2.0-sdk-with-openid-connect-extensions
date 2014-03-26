@@ -1,10 +1,10 @@
 package com.nimbusds.oauth2.sdk.client;
 
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
-
-import com.nimbusds.oauth2.sdk.token.BearerTokenError;
-import org.apache.commons.lang3.StringUtils;
 
 import net.jcip.annotations.Immutable;
 
@@ -47,7 +47,7 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 	 * @param accessToken An OAuth 2.0 Bearer access token for the request. 
 	 *                    Must not be {@code null}.
 	 */
-	public ClientReadRequest(final URL uri, final BearerAccessToken accessToken) {
+	public ClientReadRequest(final URI uri, final BearerAccessToken accessToken) {
 
 		super(uri, accessToken);
 
@@ -62,8 +62,18 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 		
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
+
+		URL endpointURL;
+
+		try {
+			endpointURL = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
 	
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, getEndpointURI());
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, endpointURL);
 		httpRequest.setAuthorization(getAccessToken().toAuthorizationHeader());
 		return httpRequest;
 	}
@@ -85,7 +95,17 @@ public class ClientReadRequest extends ProtectedResourceRequest {
 		httpRequest.ensureMethod(HTTPRequest.Method.GET);
 
 		BearerAccessToken accessToken = BearerAccessToken.parse(httpRequest.getAuthorization());
+
+		URI endpointURI;
+
+		try {
+			endpointURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 		
-		return new ClientReadRequest(httpRequest.getURL(), accessToken);
+		return new ClientReadRequest(endpointURI, accessToken);
 	}
 }

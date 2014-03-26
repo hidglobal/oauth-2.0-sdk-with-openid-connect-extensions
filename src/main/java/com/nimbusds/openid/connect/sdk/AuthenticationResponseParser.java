@@ -1,11 +1,14 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -36,7 +39,7 @@ public class AuthenticationResponseParser {
 	 *                        OpenID Connect authentication success or
 	 *                        error response.
 	 */
-	public static AuthenticationResponse parse(final URL redirectURI,
+	public static AuthenticationResponse parse(final URI redirectURI,
 						   final Map<String,String> params)
 		throws ParseException {
 
@@ -68,7 +71,7 @@ public class AuthenticationResponseParser {
 	 *                        an OpenID Connect authentication success or
 	 *                        error response.
 	 */
-	public static AuthenticationResponse parse(final URL uri)
+	public static AuthenticationResponse parse(final URI uri)
 		throws ParseException {
 
 		String paramString;
@@ -76,8 +79,8 @@ public class AuthenticationResponseParser {
 		if (uri.getQuery() != null)
 			paramString = uri.getQuery();
 				
-		else if (uri.getRef() != null)
-			paramString = uri.getRef();
+		else if (uri.getFragment() != null)
+			paramString = uri.getFragment();
 		
 		else
 			throw new ParseException("Missing authorization response parameters");
@@ -87,7 +90,7 @@ public class AuthenticationResponseParser {
 		if (params == null)
 			throw new ParseException("Missing or invalid authorization response parameters");
 
-		return parse(URLUtils.getBaseURL(uri), params);
+		return parse(URIUtils.getBaseURI(uri), params);
 	}
 
 
@@ -122,8 +125,14 @@ public class AuthenticationResponseParser {
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URI / HTTP Location header");
-		
-		return parse(location);
+
+		try {
+			return parse(location.toURI());
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 
 

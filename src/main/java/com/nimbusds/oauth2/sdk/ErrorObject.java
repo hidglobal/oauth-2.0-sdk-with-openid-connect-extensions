@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import net.jcip.annotations.Immutable;
 
@@ -35,7 +35,7 @@ public class ErrorObject {
 	 * Optional URI of a web page that includes additional information 
 	 * about the error.
 	 */
-	private final URL uri;
+	private final URI uri;
 
 
 	/**
@@ -90,7 +90,7 @@ public class ErrorObject {
 	 *                       specified.
 	 */
 	public ErrorObject(final String code, final String description, 
-		           final int httpStatusCode, final URL uri) {
+		           final int httpStatusCode, final URI uri) {
 	
 		this.code = code;
 		this.description = description;
@@ -186,7 +186,7 @@ public class ErrorObject {
 	 *
 	 * @return The error page URI, {@code null} if not specified.
 	 */
-	public URL getURI() {
+	public URI getURI() {
 
 		return uri;
 	}
@@ -199,7 +199,7 @@ public class ErrorObject {
 	 *
 	 * @return A copy of this error with the specified page URI.
 	 */
-	public ErrorObject setURI(final URL uri) {
+	public ErrorObject setURI(final URI uri) {
 
 		return new ErrorObject(getCode(), getDescription(), getHTTPStatusCode(), uri);
 	}

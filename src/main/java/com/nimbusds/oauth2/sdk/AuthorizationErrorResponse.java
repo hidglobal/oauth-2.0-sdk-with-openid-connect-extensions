@@ -1,7 +1,8 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -111,7 +113,7 @@ public class AuthorizationErrorResponse
 	 *                    {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthorizationErrorResponse(final URL redirectURI,
+	public AuthorizationErrorResponse(final URI redirectURI,
 					  final ErrorObject error,
 					  final ResponseType rt,
 					  final State state) {
@@ -139,7 +141,7 @@ public class AuthorizationErrorResponse
 	 *                    {@code null}.
 	 * @param state       The state, {@code null} if not requested.
 	 */
-	public AuthorizationErrorResponse(final URL redirectURI,
+	public AuthorizationErrorResponse(final URI redirectURI,
 	                                  final ErrorObject error,
 					  final State state) {
 					  
@@ -186,7 +188,7 @@ public class AuthorizationErrorResponse
 	
 	
 	@Override
-	public URL toURI()
+	public URI toURI()
 		throws SerializeException {
 		
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
@@ -200,9 +202,9 @@ public class AuthorizationErrorResponse
 		sb.append(URLUtils.serializeParameters(toParameters()));
 		
 		try {
-			return new URL(sb.toString());
+			return new URI(sb.toString());
 			
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 		
 			throw new SerializeException("Couldn't serialize redirection URI: " + e.getMessage(), e);
 		}
@@ -223,7 +225,7 @@ public class AuthorizationErrorResponse
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation error response.
 	 */
-	public static AuthorizationErrorResponse parse(final URL redirectURI, 
+	public static AuthorizationErrorResponse parse(final URI redirectURI,
 		                                       final Map<String,String> params)
 		throws ParseException {
 
@@ -238,14 +240,14 @@ public class AuthorizationErrorResponse
 
 		String errorURIString = params.get("error_uri");
 
-		URL errorURI = null;
+		URI errorURI = null;
 
 		if (errorURIString != null) {
 			
 			try {
-				errorURI = new URL(errorURIString);
+				errorURI = new URI(errorURIString);
 				
-			} catch (MalformedURLException e) {
+			} catch (URISyntaxException e) {
 		
 				throw new ParseException("Invalid error URI: " + errorURIString, e);
 			}
@@ -282,13 +284,13 @@ public class AuthorizationErrorResponse
 	 * @throws ParseException If the URI couldn't be parsed to an
 	 *                        authorisation error response.
 	 */
-	public static AuthorizationErrorResponse parse(final URL uri)
+	public static AuthorizationErrorResponse parse(final URI uri)
 		throws ParseException {
 		
 		Map<String,String> params;
 		
-		if (uri.getRef() != null)
-			params = URLUtils.parseParameters(uri.getRef());
+		if (uri.getFragment() != null)
+			params = URLUtils.parseParameters(uri.getFragment());
 
 		else if (uri.getQuery() != null)
 			params = URLUtils.parseParameters(uri.getQuery());
@@ -297,7 +299,7 @@ public class AuthorizationErrorResponse
 			throw new ParseException("Missing URI fragment or query string");
 
 		
-		return parse(URLUtils.getBaseURL(uri), params);
+		return parse(URIUtils.getBaseURI(uri), params);
 	}
 	
 	
@@ -334,7 +336,13 @@ public class AuthorizationErrorResponse
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URI / HTTP Location header");
-		
-		return parse(location);
+
+		try {
+			return parse(location.toURI());
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }
