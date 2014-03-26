@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -645,69 +645,69 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * Gets the profile page. Corresponds to the {@code profile} claim.
 	 *
-	 * @return The profile page URL, {@code null} if not specified.
+	 * @return The profile page URI, {@code null} if not specified.
 	 */
-	public URL getProfile() {
+	public URI getProfile() {
 	
-		return getURLClaim(PROFILE_CLAIM_NAME);
+		return getURIClaim(PROFILE_CLAIM_NAME);
 	}
 	
 	
 	/**
 	 * Sets the profile page. Corresponds to the {@code profile} claim.
 	 *
-	 * @param profile The profile page URL. If {@code null} the claim will
+	 * @param profile The profile page URI. If {@code null} the claim will
 	 *                be removed.
 	 */
-	public void setProfile(final URL profile) {
+	public void setProfile(final URI profile) {
 	
-		setURLClaim(PROFILE_CLAIM_NAME, profile);
+		setURIClaim(PROFILE_CLAIM_NAME, profile);
 	}
 	
 	
 	/**
 	 * Gets the picture. Corresponds to the {@code picture} claim.
 	 *
-	 * @return The picture URL, {@code null} if not specified.
+	 * @return The picture URI, {@code null} if not specified.
 	 */
-	public URL getPicture() {
+	public URI getPicture() {
 	
-		return getURLClaim(PICTURE_CLAIM_NAME);
+		return getURIClaim(PICTURE_CLAIM_NAME);
 	}
 	
 	
 	/**
 	 * Sets the picture. Corresponds to the {@code picture} claim.
 	 *
-	 * @param picture The picture URL. If {@code null} the claim will be
+	 * @param picture The picture URI. If {@code null} the claim will be
 	 *                removed.
 	 */
-	public void setPicture(final URL picture) {
+	public void setPicture(final URI picture) {
 	
-		setURLClaim(PICTURE_CLAIM_NAME, picture);
+		setURIClaim(PICTURE_CLAIM_NAME, picture);
 	}
 	
 	
 	/**
 	 * Gets the web page or blog. Corresponds to the {@code website} claim.
 	 *
-	 * @return The web page or blog URL, {@code null} if not specified.
+	 * @return The web page or blog URI, {@code null} if not specified.
 	 */
-	public URL getWebsite() {
+	public URI getWebsite() {
 	
-		return getURLClaim(WEBSITE_CLAIM_NAME);
+		return getURIClaim(WEBSITE_CLAIM_NAME);
 	}
 	
 	
 	/**
 	 * Sets the web page or blog. Corresponds to the {@code website} claim.
 	 *
-	 * @param website The web page or blog URL. If {@code null} the claim
+	 * @param website The web page or blog URI. If {@code null} the claim
 	 *                will be removed.
 	 */
-	public void setWebsite(final URL website) {
+	public void setWebsite(final URI website) {
 	
-		setURLClaim(WEBSITE_CLAIM_NAME, website);
+		setURIClaim(WEBSITE_CLAIM_NAME, website);
 	}
 	
 	

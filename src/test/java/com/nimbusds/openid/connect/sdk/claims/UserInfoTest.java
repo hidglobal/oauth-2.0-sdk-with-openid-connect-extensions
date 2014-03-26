@@ -1,14 +1,16 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import javax.mail.internet.InternetAddress;
 
+import junit.framework.TestCase;
+
 import com.nimbusds.langtag.LangTag;
+
 import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.util.DateUtils;
-import junit.framework.TestCase;
 
 
 /**
@@ -146,9 +148,9 @@ public class UserInfoTest extends TestCase {
 		userInfo.setMiddleName("middle_name");
 		userInfo.setNickname("nickname");
 		userInfo.setPreferredUsername("preferred_username");
-		userInfo.setProfile(new URL("https://profile.com"));
-		userInfo.setPicture(new URL("https://picture.com"));
-		userInfo.setWebsite(new URL("https://website.com"));
+		userInfo.setProfile(new URI("https://profile.com"));
+		userInfo.setPicture(new URI("https://picture.com"));
+		userInfo.setWebsite(new URI("https://website.com"));
 		userInfo.setEmail(new InternetAddress("name@domain.com"));
 		userInfo.setEmailVerified(true);
 		userInfo.setGender(Gender.FEMALE);

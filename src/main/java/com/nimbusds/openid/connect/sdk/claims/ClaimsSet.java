@@ -2,6 +2,8 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.util.*;
@@ -285,6 +287,47 @@ public abstract class ClaimsSet {
 	 *              with the same name will be removed.
 	 */
 	public void setURLClaim(final String name, final URL value) {
+
+		if (value != null)
+			setClaim(name, value.toString());
+		else
+			claims.remove(name);
+	}
+
+
+	/**
+	 * Gets an URI string based claim.
+	 *
+	 * @param name The claim name. Must not be {@code null}.
+	 *
+	 * @return The claim value, {@code null} if not specified or parsing
+	 *         failed.
+	 */
+	public URI getURIClaim(final String name) {
+
+		String value = getStringClaim(name);
+
+		if (value == null)
+			return null;
+
+		try {
+			return new URI(value);
+
+		} catch (URISyntaxException e) {
+
+			return null;
+		}
+	}
+
+
+	/**
+	 * Sets an URI string based claim.
+	 *
+	 * @param name  The claim name. Must not be {@code null}.
+	 * @param value The claim value. If {@code null} any existing claim
+	 *              with the same name will be removed.
+	 */
+	public void setURIClaim(final String name, final URI value) {
 
 		if (value != null)
 			setClaim(name, value.toString());
