@@ -43,7 +43,6 @@ public class AuthenticationResponseParser {
 						   final Map<String,String> params)
 		throws ParseException {
 
-
 		if (params.containsKey("error"))
 			return AuthenticationErrorResponse.parse(redirectURI, params);
 		else
@@ -76,14 +75,18 @@ public class AuthenticationResponseParser {
 
 		String paramString;
 		
-		if (uri.getQuery() != null)
-			paramString = uri.getQuery();
-				
-		else if (uri.getFragment() != null)
-			paramString = uri.getFragment();
-		
-		else
+		if (uri.getRawQuery() != null) {
+
+			paramString = uri.getRawQuery();
+
+		} else if (uri.getRawFragment() != null) {
+
+			paramString = uri.getRawFragment();
+
+		} else {
+
 			throw new ParseException("Missing authorization response parameters");
+		}
 		
 		Map<String,String> params = URLUtils.parseParameters(paramString);
 

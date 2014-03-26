@@ -85,7 +85,7 @@ public final class Issuer extends Identifier {
 		if (value.getQuery() != null)
 			return false;
 
-		if (value.getFragment() != null)
+		if (value.getRawFragment() != null)
 			return false;
 
 		return true;

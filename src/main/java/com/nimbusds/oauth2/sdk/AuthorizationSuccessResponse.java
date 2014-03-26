@@ -281,7 +281,7 @@ public class AuthorizationSuccessResponse
 
 			paramString = uri.getRawQuery();
 
-		} else if (uri.getFragment() != null) {
+		} else if (uri.getRawFragment() != null) {
 
 			paramString = uri.getRawFragment();
 

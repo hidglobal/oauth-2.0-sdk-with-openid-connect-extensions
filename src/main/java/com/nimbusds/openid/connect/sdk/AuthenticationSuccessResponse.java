@@ -239,13 +239,13 @@ public class AuthenticationSuccessResponse
 		
 		String paramString;
 		
-		if (uri.getQuery() != null) {
+		if (uri.getRawQuery() != null) {
 
-			paramString = uri.getQuery();
+			paramString = uri.getRawQuery();
 				
-		} else if (uri.getFragment() != null) {
+		} else if (uri.getRawFragment() != null) {
 
-			paramString = uri.getFragment();
+			paramString = uri.getRawFragment();
 		
 		} else {
 			throw new ParseException("Missing authorization response parameters");

@@ -289,11 +289,11 @@ public class AuthorizationErrorResponse
 		
 		Map<String,String> params;
 		
-		if (uri.getFragment() != null)
-			params = URLUtils.parseParameters(uri.getFragment());
+		if (uri.getRawFragment() != null)
+			params = URLUtils.parseParameters(uri.getRawFragment());
 
-		else if (uri.getQuery() != null)
-			params = URLUtils.parseParameters(uri.getQuery());
+		else if (uri.getRawQuery() != null)
+			params = URLUtils.parseParameters(uri.getRawQuery());
 
 		else
 			throw new ParseException("Missing URI fragment or query string");
