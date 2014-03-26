@@ -83,7 +83,7 @@ This SDK version implements the following standards and drafts:
 
 	* OpenID Connect Discovery 1.0 (2014-02-25).
 
-	* OpenID Connect Registration 1.0 (2014-02-25).
+	* OpenID Connect Dynamic Registration 1.0 (2014-02-25).
 
 	* OAuth 2.0 Multiple Response Type Encoding Practices 1.0 (2014-02-25).
 
@@ -94,4 +94,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2014-03-08
+2014-03-26
