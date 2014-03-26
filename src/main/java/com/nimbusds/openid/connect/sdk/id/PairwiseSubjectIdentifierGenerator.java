@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.id;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import com.nimbusds.oauth2.sdk.id.Subject;
 
@@ -20,9 +20,9 @@ public abstract class PairwiseSubjectIdentifierGenerator {
 
 	/**
 	 * Generates a new pairwise subject identifier from the specified
-	 * sector identifier URL and local subject.
+	 * sector identifier URI and local subject.
 	 *
-	 * @param sectorURL The sector identifier URL. Its protocol must be
+	 * @param sectorURI The sector identifier URI. Its scheme must be
 	 *                  "https", must include a host portion and must not
 	 *                  be {@code null}.
 	 * @param localSub  The local subject identifier. Must not be
@@ -30,15 +30,15 @@ public abstract class PairwiseSubjectIdentifierGenerator {
 	 *
 	 * @return The pairwise subject identifier.
 	 */
-	public Subject generate(final URL sectorURL, final Subject localSub) {
+	public Subject generate(final URI sectorURI, final Subject localSub) {
 
-		if (! sectorURL.getProtocol().equalsIgnoreCase("https"))
-			throw new IllegalArgumentException("The sector identifier URL protocol must be HTTPS");
+		if (! sectorURI.getScheme().equalsIgnoreCase("https"))
+			throw new IllegalArgumentException("The sector identifier URI scheme must be HTTPS");
 
-		if (sectorURL.getHost() == null)
-			throw new IllegalArgumentException("The sector identifier URL must specify a host");
+		if (sectorURI.getHost() == null)
+			throw new IllegalArgumentException("The sector identifier URI must specify a host");
 
-		return generate(sectorURL.getHost(), localSub);
+		return generate(sectorURI.getHost(), localSub);
 	}
 
 
