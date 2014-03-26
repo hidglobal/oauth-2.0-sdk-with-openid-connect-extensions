@@ -387,12 +387,12 @@ public class AuthorizationRequest extends AbstractRequest {
 	
 	
 	/**
-	 * Returns the URL query string for this authorisation request.
+	 * Returns the URI query string for this authorisation request.
 	 *
-	 * <p>Note that the '?' character preceding the query string in an URL
+	 * <p>Note that the '?' character preceding the query string in an URI
 	 * is not included in the returned string.
 	 *
-	 * <p>Example URL query string:
+	 * <p>Example URI query string:
 	 *
 	 * <pre>
 	 * response_type=code
@@ -401,10 +401,10 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * &amp;redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb
 	 * </pre>
 	 * 
-	 * @return The URL query string.
+	 * @return The URI query string.
 	 *
 	 * @throws SerializeException If this authorisation request couldn't be
-	 *                            serialised to an URL query string.
+	 *                            serialised to an URI query string.
 	 */
 	public String toQueryString()
 		throws SerializeException {
@@ -646,9 +646,9 @@ public class AuthorizationRequest extends AbstractRequest {
 	
 	
 	/**
-	 * Parses an authorisation request from the specified URL query string.
+	 * Parses an authorisation request from the specified URI query string.
 	 *
-	 * <p>Example URL query string:
+	 * <p>Example URI query string:
 	 *
 	 * <pre>
 	 * response_type=code
@@ -660,7 +660,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @param uri   The URI of the authorisation endpoint. May be 
 	 *              {@code null} if the {@link #toHTTPRequest()} method
 	 *              will not be used.
-	 * @param query The URL query string. Must not be {@code null}.
+	 * @param query The URI query string. Must not be {@code null}.
 	 *
 	 * @return The authorisation request.
 	 *
@@ -752,8 +752,14 @@ public class AuthorizationRequest extends AbstractRequest {
 		String query = httpRequest.getQuery();
 		
 		if (query == null)
-			throw new ParseException("Missing URL query string");
-		
-		return parse(URIUtils.getBaseURI(httpRequest.getURL()), query);
+			throw new ParseException("Missing URI query string");
+
+		try {
+			return parse(URIUtils.getBaseURI(httpRequest.getURL().toURI()), query);
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }
