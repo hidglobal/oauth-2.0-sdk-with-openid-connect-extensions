@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -148,8 +148,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 		OIDCProviderMetadata op = OIDCProviderMetadata.parse(s);
 		
 		assertEquals("https://server.example.com", op.getIssuer().getValue());
-		assertEquals("https://server.example.com/connect/authorize", op.getAuthorizationEndpointURL().toString());
-		assertEquals("https://server.example.com/connect/token", op.getTokenEndpointURL().toString());
+		assertEquals("https://server.example.com/connect/authorize", op.getAuthorizationEndpointURI().toString());
+		assertEquals("https://server.example.com/connect/token", op.getTokenEndpointURI().toString());
 		
 		List<ClientAuthenticationMethod> authMethods = op.getTokenEndpointAuthMethods();
 		assertTrue(authMethods.contains(ClientAuthenticationMethod.CLIENT_SECRET_BASIC));
@@ -161,14 +161,14 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(tokenEndpointJWSAlgs.contains(JWSAlgorithm.ES256));
 		assertEquals(2, tokenEndpointJWSAlgs.size());
 		
-		assertEquals("https://server.example.com/connect/userinfo", op.getUserInfoEndpointURL().toString());
+		assertEquals("https://server.example.com/connect/userinfo", op.getUserInfoEndpointURI().toString());
 		
-		assertEquals("https://server.example.com/connect/check_session", op.getCheckSessionIframeURL().toString());
-		assertEquals("https://server.example.com/connect/end_session", op.getEndSessionEndpointURL().toString());
+		assertEquals("https://server.example.com/connect/check_session", op.getCheckSessionIframeURI().toString());
+		assertEquals("https://server.example.com/connect/end_session", op.getEndSessionEndpointURI().toString());
 		
 		assertEquals("https://server.example.com/jwks.json", op.getJWKSetURI().toString());
 		
-		assertEquals("https://server.example.com/connect/register", op.getRegistrationEndpointURL().toString());
+		assertEquals("https://server.example.com/connect/register", op.getRegistrationEndpointURI().toString());
 		Scope scopes = op.getScopes();
 		assertTrue(scopes.contains(OIDCScopeValue.OPENID));
 		assertTrue(scopes.contains(OIDCScopeValue.PROFILE));
@@ -281,7 +281,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		
 		assertTrue(op.supportsClaimsParam());
 		
-		assertEquals("http://server.example.com/connect/service_documentation.html", op.getServiceDocsURL().toString());
+		assertEquals("http://server.example.com/connect/service_documentation.html", op.getServiceDocsURI().toString());
 		
 		List<LangTag> uiLocales = op.getUILocales();
 		assertTrue(uiLocales.contains(LangTag.parse("en-US")));
@@ -302,7 +302,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		subjectTypes.add(SubjectType.PAIRWISE);
 		subjectTypes.add(SubjectType.PUBLIC);
 
-		URL jwkSetURI = new URL("https://c2id.com/jwks.json");
+		URI jwkSetURI = new URI("https://c2id.com/jwks.json");
 
 		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwkSetURI);
 
@@ -311,23 +311,23 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals(SubjectType.PUBLIC, meta.getSubjectTypes().get(1));
 		assertEquals(jwkSetURI.toString(), meta.getJWKSetURI().toString());
 
-		meta.setAuthorizationEndpointURL(new URL("https://c2id.com/authz"));
-		assertEquals("https://c2id.com/authz", meta.getAuthorizationEndpointURL().toString());
+		meta.setAuthorizationEndpointURI(new URI("https://c2id.com/authz"));
+		assertEquals("https://c2id.com/authz", meta.getAuthorizationEndpointURI().toString());
 
-		meta.setTokenEndpointURL(new URL("https://c2id.com/token"));
-		assertEquals("https://c2id.com/token", meta.getTokenEndpointURL().toString());
+		meta.setTokenEndpointURI(new URI("https://c2id.com/token"));
+		assertEquals("https://c2id.com/token", meta.getTokenEndpointURI().toString());
 
-		meta.setUserInfoEndpointURL(new URL("https://c2id.com/userinfo"));
-		assertEquals("https://c2id.com/userinfo", meta.getUserInfoEndpointURL().toString());
+		meta.setUserInfoEndpointURI(new URI("https://c2id.com/userinfo"));
+		assertEquals("https://c2id.com/userinfo", meta.getUserInfoEndpointURI().toString());
 
-		meta.setRegistrationEndpointURL(new URL("https://c2id.com/reg"));
-		assertEquals("https://c2id.com/reg", meta.getRegistrationEndpointURL().toString());
+		meta.setRegistrationEndpointURI(new URI("https://c2id.com/reg"));
+		assertEquals("https://c2id.com/reg", meta.getRegistrationEndpointURI().toString());
 
-		meta.setCheckSessionIframeURL(new URL("https://c2id.com/session"));
-		assertEquals("https://c2id.com/session", meta.getCheckSessionIframeURL().toString());
+		meta.setCheckSessionIframeURI(new URI("https://c2id.com/session"));
+		assertEquals("https://c2id.com/session", meta.getCheckSessionIframeURI().toString());
 
-		meta.setEndSessionEndpointURL(new URL("https://c2id.com/logout"));
-		assertEquals("https://c2id.com/logout", meta.getEndSessionEndpointURL().toString());
+		meta.setEndSessionEndpointURI(new URI("https://c2id.com/logout"));
+		assertEquals("https://c2id.com/logout", meta.getEndSessionEndpointURI().toString());
 
 		meta.setScopes(Scope.parse("openid email profile"));
 		assertTrue(Scope.parse("openid email profile").containsAll(meta.getScopes()));
@@ -451,13 +451,13 @@ public class OIDCProviderMetadataTest extends TestCase {
 		meta.setUILocales(uiLocales);
 		assertEquals("bg-BG", meta.getUILocales().get(0).toString());
 
-		meta.setServiceDocsURL(new URL("https://c2id.com/docs"));
-		assertEquals("https://c2id.com/docs", meta.getServiceDocsURL().toString());
+		meta.setServiceDocsURI(new URI("https://c2id.com/docs"));
+		assertEquals("https://c2id.com/docs", meta.getServiceDocsURI().toString());
 
-		meta.setPolicyURI(new URL("https://c2id.com/policy"));
+		meta.setPolicyURI(new URI("https://c2id.com/policy"));
 		assertEquals("https://c2id.com/policy", meta.getPolicyURI().toString());
 
-		meta.setTermsOfServiceURI(new URL("https://c2id.com/tos"));
+		meta.setTermsOfServiceURI(new URI("https://c2id.com/tos"));
 		assertEquals("https://c2id.com/tos", meta.getTermsOfServiceURI().toString());
 
 		meta.setSupportsClaimsParams(true);
@@ -481,12 +481,12 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals(SubjectType.PUBLIC, meta.getSubjectTypes().get(1));
 		assertEquals(jwkSetURI.toString(), meta.getJWKSetURI().toString());
 
-		assertEquals("https://c2id.com/authz", meta.getAuthorizationEndpointURL().toString());
-		assertEquals("https://c2id.com/token", meta.getTokenEndpointURL().toString());
-		assertEquals("https://c2id.com/userinfo", meta.getUserInfoEndpointURL().toString());
-		assertEquals("https://c2id.com/reg", meta.getRegistrationEndpointURL().toString());
-		assertEquals("https://c2id.com/session", meta.getCheckSessionIframeURL().toString());
-		assertEquals("https://c2id.com/logout", meta.getEndSessionEndpointURL().toString());
+		assertEquals("https://c2id.com/authz", meta.getAuthorizationEndpointURI().toString());
+		assertEquals("https://c2id.com/token", meta.getTokenEndpointURI().toString());
+		assertEquals("https://c2id.com/userinfo", meta.getUserInfoEndpointURI().toString());
+		assertEquals("https://c2id.com/reg", meta.getRegistrationEndpointURI().toString());
+		assertEquals("https://c2id.com/session", meta.getCheckSessionIframeURI().toString());
+		assertEquals("https://c2id.com/logout", meta.getEndSessionEndpointURI().toString());
 
 		assertTrue(Scope.parse("openid email profile").containsAll(meta.getScopes()));
 
@@ -539,7 +539,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		assertEquals("bg-BG", meta.getUILocales().get(0).toString());
 
-		assertEquals("https://c2id.com/docs", meta.getServiceDocsURL().toString());
+		assertEquals("https://c2id.com/docs", meta.getServiceDocsURI().toString());
 
 		assertEquals("https://c2id.com/policy", meta.getPolicyURI().toString());
 
@@ -563,9 +563,9 @@ public class OIDCProviderMetadataTest extends TestCase {
 		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
 		subjectTypes.add(SubjectType.PUBLIC);
 
-		URL jwksURL = new URL("https://c2id.com/jwks.json");
+		URI jwksURI = new URI("https://c2id.com/jwks.json");
 
-		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURL);
+		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURI);
 
 		List<JWSAlgorithm> tokenEndpointJWTAlgs = new ArrayList<JWSAlgorithm>();
 		tokenEndpointJWTAlgs.add(new JWSAlgorithm("none"));
@@ -608,9 +608,9 @@ public class OIDCProviderMetadataTest extends TestCase {
 		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
 		subjectTypes.add(SubjectType.PUBLIC);
 
-		URL jwksURL = new URL("https://c2id.com/jwks.json");
+		URI jwksURI = new URI("https://c2id.com/jwks.json");
 
-		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURL);
+		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURI);
 
 		meta.applyDefaults();
 

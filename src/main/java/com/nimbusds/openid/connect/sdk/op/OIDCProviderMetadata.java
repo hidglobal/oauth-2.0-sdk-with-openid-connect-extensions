@@ -1,8 +1,8 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import net.minidev.json.JSONObject;
@@ -105,43 +105,43 @@ public class OIDCProviderMetadata {
 	/**
 	 * The authorisation endpoint.
 	 */
-	private URL authzEndpoint;
+	private URI authzEndpoint;
 
 
 	/**
 	 * The token endpoint.
 	 */
-	private URL tokenEndpoint;
+	private URI tokenEndpoint;
 
 
 	/**
 	 * The UserInfo endpoint.
 	 */
-	private URL userInfoEndpoint;
+	private URI userInfoEndpoint;
 
 
 	/**
 	 * The registration endpoint.
 	 */
-	private URL regEndpoint;
+	private URI regEndpoint;
 	
 	
 	/**
 	 * The cross-origin check session iframe.
 	 */
-	private URL checkSessionIframe;
+	private URI checkSessionIframe;
 	
 	
 	/**
 	 * The logout endpoint.
 	 */
-	private URL endSessionEndpoint;
+	private URI endSessionEndpoint;
 
 
 	/**
-	 * The JWK set URL.
+	 * The JWK set URI.
 	 */
-	private final URL jwkSetURI;
+	private final URI jwkSetURI;
 
 
 	/**
@@ -278,21 +278,21 @@ public class OIDCProviderMetadata {
 
 
 	/**
-	 * The service documentation URL.
+	 * The service documentation URI.
 	 */
-	private URL serviceDocsURL;
+	private URI serviceDocsURI;
 	
 	
 	/**
 	 * The provider's policy regarding relying party use of data.
 	 */
-	private URL policyURI;
+	private URI policyURI;
 	
 	
 	/**
 	 * The provider's terms of service.
 	 */
-	private URL tosURI;
+	private URI tosURI;
 	
 	
 	/**
@@ -325,7 +325,7 @@ public class OIDCProviderMetadata {
 	/**
 	 * Creates a new OpenID Connect provider metadata instance.
 	 * 
-	 * @param issuer       The issuer identifier. Must be an URL using the 
+	 * @param issuer       The issuer identifier. Must be an URI using the
 	 *                     https scheme with no query or fragment 
 	 *                     component. Must not be {@code null}.
 	 * @param subjectTypes The supported subject types. At least one must
@@ -333,23 +333,23 @@ public class OIDCProviderMetadata {
 	 */
 	public OIDCProviderMetadata(final Issuer issuer,
 				    final List<SubjectType> subjectTypes,
-				    final URL jwkSetURI) {
+				    final URI jwkSetURI) {
 	
-		URL url;
+		URI url;
 		
 		try {
-			url = new URL(issuer.getValue());
+			url = new URI(issuer.getValue());
 			
-		} catch (MalformedURLException e) {
+		} catch (URISyntaxException e) {
 			
-			throw new IllegalArgumentException("The issuer identifier must be a URL: " + e.getMessage(), e);
+			throw new IllegalArgumentException("The issuer identifier must be a URI: " + e.getMessage(), e);
 		}
 		
-		if (url.getQuery() != null)
-			throw new IllegalArgumentException("The issuer URL must be without a query component");
+		if (url.getRawQuery() != null)
+			throw new IllegalArgumentException("The issuer URI must be without a query component");
 		
-		if (url.getRef() != null) 
-			throw new IllegalArgumentException("The issuer URL must be without a fragment component ");
+		if (url.getRawFragment() != null)
+			throw new IllegalArgumentException("The issuer URI must be without a fragment component ");
 		
 		this.issuer = issuer;
 		
@@ -392,152 +392,152 @@ public class OIDCProviderMetadata {
 
 
 	/**
-	 * Gets the authorisation endpoint URL. Corresponds the 
+	 * Gets the authorisation endpoint URI. Corresponds the
 	 * {@code authorization_endpoint} metadata field.
 	 *
-	 * @return The authorisation endpoint URL, {@code null} if not 
+	 * @return The authorisation endpoint URI, {@code null} if not
 	 *         specified.
 	 */
-	public URL getAuthorizationEndpointURL() {
+	public URI getAuthorizationEndpointURI() {
 
 		return authzEndpoint;
 	}
 
 
 	/**
-	 * Sets the authorisation endpoint URL. Corresponds the
+	 * Sets the authorisation endpoint URI. Corresponds the
 	 * {@code authorization_endpoint} metadata field.
 	 *
-	 * @param authzEndpoint The authorisation endpoint URL, {@code null} if
+	 * @param authzEndpoint The authorisation endpoint URI, {@code null} if
 	 *                      not specified.
 	 */
-	public void setAuthorizationEndpointURL(final URL authzEndpoint) {
+	public void setAuthorizationEndpointURI(final URI authzEndpoint) {
 
 		this.authzEndpoint = authzEndpoint;
 	}
 
 
 	/**
-	 * Gets the token endpoint URL. Corresponds the {@code token_endpoint}
+	 * Gets the token endpoint URI. Corresponds the {@code token_endpoint}
 	 * metadata field.
 	 *
-	 * @return The token endpoint URL, {@code null} if not specified.
+	 * @return The token endpoint URI, {@code null} if not specified.
 	 */
-	public URL getTokenEndpointURL() {
+	public URI getTokenEndpointURI() {
 
 		return tokenEndpoint;
 	}
 
 
 	/**
-	 * Sts the token endpoint URL. Corresponds the {@code token_endpoint}
+	 * Sts the token endpoint URI. Corresponds the {@code token_endpoint}
 	 * metadata field.
 	 *
-	 * @param tokenEndpoint The token endpoint URL, {@code null} if not
+	 * @param tokenEndpoint The token endpoint URI, {@code null} if not
 	 *                      specified.
 	 */
-	public void setTokenEndpointURL(final URL tokenEndpoint) {
+	public void setTokenEndpointURI(final URI tokenEndpoint) {
 
 		this.tokenEndpoint = tokenEndpoint;
 	}
 
 
 	/**
-	 * Gets the UserInfo endpoint URL. Corresponds the 
+	 * Gets the UserInfo endpoint URI. Corresponds the
 	 * {@code userinfo_endpoint} metadata field.
 	 *
-	 * @return The UserInfo endpoint URL, {@code null} if not specified.
+	 * @return The UserInfo endpoint URI, {@code null} if not specified.
 	 */
-	public URL getUserInfoEndpointURL() {
+	public URI getUserInfoEndpointURI() {
 
 		return userInfoEndpoint;
 	}
 
 
 	/**
-	 * Sets the UserInfo endpoint URL. Corresponds the
+	 * Sets the UserInfo endpoint URI. Corresponds the
 	 * {@code userinfo_endpoint} metadata field.
 	 *
-	 * @param userInfoEndpoint The UserInfo endpoint URL, {@code null} if
+	 * @param userInfoEndpoint The UserInfo endpoint URI, {@code null} if
 	 *                         not specified.
 	 */
-	public void setUserInfoEndpointURL(final URL userInfoEndpoint) {
+	public void setUserInfoEndpointURI(final URI userInfoEndpoint) {
 
 		this.userInfoEndpoint = userInfoEndpoint;
 	}
 
 
 	/**
-	 * Gets the client registration endpoint URL. Corresponds to the
+	 * Gets the client registration endpoint URI. Corresponds to the
 	 * {@code registration_endpoint} metadata field.
 	 *
-	 * @return The client registration endpoint URL, {@code null} if not
+	 * @return The client registration endpoint URI, {@code null} if not
 	 *         specified.
 	 */
-	public URL getRegistrationEndpointURL() {
+	public URI getRegistrationEndpointURI() {
 
 		return regEndpoint;
 	}
 
 
 	/**
-	 * Sets the client registration endpoint URL. Corresponds to the
+	 * Sets the client registration endpoint URI. Corresponds to the
 	 * {@code registration_endpoint} metadata field.
 	 *
-	 * @param regEndpoint The client registration endpoint URL,
+	 * @param regEndpoint The client registration endpoint URI,
 	 *                    {@code null} if not specified.
 	 */
-	public void setRegistrationEndpointURL(final URL regEndpoint) {
+	public void setRegistrationEndpointURI(final URI regEndpoint) {
 
 		this.regEndpoint = regEndpoint;
 	}
 	
 	
 	/**
-	 * Gets the cross-origin check session iframe URL. Corresponds to the
+	 * Gets the cross-origin check session iframe URI. Corresponds to the
 	 * {@code check_session_iframe} metadata field.
 	 * 
-	 * @return The check session iframe URL, {@code null} if not specified.
+	 * @return The check session iframe URI, {@code null} if not specified.
 	 */
-	public URL getCheckSessionIframeURL() {
+	public URI getCheckSessionIframeURI() {
 		
 		return checkSessionIframe;
 	}
 
 
 	/**
-	 * Sets the cross-origin check session iframe URL. Corresponds to the
+	 * Sets the cross-origin check session iframe URI. Corresponds to the
 	 * {@code check_session_iframe} metadata field.
 	 *
-	 * @param checkSessionIframe The check session iframe URL, {@code null}
+	 * @param checkSessionIframe The check session iframe URI, {@code null}
 	 *                           if not specified.
 	 */
-	public void setCheckSessionIframeURL(final URL checkSessionIframe) {
+	public void setCheckSessionIframeURI(final URI checkSessionIframe) {
 
 		this.checkSessionIframe = checkSessionIframe;
 	}
 	
 	
 	/**
-	 * Gets the logout endpoint URL. Corresponds to the 
+	 * Gets the logout endpoint URI. Corresponds to the
 	 * {@code end_session_endpoint} metadata field.
 	 * 
-	 * @return The logoout endpoint URL, {@code null} if not specified.
+	 * @return The logoout endpoint URI, {@code null} if not specified.
 	 */
-	public URL getEndSessionEndpointURL() {
+	public URI getEndSessionEndpointURI() {
 		
 		return endSessionEndpoint;
 	}
 
 
 	/**
-	 * Sets the logout endpoint URL. Corresponds to the
+	 * Sets the logout endpoint URI. Corresponds to the
 	 * {@code end_session_endpoint} metadata field.
 	 *
-	 * @param endSessionEndpoint The logoout endpoint URL, {@code null} if
+	 * @param endSessionEndpoint The logoout endpoint URI, {@code null} if
 	 *                           not specified.
 	 */
-	public void setEndSessionEndpointURL(final URL endSessionEndpoint) {
+	public void setEndSessionEndpointURI(final URI endSessionEndpoint) {
 
 		this.endSessionEndpoint = endSessionEndpoint;
 	}
@@ -549,7 +549,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @return The JWK set URI.
 	 */
-	public URL getJWKSetURI() {
+	public URI getJWKSetURI() {
 
 		return jwkSetURI;
 	}
@@ -1122,28 +1122,28 @@ public class OIDCProviderMetadata {
 
 
 	/**
-	 * Gets the service documentation URL. Corresponds to the 
+	 * Gets the service documentation URI. Corresponds to the
 	 * {@code service_documentation} metadata field.
 	 *
-	 * @return The service documentation URL, {@code null} if not 
+	 * @return The service documentation URI, {@code null} if not
 	 *         specified.
 	 */
-	public URL getServiceDocsURL() {
+	public URI getServiceDocsURI() {
 
-		return serviceDocsURL;
+		return serviceDocsURI;
 	}
 
 
 	/**
-	 * Sets the service documentation URL. Corresponds to the
+	 * Sets the service documentation URI. Corresponds to the
 	 * {@code service_documentation} metadata field.
 	 *
-	 * @param serviceDocsURL The service documentation URL, {@code null} if
+	 * @param serviceDocsURI The service documentation URI, {@code null} if
 	 *                       not specified.
 	 */
-	public void setServiceDocsURL(final URL serviceDocsURL) {
+	public void setServiceDocsURI(final URI serviceDocsURI) {
 
-		this.serviceDocsURL = serviceDocsURL;
+		this.serviceDocsURI = serviceDocsURI;
 	}
 	
 	
@@ -1153,7 +1153,7 @@ public class OIDCProviderMetadata {
 	 * 
 	 * @return The policy URI, {@code null} if not specified.
 	 */
-	public URL getPolicyURI() {
+	public URI getPolicyURI() {
 		
 		return policyURI;
 	}
@@ -1165,7 +1165,7 @@ public class OIDCProviderMetadata {
 	 *
 	 * @param policyURI The policy URI, {@code null} if not specified.
 	 */
-	public void setPolicyURI(final URL policyURI) {
+	public void setPolicyURI(final URI policyURI) {
 
 		this.policyURI = policyURI;
 	}
@@ -1177,7 +1177,7 @@ public class OIDCProviderMetadata {
 	 * 
 	 * @return The terms of service URI, {@code null} if not specified.
 	 */
-	public URL getTermsOfServiceURI() {
+	public URI getTermsOfServiceURI() {
 		
 		return tosURI;
 	}
@@ -1190,7 +1190,7 @@ public class OIDCProviderMetadata {
 	 * @param tosURI The terms of service URI, {@code null} if not
 	 *               specified.
 	 */
-	public void setTermsOfServiceURI(final URL tosURI) {
+	public void setTermsOfServiceURI(final URI tosURI) {
 
 		this.tosURI = tosURI;
 	}
@@ -1586,8 +1586,8 @@ public class OIDCProviderMetadata {
 			o.put("ui_locales_supported", stringList);
 		}
 
-		if (serviceDocsURL != null)
-			o.put("service_documentation", serviceDocsURL.toString());
+		if (serviceDocsURI != null)
+			o.put("service_documentation", serviceDocsURI.toString());
 
 		if (policyURI != null)
 			o.put("op_policy_uri", policyURI.toString());
@@ -1631,31 +1631,31 @@ public class OIDCProviderMetadata {
 			subjectTypes.add(SubjectType.parse(v));
 		}
 		
-		Issuer issuer = new Issuer(JSONObjectUtils.getURL(jsonObject, "issuer").toString());
+		Issuer issuer = new Issuer(JSONObjectUtils.getURI(jsonObject, "issuer").toString());
 
-		URL jwkSetURI = JSONObjectUtils.getURL(jsonObject, "jwks_uri");
+		URI jwkSetURI = JSONObjectUtils.getURI(jsonObject, "jwks_uri");
 		
 		
 		OIDCProviderMetadata op = new OIDCProviderMetadata(issuer, Collections.unmodifiableList(subjectTypes), jwkSetURI);
 
 		// Endpoints
 		if (jsonObject.containsKey("authorization_endpoint"))
-			op.authzEndpoint = JSONObjectUtils.getURL(jsonObject, "authorization_endpoint");
+			op.authzEndpoint = JSONObjectUtils.getURI(jsonObject, "authorization_endpoint");
 
 		if (jsonObject.containsKey("token_endpoint"))
-			op.tokenEndpoint = JSONObjectUtils.getURL(jsonObject, "token_endpoint");
+			op.tokenEndpoint = JSONObjectUtils.getURI(jsonObject, "token_endpoint");
 
 		if (jsonObject.containsKey("userinfo_endpoint"))
-			op.userInfoEndpoint = JSONObjectUtils.getURL(jsonObject, "userinfo_endpoint");
+			op.userInfoEndpoint = JSONObjectUtils.getURI(jsonObject, "userinfo_endpoint");
 		
 		if (jsonObject.containsKey("registration_endpoint"))
-			op.regEndpoint = JSONObjectUtils.getURL(jsonObject, "registration_endpoint");
+			op.regEndpoint = JSONObjectUtils.getURI(jsonObject, "registration_endpoint");
 		
 		if (jsonObject.containsKey("check_session_iframe"))
-			op.checkSessionIframe = JSONObjectUtils.getURL(jsonObject, "check_session_iframe");
+			op.checkSessionIframe = JSONObjectUtils.getURI(jsonObject, "check_session_iframe");
 		
 		if (jsonObject.containsKey("end_session_endpoint"))
-			op.endSessionEndpoint = JSONObjectUtils.getURL(jsonObject, "end_session_endpoint");
+			op.endSessionEndpoint = JSONObjectUtils.getURI(jsonObject, "end_session_endpoint");
 
 		// OIDC capabilities
 		if (jsonObject.containsKey("scopes_supported")) {
@@ -1928,13 +1928,13 @@ public class OIDCProviderMetadata {
 
 
 		if (jsonObject.containsKey("service_documentation"))
-			op.serviceDocsURL = JSONObjectUtils.getURL(jsonObject, "service_documentation");
+			op.serviceDocsURI = JSONObjectUtils.getURI(jsonObject, "service_documentation");
 		
 		if (jsonObject.containsKey("op_policy_uri"))
-			op.policyURI = JSONObjectUtils.getURL(jsonObject, "op_policy_uri");
+			op.policyURI = JSONObjectUtils.getURI(jsonObject, "op_policy_uri");
 		
 		if (jsonObject.containsKey("op_tos_uri"))
-			op.tosURI = JSONObjectUtils.getURL(jsonObject, "op_tos_uri");
+			op.tosURI = JSONObjectUtils.getURI(jsonObject, "op_tos_uri");
 		
 		if (jsonObject.containsKey("claims_parameter_supported"))
 			op.claimsParamSupported = JSONObjectUtils.getBoolean(jsonObject, "claims_parameter_supported");
