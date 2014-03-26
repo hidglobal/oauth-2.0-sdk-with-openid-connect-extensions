@@ -492,7 +492,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		/**
 		 * Sets the request object. Corresponds to the optional
 		 * {@code request} parameter. Must not be specified together
-		 * with a request object URL.
+		 * with a request object URI.
 		 *
 		 * @return The request object, {@code null} if not specified.
 		 */
@@ -504,11 +504,11 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 		/**
-		 * Sets the request object URL. Corresponds to the optional
+		 * Sets the request object URI. Corresponds to the optional
 		 * {@code request_uri} parameter. Must not be specified
 		 * together with a request object.
 		 *
-		 * @param requestURI The request object URL, {@code null} if
+		 * @param requestURI The request object URI, {@code null} if
 		 *                   not specified.
 		 */
 		public Builder requestURI(final URI requestURI) {
@@ -639,9 +639,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 *                      parameter. {@code null} if not specified.
 	 * @param requestObject The request object. Corresponds to the optional
 	 *                      {@code request} parameter. Must not be
-	 *                      specified together with a request object URL.
+	 *                      specified together with a request object URI.
 	 *                      {@code null} if not specified.
-	 * @param requestURI    The request object URL. Corresponds to the
+	 * @param requestURI    The request object URI. Corresponds to the
 	 *                      optional {@code request_uri} parameter. Must
 	 *                      not be specified together with a request
 	 *                      object. {@code null} if not specified.
@@ -1294,9 +1294,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	
 	/**
 	 * Parses an OpenID Connect authentication request from the specified
-	 * URL query string.
+	 * URI query string.
 	 *
-	 * <p>Example URL query string:
+	 * <p>Example URI query string:
 	 *
 	 * <pre>
 	 * response_type=token%20id_token
@@ -1307,7 +1307,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 * &amp;nonce=n-0S6_WzA2Mj
 	 * </pre>
 	 *
-	 * @param query The URL query string. Must not be {@code null}.
+	 * @param query The URI query string. Must not be {@code null}.
 	 *
 	 * @return The OpenID Connect authentication request.
 	 *
@@ -1339,7 +1339,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 * @param uri   The URI of the OAuth 2.0 authorisation endpoint. May be
 	 *              {@code null} if the {@link #toHTTPRequest} method will
 	 *              not be used.
-	 * @param query The URL query string. Must not be {@code null}.
+	 * @param query The URI query string. Must not be {@code null}.
 	 *
 	 * @return The OpenID Connect authentication request.
 	 *
@@ -1382,7 +1382,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		String query = httpRequest.getQuery();
 		
 		if (query == null)
-			throw new ParseException("Missing URL query string");
+			throw new ParseException("Missing URI query string");
 
 		URI endpointURI;
 
