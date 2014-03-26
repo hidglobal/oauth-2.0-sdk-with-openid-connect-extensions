@@ -12,7 +12,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * must contain the {@link com.nimbusds.oauth2.sdk.id.ClientID client 
  * identifier} of the authorised party.
  *
- * <p>The client identifier can be a URL or an arbitrary string.
+ * <p>The client identifier can be a URI or an arbitrary string.
  *
  * <p>See also {@link com.nimbusds.oauth2.sdk.id.ClientID}.
  *

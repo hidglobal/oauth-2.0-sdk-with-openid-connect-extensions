@@ -93,7 +93,7 @@ public class AuthorizationErrorResponse
 	
 	
 	/**
-	 * The response type, used to determine redirection URL composition. If
+	 * The response type, used to determine redirection URI composition. If
 	 * unknown {@code null}.
 	 */
 	private final ResponseType rt;

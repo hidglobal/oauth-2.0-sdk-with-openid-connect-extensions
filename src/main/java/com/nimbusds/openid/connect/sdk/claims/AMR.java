@@ -10,7 +10,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * Authentication Method Reference ({@code amr}). It identifies the method
  * used in authentication.
  *
- * <p>The AMR is represented by a string or an URL string.
+ * <p>The AMR is represented by a string or an URI string.
  *
  * <p>Related specifications:
  *

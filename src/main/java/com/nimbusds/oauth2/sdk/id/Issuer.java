@@ -10,7 +10,7 @@ import net.jcip.annotations.Immutable;
 /**
  * Issuer identifier.
  *
- * <p>Valid issuer identifiers are URLs with "https" schema and no query or
+ * <p>Valid issuer identifiers are URIs with "https" schema and no query or
  * fragment component.
  */
 @Immutable

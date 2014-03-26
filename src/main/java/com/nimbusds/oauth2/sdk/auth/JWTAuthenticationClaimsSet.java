@@ -140,7 +140,7 @@ public class JWTAuthenticationClaimsSet {
 	 *
 	 * @param clientID The client identifier. Used to specify the issuer 
 	 *                 and the subject. Must not be {@code null}.
-	 * @param aud      The audience identifier, typically the URL of the 
+	 * @param aud      The audience identifier, typically the URI of the
 	 *                 authorisation server's Token endpoint. Must not be 
 	 *                 {@code null}.
 	 * @param exp      The expiration time. Must not be {@code null}.
@@ -224,7 +224,7 @@ public class JWTAuthenticationClaimsSet {
 	 * Gets the audience. Corresponds to the {@code aud} claim 
 	 * (single-valued).
 	 *
-	 * @return The audience, typically the URL of the authorisation 
+	 * @return The audience, typically the URI of the authorisation
 	 *         server's token endpoint.
 	 */
 	public Audience getAudience() {
