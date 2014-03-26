@@ -1,8 +1,8 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 import net.minidev.json.JSONArray;
@@ -90,13 +90,13 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Sector identifier URI.
 	 */
-	private URL sectorIDURI;
+	private URI sectorIDURI;
 	
 	
 	/**
 	 * Pre-registered OpenID Connect request URIs.
 	 */
-	private Set<URL> requestObjectURIs;
+	private Set<URI> requestObjectURIs;
 
 
 	/**
@@ -193,13 +193,13 @@ public class OIDCClientMetadata extends ClientMetadata {
 	/**
 	 * Authorisation server initiated login HTTPS URI.
 	 */
-	private URL initiateLoginURI;
+	private URI initiateLoginURI;
 
 
 	/**
 	 * Logout redirection URIs.
 	 */
-	private Set<URL> postLogoutRedirectURIs;
+	private Set<URI> postLogoutRedirectURIs;
 
 
 	/** 
@@ -292,7 +292,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The sector identifier URI, {@code null} if not specified.
 	 */
-	public URL getSectorIDURI() {
+	public URI getSectorIDURI() {
 
 		return sectorIDURI;
 	}
@@ -305,7 +305,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param sectorIDURI The sector identifier URI, {@code null} if not 
 	 *                    specified.
 	 */
-	public void setSectorIDURI(final URL sectorIDURI) {
+	public void setSectorIDURI(final URI sectorIDURI) {
 
 		this.sectorIDURI = sectorIDURI;
 	}
@@ -317,7 +317,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * 
 	 * @return The request object URIs, {@code null} if not specified.
 	 */
-	public Set<URL> getRequestObjectURIs() {
+	public Set<URI> getRequestObjectURIs() {
 		
 		return requestObjectURIs;
 	}
@@ -330,7 +330,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param requestObjectURIs The request object URIs, {@code null} if
 	 *                          not specified.
 	 */
-	public void setRequestObjectURIs(final Set<URL> requestObjectURIs) {
+	public void setRequestObjectURIs(final Set<URI> requestObjectURIs) {
 
 		this.requestObjectURIs = requestObjectURIs;
 	}
@@ -694,7 +694,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The login URI, {@code null} if not specified.
 	 */
-	public URL getInitiateLoginURI() {
+	public URI getInitiateLoginURI() {
 
 		return initiateLoginURI;
 	}
@@ -707,7 +707,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @param loginURI The login URI, {@code null} if not specified.
 	 */
-	public void setInitiateLoginURI(final URL loginURI) {
+	public void setInitiateLoginURI(final URI loginURI) {
 
 		this.initiateLoginURI = loginURI;
 	}
@@ -719,7 +719,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *
 	 * @return The logout redirection URIs, {@code null} if not specified.
 	 */
-	public Set<URL> getPostLogoutRedirectionURIs() {
+	public Set<URI> getPostLogoutRedirectionURIs() {
 
 		return postLogoutRedirectURIs;
 	}
@@ -732,7 +732,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * @param logoutURIs The logout redirection URIs, {@code null} if not
 	 *                   specified.
 	 */
-	public void setPostLogoutRedirectionURIs(final Set<URL> logoutURIs) {
+	public void setPostLogoutRedirectionURIs(final Set<URI> logoutURIs) {
 
 		postLogoutRedirectURIs = logoutURIs;
 	}
@@ -790,7 +790,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 			
 			JSONArray uriList = new JSONArray();
 			
-			for (URL uri: requestObjectURIs)
+			for (URI uri: requestObjectURIs)
 				uriList.add(uri.toString());
 			
 			o.put("request_uris", uriList);
@@ -860,7 +860,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 			JSONArray uriList = new JSONArray();
 
-			for (URL uri: postLogoutRedirectURIs)
+			for (URI uri: postLogoutRedirectURIs)
 				uriList.add(uri.toString());
 
 			o.put("post_logout_redirect_uris", uriList);
@@ -908,20 +908,20 @@ public class OIDCClientMetadata extends ClientMetadata {
 		}
 
 		if (jsonObject.containsKey("sector_identifier_uri")) {
-			metadata.setSectorIDURI(JSONObjectUtils.getURL(jsonObject, "sector_identifier_uri"));
+			metadata.setSectorIDURI(JSONObjectUtils.getURI(jsonObject, "sector_identifier_uri"));
 			oidcFields.remove("sector_identifier_uri");
 		}
 
 		if (jsonObject.containsKey("request_uris")) {
 			
-			Set<URL> requestURIs = new LinkedHashSet<URL>();
+			Set<URI> requestURIs = new LinkedHashSet<URI>();
 			
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "request_uris")) {
 				
 				try {
-					requestURIs.add(new URL(uriString));
+					requestURIs.add(new URI(uriString));
 					
-				} catch (MalformedURLException e) {
+				} catch (URISyntaxException e) {
 					
 					throw new ParseException("Invalid \"request_uris\" parameter");
 				}
@@ -1024,20 +1024,20 @@ public class OIDCClientMetadata extends ClientMetadata {
 		}
 
 		if (jsonObject.containsKey("initiate_login_uri")) {
-			metadata.setInitiateLoginURI(JSONObjectUtils.getURL(jsonObject, "initiate_login_uri"));
+			metadata.setInitiateLoginURI(JSONObjectUtils.getURI(jsonObject, "initiate_login_uri"));
 			oidcFields.remove("initiate_login_uri");
 		}
 
 		if (jsonObject.containsKey("post_logout_redirect_uris")) {
 
-			Set<URL> logoutURIs = new LinkedHashSet<URL>();
+			Set<URI> logoutURIs = new LinkedHashSet<URI>();
 
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "post_logout_redirect_uris")) {
 
 				try {
-					logoutURIs.add(new URL(uriString));
+					logoutURIs.add(new URI(uriString));
 
-				} catch (MalformedURLException e) {
+				} catch (URISyntaxException e) {
 
 					throw new ParseException("Invalid \"post_logout_redirect_uris\" parameter");
 				}

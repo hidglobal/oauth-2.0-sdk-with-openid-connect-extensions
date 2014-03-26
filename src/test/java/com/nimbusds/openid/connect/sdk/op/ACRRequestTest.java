@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.op;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,11 +54,11 @@ public class ACRRequestTest extends TestCase {
 		throws Exception {
 		
 		AuthenticationRequest authRequest = new AuthenticationRequest(
-			new URL("https://c2id.com/login"),
+			new URI("https://c2id.com/login"),
 			new ResponseType("code"),
 			Scope.parse("openid profile"),
 			new ClientID("abc"),
-			new URL("https://example.com/in"),
+			new URI("https://example.com/in"),
 			new State(),
 			new Nonce());
 		
@@ -82,7 +82,7 @@ public class ACRRequestTest extends TestCase {
 			new ResponseType("code"),
 			new Scope("openid", "profile"),
 			new ClientID("123"),
-			new URL("https://example.com/in")).
+			new URI("https://example.com/in")).
 			acrValues(acrValues).
 			build();
 		
@@ -115,7 +115,7 @@ public class ACRRequestTest extends TestCase {
 			new ResponseType("code"),
 			new Scope("openid", "profile"),
 			new ClientID("123"),
-			new URL("https://example.com/in")).
+			new URI("https://example.com/in")).
 			claims(claims).
 			build();
 		
@@ -145,7 +145,7 @@ public class ACRRequestTest extends TestCase {
 			new ResponseType("code"),
 			new Scope("openid", "profile"),
 			new ClientID("123"),
-			new URL("https://example.com/in")).
+			new URI("https://example.com/in")).
 			claims(claims).
 			build();
 		
@@ -179,7 +179,7 @@ public class ACRRequestTest extends TestCase {
 			new ResponseType("code"),
 			new Scope("openid", "profile"),
 			new ClientID("123"),
-			new URL("https://example.com/in")).
+			new URI("https://example.com/in")).
 			acrValues(acrValues).
 			claims(claims).
 			build();

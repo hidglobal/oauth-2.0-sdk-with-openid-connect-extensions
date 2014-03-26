@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -322,11 +322,11 @@ public class ClaimsRequestTest extends TestCase {
 		throws Exception {
 
 		AuthenticationRequest authRequest = new AuthenticationRequest(
-			new URL("https://c2id.com/login"),
+			new URI("https://c2id.com/login"),
 			ResponseType.parse("code"),
 			Scope.parse("openid email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb"),
+			new URI("https://client.com/cb"),
 			new State(),
 			new Nonce());
 
@@ -341,7 +341,7 @@ public class ClaimsRequestTest extends TestCase {
 
 		Map<String,String> authRequestParams = authRequest.toParameters();
 
-		authRequest = AuthenticationRequest.parse(new URL("https://c2id.com/login"), authRequestParams);
+		authRequest = AuthenticationRequest.parse(new URI("https://c2id.com/login"), authRequestParams);
 
 		claimsRequest = ClaimsRequest.resolve(authRequest);
 
@@ -358,11 +358,11 @@ public class ClaimsRequestTest extends TestCase {
 		throws Exception {
 
 		AuthenticationRequest authRequest = new AuthenticationRequest(
-			new URL("https://c2id.com/login"),
+			new URI("https://c2id.com/login"),
 			ResponseType.parse("id_token"),
 			Scope.parse("openid email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb"),
+			new URI("https://client.com/cb"),
 			new State(),
 			new Nonce());
 
@@ -377,7 +377,7 @@ public class ClaimsRequestTest extends TestCase {
 
 		Map<String,String> authRequestParams = authRequest.toParameters();
 
-		authRequest = AuthenticationRequest.parse(new URL("https://c2id.com/login"), authRequestParams);
+		authRequest = AuthenticationRequest.parse(new URI("https://c2id.com/login"), authRequestParams);
 
 		claimsRequest = ClaimsRequest.resolve(authRequest);
 
@@ -400,7 +400,7 @@ public class ClaimsRequestTest extends TestCase {
 			new ResponseType("code"),
 			new Scope("openid", "email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb")).claims(cr).build();
+			new URI("https://client.com/cb")).claims(cr).build();
 
 		ClaimsRequest claimsRequest = ClaimsRequest.resolve(authRequest);
 
@@ -423,7 +423,7 @@ public class ClaimsRequestTest extends TestCase {
 
 		Map<String,String> authRequestParams = authRequest.toParameters();
 
-		authRequest = AuthenticationRequest.parse(new URL("https://c2id.com/login"), authRequestParams);
+		authRequest = AuthenticationRequest.parse(new URI("https://c2id.com/login"), authRequestParams);
 
 		claimsRequest = ClaimsRequest.resolve(authRequest);
 

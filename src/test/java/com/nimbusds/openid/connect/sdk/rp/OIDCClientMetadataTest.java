@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
+import java.net.URI;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -105,10 +106,10 @@ public class OIDCClientMetadataTest extends TestCase {
 		
 		assertEquals(ApplicationType.WEB, clientMetadata.getApplicationType());
 		
-		Set<URL> redirectURIs = clientMetadata.getRedirectionURIs();
+		Set<URI> redirectURIs = clientMetadata.getRedirectionURIs();
 		
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback2")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback2")));
 		assertEquals(2, redirectURIs.size());
 		
 		assertEquals("My Example", clientMetadata.getName());
@@ -133,9 +134,9 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(new InternetAddress("mary@example.org").equals(contacts.get(1)));
 		assertEquals(2, contacts.size());
 		
-		Set<URL> requestURIs = clientMetadata.getRequestObjectURIs();
+		Set<URI> requestURIs = clientMetadata.getRequestObjectURIs();
 		
-		assertTrue(requestURIs.contains(new URL("https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA")));
+		assertTrue(requestURIs.contains(new URI("https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA")));
 		assertEquals(1, requestURIs.size());
 
 		assertTrue(clientMetadata.getCustomFields().isEmpty());
@@ -156,13 +157,13 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(SubjectType.PAIRWISE, meta.getSubjectType());
 
 		assertNull(meta.getSectorIDURI());
-		URL sectorIDURI = new URL("http://sector.id");
+		URI sectorIDURI = new URI("http://sector.id");
 		meta.setSectorIDURI(sectorIDURI);
 		assertEquals(sectorIDURI.toString(), meta.getSectorIDURI().toString());
 
 		assertNull(meta.getRequestObjectURIs());
-		Set<URL> requestObjURIs = new HashSet<URL>();
-		requestObjURIs.add(new URL("http://client.com/reqobj"));
+		Set<URI> requestObjURIs = new HashSet<URI>();
+		requestObjURIs.add(new URI("http://client.com/reqobj"));
 		meta.setRequestObjectURIs(requestObjURIs);
 		assertEquals("http://client.com/reqobj", meta.getRequestObjectURIs().iterator().next().toString());
 		assertEquals(1, meta.getRequestObjectURIs().size());
@@ -222,12 +223,12 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals("1", meta.getDefaultACRs().get(0).toString());
 
 		assertNull(meta.getInitiateLoginURI());
-		meta.setInitiateLoginURI(new URL("http://do-login.com"));
+		meta.setInitiateLoginURI(new URI("http://do-login.com"));
 		assertEquals("http://do-login.com", meta.getInitiateLoginURI().toString());
 
 		assertNull(meta.getPostLogoutRedirectionURIs());
-		Set<URL> logoutURIs = new HashSet<URL>();
-		logoutURIs.add(new URL("http://post-logout.com"));
+		Set<URI> logoutURIs = new HashSet<URI>();
+		logoutURIs.add(new URI("http://post-logout.com"));
 		meta.setPostLogoutRedirectionURIs(logoutURIs);
 		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectionURIs().iterator().next().toString());
 

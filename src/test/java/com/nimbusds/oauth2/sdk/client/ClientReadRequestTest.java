@@ -32,7 +32,7 @@ public class ClientReadRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 
 		assertEquals(HTTPRequest.Method.GET, httpRequest.getMethod());
-		assertEquals(uri, httpRequest.getURL());
+		assertEquals(uri, httpRequest.getURL().toURI());
 		assertEquals(accessToken.toAuthorizationHeader(), httpRequest.getAuthorization());
 
 		request = ClientReadRequest.parse(httpRequest);

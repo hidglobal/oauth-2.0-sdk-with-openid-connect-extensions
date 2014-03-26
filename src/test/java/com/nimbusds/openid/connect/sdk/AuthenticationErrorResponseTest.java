@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
@@ -20,7 +20,7 @@ public class AuthenticationErrorResponseTest extends TestCase {
 	public void testCodeErrorResponse()
 		throws Exception {
 
-		URL redirectURI = new URL("https://client.com/cb");
+		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
 		ResponseType responseType = new ResponseType("code");
 		State state = new State("123");
@@ -33,13 +33,13 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		assertEquals(responseType, response.getResponseType());
 		assertEquals(state, response.getState());
 
-		URL responseURI = response.toURI();
+		URI responseURI = response.toURI();
 
 		String[] parts = responseURI.toString().split("\\?");
 		assertEquals(redirectURI.toString(), parts[0]);
 
 		assertNotNull(responseURI.getQuery());
-		assertNull(responseURI.getRef());
+		assertNull(responseURI.getFragment());
 
 		response = AuthenticationErrorResponse.parse(responseURI);
 
@@ -53,7 +53,7 @@ public class AuthenticationErrorResponseTest extends TestCase {
 	public void testIDTokenErrorResponse()
 		throws Exception {
 
-		URL redirectURI = new URL("https://client.com/cb");
+		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
 		ResponseType responseType = new ResponseType("id_token");
 		State state = new State("123");
@@ -66,13 +66,13 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		assertEquals(responseType, response.getResponseType());
 		assertEquals(state, response.getState());
 
-		URL responseURI = response.toURI();
+		URI responseURI = response.toURI();
 
 		String[] parts = responseURI.toString().split("#");
 		assertEquals(redirectURI.toString(), parts[0]);
 
 		assertNull(responseURI.getQuery());
-		assertNotNull(responseURI.getRef());
+		assertNotNull(responseURI.getFragment());
 
 		response = AuthenticationErrorResponse.parse(responseURI);
 

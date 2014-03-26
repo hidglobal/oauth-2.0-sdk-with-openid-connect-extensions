@@ -3,9 +3,11 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nimbusds.oauth2.sdk.id.State;
@@ -146,7 +148,7 @@ public abstract class AuthorizationResponse implements Response {
 		HTTPResponse response = new HTTPResponse(HTTPResponse.SC_FOUND);
 
 		try {
-			response.setLocation(redirectURI.toURL());
+			response.setLocation(toURI().toURL());
 
 		} catch (MalformedURLException e) {
 
@@ -170,7 +172,7 @@ public abstract class AuthorizationResponse implements Response {
 	 * @throws ParseException If the parameters couldn't be parsed to an
 	 *                        authorisation success or error response.
 	 */
-	public static AuthorizationResponse parse(final URL redirectURI, final Map<String,String> params)
+	public static AuthorizationResponse parse(final URI redirectURI, final Map<String,String> params)
 		throws ParseException {
 
 		if (StringUtils.isNotBlank(params.get("error")))
@@ -188,7 +190,7 @@ public abstract class AuthorizationResponse implements Response {
 	 * known:
 	 *
 	 * <pre>
-	 * URL relUrl = new URL("http://?code=Qcb0Orv1...&state=af0ifjsldkj");
+	 * URI relUrl = new URI("http://?code=Qcb0Orv1...&state=af0ifjsldkj");
 	 * AuthorizationResponse = AuthorizationResponse.parse(relURL);
 	 * </pre>
 	 *
@@ -201,13 +203,13 @@ public abstract class AuthorizationResponse implements Response {
 	 * @throws ParseException If no authorisation response parameters were
 	 *                        found in the URL.
 	 */
-	public static AuthorizationResponse parse(final URL uri)
+	public static AuthorizationResponse parse(final URI uri)
 		throws ParseException {
 
 		Map<String,String> params;
 		
-		if (uri.getRef() != null)
-			params = URLUtils.parseParameters(uri.getRef());
+		if (uri.getRawFragment() != null)
+			params = URLUtils.parseParameters(uri.getRawFragment());
 
 		else if (uri.getQuery() != null)
 			params = URLUtils.parseParameters(uri.getQuery());
@@ -216,7 +218,7 @@ public abstract class AuthorizationResponse implements Response {
 			throw new ParseException("Missing URL fragment or query string");
 
 		
-		return parse(URLUtils.getBaseURL(uri), params);
+		return parse(URIUtils.getBaseURI(uri), params);
 	}
 
 
@@ -247,7 +249,13 @@ public abstract class AuthorizationResponse implements Response {
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URL / HTTP Location header");
-		
-		return parse(location);
+
+		try {
+			return parse(location.toURI());
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }

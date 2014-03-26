@@ -1,7 +1,7 @@
-package com.nimbusds.openid.connect.sdk.rp;
+package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -17,8 +17,6 @@ import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.State;
 
-import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
-
 
 /**
  * Tests the authentication success response class.
@@ -26,12 +24,12 @@ import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 public class AuthenticationSuccessResponseTest extends TestCase {
 
 
-	private static URL REDIRECT_URI;
+	private static URI REDIRECT_URI;
 
 	static {
 
 		try {
-			REDIRECT_URI = new URL("https://client.com/cb");
+			REDIRECT_URI = new URI("https://client.com/cb");
 
 		} catch (Exception e) {
 			// ignore
@@ -65,12 +63,12 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		assertTrue(new ResponseType("id_token").equals(response.impliedResponseType()));
 
-		URL responseURL = response.toURI();
+		URI responseURI = response.toURI();
 
-		String[] parts = responseURL.toString().split("#");
+		String[] parts = responseURI.toString().split("#");
 		assertEquals(REDIRECT_URI.toString(), parts[0]);
 
-		response = AuthenticationSuccessResponse.parse(responseURL);
+		response = AuthenticationSuccessResponse.parse(responseURI);
 
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertEquals("https://c2id.com", response.getIDToken().getJWTClaimsSet().getIssuer());
@@ -113,12 +111,12 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		assertTrue(new ResponseType("code", "id_token").equals(response.impliedResponseType()));
 
-		URL responseURL = response.toURI();
+		URI responseURI = response.toURI();
 
-		String[] parts = responseURL.toString().split("#");
+		String[] parts = responseURI.toString().split("#");
 		assertEquals(REDIRECT_URI.toString(), parts[0]);
 
-		response = AuthenticationSuccessResponse.parse(responseURL);
+		response = AuthenticationSuccessResponse.parse(responseURI);
 
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertEquals("https://c2id.com", response.getIDToken().getJWTClaimsSet().getIssuer());
@@ -149,12 +147,12 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		assertTrue(new ResponseType("code").equals(response.impliedResponseType()));
 
-		URL responseURL = response.toURI();
+		URI responseURI = response.toURI();
 
-		String[] parts = responseURL.toString().split("\\?");
+		String[] parts = responseURI.toString().split("\\?");
 		assertEquals(REDIRECT_URI.toString(), parts[0]);
 
-		response = AuthenticationSuccessResponse.parse(responseURL);
+		response = AuthenticationSuccessResponse.parse(responseURI);
 
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertNull(response.getIDToken());

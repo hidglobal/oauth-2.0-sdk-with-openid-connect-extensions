@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
@@ -18,25 +18,25 @@ public class UserInfoRequestTest extends TestCase {
 	public void testMinimalConstructor()
 		throws Exception {
 
-		URL url = new URL("https://c2id.com/userinfo");
+		URI endpointURI = new URI("https://c2id.com/userinfo");
 		BearerAccessToken token = new BearerAccessToken();
 
-		UserInfoRequest request = new UserInfoRequest(url, token);
+		UserInfoRequest request = new UserInfoRequest(endpointURI, token);
 
-		assertEquals(url, request.getEndpointURI());
+		assertEquals(endpointURI, request.getEndpointURI());
 		assertEquals(token, request.getAccessToken());
 		assertEquals(HTTPRequest.Method.GET, request.getMethod());
 
 		HTTPRequest httpRequest = request.toHTTPRequest();
 
 		assertEquals(HTTPRequest.Method.GET, httpRequest.getMethod());
-		assertEquals(url, httpRequest.getURL());
+		assertEquals(endpointURI, httpRequest.getURL().toURI());
 		assertNull(httpRequest.getQuery());
 		assertEquals(token.toAuthorizationHeader(), httpRequest.getAuthorization());
 
 		request = UserInfoRequest.parse(httpRequest);
 
-		assertEquals(url, request.getEndpointURI());
+		assertEquals(endpointURI, request.getEndpointURI());
 		assertEquals(token, request.getAccessToken());
 		assertEquals(HTTPRequest.Method.GET, request.getMethod());
 	}
@@ -45,7 +45,7 @@ public class UserInfoRequestTest extends TestCase {
 	public void testFullConstructor()
 		throws Exception {
 
-		URL url = new URL("https://c2id.com/userinfo");
+		URI url = new URI("https://c2id.com/userinfo");
 		BearerAccessToken token = new BearerAccessToken();
 
 		UserInfoRequest request = new UserInfoRequest(url, HTTPRequest.Method.POST, token);
@@ -57,7 +57,7 @@ public class UserInfoRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 
 		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
-		assertEquals(url, httpRequest.getURL());
+		assertEquals(url, httpRequest.getURL().toURI());
 		assertEquals("application/x-www-form-urlencoded; charset=UTF-8", httpRequest.getContentType().toString());
 		assertEquals("access_token="+token.getValue(), httpRequest.getQuery());
 		assertNull(httpRequest.getAuthorization());

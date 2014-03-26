@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.URI;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -35,7 +36,7 @@ public class TokenRequestTest extends TestCase {
 		
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
+		assertTrue(new URI("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
@@ -74,7 +75,7 @@ public class TokenRequestTest extends TestCase {
 		
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
+		assertTrue(new URI("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
@@ -109,7 +110,7 @@ public class TokenRequestTest extends TestCase {
 
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
+		assertTrue(new URI("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());
@@ -146,7 +147,7 @@ public class TokenRequestTest extends TestCase {
 
 		TokenRequest tr = TokenRequest.parse(httpRequest);
 
-		assertTrue(new URL("https://connect2id.com/token/").equals(tr.getEndpointURI()));
+		assertTrue(new URI("https://connect2id.com/token/").equals(tr.getEndpointURI()));
 
 		ClientSecretBasic authBasic = (ClientSecretBasic)tr.getClientAuthentication();
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, authBasic.getMethod());

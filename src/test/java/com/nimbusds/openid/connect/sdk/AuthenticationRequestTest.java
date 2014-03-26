@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testMinimalConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/login/");
+		URI uri = new URI("https://c2id.com/login/");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -45,7 +45,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		ClientID clientID = new ClientID("123456789");
 
-		URL redirectURI = new URL("http://www.deezer.com/en/");
+		URI redirectURI = new URI("http://www.deezer.com/en/");
 
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
@@ -67,7 +67,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -94,7 +94,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -104,7 +104,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testAltParse()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/login/");
+		URI uri = new URI("https://c2id.com/login/");
 
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -116,7 +116,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		ClientID clientID = new ClientID("123456789");
 
-		URL redirectURI = new URL("http://www.deezer.com/en/");
+		URI redirectURI = new URI("http://www.deezer.com/en/");
 
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
@@ -143,7 +143,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -153,7 +153,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testExtendedConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/login/");
+		URI uri = new URI("https://c2id.com/login/");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -165,7 +165,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		ClientID clientID = new ClientID("123456789");
 
-		URL redirectURI = new URL("http://www.deezer.com/en/");
+		URI redirectURI = new URI("http://www.deezer.com/en/");
 
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
@@ -218,7 +218,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -282,7 +282,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -328,7 +328,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testRequestObjectConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/login");
+		URI uri = new URI("https://c2id.com/login");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -340,7 +340,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		ClientID clientID = new ClientID("123456789");
 
-		URL redirectURI = new URL("http://www.deezer.com/en/");
+		URI redirectURI = new URI("http://www.deezer.com/en/");
 
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
@@ -395,7 +395,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -461,7 +461,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -509,7 +509,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testRequestURIConstructor()
 		throws Exception {
 
-		URL uri = new URL("https://c2id.com/login/");
+		URI uri = new URI("https://c2id.com/login/");
 		
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
@@ -521,7 +521,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		ClientID clientID = new ClientID("123456789");
 
-		URL redirectURI = new URL("http://www.deezer.com/en/");
+		URI redirectURI = new URI("http://www.deezer.com/en/");
 
 		State state = new State("abc");
 		Nonce nonce = new Nonce("xyz");
@@ -555,7 +555,7 @@ public class AuthenticationRequestTest extends TestCase {
 		claims.addUserInfoClaim("given_name");
 		claims.addUserInfoClaim("family_name");
 
-		URL requestURI = new URL("http://example.com/request-object.jwt#1234");
+		URI requestURI = new URI("http://example.com/request-object.jwt#1234");
 
 		AuthenticationRequest request = new AuthenticationRequest(
 			uri, rts, scope, clientID, redirectURI, state, nonce,
@@ -576,7 +576,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -642,7 +642,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ClientID("123456789").equals(request.getClientID()));
 
-		assertTrue(new URL("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
+		assertTrue(new URI("http://www.deezer.com/en/").equals(request.getRedirectionURI()));
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
@@ -694,12 +694,12 @@ public class AuthenticationRequestTest extends TestCase {
 			new ResponseType("code", "id_token"),
 			new Scope("openid", "email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb")).build();
+			new URI("https://client.com/cb")).build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
-		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
 		assertNull(request.getState());
 		assertNull(request.getNonce());
 		assertNull(request.getDisplay());
@@ -731,7 +731,7 @@ public class AuthenticationRequestTest extends TestCase {
 			new ResponseType("code", "id_token"),
 			new Scope("openid", "email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb")).
+			new URI("https://client.com/cb")).
 			state(new State("abc")).
 			nonce(new Nonce("def")).
 			display(Display.POPUP).
@@ -743,13 +743,13 @@ public class AuthenticationRequestTest extends TestCase {
 			loginHint("alice@wonderland.net").
 			acrValues(acrValues).
 			claims(claims).
-			endpointURI(new URL("https://c2id.com/login")).
+			endpointURI(new URI("https://c2id.com/login")).
 			build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
-		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("def").equals(request.getNonce()));
 		assertTrue(Display.POPUP.equals(request.getDisplay()));
@@ -761,7 +761,7 @@ public class AuthenticationRequestTest extends TestCase {
 		assertEquals("alice@wonderland.net", request.getLoginHint());
 		assertEquals(acrValues, request.getACRValues());
 		assertEquals(claims, request.getClaims());
-		assertTrue(new URL("https://c2id.com/login").equals(request.getEndpointURI()));
+		assertTrue(new URI("https://c2id.com/login").equals(request.getEndpointURI()));
 	}
 
 
@@ -772,14 +772,14 @@ public class AuthenticationRequestTest extends TestCase {
 			new ResponseType("code", "id_token"),
 			new Scope("openid", "email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb")).
+			new URI("https://client.com/cb")).
 			requestObject(JWTParser.parse(EXAMPLE_JWT_STRING)).
 			build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
-		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
 		assertEquals(EXAMPLE_JWT_STRING, request.getRequestObject().getParsedString());
 	}
 
@@ -791,14 +791,14 @@ public class AuthenticationRequestTest extends TestCase {
 			new ResponseType("code", "id_token"),
 			new Scope("openid", "email"),
 			new ClientID("123"),
-			new URL("https://client.com/cb")).
-			requestURI(new URL("https://client.com/request#123")).
+			new URI("https://client.com/cb")).
+			requestURI(new URI("https://client.com/request#123")).
 			build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
-		assertTrue(new URL("https://client.com/cb").equals(request.getRedirectionURI()));
-		assertTrue(new URL("https://client.com/request#123").equals(request.getRequestURI()));
+		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new URI("https://client.com/request#123").equals(request.getRequestURI()));
 	}
 }

@@ -21,9 +21,6 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	
 	
 	private static URI ABS_REDIRECT_URI = null;
-	
-	
-	private static URI REL_REDIRECT_URI = null;
 
 
 	private static AuthorizationCode CODE = new AuthorizationCode("SplxlOBeZQQYbYS6WxSbIA");
@@ -52,8 +49,6 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		       java.text.ParseException {
 		
 		ABS_REDIRECT_URI = new URI("https://client.example.org/cb");
-		
-		REL_REDIRECT_URI = new URI("https://");
 	}
 	
 	
@@ -77,11 +72,9 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		URI uri = resp.toURI();
 
-		System.out.println("Location: " + uri);
-
 		HTTPResponse httpResponse = resp.toHTTPResponse();
 		assertEquals(302, httpResponse.getStatusCode());
-		assertEquals(uri, httpResponse.getLocation());
+		assertEquals(uri.toString(), httpResponse.getLocation().toString());
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
@@ -119,7 +112,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		HTTPResponse httpResponse = resp.toHTTPResponse();
 		assertEquals(302, httpResponse.getStatusCode());
-		assertEquals(uri, httpResponse.getLocation());
+		assertEquals(uri, httpResponse.getLocation().toURI());
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 

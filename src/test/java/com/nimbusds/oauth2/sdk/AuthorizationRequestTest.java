@@ -49,7 +49,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		HTTPRequest httpReq = req.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
-		assertEquals(uri, httpReq.getURL());
+		assertEquals(uri, httpReq.getURL().toURI());
 		assertEquals(query, httpReq.getQuery());
 
 		req = AuthorizationRequest.parse(uri, query);

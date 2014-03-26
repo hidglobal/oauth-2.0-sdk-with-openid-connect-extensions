@@ -1,7 +1,7 @@
 package com.nimbusds.openid.connect.sdk.rp;
 
 
-import java.net.URL;
+import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -26,17 +26,17 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 	
 	public void testRoundtrip() throws Exception {
 		
-		URL uri = new URL("https://server.example.com/connect/register");
+		URI uri = new URI("https://server.example.com/connect/register");
 		
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		
-		Set<URL> redirectURIs = new HashSet<URL>();
-		redirectURIs.add(new URL("https://client.example.org/callback"));
+		Set<URI> redirectURIs = new HashSet<URI>();
+		redirectURIs.add(new URI("https://client.example.org/callback"));
 		metadata.setRedirectionURIs(redirectURIs);
 		
 		metadata.setApplicationType(ApplicationType.NATIVE);
 		
-		metadata.setJWKSetURL(new URL("https://client.example.org/my_public_keys.jwks"));
+		metadata.setJWKSetURI(new URI("https://client.example.org/my_public_keys.jwks"));
 		
 		OIDCClientRegistrationRequest request = new OIDCClientRegistrationRequest(uri, metadata, null);
 		
@@ -47,12 +47,12 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		metadata = request.getOIDCClientMetadata();
 		
 		redirectURIs = metadata.getRedirectionURIs();
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback")));
 		assertEquals(1, redirectURIs.size());
 		
 		assertEquals(ApplicationType.NATIVE, metadata.getApplicationType());
 		
-		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+		assertEquals(new URI("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
 		
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		
@@ -70,18 +70,18 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		metadata = request.getOIDCClientMetadata();
 		
 		redirectURIs = metadata.getRedirectionURIs();
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback")));
 		assertEquals(1, redirectURIs.size());
 		
 		assertEquals(ApplicationType.NATIVE, metadata.getApplicationType());
 		
-		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+		assertEquals(new URI("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
 	}
 		
 	
 	public void testParse() throws Exception {
 		
-		URL uri = new URL("https://server.example.com/connect/register");
+		URI uri = new URI("https://server.example.com/connect/register");
 		
 		String json = "{"
 			+ "   \"application_type\": \"web\","
@@ -101,7 +101,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		System.out.println(json);
 		
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, uri);
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, uri.toURL());
 		httpRequest.setAuthorization("Bearer eyJhbGciOiJSUzI1NiJ9.eyJ");
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
 		httpRequest.setQuery(json);
@@ -114,9 +114,9 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		assertEquals(ApplicationType.WEB, metadata.getApplicationType());
 		
-		Set<URL> redirectURIs = metadata.getRedirectionURIs();
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback")));
-		assertTrue(redirectURIs.contains(new URL("https://client.example.org/callback2")));
+		Set<URI> redirectURIs = metadata.getRedirectionURIs();
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback")));
+		assertTrue(redirectURIs.contains(new URI("https://client.example.org/callback2")));
 		assertEquals(2, redirectURIs.size());
 		
 		assertEquals("My Example", metadata.getName());
@@ -124,16 +124,16 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		assertEquals("クライアント名", metadata.getName(LangTag.parse("ja-Jpan-JP")));
 		assertEquals(2, metadata.getNameEntries().size());
 		
-		assertEquals(new URL("https://client.example.org/logo.png"), metadata.getLogoURI());
-		assertEquals(new URL("https://client.example.org/logo.png"), metadata.getLogoURI(null));
+		assertEquals(new URI("https://client.example.org/logo.png"), metadata.getLogoURI());
+		assertEquals(new URI("https://client.example.org/logo.png"), metadata.getLogoURI(null));
 		assertEquals(1, metadata.getLogoURIEntries().size());
 		
 		assertEquals(SubjectType.PAIRWISE, metadata.getSubjectType());
-		assertEquals(new URL("https://other.example.net/file_of_redirect_uris.json"), metadata.getSectorIDURI());
+		assertEquals(new URI("https://other.example.net/file_of_redirect_uris.json"), metadata.getSectorIDURI());
 		
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
 		
-		assertEquals(new URL("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
+		assertEquals(new URI("https://client.example.org/my_public_keys.jwks"), metadata.getJWKSetURI());
 		
 		assertEquals(JWEAlgorithm.RSA1_5, metadata.getUserInfoJWEAlg());
 		assertEquals(EncryptionMethod.A128CBC_HS256, metadata.getUserInfoJWEEnc());
@@ -143,7 +143,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		assertTrue(contacts.contains(new InternetAddress("mary@example.org")));
 		assertEquals(2, contacts.size());
 		
-		Set<URL> requestObjectURIs = metadata.getRequestObjectURIs();
-		assertTrue(requestObjectURIs.contains(new URL("https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA")));
+		Set<URI> requestObjectURIs = metadata.getRequestObjectURIs();
+		assertTrue(requestObjectURIs.contains(new URI("https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA")));
 	}
 }

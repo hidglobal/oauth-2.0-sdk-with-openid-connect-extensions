@@ -96,7 +96,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		HTTPResponse httpResponse = r.toHTTPResponse();
 			
 		assertEquals(HTTPResponse.SC_FOUND, httpResponse.getStatusCode());
-		assertEquals(location, httpResponse.getLocation());
+		assertEquals(location, httpResponse.getLocation().toURI());
 
 		r = AuthorizationErrorResponse.parse(httpResponse);
 
@@ -199,18 +199,6 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		try {
 			AuthorizationErrorResponse.parse(new URI(s1));
 			fail("Failed to raise exception: No params");
-			
-		} catch (ParseException e) {
-		
-			System.out.println(e);
-		}
-		
-		
-		String s2 = "https://client.example.com/cb?error=invalid_request&error_uri=example.html";
-		
-		try {
-			AuthorizationErrorResponse.parse(new URI(s2));
-			fail("Failed to raise exception: Invalid error URI");
 			
 		} catch (ParseException e) {
 		
