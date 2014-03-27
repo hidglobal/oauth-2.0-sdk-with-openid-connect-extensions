@@ -113,3 +113,7 @@ version 2.15.3 (2014-03-08)
     * Ensures case insensitive comparison of access token types.
     * Updates the OpenID Connect specification references to the final 1.0
       release from 2014-02-25.
+
+version 3.0 (2014-03-27)
+    * Replaces java.net.URL representations with java.net.URI where URL is not
+      directly required (see issues 79 and 80).
