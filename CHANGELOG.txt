@@ -117,3 +117,8 @@ version 2.15.3 (2014-03-08)
 version 3.0 (2014-03-27)
     * Replaces java.net.URL representations with java.net.URI where URL is not
       directly required (see issues 79 and 80).
+
+version 3.0.1 (2014-04-08)
+    * Upgrades Nimbus JOSE + JWT dependency to 2.24.
+    * Upgrades Apache Commons Lang dependency to 3.3.1.
+    * Upgrades Apache Commons Codec dependency to 1.9.
