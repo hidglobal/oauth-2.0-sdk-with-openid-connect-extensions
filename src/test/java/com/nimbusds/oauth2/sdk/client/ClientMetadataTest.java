@@ -9,10 +9,12 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.oauth2.sdk.ParseException;
+import junit.framework.TestCase;
+
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.util.Base64URL;
-import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
 
@@ -284,5 +286,48 @@ public class ClientMetadataTest extends TestCase {
 		meta.setRedirectionURI(new URI("https://cliemt.com/cb"));
 		assertTrue(meta.getRedirectionURIStrings().contains("https://cliemt.com/cb"));
 		assertEquals(1, meta.getRedirectionURIStrings().size());
+	}
+
+
+	public void testParse()
+		throws Exception {
+
+		String json = "{\n" +
+			"      \"redirect_uris\":[\n" +
+			"        \"https://client.example.org/callback\",\n" +
+			"        \"https://client.example.org/callback2\"],\n" +
+			"      \"token_endpoint_auth_method\":\"client_secret_basic\",\n" +
+			"      \"example_extension_parameter\": \"example_value\"\n" +
+			"     }";
+
+		ClientMetadata meta = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertTrue(meta.getRedirectionURIs().contains(new URI("https://client.example.org/callback")));
+		assertTrue(meta.getRedirectionURIs().contains(new URI("https://client.example.org/callback2")));
+		assertEquals(2, meta.getRedirectionURIs().size());
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, meta.getTokenEndpointAuthMethod());
+
+		assertEquals("example_value", meta.getCustomField("example_extension_parameter"));
+	}
+
+
+	public void testParseBadRedirectionURI()
+		throws Exception {
+
+		String json = "{\n" +
+			"      \"redirect_uris\":[\n" +
+			"        \"https://\",\n" +
+			"        \"https://client.example.org/callback2\"],\n" +
+			"      \"token_endpoint_auth_method\":\"client_secret_basic\",\n" +
+			"      \"example_extension_parameter\": \"example_value\"\n" +
+			"     }";
+
+		try {
+			ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+			fail();
+		} catch (ParseException e) {
+			// ok
+		}
 	}
 }
