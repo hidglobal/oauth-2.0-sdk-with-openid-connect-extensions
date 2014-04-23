@@ -122,3 +122,6 @@ version 3.0.1 (2014-04-08)
     * Upgrades Nimbus JOSE + JWT dependency to 2.24.
     * Upgrades Apache Commons Lang dependency to 3.3.1.
     * Upgrades Apache Commons Codec dependency to 1.9.
+
+version 3.0.2 (2014-04-23)
+    * Upgrades Nimbus JOSE + JWT dependency to 2.25.

@@ -10,10 +10,8 @@ import net.jcip.annotations.ThreadSafe;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWEAlgorithm;
-import com.nimbusds.jose.JWEHeaderFilter;
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeaderFilter;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
@@ -74,9 +72,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 */
 	public void addJWSVerifier(final JWSVerifier verifier) {
 	
-		JWSHeaderFilter filter = verifier.getJWSHeaderFilter();
-		 
-		for (JWSAlgorithm alg: filter.getAcceptedAlgorithms()) {
+		for (JWSAlgorithm alg: verifier.getAcceptedAlgorithms()) {
 
 			jwsVerifiers.put(alg, verifier);
 		}
@@ -104,9 +100,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 */
 	public void addJWEDecrypter(final JWEDecrypter decrypter) {
 	
-		JWEHeaderFilter filter = decrypter.getJWEHeaderFilter();
-		
-		for (JWEAlgorithm alg: filter.getAcceptedAlgorithms()) {
+		for (JWEAlgorithm alg: decrypter.getAcceptedAlgorithms()) {
 
 			jweDecrypters.put(alg, decrypter);
 		}

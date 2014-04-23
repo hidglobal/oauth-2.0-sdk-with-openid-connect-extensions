@@ -20,11 +20,11 @@
 		client and server applications.
 	</description>
 
-	<url>https://bitbucket.org/nimbusds/oauth-2.0-sdk-with-openid-connect-extensions</url>
+	<url>https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions</url>
 
 	<organization>
-		<name>NimbusDS</name>
-		<url>http://www.nimbusds.com</url>
+		<name>Connect2id Ltd.</name>
+		<url>http://connect2id.com</url>
 	</organization>
     
 	<licenses>
@@ -36,9 +36,9 @@
 	</licenses>
     
 	<scm>
-		<connection>scm:git:https://bitbucket.org/nimbusds/oauth-2.0-sdk-with-openid-connect-extensions.git</connection>
-		<developerConnection>scm:git:git@bitbucket.org:nimbusds/oauth-2.0-sdk-with-openid-connect-extensions.git</developerConnection>
-		<url>https://bitbucket.org/nimbusds/oauth-2.0-sdk-with-openid-connect-extensions</url>
+		<connection>scm:git:https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git</connection>
+		<developerConnection>scm:git:git@bitbucket.org:connect2id/oauth-2.0-sdk-with-openid-connect-extensions.git</developerConnection>
+		<url>https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions</url>
 		<tag>HEAD</tag>
 	</scm>
     
@@ -46,7 +46,7 @@
 		<developer>
 			<id>vdzhuvinov</id>
 			<name>Vladimir Dzhuvinov</name>
-			<email>vladimir@nimbusds.com</email>
+			<email>vladimir@dzhuvinov.com</email>
 		</developer>
 	</developers>
     
@@ -90,7 +90,7 @@
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
-			<version>2.24</version>
+			<version>2.25</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
