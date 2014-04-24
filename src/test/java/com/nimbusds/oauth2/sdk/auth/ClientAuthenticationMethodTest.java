@@ -25,4 +25,36 @@ public class ClientAuthenticationMethodTest extends TestCase {
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, 
 		             ClientAuthenticationMethod.getDefault());
 	}
+
+
+	public void testParse() {
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, ClientAuthenticationMethod.parse("client_secret_basic"));
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_POST, ClientAuthenticationMethod.parse("client_secret_post"));
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_JWT, ClientAuthenticationMethod.parse("client_secret_jwt"));
+		assertEquals(ClientAuthenticationMethod.PRIVATE_KEY_JWT, ClientAuthenticationMethod.parse("private_key_jwt"));
+		assertEquals(ClientAuthenticationMethod.NONE, ClientAuthenticationMethod.parse("none"));
+	}
+
+
+	public void testParseNull() {
+
+		try {
+			ClientAuthenticationMethod.parse(null);
+			fail();
+		} catch (NullPointerException e) {
+			//  ok
+		}
+	}
+
+
+	public void testParseEmptyValue() {
+
+		try {
+			ClientAuthenticationMethod.parse("");
+			fail();
+		} catch (IllegalArgumentException e) {
+			// ok
+		}
+	}
 }

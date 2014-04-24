@@ -107,6 +107,32 @@ public final class ClientAuthenticationMethod extends Identifier {
 	}
 
 
+	/**
+	 * Parses a client authentication method from the specified value.
+	 *
+	 * @param value The authentication method value. Must not be
+	 *              {@code null} or empty string.
+	 *
+	 * @return The client authentication method.
+	 */
+	public static ClientAuthenticationMethod parse(final String value) {
+
+		if (value.equals(CLIENT_SECRET_BASIC.getValue())) {
+			return CLIENT_SECRET_BASIC;
+		} else if (value.equals(CLIENT_SECRET_POST.getValue())) {
+			return CLIENT_SECRET_POST;
+		} else if (value.equals(CLIENT_SECRET_JWT.getValue())) {
+			return CLIENT_SECRET_JWT;
+		} else if (value.equals(PRIVATE_KEY_JWT.getValue())) {
+			return PRIVATE_KEY_JWT;
+		} else if (value.equals(NONE.getValue())) {
+			return NONE;
+		} else {
+			return new ClientAuthenticationMethod(value);
+		}
+	}
+
+
 	@Override
 	public boolean equals(final Object object) {
 	
