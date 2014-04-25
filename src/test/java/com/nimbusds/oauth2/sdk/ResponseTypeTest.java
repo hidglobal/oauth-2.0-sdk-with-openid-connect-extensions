@@ -161,4 +161,11 @@ public class ResponseTypeTest extends TestCase {
 
 		assertEquals(ResponseType.Value.CODE, new ResponseType.Value("code"));
 	}
+
+
+	public void testMultipleEquality()
+		throws Exception {
+
+		assertTrue(ResponseType.parse("code id_token").equals(ResponseType.parse("id_token code")));
+	}
 }
