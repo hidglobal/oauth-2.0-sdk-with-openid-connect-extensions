@@ -67,7 +67,7 @@ public final class RefreshTokenGrant extends AuthorizationGrant {
 	@Override
 	public Map<String,String> toParameters() {
 
-		Map<String,String> params = new LinkedHashMap<String,String>();
+		Map<String,String> params = new LinkedHashMap<>();
 		params.put("grant_type", GRANT_TYPE.getValue());
 		params.put("refresh_token", refreshToken.getValue());
 		return params;

@@ -179,11 +179,11 @@ public class AuthenticationRequestTest extends TestCase {
 
 		int maxAge = 3600;
 
-		List<LangTag> uiLocales = new LinkedList<LangTag>();
+		List<LangTag> uiLocales = new LinkedList<>();
 		uiLocales.add(LangTag.parse("en-US"));
 		uiLocales.add(LangTag.parse("en-GB"));
 
-		List<LangTag> claimsLocales = new LinkedList<LangTag>();
+		List<LangTag> claimsLocales = new LinkedList<>();
 		claimsLocales.add(LangTag.parse("en-US"));
 		claimsLocales.add(LangTag.parse("en-GB"));
 
@@ -191,7 +191,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		String loginHint = "alice123";
 
-		List<ACR> acrValues = new LinkedList<ACR>();
+		List<ACR> acrValues = new LinkedList<>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
 
@@ -354,11 +354,11 @@ public class AuthenticationRequestTest extends TestCase {
 
 		int maxAge = 3600;
 
-		List<LangTag> uiLocales = new LinkedList<LangTag>();
+		List<LangTag> uiLocales = new LinkedList<>();
 		uiLocales.add(LangTag.parse("en-US"));
 		uiLocales.add(LangTag.parse("en-GB"));
 
-		List<LangTag> claimsLocales = new LinkedList<LangTag>();
+		List<LangTag> claimsLocales = new LinkedList<>();
 		claimsLocales.add(LangTag.parse("en-US"));
 		claimsLocales.add(LangTag.parse("en-GB"));
 
@@ -366,7 +366,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		String loginHint = "alice123";
 
-		List<ACR> acrValues = new LinkedList<ACR>();
+		List<ACR> acrValues = new LinkedList<>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
 
@@ -535,11 +535,11 @@ public class AuthenticationRequestTest extends TestCase {
 
 		int maxAge = 3600;
 
-		List<LangTag> uiLocales = new LinkedList<LangTag>();
+		List<LangTag> uiLocales = new LinkedList<>();
 		uiLocales.add(LangTag.parse("en-US"));
 		uiLocales.add(LangTag.parse("en-GB"));
 
-		List<LangTag> claimsLocales = new LinkedList<LangTag>();
+		List<LangTag> claimsLocales = new LinkedList<>();
 		claimsLocales.add(LangTag.parse("en-US"));
 		claimsLocales.add(LangTag.parse("en-GB"));
 
@@ -547,7 +547,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		String loginHint = "alice123";
 
-		List<ACR> acrValues = new LinkedList<ACR>();
+		List<ACR> acrValues = new LinkedList<>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
 
@@ -719,7 +719,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testBuilderFull()
 		throws Exception {
 
-		List<ACR> acrValues = new LinkedList<ACR>();
+		List<ACR> acrValues = new LinkedList<>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
 

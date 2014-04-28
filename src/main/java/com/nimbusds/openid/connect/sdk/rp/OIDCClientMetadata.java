@@ -46,7 +46,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 */
 	static {
 		// Start with the base OAuth 2.0 client params
-		Set<String> p = new HashSet<String>(ClientMetadata.getRegisteredParameterNames());
+		Set<String> p = new HashSet<>(ClientMetadata.getRegisteredParameterNames());
 
 		// OIDC params
 		p.add("application_type");
@@ -914,7 +914,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 		if (jsonObject.containsKey("request_uris")) {
 			
-			Set<URI> requestURIs = new LinkedHashSet<URI>();
+			Set<URI> requestURIs = new LinkedHashSet<>();
 			
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "request_uris")) {
 				
@@ -1013,7 +1013,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 		if (jsonObject.containsKey("default_acr_values")) {
 
-			List<ACR> acrValues = new LinkedList<ACR>();
+			List<ACR> acrValues = new LinkedList<>();
 
 			for (String acrString: JSONObjectUtils.getStringArray(jsonObject, "default_acr_values"))
 				acrValues.add(new ACR(acrString));
@@ -1030,7 +1030,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 		if (jsonObject.containsKey("post_logout_redirect_uris")) {
 
-			Set<URI> logoutURIs = new LinkedHashSet<URI>();
+			Set<URI> logoutURIs = new LinkedHashSet<>();
 
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "post_logout_redirect_uris")) {
 

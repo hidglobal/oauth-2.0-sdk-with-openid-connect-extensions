@@ -141,7 +141,7 @@ public abstract class ClaimsSet {
 
 		Map<LangTag,Object> matches = LangTagUtils.find(name, claims);
 
-		Map<LangTag,T> out = new HashMap<LangTag,T>();
+		Map<LangTag,T> out = new HashMap<>();
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
@@ -438,7 +438,7 @@ public abstract class ClaimsSet {
 		if (rawList == null)
 			return null;
 
-		List<String> outputList = new ArrayList<String>(rawList.size());
+		List<String> outputList = new ArrayList<>(rawList.size());
 
 		for (Object item: rawList) {
 

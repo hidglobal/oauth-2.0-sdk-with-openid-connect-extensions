@@ -403,7 +403,7 @@ public class JSONObjectUtils {
 
 		List<Object> list = getList(o, key);
 
-		Set<String> set = new HashSet<String>();
+		Set<String> set = new HashSet<>();
 
 		for (Object item: list) {
 

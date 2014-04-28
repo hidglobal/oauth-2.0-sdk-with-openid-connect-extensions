@@ -162,7 +162,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(sectorIDURI.toString(), meta.getSectorIDURI().toString());
 
 		assertNull(meta.getRequestObjectURIs());
-		Set<URI> requestObjURIs = new HashSet<URI>();
+		Set<URI> requestObjURIs = new HashSet<>();
 		requestObjURIs.add(new URI("http://client.com/reqobj"));
 		meta.setRequestObjectURIs(requestObjURIs);
 		assertEquals("http://client.com/reqobj", meta.getRequestObjectURIs().iterator().next().toString());
@@ -217,7 +217,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(meta.requiresAuthTime());
 
 		assertNull(meta.getDefaultACRs());
-		List<ACR> acrList = new LinkedList<ACR>();
+		List<ACR> acrList = new LinkedList<>();
 		acrList.add(new ACR("1"));
 		meta.setDefaultACRs(acrList);
 		assertEquals("1", meta.getDefaultACRs().get(0).toString());
@@ -227,7 +227,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals("http://do-login.com", meta.getInitiateLoginURI().toString());
 
 		assertNull(meta.getPostLogoutRedirectionURIs());
-		Set<URI> logoutURIs = new HashSet<URI>();
+		Set<URI> logoutURIs = new HashSet<>();
 		logoutURIs.add(new URI("http://post-logout.com"));
 		meta.setPostLogoutRedirectionURIs(logoutURIs);
 		assertEquals("http://post-logout.com", meta.getPostLogoutRedirectionURIs().iterator().next().toString());

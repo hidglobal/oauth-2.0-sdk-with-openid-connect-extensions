@@ -6,10 +6,8 @@ import java.util.Map;
 
 import javax.mail.internet.ContentType;
 
-import com.nimbusds.jose.JWSObject;
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -175,7 +173,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	public Map<String,String> toParameters()
 		throws SerializeException {
 	
-		Map<String,String> params = new HashMap<String,String>();
+		Map<String,String> params = new HashMap<>();
 		
 		try {
 			params.put("client_assertion", clientAssertion.serialize());

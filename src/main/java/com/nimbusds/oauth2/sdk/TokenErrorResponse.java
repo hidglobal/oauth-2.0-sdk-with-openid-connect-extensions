@@ -60,7 +60,7 @@ public class TokenErrorResponse
 	/**
 	 * The standard OAuth 2.0 errors for an Access Token error response.
 	 */
-	private static final Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
+	private static final Set<ErrorObject> stdErrors = new HashSet<>();
 	
 	
 	static {

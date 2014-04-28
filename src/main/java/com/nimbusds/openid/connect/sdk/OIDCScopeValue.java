@@ -130,7 +130,7 @@ public class OIDCScopeValue extends Scope.Value {
 		super(value, requirement);
 		
 		if (claims != null)
-			this.claims = Collections.unmodifiableSet(new LinkedHashSet<String>(Arrays.asList(claims)));
+			this.claims = Collections.unmodifiableSet(new LinkedHashSet<>(Arrays.asList(claims)));
 		else
 			this.claims = null;
 	}
@@ -226,7 +226,7 @@ public class OIDCScopeValue extends Scope.Value {
 	 */
 	public Set<ClaimsRequest.Entry> toClaimsRequestEntries() {
 		
-		Set<ClaimsRequest.Entry> entries = new HashSet<ClaimsRequest.Entry>();
+		Set<ClaimsRequest.Entry> entries = new HashSet<>();
 		
 		if (this == OPENID || this == OFFLINE_ACCESS)
 			return Collections.unmodifiableSet(entries);

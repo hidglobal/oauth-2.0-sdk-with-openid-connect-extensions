@@ -57,7 +57,7 @@ public class UserInfoErrorResponse
 	 */
 	public static Set<BearerTokenError> getStandardErrors() {
 		
-		Set<BearerTokenError> stdErrors = new HashSet<BearerTokenError>();
+		Set<BearerTokenError> stdErrors = new HashSet<>();
 		stdErrors.add(BearerTokenError.MISSING_TOKEN);
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);

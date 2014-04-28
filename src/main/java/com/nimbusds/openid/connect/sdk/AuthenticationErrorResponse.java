@@ -74,7 +74,7 @@ public class AuthenticationErrorResponse
 	 * The standard errors for an OpenID Connect authentication error
 	 * response.
 	 */
-	private static Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
+	private static Set<ErrorObject> stdErrors = new HashSet<>();
 	
 	
 	static {

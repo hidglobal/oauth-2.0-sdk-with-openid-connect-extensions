@@ -53,7 +53,7 @@ public final class OIDCClientInformation extends ClientInformation {
 	 * Initialises the registered parameter name set.
 	 */
 	static {
-		Set<String> p = new HashSet<String>(ClientInformation.getRegisteredParameterNames());
+		Set<String> p = new HashSet<>(ClientInformation.getRegisteredParameterNames());
 
 		p.addAll(OIDCClientMetadata.getRegisteredParameterNames());
 

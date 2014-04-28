@@ -30,7 +30,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		
-		Set<URI> redirectURIs = new HashSet<URI>();
+		Set<URI> redirectURIs = new HashSet<>();
 		redirectURIs.add(new URI("https://client.example.org/callback"));
 		metadata.setRedirectionURIs(redirectURIs);
 		

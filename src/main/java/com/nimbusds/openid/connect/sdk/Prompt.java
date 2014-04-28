@@ -91,20 +91,18 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
 			if (StringUtils.isBlank(s))
 				throw new ParseException("Null or empty prompt type string");
 
-			if (s.equals("none"))
-				return NONE;
-
-			else if (s.equals("login"))
-				return LOGIN;
-
-			else if (s.equals("consent"))
-				return CONSENT;
-
-			else if (s.equals("select_account"))
-				return SELECT_ACCOUNT;
-
-			else
-				throw new ParseException("Unknown prompt type: " + s);
+			switch (s) {
+				case "none":
+					return NONE;
+				case "login":
+					return LOGIN;
+				case "consent":
+					return CONSENT;
+				case "select_account":
+					return SELECT_ACCOUNT;
+				default:
+					throw new ParseException("Unknown prompt type: " + s);
+			}
 		}
 	}
 	
@@ -171,7 +169,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
 	 */
 	public List<String> toStringList() {
 		
-		List<String> list = new ArrayList<String>(this.size());
+		List<String> list = new ArrayList<>(this.size());
 		
 		for (Type t: this)
 			list.add(t.toString());

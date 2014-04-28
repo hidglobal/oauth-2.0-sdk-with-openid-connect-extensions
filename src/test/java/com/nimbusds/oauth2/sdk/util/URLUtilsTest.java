@@ -52,7 +52,7 @@ public class URLUtilsTest extends TestCase {
 	
 	public void testSerializeParameters() {
 	
-		Map<String,String> params = new LinkedHashMap<String,String>();
+		Map<String,String> params = new LinkedHashMap<>();
 		
 		params.put("response_type", "code id_token");
 		params.put("client_id", "s6BhdRkqt3");

@@ -126,7 +126,7 @@ public class IDTokenClaimsSetTest extends TestCase {
 		Issuer issuer = new Issuer("iss");
 		Subject subject = new Subject("sub");
 
-		List<Audience> audList = new LinkedList<Audience>();
+		List<Audience> audList = new LinkedList<>();
 		audList.add(new Audience("aud"));
 
 		Date expirationTime = DateUtils.fromSecondsSinceEpoch(100000l);
@@ -149,7 +149,7 @@ public class IDTokenClaimsSetTest extends TestCase {
 		ACR acr = new ACR("1");
 		idTokenClaimsSet.setACR(acr);
 
-		List<AMR> amrList = new LinkedList<AMR>();
+		List<AMR> amrList = new LinkedList<>();
 		amrList.add(new AMR("A"));
 		idTokenClaimsSet.setAMR(amrList);
 
@@ -203,7 +203,7 @@ public class IDTokenClaimsSetTest extends TestCase {
 		Issuer issuer = new Issuer("iss");
 		Subject subject = new Subject("sub");
 
-		List<Audience> audList = new LinkedList<Audience>();
+		List<Audience> audList = new LinkedList<>();
 		audList.add(new Audience("aud"));
 
 		Date expirationTime = DateUtils.fromSecondsSinceEpoch(100000l);

@@ -57,7 +57,7 @@ public class JWTAuthenticationClaimsSet {
 	/**
 	 * The names of the reserved client authentication claims.
 	 */
-	private static final Set<String> reservedClaimNames = new LinkedHashSet<String>();
+	private static final Set<String> reservedClaimNames = new LinkedHashSet<>();
 	
 	
 	static {
@@ -291,7 +291,7 @@ public class JWTAuthenticationClaimsSet {
 		o.put("iss", iss.getValue());
 		o.put("sub", sub.getValue());
 
-		List<Object> audList = new LinkedList<Object>();
+		List<Object> audList = new LinkedList<>();
 		audList.add(aud);
 		o.put("aud", audList);
 
@@ -323,7 +323,7 @@ public class JWTAuthenticationClaimsSet {
 		jwtClaimsSet.setIssuer(iss.getValue());
 		jwtClaimsSet.setSubject(sub.getValue());
 
-		List<String> audList = new LinkedList<String>();
+		List<String> audList = new LinkedList<>();
 		audList.add(aud.getValue());
 
 		jwtClaimsSet.setAudience(audList);

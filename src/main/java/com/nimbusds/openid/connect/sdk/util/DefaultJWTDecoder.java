@@ -41,14 +41,14 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 * Thread-safe map of available JWS verifiers.
 	 */
 	private final Map<JWSAlgorithm,JWSVerifier> jwsVerifiers = 
-		new Hashtable<JWSAlgorithm,JWSVerifier>();
+		new Hashtable<>();
 	
 	
 	/**
 	 * Thread-safe map of available JWE decrypters.
 	 */
 	private final Map<JWEAlgorithm,JWEDecrypter> jweDecrypters = 
-		new Hashtable<JWEAlgorithm,JWEDecrypter>();
+		new Hashtable<>();
 	
 	
 	/**

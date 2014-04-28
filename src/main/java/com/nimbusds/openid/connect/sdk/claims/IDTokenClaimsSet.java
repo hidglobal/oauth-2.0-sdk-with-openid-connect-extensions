@@ -128,7 +128,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * The names of the standard top-level ID token claims.
 	 */
-	private static final Set<String> stdClaimNames = new LinkedHashSet<String>();
+	private static final Set<String> stdClaimNames = new LinkedHashSet<>();
 
 
 	static {
@@ -312,7 +312,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 			if (rawList == null || rawList.isEmpty())
 				return null;
 
-			List<Audience> audList = new ArrayList<Audience>(rawList.size());
+			List<Audience> audList = new ArrayList<>(rawList.size());
 
 			for (String s: rawList)
 				audList.add(new Audience(s));
@@ -522,7 +522,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 		if (rawList == null || rawList.isEmpty())
 			return null;
 
-		List<AMR> amrList = new ArrayList<AMR>(rawList.size());
+		List<AMR> amrList = new ArrayList<>(rawList.size());
 
 		for (String s: rawList)
 			amrList.add(new AMR(s));
@@ -542,7 +542,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 
 		if (amr != null) {
 
-			List<String> amrList = new ArrayList<String>(amr.size());
+			List<String> amrList = new ArrayList<>(amr.size());
 
 			for (AMR a: amr)
 				amrList.add(a.getValue());

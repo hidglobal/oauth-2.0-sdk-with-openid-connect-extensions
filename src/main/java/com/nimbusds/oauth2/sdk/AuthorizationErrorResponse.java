@@ -60,7 +60,7 @@ public class AuthorizationErrorResponse
 	/**
 	 * The standard OAuth 2.0 errors for an Authorisation error response.
 	 */
-	private static Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
+	private static Set<ErrorObject> stdErrors = new HashSet<>();
 	
 	
 	static {
@@ -170,7 +170,7 @@ public class AuthorizationErrorResponse
 	@Override
 	public Map<String,String> toParameters() {
 
-		Map<String,String> params = new HashMap<String,String>();
+		Map<String,String> params = new HashMap<>();
 
 		params.put("error", error.getCode());
 

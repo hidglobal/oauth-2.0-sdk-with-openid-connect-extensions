@@ -368,7 +368,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	public Map<String,String> toParameters()
 		throws SerializeException {
 
-		Map <String,String> params = new LinkedHashMap<String,String>();
+		Map <String,String> params = new LinkedHashMap<>();
 		
 		params.put("response_type", rt.toString());
 		params.put("client_id", clientID.getValue());

@@ -56,7 +56,7 @@ public final class Audience extends Identifier {
 	 */
 	public List<Audience> toSingleAudienceList() {
 
-		List<Audience> audienceList = new ArrayList<Audience>(1);
+		List<Audience> audienceList = new ArrayList<>(1);
 		audienceList.add(this);
 		return audienceList;
 	}

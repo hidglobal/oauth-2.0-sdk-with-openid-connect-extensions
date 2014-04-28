@@ -110,7 +110,7 @@ public final class ACRRequest {
 				
 				if (claimEntry.getClaimRequirement().equals(ClaimRequirement.ESSENTIAL)) {
 					
-					essentialACRs = new ArrayList<ACR>();
+					essentialACRs = new ArrayList<>();
 					
 					if (claimEntry.getValue() != null)
 						essentialACRs.add(new ACR(claimEntry.getValue()));
@@ -122,7 +122,7 @@ public final class ACRRequest {
 					}
 					
 				} else {
-					voluntaryACRs = new ArrayList<ACR>();
+					voluntaryACRs = new ArrayList<>();
 					
 					if (claimEntry.getValue() != null)
 						voluntaryACRs.add(new ACR(claimEntry.getValue()));
@@ -142,7 +142,7 @@ public final class ACRRequest {
 		if (topLevelACRs != null) {
 			
 			if (voluntaryACRs == null)
-				voluntaryACRs = new ArrayList<ACR>();
+				voluntaryACRs = new ArrayList<>();
 			
 			voluntaryACRs.addAll(topLevelACRs);
 		}

@@ -171,7 +171,7 @@ public class UserInfo extends ClaimsSet {
 	/**
 	 * The names of the standard top-level UserInfo claims.
 	 */
-	private static final Set<String> stdClaimNames = new LinkedHashSet<String>();
+	private static final Set<String> stdClaimNames = new LinkedHashSet<>();
 	
 	
 	static {
@@ -962,7 +962,7 @@ public class UserInfo extends ClaimsSet {
 	
 		Map<LangTag,JSONObject> entriesIn = getLangTaggedClaim(ADDRESS_CLAIM_NAME, JSONObject.class);
 
-		Map<LangTag,Address> entriesOut = new HashMap<LangTag,Address>();
+		Map<LangTag,Address> entriesOut = new HashMap<>();
 
 		for (Map.Entry<LangTag,JSONObject> en: entriesIn.entrySet())
 			entriesOut.put(en.getKey(), new Address(en.getValue()));

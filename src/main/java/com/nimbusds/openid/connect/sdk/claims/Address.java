@@ -62,7 +62,7 @@ public class Address extends ClaimsSet {
 	/**
 	 * The names of the standard UserInfo address claims.
 	 */
-	private static final Set<String> stdClaimNames = new LinkedHashSet<String>();
+	private static final Set<String> stdClaimNames = new LinkedHashSet<>();
 	
 	
 	static {

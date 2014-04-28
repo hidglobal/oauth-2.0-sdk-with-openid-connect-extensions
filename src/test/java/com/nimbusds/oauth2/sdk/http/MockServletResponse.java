@@ -21,7 +21,7 @@ class MockServletResponse implements HttpServletResponse {
 	private int status;
 
 
-	private Map<String,String> headers = new HashMap<String, String>();
+	private Map<String,String> headers = new HashMap<>();
 
 
 	private ByteArrayOutputStream content = new ByteArrayOutputStream();
@@ -152,7 +152,7 @@ class MockServletResponse implements HttpServletResponse {
 	@Override
 	public Collection<String> getHeaders(String s) {
 
-		Collection<String> h = new ArrayList<String>(1);
+		Collection<String> h = new ArrayList<>(1);
 
 		String value = headers.get(s);
 

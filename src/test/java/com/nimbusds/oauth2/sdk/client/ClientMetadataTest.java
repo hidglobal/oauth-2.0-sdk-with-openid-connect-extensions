@@ -65,7 +65,7 @@ public class ClientMetadataTest extends TestCase {
 		
 		ClientMetadata meta = new ClientMetadata();
 		
-		Set<URI> redirectURIs = new HashSet<URI>();
+		Set<URI> redirectURIs = new HashSet<>();
 		redirectURIs.add(new URI("http://example.com/1"));
 		redirectURIs.add(new URI("http://example.com/2"));
 		meta.setRedirectionURIs(redirectURIs);
@@ -73,16 +73,16 @@ public class ClientMetadataTest extends TestCase {
 		Scope scope = Scope.parse("read write");
 		meta.setScope(scope);
 		
-		Set<ResponseType> rts = new HashSet<ResponseType>();
+		Set<ResponseType> rts = new HashSet<>();
 		rts.add(ResponseType.parse("code id_token"));
 		meta.setResponseTypes(rts);
 		
-		Set<GrantType> grantTypes = new HashSet<GrantType>();
+		Set<GrantType> grantTypes = new HashSet<>();
 		grantTypes.add(GrantType.AUTHORIZATION_CODE);
 		grantTypes.add(GrantType.REFRESH_TOKEN);
 		meta.setGrantTypes(grantTypes);
 		
-		List<InternetAddress> contacts = new LinkedList<InternetAddress>();
+		List<InternetAddress> contacts = new LinkedList<>();
 		contacts.add(new InternetAddress("alice@wonderland.net"));
 		contacts.add(new InternetAddress("admin@wonderland.net"));
 		meta.setContacts(contacts);
@@ -271,7 +271,7 @@ public class ClientMetadataTest extends TestCase {
 
 		assertNull(meta.getRedirectionURIStrings());
 
-		Set<URI> redirectURIs = new HashSet<URI>();
+		Set<URI> redirectURIs = new HashSet<>();
 		redirectURIs.add(new URI("https://cliemt.com/cb-1"));
 		redirectURIs.add(new URI("https://cliemt.com/cb-2"));
 		redirectURIs.add(new URI("https://cliemt.com/cb-3"));

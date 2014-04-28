@@ -167,7 +167,7 @@ public class AuthorizationSuccessResponse
 	public Map<String,String> toParameters()
 		throws SerializeException {
 
-		Map<String,String> params = new HashMap<String,String>();
+		Map<String,String> params = new HashMap<>();
 
 		if (code != null)
 			params.put("code", code.getValue());

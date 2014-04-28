@@ -25,10 +25,10 @@ public class ACRRequestTest extends TestCase {
 	
 	public void testConstructAndGet() {
 		
-		List<ACR> essentialACRs = new ArrayList<ACR>();
+		List<ACR> essentialACRs = new ArrayList<>();
 		essentialACRs.add(new ACR("1"));
 		
-		List<ACR> voluntaryACRs = new ArrayList<ACR>();
+		List<ACR> voluntaryACRs = new ArrayList<>();
 		voluntaryACRs.add(new ACR("2"));
 		
 		ACRRequest req = new ACRRequest(essentialACRs, voluntaryACRs);
@@ -74,7 +74,7 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveTopLevelACRRequest()
 		throws Exception {
 
-		List<ACR> acrValues = new ArrayList<ACR>();
+		List<ACR> acrValues = new ArrayList<>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
 		
@@ -106,7 +106,7 @@ public class ACRRequestTest extends TestCase {
 		
 		ClaimsRequest claims = new ClaimsRequest();
 		
-		List<String> essentialACRs = new ArrayList<String>();
+		List<String> essentialACRs = new ArrayList<>();
 		essentialACRs.add("A");
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);
@@ -136,7 +136,7 @@ public class ACRRequestTest extends TestCase {
 		
 		ClaimsRequest claims = new ClaimsRequest();
 		
-		List<String> essentialACRs = new ArrayList<String>();
+		List<String> essentialACRs = new ArrayList<>();
 		essentialACRs.add("A");
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.VOLUNTARY, null, essentialACRs);
@@ -164,13 +164,13 @@ public class ACRRequestTest extends TestCase {
 	public void testResolveMixedACRRequest()
 		throws Exception {
 		
-		List<ACR> acrValues = new ArrayList<ACR>();
+		List<ACR> acrValues = new ArrayList<>();
 		acrValues.add(new ACR("1"));
 		acrValues.add(new ACR("2"));
 		
 		ClaimsRequest claims = new ClaimsRequest();
 		
-		List<String> essentialACRs = new ArrayList<String>();
+		List<String> essentialACRs = new ArrayList<>();
 		essentialACRs.add("A");
 		essentialACRs.add("B");
 		claims.addIDTokenClaim("acr", ClaimRequirement.ESSENTIAL, null, essentialACRs);

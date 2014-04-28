@@ -52,7 +52,7 @@ public class OIDCProviderMetadata {
 	 * Initialises the registered parameter name set.
 	 */
 	static {
-		Set<String> p = new HashSet<String>();
+		Set<String> p = new HashSet<>();
 
 		p.add("issuer");
 		p.add("authorization_endpoint");
@@ -1328,19 +1328,19 @@ public class OIDCProviderMetadata {
 	public void applyDefaults() {
 
 		if (rms == null) {
-			rms = new ArrayList<ResponseMode>(2);
+			rms = new ArrayList<>(2);
 			rms.add(ResponseMode.QUERY);
 			rms.add(ResponseMode.FRAGMENT);
 		}
 
 		if (gts == null) {
-			gts = new ArrayList<GrantType>(2);
+			gts = new ArrayList<>(2);
 			gts.add(GrantType.AUTHORIZATION_CODE);
 			gts.add(GrantType.IMPLICIT);
 		}
 
 		if (claimTypes == null) {
-			claimTypes = new ArrayList<ClaimType>(1);
+			claimTypes = new ArrayList<>(1);
 			claimTypes.add(ClaimType.NORMAL);
 		}
 	}
@@ -1360,7 +1360,7 @@ public class OIDCProviderMetadata {
 
 		o.put("issuer", issuer.getValue());
 
-		List<String> stringList = new ArrayList<String>(subjectTypes.size());
+		List<String> stringList = new ArrayList<>(subjectTypes.size());
 
 		for (SubjectType st: subjectTypes)
 			stringList.add(st.toString());
@@ -1394,7 +1394,7 @@ public class OIDCProviderMetadata {
 
 		if (rts != null) {
 
-			stringList = new ArrayList<String>(rts.size());
+			stringList = new ArrayList<>(rts.size());
 
 			for (ResponseType rt: rts)
 				stringList.add(rt.toString());
@@ -1404,7 +1404,7 @@ public class OIDCProviderMetadata {
 
 		if (rms != null) {
 
-			stringList = new ArrayList<String>(rms.size());
+			stringList = new ArrayList<>(rms.size());
 
 			for (ResponseMode rm: rms)
 				stringList.add(rm.getValue());
@@ -1414,7 +1414,7 @@ public class OIDCProviderMetadata {
 
 		if (gts != null) {
 
-			stringList = new ArrayList<String>(gts.size());
+			stringList = new ArrayList<>(gts.size());
 
 			for (GrantType gt: gts)
 				stringList.add(gt.toString());
@@ -1424,7 +1424,7 @@ public class OIDCProviderMetadata {
 
 		if (acrValues != null) {
 
-			stringList = new ArrayList<String>(acrValues.size());
+			stringList = new ArrayList<>(acrValues.size());
 
 			for (ACR acr: acrValues)
 				stringList.add(acr.getValue());
@@ -1435,7 +1435,7 @@ public class OIDCProviderMetadata {
 
 		if (tokenEndpointAuthMethods != null) {
 
-			stringList = new ArrayList<String>(tokenEndpointAuthMethods.size());
+			stringList = new ArrayList<>(tokenEndpointAuthMethods.size());
 
 			for (ClientAuthenticationMethod m: tokenEndpointAuthMethods)
 				stringList.add(m.getValue());
@@ -1445,7 +1445,7 @@ public class OIDCProviderMetadata {
 
 		if (tokenEndpointJWSAlgs != null) {
 
-			stringList = new ArrayList<String>(tokenEndpointJWSAlgs.size());
+			stringList = new ArrayList<>(tokenEndpointJWSAlgs.size());
 
 			for (JWSAlgorithm alg: tokenEndpointJWSAlgs)
 				stringList.add(alg.getName());
@@ -1455,7 +1455,7 @@ public class OIDCProviderMetadata {
 
 		if (requestObjectJWSAlgs != null) {
 
-			stringList = new ArrayList<String>(requestObjectJWSAlgs.size());
+			stringList = new ArrayList<>(requestObjectJWSAlgs.size());
 
 			for (JWSAlgorithm alg: requestObjectJWSAlgs)
 				stringList.add(alg.getName());
@@ -1465,7 +1465,7 @@ public class OIDCProviderMetadata {
 
 		if (requestObjectJWEAlgs != null) {
 
-			stringList = new ArrayList<String>(requestObjectJWEAlgs.size());
+			stringList = new ArrayList<>(requestObjectJWEAlgs.size());
 
 			for (JWEAlgorithm alg: requestObjectJWEAlgs)
 				stringList.add(alg.getName());
@@ -1475,7 +1475,7 @@ public class OIDCProviderMetadata {
 
 		if (requestObjectJWEEncs != null) {
 
-			stringList = new ArrayList<String>(requestObjectJWEEncs.size());
+			stringList = new ArrayList<>(requestObjectJWEEncs.size());
 
 			for (EncryptionMethod m: requestObjectJWEEncs)
 				stringList.add(m.getName());
@@ -1485,7 +1485,7 @@ public class OIDCProviderMetadata {
 
 		if (idTokenJWSAlgs != null) {
 
-			stringList = new ArrayList<String>(idTokenJWSAlgs.size());
+			stringList = new ArrayList<>(idTokenJWSAlgs.size());
 
 			for (JWSAlgorithm alg: idTokenJWSAlgs)
 				stringList.add(alg.getName());
@@ -1495,7 +1495,7 @@ public class OIDCProviderMetadata {
 
 		if (idTokenJWEAlgs != null) {
 
-			stringList = new ArrayList<String>(idTokenJWEAlgs.size());
+			stringList = new ArrayList<>(idTokenJWEAlgs.size());
 
 			for (JWEAlgorithm alg: idTokenJWEAlgs)
 				stringList.add(alg.getName());
@@ -1505,7 +1505,7 @@ public class OIDCProviderMetadata {
 
 		if (idTokenJWEEncs != null) {
 
-			stringList = new ArrayList<String>(idTokenJWEEncs.size());
+			stringList = new ArrayList<>(idTokenJWEEncs.size());
 
 			for (EncryptionMethod m: idTokenJWEEncs)
 				stringList.add(m.getName());
@@ -1515,7 +1515,7 @@ public class OIDCProviderMetadata {
 
 		if (userInfoJWSAlgs != null) {
 
-			stringList = new ArrayList<String>(userInfoJWSAlgs.size());
+			stringList = new ArrayList<>(userInfoJWSAlgs.size());
 
 			for (JWSAlgorithm alg: userInfoJWSAlgs)
 				stringList.add(alg.getName());
@@ -1525,7 +1525,7 @@ public class OIDCProviderMetadata {
 
 		if (userInfoJWEAlgs != null) {
 
-			stringList = new ArrayList<String>(userInfoJWEAlgs.size());
+			stringList = new ArrayList<>(userInfoJWEAlgs.size());
 
 			for (JWEAlgorithm alg: userInfoJWEAlgs)
 				stringList.add(alg.getName());
@@ -1535,7 +1535,7 @@ public class OIDCProviderMetadata {
 
 		if (userInfoJWEEncs != null) {
 
-			stringList = new ArrayList<String>(userInfoJWEEncs.size());
+			stringList = new ArrayList<>(userInfoJWEEncs.size());
 
 			for (EncryptionMethod m: userInfoJWEEncs)
 				stringList.add(m.getName());
@@ -1545,7 +1545,7 @@ public class OIDCProviderMetadata {
 
 		if (displays != null) {
 
-			stringList = new ArrayList<String>(displays.size());
+			stringList = new ArrayList<>(displays.size());
 
 			for (Display d: displays)
 				stringList.add(d.toString());
@@ -1555,7 +1555,7 @@ public class OIDCProviderMetadata {
 
 		if (claimTypes != null) {
 
-			stringList = new ArrayList<String>(claimTypes.size());
+			stringList = new ArrayList<>(claimTypes.size());
 
 			for (ClaimType ct: claimTypes)
 				stringList.add(ct.toString());
@@ -1568,7 +1568,7 @@ public class OIDCProviderMetadata {
 
 		if (claimsLocales != null) {
 
-			stringList = new ArrayList<String>(claimsLocales.size());
+			stringList = new ArrayList<>(claimsLocales.size());
 
 			for (LangTag l: claimsLocales)
 				stringList.add(l.toString());
@@ -1578,7 +1578,7 @@ public class OIDCProviderMetadata {
 
 		if (uiLocales != null) {
 
-			stringList = new ArrayList<String>(uiLocales.size());
+			stringList = new ArrayList<>(uiLocales.size());
 
 			for (LangTag l: uiLocales)
 				stringList.add(l.toString());
@@ -1625,7 +1625,7 @@ public class OIDCProviderMetadata {
 
 		// Parse issuer and subject_types_supported first
 		
-		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
+		List<SubjectType> subjectTypes = new ArrayList<>();
 		
 		for (String v: JSONObjectUtils.getStringArray(jsonObject, "subject_types_supported")) {
 			subjectTypes.add(SubjectType.parse(v));
@@ -1671,7 +1671,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("response_types_supported")) {
 
-			op.rts = new ArrayList<ResponseType>();
+			op.rts = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "response_types_supported")) {
 
@@ -1682,7 +1682,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("response_modes_supported")) {
 
-			op.rms = new ArrayList<ResponseMode>();
+			op.rms = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "response_modes_supported")) {
 
@@ -1693,7 +1693,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("grant_types_supported")) {
 			
-			op.gts = new ArrayList<GrantType>();
+			op.gts = new ArrayList<>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "grant_types_supported")) {
 				
@@ -1704,7 +1704,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("acr_values_supported")) {
 
-			op.acrValues = new ArrayList<ACR>();
+			op.acrValues = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "acr_values_supported")) {
 
@@ -1715,7 +1715,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("token_endpoint_auth_methods_supported")) {
 			
-			op.tokenEndpointAuthMethods = new ArrayList<ClientAuthenticationMethod>();
+			op.tokenEndpointAuthMethods = new ArrayList<>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "token_endpoint_auth_methods_supported")) {
 				
@@ -1726,7 +1726,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("token_endpoint_auth_signing_alg_values_supported")) {
 			
-			op.tokenEndpointJWSAlgs = new ArrayList<JWSAlgorithm>();
+			op.tokenEndpointJWSAlgs = new ArrayList<>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "token_endpoint_auth_signing_alg_values_supported")) {
 
@@ -1743,7 +1743,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("request_object_signing_alg_values_supported")) {
 
-			op.requestObjectJWSAlgs = new ArrayList<JWSAlgorithm>();
+			op.requestObjectJWSAlgs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "request_object_signing_alg_values_supported")) {
 
@@ -1755,7 +1755,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("request_object_encryption_alg_values_supported")) {
 
-			op.requestObjectJWEAlgs = new ArrayList<JWEAlgorithm>();
+			op.requestObjectJWEAlgs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "request_object_encryption_alg_values_supported")) {
 
@@ -1767,7 +1767,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("request_object_encryption_enc_values_supported")) {
 
-			op.requestObjectJWEEncs = new ArrayList<EncryptionMethod>();
+			op.requestObjectJWEEncs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "request_object_encryption_enc_values_supported")) {
 
@@ -1781,7 +1781,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("id_token_signing_alg_values_supported")) {
 
-			op.idTokenJWSAlgs = new ArrayList<JWSAlgorithm>();
+			op.idTokenJWSAlgs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "id_token_signing_alg_values_supported")) {
 
@@ -1793,7 +1793,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("id_token_encryption_alg_values_supported")) {
 
-			op.idTokenJWEAlgs = new ArrayList<JWEAlgorithm>();
+			op.idTokenJWEAlgs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "id_token_encryption_alg_values_supported")) {
 
@@ -1805,7 +1805,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("id_token_encryption_enc_values_supported")) {
 
-			op.idTokenJWEEncs = new ArrayList<EncryptionMethod>();
+			op.idTokenJWEEncs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "id_token_encryption_enc_values_supported")) {
 
@@ -1818,7 +1818,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("userinfo_signing_alg_values_supported")) {
 
-			op.userInfoJWSAlgs = new ArrayList<JWSAlgorithm>();
+			op.userInfoJWSAlgs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "userinfo_signing_alg_values_supported")) {
 
@@ -1830,7 +1830,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("userinfo_encryption_alg_values_supported")) {
 
-			op.userInfoJWEAlgs = new ArrayList<JWEAlgorithm>();
+			op.userInfoJWEAlgs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "userinfo_encryption_alg_values_supported")) {
 
@@ -1842,7 +1842,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("userinfo_encryption_enc_values_supported")) {
 
-			op.userInfoJWEEncs = new ArrayList<EncryptionMethod>();
+			op.userInfoJWEEncs = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "userinfo_encryption_enc_values_supported")) {
 
@@ -1856,7 +1856,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("display_values_supported")) {
 
-			op.displays = new ArrayList<Display>();
+			op.displays = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "display_values_supported")) {
 
@@ -1867,7 +1867,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("claim_types_supported")) {
 			
-			op.claimTypes = new ArrayList<ClaimType>();
+			op.claimTypes = new ArrayList<>();
 			
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "claim_types_supported")) {
 				
@@ -1879,7 +1879,7 @@ public class OIDCProviderMetadata {
 
 		if (jsonObject.containsKey("claims_supported")) {
 
-			op.claims = new ArrayList<String>();
+			op.claims = new ArrayList<>();
 
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "claims_supported")) {
 
@@ -1890,7 +1890,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("claims_locales_supported")) {
 			
-			op.claimsLocales = new ArrayList<LangTag>();
+			op.claimsLocales = new ArrayList<>();
 			
 			for (String v : JSONObjectUtils.getStringArray(jsonObject, "claims_locales_supported")) {
 				
@@ -1909,7 +1909,7 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("ui_locales_supported")) {
 			
-			op.uiLocales = new ArrayList<LangTag>();
+			op.uiLocales = new ArrayList<>();
 			
 			for (String v : JSONObjectUtils.getStringArray(jsonObject, "ui_locales_supported")) {
 				

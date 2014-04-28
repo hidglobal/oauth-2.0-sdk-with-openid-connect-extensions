@@ -126,7 +126,7 @@ public class ResponseTypeTest extends TestCase {
 
 	public void testContains() {
 
-		List<ResponseType> rtList = new ArrayList<ResponseType>();
+		List<ResponseType> rtList = new ArrayList<>();
 
 		ResponseType rt1 = new ResponseType();
 		rt1.add(ResponseType.Value.CODE);

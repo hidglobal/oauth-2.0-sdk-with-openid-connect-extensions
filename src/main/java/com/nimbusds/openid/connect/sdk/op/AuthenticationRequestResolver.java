@@ -247,7 +247,7 @@ public class AuthenticationRequestResolver {
 		Map<String,Object> claims = claimsSet.getAllClaims();
 
 		// Reformat all claim values as strings
-		Map<String,String> reformattedClaims = new HashMap<String,String>();
+		Map<String,String> reformattedClaims = new HashMap<>();
 
 		for (Map.Entry<String,Object> entry: claims.entrySet()) {
 
@@ -330,7 +330,7 @@ public class AuthenticationRequestResolver {
 
 			Map<String, String> requestObjectParams = reformatClaims(jwtClaims);
 
-			Map<String, String> finalParams = new HashMap<String, String>();
+			Map<String, String> finalParams = new HashMap<>();
 			
 			try {
 				finalParams.putAll(request.toParameters());

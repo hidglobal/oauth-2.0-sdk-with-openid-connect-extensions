@@ -128,3 +128,7 @@ version 3.0.2 (2014-04-23)
 
 version 3.1 (2014-04-24)
     * Adds static ClientAuthenticationMethod.parse(String) method.
+
+version 3.2 (2014-04-28)
+    * Upgrades source and compile target to Java 7.
+    * Fixes NullPointerException in OIDCProviderMetadata.toJSONObject() method.

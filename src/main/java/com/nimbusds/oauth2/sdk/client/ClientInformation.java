@@ -50,7 +50,7 @@ public class ClientInformation {
 	 * Initialises the registered parameter name set.
 	 */
 	static {
-		Set<String> p = new HashSet<String>(ClientMetadata.getRegisteredParameterNames());
+		Set<String> p = new HashSet<>(ClientMetadata.getRegisteredParameterNames());
 
 		p.add("client_id");
 		p.add("client_id_issued_at");

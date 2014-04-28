@@ -75,7 +75,7 @@ public class ClientRegistrationErrorResponse
 	 */
 	public static Set<ErrorObject> getStandardErrors() {
 		
-		Set<ErrorObject> stdErrors = new HashSet<ErrorObject>();
+		Set<ErrorObject> stdErrors = new HashSet<>();
 		stdErrors.add(BearerTokenError.MISSING_TOKEN);
 		stdErrors.add(BearerTokenError.INVALID_REQUEST);
 		stdErrors.add(BearerTokenError.INVALID_TOKEN);

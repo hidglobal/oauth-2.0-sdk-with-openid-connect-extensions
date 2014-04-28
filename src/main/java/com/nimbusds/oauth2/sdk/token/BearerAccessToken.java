@@ -3,17 +3,16 @@ package com.nimbusds.oauth2.sdk.token;
 
 import java.util.Map;
 
-import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
-import com.nimbusds.oauth2.sdk.util.ContentTypeUtils;
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**

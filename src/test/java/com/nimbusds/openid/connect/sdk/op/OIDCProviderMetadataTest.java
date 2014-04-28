@@ -298,7 +298,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		Issuer issuer = new Issuer("https://c2id.com");
 
-		List<SubjectType> subjectTypes = new LinkedList<SubjectType>();
+		List<SubjectType> subjectTypes = new LinkedList<>();
 		subjectTypes.add(SubjectType.PAIRWISE);
 		subjectTypes.add(SubjectType.PUBLIC);
 
@@ -332,7 +332,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		meta.setScopes(Scope.parse("openid email profile"));
 		assertTrue(Scope.parse("openid email profile").containsAll(meta.getScopes()));
 
-		List<ResponseType> responseTypes = new LinkedList<ResponseType>();
+		List<ResponseType> responseTypes = new LinkedList<>();
 		ResponseType rt1 = new ResponseType();
 		rt1.add(ResponseType.Value.CODE);
 		responseTypes.add(rt1);
@@ -341,7 +341,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals(ResponseType.Value.CODE, responseTypes.iterator().next().iterator().next());
 		assertEquals(1, responseTypes.size());
 
-		List<ResponseMode> responseModes = new LinkedList<ResponseMode>();
+		List<ResponseMode> responseModes = new LinkedList<>();
 		responseModes.add(ResponseMode.QUERY);
 		responseModes.add(ResponseMode.FRAGMENT);
 		meta.setResponseModes(responseModes);
@@ -349,7 +349,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(meta.getResponseModes().contains(ResponseMode.FRAGMENT));
 		assertEquals(2, meta.getResponseModes().size());
 
-		List<GrantType> grantTypes = new LinkedList<GrantType>();
+		List<GrantType> grantTypes = new LinkedList<>();
 		grantTypes.add(GrantType.AUTHORIZATION_CODE);
 		grantTypes.add(GrantType.REFRESH_TOKEN);
 		meta.setGrantTypes(grantTypes);
@@ -357,17 +357,17 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
 		assertEquals(2, meta.getGrantTypes().size());
 
-		List<ACR> acrList = new LinkedList<ACR>();
+		List<ACR> acrList = new LinkedList<>();
 		acrList.add(new ACR("1"));
 		meta.setACRs(acrList);
 		assertEquals("1", meta.getACRs().get(0).getValue());
 
-		List<ClientAuthenticationMethod> authMethods = new LinkedList<ClientAuthenticationMethod>();
+		List<ClientAuthenticationMethod> authMethods = new LinkedList<>();
 		authMethods.add(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
 		meta.setTokenEndpointAuthMethods(authMethods);
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, meta.getTokenEndpointAuthMethods().get(0));
 
-		List<JWSAlgorithm> tokenEndpointJWSAlgs = new LinkedList<JWSAlgorithm>();
+		List<JWSAlgorithm> tokenEndpointJWSAlgs = new LinkedList<>();
 		tokenEndpointJWSAlgs.add(JWSAlgorithm.HS256);
 		tokenEndpointJWSAlgs.add(JWSAlgorithm.HS384);
 		tokenEndpointJWSAlgs.add(JWSAlgorithm.HS512);
@@ -376,51 +376,51 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals(JWSAlgorithm.HS384, meta.getTokenEndpointJWSAlgs().get(1));
 		assertEquals(JWSAlgorithm.HS512, meta.getTokenEndpointJWSAlgs().get(2));
 
-		List<JWSAlgorithm> requestObjectJWSAlgs = new LinkedList<JWSAlgorithm>();
+		List<JWSAlgorithm> requestObjectJWSAlgs = new LinkedList<>();
 		requestObjectJWSAlgs.add(JWSAlgorithm.HS256);
 		meta.setRequestObjectJWSAlgs(requestObjectJWSAlgs);
 		assertEquals(JWSAlgorithm.HS256, meta.getRequestObjectJWSAlgs().get(0));
 
-		List<JWEAlgorithm> requestObjectJWEAlgs = new LinkedList<JWEAlgorithm>();
+		List<JWEAlgorithm> requestObjectJWEAlgs = new LinkedList<>();
 		requestObjectJWEAlgs.add(JWEAlgorithm.A128KW);
 		meta.setRequestObjectJWEAlgs(requestObjectJWEAlgs);
 		assertEquals(JWEAlgorithm.A128KW, meta.getRequestObjectJWEAlgs().get(0));
 
-		List<EncryptionMethod> requestObjectEncs = new LinkedList<EncryptionMethod>();
+		List<EncryptionMethod> requestObjectEncs = new LinkedList<>();
 		requestObjectEncs.add(EncryptionMethod.A128GCM);
 		meta.setRequestObjectJWEEncs(requestObjectEncs);
 		assertEquals(EncryptionMethod.A128GCM, meta.getRequestObjectJWEEncs().get(0));
 
-		List<JWSAlgorithm> idTokenJWSAlgs = new LinkedList<JWSAlgorithm>();
+		List<JWSAlgorithm> idTokenJWSAlgs = new LinkedList<>();
 		idTokenJWSAlgs.add(JWSAlgorithm.RS256);
 		meta.setIdTokenJWSAlgs(idTokenJWSAlgs);
 		assertEquals(JWSAlgorithm.RS256, meta.getIDTokenJWSAlgs().get(0));
 
-		List<JWEAlgorithm> idTokenJWEalgs = new LinkedList<JWEAlgorithm>();
+		List<JWEAlgorithm> idTokenJWEalgs = new LinkedList<>();
 		idTokenJWEalgs.add(JWEAlgorithm.A256KW);
 		meta.setIDTokenJWEAlgs(idTokenJWEalgs);
 
-		List<EncryptionMethod> idTokenEncs = new LinkedList<EncryptionMethod>();
+		List<EncryptionMethod> idTokenEncs = new LinkedList<>();
 		idTokenEncs.add(EncryptionMethod.A128GCM);
 		meta.setIdTokenJWEEncs(idTokenEncs);
 		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEncs().get(0));
 
-		List<JWSAlgorithm> userInfoJWSAlgs = new LinkedList<JWSAlgorithm>();
+		List<JWSAlgorithm> userInfoJWSAlgs = new LinkedList<>();
 		userInfoJWSAlgs.add(JWSAlgorithm.RS256);
 		meta.setUserInfoJWSAlgs(userInfoJWSAlgs);
 		assertEquals(JWSAlgorithm.RS256, meta.getUserInfoJWSAlgs().get(0));
 
-		List<JWEAlgorithm> userInfoJWEAlgs = new LinkedList<JWEAlgorithm>();
+		List<JWEAlgorithm> userInfoJWEAlgs = new LinkedList<>();
 		userInfoJWEAlgs.add(JWEAlgorithm.RSA1_5);
 		meta.setUserInfoJWEAlgs(userInfoJWEAlgs);
 		assertEquals(JWEAlgorithm.RSA1_5, meta.getUserInfoJWEAlgs().get(0));
 
-		List<EncryptionMethod> userInfoEncs = new LinkedList<EncryptionMethod>();
+		List<EncryptionMethod> userInfoEncs = new LinkedList<>();
 		userInfoEncs.add(EncryptionMethod.A128CBC_HS256);
 		meta.setUserInfoJWEEncs(userInfoEncs);
 		assertEquals(EncryptionMethod.A128CBC_HS256, meta.getUserInfoJWEEncs().get(0));
 
-		List<Display> displays = new LinkedList<Display>();
+		List<Display> displays = new LinkedList<>();
 		displays.add(Display.PAGE);
 		displays.add(Display.POPUP);
 		meta.setDisplays(displays);
@@ -428,12 +428,12 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals(Display.POPUP, meta.getDisplays().get(1));
 		assertEquals(2, meta.getDisplays().size());
 
-		List<ClaimType> claimTypes = new LinkedList<ClaimType>();
+		List<ClaimType> claimTypes = new LinkedList<>();
 		claimTypes.add(ClaimType.NORMAL);
 		meta.setClaimTypes(claimTypes);
 		assertEquals(ClaimType.NORMAL, meta.getClaimTypes().get(0));
 
-		List<String> claims = new LinkedList<String>();
+		List<String> claims = new LinkedList<>();
 		claims.add("name");
 		claims.add("email");
 		meta.setClaims(claims);
@@ -441,12 +441,12 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertEquals("email", meta.getClaims().get(1));
 		assertEquals(2, meta.getClaims().size());
 
-		List<LangTag> claimLocales = new LinkedList<LangTag>();
+		List<LangTag> claimLocales = new LinkedList<>();
 		claimLocales.add(LangTag.parse("en-GB"));
 		meta.setClaimLocales(claimLocales);
 		assertEquals("en-GB", meta.getClaimsLocales().get(0).toString());
 
-		List<LangTag> uiLocales = new LinkedList<LangTag>();
+		List<LangTag> uiLocales = new LinkedList<>();
 		uiLocales.add(LangTag.parse("bg-BG"));
 		meta.setUILocales(uiLocales);
 		assertEquals("bg-BG", meta.getUILocales().get(0).toString());
@@ -560,14 +560,14 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		Issuer issuer = new Issuer("https://c2id.com");
 
-		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
+		List<SubjectType> subjectTypes = new ArrayList<>();
 		subjectTypes.add(SubjectType.PUBLIC);
 
 		URI jwksURI = new URI("https://c2id.com/jwks.json");
 
 		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURI);
 
-		List<JWSAlgorithm> tokenEndpointJWTAlgs = new ArrayList<JWSAlgorithm>();
+		List<JWSAlgorithm> tokenEndpointJWTAlgs = new ArrayList<>();
 		tokenEndpointJWTAlgs.add(new JWSAlgorithm("none"));
 
 		try {
@@ -583,7 +583,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		// Simulate JSON object with none token endpoint JWT algs
 		JSONObject jsonObject = meta.toJSONObject();
 
-		List<String> stringList = new ArrayList<String>();
+		List<String> stringList = new ArrayList<>();
 		stringList.add("none");
 
 		jsonObject.put("token_endpoint_auth_signing_alg_values_supported", stringList);
@@ -605,7 +605,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		Issuer issuer = new Issuer("https://c2id.com");
 
-		List<SubjectType> subjectTypes = new ArrayList<SubjectType>();
+		List<SubjectType> subjectTypes = new ArrayList<>();
 		subjectTypes.add(SubjectType.PUBLIC);
 
 		URI jwksURI = new URI("https://c2id.com/jwks.json");

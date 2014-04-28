@@ -1138,7 +1138,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		if (StringUtils.isNotBlank(v)) {
 
-			uiLocales = new LinkedList<LangTag>();
+			uiLocales = new LinkedList<>();
 
 			StringTokenizer st = new StringTokenizer(v, " ");
 
@@ -1163,7 +1163,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		if (StringUtils.isNotBlank(v)) {
 
-			claimsLocales = new LinkedList<LangTag>();
+			claimsLocales = new LinkedList<>();
 
 			StringTokenizer st = new StringTokenizer(v, " ");
 
@@ -1208,7 +1208,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		if (StringUtils.isNotBlank(v)) {
 
-			acrValues = new LinkedList<ACR>();
+			acrValues = new LinkedList<>();
 
 			StringTokenizer st = new StringTokenizer(v, " ");
 

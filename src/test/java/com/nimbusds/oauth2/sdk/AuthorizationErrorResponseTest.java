@@ -198,11 +198,10 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		
 		try {
 			AuthorizationErrorResponse.parse(new URI(s1));
-			fail("Failed to raise exception: No params");
+			fail();
 			
 		} catch (ParseException e) {
-		
-			System.out.println(e);
+			// ok
 		}
 	}
 }

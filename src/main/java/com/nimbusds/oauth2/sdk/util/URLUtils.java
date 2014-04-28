@@ -130,7 +130,7 @@ public class URLUtils {
 	 */
 	public static Map<String,String> parseParameters(final String query) {
 		
-		Map<String,String> params = new HashMap<String, String>();
+		Map<String,String> params = new HashMap<>();
 		
 		if (query == null)
 			return params; // empty map

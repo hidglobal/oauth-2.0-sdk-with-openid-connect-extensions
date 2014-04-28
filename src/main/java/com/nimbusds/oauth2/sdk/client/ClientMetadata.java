@@ -64,7 +64,7 @@ public class ClientMetadata {
 	 * Initialises the registered parameter name set.
 	 */
 	static {
-		Set<String> p = new HashSet<String>();
+		Set<String> p = new HashSet<>();
 
 		p.add("redirect_uris");
 		p.add("scope");
@@ -191,12 +191,12 @@ public class ClientMetadata {
 	 */
 	public ClientMetadata() {
 
-		nameEntries = new HashMap<LangTag,String>();
-		logoURIEntries = new HashMap<LangTag,URI>();
-		uriEntries = new HashMap<LangTag,URI>();
-		policyURIEntries = new HashMap<LangTag,URI>();
-		policyURIEntries = new HashMap<LangTag,URI>();
-		tosURIEntries = new HashMap<LangTag,URI>();
+		nameEntries = new HashMap<>();
+		logoURIEntries = new HashMap<>();
+		uriEntries = new HashMap<>();
+		policyURIEntries = new HashMap<>();
+		policyURIEntries = new HashMap<>();
+		tosURIEntries = new HashMap<>();
 		customFields = new JSONObject();
 	}
 
@@ -265,7 +265,7 @@ public class ClientMetadata {
 		if (redirectURIs == null)
 			return null;
 
-		Set<String> uriStrings = new HashSet<String>();
+		Set<String> uriStrings = new HashSet<>();
 
 		for (URI uri: redirectURIs)
 			uriStrings.add(uri.toString());
@@ -297,7 +297,7 @@ public class ClientMetadata {
 	public void setRedirectionURI(final URI redirectURI) {
 
 		if (redirectURI != null) {
-			redirectURIs = new HashSet<URI>(Arrays.asList(redirectURI));
+			redirectURIs = new HashSet<>(Arrays.asList(redirectURI));
 		} else {
 			redirectURIs = null;
 		}
@@ -924,12 +924,12 @@ public class ClientMetadata {
 	public void applyDefaults() {
 
 		if (responseTypes == null) {
-			responseTypes = new HashSet<ResponseType>();
+			responseTypes = new HashSet<>();
 			responseTypes.add(ResponseType.getDefault());
 		}
 
 		if (grantTypes == null) {
-			grantTypes = new HashSet<GrantType>();
+			grantTypes = new HashSet<>();
 			grantTypes.add(GrantType.AUTHORIZATION_CODE);
 		}
 
@@ -1167,7 +1167,7 @@ public class ClientMetadata {
 
 		if (jsonObject.containsKey("redirect_uris")) {
 
-			Set<URI> redirectURIs = new LinkedHashSet<URI>();
+			Set<URI> redirectURIs = new LinkedHashSet<>();
 
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "redirect_uris")) {
 
@@ -1194,7 +1194,7 @@ public class ClientMetadata {
 
 		if (jsonObject.containsKey("response_types")) {
 
-			Set<ResponseType> responseTypes = new LinkedHashSet<ResponseType>();
+			Set<ResponseType> responseTypes = new LinkedHashSet<>();
 
 			for (String rt: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
 
@@ -1208,7 +1208,7 @@ public class ClientMetadata {
 
 		if (jsonObject.containsKey("grant_types")) {
 
-			Set<GrantType> grantTypes = new LinkedHashSet<GrantType>();
+			Set<GrantType> grantTypes = new LinkedHashSet<>();
 
 			for (String grant: JSONObjectUtils.getStringArray(jsonObject, "grant_types")) {
 
@@ -1222,7 +1222,7 @@ public class ClientMetadata {
 
 		if (jsonObject.containsKey("contacts")) {
 
-			List<InternetAddress> emailList = new LinkedList<InternetAddress>();
+			List<InternetAddress> emailList = new LinkedList<>();
 
 			for (String emailString: JSONObjectUtils.getStringArray(jsonObject, "contacts")) {
 

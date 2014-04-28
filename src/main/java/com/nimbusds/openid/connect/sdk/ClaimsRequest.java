@@ -345,7 +345,7 @@ public class ClaimsRequest {
 		 */
 		public static Collection<Entry> parseEntries(final JSONObject jsonObject) {
 
-			Collection<Entry> entries = new LinkedList<Entry>();
+			Collection<Entry> entries = new LinkedList<>();
 
 			if (jsonObject.isEmpty())
 				return entries;
@@ -406,7 +406,7 @@ public class ClaimsRequest {
 
 					} else if (entrySpec.containsKey("values")) {
 
-						List<String> expectedValues = new LinkedList<String>();
+						List<String> expectedValues = new LinkedList<>();
 
 						for (Object v: (List)entrySpec.get("values")) {
 
@@ -433,14 +433,14 @@ public class ClaimsRequest {
 	 * The requested ID token claims, keyed by claim name and language tag.
 	 */
 	private final Map<ImmutablePair<String,LangTag>,Entry> idTokenClaims =
-		new HashMap<ImmutablePair<String,LangTag>,Entry>();
+		new HashMap<>();
 
 
 	/**
 	 * The requested UserInfo claims, keyed by claim name and language tag.
 	 */
 	private final Map<ImmutablePair<String,LangTag>,Entry> userInfoClaims =
-		new HashMap<ImmutablePair<String,LangTag>,Entry>();	
+		new HashMap<>();
 	
 
 	/**
@@ -553,7 +553,7 @@ public class ClaimsRequest {
 	public void addIDTokenClaim(final Entry entry) {
 
 		ImmutablePair<String,LangTag> key = 
-			new ImmutablePair<String,LangTag>(entry.getClaimName(), entry.getLangTag());
+			new ImmutablePair<>(entry.getClaimName(), entry.getLangTag());
 
 		idTokenClaims.put(key, entry);
 	}
@@ -583,7 +583,7 @@ public class ClaimsRequest {
 	 */
 	public Set<String> getIDTokenClaimNames(final boolean withLangTag) {
 		
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		
 		for (Entry en: idTokenClaims.values())
 			names.add(en.getClaimName(withLangTag));
@@ -603,7 +603,7 @@ public class ClaimsRequest {
 	public Entry removeIDTokenClaim(final String claimName, final LangTag langTag) {
 
 		ImmutablePair<String,LangTag> key = 
-			new ImmutablePair<String,LangTag>(claimName, langTag);
+			new ImmutablePair<>(claimName, langTag);
 
 		return idTokenClaims.remove(key);
 	}
@@ -620,7 +620,7 @@ public class ClaimsRequest {
 	 */
 	public Collection<Entry> removeIDTokenClaims(final String claimName) {
 
-		Collection<Entry> removedClaims = new LinkedList<Entry>();
+		Collection<Entry> removedClaims = new LinkedList<>();
 
 		Iterator<Map.Entry<ImmutablePair<String,LangTag>,Entry>> it = idTokenClaims.entrySet().iterator();
 
@@ -725,7 +725,7 @@ public class ClaimsRequest {
 	public void addUserInfoClaim(final Entry entry) {
 
 		ImmutablePair<String,LangTag> key = 
-			new ImmutablePair<String,LangTag>(entry.getClaimName(), entry.getLangTag());
+			new ImmutablePair<>(entry.getClaimName(), entry.getLangTag());
 
 		userInfoClaims.put(key, entry);
 	}
@@ -755,7 +755,7 @@ public class ClaimsRequest {
 	 */
 	public Set<String> getUserInfoClaimNames(final boolean withLangTag) {
 		
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new HashSet<>();
 		
 		for (Entry en: userInfoClaims.values())
 			names.add(en.getClaimName(withLangTag));
@@ -775,7 +775,7 @@ public class ClaimsRequest {
 	public Entry removeUserInfoClaim(final String claimName, final LangTag langTag) {
 
 		ImmutablePair<String,LangTag> key = 
-			new ImmutablePair<String,LangTag>(claimName, langTag);
+			new ImmutablePair<>(claimName, langTag);
 
 		return userInfoClaims.remove(key);
 	}
@@ -792,7 +792,7 @@ public class ClaimsRequest {
 	 */
 	public Collection<Entry> removeUserInfoClaims(final String claimName) {
 
-		Collection<Entry> removedClaims = new LinkedList<Entry>();
+		Collection<Entry> removedClaims = new LinkedList<>();
 
 		Iterator<Map.Entry<ImmutablePair<String,LangTag>,Entry>> it = userInfoClaims.entrySet().iterator();
 
