@@ -1485,7 +1485,7 @@ public class OIDCProviderMetadata {
 
 		if (idTokenJWSAlgs != null) {
 
-			stringList = new ArrayList<String>(idTokenJWEAlgs.size());
+			stringList = new ArrayList<String>(idTokenJWSAlgs.size());
 
 			for (JWSAlgorithm alg: idTokenJWSAlgs)
 				stringList.add(alg.getName());
