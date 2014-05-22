@@ -30,4 +30,14 @@ public class GrantTypeTest extends TestCase {
 
 		assertEquals("x_custom", grantType.getValue());
 	}
+	
+	
+	public void testEquals() {
+	
+		assertTrue(new GrantType("authorization_code").equals(GrantType.AUTHORIZATION_CODE));
+		assertTrue(new GrantType("implicit").equals(GrantType.IMPLICIT));
+		assertTrue(new GrantType("refresh_token").equals(GrantType.REFRESH_TOKEN));
+		assertTrue(new GrantType("password").equals(GrantType.PASSWORD));
+		assertTrue(new GrantType("client_credentials").equals(GrantType.CLIENT_CREDENTIALS));
+	}
 }
