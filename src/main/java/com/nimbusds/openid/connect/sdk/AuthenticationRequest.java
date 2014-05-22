@@ -1253,7 +1253,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		
 			} catch (URISyntaxException e) {
 			
-				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), 
+				throw new ParseException("Invalid \"request_uri\" parameter: " + e.getMessage(), 
 					                 OAuth2Error.INVALID_REQUEST,
 					                 clientID, redirectURI, state, e);
 			}
