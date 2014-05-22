@@ -224,10 +224,15 @@ public class HTTPRequest extends HTTPMessage {
 			
 			String line;
 			
+			boolean firstLine = true;
+			
 			while ((line = reader.readLine()) != null) {
 			
+				if (firstLine)
+					firstLine = false;
+				else
+					body.append(System.getProperty("line.separator"));
 				body.append(line);
-				body.append(System.getProperty("line.separator"));
 			}
 			
 			reader.close();
