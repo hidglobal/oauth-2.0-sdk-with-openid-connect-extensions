@@ -92,9 +92,8 @@ public abstract class AuthorizationGrant {
 		} else if (grantType.equals(GrantType.REFRESH_TOKEN)) {
 
 			return RefreshTokenGrant.parse(params);
-		}
-
-		else if (grantType.equals(GrantType.PASSWORD)) {
+			
+		} else if (grantType.equals(GrantType.PASSWORD)) {
 
 			return ResourceOwnerPasswordCredentialsGrant.parse(params);
 
