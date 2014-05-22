@@ -205,7 +205,7 @@ public class ClientRegistrationErrorResponse
 			String code = null;
 			String description = null;
 			
-			if (CommonContentTypes.APPLICATION_JSON == httpResponse.getContentType()) {
+			if (CommonContentTypes.APPLICATION_JSON.match(httpResponse.getContentType())) {
 				
 				JSONObject jsonObject = httpResponse.getContentAsJSONObject();
 
