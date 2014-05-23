@@ -26,6 +26,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>{@link #SC_OK HTTP 200 OK}
+ *     <li>{@link #SC_CREATED HTTP 201 Created}
  *     <li>{@link #SC_FOUND HTTP 302 Redirect}
  *     <li>{@link #SC_BAD_REQUEST HTTP 400 Bad request}
  *     <li>{@link #SC_UNAUTHORIZED HTTP 401 Unauthorized}
@@ -51,6 +52,13 @@ public class HTTPResponse extends HTTPMessage {
 	 * HTTP status code (200) indicating the request succeeded.
 	 */
 	public static final int SC_OK = 200;
+
+
+	/**
+	 * HTTP status code (201) indicating the request succeeded with a new
+	 * resource being created.
+	 */
+	public static final int SC_CREATED = 201;
 	
 	
 	/**

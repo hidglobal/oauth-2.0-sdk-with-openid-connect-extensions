@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 5.
+ *         (draft-ietf-oauth-dyn-reg-17), section 3.2.
  * </ul>
  */
 public abstract class ClientRegistrationResponse implements Response {
@@ -33,9 +33,14 @@ public abstract class ClientRegistrationResponse implements Response {
 	public static ClientRegistrationResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		if (httpResponse.getStatusCode() == HTTPResponse.SC_OK)
+		if (httpResponse.getStatusCode() == HTTPResponse.SC_CREATED ||
+		    httpResponse.getStatusCode() == HTTPResponse.SC_OK) {
+
 			return ClientInformationResponse.parse(httpResponse);
-		else
+
+		} else {
+
 			return ClientRegistrationErrorResponse.parse(httpResponse);
+		}
 	}
 }
