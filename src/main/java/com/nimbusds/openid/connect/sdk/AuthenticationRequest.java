@@ -1376,7 +1376,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 * @throws ParseException If the HTTP request couldn't be parsed to an 
 	 *                        OpenID Connect authentication request.
 	 */
-	public static AuthorizationRequest parse(final HTTPRequest httpRequest) 
+	public static AuthenticationRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
 		
 		String query = httpRequest.getQuery();
