@@ -27,7 +27,22 @@ public final class RegistrationError {
 	 */
 	public static final ErrorObject	INVALID_CLIENT_METADATA =
 		new ErrorObject("invalid_client_metadata", "Invalid client metadata field", HTTPResponse.SC_BAD_REQUEST);
-	
+
+
+	/**
+	 * Client registration: The software statement presented is invalid.
+	 */
+	public static final ErrorObject INVALID_SOFTWARE_STATEMENT =
+		new ErrorObject("invalid_software_statement", "Invalid software statement", HTTPResponse.SC_BAD_REQUEST);
+
+
+	/**
+	 * Client registration: The software statement presented is not
+	 * approved for use by this authorisation server.
+	 */
+	public static final ErrorObject UNAPPROVED_SOFTWARE_STATEMENT =
+		new ErrorObject("unapproved_software_statement", "Unapproved software statement", HTTPResponse.SC_BAD_REQUEST);
+
 	
 	/**
 	 * Prevents public instantiation.

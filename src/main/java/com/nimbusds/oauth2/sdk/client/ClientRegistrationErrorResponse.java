@@ -37,6 +37,8 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *         <ul>
  *             <li>{@link RegistrationError#INVALID_REDIRECT_URI}
  *             <li>{@link RegistrationError#INVALID_CLIENT_METADATA}
+ *             <li>{@link RegistrationError#INVALID_SOFTWARE_STATEMENT}
+ *             <li>{@link RegistrationError#UNAPPROVED_SOFTWARE_STATEMENT}
  *         </ul>
  * </ul>
  *
@@ -58,7 +60,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 5.2.
+ *         (draft-ietf-oauth-dyn-reg-17), section 4.2.
  *     <li>OAuth 2.0 Bearer Token Usage (RFC 6750), section 3.1.
  * </ul>
  */
@@ -82,6 +84,8 @@ public class ClientRegistrationErrorResponse
 		stdErrors.add(BearerTokenError.INSUFFICIENT_SCOPE);
 		stdErrors.add(RegistrationError.INVALID_REDIRECT_URI);
 		stdErrors.add(RegistrationError.INVALID_CLIENT_METADATA);
+		stdErrors.add(RegistrationError.INVALID_SOFTWARE_STATEMENT);
+		stdErrors.add(RegistrationError.UNAPPROVED_SOFTWARE_STATEMENT);
 
 		return Collections.unmodifiableSet(stdErrors);
 	}
@@ -141,10 +145,11 @@ public class ClientRegistrationErrorResponse
 
 		HTTPResponse httpResponse;
 
-		if (error.getHTTPStatusCode() > 0)
+		if (error.getHTTPStatusCode() > 0) {
 			httpResponse = new HTTPResponse(error.getHTTPStatusCode());
-		else
+		} else {
 			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);
+		}
 
 		// Add the WWW-Authenticate header
 		if (error instanceof BearerTokenError) {
