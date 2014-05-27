@@ -5,11 +5,12 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import junit.framework.TestCase;
+
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import junit.framework.TestCase;
 
 
 /**
@@ -49,60 +50,112 @@ public class ClientInformationTest extends TestCase {
 	}
 
 
-	public void testConstructor()
+	public void testMinimalConstructor()
 		throws Exception {
 
 		ClientID clientID = new ClientID("123");
-
-		URI regURI = new URI("https://c2id.com/client-reg/123");
-
-		BearerAccessToken accessToken = new BearerAccessToken("xyz");
-
 		ClientMetadata metadata = new ClientMetadata();
 		metadata.setName("Example app");
 
-		Secret secret = new Secret("secret");
-
-		Date now = new Date();
-
-		ClientInformation info = new ClientInformation(clientID, regURI, accessToken, metadata, secret, now);
+		ClientInformation info = new ClientInformation(clientID, null, metadata, null);
 
 		assertEquals(clientID, info.getID());
-		assertEquals(regURI, info.getRegistrationURI());
-		assertEquals(accessToken, info.getRegistrationAccessToken());
+		assertNull(info.getIDIssueDate());
 		assertEquals(metadata, info.getClientMetadata());
 		assertEquals("Example app", info.getClientMetadata().getName());
-		assertEquals(secret, info.getSecret());
-		assertEquals(now, info.getIssueDate());
-	}
-
-
-	public void testSerializeAndParse()
-		throws Exception {
-
-		ClientID clientID = new ClientID("123");
-
-		URI regURI = new URI("https://c2id.com/client-reg/123");
-
-		BearerAccessToken accessToken = new BearerAccessToken("xyz");
-
-		ClientMetadata metadata = new ClientMetadata();
-		metadata.setName("Example app");
-
-		Secret secret = new Secret("secret");
-
-		Date now = new Date(new Date().getTime() / 1000 * 1000);
-
-		ClientInformation info = new ClientInformation(clientID, regURI, accessToken, metadata, secret, now);
+		assertNull(info.getSecret());
+		assertNull(info.getRegistrationURI());
+		assertNull(info.getRegistrationAccessToken());
 
 		String json = info.toJSONObject().toJSONString();
 
 		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
 
 		assertEquals(clientID, info.getID());
-		assertEquals(regURI.toString(), info.getRegistrationURI().toString());
-		assertEquals(accessToken.getValue(), info.getRegistrationAccessToken().getValue());
-		assertEquals(metadata.getName(), info.getClientMetadata().getName());
-		assertEquals(now.getTime(), info.getIssueDate().getTime());
+		assertNull(info.getIDIssueDate());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertNull(info.getSecret());
+		assertNull(info.getRegistrationURI());
+		assertNull(info.getRegistrationAccessToken());
+
+		Date now = new Date(new Date().getTime() / 1000 * 1000);
+		Secret secret = new Secret("secret");
+
+		info = new ClientInformation(clientID, now, metadata, secret);
+
+		assertEquals(clientID, info.getID());
+		assertEquals(now, info.getIDIssueDate());
+		assertEquals(metadata, info.getClientMetadata());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(secret, info.getSecret());
+		assertNull(info.getRegistrationURI());
+		assertNull(info.getRegistrationAccessToken());
+
+		json = info.toJSONObject().toJSONString();
+
+		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals(clientID, info.getID());
+		assertEquals(now, info.getIDIssueDate());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(secret, info.getSecret());
+		assertNull(info.getRegistrationURI());
+		assertNull(info.getRegistrationAccessToken());
+	}
+
+
+	public void testFullConstructor()
+		throws Exception {
+
+		ClientID clientID = new ClientID("123");
+		ClientMetadata metadata = new ClientMetadata();
+		metadata.setName("Example app");
+
+		ClientInformation info = new ClientInformation(clientID, null, metadata, null, null, null);
+
+		assertEquals(clientID, info.getID());
+		assertNull(info.getIDIssueDate());
+		assertEquals(metadata, info.getClientMetadata());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertNull(info.getSecret());
+		assertNull(info.getRegistrationURI());
+		assertNull(info.getRegistrationAccessToken());
+
+		String json = info.toJSONObject().toJSONString();
+
+		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals(clientID, info.getID());
+		assertNull(info.getIDIssueDate());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertNull(info.getSecret());
+		assertNull(info.getRegistrationURI());
+		assertNull(info.getRegistrationAccessToken());
+
+		Date now = new Date(new Date().getTime() / 1000 * 1000);
+		Secret secret = new Secret("secret");
+		URI regURI = new URI("https://c2id.com/client-reg/123");
+		BearerAccessToken accessToken = new BearerAccessToken("xyz");
+
+		info = new ClientInformation(clientID, now, metadata, secret, regURI, accessToken);
+
+		assertEquals(clientID, info.getID());
+		assertEquals(now, info.getIDIssueDate());
+		assertEquals(metadata, info.getClientMetadata());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(secret, info.getSecret());
+		assertEquals(regURI, info.getRegistrationURI());
+		assertEquals(accessToken, info.getRegistrationAccessToken());
+
+		json = info.toJSONObject().toJSONString();
+
+		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals(clientID, info.getID());
+		assertEquals(now, info.getIDIssueDate());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(secret, info.getSecret());
+		assertEquals(regURI, info.getRegistrationURI());
+		assertEquals(accessToken, info.getRegistrationAccessToken());
 	}
 }

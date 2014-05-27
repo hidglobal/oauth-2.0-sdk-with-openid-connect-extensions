@@ -29,10 +29,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *  "client_secret_expires_at"   : 2893276800
  *  "client_name"                : "My Example Client",
  *  "client_name#ja-Jpan-JP"     : "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D",
- *  "redirect_uris"              : ["https://client.example.org/callback",
- *                                  "https://client.example.org/callback2"]
+ *  "redirect_uris"              : [ "https://client.example.org/callback",
+ *                                   "https://client.example.org/callback2" ]
  *  "scope"                      : "read write dolphin",
- *  "grant_types"                : ["authorization_code", "refresh_token"]
+ *  "grant_types"                : [ "authorization_code", "refresh_token" ]
  *  "token_endpoint_auth_method" : "client_secret_basic",
  *  "logo_uri"                   : "https://client.example.org/logo.png",
  *  "jwks_uri"                   : "https://client.example.org/my_public_keys.jwks"
@@ -42,8 +42,10 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 5.1.
+ *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol
+ *         (draft-ietf-oauth-dyn-reg-management-01), section 3.1.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol
+ *         (draft-ietf-oauth-dyn-reg-17), section 2.
  * </ul>
  */
 @Immutable
@@ -109,7 +111,7 @@ public class ClientInformationResponse
 	public static ClientInformationResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
-		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
+		httpResponse.ensureStatusCode(HTTPResponse.SC_OK, HTTPResponse.SC_CREATED);
 		ClientInformation clientInfo = ClientInformation.parse(httpResponse.getContentAsJSONObject());
 		return new ClientInformationResponse(clientInfo);
 	}

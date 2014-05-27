@@ -73,57 +73,34 @@ public class OIDCClientInformationTest extends TestCase {
 		throws Exception {
 
 		ClientID clientID = new ClientID("123");
-
-		URI regURI = new URI("https://c2id.com/client-reg/123");
-
-		BearerAccessToken accessToken = new BearerAccessToken("xyz");
-
+		Date now = new Date(new Date().getTime() / 1000 * 1000);
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		metadata.setName("Example app");
-
 		Secret secret = new Secret("secret");
+		URI regURI = new URI("https://c2id.com/client-reg/123");
+		BearerAccessToken accessToken = new BearerAccessToken("xyz");
 
-		Date now = new Date();
-
-		OIDCClientInformation info = new OIDCClientInformation(clientID, regURI, accessToken, metadata, secret, now);
+		OIDCClientInformation info = new OIDCClientInformation(clientID, now, metadata, secret, regURI, accessToken);
 
 		assertEquals(clientID, info.getID());
-		assertEquals(regURI, info.getRegistrationURI());
-		assertEquals(accessToken, info.getRegistrationAccessToken());
+		assertEquals(now, info.getIDIssueDate());
 		assertEquals(metadata, info.getClientMetadata());
 		assertEquals(metadata, info.getOIDCClientMetadata());
 		assertEquals("Example app", info.getClientMetadata().getName());
 		assertEquals(secret, info.getSecret());
-		assertEquals(now, info.getIssueDate());
-	}
-
-
-	public void testSerializeAndParse()
-		throws Exception {
-
-		ClientID clientID = new ClientID("123");
-
-		URI regURI = new URI("https://c2id.com/client-reg/123");
-
-		BearerAccessToken accessToken = new BearerAccessToken("xyz");
-
-		OIDCClientMetadata metadata = new OIDCClientMetadata();
-		metadata.setName("Example app");
-
-		Secret secret = new Secret("secret");
-
-		Date now = new Date(new Date().getTime() / 1000 * 1000);
-
-		OIDCClientInformation info = new OIDCClientInformation(clientID, regURI, accessToken, metadata, secret, now);
+		assertEquals(regURI, info.getRegistrationURI());
+		assertEquals(accessToken, info.getRegistrationAccessToken());
 
 		String json = info.toJSONObject().toJSONString();
 
 		info = OIDCClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
 
 		assertEquals(clientID, info.getID());
-		assertEquals(regURI.toString(), info.getRegistrationURI().toString());
-		assertEquals(accessToken.getValue(), info.getRegistrationAccessToken().getValue());
-		assertEquals(metadata.getName(), info.getClientMetadata().getName());
-		assertEquals(now.getTime(), info.getIssueDate().getTime());
+		assertEquals(now, info.getIDIssueDate());
+		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals("Example app", info.getOIDCClientMetadata().getName());
+		assertEquals(secret, info.getSecret());
+		assertEquals(regURI, info.getRegistrationURI());
+		assertEquals(accessToken, info.getRegistrationAccessToken());
 	}
 }

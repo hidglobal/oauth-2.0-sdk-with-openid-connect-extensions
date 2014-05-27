@@ -3,13 +3,14 @@ package com.nimbusds.openid.connect.sdk.rp;
 
 import java.net.URI;
 
+import junit.framework.TestCase;
+
 import com.nimbusds.oauth2.sdk.client.ClientRegistrationErrorResponse;
 import com.nimbusds.oauth2.sdk.client.ClientRegistrationResponse;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
-import junit.framework.TestCase;
 
 
 /**
@@ -22,14 +23,14 @@ public class OIDCClientRegistrationResponseParserTest extends TestCase {
 		throws Exception {
 
 		ClientID id = new ClientID("123");
-		URI regURI = new URI("https://c2id.com/client-reg/123");
-		BearerAccessToken accessToken = new BearerAccessToken();
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		metadata.setRedirectionURI(new URI("https://client.com/cb"));
+		URI regURI = new URI("https://c2id.com/client-reg/123");
+		BearerAccessToken accessToken = new BearerAccessToken();
 		metadata.setName("My app");
 		metadata.applyDefaults();
 
-		OIDCClientInformation clientInfo = new OIDCClientInformation(id, regURI, accessToken, metadata, null, null);
+		OIDCClientInformation clientInfo = new OIDCClientInformation(id, null, metadata, null, regURI, accessToken);
 
 		OIDCClientInformationResponse response = new OIDCClientInformationResponse(clientInfo);
 
@@ -40,11 +41,11 @@ public class OIDCClientRegistrationResponseParserTest extends TestCase {
 		response = (OIDCClientInformationResponse)regResponse;
 
 		assertEquals(id, response.getOIDCClientInformation().getID());
-		assertEquals(regURI, response.getOIDCClientInformation().getRegistrationURI());
-		assertEquals(accessToken.getValue(), response.getOIDCClientInformation().getRegistrationAccessToken().getValue());
 		assertEquals("My app", response.getOIDCClientInformation().getClientMetadata().getName());
 		assertNull(response.getOIDCClientInformation().getSecret());
-		assertNull(response.getOIDCClientInformation().getIssueDate());
+		assertNull(response.getOIDCClientInformation().getIDIssueDate());
+		assertEquals(regURI, response.getOIDCClientInformation().getRegistrationURI());
+		assertEquals(accessToken.getValue(), response.getOIDCClientInformation().getRegistrationAccessToken().getValue());
 	}
 
 

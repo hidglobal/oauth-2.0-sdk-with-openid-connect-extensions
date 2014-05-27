@@ -22,16 +22,16 @@ public class OIDCClientInformationResponseTest extends TestCase {
 		throws Exception {
 
 		ClientID id = new ClientID("123");
-		URI uri = new URI("https://c2id.com/client-reg/123");
-		BearerAccessToken accessToken = new BearerAccessToken();
+		Date issueDate = new Date(new Date().getTime() / 1000 * 1000);
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		metadata.setRedirectionURI(new URI("https://client.com/cb"));
 		metadata.applyDefaults();
 		Secret secret = new Secret();
-		Date issueDate = new Date(new Date().getTime() / 1000 * 1000);
+		BearerAccessToken accessToken = new BearerAccessToken();
+		URI uri = new URI("https://c2id.com/client-reg/123");
 
 		OIDCClientInformation info = new OIDCClientInformation(
-			id, uri, accessToken, metadata, secret, issueDate);
+			id, issueDate, metadata, secret, uri, accessToken);
 
 		OIDCClientInformationResponse response = new OIDCClientInformationResponse(info);
 
@@ -43,10 +43,10 @@ public class OIDCClientInformationResponseTest extends TestCase {
 		response = OIDCClientInformationResponse.parse(httpResponse);
 
 		assertEquals(id.getValue(), response.getClientInformation().getID().getValue());
-		assertEquals(uri.toString(), response.getClientInformation().getRegistrationURI().toString());
-		assertEquals(accessToken.getValue(), response.getClientInformation().getRegistrationAccessToken().getValue());
+		assertEquals(issueDate, response.getClientInformation().getIDIssueDate());
 		assertEquals("https://client.com/cb", response.getClientInformation().getClientMetadata().getRedirectionURIs().iterator().next().toString());
 		assertEquals(secret.getValue(), response.getClientInformation().getSecret().getValue());
-		assertEquals(issueDate, response.getClientInformation().getIssueDate());
+		assertEquals(uri.toString(), response.getClientInformation().getRegistrationURI().toString());
+		assertEquals(accessToken.getValue(), response.getClientInformation().getRegistrationAccessToken().getValue());
 	}
 }

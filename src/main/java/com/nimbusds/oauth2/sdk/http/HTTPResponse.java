@@ -159,19 +159,23 @@ public class HTTPResponse extends HTTPMessage {
 	
 	
 	/**
-	 * Ensures this HTTP response has the specified {@link #getStatusCode
-	 * status code}.
+	 * Ensures this HTTP response has the specified status code.
 	 *
-	 * @param statusCode The expected status code.
+	 * @param statusCode The expected status code(s).
 	 *
 	 * @throws ParseException If the status code of this HTTP response 
 	 *                        doesn't match the expected.
 	 */ 
-	public void ensureStatusCode(final int statusCode)
+	public void ensureStatusCode(final int ... statusCode)
 		throws ParseException {
-	
-		if (this.statusCode != statusCode)
-			throw new ParseException("Unexpected HTTP status code, must be " +  statusCode);
+
+		for (int c: statusCode) {
+
+			if (this.statusCode == c)
+				return;
+		}
+
+		throw new ParseException("Unexpected HTTP status code, must be " +  statusCode);
 	}
 
 

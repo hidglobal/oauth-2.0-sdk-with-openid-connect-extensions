@@ -35,9 +35,10 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * {
  *  "client_id"                  :"s6BhdRkqt3",
  *  "client_secret"              : "cf136dc3c1fc93f31185e5885805d",
- *  "redirect_uris"              : ["https://client.example.org/callback", "https://client.example.org/alt"],
+ *  "redirect_uris"              : [ "https://client.example.org/callback",
+ *                                   "https://client.example.org/alt" ],
  *  "scope"                      : "read write dolphin",
- *  "grant_types"                : ["authorization_code", "refresh_token"]
+ *  "grant_types"                : [ "authorization_code", "refresh_token" ]
  *  "token_endpoint_auth_method" : "client_secret_basic",
  *  "jwks_uri"                   : "https://client.example.org/my_public_keys.jwks"
  *  "client_name"                : "My New Example",
@@ -51,8 +52,10 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <p>Related specifications:
  *
  * <ul>
+ *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol
+ *         (draft-ietf-oauth-dyn-reg-management-01), section 2.3.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 4.3.
+ *         (draft-ietf-oauth-dyn-reg-17), section 2.
  * </ul>
  */
 @Immutable

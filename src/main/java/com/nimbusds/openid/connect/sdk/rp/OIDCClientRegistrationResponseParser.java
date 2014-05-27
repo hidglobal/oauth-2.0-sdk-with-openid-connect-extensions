@@ -16,8 +16,8 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.2 and 3.3.
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-14), section 3.2, 4.3 and 5.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol
+ *         (draft-ietf-oauth-dyn-reg-17), sections 2 and 3.
  * </ul>
  */
 @Immutable
@@ -37,11 +37,14 @@ public class OIDCClientRegistrationResponseParser {
 	 */
 	public static ClientRegistrationResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
-		
-		if (httpResponse.getStatusCode() == HTTPResponse.SC_OK)
+
+		final int statusCode = httpResponse.getStatusCode();
+
+		if (statusCode == HTTPResponse.SC_OK || statusCode == HTTPResponse.SC_CREATED) {
 			return OIDCClientInformationResponse.parse(httpResponse);
-		else
+		} else {
 			return ClientRegistrationErrorResponse.parse(httpResponse);
+		}
 	}
 	
 	
