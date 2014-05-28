@@ -4,6 +4,7 @@ package com.nimbusds.oauth2.sdk.http;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.Arrays;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -175,7 +176,7 @@ public class HTTPResponse extends HTTPMessage {
 				return;
 		}
 
-		throw new ParseException("Unexpected HTTP status code, must be " +  statusCode);
+		throw new ParseException("Unexpected HTTP status code, must be " +  Arrays.toString(statusCode));
 	}
 
 

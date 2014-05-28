@@ -27,12 +27,14 @@ public class HTTPResponseTest extends TestCase {
 		assertEquals(200, response.getStatusCode());
 
 		response.ensureStatusCode(200);
+		response.ensureStatusCode(200, 201);
 
 		try {
 			response.ensureStatusCode(302);
 			fail();
 		} catch (ParseException e) {
 			// ok
+			assertEquals("Unexpected HTTP status code, must be [302]", e.getMessage());
 		}
 
 		assertNull(response.getContentType());
@@ -95,7 +97,7 @@ public class HTTPResponseTest extends TestCase {
 	}
 
 
-	public void testRedirectApplytoServletResponse()
+	public void testRedirectApplyToServletResponse()
 		throws Exception {
 
 		HTTPResponse response = new HTTPResponse(302);
@@ -110,7 +112,7 @@ public class HTTPResponseTest extends TestCase {
 	}
 
 
-	public void testJSONContentApplytoServletResponse()
+	public void testJSONContentApplyToServletResponse()
 		throws Exception {
 
 		HTTPResponse response = new HTTPResponse(200);
