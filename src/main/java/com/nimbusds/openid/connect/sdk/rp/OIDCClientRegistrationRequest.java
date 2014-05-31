@@ -4,16 +4,19 @@ package com.nimbusds.openid.connect.sdk.rp;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import net.jcip.annotations.Immutable;
+
 import org.apache.commons.lang3.StringUtils;
 
 import net.minidev.json.JSONObject;
 
-import net.jcip.annotations.Immutable;
+import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.client.ClientRegistrationRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -76,6 +79,32 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
 
 		super(uri, metadata, accessToken);
 	}
+
+
+	/**
+	 * Creates a new OpenID Connect client registration request with an
+	 * optional software statement.
+	 *
+	 * @param uri               The URI of the client registration
+	 *                          endpoint. May be {@code null} if the
+	 *                          {@link #toHTTPRequest()} method will not be
+	 *                          used.
+	 * @param metadata          The OpenID Connect client metadata. Must
+	 *                          not be {@code null} and must specify one or
+	 *                          more redirection URIs.
+	 * @param softwareStatement Optional software statement, as a signed
+	 *                          JWT with an {@code iss} claim; {@code null}
+	 *                          if not specified.
+	 * @param accessToken       An OAuth 2.0 Bearer access token for the
+	 *                          request, {@code null} if none.
+	 */
+	public OIDCClientRegistrationRequest(final URI uri,
+					     final OIDCClientMetadata metadata,
+					     final SignedJWT softwareStatement,
+					     final BearerAccessToken accessToken) {
+
+		super(uri, metadata, softwareStatement, accessToken);
+	}
 	
 	
 	/**
@@ -105,9 +134,27 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
 
 		httpRequest.ensureMethod(HTTPRequest.Method.POST);
 
-		// Parse the client metadata
+		// Get the JSON object content
 		JSONObject jsonObject = httpRequest.getQueryAsJSONObject();
 
+		// Extract the software statement if any
+		SignedJWT stmt = null;
+
+		if (jsonObject.containsKey("software_statement")) {
+
+			try {
+				stmt = SignedJWT.parse(JSONObjectUtils.getString(jsonObject, "software_statement"));
+
+			} catch (java.text.ParseException e) {
+
+				throw new ParseException("Invalid software statement JWT: " + e.getMessage());
+			}
+
+			// Prevent the JWT from appearing in the metadata
+			jsonObject.remove("software_statement");
+		}
+
+		// Parse the client metadata
 		OIDCClientMetadata metadata = OIDCClientMetadata.parse(jsonObject);
 
 		// Parse the optional bearer access token
@@ -118,16 +165,14 @@ public class OIDCClientRegistrationRequest extends ClientRegistrationRequest {
 		if (StringUtils.isNotBlank(authzHeaderValue))
 			accessToken = BearerAccessToken.parse(authzHeaderValue);
 
-		URI endpointURI;
-
 		try {
-			endpointURI = httpRequest.getURL().toURI();
+			URI endpointURI = httpRequest.getURL().toURI();
 
-		} catch (URISyntaxException e) {
+			return new OIDCClientRegistrationRequest(endpointURI, metadata, stmt, accessToken);
+
+		} catch (URISyntaxException | IllegalArgumentException e) {
 
 			throw new ParseException(e.getMessage(), e);
 		}
-		
-		return new OIDCClientRegistrationRequest(endpointURI, metadata, accessToken);
 	}
 }

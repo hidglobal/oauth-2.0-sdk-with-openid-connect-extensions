@@ -11,11 +11,21 @@ import junit.framework.TestCase;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+
 import com.nimbusds.langtag.LangTag;
+
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+
 import com.nimbusds.openid.connect.sdk.SubjectType;
+
 
 
 /**
@@ -145,5 +155,86 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		
 		Set<URI> requestObjectURIs = metadata.getRequestObjectURIs();
 		assertTrue(requestObjectURIs.contains(new URI("https://client.example.org/rf.txt#qpXaRLh_n93TTR9F252ValdatUQvQiJi5BDub2BeznA")));
+	}
+
+
+	public void testSoftwareStatement()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet();
+		claimsSet.setIssuer("https://c2id.com");
+
+		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+		jwt.sign(new MACSigner("abcdef1234567890"));
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.setRedirectionURI(new URI("https://client.com/in"));
+		metadata.setName("Test App");
+
+		OIDCClientRegistrationRequest request = new OIDCClientRegistrationRequest(new URI("https://c2id.com/reg"), metadata, jwt, null);
+
+		assertEquals(metadata, request.getClientMetadata());
+		assertEquals(jwt, request.getSoftwareStatement());
+		assertNull(request.getAccessToken());
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		request = OIDCClientRegistrationRequest.parse(httpRequest);
+
+		assertEquals("https://client.com/in", request.getClientMetadata().getRedirectionURIs().iterator().next().toString());
+		assertEquals("Test App", request.getClientMetadata().getName());
+		assertEquals(jwt.serialize(), request.getSoftwareStatement().getParsedString());
+		assertTrue(request.getSoftwareStatement().verify(new MACVerifier("abcdef1234567890")));
+	}
+
+
+	public void testRejectUnsignedSoftwareStatement()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet();
+		claimsSet.setIssuer("https://c2id.com");
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.setRedirectionURI(new URI("https://client.com/in"));
+		metadata.setName("Test App");
+
+		try {
+			new OIDCClientRegistrationRequest(
+				new URI("https://c2id.com/reg"),
+				metadata,
+				new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet),
+				null);
+
+		} catch (IllegalArgumentException e) {
+
+			// ok
+			assertEquals("The software statement JWT must be signed", e.getMessage());
+		}
+
+	}
+
+
+	public void testRejectSoftwareStatementWithoutIssuer()
+		throws Exception {
+
+		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), new JWTClaimsSet());
+		jwt.sign(new MACSigner("abcdef1234567890"));
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.setRedirectionURI(new URI("https://client.com/in"));
+		metadata.setName("Test App");
+
+		try {
+			new OIDCClientRegistrationRequest(
+				new URI("https://c2id.com/reg"),
+				metadata,
+				jwt,
+				null);
+
+		} catch (IllegalArgumentException e) {
+
+			// ok
+			assertEquals("The software statement JWT must contain an 'iss' claim", e.getMessage());
+		}
 	}
 }
