@@ -129,13 +129,15 @@ version 3.0.2 (2014-04-23)
 version 3.1 (2014-04-24)
     * Adds static ClientAuthenticationMethod.parse(String) method.
 
-version 3.2 (2014-06-10)
+version 3.2 (2014-04-28)
+    * Upgrades source and compile target to Java 7.
+    * Fixes NullPointerException in OIDCProviderMetadata.toJSONObject() method.
+
+version 3.3 (2014-06-10)
     * Upgrades OAuth 2.0 client registration to draft-ietf-oauth-dyn-reg-17
       and draft-ietf-oauth-dyn-reg-management-01, adds support for software
       statements.
-    * Upgrades source and compile target to Java 7.
     * Upgrades Nimbus JOSE + JWT dependency to 2.26.
-    * Fixes NullPointerException in OIDCProviderMetadata.toJSONObject() method.
     * Fixes affecting HTTP POST parameter parsing.
     * Corrects return type of AuthenticationRequest.parse(HTTPRequest)
       (issue #83).
