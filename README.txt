@@ -75,9 +75,18 @@ This SDK version implements the following standards and drafts:
 	* The OAuth 2.0 Authorization Framework (RFC 6749)
 
 	* The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 6750)
+
+	* Assertion Framework for OAuth 2.0 Client Authentication and Authorization
+	  Grants (draft-ietf-oauth-assertions-16)
+
+	* JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
+      Authorization Grants (draft-ietf-oauth-jwt-bearer-09)
 	
 	* OAuth 2.0 Dynamic Client Registration Protocol 
-	  (draft-ietf-oauth-dyn-reg-14)
+	  (draft-ietf-oauth-dyn-reg-17)
+
+	* OAuth 2.0 Dynamic Client Registration Management Protocol
+	  (draft-ietf-oauth-dyn-reg-management-01)
 
 	* OpenID Connect Core 1.0 (2014-02-25).
 
@@ -94,4 +103,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2014-03-26
+2014-06-10
