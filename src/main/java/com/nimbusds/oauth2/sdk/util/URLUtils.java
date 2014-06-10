@@ -132,11 +132,12 @@ public class URLUtils {
 		
 		Map<String,String> params = new HashMap<>();
 		
-		if (query == null)
+		if (query == null || query.trim().isEmpty()) {
 			return params; // empty map
+		}
 		
 		try {
-			StringTokenizer st = new StringTokenizer(query, "&");
+			StringTokenizer st = new StringTokenizer(query.trim(), "&");
 
 			while(st.hasMoreTokens()) {
 

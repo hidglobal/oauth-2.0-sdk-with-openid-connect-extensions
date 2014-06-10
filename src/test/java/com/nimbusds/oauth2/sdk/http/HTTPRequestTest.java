@@ -4,6 +4,7 @@ package com.nimbusds.oauth2.sdk.http;
 import java.net.URL;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -56,6 +57,43 @@ public class HTTPRequestTest extends TestCase {
 		JSONObject jsonObject = request.getQueryAsJSONObject();
 		assertEquals("123", (String)jsonObject.get("apples"));
 	}
+
+
+	public void testParseJSONObject()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost"));
+
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
+
+		httpRequest.setQuery("{\"apples\":30, \"pears\":\"green\"}");
+
+		JSONObject jsonObject = httpRequest.getQueryAsJSONObject();
+
+		assertEquals(30, JSONObjectUtils.getInt(jsonObject, "apples"));
+		assertEquals("green", JSONObjectUtils.getString(jsonObject, "pears"));
+		assertEquals(2, jsonObject.size());
+	}
+
+
+	public void testParseJSONObjectException()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost"));
+
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_JSON);
+
+		httpRequest.setQuery(" ");
+
+		try {
+			httpRequest.getQueryAsJSONObject();
+			fail();
+		} catch (ParseException e) {
+			// ok
+			assertEquals("Missing or empty HTTP query string / entity body", e.getMessage());
+		}
+	}
+
 
 	// TODO Enable when connect2is server is available
 	public void _test401Response()

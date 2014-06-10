@@ -93,7 +93,7 @@ public class URLUtilsTest extends TestCase {
 	
 		Map<String,String> params = URLUtils.parseParameters(query);
 		
-		String value = null;
+		String value;
 		
 		value = params.get("response_type");
 		assertNotNull(value);
@@ -129,5 +129,25 @@ public class URLUtilsTest extends TestCase {
 		
 		assertNotNull(params);
 		assertTrue(params.isEmpty());
+	}
+
+
+	public void testParseParametersEmpty() {
+
+		String query = " ";
+
+		assertTrue(URLUtils.parseParameters(query).isEmpty());
+	}
+
+
+	public void testParseParametersEnsureTrim() {
+
+		String query = "\np1=abc&p2=def  \n";
+
+		Map<String,String> params = URLUtils.parseParameters(query);
+
+		assertEquals("abc", params.get("p1"));
+		assertEquals("def", params.get("p2"));
+		assertEquals(2, params.size());
 	}
 }

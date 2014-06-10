@@ -363,7 +363,7 @@ public class HTTPRequest extends HTTPMessage {
 	private void ensureQuery()
 		throws ParseException {
 		
-		if (query == null || query.isEmpty())
+		if (query == null || query.trim().isEmpty())
 			throw new ParseException("Missing or empty HTTP query string / entity body");
 	}
 	
