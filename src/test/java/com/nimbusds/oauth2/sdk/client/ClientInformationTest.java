@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk.client;
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
@@ -11,6 +12,7 @@ import junit.framework.TestCase;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -157,5 +159,31 @@ public class ClientInformationTest extends TestCase {
 		assertEquals(secret, info.getSecret());
 		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());
+	}
+
+
+	public void testNoSecretExpiration()
+		throws Exception {
+
+		ClientID clientID = new ClientID("123");
+		ClientMetadata metadata = new ClientMetadata();
+		metadata.setRedirectionURI(new URI("https://example.com/in"));
+		Secret secret = new Secret("secret");
+
+		ClientInformation clientInfo = new ClientInformation(clientID, null, metadata, secret);
+
+		assertEquals(clientID, clientInfo.getID());
+		assertNull(clientInfo.getIDIssueDate());
+		assertEquals(metadata, clientInfo.getClientMetadata());
+		assertEquals(secret, clientInfo.getSecret());
+		assertNull(clientInfo.getRegistrationURI());
+		assertNull(clientInfo.getRegistrationAccessToken());
+
+		JSONObject o = clientInfo.toJSONObject();
+		assertEquals("123", (String)o.get("client_id"));
+		assertEquals("https://example.com/in", ((List<String>)o.get("redirect_uris")).get(0));
+		assertEquals("secret", (String)o.get("client_secret"));
+		assertEquals(0, ((Integer)o.get("client_secret_expires_at")).intValue());
+		assertEquals(4, o.size());
 	}
 }
