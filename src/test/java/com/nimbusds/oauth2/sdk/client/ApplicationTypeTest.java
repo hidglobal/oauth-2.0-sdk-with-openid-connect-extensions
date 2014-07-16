@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.rp;
+package com.nimbusds.oauth2.sdk.client;
 
 
 import junit.framework.TestCase;

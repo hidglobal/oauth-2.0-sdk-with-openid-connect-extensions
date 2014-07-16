@@ -6,13 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import junit.framework.TestCase;
+
+import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import net.minidev.json.JSONObject;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -37,6 +38,7 @@ public class ClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("client_uri"));
 		assertTrue(paramNames.contains("logo_uri"));
 		assertTrue(paramNames.contains("contacts"));
+		assertTrue(paramNames.contains("application_type"));
 		assertTrue(paramNames.contains("tos_uri"));
 		assertTrue(paramNames.contains("policy_uri"));
 		assertTrue(paramNames.contains("token_endpoint_auth_method"));
@@ -48,7 +50,7 @@ public class ClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
-		assertEquals(21, paramNames.size());
+		assertEquals(22, paramNames.size());
 	}
 
 

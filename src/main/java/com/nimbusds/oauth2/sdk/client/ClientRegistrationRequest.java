@@ -71,7 +71,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-17), sections 2 and 3.1.
+ *         (draft-ietf-oauth-dyn-reg-18), sections 2 and 3.1.
  * </ul>
  */
 @Immutable
@@ -157,7 +157,7 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 
 			if (claimsSet.getIssuer() == null) {
 
-				// http://tools.ietf.org/html/draft-ietf-oauth-dyn-reg-17#section-2.3
+				// http://tools.ietf.org/html/draft-ietf-oauth-dyn-reg-18#section-2.3
 				throw new IllegalArgumentException("The software statement JWT must contain an 'iss' claim");
 			}
 

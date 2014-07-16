@@ -33,7 +33,7 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol
  *         (draft-ietf-oauth-dyn-reg-management-01), section 2.2.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-17), section 2.
+ *         (draft-ietf-oauth-dyn-reg-18), section 2.
  * </ul>
  */
 @Immutable
