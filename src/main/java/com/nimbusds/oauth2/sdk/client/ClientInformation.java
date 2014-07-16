@@ -207,7 +207,7 @@ public class ClientInformation {
 	 * 
 	 * @return The client metadata.
 	 */
-	public ClientMetadata getClientMetadata() {
+	public ClientMetadata getMetadata() {
 		
 		return metadata;
 	}

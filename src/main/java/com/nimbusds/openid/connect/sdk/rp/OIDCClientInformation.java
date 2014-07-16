@@ -126,9 +126,9 @@ public final class OIDCClientInformation extends ClientInformation {
 	 * 
 	 * @return The OpenID Connect client metadata.
 	 */
-	public OIDCClientMetadata getOIDCClientMetadata() {
+	public OIDCClientMetadata getOIDCMetadata() {
 		
-		return (OIDCClientMetadata)getClientMetadata();
+		return (OIDCClientMetadata) getMetadata();
 	}
 	
 	

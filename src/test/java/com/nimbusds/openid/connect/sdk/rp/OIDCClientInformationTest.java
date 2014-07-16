@@ -84,9 +84,9 @@ public class OIDCClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
-		assertEquals(metadata, info.getClientMetadata());
-		assertEquals(metadata, info.getOIDCClientMetadata());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(metadata, info.getMetadata());
+		assertEquals(metadata, info.getOIDCMetadata());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertEquals(secret, info.getSecret());
 		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());
@@ -97,8 +97,8 @@ public class OIDCClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
-		assertEquals("Example app", info.getClientMetadata().getName());
-		assertEquals("Example app", info.getOIDCClientMetadata().getName());
+		assertEquals("Example app", info.getMetadata().getName());
+		assertEquals("Example app", info.getOIDCMetadata().getName());
 		assertEquals(secret, info.getSecret());
 		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());

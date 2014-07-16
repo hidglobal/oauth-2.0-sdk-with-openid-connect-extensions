@@ -63,8 +63,8 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertNull(info.getIDIssueDate());
-		assertEquals(metadata, info.getClientMetadata());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(metadata, info.getMetadata());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertNull(info.getSecret());
 		assertNull(info.getRegistrationURI());
 		assertNull(info.getRegistrationAccessToken());
@@ -75,7 +75,7 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertNull(info.getIDIssueDate());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertNull(info.getSecret());
 		assertNull(info.getRegistrationURI());
 		assertNull(info.getRegistrationAccessToken());
@@ -87,8 +87,8 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
-		assertEquals(metadata, info.getClientMetadata());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(metadata, info.getMetadata());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertEquals(secret, info.getSecret());
 		assertNull(info.getRegistrationURI());
 		assertNull(info.getRegistrationAccessToken());
@@ -99,7 +99,7 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertEquals(secret, info.getSecret());
 		assertNull(info.getRegistrationURI());
 		assertNull(info.getRegistrationAccessToken());
@@ -117,8 +117,8 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertNull(info.getIDIssueDate());
-		assertEquals(metadata, info.getClientMetadata());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(metadata, info.getMetadata());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertNull(info.getSecret());
 		assertNull(info.getRegistrationURI());
 		assertNull(info.getRegistrationAccessToken());
@@ -129,7 +129,7 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertNull(info.getIDIssueDate());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertNull(info.getSecret());
 		assertNull(info.getRegistrationURI());
 		assertNull(info.getRegistrationAccessToken());
@@ -143,8 +143,8 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
-		assertEquals(metadata, info.getClientMetadata());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals(metadata, info.getMetadata());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertEquals(secret, info.getSecret());
 		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());
@@ -155,7 +155,7 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
-		assertEquals("Example app", info.getClientMetadata().getName());
+		assertEquals("Example app", info.getMetadata().getName());
 		assertEquals(secret, info.getSecret());
 		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());
@@ -174,7 +174,7 @@ public class ClientInformationTest extends TestCase {
 
 		assertEquals(clientID, clientInfo.getID());
 		assertNull(clientInfo.getIDIssueDate());
-		assertEquals(metadata, clientInfo.getClientMetadata());
+		assertEquals(metadata, clientInfo.getMetadata());
 		assertEquals(secret, clientInfo.getSecret());
 		assertNull(clientInfo.getRegistrationURI());
 		assertNull(clientInfo.getRegistrationAccessToken());

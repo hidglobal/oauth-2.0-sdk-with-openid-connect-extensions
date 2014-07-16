@@ -44,7 +44,7 @@ public class OIDCClientInformationResponseTest extends TestCase {
 
 		assertEquals(id.getValue(), response.getClientInformation().getID().getValue());
 		assertEquals(issueDate, response.getClientInformation().getIDIssueDate());
-		assertEquals("https://client.com/cb", response.getClientInformation().getClientMetadata().getRedirectionURIs().iterator().next().toString());
+		assertEquals("https://client.com/cb", response.getClientInformation().getMetadata().getRedirectionURIs().iterator().next().toString());
 		assertEquals(secret.getValue(), response.getClientInformation().getSecret().getValue());
 		assertEquals(uri.toString(), response.getClientInformation().getRegistrationURI().toString());
 		assertEquals(accessToken.getValue(), response.getClientInformation().getRegistrationAccessToken().getValue());

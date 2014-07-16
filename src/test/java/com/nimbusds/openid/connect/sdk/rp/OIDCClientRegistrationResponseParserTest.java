@@ -41,7 +41,7 @@ public class OIDCClientRegistrationResponseParserTest extends TestCase {
 		response = (OIDCClientInformationResponse)regResponse;
 
 		assertEquals(id, response.getOIDCClientInformation().getID());
-		assertEquals("My app", response.getOIDCClientInformation().getClientMetadata().getName());
+		assertEquals("My app", response.getOIDCClientInformation().getMetadata().getName());
 		assertNull(response.getOIDCClientInformation().getSecret());
 		assertNull(response.getOIDCClientInformation().getIDIssueDate());
 		assertEquals(regURI, response.getOIDCClientInformation().getRegistrationURI());
