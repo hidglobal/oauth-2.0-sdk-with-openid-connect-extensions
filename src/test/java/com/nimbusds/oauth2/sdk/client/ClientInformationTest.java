@@ -187,5 +187,19 @@ public class ClientInformationTest extends TestCase {
 		assertEquals("secret", (String)o.get("client_secret"));
 		assertEquals(0, ((Integer)o.get("client_secret_expires_at")).intValue());
 		assertEquals(4, o.size());
+
+		String jsonString = o.toJSONString();
+
+		o = com.nimbusds.jose.util.JSONObjectUtils.parseJSONObject(jsonString);
+
+		clientInfo = ClientInformation.parse(o);
+
+		assertEquals("123", clientInfo.getID().toString());
+		assertNull(clientInfo.getIDIssueDate());
+		assertEquals("https://example.com/in", clientInfo.getMetadata().getRedirectionURIs().iterator().next().toString());
+		assertEquals("secret", clientInfo.getSecret().getValue());
+		assertNull(clientInfo.getSecret().getExpirationDate());
+		assertNull(clientInfo.getRegistrationURI());
+		assertNull(clientInfo.getRegistrationAccessToken());
 	}
 }

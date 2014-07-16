@@ -324,8 +324,14 @@ public class ClientInformation {
 
 			Date exp = null;
 
-			if (jsonObject.containsKey("client_secret_expires_at"))
-				exp = new Date(JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at") * 1000);
+			if (jsonObject.containsKey("client_secret_expires_at")) {
+
+				final long t = JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at");
+
+				if (t > 0) {
+					exp = new Date(t * 1000);
+				}
+			}
 
 			secret = new Secret(value, exp);
 		}
