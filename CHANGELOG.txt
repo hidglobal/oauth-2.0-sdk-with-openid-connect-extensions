@@ -141,3 +141,11 @@ version 3.3 (2014-06-10)
     * Fixes affecting HTTP POST parameter parsing.
     * Corrects return type of AuthenticationRequest.parse(HTTPRequest)
       (issue #83).
+
+version 3.4 (2014-07-16)
+    * Upgrades OAuth 2.0 client registration to draft-ietf-oauth-dyn-reg-18 and
+      draft-ietf-oauth-dyn-reg-management-02.
+    * Upgrades Nimbus JOSE + JWT dependency to 2.26.1.
+    * Adds TokenEncoding and ClaimsTransport enumerations.
+    * Fixes ClientInformation serialisation and parsing of the
+      client_secret_expires_at parameter when set to zero (issues #92 and #94).
