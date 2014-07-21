@@ -185,7 +185,7 @@ public class ClientInformationTest extends TestCase {
 		assertEquals("123", (String)o.get("client_id"));
 		assertEquals("https://example.com/in", ((List<String>)o.get("redirect_uris")).get(0));
 		assertEquals("secret", (String)o.get("client_secret"));
-		assertEquals(0, ((Integer)o.get("client_secret_expires_at")).intValue());
+		assertEquals(0l, ((Long)o.get("client_secret_expires_at")).longValue());
 		assertEquals(4, o.size());
 
 		String jsonString = o.toJSONString();

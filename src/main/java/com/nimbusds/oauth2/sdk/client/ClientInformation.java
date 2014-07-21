@@ -273,7 +273,7 @@ public class ClientInformation {
 			if (secret.getExpirationDate() != null) {
 				o.put("client_secret_expires_at", secret.getExpirationDate().getTime() / 1000);
 			} else {
-				o.put("client_secret_expires_at", 0);
+				o.put("client_secret_expires_at", 0l);
 			}
 		}
 
