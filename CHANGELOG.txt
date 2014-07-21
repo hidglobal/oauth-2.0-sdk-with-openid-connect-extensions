@@ -149,3 +149,6 @@ version 3.4 (2014-07-16)
     * Adds TokenEncoding and ClaimsTransport enumerations.
     * Fixes ClientInformation serialisation and parsing of the
       client_secret_expires_at parameter when set to zero (issues #92 and #94).
+
+version 3.4.1 (2014-07-21)
+    * Serialises zero client_secret_expires_at as long instead of int.
