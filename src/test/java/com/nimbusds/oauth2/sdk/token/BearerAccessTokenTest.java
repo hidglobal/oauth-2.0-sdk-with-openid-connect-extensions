@@ -19,7 +19,8 @@ import org.apache.commons.codec.binary.Base64;
 public class BearerAccessTokenTest extends TestCase {
 
 
-	public void testMinimalConstructor() {
+	public void testMinimalConstructor()
+		throws Exception {
 		
 		AccessToken token = new BearerAccessToken("abc");
 		
@@ -35,17 +36,15 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals("Bearer", json.get("token_type"));
 		assertEquals(2, json.size());
 
-		try {
-			token = BearerAccessToken.parse(json);
-
-		} catch (ParseException e) {
-
-			fail(e.getMessage());
-		}
+		token = BearerAccessToken.parse(json);
 
 		assertEquals("abc", token.getValue());
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
+
+		assertTrue(token.getParamNames().contains("access_token"));
+		assertTrue(token.getParamNames().contains("token_type"));
+		assertEquals(2, token.getParamNames().size());
 	}
 
 
@@ -59,7 +58,9 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
-		System.out.println(token.toAuthorizationHeader());
+		String header = token.toAuthorizationHeader();
+		assertTrue(header.startsWith("Bearer "));
+		assertEquals(token.getValue(), header.substring("Bearer ".length()));
 	}
 
 
@@ -73,11 +74,14 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
-		System.out.println(token.toAuthorizationHeader());
+		String header = token.toAuthorizationHeader();
+		assertTrue(header.startsWith("Bearer "));
+		assertEquals(token.getValue(), header.substring("Bearer ".length()));
 	}
 
 
-	public void testFullConstructor() {
+	public void testFullConstructor()
+		throws Exception {
 		
 		Scope scope = Scope.parse("read write");
 
@@ -91,7 +95,13 @@ public class BearerAccessTokenTest extends TestCase {
 
 		JSONObject json = token.toJSONObject();
 
-		System.out.println(json);
+		assertEquals("abc", json.get("access_token"));
+		assertEquals("Bearer", json.get("token_type"));
+		assertEquals(1500l, json.get("expires_in"));
+		assertTrue(Scope.parse((String)json.get("scope")).equals(scope));
+		assertEquals(4, json.size());
+
+		token = BearerAccessToken.parse(json);
 
 		assertEquals("abc", json.get("access_token"));
 		assertEquals("Bearer", json.get("token_type"));
@@ -99,37 +109,26 @@ public class BearerAccessTokenTest extends TestCase {
 		assertTrue(Scope.parse((String)json.get("scope")).equals(scope));
 		assertEquals(4, json.size());
 
-		try {
-			BearerAccessToken.parse(json);
-
-		} catch (ParseException e) {
-
-			fail(e.getMessage());
-		}
-
-		assertEquals("abc", json.get("access_token"));
-		assertEquals("Bearer", json.get("token_type"));
-		assertEquals(1500l, json.get("expires_in"));
-		assertTrue(Scope.parse((String)json.get("scope")).equals(scope));
-		assertEquals(4, json.size());
+		assertTrue(token.getParamNames().contains("access_token"));
+		assertTrue(token.getParamNames().contains("token_type"));
+		assertTrue(token.getParamNames().contains("expires_in"));
+		assertTrue(token.getParamNames().contains("scope"));
+		assertEquals(4, token.getParamNames().size());
 	}
 	
 	
-	public void testParse() {
+	public void testParse()
+		throws Exception {
 	
-		AccessToken token = null;
-	
-		try {
-			token = AccessToken.parse("Bearer abc");
-			
-		} catch (ParseException e) {
-		
-			fail(e.getMessage());
-		}
+		AccessToken token = AccessToken.parse("Bearer abc");
 		
 		assertEquals("abc", token.getValue());
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
+
+		assertTrue(token.getParamNames().contains("access_token"));
+		assertTrue(token.getParamNames().contains("token_type"));
+		assertEquals(2, token.getParamNames().size());
 	}
 
 

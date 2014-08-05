@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
@@ -54,6 +57,15 @@ public final class RefreshToken extends Token {
 	public RefreshToken(final String value) {
 	
 		super(value);
+	}
+
+
+	@Override
+	public Set<String> getParamNames() {
+
+		Set<String> paramNames = new HashSet<>();
+		paramNames.add("refresh_token");
+		return paramNames;
 	}
 
 

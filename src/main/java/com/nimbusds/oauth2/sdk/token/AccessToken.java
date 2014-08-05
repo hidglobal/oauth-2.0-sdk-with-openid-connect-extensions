@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -181,6 +184,24 @@ public abstract class AccessToken extends Token {
 	public Scope getScope() {
 	
 		return scope;
+	}
+
+
+	@Override
+	public Set<String> getParamNames() {
+
+		Set<String> paramNames = new HashSet<>();
+		paramNames.add("access_token");
+		paramNames.add("token_type");
+
+		if (getLifetime() > 0)
+			paramNames.add("expires_in");
+
+		if (getScope() != null)
+			paramNames.add("scope");
+
+
+		return paramNames;
 	}
 
 

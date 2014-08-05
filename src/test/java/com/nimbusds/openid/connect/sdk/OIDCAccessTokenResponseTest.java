@@ -1,7 +1,9 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import com.nimbusds.oauth2.sdk.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -9,6 +11,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
@@ -57,6 +60,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 		assertNull(response.getRefreshToken());
 		assertNull(response.getIDToken());
 		assertNull(response.getIDTokenString());
+		assertTrue(response.getCustomParams().isEmpty());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
@@ -66,6 +70,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 		assertNull(response.getRefreshToken());
 		assertNull(response.getIDToken());
 		assertNull(response.getIDTokenString());
+		assertTrue(response.getCustomParams().isEmpty());
 	}
 
 
@@ -81,6 +86,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
 		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertTrue(response.getCustomParams().isEmpty());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
@@ -90,6 +96,40 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
 		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertTrue(response.getCustomParams().isEmpty());
+	}
+
+
+	public void testWithIDTokenJWTAndCustomParams()
+		throws Exception {
+
+		AccessToken accessToken = new BearerAccessToken("abc123");
+		RefreshToken refreshToken = new RefreshToken("def456");
+		Map<String,Object> customParams = new HashMap<>();
+		customParams.put("sub_sid", "abc");
+		customParams.put("priority", 10);
+
+		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN, customParams);
+
+		assertEquals("abc123", response.getAccessToken().getValue());
+		assertEquals("def456", response.getRefreshToken().getValue());
+		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
+		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertEquals("abc", (String)response.getCustomParams().get("sub_sid"));
+		assertEquals(10, ((Number)response.getCustomParams().get("priority")).intValue());
+		assertEquals(2, response.getCustomParams().size());
+
+		HTTPResponse httpResponse = response.toHTTPResponse();
+
+		response = OIDCAccessTokenResponse.parse(httpResponse);
+
+		assertEquals("abc123", response.getAccessToken().getValue());
+		assertEquals("def456", response.getRefreshToken().getValue());
+		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
+		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertEquals("abc", (String)response.getCustomParams().get("sub_sid"));
+		assertEquals(10, ((Number)response.getCustomParams().get("priority")).intValue());
+		assertEquals(2, response.getCustomParams().size());
 	}
 
 
@@ -105,6 +145,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
 		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertTrue(response.getCustomParams().isEmpty());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
@@ -114,6 +155,40 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
 		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertTrue(response.getCustomParams().isEmpty());
+	}
+
+
+	public void testWithIDTokenStringAndCustomParams()
+		throws Exception {
+
+		AccessToken accessToken = new BearerAccessToken("abc123");
+		RefreshToken refreshToken = new RefreshToken("def456");
+		Map<String,Object> customParams = new HashMap<>();
+		customParams.put("sub_sid", "abc");
+		customParams.put("priority", 10);
+
+		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN_STRING, customParams);
+
+		assertEquals("abc123", response.getAccessToken().getValue());
+		assertEquals("def456", response.getRefreshToken().getValue());
+		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
+		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertEquals("abc", (String)response.getCustomParams().get("sub_sid"));
+		assertEquals(10, ((Number)response.getCustomParams().get("priority")).intValue());
+		assertEquals(2, response.getCustomParams().size());
+
+		HTTPResponse httpResponse = response.toHTTPResponse();
+
+		response = OIDCAccessTokenResponse.parse(httpResponse);
+
+		assertEquals("abc123", response.getAccessToken().getValue());
+		assertEquals("def456", response.getRefreshToken().getValue());
+		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
+		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertEquals("abc", (String)response.getCustomParams().get("sub_sid"));
+		assertEquals(10, ((Number)response.getCustomParams().get("priority")).intValue());
+		assertEquals(2, response.getCustomParams().size());
 	}
 
 

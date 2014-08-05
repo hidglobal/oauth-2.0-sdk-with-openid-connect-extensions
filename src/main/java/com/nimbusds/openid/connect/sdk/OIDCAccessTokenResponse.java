@@ -1,6 +1,9 @@
 package com.nimbusds.openid.connect.sdk;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
@@ -18,7 +21,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * OpenID Connect access token response.
+ * OpenID Connect access token response with an optional ID token.
  *
  * <p>Example HTTP response:
  *
@@ -53,7 +56,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  */
 @Immutable
-public class OIDCAccessTokenResponse
+public final class OIDCAccessTokenResponse
 	extends AccessTokenResponse {
 
 
@@ -80,8 +83,8 @@ public class OIDCAccessTokenResponse
 
 		this(accessToken, refreshToken, (String)null);
 	}
-	
-	
+
+
 	/**
 	 * Creates a new OpenID Connect access token response.
 	 *
@@ -95,8 +98,28 @@ public class OIDCAccessTokenResponse
 	                               final RefreshToken refreshToken,
 	                               final JWT idToken) {
 				   
-		super(accessToken, refreshToken);
-		
+		this(accessToken, refreshToken, idToken, null);
+	}
+
+
+	/**
+	 * Creates a new OpenID Connect access token response.
+	 *
+	 * @param accessToken  The access token. Must not be {@code null}.
+	 * @param refreshToken Optional refresh token, {@code null} if none.
+	 * @param idToken      The ID token. Must be {@code null} if the
+	 *                     request grant type was not
+	 *                     {@link com.nimbusds.oauth2.sdk.GrantType#AUTHORIZATION_CODE}.
+	 * @param customParams Optional custom parameters, {@code null} if
+	 *                     none.
+	 */
+	public OIDCAccessTokenResponse(final AccessToken accessToken,
+	                               final RefreshToken refreshToken,
+	                               final JWT idToken,
+				       final Map<String,Object> customParams) {
+
+		super(accessToken, refreshToken, customParams);
+
 		this.idToken = idToken;
 
 		idTokenString = null;
@@ -116,7 +139,27 @@ public class OIDCAccessTokenResponse
 				       final RefreshToken refreshToken,
 				       final String idTokenString) {
 
-		super(accessToken, refreshToken);
+		this(accessToken, refreshToken, idTokenString, null);
+	}
+
+
+	/**
+	 * Creates a new OpenID Connect access token response.
+	 *
+	 * @param accessToken   The access token. Must not be {@code null}.
+	 * @param refreshToken  Optional refresh token, {@code null} if none.
+	 * @param idTokenString The ID token string. Must be {@code null} if
+	 *                      the request grant type was not
+	 *                      {@link com.nimbusds.oauth2.sdk.GrantType#AUTHORIZATION_CODE}.
+	 * @param customParams Optional custom parameters, {@code null} if
+	 *                     none.
+	 */
+	public OIDCAccessTokenResponse(final AccessToken accessToken,
+				       final RefreshToken refreshToken,
+				       final String idTokenString,
+				       final Map<String,Object> customParams) {
+
+		super(accessToken, refreshToken, customParams);
 
 		idToken = null;
 
@@ -246,11 +289,16 @@ public class OIDCAccessTokenResponse
 				throw new ParseException("Couldn't parse ID token: " + e.getMessage(), e);
 			}
 		}
-		
+
+		// Parse the custom parameters
+		Map<String,Object> customParams = new HashMap<>();
+		customParams.putAll(atr.getCustomParams());
+		customParams.remove("id_token");
 		
 		return new OIDCAccessTokenResponse(atr.getAccessToken(),
 			                           atr.getRefreshToken(),
-			                           idToken);
+			                           idToken,
+			                           customParams);
 	}
 	
 	

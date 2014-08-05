@@ -1,6 +1,11 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
@@ -54,6 +59,12 @@ public class AccessTokenResponse
 	 * Optional refresh token.
 	 */
 	private final RefreshToken refreshToken;
+
+
+	/**
+	 * Optional custom parameters.
+	 */
+	private final Map<String,Object> customParams;
 	
 	
 	/**
@@ -65,12 +76,30 @@ public class AccessTokenResponse
 	public AccessTokenResponse(final AccessToken accessToken,
 	                           final RefreshToken refreshToken) {
 				   
+		this(accessToken, refreshToken, null);
+	}
+
+
+	/**
+	 * Creates a new access token response.
+	 *
+	 * @param accessToken  The access token. Must not be {@code null}.
+	 * @param refreshToken Optional refresh token, {@code null} if none.
+	 * @param customParams Optional custom parameters, {@code null} if
+	 *                     none.
+	 */
+	public AccessTokenResponse(final AccessToken accessToken,
+	                           final RefreshToken refreshToken,
+				   final Map<String,Object> customParams) {
+
 		if (accessToken == null)
 			throw new IllegalArgumentException("The access token must not be null");
-		
+
 		this.accessToken = accessToken;
-		
+
 		this.refreshToken = refreshToken;
+
+		this.customParams = customParams;
 	}
 
 
@@ -82,7 +111,22 @@ public class AccessTokenResponse
 	 */
 	public AccessTokenResponse(final TokenPair tokenPair) {
 				   
-		this(tokenPair.getAccessToken(), tokenPair.getRefreshToken());
+		this(tokenPair, null);
+	}
+
+
+	/**
+	 * Creates a new access token response.
+	 *
+	 * @param tokenPair    The access and refresh token pair. Must not be
+	 *                     {@code null}.
+	 * @param customParams Optional custom parameters, {@code null} if
+	 *                     none.
+	 */
+	public AccessTokenResponse(final TokenPair tokenPair,
+				   final Map<String,Object> customParams) {
+
+		this(tokenPair.getAccessToken(), tokenPair.getRefreshToken(), customParams);
 	}
 	
 	
@@ -117,6 +161,21 @@ public class AccessTokenResponse
 
 		return new TokenPair(accessToken, refreshToken);
 	}
+
+
+	/**
+	 * Gets the custom parameters.
+	 *
+	 * @return The custom parameters, as a unmodifiable map, empty map if
+	 *         none.
+	 */
+	public Map<String,Object> getCustomParams() {
+
+		if (customParams == null)
+			return Collections.emptyMap();
+
+		return Collections.unmodifiableMap(customParams);
+	}
 	
 	
 	/**
@@ -145,6 +204,9 @@ public class AccessTokenResponse
 
 		if (refreshToken != null)
 			o.putAll(refreshToken.toJSONObject());
+
+		if (customParams != null)
+			o.putAll(customParams);
 		
 		return o;
 	}
@@ -182,8 +244,29 @@ public class AccessTokenResponse
 		AccessToken accessToken = AccessToken.parse(jsonObject);
 		
 		RefreshToken refreshToken = RefreshToken.parse(jsonObject);
+
+		// Get the std param names for the access + refresh token
+		Set<String> paramNames = accessToken.getParamNames();
+
+		if (refreshToken != null)
+			paramNames.addAll(refreshToken.getParamNames());
+
+		// Determine the custom param names
+		Set<String> customParamNames = jsonObject.keySet();
+		customParamNames.removeAll(paramNames);
+
+		Map<String,Object> customParams = null;
+
+		if (customParamNames.size() > 0) {
+
+			customParams = new HashMap<>();
+
+			for (String name: customParamNames) {
+				customParams.put(name, jsonObject.get(name));
+			}
+		}
 		
-		return new AccessTokenResponse(accessToken, refreshToken);
+		return new AccessTokenResponse(accessToken, refreshToken, customParams);
 	}
 	
 	

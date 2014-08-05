@@ -1,6 +1,8 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.util.Set;
+
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -52,6 +54,16 @@ public abstract class Token extends Identifier {
 	
 		super();
 	}
+
+
+	/**
+	 * Returns the token parameter names included in the JSON object, as
+	 * required for the composition of an access token response. See OAuth
+	 * 2.0 (RFC 6749), section 5.1.
+	 *
+	 * @return The token parameter names.
+	 */
+	public abstract Set<String> getParamNames();
 
 
 	/**
