@@ -40,6 +40,13 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>Content-Type
  *     <li>Authorization
  * </ul>
+ *
+ * <p>Supported timeouts:
+ *
+ * <ul>
+ *     <li>On HTTP connect
+ *     <li>On HTTP response read
+ * </ul>
  */
 @ThreadSafe
 public class HTTPRequest extends HTTPMessage {
@@ -97,6 +104,19 @@ public class HTTPRequest extends HTTPMessage {
 	 * The query string / post body.
 	 */
 	private String query = null;
+
+
+	/**
+	 * The HTTP connect timeout, in milliseconds. Zero implies none.
+	 */
+	private int connectTimeout = 0;
+
+
+	/**
+	 * The HTTP response read timeout, in milliseconds. Zero implies none.
+
+	 */
+	private int readTimeout = 0;
 	
 	
 	/**
@@ -403,6 +423,62 @@ public class HTTPRequest extends HTTPMessage {
 
 
 	/**
+	 * Gets the HTTP connect timeout.
+	 *
+	 * @return The HTTP connect read timeout, in milliseconds. Zero implies
+	 *         no timeout.
+	 */
+	public int getConnectTimeout() {
+
+		return connectTimeout;
+	}
+
+
+	/**
+	 * Sets the HTTP connect timeout.
+	 *
+	 * @param connectTimeout The HTTP connect timeout, in milliseconds.
+	 *                       Zero implies no timeout. Must not be negative.
+	 */
+	public void setConnectTimeout(final int connectTimeout) {
+
+		if (connectTimeout < 0) {
+			throw new IllegalArgumentException("The HTTP connect timeout must be zero or positive");
+		}
+
+		this.connectTimeout = connectTimeout;
+	}
+
+
+	/**
+	 * Gets the HTTP response read timeout.
+	 *
+	 * @return The HTTP response read timeout, in milliseconds. Zero
+	 *         implies no timeout.
+	 */
+	public int getReadTimeout() {
+
+		return readTimeout;
+	}
+
+
+	/**
+	 * Sets the HTTP response read timeout.
+	 *
+	 * @param readTimeout The HTTP response read timeout, in milliseconds.
+	 *                    Zero implies no timeout. Must not be negative.
+	 */
+	public void setReadTimeout(final int readTimeout) {
+
+		if (readTimeout < 0) {
+			throw new IllegalArgumentException("The HTTP response read timeout must be zero or positive");
+		}
+
+		this.readTimeout = readTimeout;
+	}
+
+
+	/**
 	 * Returns an established HTTP URL connection for this HTTP request.
 	 *
 	 * @return The HTTP URL connection, with the request sent and ready to
@@ -438,6 +514,8 @@ public class HTTPRequest extends HTTPMessage {
 			conn.setRequestProperty("Authorization", authorization);
 
 		conn.setRequestMethod(method.name());
+		conn.setConnectTimeout(connectTimeout);
+		conn.setReadTimeout(readTimeout);
 
 		if (method.equals(HTTPRequest.Method.POST) || method.equals(Method.PUT)) {
 

@@ -1,15 +1,16 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
 
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -56,6 +57,14 @@ public class HTTPRequestTest extends TestCase {
 		request.setQuery("{\"apples\":\"123\"}");
 		JSONObject jsonObject = request.getQueryAsJSONObject();
 		assertEquals("123", (String)jsonObject.get("apples"));
+
+		assertEquals(0, request.getConnectTimeout());
+		request.setConnectTimeout(250);
+		assertEquals(250, request.getConnectTimeout());
+
+		assertEquals(0, request.getReadTimeout());
+		request.setReadTimeout(750);
+		assertEquals(750, request.getReadTimeout());
 	}
 
 
@@ -95,7 +104,7 @@ public class HTTPRequestTest extends TestCase {
 	}
 
 
-	// TODO Enable when connect2is server is available
+	// TODO Enable when connect2is server is available, passes 2014-08-05
 	public void _test401Response()
 		throws Exception {
 
@@ -112,5 +121,25 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals("Bearer", httpResponse.getWWWAuthenticate());
 
 		System.out.println("Token error: " + httpResponse.getContent());
+	}
+
+
+	// TODO Enable when connect2is server is available, passes 2014-08-05
+	public void _testToHttpURLConnection()
+		throws Exception {
+
+		// Simulate token request with invalid token
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:8080/c2id/token"));
+		httpRequest.setAuthorization("Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW");
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+		httpRequest.setConnectTimeout(250);
+		httpRequest.setReadTimeout(750);
+		httpRequest.setQuery("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
+			"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
+
+		HttpURLConnection con = httpRequest.toHttpURLConnection();
+		assertEquals("POST", con.getRequestMethod());
+		assertEquals(250, con.getConnectTimeout());
+		assertEquals(750, con.getReadTimeout());
 	}
 }
