@@ -35,6 +35,14 @@
  *                 server responds with a token error.
  *         </ul>
  * </ul>
+ *
+ * <p>Token revocation endpoint messages:
+ *
+ * <ul>
+ *     <li>{@link com.nimbusds.oauth2.sdk.TokenRevocationRequest} The client
+ *         request revocation of a previously issued access or refresh
+ *         token.</li>
+ * </ul>
  * 
  * <p>Protected resource messages:
  * 

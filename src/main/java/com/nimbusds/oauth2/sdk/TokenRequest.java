@@ -134,7 +134,7 @@ public class TokenRequest extends AbstractRequest {
 	
 	
 	/**
-	 * Parses the specified HTTP request for a token request.
+	 * Parses a token request from the specified HTTP request.
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
 	 *

@@ -11,18 +11,25 @@ and OpenID Connect based applications:
 	* Developing OAuth 2.0 servers:
 
 		- Parse and process requests at the Authorisation Endpoint, then
-		  generate the appropriate responses with an authorisation
-		  code or access token;
+		  generate the appropriate responses with an authorisation code or
+		  access token;
 
-		- Parse and process requests at the Token Endpoint, then
+		- Parse and process requests at the Token Endpoint, then generate the
+		  appropriate responses;
+
+		- Parse and process requests at the Token Revocation Endpoint.
+
+		- Parse and process requests at the Client Registration Endpoint, then
 		  generate the appropriate responses.
 
 	* Developing OAuth 2.0 clients:
 
-		- Compose requests to an OAuth 2.0 Authorisation Endpoint and
-		  parse the responses;
+		- Make requests to an OAuth 2.0 Authorisation Endpoint and parse the
+		  responses;
 
-		- Compose requests to an OAuth 2.0 Token Endpoint and parse the
+		- Make requests to an OAuth 2.0 Token Endpoint and parse the responses;
+
+		- Make requests to an OAuth 2.0 Token Revocation Endpoint and parse the
 		  responses;
 
 		- Make requests to a protected resource using an OAuth 2.0
@@ -35,29 +42,28 @@ and OpenID Connect based applications:
 		  responses with an authorisation code, ID Token and / or
 		  UserInfo access token;
 		  
-		- Parse and process requests at the OpenID Connect Token 
-		  Endpoint, then generate the appropriate responses;
+		- Parse and process requests at the OpenID Connect Token Endpoint, then
+		  generate the appropriate responses;
 		  
-		- Parse and process requests at the OpenID Connect UserInfo 
-		  Endpoint, then generate the appropriate responses;
+		- Parse and process requests at the OpenID Connect UserInfo Endpoint,
+		  then generate the appropriate responses;
 		  
-		- Parse and process requests at the OpenID Connect Client
-		  Registration endpoint, then generate the appropriate 
-		  responses.
+		- Parse and process requests at the OpenID Connect Client Registration
+		  Endpoint, then generate the appropriate responses.
 	
 	* Developing OpenID Connect relying party (RP) clients:
 	
-		- Compose requests to an OpenID Connect Authorisation Endpoint
-		  and parse the responses;
+		- Make requests to an OpenID Connect Authorisation Endpoint and parse
+		  the responses;
 		  
-		- Compose requests to an OpenID Connect Token Endpoint and
-		  parse the responses;
+		- Make requests to an OpenID Connect Token Endpoint and parse the
+		  responses;
 		  
-		- Compose requests to an OpenID Connect UserInfo Endpoint and
-		  parse the responses;
+		- Make requests to an OpenID Connect UserInfo Endpoint and parse the
+		  responses;
 		  
-		- Compose requests to an OpenID Connect Client Registration
-		  Endpoint and parse the responses.
+		- Make requests to an OpenID Connect Client Registration Endpoint and
+		  parse the responses.
 
 
 Additional features:
@@ -76,17 +82,19 @@ This SDK version implements the following standards and drafts:
 
 	* The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 6750)
 
+	* OAuth 2.0 Token Revocation (RFC 7009)
+
 	* Assertion Framework for OAuth 2.0 Client Authentication and Authorization
 	  Grants (draft-ietf-oauth-assertions-16)
 
 	* JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
-      Authorization Grants (draft-ietf-oauth-jwt-bearer-09)
+      Authorization Grants (draft-ietf-oauth-jwt-bearer-10)
 	
 	* OAuth 2.0 Dynamic Client Registration Protocol 
-	  (draft-ietf-oauth-dyn-reg-17)
+	  (draft-ietf-oauth-dyn-reg-18)
 
 	* OAuth 2.0 Dynamic Client Registration Management Protocol
-	  (draft-ietf-oauth-dyn-reg-management-01)
+	  (draft-ietf-oauth-dyn-reg-management-02)
 
 	* OpenID Connect Core 1.0 (2014-02-25).
 
@@ -103,4 +111,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2014-06-10
+2014-08-05
