@@ -28,7 +28,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </pre>
  */
 @Immutable
-public class ErrorObject {
+public final class ErrorObject {
 	
 	
 	/**
@@ -224,6 +224,40 @@ public class ErrorObject {
 
 
 	/**
+	 * Returns a JSON object representation of this error object.
+	 *
+	 * <p>Example:
+	 *
+	 * <pre>
+	 * {
+	 *   "error"             : "invalid_grant",
+	 *   "error_description" : "Invalid resource owner credentials"
+	   }
+	 * </pre>
+	 *
+	 * @return The JSON object.
+	 */
+	public JSONObject toJSONObject() {
+
+		JSONObject o = new JSONObject();
+
+		if (code != null) {
+			o.put("error", code);
+		}
+
+		if (description != null) {
+			o.put("error_description", description);
+		}
+
+		if (uri != null) {
+			o.put("error_uri", uri.toString());
+		}
+
+		return o;
+	}
+
+
+	/**
 	 * @see #getCode
 	 */
 	@Override
@@ -255,24 +289,14 @@ public class ErrorObject {
 
 
 	/**
-	 * Parses an error object from the specified HTTP response.
+	 * Parses an error object from the specified JSON object.
 	 *
-	 * @param httpResponse The HTTP response to parse. Must not be
-	 *                     {@code null}.
+	 * @param jsonObject The JSON object to parse. Must not be
+	 *                   {@code null}.
 	 *
 	 * @return The error object.
 	 */
-	public static ErrorObject parse(final HTTPResponse httpResponse) {
-
-		JSONObject jsonObject;
-
-		try {
-			jsonObject = httpResponse.getContentAsJSONObject();
-
-		} catch (ParseException e) {
-
-			return new ErrorObject(null, null, httpResponse.getStatusCode());
-		}
+	public static ErrorObject parse(final JSONObject jsonObject) {
 
 		String code = null;
 		String description = null;
@@ -294,6 +318,36 @@ public class ErrorObject {
 			// ignore and continue
 		}
 
-		return new ErrorObject(code, description, httpResponse.getStatusCode(), uri);
+		return new ErrorObject(code, description, 0, uri);
+	}
+
+
+	/**
+	 * Parses an error object from the specified HTTP response.
+	 *
+	 * @param httpResponse The HTTP response to parse. Must not be
+	 *                     {@code null}.
+	 *
+	 * @return The error object.
+	 */
+	public static ErrorObject parse(final HTTPResponse httpResponse) {
+
+		JSONObject jsonObject;
+
+		try {
+			jsonObject = httpResponse.getContentAsJSONObject();
+
+		} catch (ParseException e) {
+
+			return new ErrorObject(null, null, httpResponse.getStatusCode());
+		}
+
+		ErrorObject intermediary = parse(jsonObject);
+
+		return new ErrorObject(
+			intermediary.getCode(),
+			intermediary.description,
+			httpResponse.getStatusCode(),
+			intermediary.getURI());
 	}
 }

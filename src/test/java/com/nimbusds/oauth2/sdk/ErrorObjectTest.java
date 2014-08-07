@@ -26,6 +26,9 @@ public class ErrorObjectTest extends TestCase {
 		assertNull(eo.getDescription());
 		assertNull(eo.getURI());
 		assertEquals(0, eo.getHTTPStatusCode());
+
+		assertEquals("access_denied", (String)eo.toJSONObject().get("error"));
+		assertEquals(1, eo.toJSONObject().size());
 	}
 
 
@@ -38,6 +41,10 @@ public class ErrorObjectTest extends TestCase {
 		assertEquals("Access denied", eo.getDescription());
 		assertNull(eo.getURI());
 		assertEquals(0, eo.getHTTPStatusCode());
+
+		assertEquals("access_denied", (String)eo.toJSONObject().get("error"));
+		assertEquals("Access denied", (String)eo.toJSONObject().get("error_description"));
+		assertEquals(2, eo.toJSONObject().size());
 	}
 
 
@@ -50,6 +57,10 @@ public class ErrorObjectTest extends TestCase {
 		assertEquals("Access denied", eo.getDescription());
 		assertNull(eo.getURI());
 		assertEquals(403, eo.getHTTPStatusCode());
+
+		assertEquals("access_denied", (String)eo.toJSONObject().get("error"));
+		assertEquals("Access denied", (String)eo.toJSONObject().get("error_description"));
+		assertEquals(2, eo.toJSONObject().size());
 	}
 
 
@@ -62,6 +73,11 @@ public class ErrorObjectTest extends TestCase {
 		assertEquals("Access denied", eo.getDescription());
 		assertEquals(new URI("https://c2id.com/errors/access_denied"), eo.getURI());
 		assertEquals(403, eo.getHTTPStatusCode());
+
+		assertEquals("access_denied", (String)eo.toJSONObject().get("error"));
+		assertEquals("Access denied", (String)eo.toJSONObject().get("error_description"));
+		assertEquals("https://c2id.com/errors/access_denied", (String)eo.toJSONObject().get("error_uri"));
+		assertEquals(3, eo.toJSONObject().size());
 	}
 
 
