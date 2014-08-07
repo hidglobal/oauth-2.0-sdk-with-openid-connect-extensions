@@ -153,4 +153,19 @@ public class ErrorObjectTest extends TestCase {
 		assertNull(errorObject.getDescription());
 		assertNull(errorObject.getURI());
 	}
+
+
+	public void testEquality() {
+
+		assertTrue(new ErrorObject("invalid_grant", null, 400).equals(OAuth2Error.INVALID_GRANT));
+		assertTrue(new ErrorObject("invalid_grant", null, 0).equals(OAuth2Error.INVALID_GRANT));
+		assertTrue(new ErrorObject(null, null, 0).equals(new ErrorObject(null, null, 0)));
+	}
+
+
+	public void testInequality() {
+
+		assertFalse(new ErrorObject("bad_request", null, 400).equals(OAuth2Error.INVALID_GRANT));
+		assertFalse(new ErrorObject("bad_request", null, 0).equals(OAuth2Error.INVALID_GRANT));
+	}
 }

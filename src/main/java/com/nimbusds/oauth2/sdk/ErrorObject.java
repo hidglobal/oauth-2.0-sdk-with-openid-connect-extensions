@@ -262,21 +262,15 @@ public class ErrorObject {
 	 */
 	@Override
 	public String toString() {
-	
-		if (code != null)
-			return code;
-		else
-			return "null";
+
+		return code != null ? code : "null";
 	}
 
 
 	@Override
 	public int hashCode() {
-	
-		if (code != null)
-			return code.hashCode();
-		else
-			return "null".hashCode();
+
+		return code != null ? code.hashCode() : "null".hashCode();
 	}
 
 
