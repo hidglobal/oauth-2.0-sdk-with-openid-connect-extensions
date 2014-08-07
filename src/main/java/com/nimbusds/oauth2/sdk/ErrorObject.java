@@ -5,9 +5,27 @@ import java.net.URI;
 
 import net.jcip.annotations.Immutable;
 
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+
 
 /**
  * Error object, used to encapsulate OAuth 2.0 and other errors.
+ *
+ * <p>Example error object as HTTP response:
+ *
+ * <pre>
+ * HTTP/1.1 400 Bad Request
+ * Content-Type: application/json;charset=UTF-8
+ * Cache-Control: no-store
+ * Pragma: no-cache
+ *
+ * {
+ *   "error" : "invalid_request"
+ * }
+ * </pre>
  */
 @Immutable
 public class ErrorObject {
@@ -233,5 +251,49 @@ public class ErrorObject {
 	
 		return object instanceof ErrorObject &&
 		       this.toString().equals(object.toString());
+	}
+
+
+	/**
+	 * Parses an error object from the specified HTTP response.
+	 *
+	 * @param httpResponse The HTTP response to parse. Must not be
+	 *                     {@code null}.
+	 *
+	 * @return The error object.
+	 */
+	public static ErrorObject parse(final HTTPResponse httpResponse) {
+
+		JSONObject jsonObject;
+
+		try {
+			jsonObject = httpResponse.getContentAsJSONObject();
+
+		} catch (ParseException e) {
+
+			return new ErrorObject(null, null, httpResponse.getStatusCode());
+		}
+
+		String code = null;
+		String description = null;
+		URI uri = null;
+
+		try {
+			if (jsonObject.containsKey("error")) {
+				code = JSONObjectUtils.getString(jsonObject, "error");
+			}
+
+			if (jsonObject.containsKey("error_description")) {
+				description = JSONObjectUtils.getString(jsonObject, "error_description");
+			}
+
+			if (jsonObject.containsKey("error_uri")) {
+				uri = JSONObjectUtils.getURI(jsonObject, "error_uri");
+			}
+		} catch (ParseException e) {
+			// ignore and continue
+		}
+
+		return new ErrorObject(code, description, httpResponse.getStatusCode(), uri);
 	}
 }
