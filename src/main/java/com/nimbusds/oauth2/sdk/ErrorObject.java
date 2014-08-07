@@ -28,7 +28,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </pre>
  */
 @Immutable
-public final class ErrorObject {
+public class ErrorObject {
 	
 	
 	/**
