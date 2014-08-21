@@ -195,33 +195,35 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Creates a new ID token claims set from the specified JSON object.
 	 *
-	 * @param jsonObject The JSON object. Must not be {@code null}.
+	 * @param jsonObject The JSON object. Must be verified to represent a
+	 *                   valid ID token claims set and not {@code null}.
 	 *
-	 * @throws IllegalArgumentException If the JSON object doesn't contain
-	 *                                  the minimally required issuer
-	 *                                  {@code iss}, subject {@code sub},
-	 *                                  audience list {@code aud},
-	 *                                  expiration date {@code exp} and
-	 *                                  issue date {@code iat} claims.
+	 * @throws ParseException If the JSON object doesn't contain the
+	 *                        minimally required issuer {@code iss},
+	 *                        subject {@code sub}, audience list
+	 *                        {@code aud}, expiration date {@code exp} and
+	 *                        issue date {@code iat} claims.
 	 */
-	public IDTokenClaimsSet(final JSONObject jsonObject) {
+	private IDTokenClaimsSet(final JSONObject jsonObject)
+		throws ParseException {
 
 		super(jsonObject);
 
 		if (getStringClaim(ISS_CLAIM_NAME) == null)
-			throw new IllegalArgumentException("Missing or invalid \"iss\" claim");
+			throw new ParseException("Missing or invalid \"iss\" claim");
 
 		if (getStringClaim(SUB_CLAIM_NAME) == null)
-			throw new IllegalArgumentException("Missing or invalid \"sub\" claim");
+			throw new ParseException("Missing or invalid \"sub\" claim");
 
-		if (getStringListClaim(AUD_CLAIM_NAME) == null)
-			throw new IllegalArgumentException("Missing or invalid \"aud\" claim");
+		if (getStringClaim(AUD_CLAIM_NAME) == null && getStringListClaim(AUD_CLAIM_NAME) == null ||
+		    getStringListClaim(AUD_CLAIM_NAME) != null && getStringListClaim(AUD_CLAIM_NAME).isEmpty())
+			throw new ParseException("Missing or invalid \"aud\" claim");
 
 		if (getDateClaim(EXP_CLAIM_NAME) == null)
-			throw new IllegalArgumentException("Missing or invalid \"exp\" claim");
+			throw new ParseException("Missing or invalid \"exp\" claim");
 
 		if (getDateClaim(IAT_CLAIM_NAME) == null)
-			throw new IllegalArgumentException("Missing or invalid \"iat\" claim");
+			throw new ParseException("Missing or invalid \"iat\" claim");
 	}
 
 
@@ -231,15 +233,14 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 *
 	 * @param jwtClaimsSet The JWT claims set. Must not be {@code null}.
 	 *
-	 * @throws IllegalArgumentException If the JWT claims set doesn't
-	 *                                  contain the minimally required
-	 *                                  issuer {@code iss}, subject
-	 *                                  {@code sub}, audience list
-	 *                                  {@code aud}, expiration date
-	 *                                  {@code exp} and issue date
-	 *                                  {@code iat} claims.
+	 * @throws ParseException If the JSON object doesn't contain the
+	 *                        minimally required issuer {@code iss},
+	 *                        subject {@code sub}, audience list
+	 *                        {@code aud}, expiration date {@code exp} and
+	 *                        issue date {@code iat} claims.
 	 */
-	public IDTokenClaimsSet(final JWTClaimsSet jwtClaimsSet) {
+	public IDTokenClaimsSet(final JWTClaimsSet jwtClaimsSet)
+		throws ParseException {
 
 		this(jwtClaimsSet.toJSONObject());
 	}
@@ -273,7 +274,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token issuer. Corresponds to the {@code iss} claim.
 	 *
-	 * @return The issuer, {@code null} if not specified or parsing failed.
+	 * @return The issuer.
 	 */
 	public Issuer getIssuer() {
 
@@ -284,8 +285,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token subject. Corresponds to the {@code sub} claim.
 	 *
-	 * @return The subject, {@code null} if not specified or parsing
-	 *         failed.
+	 * @return The subject.
 	 */
 	public Subject getSubject() {
 
@@ -296,33 +296,24 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token audience. Corresponds to the {@code aud} claim.
 	 *
-	 * @return The audience, {@code null} if not specified or parsing
-	 *         failed.
+	 * @return The audience.
 	 */
 	public List<Audience> getAudience() {
 
 		if (getClaim(AUD_CLAIM_NAME) instanceof String) {
-
+			// Special case - aud is a string
 			return new Audience(getStringClaim(AUD_CLAIM_NAME)).toSingleAudienceList();
-
-		} else if (getClaim(AUD_CLAIM_NAME) instanceof List) {
-
-			List<String> rawList = getStringListClaim(AUD_CLAIM_NAME);
-
-			if (rawList == null || rawList.isEmpty())
-				return null;
-
-			List<Audience> audList = new ArrayList<>(rawList.size());
-
-			for (String s: rawList)
-				audList.add(new Audience(s));
-
-			return audList;
-
-		} else {
-
-			return null;
 		}
+
+		// General case - JSON string array
+		List<String> rawList = getStringListClaim(AUD_CLAIM_NAME);
+
+		List<Audience> audList = new ArrayList<>(rawList.size());
+
+		for (String s: rawList)
+			audList.add(new Audience(s));
+
+		return audList;
 	}
 
 
@@ -330,8 +321,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Gets the ID token expiration time. Corresponds to the {@code exp}
 	 * claim.
 	 *
-	 * @return The expiration time, {@code null} if not specified or
-	 *         parsing failed.
+	 * @return The expiration time.
 	 */
 	public Date getExpirationTime() {
 
@@ -342,8 +332,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	/**
 	 * Gets the ID token issue time. Corresponds to the {@code iss} claim.
 	 *
-	 * @return The issue time, {@code null} if not specified or parsing
-	 *         failed.
+	 * @return The issue time.
 	 */
 	public Date getIssueTime() {
 
@@ -385,11 +374,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	public Nonce getNonce() {
 
 		String value = getStringClaim(NONCE_CLAIM_NAME);
-
-		if (value == null)
-			return null;
-
-		return new Nonce(value);
+		return value != null ? new Nonce(value) : null;
 	}
 
 
@@ -417,11 +402,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	public AccessTokenHash getAccessTokenHash() {
 
 		String value = getStringClaim(AT_HASH_CLAIM_NAME);
-
-		if (value == null)
-			return null;
-
-		return new AccessTokenHash(value);
+		return value != null ? new AccessTokenHash(value) : null;
 	}
 
 
@@ -450,11 +431,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	public CodeHash getCodeHash() {
 
 		String value = getStringClaim(C_HASH_CLAIM_NAME);
-
-		if (value == null)
-			return null;
-
-		return new CodeHash(value);
+		return value != null ? new CodeHash(value) : null;
 	}
 
 
@@ -484,11 +461,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	public ACR getACR() {
 
 		String value = getStringClaim(ACR_CLAIM_NAME);
-
-		if (value == null)
-			return null;
-
-		return new ACR(value);
+		return value != null ? new ACR(value) : null;
 	}
 
 
@@ -565,11 +538,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	public AuthorizedParty getAuthorizedParty() {
 
 		String value = getStringClaim(AZP_CLAIM_NAME);
-
-		if (value == null)
-			return null;
-
-		return new AuthorizedParty(value);
+		return value != null ? new AuthorizedParty(value) : null;
 	}
 
 

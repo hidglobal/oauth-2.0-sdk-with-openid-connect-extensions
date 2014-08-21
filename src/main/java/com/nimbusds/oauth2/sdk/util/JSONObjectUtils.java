@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -93,7 +94,7 @@ public class JSONObjectUtils {
 	 *                        of the expected type.
 	 */
 	@SuppressWarnings("unchecked")
-	private static <T> T getGeneric(final JSONObject o, final String key, final Class<T> clazz)
+	public static <T> T getGeneric(final JSONObject o, final String key, final Class<T> clazz)
 		throws ParseException {
 	
 		if (! o.containsKey(key))
@@ -198,6 +199,24 @@ public class JSONObjectUtils {
 		throws ParseException {
 		
 		return getGeneric(o, key, Number.class).doubleValue();
+	}
+
+
+	/**
+	 * Gets a number member of a JSON object as {@code java.lang.Number}.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static Number getNumber(final JSONObject o, final String key)
+		throws ParseException {
+
+		return getGeneric(o, key, Number.class);
 	}
 	
 	
@@ -384,6 +403,24 @@ public class JSONObjectUtils {
 
 			throw new ParseException("JSON object member with key \"" + key + "\" is not an array of strings");
 		}
+	}
+
+
+	/**
+	 * Gets a string list member of a JSON object.
+	 *
+	 * @param o   The JSON object. Must not be {@code null}.
+	 * @param key The JSON object member key. Must not be {@code null}.
+	 *
+	 * @return The member value.
+	 *
+	 * @throws ParseException If the value is missing, {@code null} or not
+	 *                        of the expected type.
+	 */
+	public static List<String> getStringList(final JSONObject o, final String key)
+		throws ParseException {
+
+		return Arrays.asList(getStringArray(o, key));
 	}
 
 

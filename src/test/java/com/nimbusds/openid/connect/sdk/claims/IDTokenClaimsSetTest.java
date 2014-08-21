@@ -1,6 +1,7 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
+import java.net.URL;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -93,6 +94,8 @@ public class IDTokenClaimsSetTest extends TestCase {
 		IDTokenClaimsSet idTokenClaimsSet = new IDTokenClaimsSet(jwtClaimsSet);
 
 		assertEquals("https://server.example.com", idTokenClaimsSet.getIssuer().getValue());
+		assertEquals("https://server.example.com", idTokenClaimsSet.getURLClaim("iss").toString());
+		assertEquals("https://server.example.com", idTokenClaimsSet.getURIClaim("iss").toString());
 		assertEquals("24400320", idTokenClaimsSet.getSubject().getValue());
 		assertEquals("s6BhdRkqt3", idTokenClaimsSet.getAudience().get(0).getValue());
 		assertEquals("n-0S6_WzA2Mj", idTokenClaimsSet.getNonce().getValue());
@@ -109,6 +112,8 @@ public class IDTokenClaimsSetTest extends TestCase {
 		idTokenClaimsSet = new IDTokenClaimsSet(jwtClaimsSet);
 
 		assertEquals("https://server.example.com", idTokenClaimsSet.getIssuer().getValue());
+		assertEquals("https://server.example.com", idTokenClaimsSet.getURLClaim("iss").toString());
+		assertEquals("https://server.example.com", idTokenClaimsSet.getURIClaim("iss").toString());
 		assertEquals("24400320", idTokenClaimsSet.getSubject().getValue());
 		assertEquals("s6BhdRkqt3", idTokenClaimsSet.getAudience().get(0).getValue());
 		assertEquals("n-0S6_WzA2Mj", idTokenClaimsSet.getNonce().getValue());
@@ -358,5 +363,57 @@ public class IDTokenClaimsSetTest extends TestCase {
 		} catch (IllegalArgumentException e) {
 			// ok
 		}
+	}
+
+
+	public void testStringClaim() {
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		claimsSet.setClaim("xString", "apples");
+
+		assertEquals("apples", claimsSet.getStringClaim("xString"));
+
+		assertNull(claimsSet.getStringClaim("exp"));
+	}
+
+
+	public void testNumberClaim() {
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		claimsSet.setClaim("xInteger", 10);
+
+		assertEquals(10, claimsSet.getNumberClaim("xInteger").intValue());
+
+		assertNull(claimsSet.getNumberClaim("iss"));
+	}
+
+
+	public void testURLClaim()
+		throws Exception {
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		claimsSet.setURLClaim("xURL", new URL("http://example.com"));
+
+		assertEquals("http://example.com", claimsSet.getURLClaim("xURL").toString());
+
+		assertNull(claimsSet.getURLClaim("sub"));
 	}
 }

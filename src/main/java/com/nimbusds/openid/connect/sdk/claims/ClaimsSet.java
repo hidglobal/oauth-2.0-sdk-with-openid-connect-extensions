@@ -1,17 +1,12 @@
 package com.nimbusds.openid.connect.sdk.claims;
 
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.*;
 
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.langtag.LangTag;
@@ -19,7 +14,9 @@ import com.nimbusds.langtag.LangTagUtils;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.util.DateUtils;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -91,21 +88,18 @@ public abstract class ClaimsSet {
 	 * @return The claim value, {@code null} if not specified or casting
 	 *         failed.
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> T getClaim(final String name, final Class<T> clazz) {
 
 		try {
-			return (T)claims.get(name);
-
-		} catch (ClassCastException e) {
-
+			return JSONObjectUtils.getGeneric(claims, name, clazz);
+		} catch (ParseException e) {
 			return null;
 		}
 	}
 
 
 	/**
-	 * Returns a map of all instances, including language-tagged, of a 
+	 * Returns a map of all instances, including language-tagged, of a
 	 * claim with the specified base name.
 	 *
 	 * <p>Example JSON serialised claims set:
@@ -136,19 +130,19 @@ public abstract class ClaimsSet {
 	 *         none. A {@code null} key indicates the value has no language
 	 *         tag (corresponds to the base name).
 	 */
-	@SuppressWarnings("unchecked")
 	public <T> Map<LangTag,T> getLangTaggedClaim(final String name, final Class<T> clazz) {
 
 		Map<LangTag,Object> matches = LangTagUtils.find(name, claims);
-
 		Map<LangTag,T> out = new HashMap<>();
 
 		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
 
-			try {
-				out.put(entry.getKey(), (T)entry.getValue());
+			LangTag langTag = entry.getKey();
+			String compositeKey = name + (langTag != null ? "#" + langTag : "");
 
-			} catch (ClassCastException e) {
+			try {
+				out.put(langTag, JSONObjectUtils.getGeneric(claims, compositeKey, clazz));
+			} catch (ParseException e) {
 				// skip
 			}
 		}
@@ -180,15 +174,14 @@ public abstract class ClaimsSet {
 	 *
 	 * @param name    The claim name. Must not be {@code null}.
 	 * @param value   The claim value. Should serialise to a JSON entity.
-	 *                If {@code null} any existing claim with the same name 
+	 *                If {@code null} any existing claim with the same name
 	 *                and language tag (if any) will be removed.
 	 * @param langTag The language tag of the claim value, {@code null} if
 	 *                not tagged.
 	 */
-	public <T> void setClaim(final String name, final Object value, final LangTag langTag) {
+	public void setClaim(final String name, final Object value, final LangTag langTag) {
 
 		String keyName = langTag != null ? name + "#" + langTag : name;
-		
 		setClaim(keyName, value);
 	}
 
@@ -203,7 +196,11 @@ public abstract class ClaimsSet {
 	 */
 	public String getStringClaim(final String name) {
 
-		return getClaim(name, String.class);
+		try {
+			return JSONObjectUtils.getString(claims, name);
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 
 
@@ -211,18 +208,15 @@ public abstract class ClaimsSet {
 	 * Gets a string-based claim with an optional language tag.
 	 *
 	 * @param name    The claim name. Must not be {@code null}.
-	 * @param langTag The language tag of the claim value, {@code null} to 
+	 * @param langTag The language tag of the claim value, {@code null} to
 	 *                get the non-tagged value.
 	 *
 	 * @return The claim value, {@code null} if not specified or casting
 	 *         failed.
 	 */
 	public String getStringClaim(final String name, final LangTag langTag) {
-	
-		if (langTag == null)
-			return getStringClaim(name);
-		else
-			return getStringClaim(name + '#' + langTag);
+
+		return langTag == null ? getStringClaim(name) : getStringClaim(name + '#' + langTag);
 	}
 
 
@@ -236,7 +230,11 @@ public abstract class ClaimsSet {
 	 */
 	public Boolean getBooleanClaim(final String name) {
 
-		return getClaim(name, Boolean.class);
+		try {
+			return JSONObjectUtils.getBoolean(claims, name);
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 
 
@@ -250,7 +248,11 @@ public abstract class ClaimsSet {
 	 */
 	public Number getNumberClaim(final String name) {
 
-		return getClaim(name, Number.class);
+		try {
+			return JSONObjectUtils.getNumber(claims, name);
+		} catch (ParseException e) {
+			return null;
+		}
 	}
 
 
@@ -264,16 +266,9 @@ public abstract class ClaimsSet {
 	 */
 	public URL getURLClaim(final String name) {
 
-		String value = getStringClaim(name);
-
-		if (value == null)
-			return null;
-
 		try {
-			return new URL(value);
-
-		} catch (MalformedURLException e) {
-
+			return JSONObjectUtils.getURL(claims, name);
+		} catch (ParseException e) {
 			return null;
 		}
 	}
@@ -283,7 +278,7 @@ public abstract class ClaimsSet {
 	 * Sets an URL string based claim.
 	 *
 	 * @param name  The claim name. Must not be {@code null}.
-	 * @param value The claim value. If {@code null} any existing claim 
+	 * @param value The claim value. If {@code null} any existing claim
 	 *              with the same name will be removed.
 	 */
 	public void setURLClaim(final String name, final URL value) {
@@ -305,16 +300,9 @@ public abstract class ClaimsSet {
 	 */
 	public URI getURIClaim(final String name) {
 
-		String value = getStringClaim(name);
-
-		if (value == null)
-			return null;
-
 		try {
-			return new URI(value);
-
-		} catch (URISyntaxException e) {
-
+			return JSONObjectUtils.getURI(claims, name);
+		} catch (ParseException e) {
 			return null;
 		}
 	}
@@ -346,16 +334,9 @@ public abstract class ClaimsSet {
 	 */
 	public InternetAddress getEmailClaim(final String name) {
 
-		String value = getStringClaim(name);
-
-		if (value == null)
-			return null;
-
 		try {
-			return new InternetAddress(value);
-
-		} catch (AddressException e) {
-
+			return JSONObjectUtils.getEmail(claims, name);
+		} catch (ParseException e) {
 			return null;
 		}
 	}
@@ -365,7 +346,7 @@ public abstract class ClaimsSet {
 	 * Sets an email string based claim.
 	 *
 	 * @param name  The claim name. Must not be {@code null}.
-	 * @param value The claim value. If {@code null} any existing claim 
+	 * @param value The claim value. If {@code null} any existing claim
 	 *              with the same name will be removed.
 	 */
 	public void setEmailClaim(final String name, final InternetAddress value) {
@@ -375,44 +356,37 @@ public abstract class ClaimsSet {
 		else
 			claims.remove(name);
 	}
-	
-	
+
+
 	/**
-	 * Gets a date / time based claim, represented as the number of seconds 
-	 * from 1970-01-01T0:0:0Z as measured in UTC until the date / time. 
-	 * 
+	 * Gets a date / time based claim, represented as the number of seconds
+	 * from 1970-01-01T0:0:0Z as measured in UTC until the date / time.
+	 *
 	 * @param name The claim name. Must not be {@code null}.
-	 * 
+	 *
 	 * @return The claim value, {@code null} if not specified or parsing
 	 *         failed.
 	 */
 	public Date getDateClaim(final String name) {
-		
-		Number value = getNumberClaim(name);
-		
-		if (value == null)
-			return null;
-		
+
 		try {
-			return DateUtils.fromSecondsSinceEpoch(value.longValue());
-			
+			return DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getNumber(claims, name).longValue());
 		} catch (Exception e) {
-			
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
-	 * Sets a date / time based claim, represented as the number of seconds 
-	 * from 1970-01-01T0:0:0Z as measured in UTC until the date / time. 
-	 * 
+	 * Sets a date / time based claim, represented as the number of seconds
+	 * from 1970-01-01T0:0:0Z as measured in UTC until the date / time.
+	 *
 	 * @param name  The claim name. Must not be {@code null}.
 	 * @param value The claim value. If {@code null} any existing claim
 	 *              with the same name will be removed.
 	 */
 	public void setDateClaim(final String name, final Date value) {
-		
+
 		if (value != null)
 			setClaim(name, DateUtils.toSecondsSinceEpoch(value));
 		else
@@ -430,31 +404,19 @@ public abstract class ClaimsSet {
 	 */
 	public List<String> getStringListClaim(final String name) {
 
-		@SuppressWarnings("unchecked") List<Object> rawList = getClaim(name, List.class);
-
-		if (rawList == null)
-			rawList = getClaim(name, JSONArray.class);
-
-		if (rawList == null)
+		try {
+			return Arrays.asList(JSONObjectUtils.getStringArray(claims, name));
+		} catch (ParseException e) {
 			return null;
-
-		List<String> outputList = new ArrayList<>(rawList.size());
-
-		for (Object item: rawList) {
-
-			if (item != null)
-				outputList.add(item.toString());
 		}
-
-		return outputList;
 	}
-	
-	
+
+
 	/**
 	 * Gets the JSON object representation of this claims set.
 	 *
 	 * <p>Example:
-	 * 
+	 *
 	 * <pre>
 	 * {
 	 *   "country"       : "USA",
@@ -467,7 +429,7 @@ public abstract class ClaimsSet {
 	 * @return The JSON object representation.
 	 */
 	public JSONObject toJSONObject() {
-	
+
 		return claims;
 	}
 
@@ -482,6 +444,12 @@ public abstract class ClaimsSet {
 	public JWTClaimsSet toJWTClaimsSet()
 		throws ParseException {
 
-		return JWTClaimsSet.parse(claims);
+		try {
+			return JWTClaimsSet.parse(claims);
+
+		} catch (java.text.ParseException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
 	}
 }

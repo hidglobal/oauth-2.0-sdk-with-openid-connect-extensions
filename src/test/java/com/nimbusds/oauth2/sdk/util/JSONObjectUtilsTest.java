@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk.util;
 
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -133,9 +134,9 @@ public class JSONObjectUtilsTest extends TestCase {
 	
 	public void testGetters()
 		throws Exception {
-	
+
 		JSONObject o = getTestJSONObject();
-		
+
 		assertEquals(true, JSONObjectUtils.getBoolean(o, "bool"));
 		assertEquals(100, JSONObjectUtils.getInt(o, "int"));
 		assertEquals(500l, JSONObjectUtils.getLong(o, "long"));
@@ -152,6 +153,18 @@ public class JSONObjectUtilsTest extends TestCase {
 	}
 
 
+	public void testNumberGetter()
+		throws Exception {
+
+		JSONObject o = getTestJSONObject();
+
+		assertEquals(100, JSONObjectUtils.getNumber(o, "int").intValue());
+		assertEquals(500l, JSONObjectUtils.getNumber(o, "long").longValue());
+		assertEquals(3.14f, JSONObjectUtils.getNumber(o, "float").floatValue());
+		assertEquals(3.1415d, JSONObjectUtils.getNumber(o, "double").doubleValue());
+	}
+
+
 	public void testParseBadStringArray() {
 
 		JSONObject o = new JSONObject();
@@ -159,6 +172,37 @@ public class JSONObjectUtilsTest extends TestCase {
 
 		try {
 			JSONObjectUtils.getStringArray(o, "array");
+			fail();
+		} catch (ParseException e) {
+			// ok
+		}
+	}
+
+
+	public void testParseStringList()
+		throws Exception {
+
+		JSONObject o = new JSONObject();
+		o.put("fruit", Arrays.asList("apples", "pears", "plums"));
+
+		String json = o.toJSONString();
+
+		List<String> fruit = JSONObjectUtils.getStringList(JSONObjectUtils.parseJSONObject(json), "fruit");
+
+		assertEquals("apples", fruit.get(0));
+		assertEquals("pears", fruit.get(1));
+		assertEquals("plums", fruit.get(2));
+		assertEquals(3, fruit.size());
+	}
+
+
+	public void testParseBadStringList() {
+
+		JSONObject o = new JSONObject();
+		o.put("array", Arrays.asList("apples", 10, true));
+
+		try {
+			JSONObjectUtils.getStringList(o, "array");
 			fail();
 		} catch (ParseException e) {
 			// ok

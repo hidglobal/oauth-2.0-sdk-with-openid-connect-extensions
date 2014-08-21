@@ -153,7 +153,9 @@ version 3.4 (2014-07-16)
 version 3.4.1 (2014-07-21)
     * Serialises zero client_secret_expires_at as long instead of int.
 
-version 3.5 (2014-08-05)
+version 3.5 (2014-08-21)
     * Adds support for OAuth 2.0 token revocation requests (RFC 7009).
     * Adds support for HTTP request connect and read timeouts.
     * Adds support for custom parameters in AccessTokenResponse.
+    * Hardens claims parsing IDTokenClaimsSet.
+    * Upgrades Nimbus JOSE+JWT dependency to 3.1.
