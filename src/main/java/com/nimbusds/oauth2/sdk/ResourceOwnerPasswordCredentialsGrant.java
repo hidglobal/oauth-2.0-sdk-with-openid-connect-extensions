@@ -157,7 +157,7 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 		GrantType grantType = new GrantType(grantTypeString);
 
 		if (! grantType.equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.INVALID_GRANT);
+			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
 		// Parse the username
 		String username = params.get("username");

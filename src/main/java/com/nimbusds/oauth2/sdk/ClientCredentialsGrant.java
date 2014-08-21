@@ -98,7 +98,7 @@ public class ClientCredentialsGrant extends AuthorizationGrant {
 		GrantType grantType = new GrantType(grantTypeString);
 
 		if (! grantType.equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.INVALID_GRANT);
+			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
 		// Parse optional scope
 		String scopeValue = params.get("scope");

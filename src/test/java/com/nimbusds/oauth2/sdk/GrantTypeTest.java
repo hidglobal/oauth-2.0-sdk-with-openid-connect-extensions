@@ -21,6 +21,8 @@ public class GrantTypeTest extends TestCase {
 		assertEquals("password", GrantType.PASSWORD.toString());
 
 		assertEquals("client_credentials", GrantType.CLIENT_CREDENTIALS.toString());
+
+		assertEquals("urn:ietf:params:oauth:grant-type:jwt-bearer", GrantType.JWT_BEARER.toString());
 	}
 
 
@@ -39,6 +41,7 @@ public class GrantTypeTest extends TestCase {
 		assertTrue(new GrantType("refresh_token").equals(GrantType.REFRESH_TOKEN));
 		assertTrue(new GrantType("password").equals(GrantType.PASSWORD));
 		assertTrue(new GrantType("client_credentials").equals(GrantType.CLIENT_CREDENTIALS));
+		assertTrue(new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer").equals(GrantType.JWT_BEARER));
 		
 		assertTrue(new GrantType("x_custom").equals(new GrantType("x_custom")));
 	}

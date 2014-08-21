@@ -1,11 +1,14 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
+
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.PlainJWT;
 
 import com.nimbusds.oauth2.sdk.id.ClientID;
 
@@ -16,7 +19,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 public class AuthorizationGrantTest extends TestCase {
 	
 	
-	public void testParse()
+	public void testParseCode()
 		throws Exception {
 		
 		Map<String,String> params = new HashMap<>();
@@ -31,5 +34,25 @@ public class AuthorizationGrantTest extends TestCase {
 		assertEquals("abc", grant.getAuthorizationCode().getValue());
 		assertEquals("123", grant.getClientID().getValue());
 		assertEquals("https://client.com/in", grant.getRedirectionURI().toString());
+	}
+
+
+	public void testParseJWTBearer()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet();
+		claimsSet.setSubject("alice");
+
+		JWT assertion = new PlainJWT(claimsSet);
+
+		JWTBearerGrant grant = new JWTBearerGrant(assertion, new ClientID("123"));
+
+		Map<String,String> params = grant.toParameters();
+
+		grant = (JWTBearerGrant)AuthorizationGrant.parse(params);
+
+		assertEquals(GrantType.JWT_BEARER, grant.getType());
+		assertEquals(assertion.serialize(), grant.getAssertion());
+		assertEquals("123", grant.getClientID().getValue());
 	}
 }

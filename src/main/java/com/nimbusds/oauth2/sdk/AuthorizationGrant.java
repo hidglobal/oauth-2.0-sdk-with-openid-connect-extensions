@@ -14,6 +14,7 @@ import java.util.Map;
  *     <li>{@link GrantType#PASSWORD Resource owner password credentials}
  *     <li>{@link GrantType#CLIENT_CREDENTIALS Client credentials}
  *     <li>{@link GrantType#REFRESH_TOKEN Refresh token}
+ *     <li>{@link GrantType#JWT_BEARER}
  * </ul>
  *
  * <p>Related specifications:
@@ -100,6 +101,10 @@ public abstract class AuthorizationGrant {
 		} else if (grantType.equals(GrantType.CLIENT_CREDENTIALS)) {
 
 			return ClientCredentialsGrant.parse(params);
+
+		} else if (grantType.equals(GrantType.JWT_BEARER)) {
+
+			return JWTBearerGrant.parse(params);
 
 		} else {
 

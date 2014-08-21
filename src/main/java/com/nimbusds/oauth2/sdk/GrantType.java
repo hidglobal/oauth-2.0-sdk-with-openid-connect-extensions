@@ -44,6 +44,12 @@ public final class GrantType extends Identifier {
 
 
 	/**
+	 * JWT bearer, as defined in draft-ietf-oauth-jwt-bearer-10.
+	 */
+	public static final GrantType JWT_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer");
+
+
+	/**
 	 * Creates a new OAuth 2.0 authorisation grant type with the specified
 	 * value.
 	 *

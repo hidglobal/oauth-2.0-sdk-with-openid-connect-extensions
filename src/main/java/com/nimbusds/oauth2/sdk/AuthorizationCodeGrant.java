@@ -193,7 +193,7 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 		GrantType grantType = new GrantType(grantTypeString);
 
 		if (! grantType.equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.INVALID_GRANT);
+			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
 
 		// Parse authorisation code
@@ -214,9 +214,7 @@ public final class AuthorizationCodeGrant extends AuthorizationGrant {
 
 			try {
 				redirectURI = new URI(redirectURIString);
-
 			} catch (URISyntaxException e) {
-
 				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
 			}
 		}
