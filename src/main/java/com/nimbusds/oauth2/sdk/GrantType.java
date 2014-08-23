@@ -14,7 +14,7 @@ public final class GrantType extends Identifier {
 
 	
 	/**
-	 * Authorisation code.
+	 * Authorisation code. Explicit client authentication is optional.
 	 */
 	public static final GrantType AUTHORIZATION_CODE = new GrantType("authorization_code", false, true);
 
@@ -26,7 +26,7 @@ public final class GrantType extends Identifier {
 	
 	
 	/**
-	 * Refresh token.
+	 * Refresh token. Explicit client authentication is required.
 	 */
 	public static final GrantType REFRESH_TOKEN = new GrantType("refresh_token", true, false);
 
@@ -38,15 +38,23 @@ public final class GrantType extends Identifier {
 
 
 	/**
-	 * Client credentials.
+	 * Client credentials. Explicit client authentication is required.
 	 */
 	public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials", true, true);
 
 
 	/**
-	 * JWT bearer, as defined in draft-ietf-oauth-jwt-bearer-10.
+	 * JWT bearer, as defined in draft-ietf-oauth-jwt-bearer-10. Explicit
+	 * client authentication is optional.
 	 */
-	public static final GrantType JWT_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer", true, false);
+	public static final GrantType JWT_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer", false, false);
+
+
+	/**
+	 * SAML 2.0 bearer, as defined in draft-ietf-oauth-saml2-bearer-21.
+	 * Explicit client authentication is optional.
+	 */
+	public static final GrantType SAML2_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:saml2-bearer", false, false);
 
 
 	/**
@@ -145,6 +153,10 @@ public final class GrantType extends Identifier {
 		} else if (value.equals(GrantType.JWT_BEARER.getValue())) {
 
 			return GrantType.JWT_BEARER;
+
+		} else if (value.equals(GrantType.SAML2_BEARER.getValue())) {
+
+			return GrantType.SAML2_BEARER;
 
 		} else {
 

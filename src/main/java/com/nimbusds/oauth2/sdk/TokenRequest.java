@@ -96,8 +96,8 @@ public class TokenRequest extends AbstractRequest {
 
 		clientID = null; // must not be set when client auth is present
 
-		if (authzGrant == null)
-			throw new IllegalArgumentException("The authorization grant must not be null");
+		if (authzGrant.getType().equals(GrantType.IMPLICIT))
+			throw new IllegalArgumentException("The grant type must not be \"implicit\"");
 
 		this.authzGrant = authzGrant;
 
@@ -125,19 +125,21 @@ public class TokenRequest extends AbstractRequest {
 
 		super(uri);
 
-		this.clientID = clientID;
-		clientAuth = null;
+		if (authzGrant.getType().equals(GrantType.IMPLICIT))
+			throw new IllegalArgumentException("The grant type must not be \"implicit\"");
 
-		if (authzGrant == null)
-			throw new IllegalArgumentException("The authorization grant must not be null");
+		if (authzGrant.getType().requiresClientAuthentication()) {
+			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires client authentication");
+		}
+
+		if (authzGrant.getType().requiresClientID() && clientID == null) {
+			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires a \"client_id\" parameter");
+		}
 
 		this.authzGrant = authzGrant;
 
-		if (authzGrant.getType().requiresClientAuthentication())
-			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires client authentication");
-
-		if (authzGrant.getType().requiresClientID() && clientID == null)
-			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires a client_id parameter");
+		this.clientID = clientID;
+		clientAuth = null;
 
 		this.scope = scope;
 	}
