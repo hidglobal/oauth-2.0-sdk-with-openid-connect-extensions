@@ -1254,7 +1254,7 @@ public class ClientMetadata {
 
 			for (String grant: JSONObjectUtils.getStringArray(jsonObject, "grant_types")) {
 
-				grantTypes.add(new GrantType(grant));
+				grantTypes.add(GrantType.parse(grant));
 			}
 
 			metadata.setGrantTypes(grantTypes);

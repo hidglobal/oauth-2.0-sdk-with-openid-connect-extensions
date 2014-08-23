@@ -18,42 +18,24 @@ import net.jcip.annotations.Immutable;
  * </ul>
  */
 @Immutable
-public class ClientCredentialsGrant extends AuthorizationGrant {
+public final class ClientCredentialsGrant extends AuthorizationGrant {
 
 
 	/**
-	 * The associated grant type.
+	 * The grant type.
 	 */
 	public static final GrantType GRANT_TYPE = GrantType.CLIENT_CREDENTIALS;
 
 
 	/**
-	 * The requested scope.
+	 * Creates a new client credentials grant. The actual client
+	 * credentials are included in the
+	 * {@link com.nimbusds.oauth2.sdk.auth.ClientAuthentication client
+	 * authentication} of the {@link com.nimbusds.oauth2.sdk.TokenRequest}.
 	 */
-	private final Scope scope;
-
-
-	/**
-	 * Creates a new client credentials grant.
-	 *
-	 * @param scope The requested scope, {@code null} if not specified.
-	 */
-	public ClientCredentialsGrant(final Scope scope) {
+	public ClientCredentialsGrant() {
 
 		super(GRANT_TYPE);
-
-		this.scope = scope;
-	}
-
-
-	/**
-	 * Gets the requested scope.
-	 *
-	 * @return The requested scope, {@code null} if not specified.
-	 */
-	public Scope getScope() {
-
-		return scope;
 	}
 
 
@@ -61,12 +43,7 @@ public class ClientCredentialsGrant extends AuthorizationGrant {
 	public Map<String,String> toParameters() {
 
 		Map<String,String> params = new LinkedHashMap<>();
-
 		params.put("grant_type", GRANT_TYPE.getValue());
-
-		if (scope != null)
-			params.put("scope", scope.toString());
-
 		return params;
 	}
 
@@ -95,19 +72,9 @@ public class ClientCredentialsGrant extends AuthorizationGrant {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		GrantType grantType = new GrantType(grantTypeString);
-
-		if (! grantType.equals(GRANT_TYPE))
+		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
 			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
-		// Parse optional scope
-		String scopeValue = params.get("scope");
-
-		Scope scope = null;
-
-		if (scopeValue != null)
-			scope = Scope.parse(scopeValue);
-
-		return new ClientCredentialsGrant(scope);
+		return new ClientCredentialsGrant();
 	}
 }

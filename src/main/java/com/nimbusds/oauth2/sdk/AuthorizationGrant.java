@@ -35,7 +35,8 @@ public abstract class AuthorizationGrant {
 	/**
 	 * Creates a new authorisation grant.
 	 *
-	 * @param type The authorisation grant type. Must not be {@code null}.
+	 * @param type               The authorisation grant type. Must not be
+	 *                           {@code null}.
 	 */
 	protected AuthorizationGrant(final GrantType type) {
 
@@ -84,7 +85,7 @@ public abstract class AuthorizationGrant {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		GrantType grantType = new GrantType(grantTypeString);
+		GrantType grantType = GrantType.parse(grantTypeString);
 
 		if (grantType.equals(GrantType.AUTHORIZATION_CODE)) {
 

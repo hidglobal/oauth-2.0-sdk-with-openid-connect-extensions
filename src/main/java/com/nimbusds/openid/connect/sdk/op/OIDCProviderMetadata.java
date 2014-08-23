@@ -1698,7 +1698,7 @@ public class OIDCProviderMetadata {
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "grant_types_supported")) {
 				
 				if (v != null)
-					op.gts.add(new GrantType(v));
+					op.gts.add(GrantType.parse(v));
 			}
 		}
 

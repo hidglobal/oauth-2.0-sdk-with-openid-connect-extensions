@@ -9,9 +9,6 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
-import com.nimbusds.oauth2.sdk.id.ClientID;
-
-
 /**
  * JWT bearer grant. Used in access token requests with a JSON Web Token (JWT),
  * such an OpenID Connect ID token.
@@ -26,11 +23,11 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
  * </ul>
  */
 @Immutable
-public class JWTBearerGrant extends AssertionGrant {
+public final class JWTBearerGrant extends AssertionGrant {
 
 
 	/**
-	 * The associated grant type.
+	 * The grant type.
 	 */
 	public static final GrantType GRANT_TYPE = GrantType.JWT_BEARER;
 
@@ -46,30 +43,15 @@ public class JWTBearerGrant extends AssertionGrant {
 	 *
 	 * @param assertion The JSON Web Token (JWT) assertion. Must not be
 	 *                  {@code null}.
-	 * @param clientID  The client identifier, if required for the
-	 *                  particular client authentication method employed,
-	 *                  else {@code null}.
 	 */
-	public JWTBearerGrant(final JWT assertion, final ClientID clientID) {
+	public JWTBearerGrant(final JWT assertion) {
 
-		super(GRANT_TYPE, clientID);
+		super(GRANT_TYPE);
 
 		if (assertion == null)
 			throw new IllegalArgumentException("The JWT assertion must not be null");
 
 		this.assertion = assertion;
-	}
-
-
-	/**
-	 * Creates a new JSON Web Token (JWT) assertion grant.
-	 *
-	 * @param assertion The JSON Web Token (JWT) assertion. Must not be
-	 *                  {@code null}.
-	 */
-	public JWTBearerGrant(final JWT assertion) {
-
-		this(assertion, null);
 	}
 
 
@@ -97,10 +79,6 @@ public class JWTBearerGrant extends AssertionGrant {
 		Map<String,String> params = new LinkedHashMap<>();
 		params.put("grant_type", GRANT_TYPE.getValue());
 		params.put("assertion", assertion.serialize());
-
-		if (getClientID() != null)
-			params.put("client_id", getClientID().getValue());
-
 		return params;
 	}
 
@@ -131,9 +109,7 @@ public class JWTBearerGrant extends AssertionGrant {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		GrantType grantType = new GrantType(grantTypeString);
-
-		if (! grantType.equals(GRANT_TYPE))
+		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
 			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
 		// Parse JWT assertion
@@ -150,14 +126,6 @@ public class JWTBearerGrant extends AssertionGrant {
 			throw new ParseException("The \"assertion\" is not a JWT: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
 		}
 
-		// Parse optional client ID
-		String clientIDString = params.get("client_id");
-
-		ClientID clientID = null;
-
-		if (clientIDString != null && clientIDString.trim().length() > 0)
-			clientID = new ClientID(clientIDString);
-
-		return new JWTBearerGrant(assertion, clientID);
+		return new JWTBearerGrant(assertion);
 	}
 }

@@ -25,7 +25,7 @@ public final class RefreshTokenGrant extends AuthorizationGrant {
 
 
 	/**
-	 * The associated grant type.
+	 * The grant type.
 	 */
 	public static final GrantType GRANT_TYPE = GrantType.REFRESH_TOKEN;
 
@@ -99,10 +99,8 @@ public final class RefreshTokenGrant extends AuthorizationGrant {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		GrantType grantType = new GrantType(grantTypeString);
-
-		if (! grantType.equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.INVALID_GRANT);
+		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
+			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
 		// Parse refresh token
 		String refreshTokenString = params.get("refresh_token");

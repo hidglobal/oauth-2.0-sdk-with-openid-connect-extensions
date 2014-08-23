@@ -10,6 +10,7 @@ import java.util.Map;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
@@ -28,7 +29,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Host: server.example.com
  * Content-Type: application/x-www-form-URIencoded
  * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
- * 
+ *
  * grant_type=authorization_code
  * &amp;code=SplxlOBeZQQYbYS6WxSbIA
  * &amp;redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb
@@ -51,44 +52,123 @@ public class TokenRequest extends AbstractRequest {
 
 
 	/**
+	 * The client identifier, {@code null} if not specified.
+	 */
+	private final ClientID clientID;
+
+
+	/**
 	 * The authorisation grant.
 	 */
 	private final AuthorizationGrant authzGrant;
-	
-	
+
+
 	/**
-	 * Creates a new token request.
+	 * The requested scope, {@code null} if not specified.
+	 */
+	private final Scope scope;
+
+
+	/**
+	 * Creates a new token request with the specified client
+	 * authentication.
 	 *
-	 * @param uri        The URI of the token endpoint. May be 
+	 * @param uri        The URI of the token endpoint. May be
 	 *                   {@code null} if the {@link #toHTTPRequest} method
 	 *                   will not be used.
-	 * @param clientAuth The client authentication, {@code null} if none.
+	 * @param clientAuth The client authentication. Must not be
+	 *                   {@code null}.
 	 * @param authzGrant The authorisation grant. Must not be {@code null}.
+	 * @param scope      The requested scope, {@code null} if not
+	 *                   specified.
 	 */
 	public TokenRequest(final URI uri,
 			    final ClientAuthentication clientAuth,
-			    final AuthorizationGrant authzGrant) {
-	
+			    final AuthorizationGrant authzGrant,
+			    final Scope scope) {
+
 		super(uri);
-		
+
+		if (clientAuth == null)
+			throw new IllegalArgumentException("The client authentication must not be null");
+
 		this.clientAuth = clientAuth;
+
+		clientID = null; // must not be set when client auth is present
 
 		if (authzGrant == null)
 			throw new IllegalArgumentException("The authorization grant must not be null");
 
 		this.authzGrant = authzGrant;
+
+		this.scope = scope;
 	}
-	
-	
+
+
+	/**
+	 * Creates a new token request, with no explicit client authentication
+	 * (may be present in the grant depending on its type).
+	 *
+	 * @param uri        The URI of the token endpoint. May be
+	 *                   {@code null} if the {@link #toHTTPRequest} method
+	 *                   will not be used.
+	 * @param clientID   The client identifier, {@code null} if not
+	 *                   specified.
+	 * @param authzGrant The authorisation grant. Must not be {@code null}.
+	 * @param scope      The requested scope, {@code null} if not
+	 *                   specified.
+	 */
+	public TokenRequest(final URI uri,
+			    final ClientID clientID,
+			    final AuthorizationGrant authzGrant,
+			    final Scope scope) {
+
+		super(uri);
+
+		this.clientID = clientID;
+		clientAuth = null;
+
+		if (authzGrant == null)
+			throw new IllegalArgumentException("The authorization grant must not be null");
+
+		this.authzGrant = authzGrant;
+
+		if (authzGrant.getType().requiresClientAuthentication())
+			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires client authentication");
+
+		if (authzGrant.getType().requiresClientID() && clientID == null)
+			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires a client_id parameter");
+
+		this.scope = scope;
+	}
+
+
 	/**
 	 * Gets the client authentication.
+	 *
+	 * @see #getClientID()
 	 *
 	 * @return The client authentication, {@code null} if none.
 	 */
 	public ClientAuthentication getClientAuthentication() {
-	
+
 		return clientAuth;
 	}
+
+
+	/**
+	 * Gets the client identifier (for a token request without explicit
+	 * client authentication).
+	 *
+	 * @see #getClientAuthentication()
+	 *
+	 * @return The client identifier, {@code null} if not specified.
+	 */
+	public ClientID getClientID() {
+
+		return clientID;
+	}
+
 
 
 	/**
@@ -99,6 +179,17 @@ public class TokenRequest extends AbstractRequest {
 	public AuthorizationGrant getAuthorizationGrant() {
 
 		return authzGrant;
+	}
+
+
+	/**
+	 * Gets the requested scope.
+	 *
+	 * @return The requested scope, {@code null} if not specified.
+	 */
+	public Scope getScope() {
+
+		return scope;
 	}
 
 
@@ -122,17 +213,25 @@ public class TokenRequest extends AbstractRequest {
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		Map<String,String> params = authzGrant.toParameters();
-
-		httpRequest.setQuery(URLUtils.serializeParameters(params));
-
 		if (getClientAuthentication() != null)
 			getClientAuthentication().applyTo(httpRequest);
 
+		Map<String,String> params = authzGrant.toParameters();
+
+		if (scope != null && ! scope.isEmpty()) {
+			params.put("scope", scope.toString());
+		}
+
+		if (clientID != null) {
+			params.put("client_id", clientID.getValue());
+		}
+
+		httpRequest.setQuery(URLUtils.serializeParameters(params));
+
 		return httpRequest;
 	}
-	
-	
+
+
 	/**
 	 * Parses a token request from the specified HTTP request.
 	 *
@@ -140,26 +239,13 @@ public class TokenRequest extends AbstractRequest {
 	 *
 	 * @return The token request.
 	 *
-	 * @throws ParseException If the HTTP request couldn't be parsed to a 
+	 * @throws ParseException If the HTTP request couldn't be parsed to a
 	 *                        token request.
 	 */
 	public static TokenRequest parse(final HTTPRequest httpRequest)
 		throws ParseException {
-		
+
 		// Only HTTP POST accepted
-		httpRequest.ensureMethod(HTTPRequest.Method.POST);
-		httpRequest.ensureContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		
-		// No fragment!
-		// May use query component!
-		Map<String,String> params = httpRequest.getQueryParameters();
-
-		// Parse grant
-		AuthorizationGrant authzGrant = AuthorizationGrant.parse(params);
-
-		// Parse client auth
-		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
-
 		URI uri;
 
 		try {
@@ -170,6 +256,52 @@ public class TokenRequest extends AbstractRequest {
 			throw new ParseException(e.getMessage(), e);
 		}
 
-		return new TokenRequest(uri, clientAuth, authzGrant);
+		httpRequest.ensureMethod(HTTPRequest.Method.POST);
+		httpRequest.ensureContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		// Parse client authentication, if any
+		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
+
+		// No fragment! May use query component!
+		Map<String,String> params = httpRequest.getQueryParameters();
+
+		// Parse grant
+		AuthorizationGrant grant = AuthorizationGrant.parse(params);
+
+		if (grant.getType().requiresClientAuthentication()) {
+			throw new ParseException("Missing client authentication", OAuth2Error.INVALID_CLIENT);
+		}
+
+		// Parse client id
+		ClientID clientID = null;
+
+		if (clientAuth == null) {
+
+			// Parse optional client ID
+			String clientIDString = params.get("client_id");
+
+			if (clientIDString != null && clientIDString.trim().length() > 0)
+				clientID = new ClientID(clientIDString);
+
+			if (clientID == null && grant.getType().requiresClientID()) {
+				throw new ParseException("Missing required \"client_id\" parameter", OAuth2Error.INVALID_REQUEST);
+			}
+		}
+
+		// Parse optional scope
+		String scopeValue = params.get("scope");
+
+		Scope scope = null;
+
+		if (scopeValue != null) {
+			scope = Scope.parse(scopeValue);
+		}
+
+
+		if (clientAuth != null) {
+			return new TokenRequest(uri, clientAuth, grant, scope);
+		} else {
+			return new TokenRequest(uri, clientID, grant, scope);
+		}
 	}
 }

@@ -20,11 +20,11 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
  * </ul>
  */
 @Immutable
-public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
+public final class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 
 
 	/**
-	 * The associated grant type.
+	 * The grant type.
 	 */
 	public static final GrantType GRANT_TYPE = GrantType.PASSWORD;
 
@@ -42,24 +42,15 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 
 
 	/**
-	 * The requested scope.
-	 */
-	private final Scope scope;
-
-
-	/**
 	 * Creates a new resource owner password credentials grant.
 	 *
 	 * @param username The resource owner's username. Must not be
 	 *                 {@code null}.
 	 * @param password The resource owner's password. Must not be
 	 *                 {@code null}.
-	 * @param scope    The requested scope, {@code null} if not
-	 *                 specified.
 	 */
 	public ResourceOwnerPasswordCredentialsGrant(final String username,
-						     final Secret password,
-						     final Scope scope) {
+						     final Secret password) {
 
 		super(GRANT_TYPE);
 
@@ -72,8 +63,6 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 			throw new IllegalArgumentException("The password must not be null");
 
 		this.password = password;
-
-		this.scope = scope;
 	}
 
 
@@ -99,30 +88,13 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 	}
 
 
-	/**
-	 * Gets the requested scope.
-	 *
-	 * @return The requested scope.
-	 */
-	public Scope getScope() {
-
-		return scope;
-	}
-
-
 	@Override
 	public Map<String,String> toParameters() {
 
 		Map<String,String> params = new LinkedHashMap<>();
-
 		params.put("grant_type", GRANT_TYPE.getValue());
-
 		params.put("username", username);
 		params.put("password", password.getValue());
-
-		if (scope != null)
-			params.put("scope", scope.toString());
-
 		return params;
 	}
 
@@ -154,9 +126,7 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 		if (grantTypeString == null)
 			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		GrantType grantType = new GrantType(grantTypeString);
-
-		if (! grantType.equals(GRANT_TYPE))
+		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
 			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 
 		// Parse the username
@@ -173,14 +143,6 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 
 		Secret password = new Secret(passwordString);
 
-		// Parse optional scope
-		String scopeValue = params.get("scope");
-
-		Scope scope = null;
-
-		if (scopeValue != null)
-			scope = Scope.parse(scopeValue);
-
-		return new ResourceOwnerPasswordCredentialsGrant(username, password, scope);
+		return new ResourceOwnerPasswordCredentialsGrant(username, password);
 	}
 }
