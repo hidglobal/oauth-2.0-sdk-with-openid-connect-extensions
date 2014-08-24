@@ -33,6 +33,48 @@ public class AuthorizationGrantTest extends TestCase {
 	}
 
 
+	public void testParseRefreshToken()
+		throws Exception {
+
+		Map<String,String> params = new HashMap<>();
+		params.put("grant_type", "refresh_token");
+		params.put("refresh_token", "abc123");
+
+		RefreshTokenGrant grant = (RefreshTokenGrant)AuthorizationGrant.parse(params);
+
+		assertEquals(GrantType.REFRESH_TOKEN, grant.getType());
+		assertEquals("abc123", grant.getRefreshToken().getValue());
+	}
+
+
+	public void testParsePassword()
+		throws Exception {
+
+		Map<String,String> params = new HashMap<>();
+		params.put("grant_type", "password");
+		params.put("username", "alice");
+		params.put("password", "secret");
+
+		ResourceOwnerPasswordCredentialsGrant grant = (ResourceOwnerPasswordCredentialsGrant)AuthorizationGrant.parse(params);
+
+		assertEquals(GrantType.PASSWORD, grant.getType());
+		assertEquals("alice", grant.getUsername());
+		assertEquals("secret", grant.getPassword().getValue());
+	}
+
+
+	public void testParseClientCredentials()
+		throws Exception {
+
+		Map<String,String> params = new HashMap<>();
+		params.put("grant_type", "client_credentials");
+
+		ClientCredentialsGrant grant = (ClientCredentialsGrant)AuthorizationGrant.parse(params);
+
+		assertEquals(GrantType.CLIENT_CREDENTIALS, grant.getType());
+	}
+
+
 	public void testParseJWTBearer()
 		throws Exception {
 
@@ -41,13 +83,28 @@ public class AuthorizationGrantTest extends TestCase {
 
 		JWT assertion = new PlainJWT(claimsSet);
 
-		JWTBearerGrant grant = new JWTBearerGrant(assertion);
+		Map<String,String> params = new HashMap<>();
+		params.put("grant_type", GrantType.JWT_BEARER.getValue());
+		params.put("assertion", assertion.serialize());
 
-		Map<String,String> params = grant.toParameters();
-
-		grant = (JWTBearerGrant)AuthorizationGrant.parse(params);
+		JWTBearerGrant grant = (JWTBearerGrant)AuthorizationGrant.parse(params);
 
 		assertEquals(GrantType.JWT_BEARER, grant.getType());
 		assertEquals(assertion.serialize(), grant.getAssertion());
+	}
+
+
+	public void testParseSAML2Bearer()
+		throws Exception {
+
+		Map<String,String> params = new HashMap<>();
+		params.put("grant_type", GrantType.SAML2_BEARER.getValue());
+		params.put("assertion", "abc");
+
+		SAML2BearerGrant grant = (SAML2BearerGrant)AuthorizationGrant.parse(params);
+
+		assertEquals(GrantType.SAML2_BEARER, grant.getType());
+		assertEquals("abc", grant.getAssertion());
+		assertEquals("abc", grant.getSAML2Assertion().toString());
 	}
 }

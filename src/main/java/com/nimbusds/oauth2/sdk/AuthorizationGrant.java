@@ -15,6 +15,7 @@ import java.util.Map;
  *     <li>{@link GrantType#CLIENT_CREDENTIALS Client credentials}
  *     <li>{@link GrantType#REFRESH_TOKEN Refresh token}
  *     <li>{@link GrantType#JWT_BEARER}
+ *     <li>{@link GrantType#SAML2_BEARER}
  * </ul>
  *
  * <p>Related specifications:
@@ -107,9 +108,13 @@ public abstract class AuthorizationGrant {
 
 			return JWTBearerGrant.parse(params);
 
+		} else if (grantType.equals(GrantType.SAML2_BEARER)) {
+
+			return SAML2BearerGrant.parse(params);
+
 		} else {
 
-			throw new ParseException("Unsupported grant type: " + grantType, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+			throw new ParseException("Invalid or unsupported grant type: " + grantType, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
 		}
 	}
 }

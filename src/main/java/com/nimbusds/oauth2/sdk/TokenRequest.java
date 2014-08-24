@@ -140,6 +140,25 @@ public class TokenRequest extends AbstractRequest {
 
 
 	/**
+	 * Creates a new token request, without client authentication and a
+	 * specified client identifier.
+	 *
+	 * @param uri        The URI of the token endpoint. May be
+	 *                   {@code null} if the {@link #toHTTPRequest} method
+	 *                   will not be used.
+	 * @param authzGrant The authorisation grant. Must not be {@code null}.
+	 * @param scope      The requested scope, {@code null} if not
+	 *                   specified.
+	 */
+	public TokenRequest(final URI uri,
+			    final AuthorizationGrant authzGrant,
+			    final Scope scope) {
+
+		this(uri, (ClientID)null, authzGrant, scope);
+	}
+
+
+	/**
 	 * Gets the client authentication.
 	 *
 	 * @see #getClientID()
