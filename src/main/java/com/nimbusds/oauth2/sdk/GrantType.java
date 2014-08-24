@@ -14,31 +14,35 @@ public final class GrantType extends Identifier {
 
 	
 	/**
-	 * Authorisation code. Explicit client authentication is optional.
+	 * Authorisation code. Client authentication required only for
+	 * confidential clients.
 	 */
 	public static final GrantType AUTHORIZATION_CODE = new GrantType("authorization_code", false, true);
 
 
 	/**
-	 * Implicit.
+	 * Implicit. Client authentication is not performed (except for signed
+	 * OpenID Connect authentication requests).
 	 */
 	public static final GrantType IMPLICIT = new GrantType("implicit", false, true);
 	
 	
 	/**
-	 * Refresh token. Explicit client authentication is required.
+	 * Refresh token. Client authentication required only for confidential
+	 * clients.
 	 */
-	public static final GrantType REFRESH_TOKEN = new GrantType("refresh_token", true, false);
+	public static final GrantType REFRESH_TOKEN = new GrantType("refresh_token", false, false);
 
 
 	/**
-	 * Password.
+	 * Password. Client authentication required only for confidential
+	 * clients.
 	 */
 	public static final GrantType PASSWORD = new GrantType("password", false, false);
 
 
 	/**
-	 * Client credentials. Explicit client authentication is required.
+	 * Client credentials. Client authentication is required.
 	 */
 	public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials", true, true);
 
@@ -105,8 +109,8 @@ public final class GrantType extends Identifier {
 	 *
 	 * @return {@code true} if a client identifier must always be
 	 *         communicated for this grant type (either as part of the
-	 *         client authentication, or as a separate parameter), else
-	 *         {@code false}.
+	 *         client authentication, or as a parameter in the token
+	 *         request body), else {@code false}.
 	 */
 	public boolean requiresClientID() {
 

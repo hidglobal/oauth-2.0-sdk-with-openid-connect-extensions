@@ -10,8 +10,6 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
 
-import com.nimbusds.oauth2.sdk.id.ClientID;
-
 
 /**
  * Tests the abstract authorisation grant class.
@@ -25,14 +23,12 @@ public class AuthorizationGrantTest extends TestCase {
 		Map<String,String> params = new HashMap<>();
 		params.put("grant_type", "authorization_code");
 		params.put("code", "abc");
-		params.put("client_id", "123");
 		params.put("redirect_uri", "https://client.com/in");
 		
 		AuthorizationCodeGrant grant = (AuthorizationCodeGrant)AuthorizationGrant.parse(params);
 		
 		assertEquals(GrantType.AUTHORIZATION_CODE, grant.getType());
 		assertEquals("abc", grant.getAuthorizationCode().getValue());
-		assertEquals("123", grant.getClientID().getValue());
 		assertEquals("https://client.com/in", grant.getRedirectionURI().toString());
 	}
 
@@ -45,7 +41,7 @@ public class AuthorizationGrantTest extends TestCase {
 
 		JWT assertion = new PlainJWT(claimsSet);
 
-		JWTBearerGrant grant = new JWTBearerGrant(assertion, new ClientID("123"));
+		JWTBearerGrant grant = new JWTBearerGrant(assertion);
 
 		Map<String,String> params = grant.toParameters();
 
@@ -53,6 +49,5 @@ public class AuthorizationGrantTest extends TestCase {
 
 		assertEquals(GrantType.JWT_BEARER, grant.getType());
 		assertEquals(assertion.serialize(), grant.getAssertion());
-		assertEquals("123", grant.getClientID().getValue());
 	}
 }

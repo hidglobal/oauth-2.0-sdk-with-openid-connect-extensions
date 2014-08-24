@@ -47,7 +47,8 @@ public class TokenRequestTest extends TestCase {
 		assertEquals(GrantType.AUTHORIZATION_CODE, codeGrant.getType());
 		assertEquals("SplxlOBeZQQYbYS6WxSbIA", codeGrant.getAuthorizationCode().getValue());
 		assertEquals("https://client.example.com/cb", codeGrant.getRedirectionURI().toString());
-		assertNull(codeGrant.getClientID());
+
+		assertNull(tr.getClientID());
 		
 		httpRequest = tr.toHTTPRequest();
 		
@@ -121,7 +122,8 @@ public class TokenRequestTest extends TestCase {
 		assertEquals(GrantType.PASSWORD, pwdGrant.getType());
 		assertEquals("johndoe", pwdGrant.getUsername());
 		assertEquals("A3ddj3w", pwdGrant.getPassword().getValue());
-		assertNull(pwdGrant.getScope());
+
+		assertNull(tr.getScope());
 
 		httpRequest = tr.toHTTPRequest();
 
@@ -156,7 +158,8 @@ public class TokenRequestTest extends TestCase {
 
 		ClientCredentialsGrant clientCredentialsGrant = (ClientCredentialsGrant)tr.getAuthorizationGrant();
 		assertEquals(GrantType.CLIENT_CREDENTIALS, clientCredentialsGrant.getType());
-		assertNull(clientCredentialsGrant.getScope());
+
+		assertNull(tr.getScope());
 
 		httpRequest = tr.toHTTPRequest();
 

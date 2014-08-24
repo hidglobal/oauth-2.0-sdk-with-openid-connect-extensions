@@ -96,9 +96,6 @@ public class TokenRequest extends AbstractRequest {
 
 		clientID = null; // must not be set when client auth is present
 
-		if (authzGrant.getType().equals(GrantType.IMPLICIT))
-			throw new IllegalArgumentException("The grant type must not be \"implicit\"");
-
 		this.authzGrant = authzGrant;
 
 		this.scope = scope;
@@ -124,9 +121,6 @@ public class TokenRequest extends AbstractRequest {
 			    final Scope scope) {
 
 		super(uri);
-
-		if (authzGrant.getType().equals(GrantType.IMPLICIT))
-			throw new IllegalArgumentException("The grant type must not be \"implicit\"");
 
 		if (authzGrant.getType().requiresClientAuthentication()) {
 			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires client authentication");
@@ -270,7 +264,7 @@ public class TokenRequest extends AbstractRequest {
 		// Parse grant
 		AuthorizationGrant grant = AuthorizationGrant.parse(params);
 
-		if (grant.getType().requiresClientAuthentication()) {
+		if (clientAuth == null && grant.getType().requiresClientAuthentication()) {
 			throw new ParseException("Missing client authentication", OAuth2Error.INVALID_CLIENT);
 		}
 
