@@ -89,6 +89,9 @@ This SDK version implements the following standards and drafts:
 
 	* JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
       Authorization Grants (draft-ietf-oauth-jwt-bearer-10)
+
+    * SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization
+      Grants (draft-ietf-oauth-saml2-bearer-21)
 	
 	* OAuth 2.0 Dynamic Client Registration Protocol 
 	  (draft-ietf-oauth-dyn-reg-18)
@@ -111,4 +114,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2014-08-05
+2014-08-24
