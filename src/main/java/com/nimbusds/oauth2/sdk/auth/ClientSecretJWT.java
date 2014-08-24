@@ -35,7 +35,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>Assertion Framework for OAuth 2.0 (draft-ietf-oauth-assertions-16)
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-09).
+ *         (draft-ietf-oauth-jwt-bearer-10).
  * </ul>
  */
 @Immutable

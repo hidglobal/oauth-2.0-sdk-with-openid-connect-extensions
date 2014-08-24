@@ -48,7 +48,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section-3.2.1.
  *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 
- *         (draft-ietf-oauth-jwt-bearer-09)
+ *         (draft-ietf-oauth-jwt-bearer-10)
  * </ul>
  */
 public class JWTAuthenticationClaimsSet {
