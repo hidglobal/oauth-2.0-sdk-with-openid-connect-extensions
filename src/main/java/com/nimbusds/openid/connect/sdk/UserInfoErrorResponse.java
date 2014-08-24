@@ -125,7 +125,7 @@ public class UserInfoErrorResponse
 
 		HTTPResponse httpResponse;
 
-		if (error.getHTTPStatusCode() > 0)
+		if (error != null && error.getHTTPStatusCode() > 0)
 			httpResponse = new HTTPResponse(error.getHTTPStatusCode());
 		else
 			httpResponse = new HTTPResponse(HTTPResponse.SC_BAD_REQUEST);

@@ -5,8 +5,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.nimbusds.jose.util.Base64URL;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTParser;
 import net.jcip.annotations.Immutable;
 
 
