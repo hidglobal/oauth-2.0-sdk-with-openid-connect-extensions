@@ -41,7 +41,7 @@
  * <ul>
  *     <li>{@link com.nimbusds.oauth2.sdk.TokenRevocationRequest} The client
  *         request revocation of a previously issued access or refresh
- *         token.</li>
+ *         token.
  * </ul>
  * 
  * <p>Protected resource messages:
