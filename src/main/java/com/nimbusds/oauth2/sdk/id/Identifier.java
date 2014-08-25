@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
+import java.io.Serializable;
 import java.security.SecureRandom;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +19,7 @@ import net.minidev.json.JSONValue;
  *
  * <p>Extending classes must override the {@link #equals} method.
  */
-public abstract class Identifier implements Comparable<Identifier>, JSONAware {
+public abstract class Identifier implements Serializable, Comparable<Identifier>, JSONAware {
 	
 	
 	/**
