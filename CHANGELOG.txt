@@ -161,3 +161,8 @@ version 4.0 (2014-08-24)
     * Adds support for custom parameters in AccessTokenResponse.
     * Hardens claims parsing IDTokenClaimsSet.
     * Upgrades Nimbus JOSE+JWT dependency to 3.1.1.
+
+version 4.1 (2014-08-25)
+    * Identifier implements java.io.Serializable.
+    * Adds getState() and getRedirectionURI() to AuthenticationResponse
+      interface.
