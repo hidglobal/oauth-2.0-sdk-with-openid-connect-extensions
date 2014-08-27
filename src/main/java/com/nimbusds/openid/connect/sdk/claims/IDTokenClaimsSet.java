@@ -7,7 +7,7 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -239,7 +239,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 *                        {@code aud}, expiration date {@code exp} and
 	 *                        issue date {@code iat} claims.
 	 */
-	public IDTokenClaimsSet(final JWTClaimsSet jwtClaimsSet)
+	public IDTokenClaimsSet(final ReadOnlyJWTClaimsSet jwtClaimsSet)
 		throws ParseException {
 
 		this(jwtClaimsSet.toJSONObject());

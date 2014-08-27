@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.jwk.RSAKey;
@@ -69,6 +70,28 @@ public class IDTokenClaimsSetTest extends TestCase {
 		assertTrue(stdClaimNames.contains("sub_jwk"));
 
 		assertEquals(13, stdClaimNames.size());
+	}
+
+
+	public void testReadOnlyJWTClaimsSetConstructor()
+		throws Exception {
+
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet();
+		claimsSet.setIssuer("https://c2id.com");
+		claimsSet.setSubject("alice");
+		claimsSet.setAudience("client-123");
+		claimsSet.setExpirationTime(new Date(3600000l));
+		claimsSet.setIssueTime(new Date(1000l));
+
+		ReadOnlyJWTClaimsSet roClaimsSet = (ReadOnlyJWTClaimsSet)claimsSet;
+
+		IDTokenClaimsSet idTokenClaimsSet = new IDTokenClaimsSet(roClaimsSet);
+		assertEquals("https://c2id.com", idTokenClaimsSet.getIssuer().getValue());
+		assertEquals("alice", idTokenClaimsSet.getSubject().getValue());
+		assertEquals("client-123", idTokenClaimsSet.getAudience().get(0).getValue());
+		assertEquals(3600000l, idTokenClaimsSet.getExpirationTime().getTime());
+		assertEquals(1000l, idTokenClaimsSet.getIssueTime().getTime());
 	}
 
 

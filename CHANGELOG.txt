@@ -166,3 +166,7 @@ version 4.1 (2014-08-25)
     * Identifier implements java.io.Serializable.
     * Adds getState() and getRedirectionURI() to AuthenticationResponse
       interface.
+
+version 4.2 (2014-08-27)
+    * Modifies IDTokenClaimsSet constructor to accept ReadOnlyJWTClaimsSet
+      argument (issue #99).
