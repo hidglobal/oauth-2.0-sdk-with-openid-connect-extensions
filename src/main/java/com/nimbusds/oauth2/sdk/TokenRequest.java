@@ -103,6 +103,25 @@ public class TokenRequest extends AbstractRequest {
 
 
 	/**
+	 * Creates a new token request with the specified client
+	 * authentication.
+	 *
+	 * @param uri        The URI of the token endpoint. May be
+	 *                   {@code null} if the {@link #toHTTPRequest} method
+	 *                   will not be used.
+	 * @param clientAuth The client authentication. Must not be
+	 *                   {@code null}.
+	 * @param authzGrant The authorisation grant. Must not be {@code null}.
+	 */
+	public TokenRequest(final URI uri,
+			    final ClientAuthentication clientAuth,
+			    final AuthorizationGrant authzGrant) {
+
+		this(uri, clientAuth, authzGrant, null);
+	}
+
+
+	/**
 	 * Creates a new token request, with no explicit client authentication
 	 * (may be present in the grant depending on its type).
 	 *
@@ -140,6 +159,25 @@ public class TokenRequest extends AbstractRequest {
 
 
 	/**
+	 * Creates a new token request, with no explicit client authentication
+	 * (may be present in the grant depending on its type).
+	 *
+	 * @param uri        The URI of the token endpoint. May be
+	 *                   {@code null} if the {@link #toHTTPRequest} method
+	 *                   will not be used.
+	 * @param clientID   The client identifier, {@code null} if not
+	 *                   specified.
+	 * @param authzGrant The authorisation grant. Must not be {@code null}.
+	 */
+	public TokenRequest(final URI uri,
+			    final ClientID clientID,
+			    final AuthorizationGrant authzGrant) {
+
+		this(uri, clientID, authzGrant, null);
+	}
+
+
+	/**
 	 * Creates a new token request, without client authentication and a
 	 * specified client identifier.
 	 *
@@ -155,6 +193,22 @@ public class TokenRequest extends AbstractRequest {
 			    final Scope scope) {
 
 		this(uri, (ClientID)null, authzGrant, scope);
+	}
+
+
+	/**
+	 * Creates a new token request, without client authentication and a
+	 * specified client identifier.
+	 *
+	 * @param uri        The URI of the token endpoint. May be
+	 *                   {@code null} if the {@link #toHTTPRequest} method
+	 *                   will not be used.
+	 * @param authzGrant The authorisation grant. Must not be {@code null}.
+	 */
+	public TokenRequest(final URI uri,
+			    final AuthorizationGrant authzGrant) {
+
+		this(uri, (ClientID)null, authzGrant, null);
 	}
 
 

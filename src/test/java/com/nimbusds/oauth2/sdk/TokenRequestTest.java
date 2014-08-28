@@ -52,6 +52,34 @@ public class TokenRequestTest extends TestCase {
 	}
 
 
+	public void testConstructorWithClientAuthenticationAndNoScope()
+		throws Exception {
+
+		URI uri = new URI("https://c2id.com/token");
+		ClientAuthentication clientAuth = new ClientSecretBasic(new ClientID("123"), new Secret("secret"));
+		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), null);
+
+		TokenRequest request = new TokenRequest(uri, clientAuth, grant);
+
+		assertEquals(uri, request.getEndpointURI());
+		assertEquals(clientAuth, request.getClientAuthentication());
+		assertNull(request.getClientID());
+		assertEquals(grant, request.getAuthorizationGrant());
+		assertNull(request.getScope());
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+		assertEquals(uri.toURL(), httpRequest.getURL());
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		ClientSecretBasic basic = ClientSecretBasic.parse(httpRequest.getAuthorization());
+		assertEquals("123", basic.getClientID().getValue());
+		assertEquals("secret", basic.getClientSecret().getValue());
+		Map<String,String> params = httpRequest.getQueryParameters();
+		assertEquals(GrantType.AUTHORIZATION_CODE.getValue(), params.get("grant_type"));
+		assertEquals("abc", params.get("code"));
+		assertEquals(2, params.size());
+	}
+
+
 	public void testRejectNullClientAuthentication()
 		throws Exception {
 
@@ -74,6 +102,34 @@ public class TokenRequestTest extends TestCase {
 		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), new URI("http://example.com/in"));
 
 		TokenRequest request = new TokenRequest(uri, clientID, grant, null);
+
+		assertEquals(uri, request.getEndpointURI());
+		assertNull(request.getClientAuthentication());
+		assertEquals(clientID, request.getClientID());
+		assertEquals(grant, request.getAuthorizationGrant());
+		assertNull(request.getScope());
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+		assertEquals(uri.toURL(), httpRequest.getURL());
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		assertNull(httpRequest.getAuthorization());
+		Map<String,String> params = httpRequest.getQueryParameters();
+		assertEquals(GrantType.AUTHORIZATION_CODE.getValue(), params.get("grant_type"));
+		assertEquals("abc", params.get("code"));
+		assertEquals("123", params.get("client_id"));
+		assertEquals("http://example.com/in", params.get("redirect_uri"));
+		assertEquals(4, params.size());
+	}
+
+
+	public void testConstructorWithClientIDAndNoScope()
+		throws Exception {
+
+		URI uri = new URI("https://c2id.com/token");
+		ClientID clientID = new ClientID("123");
+		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(new AuthorizationCode("abc"), new URI("http://example.com/in"));
+
+		TokenRequest request = new TokenRequest(uri, clientID, grant);
 
 		assertEquals(uri, request.getEndpointURI());
 		assertNull(request.getClientAuthentication());
@@ -135,6 +191,32 @@ public class TokenRequestTest extends TestCase {
 		assertEquals("secret", params.get("password"));
 		assertTrue(Scope.parse("openid email").containsAll(Scope.parse(params.get("scope"))));
 		assertEquals(4, params.size());
+	}
+
+
+	public void testMinimalConstructorWithNoScope()
+		throws Exception {
+
+		URI uri = new URI("https://c2id.com/token");
+		AuthorizationGrant grant = new ResourceOwnerPasswordCredentialsGrant("alice", new Secret("secret"));
+
+		TokenRequest tokenRequest = new TokenRequest(uri, grant);
+
+		assertEquals(uri, tokenRequest.getEndpointURI());
+		assertNull(tokenRequest.getClientAuthentication());
+		assertNull(tokenRequest.getClientID());
+		assertEquals(grant, tokenRequest.getAuthorizationGrant());
+		assertNull(tokenRequest.getScope());
+
+		HTTPRequest httpRequest = tokenRequest.toHTTPRequest();
+		assertEquals(uri.toURL(), httpRequest.getURL());
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		assertNull(httpRequest.getAuthorization());
+		Map<String,String> params = httpRequest.getQueryParameters();
+		assertEquals(GrantType.PASSWORD.getValue(), params.get("grant_type"));
+		assertEquals("alice", params.get("username"));
+		assertEquals("secret", params.get("password"));
+		assertEquals(3, params.size());
 	}
 
 
