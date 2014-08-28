@@ -142,6 +142,10 @@ public final class GrantType extends Identifier {
 
 			return GrantType.AUTHORIZATION_CODE;
 
+		} else if (value.equals(GrantType.IMPLICIT.getValue())) {
+
+			return GrantType.IMPLICIT;
+
 		} else if (value.equals(GrantType.REFRESH_TOKEN.getValue())) {
 
 			return GrantType.REFRESH_TOKEN;

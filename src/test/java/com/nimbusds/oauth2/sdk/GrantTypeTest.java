@@ -44,4 +44,28 @@ public class GrantTypeTest extends TestCase {
 		assertFalse(GrantType.JWT_BEARER.requiresClientID());
 		assertFalse(GrantType.SAML2_BEARER.requiresClientID());
 	}
+
+
+	public void testParse()
+		throws ParseException {
+
+		assertEquals(GrantType.AUTHORIZATION_CODE, GrantType.parse(GrantType.AUTHORIZATION_CODE.getValue()));
+		assertEquals(GrantType.IMPLICIT, GrantType.parse(GrantType.IMPLICIT.getValue()));
+		assertEquals(GrantType.REFRESH_TOKEN, GrantType.parse(GrantType.REFRESH_TOKEN.getValue()));
+		assertEquals(GrantType.PASSWORD, GrantType.parse(GrantType.PASSWORD.getValue()));
+		assertEquals(GrantType.CLIENT_CREDENTIALS, GrantType.parse(GrantType.CLIENT_CREDENTIALS.getValue()));
+		assertEquals(GrantType.JWT_BEARER, GrantType.parse(GrantType.JWT_BEARER.getValue()));
+		assertEquals(GrantType.SAML2_BEARER, GrantType.parse(GrantType.SAML2_BEARER.getValue()));
+	}
+
+
+	public void testParseUnsupported() {
+
+		try {
+			GrantType.parse("no-such-grant");
+			fail();
+		} catch (ParseException e) {
+			assertEquals(OAuth2Error.UNSUPPORTED_GRANT_TYPE, e.getErrorObject());
+		}
+	}
 }
