@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-18), section 3.2.
+ *         (draft-ietf-oauth-dyn-reg-20), section 3.2.
  * </ul>
  */
 public abstract class ClientRegistrationResponse implements Response {

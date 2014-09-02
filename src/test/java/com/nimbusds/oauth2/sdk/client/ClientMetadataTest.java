@@ -44,7 +44,6 @@ public class ClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("client_uri"));
 		assertTrue(paramNames.contains("logo_uri"));
 		assertTrue(paramNames.contains("contacts"));
-		assertTrue(paramNames.contains("application_type"));
 		assertTrue(paramNames.contains("tos_uri"));
 		assertTrue(paramNames.contains("policy_uri"));
 		assertTrue(paramNames.contains("token_endpoint_auth_method"));
@@ -56,7 +55,7 @@ public class ClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
-		assertEquals(16, ClientMetadata.getRegisteredParameterNames().size());
+		assertEquals(15, ClientMetadata.getRegisteredParameterNames().size());
 	}
 	
 	
@@ -86,8 +85,6 @@ public class ClientMetadataTest extends TestCase {
 		contacts.add(new InternetAddress("alice@wonderland.net"));
 		contacts.add(new InternetAddress("admin@wonderland.net"));
 		meta.setContacts(contacts);
-
-		meta.setApplicationType(ApplicationType.NATIVE);
 		
 		String name = "My Example App";
 		meta.setName(name);
@@ -140,7 +137,6 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(scope, meta.getScope());
 		assertEquals(grantTypes, meta.getGrantTypes());
 		assertEquals(contacts, meta.getContacts());
-		assertEquals(ApplicationType.NATIVE, meta.getApplicationType());
 		assertEquals(name, meta.getName());
 		assertEquals(nameDE, meta.getName(LangTag.parse("de")));
 		assertEquals(2, meta.getNameEntries().size());
@@ -176,7 +172,6 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(scope, meta.getScope());
 		assertEquals(grantTypes, meta.getGrantTypes());
 		assertEquals(contacts, meta.getContacts());
-		assertEquals(ApplicationType.NATIVE, meta.getApplicationType());
 		assertEquals(name, meta.getName());
 		assertEquals(nameDE, meta.getName(LangTag.parse("de")));
 		assertEquals(2, meta.getNameEntries().size());
@@ -213,7 +208,6 @@ public class ClientMetadataTest extends TestCase {
 		
 		assertNull(meta.getResponseTypes());
 		assertNull(meta.getGrantTypes());
-		assertNull(meta.getApplicationType());
 		assertNull(meta.getTokenEndpointAuthMethod());
 		
 		meta.applyDefaults();
@@ -223,8 +217,6 @@ public class ClientMetadataTest extends TestCase {
 		
 		Set<GrantType> grantTypes = meta.getGrantTypes();
 		assertTrue(grantTypes.contains(GrantType.AUTHORIZATION_CODE));
-
-		assertEquals(ApplicationType.WEB, meta.getApplicationType());
 		
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, meta.getTokenEndpointAuthMethod());
 	}

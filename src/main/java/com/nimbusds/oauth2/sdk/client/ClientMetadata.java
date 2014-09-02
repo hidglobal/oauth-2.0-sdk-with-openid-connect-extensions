@@ -33,8 +33,8 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * 
  * <pre>
  * {
- *  "redirect_uris"             : ["https://client.example.org/callback",
- *                                 "https://client.example.org/callback2"],
+ *  "redirect_uris"              : ["https://client.example.org/callback",
+ *                                  "https://client.example.org/callback2"],
  *  "client_name"                : "My Example Client",
  *  "client_name#ja-Jpan-JP"     : "\u30AF\u30E9\u30A4\u30A2\u30F3\u30C8\u540D",
  *  "token_endpoint_auth_method" : "client_secret_basic",
@@ -48,7 +48,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-18), section 2.
+ *         (draft-ietf-oauth-dyn-reg-20), section 2.
  * </ul>
  */
 public class ClientMetadata {
@@ -71,7 +71,6 @@ public class ClientMetadata {
 		p.add("response_types");
 		p.add("grant_types");
 		p.add("contacts");
-		p.add("application_type");
 		p.add("client_name");
 		p.add("logo_uri");
 		p.add("client_uri");
@@ -115,12 +114,6 @@ public class ClientMetadata {
 	 * Administrator contacts for the client.
 	 */
 	private List<InternetAddress> contacts;
-
-
-	/**
-	 * The client application type.
-	 */
-	private ApplicationType applicationType;
 
 
 	/**
@@ -222,7 +215,6 @@ public class ClientMetadata {
 		responseTypes = metadata.responseTypes;
 		grantTypes = metadata.grantTypes;
 		contacts = metadata.contacts;
-		applicationType = metadata.applicationType;
 		nameEntries = metadata.nameEntries;
 		logoURIEntries = metadata.logoURIEntries;
 		uriEntries = metadata.uriEntries;
@@ -407,31 +399,6 @@ public class ClientMetadata {
 	public void setContacts(final List<InternetAddress> contacts) {
 
 		this.contacts = contacts;
-	}
-
-
-	/**
-	 * Gets the client application type. Corresponds to the
-	 * {@code application_type} client metadata field.
-	 *
-	 * @return The client application type, {@code null} if not specified.
-	 */
-	public ApplicationType getApplicationType() {
-
-		return applicationType;
-	}
-
-
-	/**
-	 * Sets the client application type. Corresponds to the
-	 * {@code application_type} client metadata field.
-	 *
-	 * @param applicationType The client application type, {@code null} if
-	 *                        not specified.
-	 */
-	public void setApplicationType(final ApplicationType applicationType) {
-
-		this.applicationType = applicationType;
 	}
 
 
@@ -950,8 +917,6 @@ public class ClientMetadata {
 	 * <ul>
 	 *     <li>The response types default to {@code ["code"]}.
 	 *     <li>The grant types default to {@code "authorization_code".}
-	 *     <li>The application type defaults to
-	 *         {@link ApplicationType#WEB}.
 	 *     <li>The client authentication method defaults to
 	 *         "client_secret_basic".
 	 * </ul>
@@ -966,10 +931,6 @@ public class ClientMetadata {
 		if (grantTypes == null) {
 			grantTypes = new HashSet<>();
 			grantTypes.add(GrantType.AUTHORIZATION_CODE);
-		}
-
-		if (applicationType == null) {
-			applicationType = ApplicationType.WEB;
 		}
 
 		if (authMethod == null) {
@@ -1055,9 +1016,6 @@ public class ClientMetadata {
 
 			o.put("contacts", contactList);
 		}
-
-		if (applicationType != null)
-			o.put("application_type", applicationType.toString());
 
 
 		if (! nameEntries.isEmpty()) {
@@ -1280,15 +1238,6 @@ public class ClientMetadata {
 
 			metadata.setContacts(emailList);
 			jsonObject.remove("contacts");
-		}
-
-
-		if (jsonObject.containsKey("application_type")) {
-			metadata.setApplicationType(JSONObjectUtils.getEnum(jsonObject,
-				"application_type",
-				ApplicationType.class));
-
-			jsonObject.remove("application_type");
 		}
 
 

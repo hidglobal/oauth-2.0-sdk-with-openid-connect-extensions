@@ -54,7 +54,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.1.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-18), sections 2 and 3.1.
+ *         (draft-ietf-oauth-dyn-reg-20), sections 2 and 3.1.
  * </ul>
  */
 @Immutable

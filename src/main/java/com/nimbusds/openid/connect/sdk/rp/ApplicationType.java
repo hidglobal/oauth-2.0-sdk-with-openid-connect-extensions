@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk.client;
+package com.nimbusds.openid.connect.sdk.rp;
 
 
 /**

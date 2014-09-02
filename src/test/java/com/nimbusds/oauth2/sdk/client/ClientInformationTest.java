@@ -38,7 +38,6 @@ public class ClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("client_uri"));
 		assertTrue(paramNames.contains("logo_uri"));
 		assertTrue(paramNames.contains("contacts"));
-		assertTrue(paramNames.contains("application_type"));
 		assertTrue(paramNames.contains("tos_uri"));
 		assertTrue(paramNames.contains("policy_uri"));
 		assertTrue(paramNames.contains("token_endpoint_auth_method"));
@@ -50,7 +49,7 @@ public class ClientInformationTest extends TestCase {
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
-		assertEquals(22, paramNames.size());
+		assertEquals(21, paramNames.size());
 	}
 
 

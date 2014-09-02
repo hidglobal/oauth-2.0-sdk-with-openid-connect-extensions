@@ -94,10 +94,10 @@ This SDK version implements the following standards and drafts:
       Grants (draft-ietf-oauth-saml2-bearer-21)
 	
 	* OAuth 2.0 Dynamic Client Registration Protocol 
-	  (draft-ietf-oauth-dyn-reg-18)
+	  (draft-ietf-oauth-dyn-reg-20)
 
 	* OAuth 2.0 Dynamic Client Registration Management Protocol
-	  (draft-ietf-oauth-dyn-reg-management-02)
+	  (draft-ietf-oauth-dyn-reg-management-04)
 
 	* OpenID Connect Core 1.0 (2014-02-25).
 
@@ -114,4 +114,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2014-08-24
+2014-09-02

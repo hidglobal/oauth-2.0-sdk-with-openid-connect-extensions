@@ -29,7 +29,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.
  *     <li>OpenID Connect Session Management 1.0, section 5.1.1.
  *     <<li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-18), section 2.
+ *         (draft-ietf-oauth-dyn-reg-20), section 2.
  * </ul>
  */
 public class OIDCClientMetadata extends ClientMetadata {
@@ -49,6 +49,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 		Set<String> p = new HashSet<>(ClientMetadata.getRegisteredParameterNames());
 
 		// OIDC params
+		p.add("application_type");
 		p.add("subject_type");
 		p.add("sector_identifier_uri");
 		p.add("request_uris");
@@ -72,6 +73,12 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
 	}
+
+
+	/**
+	 * The client application type.
+	 */
+	private ApplicationType applicationType;
 
 
 	/**
@@ -226,6 +233,31 @@ public class OIDCClientMetadata extends ClientMetadata {
 	public static Set<String> getRegisteredParameterNames() {
 
 		return REGISTERED_PARAMETER_NAMES;
+	}
+
+
+	/**
+	 * Gets the client application type. Corresponds to the
+	 * {@code application_type} client metadata field.
+	 *
+	 * @return The client application type, {@code null} if not specified.
+	 */
+	public ApplicationType getApplicationType() {
+
+		return applicationType;
+	}
+
+
+	/**
+	 * Sets the client application type. Corresponds to the
+	 * {@code application_type} client metadata field.
+	 *
+	 * @param applicationType The client application type, {@code null} if
+	 *                        not specified.
+	 */
+	public void setApplicationType(final ApplicationType applicationType) {
+
+		this.applicationType = applicationType;
 	}
 
 
@@ -713,10 +745,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * <ul>
 	 *     <li>The response types default to {@code ["code"]}.
 	 *     <li>The grant types default to {@code "authorization_code".}
-	 *     <li>The application type defaults to
-	 *         {@link com.nimbusds.oauth2.sdk.client.ApplicationType#WEB}.
-	 *     <li>The client authentication method defaults to 
+	 *     <li>The client authentication method defaults to
 	 *         "client_secret_basic".
+	 *     <li>The application type defaults to
+	 *         {@link ApplicationType#WEB}.
 	 *     <li>The ID token JWS algorithm defaults to "RS256".
 	 * </ul>
 	 */
@@ -724,6 +756,10 @@ public class OIDCClientMetadata extends ClientMetadata {
 	public void applyDefaults() {
 		
 		super.applyDefaults();
+
+		if (applicationType == null) {
+			applicationType = ApplicationType.WEB;
+		}
 		
 		if (idTokenJWSAlg == null) {
 			idTokenJWSAlg = JWSAlgorithm.RS256;
@@ -737,6 +773,9 @@ public class OIDCClientMetadata extends ClientMetadata {
 		JSONObject o = super.toJSONObject(false);
 
 		o.putAll(getCustomFields());
+
+		if (applicationType != null)
+			o.put("application_type", applicationType.toString());
 
 		if (subjectType != null)
 			o.put("subject_type", subjectType.toString());
@@ -853,6 +892,11 @@ public class OIDCClientMetadata extends ClientMetadata {
 		// reg fields
 
 		JSONObject oidcFields = baseMetadata.getCustomFields();
+
+		if (jsonObject.containsKey("application_type")) {
+			metadata.setApplicationType(JSONObjectUtils.getEnum(jsonObject, "application_type", ApplicationType.class));
+			oidcFields.remove("application_type");
+		}
 		
 		if (jsonObject.containsKey("subject_type")) {
 			metadata.setSubjectType(JSONObjectUtils.getEnum(jsonObject, "subject_type", SubjectType.class));

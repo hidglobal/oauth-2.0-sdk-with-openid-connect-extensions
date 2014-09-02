@@ -34,9 +34,9 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-18), section 4.1.
+ *         (draft-ietf-oauth-dyn-reg-20), section 4.1.
  *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol
- *         (draft-ietf-oauth-dyn-reg-management-02), section 3.1.
+ *         (draft-ietf-oauth-dyn-reg-management-04), section 3.1.
  * </ul>
  */
 @Immutable

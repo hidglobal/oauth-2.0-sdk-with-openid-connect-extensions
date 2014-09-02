@@ -24,7 +24,6 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-import com.nimbusds.oauth2.sdk.client.ApplicationType;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 
@@ -45,7 +44,6 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("client_uri"));
 		assertTrue(paramNames.contains("logo_uri"));
 		assertTrue(paramNames.contains("contacts"));
-		assertTrue(paramNames.contains("application_type"));
 		assertTrue(paramNames.contains("tos_uri"));
 		assertTrue(paramNames.contains("policy_uri"));
 		assertTrue(paramNames.contains("token_endpoint_auth_method"));
@@ -58,6 +56,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("software_version"));
 
 		// OIDC specifid params
+		assertTrue(paramNames.contains("application_type"));
 		assertTrue(paramNames.contains("sector_identifier_uri"));
 		assertTrue(paramNames.contains("subject_type"));
 		assertTrue(paramNames.contains("id_token_signed_response_alg"));
@@ -238,7 +237,6 @@ public class OIDCClientMetadataTest extends TestCase {
 		meta = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
 
 		assertEquals(ApplicationType.NATIVE, meta.getApplicationType());
-
 
 		assertEquals(SubjectType.PAIRWISE, meta.getSubjectType());
 

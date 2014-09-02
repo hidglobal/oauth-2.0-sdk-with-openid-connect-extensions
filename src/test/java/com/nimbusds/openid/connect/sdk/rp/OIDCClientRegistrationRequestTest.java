@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Set;
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.oauth2.sdk.client.ApplicationType;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.EncryptionMethod;
