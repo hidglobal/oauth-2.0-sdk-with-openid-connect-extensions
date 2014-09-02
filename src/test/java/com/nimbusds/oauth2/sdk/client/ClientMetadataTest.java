@@ -2,10 +2,7 @@ package com.nimbusds.oauth2.sdk.client;
 
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.mail.internet.InternetAddress;
 
@@ -312,12 +309,12 @@ public class ClientMetadataTest extends TestCase {
 		throws Exception {
 
 		String json = "{\n" +
-			"      \"redirect_uris\":[\n" +
-			"        \"https://\",\n" +
-			"        \"https://client.example.org/callback2\"],\n" +
-			"      \"token_endpoint_auth_method\":\"client_secret_basic\",\n" +
-			"      \"example_extension_parameter\": \"example_value\"\n" +
-			"     }";
+			" \"redirect_uris\":[\n" +
+			"   \"https://\",\n" +
+			"   \"https://client.example.org/callback2\"],\n" +
+			" \"token_endpoint_auth_method\":\"client_secret_basic\",\n" +
+			" \"example_extension_parameter\": \"example_value\"\n" +
+			"}";
 
 		try {
 			ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
@@ -325,5 +322,61 @@ public class ClientMetadataTest extends TestCase {
 		} catch (ParseException e) {
 			// ok
 		}
+	}
+
+
+	public void testClientCredentialsGrant()
+		throws Exception {
+
+		JSONObject o = new JSONObject();
+		o.put("client_name", "Test App");
+		o.put("grant_types", Arrays.asList("client_credentials"));
+		o.put("response_types", new ArrayList<String>());
+		o.put("scope", "read write");
+
+		String json = o.toJSONString();
+
+		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals("Test App", metadata.getName());
+		assertTrue(metadata.getGrantTypes().contains(GrantType.CLIENT_CREDENTIALS));
+		assertEquals(1, metadata.getGrantTypes().size());
+		assertTrue(metadata.getResponseTypes().isEmpty());
+		assertTrue(Scope.parse("read write").containsAll(metadata.getScope()));
+		assertEquals(2, metadata.getScope().size());
+
+		assertNull(metadata.getTokenEndpointAuthMethod());
+
+		metadata.applyDefaults();
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
+	}
+
+
+	public void testPasswordGrant()
+		throws Exception {
+
+		JSONObject o = new JSONObject();
+		o.put("client_name", "Test App");
+		o.put("grant_types", Arrays.asList("password"));
+		o.put("response_types", new ArrayList<String>());
+		o.put("scope", "read write");
+
+		String json = o.toJSONString();
+
+		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals("Test App", metadata.getName());
+		assertTrue(metadata.getGrantTypes().contains(GrantType.PASSWORD));
+		assertEquals(1, metadata.getGrantTypes().size());
+		assertTrue(metadata.getResponseTypes().isEmpty());
+		assertTrue(Scope.parse("read write").containsAll(metadata.getScope()));
+		assertEquals(2, metadata.getScope().size());
+
+		assertNull(metadata.getTokenEndpointAuthMethod());
+
+		metadata.applyDefaults();
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
 	}
 }
