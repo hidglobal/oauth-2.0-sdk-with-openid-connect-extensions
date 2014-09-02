@@ -226,8 +226,8 @@ public class ClientMetadataTest extends TestCase {
 
 		meta.setCustomField("x-data", "123");
 
-		assertEquals("123", (String)meta.getCustomField("x-data"));
-		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
+		assertEquals("123", (String) meta.getCustomField("x-data"));
+		assertEquals("123", (String) meta.getCustomFields().get("x-data"));
 		assertEquals(1, meta.getCustomFields().size());
 
 		String json = meta.toJSONObject().toJSONString();
@@ -235,7 +235,7 @@ public class ClientMetadataTest extends TestCase {
 		meta = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
 
 		assertEquals("123", (String)meta.getCustomField("x-data"));
-		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
+		assertEquals("123", (String) meta.getCustomFields().get("x-data"));
 		assertEquals(1, meta.getCustomFields().size());
 	}
 
@@ -376,6 +376,36 @@ public class ClientMetadataTest extends TestCase {
 		assertNull(metadata.getTokenEndpointAuthMethod());
 
 		metadata.applyDefaults();
+
+		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
+	}
+
+
+	public void testNoGrant()
+		throws Exception {
+
+		JSONObject o = new JSONObject();
+		o.put("client_name", "Test App");
+		o.put("grant_types", new ArrayList<String>());
+		o.put("response_types", new ArrayList<String>());
+		o.put("scope", "read write");
+
+		String json = o.toJSONString();
+
+		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+
+		assertEquals("Test App", metadata.getName());
+		assertTrue(metadata.getGrantTypes().isEmpty());
+		assertTrue(metadata.getResponseTypes().isEmpty());
+		assertTrue(Scope.parse("read write").containsAll(metadata.getScope()));
+		assertEquals(2, metadata.getScope().size());
+
+		assertNull(metadata.getTokenEndpointAuthMethod());
+
+		metadata.applyDefaults();
+
+		assertTrue(metadata.getGrantTypes().isEmpty());
+		assertTrue(metadata.getResponseTypes().isEmpty());
 
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
 	}
