@@ -180,3 +180,4 @@ version 4.4 (2014-09-02)
     * Upgrades OAuth 2.0 client registration to draft-ietf-oauth-dyn-reg-20 and
       draft-ietf-oauth-dyn-reg-management-04.
     * Upgrades Nimbus JOSE+JWT dependency to 3.1.2.
+    
