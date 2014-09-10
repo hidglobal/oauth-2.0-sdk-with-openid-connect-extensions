@@ -837,7 +837,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 			o.put("default_max_age", defaultMaxAge);
 
 
-		o.put("require_auth_time", requiresAuthTime);
+		if (requiresAuthTime())
+			o.put("require_auth_time", requiresAuthTime);
 
 
 		if (defaultACRs != null) {

@@ -316,4 +316,27 @@ public class OIDCClientMetadataTest extends TestCase {
 
 		assertEquals(ApplicationType.WEB, metadata.getApplicationType());
 	}
+
+
+	public void testSerialiseDefaultRequireAuthTime() {
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.applyDefaults();
+
+		JSONObject jsonObject = metadata.toJSONObject();
+
+		assertNull(jsonObject.get("require_auth_time"));
+	}
+
+
+	public void testSerialiseNonDefaultRequireAuthTime() {
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.requiresAuthTime(true);
+		metadata.applyDefaults();
+
+		JSONObject jsonObject = metadata.toJSONObject();
+
+		assertTrue((Boolean) jsonObject.get("require_auth_time"));
+	}
 }
