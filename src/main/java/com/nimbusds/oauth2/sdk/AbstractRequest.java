@@ -13,7 +13,7 @@ public abstract class AbstractRequest implements Request {
 	/**
 	 * The request endpoint.
 	 */
-	private URI uri;
+	private final URI uri;
 	
 	
 	/**

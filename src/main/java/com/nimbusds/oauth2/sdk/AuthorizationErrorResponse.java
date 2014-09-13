@@ -60,7 +60,7 @@ public class AuthorizationErrorResponse
 	/**
 	 * The standard OAuth 2.0 errors for an Authorisation error response.
 	 */
-	private static Set<ErrorObject> stdErrors = new HashSet<>();
+	private static final Set<ErrorObject> stdErrors = new HashSet<>();
 	
 	
 	static {
