@@ -5,12 +5,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.auth.*;
 import junit.framework.TestCase;
 
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
-import com.nimbusds.oauth2.sdk.auth.ClientSecretBasic;
-import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -432,5 +429,23 @@ public class TokenRequestTest extends TestCase {
 		} catch (ParseException e) {
 			assertEquals(OAuth2Error.INVALID_CLIENT, e.getErrorObject());
 		}
+	}
+
+
+	public void testSupportTokenRequestClientSecretPostSerialization()
+		throws Exception {
+		
+		AuthorizationCode code = new AuthorizationCode();
+		URI endpointUri = new URI("https://token.endpoint.uri/token");
+		URI redirectUri = new URI("https://arbitrary.redirect.uri/");
+		ClientID clientId = new ClientID("client");
+		Secret secret = new Secret("secret");
+		ClientSecretPost clientAuthentication = new ClientSecretPost(clientId,secret);
+		AuthorizationGrant grant = new AuthorizationCodeGrant(code,redirectUri);
+		TokenRequest request = new TokenRequest(endpointUri,clientAuthentication,grant);
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+		TokenRequest reconstructedRequest = TokenRequest.parse(httpRequest);
+		// -> throws ParseException: Missing required "client_id" parameter
 	}
 }
