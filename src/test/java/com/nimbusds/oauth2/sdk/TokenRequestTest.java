@@ -5,9 +5,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Map;
 
-import com.nimbusds.oauth2.sdk.auth.*;
 import junit.framework.TestCase;
 
+import com.nimbusds.oauth2.sdk.auth.*;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -266,7 +266,10 @@ public class TokenRequestTest extends TestCase {
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
-		assertEquals(postBody, httpRequest.getQuery());
+		assertEquals("authorization_code", httpRequest.getQueryParameters().get("grant_type"));
+		assertEquals("SplxlOBeZQQYbYS6WxSbIA", httpRequest.getQueryParameters().get("code"));
+		assertEquals("https://client.example.com/cb", httpRequest.getQueryParameters().get("redirect_uri"));
+		assertEquals(3, httpRequest.getQueryParameters().size());
 	}
 	
 	
@@ -336,7 +339,10 @@ public class TokenRequestTest extends TestCase {
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertNull(httpRequest.getAuthorization());
-		assertEquals(postBody, httpRequest.getQuery());
+		assertEquals("password", httpRequest.getQueryParameters().get("grant_type"));
+		assertEquals("johndoe", httpRequest.getQueryParameters().get("username"));
+		assertEquals("A3ddj3w", httpRequest.getQueryParameters().get("password"));
+		assertEquals(3, httpRequest.getQueryParameters().size());
 	}
 
 
@@ -374,7 +380,10 @@ public class TokenRequestTest extends TestCase {
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
-		assertEquals(postBody, httpRequest.getQuery());
+		assertEquals("password", httpRequest.getQueryParameters().get("grant_type"));
+		assertEquals("johndoe", httpRequest.getQueryParameters().get("username"));
+		assertEquals("A3ddj3w", httpRequest.getQueryParameters().get("password"));
+		assertEquals(3, httpRequest.getQueryParameters().size());
 	}
 
 
@@ -434,7 +443,7 @@ public class TokenRequestTest extends TestCase {
 
 	public void testSupportTokenRequestClientSecretPostSerialization()
 		throws Exception {
-		
+
 		AuthorizationCode code = new AuthorizationCode();
 		URI endpointUri = new URI("https://token.endpoint.uri/token");
 		URI redirectUri = new URI("https://arbitrary.redirect.uri/");
@@ -446,6 +455,9 @@ public class TokenRequestTest extends TestCase {
 
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		TokenRequest reconstructedRequest = TokenRequest.parse(httpRequest);
-		// -> throws ParseException: Missing required "client_id" parameter
+		
+		assertEquals("client", reconstructedRequest.getClientAuthentication().getClientID().getValue());
+		assertEquals("secret", ((ClientSecretPost)reconstructedRequest.getClientAuthentication()).getClientSecret().getValue());
+		assertEquals(code, ((AuthorizationCodeGrant)reconstructedRequest.getAuthorizationGrant()).getAuthorizationCode());
 	}
 }

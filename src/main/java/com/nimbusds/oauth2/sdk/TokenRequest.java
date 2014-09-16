@@ -282,10 +282,13 @@ public class TokenRequest extends AbstractRequest {
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, url);
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
-		if (getClientAuthentication() != null)
+		if (getClientAuthentication() != null) {
 			getClientAuthentication().applyTo(httpRequest);
+		}
 
-		Map<String,String> params = authzGrant.toParameters();
+		Map<String,String> params = httpRequest.getQueryParameters();
+
+		params.putAll(authzGrant.toParameters());
 
 		if (scope != null && ! scope.isEmpty()) {
 			params.put("scope", scope.toString());
