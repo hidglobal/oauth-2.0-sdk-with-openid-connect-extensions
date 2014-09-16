@@ -182,6 +182,10 @@ version 4.4 (2014-09-02)
     * Upgrades Nimbus JOSE+JWT dependency to 3.1.2.
 
 version 4.4.1 (2014-09-10)
-    * Prevent JSON serialisation of default OpenID Connect client registration
+    * Prevents JSON serialisation of default OpenID Connect client registration
       "require_auth_time" values.
+
+version 4.4.2 (2014-09-16)
+    * Fixes serialisation of TokenRequest with client_secret_post client
+      authentication (issue #104).
     
