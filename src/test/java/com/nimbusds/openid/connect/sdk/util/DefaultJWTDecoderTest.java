@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.nimbusds.openid.connect.sdk.util;
 
 import static org.junit.Assert.*;
