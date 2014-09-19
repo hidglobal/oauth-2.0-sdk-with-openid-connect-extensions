@@ -193,6 +193,6 @@ version 4.4.3 (2014-09-19)
     * Removes final from AuthorizationGrant classes.
     * Removes final from OIDCAccessTokenResponse class.
 
-version 4.4.4 (2014-09-19)
+version 4.5 (2014-09-19)
     * Adds default public constructor to GrantType class, unbounds its static
       parse method.
