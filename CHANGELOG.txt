@@ -188,4 +188,7 @@ version 4.4.1 (2014-09-10)
 version 4.4.2 (2014-09-16)
     * Fixes serialisation of TokenRequest with client_secret_post client
       authentication (issue #104).
-    
+
+version 4.4.3 (2014-09-19)
+    * Removes final from AuthorizationGrant classes.
+    * Removes final from OIDCAccessTokenResponse class.
