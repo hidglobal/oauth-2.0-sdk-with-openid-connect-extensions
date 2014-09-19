@@ -23,7 +23,7 @@ import com.nimbusds.jwt.JWTParser;
  * </ul>
  */
 @Immutable
-public final class JWTBearerGrant extends AssertionGrant {
+public class JWTBearerGrant extends AssertionGrant {
 
 
 	/**

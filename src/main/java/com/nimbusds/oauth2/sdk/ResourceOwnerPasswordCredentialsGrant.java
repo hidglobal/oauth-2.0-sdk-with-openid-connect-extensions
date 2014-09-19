@@ -20,7 +20,7 @@ import com.nimbusds.oauth2.sdk.auth.Secret;
  * </ul>
  */
 @Immutable
-public final class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
+public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 
 
 	/**

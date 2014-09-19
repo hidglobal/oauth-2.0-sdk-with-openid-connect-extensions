@@ -21,7 +21,7 @@ import com.nimbusds.oauth2.sdk.token.RefreshToken;
  * </ul>
  */
 @Immutable
-public final class RefreshTokenGrant extends AuthorizationGrant {
+public class RefreshTokenGrant extends AuthorizationGrant {
 
 
 	/**

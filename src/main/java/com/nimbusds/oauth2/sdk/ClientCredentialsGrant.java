@@ -18,7 +18,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  */
 @Immutable
-public final class ClientCredentialsGrant extends AuthorizationGrant {
+public class ClientCredentialsGrant extends AuthorizationGrant {
 
 
 	/**

@@ -22,7 +22,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  */
 @Immutable
-public final class SAML2BearerGrant extends AssertionGrant {
+public class SAML2BearerGrant extends AssertionGrant {
 
 
 	/**
