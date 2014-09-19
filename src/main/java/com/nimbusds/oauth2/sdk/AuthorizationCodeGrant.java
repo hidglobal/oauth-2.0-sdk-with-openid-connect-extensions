@@ -20,7 +20,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  */
 @Immutable
-public final class AuthorizationCodeGrant extends AuthorizationGrant {
+public class AuthorizationCodeGrant extends AuthorizationGrant {
 
 
 	/**
