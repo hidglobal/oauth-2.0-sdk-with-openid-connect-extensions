@@ -75,6 +75,20 @@ public final class GrantType extends Identifier {
 
 	/**
 	 * Creates a new OAuth 2.0 authorisation grant type with the specified
+	 * value. The client authentication requirement is set to
+	 * {@code false}. So is the client identifier requirement.
+	 *
+	 * @param value The authorisation grant type value. Must not be
+	 *              {@code null} or empty string.
+	 */
+	public GrantType(final String value) {
+
+		this(value, false, false);
+	}
+
+
+	/**
+	 * Creates a new OAuth 2.0 authorisation grant type with the specified
 	 * value.
 	 *
 	 * @param value              The authorisation grant type value. Must
@@ -128,47 +142,56 @@ public final class GrantType extends Identifier {
 	/**
 	 * Parses a grant type from the specified string.
 	 *
-	 * @param value The string to parse. Must not be {@code null}.
+	 * @param value The string to parse.
 	 *
 	 * @return The grant type.
 	 *
-	 * @throws ParseException If string doesn't correspond to a valid or
-	 *                        supported grant.
+	 * @throws ParseException If string is {@code null}, blank or empty.
 	 */
 	public static GrantType parse(final String value)
 		throws ParseException {
 
-		if (value.equals(GrantType.AUTHORIZATION_CODE.getValue())) {
+		GrantType grantType;
+
+		try {
+			grantType = new GrantType(value);
+
+		} catch (IllegalArgumentException e) {
+
+			throw new ParseException(e.getMessage());
+		}
+
+		if (grantType.equals(GrantType.AUTHORIZATION_CODE)) {
 
 			return GrantType.AUTHORIZATION_CODE;
 
-		} else if (value.equals(GrantType.IMPLICIT.getValue())) {
+		} else if (grantType.equals(GrantType.IMPLICIT)) {
 
 			return GrantType.IMPLICIT;
 
-		} else if (value.equals(GrantType.REFRESH_TOKEN.getValue())) {
+		} else if (grantType.equals(GrantType.REFRESH_TOKEN)) {
 
 			return GrantType.REFRESH_TOKEN;
 
-		} else if (value.equals(GrantType.PASSWORD.getValue())) {
+		} else if (grantType.equals(GrantType.PASSWORD)) {
 
 			return GrantType.PASSWORD;
 
-		} else if (value.equals(GrantType.CLIENT_CREDENTIALS.getValue())) {
+		} else if (grantType.equals(GrantType.CLIENT_CREDENTIALS)) {
 
 			return GrantType.CLIENT_CREDENTIALS;
 
-		} else if (value.equals(GrantType.JWT_BEARER.getValue())) {
+		} else if (grantType.equals(GrantType.JWT_BEARER)) {
 
 			return GrantType.JWT_BEARER;
 
-		} else if (value.equals(GrantType.SAML2_BEARER.getValue())) {
+		} else if (grantType.equals(GrantType.SAML2_BEARER)) {
 
 			return GrantType.SAML2_BEARER;
 
 		} else {
 
-			throw new ParseException("Unsupported grant type: " + value, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+			return grantType;
 		}
 	}
 }

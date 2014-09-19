@@ -46,7 +46,16 @@ public class GrantTypeTest extends TestCase {
 	}
 
 
-	public void testParse()
+	public void testDefaultConstructor() {
+
+		GrantType grantType = new GrantType("custom");
+		assertEquals("custom", grantType.getValue());
+		assertFalse(grantType.requiresClientAuthentication());
+		assertFalse(grantType.requiresClientID());
+	}
+
+
+	public void testParseStandard()
 		throws ParseException {
 
 		assertEquals(GrantType.AUTHORIZATION_CODE, GrantType.parse(GrantType.AUTHORIZATION_CODE.getValue()));
@@ -59,13 +68,49 @@ public class GrantTypeTest extends TestCase {
 	}
 
 
-	public void testParseUnsupported() {
+	public void testParseCustomGrant()
+		throws ParseException {
+
+		GrantType grantType = GrantType.parse("custom");
+
+		assertEquals("custom", grantType.getValue());
+		assertFalse(grantType.requiresClientAuthentication());
+		assertFalse(grantType.requiresClientID());
+	}
+
+
+	public void testParseNull() {
 
 		try {
-			GrantType.parse("no-such-grant");
+			GrantType.parse(null);
 			fail();
+
 		} catch (ParseException e) {
-			assertEquals(OAuth2Error.UNSUPPORTED_GRANT_TYPE, e.getErrorObject());
+			// ok
+		}
+	}
+
+
+	public void testParseEmpty() {
+
+		try {
+			GrantType.parse("");
+			fail();
+
+		} catch (ParseException e) {
+			// ok
+		}
+	}
+
+
+	public void testParseBlank() {
+
+		try {
+			GrantType.parse(" ");
+			fail();
+
+		} catch (ParseException e) {
+			// ok
 		}
 	}
 }
