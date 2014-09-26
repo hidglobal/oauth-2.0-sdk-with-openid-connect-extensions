@@ -1,7 +1,16 @@
 package com.nimbusds.openid.connect.sdk.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Collection;
 
 import org.junit.After;
@@ -10,6 +19,8 @@ import org.junit.Test;
 
 import com.nimbusds.jose.JWEDecrypter;
 import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.RSADecrypter;
+import com.nimbusds.jose.crypto.RSASSAVerifier;
 
 /**
  * Tests the {@link DefaultJWTDecoder} class.
@@ -63,4 +74,51 @@ public class DefaultJWTDecoderTest {
 		assertEquals(0, jweDecrypters.size());
 	}
 
+	/**
+	 * Test method for {@link com.nimbusds.openid.connect.sdk.util.DefaultJWTDecoder#addJWSVerifier(JWSVerifier)}
+	 * using a {@link RSASSAVerifier} initializes a collection of verifiers with a size of all
+	 * supported algorithms
+	 */
+	@Test
+	public final void testAddJWSVerifierHappyPath() {
+		try {
+			final KeyPair keyPair = generateKeyPair("RSA", 1024);
+			JWSVerifier verifier  = new RSASSAVerifier((RSAPublicKey) keyPair.getPublic());
+			DefaultJWTDecoder jwtDecoder = new DefaultJWTDecoder();
+			jwtDecoder.addJWSVerifier(verifier);
+			Collection<JWSVerifier> verifiers = jwtDecoder.getJWSVerifiers();
+			assertNotNull(verifiers);
+			assertEquals(verifier.getAcceptedAlgorithms().size(), verifiers.size());
+		} catch (NoSuchAlgorithmException e) {
+			fail("Failed due to: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Test method for {@link com.nimbusds.openid.connect.sdk.util.DefaultJWTDecoder#addJWEDecrypter(JWEDecrypter)}
+	 * using a {@link RSADecrypter} initializes a collection of decrypters with a size of all
+	 * supported algorithms
+	 */
+	@Test
+	public final void testAddJWEDecrypterHappyPath() {
+		try {
+			final KeyPair keyPair = generateKeyPair("RSA", 1024);
+			final JWEDecrypter decrypter = new RSADecrypter((RSAPrivateKey)keyPair.getPrivate());
+			DefaultJWTDecoder jwtDecoder = new DefaultJWTDecoder();
+			jwtDecoder.addJWEDecrypter(decrypter);
+			Collection<JWEDecrypter> decrypters = jwtDecoder.getJWEDecrypters();
+			assertNotNull(decrypters);
+			assertEquals(decrypter.getAcceptedAlgorithms().size(), decrypters.size());
+		} catch (NoSuchAlgorithmException e) {
+			fail("Failed due to: " + e.getMessage());
+		}
+	}
+
+	protected KeyPair generateKeyPair(final String algorithm, final int size) throws NoSuchAlgorithmException {
+		KeyPair keyPair = null;
+		final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
+		generator.initialize(size, new SecureRandom());
+		keyPair = generator.generateKeyPair();
+		return keyPair;
+	}
 }
