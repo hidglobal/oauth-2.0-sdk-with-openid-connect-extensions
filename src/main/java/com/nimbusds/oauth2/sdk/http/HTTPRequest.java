@@ -1,10 +1,7 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -573,20 +570,25 @@ public class HTTPRequest extends HTTPMessage {
 				throw e;
 			} else {
 				// HTTP status code indicates the response got
-				// through, read the content but using error
-				// stream
-				reader = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+				// through, read the content but using error stream
+				InputStream errStream = conn.getErrorStream();
+
+				if (errStream != null) {
+					// We have useful HTTP error body
+					reader = new BufferedReader(new InputStreamReader(errStream));
+				} else {
+					// No content, set to empty string
+					reader = new BufferedReader(new StringReader(""));
+				}
 			}
 		}
 
 		StringBuilder body = new StringBuilder();
 
-
 		try {
 			String line;
 
 			while ((line = reader.readLine()) != null) {
-
 				body.append(line);
 				body.append(System.getProperty("line.separator"));
 			}
