@@ -2,9 +2,7 @@ package com.nimbusds.oauth2.sdk.http;
 
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.*;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -607,10 +605,9 @@ public class HTTPRequest extends HTTPMessage {
 		if (location != null) {
 
 			try {
-				response.setLocation(new URL(location));
+				response.setLocation(new URI(location));
 
-			} catch (MalformedURLException e) {
-
+			} catch (URISyntaxException e) {
 				throw new IOException("Couldn't parse Location header: " + e.getMessage(), e);
 			}
 		}

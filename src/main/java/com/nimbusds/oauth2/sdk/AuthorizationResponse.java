@@ -1,10 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.util.URIUtils;
@@ -146,15 +143,7 @@ public abstract class AuthorizationResponse implements Response {
 		throws SerializeException {
 	
 		HTTPResponse response = new HTTPResponse(HTTPResponse.SC_FOUND);
-
-		try {
-			response.setLocation(toURI().toURL());
-
-		} catch (MalformedURLException e) {
-
-			throw new SerializeException(e.getMessage(), e);
-		}
-		
+		response.setLocation(toURI());
 		return response;
 	}
 
@@ -245,17 +234,11 @@ public abstract class AuthorizationResponse implements Response {
 			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + 
 			                         httpResponse.getStatusCode());
 		
-		URL location = httpResponse.getLocation();
+		URI location = httpResponse.getLocation();
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URI / HTTP Location header");
 
-		try {
-			return parse(location.toURI());
-
-		} catch (URISyntaxException e) {
-
-			throw new ParseException(e.getMessage(), e);
-		}
+		return parse(location);
 	}
 }

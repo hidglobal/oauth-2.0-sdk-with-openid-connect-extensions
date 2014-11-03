@@ -3,7 +3,7 @@ package com.nimbusds.oauth2.sdk.http;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.net.URL;
+import java.net.URI;
 import java.util.Arrays;
 
 import javax.servlet.http.HttpServletResponse;
@@ -110,7 +110,7 @@ public class HTTPResponse extends HTTPMessage {
 	/**
 	 * Specifies a {@code Location} header value (for redirects).
 	 */
-	private URL location = null;
+	private URI location = null;
 	
 	
 	/**
@@ -200,7 +200,7 @@ public class HTTPResponse extends HTTPMessage {
 	 *
 	 * @return The header value, {@code null} if not specified.
 	 */
-	public URL getLocation() {
+	public URI getLocation() {
 	
 		return location;
 	}
@@ -211,7 +211,7 @@ public class HTTPResponse extends HTTPMessage {
 	 *
 	 * @param location The header value, {@code null} if not specified.
 	 */
-	public void setLocation(final URL location) {
+	public void setLocation(final URI location) {
 	
 		this.location = location;
 	}

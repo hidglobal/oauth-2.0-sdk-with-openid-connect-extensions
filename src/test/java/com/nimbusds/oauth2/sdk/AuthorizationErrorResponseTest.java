@@ -96,7 +96,7 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		HTTPResponse httpResponse = r.toHTTPResponse();
 			
 		assertEquals(HTTPResponse.SC_FOUND, httpResponse.getStatusCode());
-		assertEquals(location, httpResponse.getLocation().toURI());
+		assertEquals(location, httpResponse.getLocation());
 
 		r = AuthorizationErrorResponse.parse(httpResponse);
 

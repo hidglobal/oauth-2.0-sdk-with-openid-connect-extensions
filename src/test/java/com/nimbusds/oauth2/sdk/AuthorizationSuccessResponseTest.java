@@ -112,7 +112,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		HTTPResponse httpResponse = resp.toHTTPResponse();
 		assertEquals(302, httpResponse.getStatusCode());
-		assertEquals(uri, httpResponse.getLocation().toURI());
+		assertEquals(uri, httpResponse.getLocation());
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 

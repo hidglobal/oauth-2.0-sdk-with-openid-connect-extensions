@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
-import java.net.URL;
+import java.net.URI;
 
 import junit.framework.TestCase;
 
@@ -42,9 +42,9 @@ public class HTTPResponseTest extends TestCase {
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, response.getContentType());
 
 		assertNull(response.getLocation());
-		URL url = new URL("https://client.com/cb");
-		response.setLocation(url);
-		assertEquals(url, response.getLocation());
+		URI location = new URI("https://client.com/cb");
+		response.setLocation(location);
+		assertEquals(location, response.getLocation());
 
 		assertNull(response.getCacheControl());
 		response.setCacheControl("no-cache");
@@ -101,7 +101,7 @@ public class HTTPResponseTest extends TestCase {
 		throws Exception {
 
 		HTTPResponse response = new HTTPResponse(302);
-		response.setLocation(new URL("https://client.com/cb"));
+		response.setLocation(new URI("https://client.com/cb"));
 
 		MockServletResponse servletResponse = new MockServletResponse();
 
