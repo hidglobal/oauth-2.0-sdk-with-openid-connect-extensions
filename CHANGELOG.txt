@@ -204,4 +204,5 @@ version 4.6 (2014-11-04)
       (issue #110).
     * Adds additional information to ParseException thrown by
       HTTPResponse.ensureStatusCode.
+    * Upgrades Nimbus JOSE+JWT dependency to 3.2.1.
 
