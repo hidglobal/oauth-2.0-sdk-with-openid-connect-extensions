@@ -196,3 +196,12 @@ version 4.4.3 (2014-09-19)
 version 4.5 (2014-09-19)
     * Adds default public constructor to GrantType class, unbounds its static
       parse method.
+
+version 4.6 (2014-11-04)
+    * HTTPResponse Location header switches from URL to URI representation
+      (issue #109).
+    * Fixes NullPointerException in HTTPRequest.send on empty error stream
+      (issue #110).
+    * Adds additional information to ParseException thrown by
+      HTTPResponse.ensureStatusCode.
+
