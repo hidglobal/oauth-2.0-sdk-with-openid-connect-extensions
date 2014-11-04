@@ -34,7 +34,7 @@ public class HTTPResponseTest extends TestCase {
 			fail();
 		} catch (ParseException e) {
 			// ok
-			assertEquals("Unexpected HTTP status code, must be [302]", e.getMessage());
+			assertEquals("Unexpected HTTP status code 200, must be [302]", e.getMessage());
 		}
 
 		assertNull(response.getContentType());
