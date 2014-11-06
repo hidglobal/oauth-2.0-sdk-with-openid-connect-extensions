@@ -46,6 +46,10 @@ public class HTTPRequestTest extends TestCase {
 		request.setAuthorization("Bearer 123");
 		assertEquals("Bearer 123", request.getAuthorization());
 
+		assertNull(request.getAccept());
+		request.setAccept("text/plain");
+		assertEquals("text/plain", request.getAccept());
+
 		assertNull(request.getQuery());
 		request.setQuery("x=123&y=456");
 		assertEquals("x=123&y=456", request.getQuery());

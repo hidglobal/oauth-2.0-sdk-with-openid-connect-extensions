@@ -34,6 +34,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>Content-Type
  *     <li>Authorization
+ *     <li>Accept
  * </ul>
  *
  * <p>Supported timeouts:
@@ -93,6 +94,12 @@ public class HTTPRequest extends HTTPMessage {
 	 * Specifies an {@code Authorization} header value.
 	 */
 	private String authorization = null;
+
+
+	/**
+	 * Specified an {@code Accept} header value.
+	 */
+	private String accept = null;
 	
 	
 	/**
@@ -225,6 +232,7 @@ public class HTTPRequest extends HTTPMessage {
 		}
 		
 		setAuthorization(sr.getHeader("Authorization"));
+		setAccept(sr.getHeader("Accept"));
 		
 		if (method.equals(Method.GET) || method.equals(Method.DELETE)) {
 		
@@ -315,6 +323,30 @@ public class HTTPRequest extends HTTPMessage {
 	public void setAuthorization(final String authz) {
 	
 		authorization = authz;
+	}
+
+
+	/**
+	 * Gets the {@code Accept} header value.
+	 *
+	 * @return The {@code Accept} header value, {@code null} if not
+	 *         specified.
+	 */
+	public String getAccept() {
+
+		return accept;
+	}
+
+
+	/**
+	 * Sets the {@code Accept} header value.
+	 *
+	 * @param accept The {@code Accept} header value, {@code null} if not
+	 *               specified.
+	 */
+	public void setAccept(final String accept) {
+
+		this.accept = accept;
 	}
 	
 	
@@ -507,6 +539,9 @@ public class HTTPRequest extends HTTPMessage {
 
 		if (authorization != null)
 			conn.setRequestProperty("Authorization", authorization);
+
+		if (accept != null)
+			conn.setRequestProperty("Accept", accept);
 
 		conn.setRequestMethod(method.name());
 		conn.setConnectTimeout(connectTimeout);
