@@ -206,3 +206,6 @@ version 4.6 (2014-11-04)
       HTTPResponse.ensureStatusCode.
     * Upgrades Nimbus JOSE+JWT dependency to 3.2.1.
 
+version 4.7 (2014-11-06)
+    * Adds support for OpenID Connect session logout requests.
+

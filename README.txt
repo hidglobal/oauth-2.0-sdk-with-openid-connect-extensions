@@ -50,6 +50,9 @@ and OpenID Connect based applications:
 		  
 		- Parse and process requests at the OpenID Connect Client Registration
 		  Endpoint, then generate the appropriate responses.
+
+		- Parse and process requests at the OpenID Connect End-Session (Logout)
+		  Endpoint.
 	
 	* Developing OpenID Connect relying party (RP) clients:
 	
@@ -64,6 +67,8 @@ and OpenID Connect based applications:
 		  
 		- Make requests to an OpenID Connect Client Registration Endpoint and
 		  parse the responses.
+
+		- Make requests to an OpenID Connect End-Session (Logout) Endpoint.
 
 
 Additional features:
@@ -105,6 +110,8 @@ This SDK version implements the following standards and drafts:
 
 	* OpenID Connect Dynamic Registration 1.0 (2014-02-25).
 
+	* OpenID Connect Session Management 1.0 (2014-09-16).
+
 	* OAuth 2.0 Multiple Response Type Encoding Practices 1.0 (2014-02-25).
 
 
@@ -114,4 +121,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2014-09-02
+2014-11-06

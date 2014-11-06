@@ -1,0 +1,483 @@
+package com.nimbusds.openid.connect.sdk;
+
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import net.jcip.annotations.Immutable;
+
+import org.apache.commons.lang3.StringUtils;
+
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+
+import com.nimbusds.oauth2.sdk.AbstractRequest;
+import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
+
+
+/**
+ * OpenID Connect logout request initiated by the relying party (RP).
+ *
+ * <p>Example HTTP request:
+ *
+ * <pre>
+ * https://server.example.com/op/logout?
+ * &amp;id_token_hint=eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+ * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient.example.org%2Fpost-logout
+ * &amp;state=af0ifjsldkj
+ * </pre>
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Session Management 1.0, section 5.
+ * </ul>
+ */
+@Immutable
+public class LogoutRequest extends AbstractRequest {
+
+
+	/**
+	 * The required ID token hint.
+	 */
+	private final JWT idTokenHint;
+
+
+	/**
+	 * The optional post-logout redirection URI.
+	 */
+	private final URI postLogoutRedirectURI;
+
+
+	/**
+	 * The optional state parameter.
+	 */
+	private final State state;
+
+
+	/**
+	 * Creates a new OpenID Connect logout request.
+	 *
+	 * @param uri                   The URI of the end-session endpoint.
+	 *                              May be {@code null} if the
+	 *                              {@link #toHTTPRequest} method will not
+	 *                              be used.
+	 * @param idTokenHint           The ID token hint. Must not be
+	 *                              {@code null}.
+	 * @param postLogoutRedirectURI The optional post-logout redirection
+	 *                              URI, {@code null} if not specified.
+	 * @param state                 The optional state parameter for a
+	 *                              post-logout redirection URI,
+	 *                              {@code null} if not specified.
+	 */
+	public LogoutRequest(final URI uri,
+			     final JWT idTokenHint,
+			     final URI postLogoutRedirectURI,
+			     final State state) {
+
+		super(uri);
+
+		if (idTokenHint == null) {
+			throw new IllegalArgumentException("The ID token hint must not be null");
+		}
+
+		this.idTokenHint = idTokenHint;
+
+		this.postLogoutRedirectURI = postLogoutRedirectURI;
+
+		if (postLogoutRedirectURI == null && state != null) {
+			throw new IllegalArgumentException("The state parameter required a post-logout redirection URI");
+		}
+
+		this.state = state;
+	}
+
+
+	/**
+	 * Creates a new OpenID Connect logout request with a post-logout
+	 * redirection.
+	 *
+	 * @param uri         The URI of the end-session endpoint. May be
+	 *                    {@code null} if the {@link #toHTTPRequest} method
+	 *                    will not be used.
+	 * @param idTokenHint  The ID token hint. Must not be {@code null}.
+	 */
+	public LogoutRequest(final URI uri,
+			     final JWT idTokenHint) {
+
+		this(uri, idTokenHint, null, null);
+	}
+
+
+	/**
+	 * Returns the ID token hint.
+	 *
+	 * @return The ID token hint.
+	 */
+	public JWT getIDTokenHint() {
+
+		return idTokenHint;
+	}
+
+
+	/**
+	 * Return the post-logout redirection URI.
+	 *
+	 * @return The post-logout redirection URI, {@code null} if not
+	 *         specified.
+	 */
+	public URI getPostLogoutRedirectionURI() {
+
+		return postLogoutRedirectURI;
+	}
+
+
+	/**
+	 * Returns the state parameter for a post-logout redirection URI.
+	 *
+	 * @return The state parameter, {@code null} if not specified.
+	 */
+	public State getState() {
+
+		return state;
+	}
+
+	/**
+	 * Returns the parameters for this authorisation request.
+	 *
+	 * <p>Example parameters:
+	 *
+	 * <pre>
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * post_logout_redirect_uri = https://client.example.com/post-logout
+	 * state = af0ifjsldkj
+	 * </pre>
+	 *
+	 * @return The parameters.
+	 *
+	 * @throws SerializeException If this logout request couldn't be
+	 *                            serialised to an parameters map.
+	 */
+	public Map<String,String> toParameters()
+		throws SerializeException {
+
+		Map <String,String> params = new LinkedHashMap<>();
+
+		try {
+			params.put("id_token_hint", idTokenHint.serialize());
+		} catch (IllegalStateException e) {
+			throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
+		}
+
+		if (postLogoutRedirectURI != null) {
+			params.put("post_logout_redirect_uri", postLogoutRedirectURI.toString());
+		}
+
+		if (state != null) {
+			params.put("state", state.getValue());
+		}
+
+		return params;
+	}
+
+
+	/**
+	 * Returns the URI query string for this logout request.
+	 *
+	 * <p>Note that the '?' character preceding the query string in an URI
+	 * is not included in the returned string.
+	 *
+	 * <p>Example URI query string:
+	 *
+	 * <pre>
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fpost-logout
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @return The URI query string.
+	 *
+	 * @throws SerializeException If this logout request couldn't be
+	 *                            serialised to an URI query string.
+	 */
+	public String toQueryString()
+		throws SerializeException {
+
+		return URLUtils.serializeParameters(toParameters());
+	}
+
+
+	/**
+	 * Returns the complete URI representation for this logout request,
+	 * consisting of the {@link #getEndpointURI end-session endpoint URI}
+	 * with the {@link #toQueryString query string} appended.
+	 *
+	 * <p>Example URI:
+	 *
+	 * <pre>
+	 * https://server.example.com/logout?
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fpost-logout
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @return The URI representation.
+	 *
+	 * @throws SerializeException If this logout request couldn't be
+	 *                            serialised to a URI.
+	 */
+	public URI toURI()
+		throws SerializeException {
+
+		if (getEndpointURI() == null)
+			throw new SerializeException("The end-session endpoint URI is not specified");
+
+		StringBuilder sb = new StringBuilder(getEndpointURI().toString());
+		sb.append('?');
+		sb.append(toQueryString());
+		try {
+			return new URI(sb.toString());
+		} catch (URISyntaxException e) {
+			throw new SerializeException("Couldn't append query string: " + e.getMessage(), e);
+		}
+	}
+
+
+	@Override
+	public HTTPRequest toHTTPRequest()
+		throws SerializeException {
+
+		if (getEndpointURI() == null)
+			throw new SerializeException("The endpoint URI is not specified");
+
+		HTTPRequest httpRequest;
+
+		URL endpointURL;
+
+		try {
+			endpointURL = getEndpointURI().toURL();
+
+		} catch (MalformedURLException e) {
+
+			throw new SerializeException(e.getMessage(), e);
+		}
+
+		httpRequest = new HTTPRequest(HTTPRequest.Method.GET, endpointURL);
+
+		httpRequest.setQuery(toQueryString());
+
+		return httpRequest;
+	}
+
+
+	/**
+	 * Parses a logout request from the specified parameters.
+	 *
+	 * <p>Example parameters:
+	 *
+	 * <pre>
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * post_logout_redirect_uri = https://client.example.com/post-logout
+	 * state = af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param params The parameters. Must not be {@code null}.
+	 *
+	 * @return The logout request.
+	 *
+	 * @throws ParseException If the parameters couldn't be parsed to a
+	 *                        logout request.
+	 */
+	public static LogoutRequest parse(final Map<String,String> params)
+		throws ParseException {
+
+		return parse(null, params);
+	}
+
+
+	/**
+	 * Parses a logout request from the specified parameters.
+	 *
+	 * <p>Example parameters:
+	 *
+	 * <pre>
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * post_logout_redirect_uri = https://client.example.com/post-logout
+	 * state = af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param uri    The URI of the end-session endpoint. May be
+	 *               {@code null} if the {@link #toHTTPRequest()} method
+	 *               will not be used.
+	 * @param params The parameters. Must not be {@code null}.
+	 *
+	 * @return The logout request.
+	 *
+	 * @throws ParseException If the parameters couldn't be parsed to a
+	 *                        logout request.
+	 */
+	public static LogoutRequest parse(final URI uri, final Map<String,String> params)
+		throws ParseException {
+
+		String v = params.get("id_token_hint");
+
+		if (StringUtils.isBlank(v))
+			throw new ParseException("Missing \"id_token_hint\" parameter");
+
+		JWT idTokenHint;
+
+		try {
+			idTokenHint = JWTParser.parse(v);
+		} catch (java.text.ParseException e) {
+			throw new ParseException("Invalid ID token hint: " + e.getMessage(), e);
+		}
+
+		v = params.get("post_logout_redirect_uri");
+
+		URI postLogoutRedirectURI = null;
+
+		if (StringUtils.isNotBlank(v)) {
+
+			try {
+				postLogoutRedirectURI = new URI(v);
+			} catch (URISyntaxException e) {
+				throw new ParseException("Invalid \"post_logout_redirect_uri\" parameter: " + e.getMessage(),  e);
+			}
+		}
+
+		State state = null;
+
+		v = params.get("state");
+
+		if (postLogoutRedirectURI != null && StringUtils.isNotBlank(v)) {
+			state = new State(v);
+		}
+
+		return new LogoutRequest(uri, idTokenHint, postLogoutRedirectURI, state);
+	}
+
+
+	/**
+	 * Parses a logout request from the specified URI query string.
+	 *
+	 * <p>Example URI query string:
+	 *
+	 * <pre>
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fpost-logout
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param query The URI query string. Must not be {@code null}.
+	 *
+	 * @return The logout request.
+	 *
+	 * @throws ParseException If the query string couldn't be parsed to a
+	 *                        logout request.
+	 */
+	public static LogoutRequest parse(final String query)
+		throws ParseException {
+
+		return parse(null, URLUtils.parseParameters(query));
+	}
+
+
+	/**
+	 * Parses a logout request from the specified URI query string.
+	 *
+	 * <p>Example URI query string:
+	 *
+	 * <pre>
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fpost-logout
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param uri   The URI of the end-session endpoint. May be
+	 *              {@code null} if the {@link #toHTTPRequest()} method
+	 *              will not be used.
+	 * @param query The URI query string. Must not be {@code null}.
+	 *
+	 * @return The logout request.
+	 *
+	 * @throws ParseException If the query string couldn't be parsed to a
+	 *                        logout request.
+	 */
+	public static LogoutRequest parse(final URI uri, final String query)
+		throws ParseException {
+
+		return parse(uri, URLUtils.parseParameters(query));
+	}
+
+
+	/**
+	 * Parses a logout request from the specified URI.
+	 *
+	 * <p>Example URI:
+	 *
+	 * <pre>
+	 * https://server.example.com/logout?
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fpost-logout
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param uri The URI. Must not be {@code null}.
+	 *
+	 * @return The logout request.
+	 *
+	 * @throws ParseException If the URI couldn't be parsed to a logout
+	 *                        request.
+	 */
+	public static LogoutRequest parse(final URI uri)
+		throws ParseException {
+
+		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getQuery()));
+	}
+
+
+	/**
+	 * Parses a logout request from the specified HTTP request.
+	 *
+	 * <p>Example HTTP request (GET):
+	 *
+	 * <pre>
+	 * https://server.example.com/logout?
+	 * id_token_hint = eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+	 * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fpost-logout
+	 * &amp;state=af0ifjsldkj
+	 * </pre>
+	 *
+	 * @param httpRequest The HTTP request. Must not be {@code null}.
+	 *
+	 * @return The logout request.
+	 *
+	 * @throws ParseException If the HTTP request couldn't be parsed to a
+	 *                        logout request.
+	 */
+	public static LogoutRequest parse(final HTTPRequest httpRequest)
+		throws ParseException {
+
+		String query = httpRequest.getQuery();
+
+		if (query == null)
+			throw new ParseException("Missing URI query string");
+
+		try {
+			return parse(URIUtils.getBaseURI(httpRequest.getURL().toURI()), query);
+
+		} catch (URISyntaxException e) {
+
+			throw new ParseException(e.getMessage(), e);
+		}
+	}
+}

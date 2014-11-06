@@ -697,32 +697,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	public static AuthorizationRequest parse(final URI uri)
 		throws ParseException {
 
-		StringBuilder sb = new StringBuilder(uri.getScheme());
-		sb.append("://");
-
-		if (uri.getHost() != null) {
-			sb.append(uri.getHost());
-		}
-
-		if (uri.getPort() > 0) {
-			sb.append(':');
-			sb.append(uri.getPort());
-		}
-
-		if (uri.getPath() != null) {
-			sb.append(uri.getPath());
-		}
-
-		URI endpointURI;
-
-		try {
-			endpointURI = new URI(sb.toString());
-
-		} catch (URISyntaxException e) {
-			throw new ParseException("Couldn't parse endpoint URI: " + e.getMessage(), e);
-		}
-
-		return parse(endpointURI, URLUtils.parseParameters(uri.getQuery()));
+		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getQuery()));
 	}
 	
 	
