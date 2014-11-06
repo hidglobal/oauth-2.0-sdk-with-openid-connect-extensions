@@ -252,7 +252,8 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		if (s.trim().isEmpty())
 			return scope;
 
-		StringTokenizer st = new StringTokenizer(s, " ");
+		// OAuth specifies space as delimiter, also support comma (old draft)
+		StringTokenizer st = new StringTokenizer(s, " ,");
 
 		while(st.hasMoreTokens())
 			scope.add(new Scope.Value(st.nextToken()));

@@ -120,4 +120,15 @@ public class ScopeTest extends TestCase {
 		assertTrue(scope.contains("openid"));
 		assertEquals(1, scope.size());
 	}
+
+
+	public void testParseCommaDelimited() {
+
+		Scope scope = Scope.parse("read,write,admin");
+
+		assertTrue(scope.contains("read"));
+		assertTrue(scope.contains("write"));
+		assertTrue(scope.contains("admin"));
+		assertEquals(3, scope.size());
+	}
 }
