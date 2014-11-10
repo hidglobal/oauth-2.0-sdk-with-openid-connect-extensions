@@ -31,7 +31,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * <pre>
  * https://server.example.com/op/logout?
- * &amp;id_token_hint=eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
+ * id_token_hint=eyJhbGciOiJSUzI1NiJ9.eyJpc3Mi...
  * &amp;post_logout_redirect_uri=https%3A%2F%2Fclient.example.org%2Fpost-logout
  * &amp;state=af0ifjsldkj
  * </pre>
