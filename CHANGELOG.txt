@@ -209,4 +209,5 @@ version 4.6 (2014-11-04)
 version 4.7 (2014-11-06)
     * Adds support for OpenID Connect session logout requests.
     * Adds support Accept HTTP request header.
+    * Upgrades Apache Commons Lang dependency to 3.3.2.
 
