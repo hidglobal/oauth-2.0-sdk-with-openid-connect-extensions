@@ -212,3 +212,5 @@ version 4.7 (2014-11-10)
     * Upgrades Apache Commons Lang dependency to 3.3.2.
     * Upgrades to Apache Commons Codec dependency to 1.10.
 
+version 4.7.1 (2014-11-11)
+    * Upgrades Nimbus JOSE+JWT dependency to 3.2.2.
