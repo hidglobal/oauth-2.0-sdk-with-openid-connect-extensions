@@ -170,6 +170,7 @@ public class ClientInformationTest extends TestCase {
 		ClientMetadata metadata = new ClientMetadata();
 		metadata.setRedirectionURI(new URI("https://example.com/in"));
 		Secret secret = new Secret("secret");
+		assertFalse(secret.expired());
 
 		ClientInformation clientInfo = new ClientInformation(clientID, null, metadata, secret);
 
@@ -177,6 +178,50 @@ public class ClientInformationTest extends TestCase {
 		assertNull(clientInfo.getIDIssueDate());
 		assertEquals(metadata, clientInfo.getMetadata());
 		assertEquals(secret, clientInfo.getSecret());
+		assertFalse(clientInfo.getSecret().expired());
+		assertNull(clientInfo.getRegistrationURI());
+		assertNull(clientInfo.getRegistrationAccessToken());
+
+		JSONObject o = clientInfo.toJSONObject();
+		assertEquals("123", (String)o.get("client_id"));
+		assertEquals("https://example.com/in", ((List<String>)o.get("redirect_uris")).get(0));
+		assertEquals("secret", (String)o.get("client_secret"));
+		assertEquals(0l, ((Long)o.get("client_secret_expires_at")).longValue());
+		assertEquals(4, o.size());
+
+		String jsonString = o.toJSONString();
+
+		o = com.nimbusds.jose.util.JSONObjectUtils.parseJSONObject(jsonString);
+
+		clientInfo = ClientInformation.parse(o);
+
+		assertEquals("123", clientInfo.getID().toString());
+		assertNull(clientInfo.getIDIssueDate());
+		assertEquals("https://example.com/in", clientInfo.getMetadata().getRedirectionURIs().iterator().next().toString());
+		assertEquals("secret", clientInfo.getSecret().getValue());
+		assertFalse(clientInfo.getSecret().expired());
+		assertNull(clientInfo.getSecret().getExpirationDate());
+		assertNull(clientInfo.getRegistrationURI());
+		assertNull(clientInfo.getRegistrationAccessToken());
+	}
+
+
+	public void testNoSecretExpirationAlt()
+		throws Exception {
+
+		ClientID clientID = new ClientID("123");
+		ClientMetadata metadata = new ClientMetadata();
+		metadata.setRedirectionURI(new URI("https://example.com/in"));
+		Secret secret = new Secret("secret", null);
+		assertFalse(secret.expired());
+
+		ClientInformation clientInfo = new ClientInformation(clientID, null, metadata, secret);
+
+		assertEquals(clientID, clientInfo.getID());
+		assertNull(clientInfo.getIDIssueDate());
+		assertEquals(metadata, clientInfo.getMetadata());
+		assertEquals(secret, clientInfo.getSecret());
+		assertFalse(clientInfo.getSecret().expired());
 		assertNull(clientInfo.getRegistrationURI());
 		assertNull(clientInfo.getRegistrationAccessToken());
 
@@ -198,6 +243,7 @@ public class ClientInformationTest extends TestCase {
 		assertEquals("https://example.com/in", clientInfo.getMetadata().getRedirectionURIs().iterator().next().toString());
 		assertEquals("secret", clientInfo.getSecret().getValue());
 		assertNull(clientInfo.getSecret().getExpirationDate());
+		assertFalse(clientInfo.getSecret().expired());
 		assertNull(clientInfo.getRegistrationURI());
 		assertNull(clientInfo.getRegistrationAccessToken());
 	}
