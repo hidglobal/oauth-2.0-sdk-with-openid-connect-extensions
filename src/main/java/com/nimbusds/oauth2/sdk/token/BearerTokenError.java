@@ -195,6 +195,41 @@ public class BearerTokenError extends ErrorObject {
 		this.realm = realm;
 		this.scope = scope;
 	}
+
+
+	@Override
+	public BearerTokenError setDescription(final String description) {
+
+		return new BearerTokenError(super.getCode(), description, super.getHTTPStatusCode(), super.getURI(), realm, scope);
+	}
+
+
+	@Override
+	public BearerTokenError appendDescription(final String text) {
+
+		String newDescription;
+
+		if (getDescription() != null)
+			newDescription = getDescription() + text;
+		else
+			newDescription = text;
+
+		return new BearerTokenError(super.getCode(), newDescription, super.getHTTPStatusCode(), super.getURI(), realm, scope);
+	}
+
+
+	@Override
+	public BearerTokenError setHTTPStatusCode(final int httpStatusCode) {
+
+		return new BearerTokenError(super.getCode(), super.getDescription(), httpStatusCode, super.getURI(), realm, scope);
+	}
+
+
+	@Override
+	public BearerTokenError setURI(final URI uri) {
+
+		return new BearerTokenError(super.getCode(), super.getDescription(), super.getHTTPStatusCode(), uri, realm, scope);
+	}
 	
 	
 	/**

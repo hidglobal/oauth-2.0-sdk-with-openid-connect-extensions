@@ -1,6 +1,9 @@
 package com.nimbusds.oauth2.sdk.token;
 
 
+import java.net.URI;
+
+import com.nimbusds.oauth2.sdk.Scope;
 import junit.framework.TestCase;
 
 
@@ -57,5 +60,48 @@ public class BearerTokenErrorTest extends TestCase {
 
 		assertEquals("example.com", error.getRealm());
 		assertNull(error.getCode());
+	}
+
+
+	public void testInsufficientScope()
+		throws Exception {
+
+		BearerTokenError error = BearerTokenError.INSUFFICIENT_SCOPE;
+		error = error.setScope(Scope.parse("offline_access"));
+
+		String wwwAuth = error.toWWWAuthenticateHeader();
+
+		System.out.println("WWW-Authenticate: " + wwwAuth);
+
+		error = BearerTokenError.parse(wwwAuth);
+
+		assertEquals(Scope.parse("offline_access"), error.getScope());
+	}
+
+
+	public void testSetDescription() {
+
+		assertEquals("description", BearerTokenError.INSUFFICIENT_SCOPE.setDescription("description").getDescription());
+	}
+
+
+	public void testAppendDescription() {
+
+		assertEquals("Insufficient scope: offline_access", BearerTokenError.INSUFFICIENT_SCOPE.appendDescription(": offline_access").getDescription());
+	}
+
+
+	public void testSetHTTPStatusCode() {
+
+		assertEquals(400, BearerTokenError.INSUFFICIENT_SCOPE.setHTTPStatusCode(400).getHTTPStatusCode());
+	}
+
+
+	public void testSetURI()
+		throws Exception {
+
+		URI uri = new URI("http://example.com");
+
+		assertEquals(uri, BearerTokenError.INSUFFICIENT_SCOPE.setURI(uri).getURI());
 	}
 }

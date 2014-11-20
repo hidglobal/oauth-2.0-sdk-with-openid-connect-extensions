@@ -168,4 +168,22 @@ public class ErrorObjectTest extends TestCase {
 		assertFalse(new ErrorObject("bad_request", null, 400).equals(OAuth2Error.INVALID_GRANT));
 		assertFalse(new ErrorObject("bad_request", null, 0).equals(OAuth2Error.INVALID_GRANT));
 	}
+
+
+	public void testSetDescription() {
+
+		assertEquals("new description", new ErrorObject("bad_request", "old description").setDescription("new description").getDescription());
+	}
+
+
+	public void testAppendDescription() {
+
+		assertEquals("a b", new ErrorObject("bad_request", "a").appendDescription(" b").getDescription());
+	}
+
+
+	public void testSetHTTPStatusCode() {
+
+		assertEquals(440, new ErrorObject("code", "description", 400).setHTTPStatusCode(440).getHTTPStatusCode());
+	}
 }
