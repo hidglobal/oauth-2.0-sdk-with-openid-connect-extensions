@@ -13,10 +13,10 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
+import com.nimbusds.oauth2.sdk.client.ClientCredentialsParser;
 import com.nimbusds.oauth2.sdk.client.ClientInformation;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
@@ -147,46 +147,12 @@ public final class OIDCClientInformation extends ClientInformation {
 	public static OIDCClientInformation parse(final JSONObject jsonObject)
 		throws ParseException {
 
-		ClientID id = new ClientID(JSONObjectUtils.getString(jsonObject, "client_id"));
-
-		Date issueDate = null;
-
-		if (jsonObject.containsKey("client_id_issued_at")) {
-
-			issueDate = new Date(JSONObjectUtils.getLong(jsonObject, "client_id_issued_at") * 1000);
-		}
-
-		OIDCClientMetadata metadata = OIDCClientMetadata.parse(jsonObject);
-
-		Secret secret = null;
-
-		if (jsonObject.containsKey("client_secret")) {
-
-			String value = JSONObjectUtils.getString(jsonObject, "client_secret");
-
-			Date exp = null;
-
-			if (jsonObject.containsKey("client_secret_expires_at"))
-				exp = new Date(JSONObjectUtils.getLong(jsonObject, "client_secret_expires_at") * 1000);
-
-			secret = new Secret(value, exp);
-		}
-
-		URI registrationURI = null;
-
-		if (jsonObject.containsKey("registration_client_uri")) {
-
-			registrationURI = JSONObjectUtils.getURI(jsonObject, "registration_client_uri");
-		}
-
-		BearerAccessToken accessToken = null;
-
-		if (jsonObject.containsKey("registration_access_token")) {
-
-			accessToken = new BearerAccessToken(
-				JSONObjectUtils.getString(jsonObject, "registration_access_token"));
-		}
-
-		return new OIDCClientInformation(id, issueDate, metadata, secret, registrationURI, accessToken);
+		return new OIDCClientInformation(
+			ClientCredentialsParser.parseID(jsonObject),
+			ClientCredentialsParser.parseIDIssueDate(jsonObject),
+			OIDCClientMetadata.parse(jsonObject),
+			ClientCredentialsParser.parseSecret(jsonObject),
+			ClientCredentialsParser.parseRegistrationURI(jsonObject),
+			ClientCredentialsParser.parseRegistrationAccessToken(jsonObject));
 	}
 }

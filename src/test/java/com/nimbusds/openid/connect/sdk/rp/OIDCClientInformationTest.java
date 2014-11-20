@@ -103,4 +103,26 @@ public class OIDCClientInformationTest extends TestCase {
 		assertEquals(regURI, info.getRegistrationURI());
 		assertEquals(accessToken, info.getRegistrationAccessToken());
 	}
+
+
+	public void testNoClientSecretExpiration()
+		throws Exception {
+
+		ClientID clientID = new ClientID("123");
+		Date now = new Date(new Date().getTime() / 1000 * 1000);
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		Secret secret = new Secret("secret", null);
+		URI regURI = new URI("https://c2id.com/client-reg/123");
+		BearerAccessToken accessToken = new BearerAccessToken("xyz");
+
+		OIDCClientInformation info = new OIDCClientInformation(clientID, now, metadata, secret, regURI, accessToken);
+
+		assertFalse(info.getSecret().expired());
+
+		String jsonString = info.toJSONObject().toJSONString();
+
+		info = OIDCClientInformation.parse(JSONObjectUtils.parseJSONObject(jsonString));
+
+		assertFalse(info.getSecret().expired());
+	}
 }
