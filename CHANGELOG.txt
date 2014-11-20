@@ -214,3 +214,10 @@ version 4.7 (2014-11-10)
 
 version 4.7.1 (2014-11-11)
     * Upgrades Nimbus JOSE+JWT dependency to 3.2.2.
+
+version 4.8 (2014-11-20)
+    * Adds new ClientCredentialsParser class.
+    * Fixes OIDCClientInformation parsing of secrets with no expiration (iss
+      #117).
+    * Adds missing shadow methods to BearerTokenError (iss #116).
+    * Upgrades Nimbus JOSE+JWT dependency to 3.4.
