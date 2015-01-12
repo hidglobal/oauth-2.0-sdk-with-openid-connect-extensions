@@ -224,3 +224,7 @@ version 4.8 (2014-11-20)
 
 version 4.8.1 (2014-12-14)
     * Upgrades Nimbus JOSE+JWT dependency to 3.5.
+
+version 4.8.2 (2015-01-12)
+    * Upgrades Nimbus JOSE+JWT dependency to 3.6.
+
