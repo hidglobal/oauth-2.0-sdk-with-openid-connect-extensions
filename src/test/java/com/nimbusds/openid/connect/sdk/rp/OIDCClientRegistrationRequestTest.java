@@ -165,7 +165,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		claimsSet.setIssuer("https://c2id.com");
 
 		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
-		jwt.sign(new MACSigner("abcdef1234567890"));
+		jwt.sign(new MACSigner("01234567890123456789012345678901"));
 
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		metadata.setRedirectionURI(new URI("https://client.com/in"));
@@ -184,7 +184,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		assertEquals("https://client.com/in", request.getClientMetadata().getRedirectionURIs().iterator().next().toString());
 		assertEquals("Test App", request.getClientMetadata().getName());
 		assertEquals(jwt.serialize(), request.getSoftwareStatement().getParsedString());
-		assertTrue(request.getSoftwareStatement().verify(new MACVerifier("abcdef1234567890")));
+		assertTrue(request.getSoftwareStatement().verify(new MACVerifier("01234567890123456789012345678901")));
 	}
 
 
@@ -218,7 +218,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		throws Exception {
 
 		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), new JWTClaimsSet());
-		jwt.sign(new MACSigner("abcdef1234567890"));
+		jwt.sign(new MACSigner("01234567890123456789012345678901"));
 
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		metadata.setRedirectionURI(new URI("https://client.com/in"));

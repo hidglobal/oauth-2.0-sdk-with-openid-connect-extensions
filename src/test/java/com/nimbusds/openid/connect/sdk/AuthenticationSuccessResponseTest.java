@@ -50,7 +50,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
-		idToken.sign(new MACSigner("1234567890abcdef"));
+		idToken.sign(new MACSigner("01234567890123456789012345678901"));
 
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
 			REDIRECT_URI, null, idToken, null, new State("abc"));
@@ -98,7 +98,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
-		idToken.sign(new MACSigner("1234567890abcdef"));
+		idToken.sign(new MACSigner("01234567890123456789012345678901"));
 
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
 			REDIRECT_URI, code, idToken, null, new State("abc"));

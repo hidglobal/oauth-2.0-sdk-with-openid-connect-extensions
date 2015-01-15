@@ -83,7 +83,7 @@ public class LogoutRequestTest extends TestCase {
 		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(iss, sub, audList, exp, iat);
 
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet.toJWTClaimsSet());
-		JWSSigner signer = new MACSigner("0123456789abcdef");
+		JWSSigner signer = new MACSigner("01234567890123456789012345678901");
 		idToken.sign(signer);
 
 		URI postLogoutRedirectURI = new URI("https://client.com/post-logout");
