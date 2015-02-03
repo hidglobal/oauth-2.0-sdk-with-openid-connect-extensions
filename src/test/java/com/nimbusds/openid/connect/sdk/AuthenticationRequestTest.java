@@ -819,4 +819,27 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Missing \"nonce\" parameter: Required in implicit flow", e.getMessage());
 		}
 	}
+
+
+	public void testParseFromURI()
+		throws Exception {
+
+		URI uri = new URI("https://c2id.com/login?" +
+			"response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj" +
+			"&nonce=n-0S6_WzA2Mj");
+
+		AuthenticationRequest request = AuthenticationRequest.parse(uri);
+
+		assertEquals(new URI("https://c2id.com/login"), request.getEndpointURI());
+		assertEquals(new ResponseType("id_token", "token"), request.getResponseType());
+		assertEquals(new ClientID("s6BhdRkqt3"), request.getClientID());
+		assertEquals(new URI("https://client.example.org/cb"), request.getRedirectionURI());
+		assertEquals(new Scope("openid", "profile"), request.getScope());
+		assertEquals(new State("af0ifjsldkj"), request.getState());
+		assertEquals(new Nonce("n-0S6_WzA2Mj"), request.getNonce());
+	}
 }

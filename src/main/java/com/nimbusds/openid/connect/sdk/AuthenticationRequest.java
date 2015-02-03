@@ -31,6 +31,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 import com.nimbusds.openid.connect.sdk.claims.ACR;
@@ -1350,6 +1351,36 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		throws ParseException {
 
 		return parse(uri, URLUtils.parseParameters(query));
+	}
+
+
+	/**
+	 * Parses an OpenID Connect authentication request from the specified
+	 * URI.
+	 *
+	 * <p>Example URI:
+	 *
+	 * <pre>
+	 * https://server.example.com/authorize?
+	 * response_type=token%20id_token
+	 * &amp;client_id=s6BhdRkqt3
+	 * &amp;redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb
+	 * &amp;scope=openid%20profile
+	 * &amp;state=af0ifjsldkj
+	 * &amp;nonce=n-0S6_WzA2Mj
+	 * </pre>
+	 *
+	 * @param uri The URI. Must not be {@code null}.
+	 *
+	 * @return The OpenID Connect authentication request.
+	 *
+	 * @throws ParseException If the query string couldn't be parsed to an
+	 *                        OpenID Connect authentication request.
+	 */
+	public static AuthenticationRequest parse(final URI uri)
+		throws ParseException {
+
+		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getQuery()));
 	}
 	
 	
