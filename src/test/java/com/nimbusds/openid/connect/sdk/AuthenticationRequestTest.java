@@ -801,4 +801,22 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
 		assertTrue(new URI("https://client.com/request#123").equals(request.getRequestURI()));
 	}
+
+
+	public void testParseMissingNonceInImplicitFlow()
+		throws Exception {
+
+		String query = "response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Missing \"nonce\" parameter: Required in implicit flow", e.getMessage());
+		}
+	}
 }
