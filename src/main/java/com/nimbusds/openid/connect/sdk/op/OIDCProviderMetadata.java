@@ -861,7 +861,7 @@ public class OIDCProviderMetadata {
 	 * @param idTokenJWSAlgs The supported JWS algorithms, {@code null} if
 	 *                       not specified.
 	 */
-	public void setIdTokenJWSAlgs(final List<JWSAlgorithm> idTokenJWSAlgs) {
+	public void setIDTokenJWSAlgs(final List<JWSAlgorithm> idTokenJWSAlgs) {
 
 		this.idTokenJWSAlgs = idTokenJWSAlgs;
 	}
@@ -912,7 +912,7 @@ public class OIDCProviderMetadata {
 	 * @param idTokenJWEEncs The supported encryption methods, {@code null}
 	 *                       if not specified.
 	 */
-	public void setIdTokenJWEEncs(final List<EncryptionMethod> idTokenJWEEncs) {
+	public void setIDTokenJWEEncs(final List<EncryptionMethod> idTokenJWEEncs) {
 
 		this.idTokenJWEEncs = idTokenJWEEncs;
 	}

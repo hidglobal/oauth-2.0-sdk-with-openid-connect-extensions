@@ -393,7 +393,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		List<JWSAlgorithm> idTokenJWSAlgs = new LinkedList<>();
 		idTokenJWSAlgs.add(JWSAlgorithm.RS256);
-		meta.setIdTokenJWSAlgs(idTokenJWSAlgs);
+		meta.setIDTokenJWSAlgs(idTokenJWSAlgs);
 		assertEquals(JWSAlgorithm.RS256, meta.getIDTokenJWSAlgs().get(0));
 
 		List<JWEAlgorithm> idTokenJWEalgs = new LinkedList<>();
@@ -402,7 +402,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		List<EncryptionMethod> idTokenEncs = new LinkedList<>();
 		idTokenEncs.add(EncryptionMethod.A128GCM);
-		meta.setIdTokenJWEEncs(idTokenEncs);
+		meta.setIDTokenJWEEncs(idTokenEncs);
 		assertEquals(EncryptionMethod.A128GCM, meta.getIDTokenJWEEncs().get(0));
 
 		List<JWSAlgorithm> userInfoJWSAlgs = new LinkedList<>();
