@@ -231,3 +231,7 @@ version 4.8.2 (2015-01-12)
 version 4.8.3 (2015-01-15)
     * Upgrades Nimbus JOSE+JWT dependency to 3.7.
 
+version 4.8.4 (2015-02-03)
+    * Renames OIDCProviderMetadata methods to match established convention.
+    * Adds missing static AuthenticationRequest.parse(URI) method.
+
