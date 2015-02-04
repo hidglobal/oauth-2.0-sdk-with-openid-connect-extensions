@@ -302,7 +302,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				throw new IllegalArgumentException("The scope must not be null");
 
 			if (! scope.contains(OIDCScopeValue.OPENID))
-				throw new IllegalArgumentException("The scope must include an \"openid\" token");
+				throw new IllegalArgumentException("The scope must include an \"openid\" value");
 
 			this.scope = scope;
 
