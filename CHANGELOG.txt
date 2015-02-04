@@ -235,3 +235,8 @@ version 4.8.4 (2015-02-03)
     * Renames OIDCProviderMetadata methods to match established convention.
     * Adds missing static AuthenticationRequest.parse(URI) method.
 
+version 4.8.5 (2015-02-04)
+    * Refines AuthorizationRequest.parse error reporting.
+    * Refines AuthenticationRequest.parse error reporting.
+    * Refines TokenRequest.parse error reporting.
+
