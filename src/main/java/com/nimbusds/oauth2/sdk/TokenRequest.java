@@ -341,7 +341,8 @@ public class TokenRequest extends AbstractRequest {
 		AuthorizationGrant grant = AuthorizationGrant.parse(params);
 
 		if (clientAuth == null && grant.getType().requiresClientAuthentication()) {
-			throw new ParseException("Missing client authentication", OAuth2Error.INVALID_CLIENT);
+			String msg = "Missing client authentication";
+			throw new ParseException(msg, OAuth2Error.INVALID_CLIENT.appendDescription(": " + msg));
 		}
 
 		// Parse client id
@@ -356,7 +357,8 @@ public class TokenRequest extends AbstractRequest {
 				clientID = new ClientID(clientIDString);
 
 			if (clientID == null && grant.getType().requiresClientID()) {
-				throw new ParseException("Missing required \"client_id\" parameter", OAuth2Error.INVALID_REQUEST);
+				String msg = "Missing required \"client_id\" parameter";
+				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg));
 			}
 		}
 
