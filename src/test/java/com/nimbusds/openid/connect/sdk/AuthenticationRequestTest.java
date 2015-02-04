@@ -803,6 +803,67 @@ public class AuthenticationRequestTest extends TestCase {
 	}
 
 
+	public void testParseMissingRedirectionURI()
+		throws Exception {
+
+		String query = "response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Missing \"redirect_uri\" parameter", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Missing \"redirect_uri\" parameter", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseMissingScope()
+		throws Exception {
+
+		String query = "response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&state=af0ifjsldkj";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Missing \"scope\" parameter", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Missing \"scope\" parameter", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseMissingScopeOpenIDValue()
+		throws Exception {
+
+		String query = "response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&scope=profile" +
+			"&state=af0ifjsldkj";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("The scope must include an \"openid\" value", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: The scope must include an \"openid\" value", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
 	public void testParseMissingNonceInImplicitFlow()
 		throws Exception {
 
@@ -817,6 +878,75 @@ public class AuthenticationRequestTest extends TestCase {
 			fail();
 		} catch (ParseException e) {
 			assertEquals("Missing \"nonce\" parameter: Required in implicit flow", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Missing \"nonce\" parameter: Required in implicit flow", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseInvalidDisplay()
+		throws Exception {
+
+		String query = "response_type=code" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj" +
+			"&display=mobile";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Invalid \"display\" parameter: Unknown display type: mobile", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Invalid \"display\" parameter: Unknown display type: mobile", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseInvalidMaxAge()
+		throws Exception {
+
+		String query = "response_type=code" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj" +
+			"&max_age=zero";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Invalid \"max_age\" parameter: zero", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Invalid \"max_age\" parameter: zero", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseInvalidIDTokenHint()
+		throws Exception {
+
+		String query = "response_type=code" +
+			"&client_id=s6BhdRkqt3" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj" +
+			"&id_token_hint=ey...";
+
+		try {
+			AuthenticationRequest.parse(query);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Invalid \"id_token_hint\" parameter: Invalid plain/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Invalid \"id_token_hint\" parameter: Invalid plain/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
 		}
 	}
 
