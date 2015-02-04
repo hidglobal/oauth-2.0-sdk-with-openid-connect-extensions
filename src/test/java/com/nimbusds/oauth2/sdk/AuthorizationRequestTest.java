@@ -237,4 +237,66 @@ public class AuthorizationRequestTest extends TestCase {
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new State("123").equals(request.getState()));
 	}
+
+
+	public void testParseExceptionMissingClientID()
+		throws Exception {
+
+		URI requestURI = new URI("https://server.example.com/authorize?" +
+			"response_type=code" +
+			"&state=xyz" +
+			"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
+
+		try {
+			AuthorizationRequest.parse(requestURI);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Missing \"client_id\" parameter", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Missing \"client_id\" parameter", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseExceptionInvalidRedirectionURI()
+		throws Exception {
+
+		URI requestURI = new URI("https://server.example.com/authorize?" +
+			"response_type=code" +
+			"&client_id=s6BhdRkqt3" +
+			"&state=xyz" +
+			"&redirect_uri=%3A");
+
+		try {
+			AuthorizationRequest.parse(requestURI);
+			fail();
+		} catch (ParseException e) {
+			assertTrue(e.getMessage().startsWith("Invalid \"redirect_uri\" parameter"));
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertTrue(e.getErrorObject().getDescription().startsWith("Invalid request: Invalid \"redirect_uri\" parameter"));
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
+
+
+	public void testParseExceptionMissingResponseType()
+		throws Exception {
+
+		URI requestURI = new URI("https://server.example.com/authorize?" +
+			"response_type=" +
+			"&client_id=123" +
+			"&state=xyz" +
+			"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
+
+		try {
+			AuthorizationRequest.parse(requestURI);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Missing \"response_type\" parameter", e.getMessage());
+			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid request: Missing \"response_type\" parameter", e.getErrorObject().getDescription());
+			assertNull(e.getErrorObject().getURI());
+		}
+	}
 }

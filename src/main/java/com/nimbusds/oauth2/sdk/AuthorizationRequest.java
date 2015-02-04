@@ -561,9 +561,10 @@ public class AuthorizationRequest extends AbstractRequest {
 		// Parse mandatory client ID first
 		String v = params.get("client_id");
 
-		if (StringUtils.isBlank(v))
-			throw new ParseException("Missing \"client_id\" parameter",
-				OAuth2Error.INVALID_REQUEST);
+		if (StringUtils.isBlank(v)) {
+			String msg = "Missing \"client_id\" parameter";
+			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg));
+		}
 
 		ClientID clientID = new ClientID(v);
 
@@ -579,9 +580,9 @@ public class AuthorizationRequest extends AbstractRequest {
 				redirectURI = new URI(v);
 
 			} catch (URISyntaxException e) {
-
-				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(),
-					OAuth2Error.INVALID_REQUEST, clientID, null, null, e);
+				String msg = "Invalid \"redirect_uri\" parameter: " + e.getMessage();
+				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
+					                 clientID, null, null, e);
 			}
 		}
 
@@ -599,10 +600,10 @@ public class AuthorizationRequest extends AbstractRequest {
 			rt = ResponseType.parse(v);
 
 		} catch (ParseException e) {
-
-			throw new ParseException(e.getMessage(),
-				OAuth2Error.UNSUPPORTED_RESPONSE_TYPE,
-				clientID, redirectURI, state, e);
+			// Only cause
+			String msg = "Missing \"response_type\" parameter";
+			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
+				                 clientID, redirectURI, state, e);
 		}
 
 
