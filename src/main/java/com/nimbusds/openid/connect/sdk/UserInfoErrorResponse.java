@@ -178,7 +178,7 @@ public class UserInfoErrorResponse
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
 		if (StringUtils.isNotBlank(wwwAuth))
-			parse(wwwAuth);
+			return parse(wwwAuth);
 
 		return new UserInfoErrorResponse();
 	}

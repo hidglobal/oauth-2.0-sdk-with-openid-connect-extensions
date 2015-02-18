@@ -3,8 +3,9 @@ package com.nimbusds.oauth2.sdk.token;
 
 import java.net.URI;
 
-import com.nimbusds.oauth2.sdk.Scope;
 import junit.framework.TestCase;
+
+import com.nimbusds.oauth2.sdk.Scope;
 
 
 /**
@@ -103,5 +104,19 @@ public class BearerTokenErrorTest extends TestCase {
 		URI uri = new URI("http://example.com");
 
 		assertEquals(uri, BearerTokenError.INSUFFICIENT_SCOPE.setURI(uri).getURI());
+	}
+
+
+	public void testParseInvalidTokenHeader()
+		throws Exception {
+
+		String header = "Bearer error=\"invalid_token\", error_description=\"Invalid access token\"";
+
+		BearerTokenError error = BearerTokenError.parse(header);
+
+		assertEquals(BearerTokenError.INVALID_TOKEN, error);
+		assertEquals("Invalid access token", error.getDescription());
+		assertNull(error.getURI());
+		assertNull(error.getRealm());
 	}
 }
