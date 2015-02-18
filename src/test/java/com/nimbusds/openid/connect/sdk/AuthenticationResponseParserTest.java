@@ -31,6 +31,7 @@ public class AuthenticationResponseParserTest extends TestCase {
 
 		AuthenticationResponse response = AuthenticationResponseParser.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(state, response.getState());
 
@@ -47,11 +48,13 @@ public class AuthenticationResponseParserTest extends TestCase {
 		State state = new State("xyz");
 
 		AuthenticationErrorResponse errorResponse = new AuthenticationErrorResponse(redirectURI, OAuth2Error.ACCESS_DENIED, rt, state);
+		assertFalse(errorResponse.indicatesSuccess());
 
 		HTTPResponse httpResponse = errorResponse.toHTTPResponse();
 
 		AuthenticationResponse response = AuthenticationResponseParser.parse(httpResponse);
 
+		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(state, response.getState());
 

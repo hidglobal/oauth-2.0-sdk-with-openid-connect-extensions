@@ -74,6 +74,13 @@ public class ClientInformationResponse
 	}
 
 
+	@Override
+	public boolean indicatesSuccess() {
+
+		return true;
+	}
+
+
 	/**
 	 * Gets the client information.
 	 *

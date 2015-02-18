@@ -29,6 +29,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse response = new AccessTokenResponse(accessToken, refreshToken);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
 		assertEquals(refreshToken, response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
@@ -43,6 +44,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse response = new AccessTokenResponse(accessToken, null);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
@@ -59,6 +61,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse response = new AccessTokenResponse(accessToken, null, customParams);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
@@ -75,6 +78,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse response = new AccessTokenResponse(tokenPair);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
 		assertEquals(refreshToken, response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
@@ -90,6 +94,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse response = new AccessTokenResponse(tokenPair);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
@@ -106,6 +111,7 @@ public class AccessTokenResponseTest extends TestCase {
 		customParams.put("sub_sid", "abc");
 
 		AccessTokenResponse response = new AccessTokenResponse(tokenPair, customParams);
+		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
@@ -143,6 +149,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse atr = AccessTokenResponse.parse(httpResponse);
 
+		assertTrue(atr.indicatesSuccess());
 		AccessToken accessToken = atr.getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
 		assertEquals(exp, accessToken.getLifetime());
@@ -200,6 +207,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		AccessTokenResponse atr = AccessTokenResponse.parse(httpResponse);
 
+		assertTrue(atr.indicatesSuccess());
 		AccessToken accessToken = atr.getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
 		assertNull(accessToken.getScope());

@@ -95,6 +95,13 @@ public class UserInfoSuccessResponse
 		
 		this.claimsSet = null;
 	}
+
+
+	@Override
+	public boolean indicatesSuccess() {
+
+		return true;
+	}
 	
 	
 	/**

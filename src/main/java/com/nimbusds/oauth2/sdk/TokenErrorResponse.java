@@ -115,6 +115,13 @@ public class TokenErrorResponse
 			
 		this.error = error;
 	}
+
+
+	@Override
+	public boolean indicatesSuccess() {
+
+		return false;
+	}
 	
 
 	@Override

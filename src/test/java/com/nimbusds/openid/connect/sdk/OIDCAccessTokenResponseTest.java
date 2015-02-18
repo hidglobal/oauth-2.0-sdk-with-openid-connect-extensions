@@ -56,6 +56,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, null);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertNull(response.getRefreshToken());
 		assertNull(response.getIDToken());
@@ -66,6 +67,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		response = OIDCAccessTokenResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertNull(response.getRefreshToken());
 		assertNull(response.getIDToken());
@@ -82,6 +84,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -92,6 +95,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		response = OIDCAccessTokenResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -111,6 +115,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN, customParams);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -123,6 +128,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		response = OIDCAccessTokenResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -141,6 +147,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN_STRING);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -151,6 +158,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		response = OIDCAccessTokenResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -170,6 +178,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN_STRING, customParams);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -182,6 +191,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		response = OIDCAccessTokenResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
@@ -201,6 +211,7 @@ public class OIDCAccessTokenResponseTest extends TestCase {
 
 		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, invalidIDTokenString);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("abc123", response.getAccessToken().getValue());
 		assertEquals("def456", response.getRefreshToken().getValue());
 		assertNull(response.getIDToken());

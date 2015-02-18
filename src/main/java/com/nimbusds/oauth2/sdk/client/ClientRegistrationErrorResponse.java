@@ -114,6 +114,13 @@ public class ClientRegistrationErrorResponse
 
 
 	@Override
+	public boolean indicatesSuccess() {
+
+		return false;
+	}
+
+
+	@Override
 	public ErrorObject getErrorObject() {
 
 		return error;

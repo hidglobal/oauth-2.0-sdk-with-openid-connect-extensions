@@ -100,6 +100,13 @@ public class UserInfoErrorResponse
 
 
 	@Override
+	public boolean indicatesSuccess() {
+
+		return false;
+	}
+
+
+	@Override
 	public ErrorObject getErrorObject() {
 
 		return error;

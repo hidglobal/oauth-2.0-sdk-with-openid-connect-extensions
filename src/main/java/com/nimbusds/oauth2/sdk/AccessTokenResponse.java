@@ -128,6 +128,13 @@ public class AccessTokenResponse
 
 		this(tokenPair.getAccessToken(), tokenPair.getRefreshToken(), customParams);
 	}
+
+
+	@Override
+	public boolean indicatesSuccess() {
+
+		return true;
+	}
 	
 	
 	/**

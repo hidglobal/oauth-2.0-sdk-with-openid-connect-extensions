@@ -35,14 +35,15 @@ public class UserInfoSuccessResponseTest extends TestCase {
 
 		UserInfoSuccessResponse response = new UserInfoSuccessResponse(claims);
 
-		assertEquals(claims, response.getUserInfo());
+		assertTrue(response.indicatesSuccess());
 		assertEquals("application/json; charset=UTF-8", response.getContentType().toString());
 		assertNull(response.getUserInfoJWT());
-
+		assertEquals(claims, response.getUserInfo());
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
 		response = UserInfoSuccessResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("application/json; charset=UTF-8", response.getContentType().toString());
 		assertNull(response.getUserInfoJWT());
 
@@ -73,6 +74,7 @@ public class UserInfoSuccessResponseTest extends TestCase {
 
 		UserInfoSuccessResponse response = new UserInfoSuccessResponse(jwt);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(jwt, response.getUserInfoJWT());
 		assertEquals("application/jwt; charset=UTF-8", response.getContentType().toString());
 		assertNull(response.getUserInfo());
@@ -81,6 +83,7 @@ public class UserInfoSuccessResponseTest extends TestCase {
 
 		response = UserInfoSuccessResponse.parse(httpResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals("application/jwt; charset=UTF-8", response.getContentType().toString());
 		assertNull(response.getUserInfo());
 

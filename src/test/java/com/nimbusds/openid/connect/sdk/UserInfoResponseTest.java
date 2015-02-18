@@ -24,6 +24,8 @@ public class UserInfoResponseTest extends TestCase {
 
 		UserInfoResponse userInfoResponse = UserInfoResponse.parse(httpResponse);
 
+		assertTrue(userInfoResponse.indicatesSuccess());
+
 		successResponse = (UserInfoSuccessResponse)userInfoResponse;
 
 		assertEquals(new Subject("alice"), successResponse.getUserInfo().getSubject());
@@ -38,6 +40,8 @@ public class UserInfoResponseTest extends TestCase {
 		HTTPResponse httpResponse = errorResponse.toHTTPResponse();
 
 		UserInfoResponse userInfoResponse = UserInfoResponse.parse(httpResponse);
+
+		assertFalse(userInfoResponse.indicatesSuccess());
 
 		errorResponse = (UserInfoErrorResponse)userInfoResponse;
 

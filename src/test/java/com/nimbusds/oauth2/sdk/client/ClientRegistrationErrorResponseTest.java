@@ -36,6 +36,7 @@ public class ClientRegistrationErrorResponseTest extends TestCase {
 		ClientRegistrationErrorResponse errorResponse =
 			new ClientRegistrationErrorResponse(RegistrationError.INVALID_REDIRECT_URI);
 
+		assertFalse(errorResponse.indicatesSuccess());
 		assertEquals(RegistrationError.INVALID_REDIRECT_URI, errorResponse.getErrorObject());
 	}
 
@@ -66,6 +67,7 @@ public class ClientRegistrationErrorResponseTest extends TestCase {
 		ClientRegistrationErrorResponse errorResponse =
 			ClientRegistrationErrorResponse.parse(httpResponse);
 
+		assertFalse(errorResponse.indicatesSuccess());
 		assertEquals(RegistrationError.INVALID_CLIENT_METADATA, errorResponse.getErrorObject());
 	}
 }

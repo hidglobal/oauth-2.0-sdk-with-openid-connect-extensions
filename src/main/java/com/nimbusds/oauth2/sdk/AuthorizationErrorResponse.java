@@ -146,6 +146,13 @@ public class AuthorizationErrorResponse
 					  
 		this(redirectURI, error, null, state);
 	}
+
+
+	@Override
+	public boolean indicatesSuccess() {
+
+		return false;
+	}
 	
 
 	@Override

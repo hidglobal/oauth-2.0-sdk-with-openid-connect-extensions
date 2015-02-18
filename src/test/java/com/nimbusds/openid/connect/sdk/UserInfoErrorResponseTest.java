@@ -28,6 +28,8 @@ public class UserInfoErrorResponseTest extends TestCase {
 
 		UserInfoErrorResponse errorResponse = new UserInfoErrorResponse(BearerTokenError.INVALID_TOKEN);
 
+		assertFalse(errorResponse.indicatesSuccess());
+
 		HTTPResponse httpResponse = errorResponse.toHTTPResponse();
 
 		assertEquals(401, httpResponse.getStatusCode());
@@ -35,6 +37,8 @@ public class UserInfoErrorResponseTest extends TestCase {
 		assertEquals("Bearer error=\"invalid_token\", error_description=\"Invalid access token\"", httpResponse.getWWWAuthenticate());
 
 		errorResponse = UserInfoErrorResponse.parse(httpResponse);
+
+		assertFalse(errorResponse.indicatesSuccess());
 
 		assertEquals(BearerTokenError.INVALID_TOKEN, errorResponse.getErrorObject());
 	}

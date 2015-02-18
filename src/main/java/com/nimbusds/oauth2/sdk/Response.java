@@ -9,6 +9,15 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  */
 public interface Response extends Message {
 
+
+	/**
+	 * Checks if the response indicates success.
+	 *
+	 * @return {@code true} if the response indicates success, else
+	 *         {@code false}.
+	 */
+	public boolean indicatesSuccess();
+
 	
 	/**
 	 * Returns the matching HTTP response.
@@ -21,5 +30,3 @@ public interface Response extends Message {
 	public HTTPResponse toHTTPResponse() 
 		throws SerializeException;
 }
-
-

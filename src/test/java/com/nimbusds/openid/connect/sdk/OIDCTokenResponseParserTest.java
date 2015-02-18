@@ -58,6 +58,8 @@ public class OIDCTokenResponseParserTest extends TestCase {
 
 		TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
 
+		assertTrue(tokenResponse.indicatesSuccess());
+
 		assertTrue(tokenResponse instanceof OIDCAccessTokenResponse);
 
 		response = (OIDCAccessTokenResponse)tokenResponse;
@@ -77,6 +79,8 @@ public class OIDCTokenResponseParserTest extends TestCase {
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
 		TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
+
+		assertFalse(tokenResponse.indicatesSuccess());
 
 		assertTrue(tokenResponse instanceof TokenErrorResponse);
 

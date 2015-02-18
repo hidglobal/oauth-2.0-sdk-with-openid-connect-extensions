@@ -57,6 +57,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	
 		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, CODE, STATE);
 
+		assertTrue(resp.indicatesSuccess());
 		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
@@ -78,6 +79,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
+		assertTrue(resp.indicatesSuccess());
 		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
@@ -90,6 +92,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	
 		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, TOKEN, STATE);
 
+		assertTrue(resp.indicatesSuccess());
 		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(TOKEN, resp.getAccessToken());
 		assertEquals(3600, resp.getAccessToken().getLifetime());
@@ -116,6 +119,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 
 		resp = AuthorizationSuccessResponse.parse(httpResponse);
 
+		assertTrue(resp.indicatesSuccess());
 		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(TOKEN, resp.getAccessToken());
 		assertEquals(3600, resp.getAccessToken().getLifetime());
@@ -130,6 +134,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		URI redirectionURI = new URI(RESPONSE_CODE);
 
 		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
+		assertTrue(response.indicatesSuccess());
 		assertEquals("https://client.example.org/cb", response.getRedirectionURI().toString());
 		assertEquals("SplxlOBeZQQYbYS6WxSbIA", response.getAuthorizationCode().getValue());
 		assertEquals("xyz", response.getState().getValue());
@@ -143,6 +148,7 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		URI redirectionURI = new URI(RESPONSE_TOKEN);
 
 		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(redirectionURI);
+		assertTrue(response.indicatesSuccess());
 		assertEquals("https://client.example.org/cb", response.getRedirectionURI().toString());
 		assertNull(response.getAuthorizationCode());
 		assertEquals("xyz", response.getState().getValue());

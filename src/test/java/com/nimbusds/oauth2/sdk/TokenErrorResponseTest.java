@@ -51,7 +51,8 @@ public class TokenErrorResponseTest extends TestCase {
 		ErrorObject err = OAuth2Error.INVALID_REQUEST.setURI(ERROR_PAGE_URI);
 
 		TokenErrorResponse r = new TokenErrorResponse(err);
-		
+
+		assertFalse(r.indicatesSuccess());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 		
 
@@ -72,7 +73,8 @@ public class TokenErrorResponseTest extends TestCase {
 		
 		
 		r = TokenErrorResponse.parse(httpResponse);
-		
+
+		assertFalse(r.indicatesSuccess());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
 	}
 
@@ -84,6 +86,7 @@ public class TokenErrorResponseTest extends TestCase {
 
 		TokenErrorResponse errorResponse = TokenErrorResponse.parse(httpResponse);
 
+		assertFalse(errorResponse.indicatesSuccess());
 		assertNull(errorResponse.getErrorObject());
 	}
 
@@ -97,6 +100,7 @@ public class TokenErrorResponseTest extends TestCase {
 
 		TokenErrorResponse errorResponse = TokenErrorResponse.parse(httpResponse);
 
+		assertFalse(errorResponse.indicatesSuccess());
 		assertEquals(OAuth2Error.INVALID_CLIENT.getCode(), errorResponse.getErrorObject().getCode());
 		assertEquals("Client authentication failed", errorResponse.getErrorObject().getDescription());
 	}
@@ -106,6 +110,7 @@ public class TokenErrorResponseTest extends TestCase {
 		throws Exception {
 
 		TokenErrorResponse errorResponse = new TokenErrorResponse();
+		assertFalse(errorResponse.indicatesSuccess());
 		assertNull(errorResponse.getErrorObject());
 		assertTrue(errorResponse.toJSONObject().isEmpty());
 
@@ -115,6 +120,7 @@ public class TokenErrorResponseTest extends TestCase {
 		assertNull(httpResponse.getContent());
 
 		errorResponse = TokenErrorResponse.parse(httpResponse);
+		assertFalse(errorResponse.indicatesSuccess());
 		assertNull(errorResponse.getErrorObject());
 		assertTrue(errorResponse.toJSONObject().isEmpty());
 	}

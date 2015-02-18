@@ -119,6 +119,13 @@ public class AuthorizationSuccessResponse
 		this.code = code;
 		this.accessToken = accessToken;
 	}
+
+
+	@Override
+	public boolean indicatesSuccess() {
+
+		return true;
+	}
 	
 	
 	/**

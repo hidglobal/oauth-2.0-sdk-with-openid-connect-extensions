@@ -34,10 +34,13 @@ public class OIDCClientRegistrationResponseParserTest extends TestCase {
 
 		OIDCClientInformationResponse response = new OIDCClientInformationResponse(clientInfo);
 
+		assertTrue(response.indicatesSuccess());
+
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
 		ClientRegistrationResponse regResponse = OIDCClientRegistrationResponseParser.parse(httpResponse);
 
+		assertTrue(regResponse.indicatesSuccess());
 		response = (OIDCClientInformationResponse)regResponse;
 
 		assertEquals(id, response.getOIDCClientInformation().getID());
@@ -53,11 +56,13 @@ public class OIDCClientRegistrationResponseParserTest extends TestCase {
 		throws Exception {
 
 		ClientRegistrationErrorResponse response = new ClientRegistrationErrorResponse(BearerTokenError.INVALID_TOKEN);
+		assertFalse(response.indicatesSuccess());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
 		ClientRegistrationResponse regResponse = OIDCClientRegistrationResponseParser.parse(httpResponse);
 
+		assertFalse(regResponse.indicatesSuccess());
 		response = (ClientRegistrationErrorResponse)regResponse;
 		assertEquals(BearerTokenError.INVALID_TOKEN.getCode(), response.getErrorObject().getCode());
 	}

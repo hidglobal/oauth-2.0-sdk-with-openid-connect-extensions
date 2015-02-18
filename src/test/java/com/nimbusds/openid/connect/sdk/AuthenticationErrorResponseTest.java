@@ -28,6 +28,7 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		AuthenticationErrorResponse response = new AuthenticationErrorResponse(
 			redirectURI, error, responseType, state);
 
+		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
 		assertEquals(responseType, response.getResponseType());
@@ -43,6 +44,7 @@ public class AuthenticationErrorResponseTest extends TestCase {
 
 		response = AuthenticationErrorResponse.parse(responseURI);
 
+		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
 		assertNull(response.getResponseType());
@@ -61,6 +63,7 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		AuthenticationErrorResponse response = new AuthenticationErrorResponse(
 			redirectURI, error, responseType, state);
 
+		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
 		assertEquals(responseType, response.getResponseType());
@@ -76,6 +79,7 @@ public class AuthenticationErrorResponseTest extends TestCase {
 
 		response = AuthenticationErrorResponse.parse(responseURI);
 
+		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
 		assertNull(response.getResponseType());

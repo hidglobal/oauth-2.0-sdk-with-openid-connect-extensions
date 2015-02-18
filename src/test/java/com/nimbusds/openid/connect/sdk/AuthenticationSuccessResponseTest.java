@@ -55,6 +55,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
 			REDIRECT_URI, null, idToken, null, new State("abc"));
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertEquals(idToken, response.getIDToken());
 		assertNull(response.getAuthorizationCode());
@@ -70,6 +71,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		response = AuthenticationSuccessResponse.parse(responseURI);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertEquals("https://c2id.com", response.getIDToken().getJWTClaimsSet().getIssuer());
 		assertEquals("https://client.com", response.getIDToken().getJWTClaimsSet().getAudience().get(0));
@@ -103,6 +105,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
 			REDIRECT_URI, code, idToken, null, new State("abc"));
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertEquals(idToken, response.getIDToken());
 		assertEquals(code, response.getAuthorizationCode());
@@ -118,6 +121,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		response = AuthenticationSuccessResponse.parse(responseURI);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertEquals("https://c2id.com", response.getIDToken().getJWTClaimsSet().getIssuer());
 		assertEquals("https://client.com", response.getIDToken().getJWTClaimsSet().getAudience().get(0));
@@ -139,6 +143,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
 			REDIRECT_URI, code, null, null, new State("abc"));
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertNull(response.getIDToken());
 		assertEquals(code, response.getAuthorizationCode());
@@ -154,6 +159,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		response = AuthenticationSuccessResponse.parse(responseURI);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
 		assertNull(response.getIDToken());
 		assertEquals(code, response.getAuthorizationCode());
