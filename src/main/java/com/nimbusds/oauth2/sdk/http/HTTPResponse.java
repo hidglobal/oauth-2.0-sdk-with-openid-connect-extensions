@@ -157,6 +157,19 @@ public class HTTPResponse extends HTTPMessage {
 	
 		return statusCode;
 	}
+
+
+	/**
+	 * Returns {@code true} if the HTTP status code indicates success
+	 * (2xx).
+	 *
+	 * @return {@code true} if the HTTP status code indicates success, else
+	 *         {@code false}.
+	 */
+	public boolean indicatesSuccess() {
+
+		return statusCode >= 200 && statusCode < 300;
+	}
 	
 	
 	/**

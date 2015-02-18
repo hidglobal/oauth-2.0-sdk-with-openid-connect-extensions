@@ -24,6 +24,7 @@ public class HTTPResponseTest extends TestCase {
 
 		HTTPResponse response = new HTTPResponse(200);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(200, response.getStatusCode());
 
 		response.ensureStatusCode(200);
@@ -107,6 +108,7 @@ public class HTTPResponseTest extends TestCase {
 
 		response.applyTo(servletResponse);
 
+		assertFalse(response.indicatesSuccess());
 		assertEquals(302, servletResponse.getStatus());
 		assertEquals("https://client.com/cb", servletResponse.getHeader("Location"));
 	}
@@ -125,6 +127,7 @@ public class HTTPResponseTest extends TestCase {
 
 		response.applyTo(servletResponse);
 
+		assertTrue(response.indicatesSuccess());
 		assertEquals(200, servletResponse.getStatus());
 		assertEquals("application/json; charset=UTF-8", servletResponse.getContentType());
 		assertEquals("no-cache", servletResponse.getHeader("Cache-Control"));
