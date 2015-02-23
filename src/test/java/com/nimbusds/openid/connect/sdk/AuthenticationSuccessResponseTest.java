@@ -61,6 +61,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getAuthorizationCode());
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
+		assertNull(response.getSessionState());
 
 		assertTrue(new ResponseType("id_token").equals(response.impliedResponseType()));
 
@@ -82,6 +83,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getAuthorizationCode());
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
+		assertNull(response.getSessionState());
 	}
 
 
@@ -111,6 +113,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertEquals(code, response.getAuthorizationCode());
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
+		assertNull(response.getSessionState());
 
 		assertTrue(new ResponseType("code", "id_token").equals(response.impliedResponseType()));
 
@@ -132,6 +135,59 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertEquals(code, response.getAuthorizationCode());
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
+		assertNull(response.getSessionState());
+	}
+
+
+	public void testCodeIDTokenResponseWithSessionState()
+		throws Exception {
+
+		AuthorizationCode code = new AuthorizationCode();
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet();
+		claimsSet.setIssuer("https://c2id.com");
+		claimsSet.setAudience(Arrays.asList("https://client.com"));
+		claimsSet.setSubject("alice");
+		claimsSet.setIssueTime(new Date(10000l));
+		claimsSet.setExpirationTime(new Date(20000l));
+		claimsSet.setClaim("nonce", "123");
+
+		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+
+		idToken.sign(new MACSigner("01234567890123456789012345678901"));
+
+		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
+			REDIRECT_URI, code, idToken, null, new State("abc"), new State("xyz"));
+
+		assertTrue(response.indicatesSuccess());
+		assertEquals(REDIRECT_URI, response.getRedirectionURI());
+		assertEquals(idToken, response.getIDToken());
+		assertEquals(code, response.getAuthorizationCode());
+		assertNull(response.getAccessToken());
+		assertEquals("abc", response.getState().getValue());
+		assertEquals("xyz", response.getSessionState().getValue());
+
+		assertTrue(new ResponseType("code", "id_token").equals(response.impliedResponseType()));
+
+		URI responseURI = response.toURI();
+
+		String[] parts = responseURI.toString().split("#");
+		assertEquals(REDIRECT_URI.toString(), parts[0]);
+
+		response = AuthenticationSuccessResponse.parse(responseURI);
+
+		assertTrue(response.indicatesSuccess());
+		assertEquals(REDIRECT_URI, response.getRedirectionURI());
+		assertEquals("https://c2id.com", response.getIDToken().getJWTClaimsSet().getIssuer());
+		assertEquals("https://client.com", response.getIDToken().getJWTClaimsSet().getAudience().get(0));
+		assertEquals("alice", response.getIDToken().getJWTClaimsSet().getSubject());
+		assertEquals(10000l, response.getIDToken().getJWTClaimsSet().getIssueTime().getTime());
+		assertEquals(20000l, response.getIDToken().getJWTClaimsSet().getExpirationTime().getTime());
+		assertEquals("123", (String)response.getIDToken().getJWTClaimsSet().getClaim("nonce"));
+		assertEquals(code, response.getAuthorizationCode());
+		assertNull(response.getAccessToken());
+		assertEquals("abc", response.getState().getValue());
+		assertEquals("xyz", response.getSessionState().getValue());
 	}
 
 
@@ -149,6 +205,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertEquals(code, response.getAuthorizationCode());
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
+		assertNull(response.getSessionState());
 
 		assertTrue(new ResponseType("code").equals(response.impliedResponseType()));
 
@@ -165,5 +222,6 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertEquals(code, response.getAuthorizationCode());
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
+		assertNull(response.getSessionState());
 	}
 }

@@ -20,6 +20,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -51,6 +52,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OpenID Connect Core 1.0, section 3.1.2.5, 3.1.2.6, 3.2.2.5, 3.2.2.6,
  *         3.3.2.5 and 3.3.2.6.
+ *     <li>OpenID Connect Session Management 1.0 - draft 22, section 3.
  * </ul>
  */
 @Immutable
@@ -63,6 +65,12 @@ public class AuthenticationSuccessResponse
 	 * The ID token, if requested.
 	 */
 	private final JWT idToken;
+
+
+	/**
+	 * The session state, required if session management is supported.
+	 */
+	private final State sessionState;
 	
 	
 	/**
@@ -84,9 +92,37 @@ public class AuthenticationSuccessResponse
 					     final AccessToken accessToken,
 					     final State state) {
 		
+		this(redirectURI, code, idToken, accessToken, state, null);
+	}
+
+
+	/**
+	 * Creates a new OpenID Connect authentication success response.
+	 *
+	 * @param redirectURI  The requested redirection URI. Must not be
+	 *                     {@code null}.
+	 * @param code         The authorisation code, {@code null} if not
+	 *                     requested.
+	 * @param idToken      The ID token (ready for output), {@code null} if
+	 *                     not requested.
+	 * @param accessToken  The UserInfo access token, {@code null} if not
+	 *                     requested.
+	 * @param state        The state, {@code null} if not requested.
+	 * @param sessionState The session store, {@code null} if session
+	 *                     management is not supported.
+	 */
+	public AuthenticationSuccessResponse(final URI redirectURI,
+					     final AuthorizationCode code,
+					     final JWT idToken,
+					     final AccessToken accessToken,
+					     final State state,
+					     final State sessionState) {
+
 		super(redirectURI, code, accessToken, state);
 
 		this.idToken = idToken;
+
+		this.sessionState = sessionState;
 	}
 	
 	
@@ -121,6 +157,18 @@ public class AuthenticationSuccessResponse
 	
 		return idToken;
 	}
+
+
+	/**
+	 * Gets the session state for session management.
+	 *
+	 * @return The session store, {@code null} if session management is not
+	 *         supported.
+	 */
+	public State getSessionState() {
+
+		return sessionState;
+	}
 	
 	
 	@Override
@@ -139,6 +187,11 @@ public class AuthenticationSuccessResponse
 				throw new SerializeException("Couldn't serialize ID token: " + e.getMessage(), e);
 			
 			}
+		}
+
+		if (sessionState != null) {
+
+			params.put("session_state", sessionState.getValue());
 		}
 
 		return params;
@@ -205,11 +258,21 @@ public class AuthenticationSuccessResponse
 			}
 		}
 
+		// Parse the optional session_state parameter
+
+		State sessionState = null;
+
+		if (StringUtils.isNotBlank(params.get("session_state"))) {
+
+			sessionState = new State(params.get("session_state"));
+		}
+
 		return new AuthenticationSuccessResponse(redirectURI,
 			                                    asr.getAuthorizationCode(),
 			                                    idToken,
 			                                    asr.getAccessToken(),
-			                                    asr.getState());
+			                                    asr.getState(),
+			                                    sessionState);
 	}
 	
 	
