@@ -110,7 +110,7 @@ This SDK version implements the following standards and drafts:
 
 	* OpenID Connect Dynamic Registration 1.0 (2014-02-25).
 
-	* OpenID Connect Session Management 1.0 (2014-09-16).
+	* OpenID Connect Session Management 1.0 (2014-11-08).
 
 	* OAuth 2.0 Multiple Response Type Encoding Practices 1.0 (2014-02-25).
 
