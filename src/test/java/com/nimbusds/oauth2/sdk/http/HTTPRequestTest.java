@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
@@ -69,6 +70,101 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals(0, request.getReadTimeout());
 		request.setReadTimeout(750);
 		assertEquals(750, request.getReadTimeout());
+	}
+	
+	
+	public void testConstructFromServletRequestWithEntityBody()
+		throws Exception {
+
+		MockServletRequest servletRequest = new MockServletRequest();
+		servletRequest.setMethod("POST");
+		servletRequest.setHeader("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString());
+		servletRequest.setLocalAddr("c2id.com");
+		servletRequest.setLocalPort(8080);
+		servletRequest.setRequestURI("/token");
+		servletRequest.setQueryString(null);
+		servletRequest.setEntityBody("token=abc&type=bearer");
+
+		HTTPRequest httpRequest = new HTTPRequest(servletRequest);
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
+		assertNull(httpRequest.getAccept());
+		assertNull(httpRequest.getAuthorization());
+		Map<String,String> queryParams = httpRequest.getQueryParameters();
+		assertEquals("abc", queryParams.get("token"));
+		assertEquals("bearer", queryParams.get("type"));
+		assertEquals(2, queryParams.size());
+	}
+
+
+	public void testConstructFromServletRequestWithQueryString()
+		throws Exception {
+
+		MockServletRequest servletRequest = new MockServletRequest();
+		servletRequest.setMethod("GET");
+		servletRequest.setLocalAddr("c2id.com");
+		servletRequest.setLocalPort(8080);
+		servletRequest.setRequestURI("/token");
+		servletRequest.setQueryString("token=abc&type=bearer");
+
+		HTTPRequest httpRequest = new HTTPRequest(servletRequest);
+		assertEquals(HTTPRequest.Method.GET, httpRequest.getMethod());
+		assertNull(httpRequest.getContentType());
+		assertNull(httpRequest.getAccept());
+		assertNull(httpRequest.getAuthorization());
+		Map<String,String> queryParams = httpRequest.getQueryParameters();
+		assertEquals("abc", queryParams.get("token"));
+		assertEquals("bearer", queryParams.get("type"));
+		assertEquals(2, queryParams.size());
+	}
+
+
+	public void testServletRequestWithExceededEntityLengthLimit()
+		throws Exception {
+
+		MockServletRequest servletRequest = new MockServletRequest();
+		servletRequest.setMethod("POST");
+		servletRequest.setHeader("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString());
+		servletRequest.setLocalAddr("c2id.com");
+		servletRequest.setLocalPort(8080);
+		servletRequest.setRequestURI("/token");
+		servletRequest.setQueryString(null);
+
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i < 1001; i++) {
+			sb.append("a");
+		}
+
+		servletRequest.setEntityBody(sb.toString());
+
+		try {
+			new HTTPRequest(servletRequest, 1000);
+			fail();
+		} catch (IOException e) {
+			assertEquals("Request entity body is too large, limit is 1000 chars", e.getMessage());
+		}
+	}
+
+
+	public void testServletRequestWithinEntityLengthLimit()
+		throws Exception {
+
+		MockServletRequest servletRequest = new MockServletRequest();
+		servletRequest.setMethod("POST");
+		servletRequest.setHeader("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString());
+		servletRequest.setLocalAddr("c2id.com");
+		servletRequest.setLocalPort(8080);
+		servletRequest.setRequestURI("/token");
+		servletRequest.setQueryString(null);
+
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i < 1000; i++) {
+			sb.append("a");
+		}
+
+		servletRequest.setEntityBody(sb.toString());
+
+		new HTTPRequest(servletRequest, 1000);
 	}
 
 

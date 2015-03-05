@@ -210,6 +210,29 @@ public class HTTPRequest extends HTTPMessage {
 	 */
 	public HTTPRequest(final HttpServletRequest sr)
 		throws IOException {
+
+		this(sr, -1);
+	}
+
+	/**
+	 * Creates a new HTTP request from the specified HTTP servlet request.
+	 *
+	 * @param sr              The servlet request. Must not be
+	 *                        {@code null}.
+	 * @param maxEntityLength The maximum entity length to accept, -1 for
+	 *                        no limit.
+	 *
+	 * @throws IllegalArgumentException The the servlet request method is
+	 *                                  not GET, POST, PUT or DELETE or the
+	 *                                  content type header value couldn't
+	 *                                  be parsed.
+	 * @throws IOException              For a POST or PUT body that
+	 *                                  couldn't be read due to an I/O
+	 *                                  exception.
+	 */
+	public HTTPRequest(final HttpServletRequest sr,
+			   final long maxEntityLength)
+		throws IOException {
 	
 		method = HTTPRequest.Method.valueOf(sr.getMethod().toUpperCase());
 
@@ -242,20 +265,20 @@ public class HTTPRequest extends HTTPMessage {
 		
 			// read body
 			StringBuilder body = new StringBuilder(256);
-			
+
 			BufferedReader reader = sr.getReader();
-			
-			String line;
-			
-			boolean firstLine = true;
-			
-			while ((line = reader.readLine()) != null) {
-			
-				if (firstLine)
-					firstLine = false;
-				else
-					body.append(System.getProperty("line.separator"));
-				body.append(line);
+
+			char[] cbuf = new char[256];
+
+			int readChars;
+
+			while ((readChars = reader.read(cbuf)) != -1) {
+
+				body.append(cbuf, 0, readChars);
+
+				if (maxEntityLength > 0 && body.length() > maxEntityLength) {
+					throw new IOException("Request entity body is too large, limit is " + maxEntityLength + " chars");
+				}
 			}
 			
 			reader.close();

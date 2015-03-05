@@ -247,3 +247,7 @@ version 4.9 (2015-02-18)
 
 version 4.10 (2015-02-23)
     * Adds support for session_state in OpenID Connect authentication response.
+
+version 4.11 (2015-03-05)
+    * Adds optional HTTPRequest entity body length limit to guard against DoS
+      attacks.
