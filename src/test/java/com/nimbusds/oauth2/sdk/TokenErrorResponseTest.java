@@ -59,7 +59,7 @@ public class TokenErrorResponseTest extends TestCase {
 		HTTPResponse httpResponse = r.toHTTPResponse();
 		
 		assertEquals(HTTPResponse.SC_BAD_REQUEST, httpResponse.getStatusCode());
-		assertEquals(CommonContentTypes.APPLICATION_JSON, httpResponse.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_JSON.toString(), httpResponse.getContentType().toString());
 		assertEquals("no-store", httpResponse.getCacheControl());
 		assertEquals("no-cache", httpResponse.getPragma());
 		

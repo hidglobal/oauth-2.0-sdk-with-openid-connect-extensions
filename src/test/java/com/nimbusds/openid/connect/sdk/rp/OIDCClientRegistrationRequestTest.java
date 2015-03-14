@@ -67,7 +67,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		
 		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
-		assertEquals(CommonContentTypes.APPLICATION_JSON, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_JSON.toString(), httpRequest.getContentType().toString());
 		
 		System.out.println(httpRequest.getQuery());
 		

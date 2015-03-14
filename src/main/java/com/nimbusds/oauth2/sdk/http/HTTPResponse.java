@@ -4,7 +4,9 @@ package com.nimbusds.oauth2.sdk.http;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -108,30 +110,6 @@ public class HTTPResponse extends HTTPMessage {
 	
 	
 	/**
-	 * Specifies a {@code Location} header value (for redirects).
-	 */
-	private URI location = null;
-	
-	
-	/**
-	 * Specifies a {@code Cache-Control} header value.
-	 */
-	private String cacheControl = null;
-	
-	
-	/**
-	 * Specifies a {@code Pragma} header value.
-	 */
-	private String pragma = null;
-	
-	
-	/**
-	 * Specifies a {@code WWW-Authenticate} header value.
-	 */
-	private String wwwAuthenticate = null;
-	
-	
-	/**
 	 * The raw response content.
 	 */
 	private String content = null;
@@ -217,8 +195,19 @@ public class HTTPResponse extends HTTPMessage {
 	 * @return The header value, {@code null} if not specified.
 	 */
 	public URI getLocation() {
-	
-		return location;
+
+		String value = getHeader("Location");
+
+		if (value == null) {
+			return null;
+		}
+
+		try {
+			return new URI(value);
+
+		} catch (URISyntaxException e) {
+			return null;
+		}
 	}
 	
 	
@@ -229,7 +218,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public void setLocation(final URI location) {
 	
-		this.location = location;
+		setHeader("Location", location != null ? location.toString() : null);
 	}
 	
 	
@@ -240,7 +229,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public String getCacheControl() {
 	
-		return cacheControl;
+		return getHeader("Cache-Control");
 	}
 
 
@@ -251,7 +240,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public void setCacheControl(final String cacheControl) {
 	
-		this.cacheControl = cacheControl;
+		setHeader("Cache-Control", cacheControl);
 	}
 	
 	
@@ -262,7 +251,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public String getPragma() {
 	
-		return pragma;
+		return getHeader("Pragma");
 	}
 	
 	
@@ -273,7 +262,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public void setPragma(final String pragma) {
 	
-		this.pragma = pragma;
+		setHeader("Pragma", pragma);
 	}
 	
 	
@@ -284,7 +273,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public String getWWWAuthenticate() {
 	
-		return wwwAuthenticate;
+		return getHeader("WWW-Authenticate");
 	}
 	
 	
@@ -296,7 +285,7 @@ public class HTTPResponse extends HTTPMessage {
 	 */
 	public void setWWWAuthenticate(final String wwwAuthenticate) {
 	
-		this.wwwAuthenticate = wwwAuthenticate;
+		setHeader("WWW-Authenticate", wwwAuthenticate);
 	}
 	
 	
@@ -399,22 +388,13 @@ public class HTTPResponse extends HTTPMessage {
 		sr.setStatus(statusCode);
 	
 	
-		// Set the headers, but only if explicitly specified	
-		if (location != null)
-			sr.setHeader("Location", location.toString());
+		// Set the headers, but only if explicitly specified
+		for (Map.Entry<String,String> header: getHeaders().entrySet()) {
+			sr.setHeader(header.getKey(), header.getValue());
+		}
 		
 		if (getContentType() != null)
 			sr.setContentType(getContentType().toString());
-		
-		if (cacheControl != null)
-			sr.setHeader("Cache-Control", cacheControl);
-		
-		if (pragma != null)
-			sr.setHeader("Pragma", pragma);
-		
-		
-		if (wwwAuthenticate != null)
-			sr.setHeader("Www-Authenticate", wwwAuthenticate);
 	
 	
 		// Write out the content

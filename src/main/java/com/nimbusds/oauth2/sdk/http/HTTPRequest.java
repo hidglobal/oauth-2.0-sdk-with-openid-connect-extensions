@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk.http;
 
 import java.io.*;
 import java.net.*;
+import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,6 +36,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>Content-Type
  *     <li>Authorization
  *     <li>Accept
+ *     <li>Etc.
  * </ul>
  *
  * <p>Supported timeouts:
@@ -88,18 +90,6 @@ public class HTTPRequest extends HTTPMessage {
 	 * The request URL.
 	 */
 	private final URL url;
-	
-	
-	/**
-	 * Specifies an {@code Authorization} header value.
-	 */
-	private String authorization = null;
-
-
-	/**
-	 * Specified an {@code Accept} header value.
-	 */
-	private String accept = null;
 	
 	
 	/**
@@ -254,8 +244,12 @@ public class HTTPRequest extends HTTPMessage {
 			throw new IllegalArgumentException("Invalid Content-Type header value: " + e.getMessage(), e);
 		}
 		
-		setAuthorization(sr.getHeader("Authorization"));
-		setAccept(sr.getHeader("Accept"));
+		Enumeration<String> headerNames = sr.getHeaderNames();
+
+		while (headerNames.hasMoreElements()) {
+			final String headerName = headerNames.nextElement();
+			setHeader(headerName, sr.getHeader(headerName));
+		}
 		
 		if (method.equals(Method.GET) || method.equals(Method.DELETE)) {
 		
@@ -333,7 +327,7 @@ public class HTTPRequest extends HTTPMessage {
 	 */
 	public String getAuthorization() {
 	
-		return authorization;
+		return getHeader("Authorization");
 	}
 	
 	
@@ -345,7 +339,7 @@ public class HTTPRequest extends HTTPMessage {
 	 */
 	public void setAuthorization(final String authz) {
 	
-		authorization = authz;
+		setHeader("Authorization", authz);
 	}
 
 
@@ -357,7 +351,7 @@ public class HTTPRequest extends HTTPMessage {
 	 */
 	public String getAccept() {
 
-		return accept;
+		return getHeader("Accept");
 	}
 
 
@@ -369,7 +363,7 @@ public class HTTPRequest extends HTTPMessage {
 	 */
 	public void setAccept(final String accept) {
 
-		this.accept = accept;
+		setHeader("Accept", accept);
 	}
 	
 	
@@ -560,11 +554,9 @@ public class HTTPRequest extends HTTPMessage {
 
 		HttpURLConnection conn = (HttpURLConnection)finalURL.openConnection();
 
-		if (authorization != null)
-			conn.setRequestProperty("Authorization", authorization);
-
-		if (accept != null)
-			conn.setRequestProperty("Accept", accept);
+		for (Map.Entry<String,String> header: getHeaders().entrySet()) {
+			conn.setRequestProperty(header.getKey(), header.getValue());
+		}
 
 		conn.setRequestMethod(method.name());
 		conn.setConnectTimeout(connectTimeout);

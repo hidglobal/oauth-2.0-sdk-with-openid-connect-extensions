@@ -251,3 +251,8 @@ version 4.10 (2015-02-23)
 version 4.11 (2015-03-05)
     * Adds optional HTTPRequest entity body length limit to guard against DoS
       attacks.
+
+version 4.12 (2015-03-14)
+    * HTTPRequest adds support for arbitrary headers.
+    * HTTPResponse adds support for arbitrary headers.
+

@@ -1,6 +1,8 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.mail.internet.ContentType;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -14,9 +16,9 @@ abstract class HTTPMessage {
 
 
 	/**
-	 * Specifies a {@code Content-Type} header value.
+	 * The HTTP request / response headers.
 	 */
-	private ContentType contentType = null;
+	private final Map<String,String> headers = new HashMap<>();
 
 
 	/**
@@ -26,8 +28,19 @@ abstract class HTTPMessage {
 	 *         specified.
 	 */
 	public ContentType getContentType() {
-	
-		return contentType;
+
+		final String value = getHeader("Content-Type");
+
+		if (value == null) {
+			return null;
+		}
+
+		try {
+			return new ContentType(value);
+
+		} catch (javax.mail.internet.ParseException e) {
+			return null;
+		}
 	}
 	
 	
@@ -38,8 +51,8 @@ abstract class HTTPMessage {
 	 *           specified.
 	 */
 	public void setContentType(final ContentType ct) {
-	
-		contentType = ct;
+
+		setHeader("Content-Type", ct != null ? ct.toString() : null);
 	}
 	
 	
@@ -55,13 +68,8 @@ abstract class HTTPMessage {
 	public void setContentType(final String ct)
 		throws ParseException {
 		
-		if (ct == null) {
-			contentType = null;
-			return;
-		}
-		
 		try {
-			contentType = new ContentType(ct);
+			setHeader("Content-Type", ct != null ? new ContentType(ct).toString() : null);
 			
 		} catch (javax.mail.internet.ParseException e) {
 		
@@ -79,7 +87,7 @@ abstract class HTTPMessage {
 	public void ensureContentType()
 		throws ParseException {
 	
-		if (contentType == null)
+		if (getContentType() == null)
 			throw new ParseException("Missing HTTP Content-Type header");
 	}
 
@@ -100,5 +108,46 @@ abstract class HTTPMessage {
 		throws ParseException {
 		
 		ContentTypeUtils.ensureContentType(contentType, getContentType());
+	}
+
+
+	/**
+	 * Gets a HTTP header value.
+	 *
+	 * @param name The header name. Must not be {@code null}.
+	 *
+	 * @return The header value, {@code null} if not specified.
+	 */
+	public String getHeader(final String name) {
+
+		return headers.get(name.toLowerCase());
+	}
+
+
+	/**
+	 * Sets a HTTP header value.
+	 *
+	 * @param name  The header name. Must not be {@code null}.
+	 * @param value The header value. If {@code null} and a header with the
+	 *              same name is specified, it will be deleted.
+	 */
+	public void setHeader(final String name, final String value) {
+
+		if (value != null) {
+			headers.put(name.toLowerCase(), value);
+		} else {
+			headers.remove(name.toLowerCase());
+		}
+	}
+
+
+	/**
+	 * Returns the HTTP headers.
+	 *
+	 * @return The HTTP headers.
+	 */
+	public Map<String,String> getHeaders() {
+
+		return headers;
 	}
 }

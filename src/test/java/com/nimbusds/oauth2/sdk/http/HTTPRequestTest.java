@@ -41,7 +41,7 @@ public class HTTPRequestTest extends TestCase {
 
 		assertNull(request.getContentType());
 		request.setContentType(CommonContentTypes.APPLICATION_JSON);
-		assertEquals(CommonContentTypes.APPLICATION_JSON, request.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_JSON.toString(), request.getContentType().toString());
 
 		assertNull(request.getAuthorization());
 		request.setAuthorization("Bearer 123");

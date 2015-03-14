@@ -96,14 +96,14 @@ class MockServletResponse implements HttpServletResponse {
 	@Override
 	public void setHeader(String s, String s2) {
 
-		headers.put(s, s2);
+		headers.put(s.toLowerCase(), s2);
 	}
 
 
 	@Override
 	public void addHeader(String s, String s2) {
 
-		headers.put(s, s2);
+		headers.put(s.toLowerCase(), s2);
 	}
 
 
@@ -145,7 +145,7 @@ class MockServletResponse implements HttpServletResponse {
 	@Override
 	public String getHeader(String s) {
 
-		return headers.get(s);
+		return headers.get(s.toLowerCase());
 	}
 
 

@@ -80,7 +80,8 @@ public class MockServletRequest implements HttpServletRequest {
 
 	@Override
 	public Enumeration<String> getHeaderNames() {
-		return null;
+
+		return new Vector(headers.keySet()).elements();
 	}
 
 

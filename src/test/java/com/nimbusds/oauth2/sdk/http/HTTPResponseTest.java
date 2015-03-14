@@ -40,7 +40,7 @@ public class HTTPResponseTest extends TestCase {
 
 		assertNull(response.getContentType());
 		response.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, response.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), response.getContentType().toString());
 
 		assertNull(response.getLocation());
 		URI location = new URI("https://client.com/cb");

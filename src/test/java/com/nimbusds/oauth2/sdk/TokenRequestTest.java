@@ -264,7 +264,7 @@ public class TokenRequestTest extends TestCase {
 		httpRequest = tr.toHTTPRequest();
 		
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
 		assertEquals("authorization_code", httpRequest.getQueryParameters().get("grant_type"));
 		assertEquals("SplxlOBeZQQYbYS6WxSbIA", httpRequest.getQueryParameters().get("code"));
@@ -304,7 +304,7 @@ public class TokenRequestTest extends TestCase {
 		httpRequest = tr.toHTTPRequest();
 
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
 		assertEquals(postBody, httpRequest.getQuery());
 	}
@@ -337,7 +337,7 @@ public class TokenRequestTest extends TestCase {
 		httpRequest = tr.toHTTPRequest();
 
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertNull(httpRequest.getAuthorization());
 		assertEquals("password", httpRequest.getQueryParameters().get("grant_type"));
 		assertEquals("johndoe", httpRequest.getQueryParameters().get("username"));
@@ -378,7 +378,7 @@ public class TokenRequestTest extends TestCase {
 		httpRequest = tr.toHTTPRequest();
 
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
 		assertEquals("password", httpRequest.getQueryParameters().get("grant_type"));
 		assertEquals("johndoe", httpRequest.getQueryParameters().get("username"));
@@ -417,7 +417,7 @@ public class TokenRequestTest extends TestCase {
 		httpRequest = tr.toHTTPRequest();
 
 		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertEquals("Basic " + authBasicString, httpRequest.getAuthorization());
 		assertEquals(postBody, httpRequest.getQuery());
 	}

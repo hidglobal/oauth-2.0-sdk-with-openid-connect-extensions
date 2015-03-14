@@ -41,7 +41,7 @@ public class TokenRevocationRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
 		assertEquals(endpointURI.toURL().toString(), httpRequest.getURL().toString());
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertNull(httpRequest.getAuthorization());
 
 		assertEquals(token.getValue(), httpRequest.getQueryParameters().get("token"));
@@ -65,7 +65,7 @@ public class TokenRevocationRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
 		assertEquals(endpointURI.toURL().toString(), httpRequest.getURL().toString());
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 
 		assertEquals(token.getValue(), httpRequest.getQueryParameters().get("token"));
 		assertEquals("access_token", httpRequest.getQueryParameters().get("token_type_hint"));
@@ -91,7 +91,7 @@ public class TokenRevocationRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
 		assertEquals(endpointURI.toURL().toString(), httpRequest.getURL().toString());
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertNull(httpRequest.getAuthorization());
 
 		assertEquals(token.getValue(), httpRequest.getQueryParameters().get("token"));
@@ -115,7 +115,7 @@ public class TokenRevocationRequestTest extends TestCase {
 		HTTPRequest httpRequest = request.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
 		assertEquals(endpointURI.toURL().toString(), httpRequest.getURL().toString());
-		assertEquals(CommonContentTypes.APPLICATION_URLENCODED, httpRequest.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 
 		assertEquals(token.getValue(), httpRequest.getQueryParameters().get("token"));
 		assertEquals("refresh_token", httpRequest.getQueryParameters().get("token_type_hint"));

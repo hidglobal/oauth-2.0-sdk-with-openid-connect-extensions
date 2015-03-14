@@ -170,7 +170,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		httpResponse = atr.toHTTPResponse();
 
-		assertEquals(CommonContentTypes.APPLICATION_JSON, httpResponse.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_JSON.toString(), httpResponse.getContentType().toString());
 		assertEquals("no-store", httpResponse.getCacheControl());
 		assertEquals("no-cache", httpResponse.getPragma());
 
@@ -218,7 +218,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		httpResponse = atr.toHTTPResponse();
 
-		assertEquals(CommonContentTypes.APPLICATION_JSON, httpResponse.getContentType());
+		assertEquals(CommonContentTypes.APPLICATION_JSON.toString(), httpResponse.getContentType().toString());
 		assertEquals("no-store", httpResponse.getCacheControl());
 		assertEquals("no-cache", httpResponse.getPragma());
 
