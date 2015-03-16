@@ -463,7 +463,7 @@ public class ClaimsRequestTest extends TestCase {
 			"     \"auth_time\": {\"essential\": true},\n" +
 			"     \"acr\": {\"values\": [\"urn:mace:incommon:iap:silver\"] }\n" +
 			"    }\n" +
-			"  }\n";
+			"  }";
 
 		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
 

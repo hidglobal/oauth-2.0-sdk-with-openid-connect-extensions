@@ -61,6 +61,15 @@ public class JSONObjectUtilsTest extends TestCase {
 		assertEquals(new Long(3), (Long)o.get("apples"));
 		assertEquals("none", (String)o.get("pears"));
 	}
+
+
+	public void testParseWithTrailingWhiteSpace()
+		throws Exception {
+
+		assertEquals(0, JSONObjectUtils.parseJSONObject("{} ").size());
+		assertEquals(0, JSONObjectUtils.parseJSONObject("{}\n").size());
+		assertEquals(0, JSONObjectUtils.parseJSONObject("{}\r\n").size());
+	}
 	
 	
 	public void testJSONObjectParseException() {

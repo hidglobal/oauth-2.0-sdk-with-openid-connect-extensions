@@ -256,3 +256,6 @@ version 4.12 (2015-03-14)
     * HTTPRequest adds support for arbitrary headers.
     * HTTPResponse adds support for arbitrary headers.
 
+version 4.12.1 (2015-03-16)
+    * Upgrades to Nimbus JOSE+JWT 3.9.2.
+    * Upgrades to JSON Smart 1.3.1.

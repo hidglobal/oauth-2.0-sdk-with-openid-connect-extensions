@@ -66,7 +66,7 @@ public class JSONObjectUtils {
 		Object o;
 		
 		try {
-			o = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT).parse(s);
+			o = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT | JSONParser.ACCEPT_TAILLING_SPACE).parse(s);
 			
 		} catch (net.minidev.json.parser.ParseException e) {
 			
