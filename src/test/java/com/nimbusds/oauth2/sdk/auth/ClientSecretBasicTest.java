@@ -5,9 +5,10 @@ import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.codec.binary.Base64;
+
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
-import org.apache.commons.codec.binary.Base64;
 
 
 /**
