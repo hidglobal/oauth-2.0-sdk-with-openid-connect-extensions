@@ -55,11 +55,10 @@ public class JSONObjectUtilsTest extends TestCase {
 		String s = "{\"apples\":3, \"pears\":\"none\"}";
 		
 		JSONObject o = JSONObjectUtils.parseJSONObject(s);
-		
-		assertNotNull(o);
-		
+
 		assertEquals(new Long(3), (Long)o.get("apples"));
 		assertEquals("none", (String)o.get("pears"));
+		assertEquals(2, o.size());
 	}
 
 

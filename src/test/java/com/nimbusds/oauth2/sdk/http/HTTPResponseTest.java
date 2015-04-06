@@ -5,6 +5,7 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -133,5 +134,19 @@ public class HTTPResponseTest extends TestCase {
 		assertEquals("no-cache", servletResponse.getHeader("Cache-Control"));
 		assertEquals("no-cache", servletResponse.getHeader("Pragma"));
 		assertEquals("{\"apples\":\"123\"}", servletResponse.getContent());
+	}
+
+
+	public void testGetContentAsJSONArray()
+		throws Exception {
+
+		HTTPResponse response = new HTTPResponse(200);
+		response.setContentType(CommonContentTypes.APPLICATION_JSON);
+		response.setContent("[\"apples\",\"pears\"]");
+
+		JSONArray array = response.getContentAsJSONArray();
+		assertEquals("apples", array.get(0));
+		assertEquals("pears", array.get(1));
+		assertEquals(2, array.size());
 	}
 }

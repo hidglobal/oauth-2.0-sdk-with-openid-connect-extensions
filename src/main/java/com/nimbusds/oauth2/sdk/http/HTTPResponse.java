@@ -12,12 +12,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.jcip.annotations.ThreadSafe;
 
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.util.JSONArrayUtils;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
@@ -331,6 +333,27 @@ public class HTTPResponse extends HTTPMessage {
 		ensureContent();
 		
 		return JSONObjectUtils.parseJSONObject(content);
+	}
+
+
+	/**
+	 * Gets the response content as a JSON array.
+	 *
+	 * @return The response content as a JSON array.
+	 *
+	 * @throws ParseException If the Content-Type header isn't
+	 *                        {@code application/json}, the response
+	 *                        content is {@code null}, empty or couldn't be
+	 *                        parsed to a valid JSON array.
+	 */
+	public JSONArray getContentAsJSONArray()
+		throws ParseException {
+
+		ensureContentType(CommonContentTypes.APPLICATION_JSON);
+
+		ensureContent();
+
+		return JSONArrayUtils.parseJSONArray(content);
 	}
 	
 	

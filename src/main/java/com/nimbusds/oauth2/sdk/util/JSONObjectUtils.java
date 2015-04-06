@@ -15,7 +15,6 @@ import javax.mail.internet.InternetAddress;
 
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 
@@ -63,20 +62,12 @@ public class JSONObjectUtils {
 	public static JSONObject parseJSONObject(final String s) 
 		throws ParseException {
 		
-		Object o;
-		
-		try {
-			o = new JSONParser(JSONParser.USE_HI_PRECISION_FLOAT | JSONParser.ACCEPT_TAILLING_SPACE).parse(s);
-			
-		} catch (net.minidev.json.parser.ParseException e) {
-			
-			throw new ParseException("Invalid JSON: " + e.getMessage(), e);
-		}
+		Object o = JSONUtils.parseJSON(s);
 		
 		if (o instanceof JSONObject)
 			return (JSONObject)o;
 		else
-			throw new ParseException("JSON entity is not an object");
+			throw new ParseException("The JSON entity is not an object");
 	}
 	
 	
