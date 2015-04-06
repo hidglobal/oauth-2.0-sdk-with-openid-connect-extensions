@@ -943,7 +943,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 		}
 
 		if (jsonObject.containsKey("request_object_encryption_enc")) {
-			metadata.setRequestObjectJWEEnc(new EncryptionMethod(
+			metadata.setRequestObjectJWEEnc(EncryptionMethod.parse(
 				JSONObjectUtils.getString(jsonObject, "request_object_encryption_enc")));
 
 			oidcFields.remove("request_object_encryption_enc");
@@ -971,7 +971,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 		}
 
 		if (jsonObject.containsKey("id_token_encrypted_response_enc")) {
-			metadata.setIDTokenJWEEnc(new EncryptionMethod(
+			metadata.setIDTokenJWEEnc(EncryptionMethod.parse(
 				JSONObjectUtils.getString(jsonObject, "id_token_encrypted_response_enc")));
 
 			oidcFields.remove("id_token_encrypted_response_enc");
@@ -992,7 +992,7 @@ public class OIDCClientMetadata extends ClientMetadata {
 		}
 
 		if (jsonObject.containsKey("userinfo_encrypted_response_enc")) {
-			metadata.setUserInfoJWEEnc(new EncryptionMethod(
+			metadata.setUserInfoJWEEnc(EncryptionMethod.parse(
 				JSONObjectUtils.getString(jsonObject, "userinfo_encrypted_response_enc")));
 
 			oidcFields.remove("userinfo_encrypted_response_enc");

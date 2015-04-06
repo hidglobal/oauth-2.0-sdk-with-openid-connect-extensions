@@ -391,6 +391,6 @@ public class OIDCClientMetadataTest extends TestCase {
 
 		assertEquals(128, metadata.getIDTokenJWEEnc().cekBitLength());
 		assertEquals(128, metadata.getUserInfoJWEEnc().cekBitLength());
-		assertEquals(128, metadata.getRequestObjectJWEEnc().cekBitLength());
+		assertEquals(256, metadata.getRequestObjectJWEEnc().cekBitLength());
 	}
 }
