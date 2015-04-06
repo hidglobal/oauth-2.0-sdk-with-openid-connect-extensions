@@ -373,4 +373,24 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(JWEAlgorithm.RSA1_5, metadata.getRequestObjectJWEAlg());
 		assertEquals(EncryptionMethod.A128CBC_HS256, metadata.getRequestObjectJWEEnc());
 	}
+
+
+	public void testJOSEEncMethodParseWithCEKCheck()
+		throws Exception {
+
+		// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issue/127/oidcclient-parse-method-causes-potential
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.applyDefaults();
+
+		metadata.setIDTokenJWEEnc(EncryptionMethod.A128GCM);
+		metadata.setUserInfoJWEEnc(EncryptionMethod.A128GCM);
+		metadata.setRequestObjectJWEEnc(EncryptionMethod.A128CBC_HS256);
+
+		metadata = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(metadata.toJSONObject().toJSONString()));
+
+		assertEquals(128, metadata.getIDTokenJWEEnc().cekBitLength());
+		assertEquals(128, metadata.getUserInfoJWEEnc().cekBitLength());
+		assertEquals(128, metadata.getRequestObjectJWEEnc().cekBitLength());
+	}
 }
