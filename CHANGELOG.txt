@@ -262,4 +262,4 @@ version 4.12.1 (2015-03-16)
 
 version 4.13 (2015-04-06)
     * Fixes EncryptionMethod parsing in OIDCClientMetadata (iss #127).
-    
+    * Adds AccessTokenResponse.getBearerAccessToken() method (iss #124).
