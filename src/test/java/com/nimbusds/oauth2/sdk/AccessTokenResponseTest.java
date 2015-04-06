@@ -31,6 +31,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(accessToken, response.getBearerAccessToken());
 		assertEquals(refreshToken, response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
 		assertEquals(refreshToken, response.getTokenPair().getRefreshToken());
@@ -46,6 +47,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(accessToken, response.getBearerAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
 		assertNull(response.getTokenPair().getRefreshToken());
@@ -63,6 +65,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(accessToken, response.getBearerAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
 		assertNull(response.getTokenPair().getRefreshToken());
@@ -80,6 +83,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(accessToken, response.getBearerAccessToken());
 		assertEquals(refreshToken, response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
 		assertEquals(refreshToken, response.getTokenPair().getRefreshToken());
@@ -96,6 +100,7 @@ public class AccessTokenResponseTest extends TestCase {
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(accessToken, response.getBearerAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
 		assertNull(response.getTokenPair().getRefreshToken());
@@ -113,6 +118,7 @@ public class AccessTokenResponseTest extends TestCase {
 		AccessTokenResponse response = new AccessTokenResponse(tokenPair, customParams);
 		assertTrue(response.indicatesSuccess());
 		assertEquals(accessToken, response.getAccessToken());
+		assertEquals(accessToken, response.getBearerAccessToken());
 		assertNull(response.getRefreshToken());
 		assertEquals(accessToken, response.getTokenPair().getAccessToken());
 		assertNull(response.getTokenPair().getRefreshToken());
@@ -150,8 +156,13 @@ public class AccessTokenResponseTest extends TestCase {
 		AccessTokenResponse atr = AccessTokenResponse.parse(httpResponse);
 
 		assertTrue(atr.indicatesSuccess());
+
 		AccessToken accessToken = atr.getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
+
+		BearerAccessToken bearerAccessToken = atr.getBearerAccessToken();
+		assertEquals(accessTokenString, bearerAccessToken.getValue());
+
 		assertEquals(exp, accessToken.getLifetime());
 		assertNull(accessToken.getScope());
 
@@ -210,6 +221,8 @@ public class AccessTokenResponseTest extends TestCase {
 		assertTrue(atr.indicatesSuccess());
 		AccessToken accessToken = atr.getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
+		BearerAccessToken bearerAccessToken = atr.getBearerAccessToken();
+		assertEquals(accessTokenString, bearerAccessToken.getValue());
 		assertNull(accessToken.getScope());
 
 		// Test pair getter

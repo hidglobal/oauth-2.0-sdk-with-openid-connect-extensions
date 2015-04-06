@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
@@ -145,6 +146,18 @@ public class AccessTokenResponse
 	public AccessToken getAccessToken() {
 	
 		return accessToken;
+	}
+
+
+	/**
+	 * Gets the access token as type bearer.
+	 *
+	 * @return The bearer access token.
+	 */
+	public BearerAccessToken getBearerAccessToken() {
+
+		// Cast should be safe, only bearer supported at present
+		return (BearerAccessToken)accessToken;
 	}
 	
 	
