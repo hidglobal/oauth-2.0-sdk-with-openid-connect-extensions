@@ -29,7 +29,7 @@ import com.nimbusds.openid.connect.sdk.claims.ACR;
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 2.
  *     <li>OpenID Connect Session Management 1.0, section 5.1.1.
  *     <<li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-20), section 2.
+ *         (draft-ietf-oauth-dyn-reg-27), section 2.
  * </ul>
  */
 public class OIDCClientMetadata extends ClientMetadata {

@@ -36,9 +36,9 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0.
  *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-20), section 4.1.
+ *         (draft-ietf-oauth-dyn-reg-27), section 3.2.1.
  *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol
- *         (draft-ietf-oauth-dyn-reg-management-04), section 3.1.
+ *         (draft-ietf-oauth-dyn-reg-management-12), section 3.
  * </ul>
  */
 @Immutable
@@ -64,14 +64,13 @@ public final class OIDCClientInformation extends ClientInformation {
 	/**
 	 * Creates a new OpenID Connect client information instance.
 	 *
-	 * @param id              The client identifier. Must not be
-	 *                        {@code null}.
-	 * @param issueDate       The issue date of the client identifier,
-	 *                        {@code null} if not specified.
-	 * @param metadata        The OpenID Connect client metadata. Must not
-	 *                        be {@code null}.
-	 * @param secret          The optional client secret, {@code null} if
-	 *                        not specified.
+	 * @param id        The client identifier. Must not be {@code null}.
+	 * @param issueDate The issue date of the client identifier,
+	 *                  {@code null} if not specified.
+	 * @param metadata  The OpenID Connect client metadata. Must not be
+	 *                  {@code null}.
+	 * @param secret    The optional client secret, {@code null} if not
+	 *                  specified.
 	 */
 	public OIDCClientInformation(final ClientID id,
 				 final Date issueDate,
