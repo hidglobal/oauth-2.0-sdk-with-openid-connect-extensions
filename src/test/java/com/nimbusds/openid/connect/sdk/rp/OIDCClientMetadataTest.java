@@ -10,6 +10,7 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -17,7 +18,6 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.util.JSONObjectUtils;
 
 import com.nimbusds.langtag.LangTag;
 
@@ -338,5 +338,39 @@ public class OIDCClientMetadataTest extends TestCase {
 		JSONObject jsonObject = metadata.toJSONObject();
 
 		assertTrue((Boolean) jsonObject.get("require_auth_time"));
+	}
+
+
+	public void testJOSEAlgEquality()
+		throws Exception {
+
+		OIDCClientMetadata metadata = new OIDCClientMetadata();
+		metadata.applyDefaults();
+
+		metadata.setIDTokenJWSAlg(JWSAlgorithm.RS256);
+		metadata.setIDTokenJWEAlg(JWEAlgorithm.RSA1_5);
+		metadata.setIDTokenJWEEnc(EncryptionMethod.A128GCM);
+
+		metadata.setUserInfoJWSAlg(JWSAlgorithm.RS256);
+		metadata.setUserInfoJWEAlg(JWEAlgorithm.RSA1_5);
+		metadata.setUserInfoJWEEnc(EncryptionMethod.A128GCM);
+
+		metadata.setRequestObjectJWSAlg(JWSAlgorithm.HS256);
+		metadata.setRequestObjectJWEAlg(JWEAlgorithm.RSA1_5);
+		metadata.setRequestObjectJWEEnc(EncryptionMethod.A128CBC_HS256);
+
+		metadata = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(metadata.toJSONObject().toJSONString()));
+
+		assertEquals(JWSAlgorithm.RS256, metadata.getIDTokenJWSAlg());
+		assertEquals(JWEAlgorithm.RSA1_5, metadata.getIDTokenJWEAlg());
+		assertEquals(EncryptionMethod.A128GCM, metadata.getIDTokenJWEEnc());
+
+		assertEquals(JWSAlgorithm.RS256, metadata.getUserInfoJWSAlg());
+		assertEquals(JWEAlgorithm.RSA1_5, metadata.getUserInfoJWEAlg());
+		assertEquals(EncryptionMethod.A128GCM, metadata.getIDTokenJWEEnc());
+
+		assertEquals(JWSAlgorithm.HS256, metadata.getRequestObjectJWSAlg());
+		assertEquals(JWEAlgorithm.RSA1_5, metadata.getRequestObjectJWEAlg());
+		assertEquals(EncryptionMethod.A128CBC_HS256, metadata.getRequestObjectJWEEnc());
 	}
 }
