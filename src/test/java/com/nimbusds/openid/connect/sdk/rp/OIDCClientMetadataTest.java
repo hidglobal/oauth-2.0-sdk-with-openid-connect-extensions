@@ -100,7 +100,7 @@ public class OIDCClientMetadataTest extends TestCase {
 			+ "  }";
 
 		
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(jsonString);
+		JSONObject jsonObject = JSONObjectUtils.parse(jsonString);
 		
 		OIDCClientMetadata clientMetadata = OIDCClientMetadata.parse(jsonObject);
 		
@@ -234,7 +234,7 @@ public class OIDCClientMetadataTest extends TestCase {
 
 		String json = meta.toJSONObject().toJSONString();
 
-		meta = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		meta = OIDCClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertEquals(ApplicationType.NATIVE, meta.getApplicationType());
 
@@ -283,7 +283,7 @@ public class OIDCClientMetadataTest extends TestCase {
 
 		String json = meta.toJSONObject().toJSONString();
 
-		meta = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		meta = OIDCClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertEquals("123", (String)meta.getCustomField("x-data"));
 		assertEquals("123", (String)meta.getCustomFields().get("x-data"));
@@ -359,7 +359,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		metadata.setRequestObjectJWEAlg(JWEAlgorithm.RSA1_5);
 		metadata.setRequestObjectJWEEnc(EncryptionMethod.A128CBC_HS256);
 
-		metadata = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(metadata.toJSONObject().toJSONString()));
+		metadata = OIDCClientMetadata.parse(JSONObjectUtils.parse(metadata.toJSONObject().toJSONString()));
 
 		assertEquals(JWSAlgorithm.RS256, metadata.getIDTokenJWSAlg());
 		assertEquals(JWEAlgorithm.RSA1_5, metadata.getIDTokenJWEAlg());
@@ -387,7 +387,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		metadata.setUserInfoJWEEnc(EncryptionMethod.A128GCM);
 		metadata.setRequestObjectJWEEnc(EncryptionMethod.A128CBC_HS256);
 
-		metadata = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(metadata.toJSONObject().toJSONString()));
+		metadata = OIDCClientMetadata.parse(JSONObjectUtils.parse(metadata.toJSONObject().toJSONString()));
 
 		assertEquals(128, metadata.getIDTokenJWEEnc().cekBitLength());
 		assertEquals(128, metadata.getUserInfoJWEEnc().cekBitLength());

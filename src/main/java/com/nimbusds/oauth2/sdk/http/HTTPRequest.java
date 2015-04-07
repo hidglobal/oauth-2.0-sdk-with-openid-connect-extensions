@@ -462,7 +462,7 @@ public class HTTPRequest extends HTTPMessage {
 
 		ensureQuery();
 
-		return JSONObjectUtils.parseJSONObject(query);
+		return JSONObjectUtils.parse(query);
 	}
 
 

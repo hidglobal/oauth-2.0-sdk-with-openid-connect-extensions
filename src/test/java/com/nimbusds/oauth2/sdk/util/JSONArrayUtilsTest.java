@@ -17,7 +17,7 @@ public class JSONArrayUtilsTest extends TestCase {
 
 		String s = "[\"apples\", \"pears\"]";
 
-		JSONArray a = JSONArrayUtils.parseJSONArray(s);
+		JSONArray a = JSONArrayUtils.parse(s);
 		assertEquals("apples", a.get(0));
 		assertEquals("pears", a.get(1));
 		assertEquals(2, a.size());
@@ -27,8 +27,8 @@ public class JSONArrayUtilsTest extends TestCase {
 	public void testParseWithTrailingWhiteSpace()
 		throws Exception {
 
-		assertEquals(0, JSONArrayUtils.parseJSONArray("[] ").size());
-		assertEquals(0, JSONArrayUtils.parseJSONArray("[]\n").size());
-		assertEquals(0, JSONArrayUtils.parseJSONArray("[]\r\n").size());
+		assertEquals(0, JSONArrayUtils.parse("[] ").size());
+		assertEquals(0, JSONArrayUtils.parse("[]\n").size());
+		assertEquals(0, JSONArrayUtils.parse("[]\r\n").size());
 	}
 }

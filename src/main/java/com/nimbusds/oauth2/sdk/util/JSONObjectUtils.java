@@ -59,7 +59,7 @@ public class JSONObjectUtils {
 	 * @throws ParseException If the string cannot be parsed to a JSON 
 	 *                        object.
 	 */
-	public static JSONObject parseJSONObject(final String s) 
+	public static JSONObject parse(final String s)
 		throws ParseException {
 		
 		Object o = JSONUtils.parseJSON(s);

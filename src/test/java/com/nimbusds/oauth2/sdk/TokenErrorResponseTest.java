@@ -64,7 +64,7 @@ public class TokenErrorResponseTest extends TestCase {
 		assertEquals("no-cache", httpResponse.getPragma());
 		
 		
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(httpResponse.getContent());	
+		JSONObject jsonObject = JSONObjectUtils.parse(httpResponse.getContent());
 
 		assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), (String)jsonObject.get("error"));
 		assertEquals(OAuth2Error.INVALID_REQUEST.getDescription(), (String)jsonObject.get("error_description"));

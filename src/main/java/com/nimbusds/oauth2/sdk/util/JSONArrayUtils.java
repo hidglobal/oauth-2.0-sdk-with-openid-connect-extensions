@@ -30,7 +30,7 @@ public class JSONArrayUtils {
 	 * @throws ParseException If the string cannot be parsed to a JSON
 	 *                        array.
 	 */
-	public static JSONArray parseJSONArray(final String s)
+	public static JSONArray parse(final String s)
 		throws ParseException {
 
 		Object o = JSONUtils.parseJSON(s);

@@ -465,7 +465,7 @@ public class ClaimsRequestTest extends TestCase {
 			"    }\n" +
 			"  }";
 
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+		JSONObject jsonObject = JSONObjectUtils.parse(json);
 
 		ClaimsRequest claimsRequest = ClaimsRequest.parse(jsonObject);
 

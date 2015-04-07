@@ -1225,7 +1225,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			JSONObject jsonObject;
 
 			try {
-				jsonObject = JSONObjectUtils.parseJSONObject(v);
+				jsonObject = JSONObjectUtils.parse(v);
 
 			} catch (ParseException e) {
 				String msg = "Invalid \"claims\" parameter: " + e.getMessage();

@@ -1046,7 +1046,7 @@ public class UserInfo extends ClaimsSet {
 	public static UserInfo parse(final String json)
 		throws ParseException {
 
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+		JSONObject jsonObject = JSONObjectUtils.parse(json);
 
 		try {
 			return new UserInfo(jsonObject);

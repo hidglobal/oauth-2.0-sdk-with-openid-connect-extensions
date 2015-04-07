@@ -1966,6 +1966,6 @@ public class OIDCProviderMetadata {
 	public static OIDCProviderMetadata parse(final String s)
 		throws ParseException {
 
-		return parse(JSONObjectUtils.parseJSONObject(s));
+		return parse(JSONObjectUtils.parse(s));
 	}
 }

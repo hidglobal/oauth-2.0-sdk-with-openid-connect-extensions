@@ -72,7 +72,7 @@ public class ClientInformationTest extends TestCase {
 
 		String json = info.toJSONObject().toJSONString();
 
-		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+		info = ClientInformation.parse(JSONObjectUtils.parse(json));
 
 		assertEquals(clientID, info.getID());
 		assertNull(info.getIDIssueDate());
@@ -96,7 +96,7 @@ public class ClientInformationTest extends TestCase {
 
 		json = info.toJSONObject().toJSONString();
 
-		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+		info = ClientInformation.parse(JSONObjectUtils.parse(json));
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
@@ -126,7 +126,7 @@ public class ClientInformationTest extends TestCase {
 
 		String json = info.toJSONObject().toJSONString();
 
-		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+		info = ClientInformation.parse(JSONObjectUtils.parse(json));
 
 		assertEquals(clientID, info.getID());
 		assertNull(info.getIDIssueDate());
@@ -152,7 +152,7 @@ public class ClientInformationTest extends TestCase {
 
 		json = info.toJSONObject().toJSONString();
 
-		info = ClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+		info = ClientInformation.parse(JSONObjectUtils.parse(json));
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());

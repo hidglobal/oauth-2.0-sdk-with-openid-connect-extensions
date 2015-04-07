@@ -616,7 +616,7 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	public static IDTokenClaimsSet parse(final String json)
 		throws ParseException {
 
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+		JSONObject jsonObject = JSONObjectUtils.parse(json);
 
 		try {
 			return new IDTokenClaimsSet(jsonObject);

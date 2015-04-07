@@ -278,7 +278,7 @@ public class Address extends ClaimsSet {
 	public static Address parse(final String json)
 		throws ParseException {
 
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+		JSONObject jsonObject = JSONObjectUtils.parse(json);
 
 		try {
 			return new Address(jsonObject);

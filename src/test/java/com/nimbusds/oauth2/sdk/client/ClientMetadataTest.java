@@ -160,7 +160,7 @@ public class ClientMetadataTest extends TestCase {
 		
 		String json = meta.toJSONObject().toJSONString();
 		
-		JSONObject jsonObject = JSONObjectUtils.parseJSONObject(json);
+		JSONObject jsonObject = JSONObjectUtils.parse(json);
 		
 		meta = ClientMetadata.parse(jsonObject);
 		
@@ -232,7 +232,7 @@ public class ClientMetadataTest extends TestCase {
 
 		String json = meta.toJSONObject().toJSONString();
 
-		meta = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		meta = ClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertEquals("123", (String)meta.getCustomField("x-data"));
 		assertEquals("123", (String) meta.getCustomFields().get("x-data"));
@@ -293,7 +293,7 @@ public class ClientMetadataTest extends TestCase {
 			"      \"example_extension_parameter\": \"example_value\"\n" +
 			"     }";
 
-		ClientMetadata meta = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		ClientMetadata meta = ClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertTrue(meta.getRedirectionURIs().contains(new URI("https://client.example.org/callback")));
 		assertTrue(meta.getRedirectionURIs().contains(new URI("https://client.example.org/callback2")));
@@ -317,7 +317,7 @@ public class ClientMetadataTest extends TestCase {
 			"}";
 
 		try {
-			ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+			ClientMetadata.parse(JSONObjectUtils.parse(json));
 			fail();
 		} catch (ParseException e) {
 			// ok
@@ -336,7 +336,7 @@ public class ClientMetadataTest extends TestCase {
 
 		String json = o.toJSONString();
 
-		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertEquals("Test App", metadata.getName());
 		assertTrue(metadata.getGrantTypes().contains(GrantType.CLIENT_CREDENTIALS));
@@ -364,7 +364,7 @@ public class ClientMetadataTest extends TestCase {
 
 		String json = o.toJSONString();
 
-		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertEquals("Test App", metadata.getName());
 		assertTrue(metadata.getGrantTypes().contains(GrantType.PASSWORD));
@@ -392,7 +392,7 @@ public class ClientMetadataTest extends TestCase {
 
 		String json = o.toJSONString();
 
-		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parseJSONObject(json));
+		ClientMetadata metadata = ClientMetadata.parse(JSONObjectUtils.parse(json));
 
 		assertEquals("Test App", metadata.getName());
 		assertTrue(metadata.getGrantTypes().isEmpty());

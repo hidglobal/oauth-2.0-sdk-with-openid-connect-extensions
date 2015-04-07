@@ -332,7 +332,7 @@ public class HTTPResponse extends HTTPMessage {
 		
 		ensureContent();
 		
-		return JSONObjectUtils.parseJSONObject(content);
+		return JSONObjectUtils.parse(content);
 	}
 
 
@@ -353,7 +353,7 @@ public class HTTPResponse extends HTTPMessage {
 
 		ensureContent();
 
-		return JSONArrayUtils.parseJSONArray(content);
+		return JSONArrayUtils.parse(content);
 	}
 	
 	

@@ -93,7 +93,7 @@ public class OIDCClientInformationTest extends TestCase {
 
 		String json = info.toJSONObject().toJSONString();
 
-		info = OIDCClientInformation.parse(JSONObjectUtils.parseJSONObject(json));
+		info = OIDCClientInformation.parse(JSONObjectUtils.parse(json));
 
 		assertEquals(clientID, info.getID());
 		assertEquals(now, info.getIDIssueDate());
@@ -121,7 +121,7 @@ public class OIDCClientInformationTest extends TestCase {
 
 		String jsonString = info.toJSONObject().toJSONString();
 
-		info = OIDCClientInformation.parse(JSONObjectUtils.parseJSONObject(jsonString));
+		info = OIDCClientInformation.parse(JSONObjectUtils.parse(jsonString));
 
 		assertFalse(info.getSecret().expired());
 	}

@@ -54,7 +54,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	
 		String s = "{\"apples\":3, \"pears\":\"none\"}";
 		
-		JSONObject o = JSONObjectUtils.parseJSONObject(s);
+		JSONObject o = JSONObjectUtils.parse(s);
 
 		assertEquals(new Long(3), (Long)o.get("apples"));
 		assertEquals("none", (String)o.get("pears"));
@@ -65,16 +65,16 @@ public class JSONObjectUtilsTest extends TestCase {
 	public void testParseWithTrailingWhiteSpace()
 		throws Exception {
 
-		assertEquals(0, JSONObjectUtils.parseJSONObject("{} ").size());
-		assertEquals(0, JSONObjectUtils.parseJSONObject("{}\n").size());
-		assertEquals(0, JSONObjectUtils.parseJSONObject("{}\r\n").size());
+		assertEquals(0, JSONObjectUtils.parse("{} ").size());
+		assertEquals(0, JSONObjectUtils.parse("{}\n").size());
+		assertEquals(0, JSONObjectUtils.parse("{}\r\n").size());
 	}
 	
 	
 	public void testJSONObjectParseException() {
 	
 		try {
-			JSONObjectUtils.parseJSONObject("{\"apples\":3, ");
+			JSONObjectUtils.parse("{\"apples\":3, ");
 			fail();
 			
 		} catch (ParseException e) {
@@ -86,7 +86,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	public void testJSONObjectObjectParseExceptionNull() {
 	
 		try {
-			JSONObjectUtils.parseJSONObject(null);
+			JSONObjectUtils.parse(null);
 			fail();
 			
 		} catch (ParseException e) {
@@ -103,7 +103,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	public void testJSONObjectObjectParseExceptionNullEntity() {
 	
 		try {
-			JSONObjectUtils.parseJSONObject("null");
+			JSONObjectUtils.parse("null");
 			fail();
 		
 		} catch (ParseException e) {
@@ -116,7 +116,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	public void testJSONObjectObjectParseExceptionEmptyString() {
 	
 		try {
-			JSONObjectUtils.parseJSONObject("");
+			JSONObjectUtils.parse("");
 			
 			fail("Failed to raise exception");
 		
@@ -130,7 +130,7 @@ public class JSONObjectUtilsTest extends TestCase {
 	public void testJSONObjectObjectParseExceptionWhitespaceString() {
 	
 		try {
-			JSONObjectUtils.parseJSONObject(" ");
+			JSONObjectUtils.parse(" ");
 			fail();
 		
 		} catch (ParseException e) {
@@ -195,7 +195,7 @@ public class JSONObjectUtilsTest extends TestCase {
 
 		String json = o.toJSONString();
 
-		List<String> fruit = JSONObjectUtils.getStringList(JSONObjectUtils.parseJSONObject(json), "fruit");
+		List<String> fruit = JSONObjectUtils.getStringList(JSONObjectUtils.parse(json), "fruit");
 
 		assertEquals("apples", fruit.get(0));
 		assertEquals("pears", fruit.get(1));
@@ -226,7 +226,7 @@ public class JSONObjectUtilsTest extends TestCase {
 
 		String json = o.toJSONString();
 
-		Set<String> fruit = JSONObjectUtils.getStringSet(JSONObjectUtils.parseJSONObject(json), "fruit");
+		Set<String> fruit = JSONObjectUtils.getStringSet(JSONObjectUtils.parse(json), "fruit");
 
 		assertTrue(fruit.contains("apples"));
 		assertTrue(fruit.contains("pears"));
@@ -243,7 +243,7 @@ public class JSONObjectUtilsTest extends TestCase {
 
 		String json = o.toJSONString();
 
-		o = JSONObjectUtils.parseJSONObject(json);
+		o = JSONObjectUtils.parse(json);
 
 		try {
 			JSONObjectUtils.getStringSet(o, "fruit");
