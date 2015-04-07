@@ -15,16 +15,12 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 
-import com.nimbusds.oauth2.sdk.GrantType;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.Display;
-import com.nimbusds.openid.connect.sdk.ResponseMode;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
@@ -1687,7 +1683,7 @@ public class OIDCProviderMetadata {
 			for (String v: JSONObjectUtils.getStringArray(jsonObject, "response_modes_supported")) {
 
 				if (v != null)
-					op.rms.add(ResponseMode.parse(v));
+					op.rms.add(new ResponseMode(v));
 			}
 		}
 		

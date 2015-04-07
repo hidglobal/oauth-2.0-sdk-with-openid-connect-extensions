@@ -21,12 +21,7 @@ import com.nimbusds.langtag.LangTagException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
-import com.nimbusds.oauth2.sdk.AuthorizationRequest;
-import com.nimbusds.oauth2.sdk.OAuth2Error;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -266,6 +261,12 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		 * Request object URI (optional).
 		 */
 		private URI requestURI;
+
+
+		/**
+		 * The response mode (optional).
+		 */
+		private ResponseMode rm;
 
 
 		/**
@@ -520,6 +521,23 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 		/**
+		 * Sets the response mode. Corresponds to the optional
+		 * {@code response_mode} parameter. Use of this parameter is
+		 * not recommended unless a non-default response mode is
+		 * requested (e.g. form_post).
+		 *
+		 * @param rm The response mode, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder responseMode(final ResponseMode rm) {
+
+			this.rm = rm;
+			return this;
+		}
+
+
+		/**
 		 * Builds a new authentication request.
 		 *
 		 * @return The authentication request.
@@ -528,7 +546,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 			try {
 				return new AuthenticationRequest(
-					uri, rt, scope, clientID, redirectURI, state, nonce,
+					uri, rt, rm, scope, clientID, redirectURI, state, nonce,
 					display, prompt, maxAge, uiLocales, claimsLocales,
 					idTokenHint, loginHint, acrValues, claims,
 					requestObject, requestURI);
@@ -576,7 +594,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		// Not specified: display, prompt, maxAge, uiLocales, claimsLocales, 
 		// idTokenHint, loginHint, acrValues, claims
-		this(uri, rt, scope, clientID, redirectURI, state, nonce, 
+		this(uri, rt, null, scope, clientID, redirectURI, state, nonce,
 		     null, null, 0, null, null, 
 		     null, null, null, null, null, null);
 	}
@@ -592,6 +610,11 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 *                      {@code response_type} parameter. Must specify a
 	 *                      valid OpenID Connect response type. Must not be
 	 *                      {@code null}.
+	 * @param rm            The response mode. Corresponds to the optional
+	 *                      {@code response_mode} parameter. Use of this
+	 *                      parameter is not recommended unless a
+	 *                      non-default response mode is requested (e.g.
+	 *                      form_post).
 	 * @param scope         The request scope. Corresponds to the
 	 *                      {@code scope} parameter. Must contain an
 	 *                      {@link OIDCScopeValue#OPENID openid value}. 
@@ -649,6 +672,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 */
 	public AuthenticationRequest(final URI uri,
 				     final ResponseType rt,
+				     final ResponseMode rm,
 				     final Scope scope,
 				     final ClientID clientID,
 				     final URI redirectURI,
@@ -666,7 +690,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				     final JWT requestObject,
 				     final URI requestURI) {
 				    
-		super(uri, rt, clientID, redirectURI, scope, state);
+		super(uri, rt, rm, clientID, redirectURI, scope, state);
 
 		if (redirectURI == null)
 			throw new IllegalArgumentException("The redirection URI must not be null");
@@ -1043,6 +1067,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		ClientID clientID = ar.getClientID();
 		State state = ar.getState();
+		ResponseMode rm = ar.getResponseMode();
 
 		// Required in OIDC
 		URI redirectURI = ar.getRedirectionURI();
@@ -1279,7 +1304,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		
 		
 		return new AuthenticationRequest(
-			uri, rt, scope, clientID, redirectURI, state, nonce,
+			uri, rt, rm, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
 			idTokenHint, loginHint, acrValues, claims, requestObject, requestURI);
 	}

@@ -193,7 +193,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		State state = new State();
 
-		AuthorizationRequest req = new AuthorizationRequest(uri, rts, clientID, redirectURI, scope, state);
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, null, clientID, redirectURI, scope, state);
 
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());

@@ -267,47 +267,14 @@ public class AuthorizationRequest extends AbstractRequest {
 		                    final ResponseType rt,
 	                            final ClientID clientID) {
 
-		this(uri, rt, clientID, null, null, null);
-	}
-	
-	
-	/**
-	 * Creates a new authorisation request.
-	 *
-	 *  @param uri        The URI of the authorisation endpoint. May be 
-	 *                    {@code null} if the {@link #toHTTPRequest} method
-	 *                    will not be used.
-	 * @param rt          The response type. Corresponds to the 
-	 *                    {@code response_type} parameter. Must not be
-	 *                    {@code null}.
-	 * @param clientID    The client identifier. Corresponds to the
-	 *                    {@code client_id} parameter. Must not be 
-	 *                    {@code null}.
-	 * @param redirectURI The redirection URI. Corresponds to the optional
-	 *                    {@code redirect_uri} parameter. {@code null} if
-	 *                    not specified.
-	 * @param scope       The request scope. Corresponds to the optional
-	 *                    {@code scope} parameter. {@code null} if not
-	 *                    specified.
-	 * @param state       The state. Corresponds to the recommended 
-	 *                    {@code state} parameter. {@code null} if not 
-	 *                    specified.
-	 */
-	public AuthorizationRequest(final URI uri,
-		                    final ResponseType rt,
-	                            final ClientID clientID,
-				    final URI redirectURI,
-	                            final Scope scope,
-				    final State state) {
-
-		this(uri, rt, null, clientID, redirectURI, scope, state);
+		this(uri, rt, null, clientID, null, null, null);
 	}
 
 
 	/**
 	 * Creates a new authorisation request.
 	 *
-	 * @param uri        The URI of the authorisation endpoint. May be
+	 * @param uri         The URI of the authorisation endpoint. May be
 	 *                    {@code null} if the {@link #toHTTPRequest} method
 	 *                    will not be used.
 	 * @param rt          The response type. Corresponds to the

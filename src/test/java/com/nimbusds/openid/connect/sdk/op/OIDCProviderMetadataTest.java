@@ -7,25 +7,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.openid.connect.sdk.*;
 import junit.framework.TestCase;
 
-import com.nimbusds.jose.util.JSONObjectUtils;
-import com.nimbusds.oauth2.sdk.GrantType;
-import com.nimbusds.oauth2.sdk.id.Issuer;
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.langtag.LangTag;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.langtag.LangTag;
-import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.Scope;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.jose.util.JSONObjectUtils;
 
+import com.nimbusds.oauth2.sdk.*;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.oauth2.sdk.id.Issuer;
+
+import com.nimbusds.openid.connect.sdk.*;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
-import net.minidev.json.JSONObject;
 
 
 /**

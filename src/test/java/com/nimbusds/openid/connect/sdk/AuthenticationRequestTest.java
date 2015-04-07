@@ -158,6 +158,8 @@ public class AuthenticationRequestTest extends TestCase {
 		ResponseType rts = new ResponseType();
 		rts.add(ResponseType.Value.CODE);
 
+		ResponseMode rm = ResponseMode.FORM_POST;
+
 		Scope scope = new Scope();
 		scope.add(OIDCScopeValue.OPENID);
 		scope.add(OIDCScopeValue.EMAIL);
@@ -200,7 +202,7 @@ public class AuthenticationRequestTest extends TestCase {
 		claims.addUserInfoClaim("family_name");
 
 		AuthenticationRequest request = new AuthenticationRequest(
-			uri, rts, scope, clientID, redirectURI, state, nonce,
+			uri, rts, rm, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
 			idTokenHint, loginHint, acrValues, claims, null, null);
 
@@ -224,6 +226,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 
 		// Check extended parameters
+
+		assertEquals(rm, request.getResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -288,6 +292,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 
 		// Check extended parameters
+
+		assertEquals(rm, request.getResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -377,7 +383,7 @@ public class AuthenticationRequestTest extends TestCase {
 		JWT requestObject = JWTParser.parse(EXAMPLE_JWT_STRING);
 
 		AuthenticationRequest request = new AuthenticationRequest(
-			uri, rts, scope, clientID, redirectURI, state, nonce,
+			uri, rts, null, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
 			idTokenHint, loginHint, acrValues, claims, requestObject, null);
 
@@ -401,6 +407,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 
 		// Check extended parameters
+
+		assertNull(request.getResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -467,6 +475,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 
 		// Check extended parameters
+
+		assertNull(request.getResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -558,7 +568,7 @@ public class AuthenticationRequestTest extends TestCase {
 		URI requestURI = new URI("http://example.com/request-object.jwt#1234");
 
 		AuthenticationRequest request = new AuthenticationRequest(
-			uri, rts, scope, clientID, redirectURI, state, nonce,
+			uri, rts, null, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
 			idTokenHint, loginHint, acrValues, claims, null, requestURI);
 
@@ -582,6 +592,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 
 		// Check extended parameters
+
+		assertNull(request.getResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -649,6 +661,8 @@ public class AuthenticationRequestTest extends TestCase {
 
 		// Check extended parameters
 
+		assertNull(request.getResponseMode());
+
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
 		promptOut = request.getPrompt();
@@ -702,6 +716,7 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
 		assertNull(request.getState());
 		assertNull(request.getNonce());
+		assertNull(request.getResponseMode());
 		assertNull(request.getDisplay());
 		assertNull(request.getPrompt());
 		assertEquals(0, request.getMaxAge());
@@ -743,10 +758,12 @@ public class AuthenticationRequestTest extends TestCase {
 			loginHint("alice@wonderland.net").
 			acrValues(acrValues).
 			claims(claims).
+			responseMode(ResponseMode.FORM_POST).
 			endpointURI(new URI("https://c2id.com/login")).
 			build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertEquals(ResponseMode.FORM_POST, request.getResponseMode());
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
