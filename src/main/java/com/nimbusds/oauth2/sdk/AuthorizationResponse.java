@@ -19,6 +19,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 3.1.
+ *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
  * </ul>
  */
 public abstract class AuthorizationResponse implements Response {

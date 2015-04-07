@@ -40,6 +40,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.1 and 4.2.1.
+ *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
+ *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
  * </ul>
  */
 @Immutable
@@ -75,6 +77,12 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * callback (recommended).
 	 */
 	private final State state;
+
+
+	/**
+	 * The response mode (optional).
+	 */
+	private final ResponseMode rm;
 
 
 	/**
@@ -119,6 +127,12 @@ public class AuthorizationRequest extends AbstractRequest {
 		 * the callback (recommended).
 		 */
 		private State state;
+
+
+		/**
+		 * The response mode (optional).
+		 */
+		private ResponseMode rm;
 
 
 		/**
@@ -193,6 +207,23 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 		/**
+		 * Sets the response mode. Corresponds to the optional
+		 * {@code response_mode} parameter. Use of this parameter is
+		 * not recommended unless a non-default response mode is
+		 * requested (e.g. form_post).
+		 *
+		 * @param rm The response mode, {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder responseMode(final ResponseMode rm) {
+
+			this.rm = rm;
+			return this;
+		}
+
+
+		/**
 		 * Sets the URI of the endpoint (HTTP or HTTPS) for which the
 		 * request is intended.
 		 *
@@ -214,7 +245,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		 */
 		public AuthorizationRequest build() {
 
-			return new AuthorizationRequest(uri, rt, clientID, redirectURI, scope, state);
+			return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state);
 		}
 	}
 
@@ -269,20 +300,60 @@ public class AuthorizationRequest extends AbstractRequest {
 	                            final Scope scope,
 				    final State state) {
 
+		this(uri, rt, null, clientID, redirectURI, scope, state);
+	}
+
+
+	/**
+	 * Creates a new authorisation request.
+	 *
+	 * @param uri        The URI of the authorisation endpoint. May be
+	 *                    {@code null} if the {@link #toHTTPRequest} method
+	 *                    will not be used.
+	 * @param rt          The response type. Corresponds to the
+	 *                    {@code response_type} parameter. Must not be
+	 *                    {@code null}.
+	 * @param rm          The response mode. Corresponds to the optional
+	 *                    {@code response_mode} parameter. Use of this
+	 *                    parameter is not recommended unless a non-default
+	 *                    response mode is requested (e.g. form_post).
+	 * @param clientID    The client identifier. Corresponds to the
+	 *                    {@code client_id} parameter. Must not be
+	 *                    {@code null}.
+	 * @param redirectURI The redirection URI. Corresponds to the optional
+	 *                    {@code redirect_uri} parameter. {@code null} if
+	 *                    not specified.
+	 * @param scope       The request scope. Corresponds to the optional
+	 *                    {@code scope} parameter. {@code null} if not
+	 *                    specified.
+	 * @param state       The state. Corresponds to the recommended
+	 *                    {@code state} parameter. {@code null} if not
+	 *                    specified.
+	 */
+	public AuthorizationRequest(final URI uri,
+		                    final ResponseType rt,
+				    final ResponseMode rm,
+	                            final ClientID clientID,
+				    final URI redirectURI,
+	                            final Scope scope,
+				    final State state) {
+
 		super(uri);
-		
+
 		if (rt == null)
 			throw new IllegalArgumentException("The response type must not be null");
-		
+
 		this.rt = rt;
+
+		this.rm = rm;
 
 
 		if (clientID == null)
 			throw new IllegalArgumentException("The client ID must not be null");
-			
+
 		this.clientID = clientID;
-		
-		
+
+
 		this.redirectURI = redirectURI;
 		this.scope = scope;
 		this.state = state;
@@ -298,6 +369,18 @@ public class AuthorizationRequest extends AbstractRequest {
 	public ResponseType getResponseType() {
 	
 		return rt;
+	}
+
+
+	/**
+	 * Gets the optional response mode. Corresponds to the optional
+	 * {@code response_mode} parameter.
+	 *
+	 * @return The response mode, {@code null} if not specified.
+	 */
+	public ResponseMode getResponseMode() {
+
+		return rm;
 	}
 
 
@@ -372,6 +455,10 @@ public class AuthorizationRequest extends AbstractRequest {
 		
 		params.put("response_type", rt.toString());
 		params.put("client_id", clientID.getValue());
+
+		if (rm != null) {
+			params.put("response_mode", rm.getValue());
+		}
 
 		if (redirectURI != null)
 			params.put("redirect_uri", redirectURI.toString());
@@ -607,6 +694,16 @@ public class AuthorizationRequest extends AbstractRequest {
 		}
 
 
+		// Parse the optional response mode
+		v = params.get("response_mode");
+
+		ResponseMode rm = null;
+
+		if (StringUtils.isNotBlank(v)) {
+			rm = new ResponseMode(v);
+		}
+
+
 		// Parse optional scope
 		v = params.get("scope");
 
@@ -616,7 +713,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			scope = Scope.parse(v);
 
 
-		return new AuthorizationRequest(uri, rt, clientID, redirectURI, scope, state);
+		return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state);
 	}
 
 
