@@ -22,15 +22,15 @@ public final class ResponseMode extends Identifier {
 
 	/**
 	 * The authorisation response parameters are encoded in the query
-	 * string added to the <code>redirect_uri</code> when redirecting back
-	 * to the client.
+	 * string added to the {@code redirect_uri} when redirecting back to
+	 * the client.
 	 */
 	public static final ResponseMode QUERY = new ResponseMode("query");
 
 
 	/**
 	 * The authorisation response parameters are encoded in the fragment
-	 * added to the <code>redirect_uri</code> when redirecting back to the
+	 * added to the {@code redirect_uri} when redirecting back to the
 	 * client.
 	 */
 	public static final ResponseMode FRAGMENT = new ResponseMode("fragment");
@@ -41,7 +41,7 @@ public final class ResponseMode extends Identifier {
 	 * values that are auto-submitted in the User Agent, and thus are
 	 * transmitted via the HTTP POST method to the client, with the result
 	 * parameters being encoded in the body using the
-	 * <code>application/x-www-form-urlencoded</code> format. The action
+	 * {@code application/x-www-form-urlencoded} format. The action
 	 * attribute of the form MUST be the client's redirection URI. The
 	 * method of the form attribute MUST be POST.
 	 */
