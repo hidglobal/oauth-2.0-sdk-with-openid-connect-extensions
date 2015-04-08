@@ -55,16 +55,19 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	public void testCodeFlow()
 		throws Exception {
 	
-		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, CODE, STATE);
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, CODE, null, STATE, null);
 
 		assertTrue(resp.indicatesSuccess());
 		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
+		assertNull(resp.getResponseMode());
 
 		ResponseType responseType = resp.impliedResponseType();
 		assertTrue(new ResponseType("code").equals(responseType));
+
+		assertEquals(ResponseMode.QUERY, resp.impliedResponseMode());
 
 		Map<String,String> params = resp.toParameters();
 		assertEquals(CODE, new AuthorizationCode(params.get("code")));
@@ -84,13 +87,16 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(CODE, resp.getAuthorizationCode());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAccessToken());
+		assertNull(resp.getResponseMode());
+
+		assertEquals(ResponseMode.QUERY, resp.impliedResponseMode());
 	}
 
 
 	public void testImplicitFlow()
 		throws Exception {
 	
-		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, TOKEN, STATE);
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(ABS_REDIRECT_URI, null, TOKEN, STATE, null);
 
 		assertTrue(resp.indicatesSuccess());
 		assertEquals(ABS_REDIRECT_URI, resp.getRedirectionURI());
@@ -98,9 +104,12 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
+		assertNull(resp.getResponseMode());
 
 		ResponseType responseType = resp.impliedResponseType();
 		assertTrue(new ResponseType("token").equals(responseType));
+
+		assertEquals(ResponseMode.FRAGMENT, resp.impliedResponseMode());
 
 		Map<String,String> params = resp.toParameters();
 		assertEquals(TOKEN.getValue(), params.get("access_token"));
@@ -125,6 +134,30 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(3600, resp.getAccessToken().getLifetime());
 		assertEquals(STATE, resp.getState());
 		assertNull(resp.getAuthorizationCode());
+		assertNull(resp.getResponseMode());
+
+		assertEquals(ResponseMode.FRAGMENT, resp.impliedResponseMode());
+	}
+
+
+	public void testResponseModeFormPost()
+		throws Exception {
+
+		// TODO
+	}
+
+
+	public void testOverrideQueryResponseMode()
+		throws Exception {
+
+		// TODO
+	}
+
+
+	public void testOverrideFragmentResponseMode()
+		throws Exception {
+
+		// TODO
 	}
 
 

@@ -7,20 +7,18 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
-import com.nimbusds.oauth2.sdk.AuthorizationCode;
-import com.nimbusds.oauth2.sdk.AuthorizationSuccessResponse;
-import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.ResponseType;
-import com.nimbusds.oauth2.sdk.SerializeException;
+import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -52,7 +50,10 @@ import org.apache.commons.lang3.StringUtils;
  * <ul>
  *     <li>OpenID Connect Core 1.0, section 3.1.2.5, 3.1.2.6, 3.2.2.5, 3.2.2.6,
  *         3.3.2.5 and 3.3.2.6.
- *     <li>OpenID Connect Session Management 1.0 - draft 22, section 3.
+ *     <li>OpenID Connect Session Management 1.0 - draft 23, section 3.
+ *     <li>OAuth 2.0 (RFC 6749), section 3.1.
+ *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
+ *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
  * </ul>
  */
 @Immutable
@@ -71,29 +72,6 @@ public class AuthenticationSuccessResponse
 	 * The session state, required if session management is supported.
 	 */
 	private final State sessionState;
-	
-	
-	/**
-	 * Creates a new OpenID Connect authentication success response.
-	 *
-	 * @param redirectURI The requested redirection URI. Must not be
-	 *                    {@code null}.
-	 * @param code        The authorisation code, {@code null} if not 
-	 *                    requested.
-	 * @param idToken     The ID token (ready for output), {@code null} if 
-	 *                    not requested.
-	 * @param accessToken The UserInfo access token, {@code null} if not 
-	 *                    requested.
-	 * @param state       The state, {@code null} if not requested.
-	 */
-	public AuthenticationSuccessResponse(final URI redirectURI,
-					     final AuthorizationCode code,
-					     final JWT idToken,
-					     final AccessToken accessToken,
-					     final State state) {
-		
-		this(redirectURI, code, idToken, accessToken, state, null);
-	}
 
 
 	/**
@@ -110,15 +88,18 @@ public class AuthenticationSuccessResponse
 	 * @param state        The state, {@code null} if not requested.
 	 * @param sessionState The session store, {@code null} if session
 	 *                     management is not supported.
+	 * @param rm           The response mode, {@code null} if not
+	 *                     specified.
 	 */
 	public AuthenticationSuccessResponse(final URI redirectURI,
 					     final AuthorizationCode code,
 					     final JWT idToken,
 					     final AccessToken accessToken,
 					     final State state,
-					     final State sessionState) {
+					     final State sessionState,
+					     final ResponseMode rm) {
 
-		super(redirectURI, code, accessToken, state);
+		super(redirectURI, code, accessToken, state, rm);
 
 		this.idToken = idToken;
 
@@ -198,34 +179,8 @@ public class AuthenticationSuccessResponse
 	}
 
 
-	@Override
-	public URI toURI()
-		throws SerializeException {
-
-		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
-
-		// Fragment or query string?
-		if (idToken != null || getAccessToken() != null) {
-			sb.append('#');
-		} else {
-			sb.append('?');
-		}
-
-		sb.append(URLUtils.serializeParameters(toParameters()));
-
-		try {
-			return new URI(sb.toString());
-
-		} catch (URISyntaxException e) {
-
-			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
-		}
-	}
-
-
 	/**
-	 * Parses an OpenID Connect authentication success response from the
-	 * specified redirection URI and parameters.
+	 * Parses an OpenID Connect authentication success response.
 	 *
 	 * @param redirectURI The base redirection URI. Must not be
 	 *                    {@code null}.
@@ -268,17 +223,24 @@ public class AuthenticationSuccessResponse
 		}
 
 		return new AuthenticationSuccessResponse(redirectURI,
-			                                    asr.getAuthorizationCode(),
-			                                    idToken,
-			                                    asr.getAccessToken(),
-			                                    asr.getState(),
-			                                    sessionState);
+			asr.getAuthorizationCode(),
+			idToken,
+			asr.getAccessToken(),
+			asr.getState(),
+			sessionState,
+			null);
 	}
 	
 	
 	/**
-	 * Parses an OpenID Connect authentication success response from the
-	 * specified URI.
+	 * Parses an OpenID Connect authentication success response.
+	 *
+	 * <p>Use a relative URI if the host, port and path details are not
+	 * known:
+	 *
+	 * <pre>
+	 * URI relUrl = new URI("http://?code=Qcb0Orv1...&state=af0ifjsldkj");
+	 * </pre>
 	 *
 	 * <p>Example URI:
 	 *
@@ -298,25 +260,20 @@ public class AuthenticationSuccessResponse
 	 */
 	public static AuthenticationSuccessResponse parse(final URI uri)
 		throws ParseException {
-		
-		String paramString;
-		
-		if (uri.getRawQuery() != null) {
 
-			paramString = uri.getRawQuery();
-				
-		} else if (uri.getRawFragment() != null) {
+		Map<String,String> params;
 
-			paramString = uri.getRawFragment();
-		
+		if (uri.getRawFragment() != null) {
+
+			params = URLUtils.parseParameters(uri.getRawFragment());
+
+		} else if (uri.getRawQuery() != null) {
+
+			params = URLUtils.parseParameters(uri.getRawQuery());
+
 		} else {
-			throw new ParseException("Missing authorization response parameters");
-		}
-		
-		Map<String,String> params = URLUtils.parseParameters(paramString);
 
-		if (params == null) {
-			throw new ParseException("Missing or invalid authorization response parameters");
+			throw new ParseException("Missing URI fragment or query string");
 		}
 
 		return parse(URIUtils.getBaseURI(uri), params);
@@ -325,7 +282,8 @@ public class AuthenticationSuccessResponse
 
 	/**
 	 * Parses an OpenID Connect authentication success response from the
-	 * specified HTTP response.
+	 * specified initial HTTP 302 redirect response generated at the
+	 * authorisation endpoint.
 	 *
 	 * <p>Example HTTP response:
 	 *
@@ -333,6 +291,8 @@ public class AuthenticationSuccessResponse
 	 * HTTP/1.1 302 Found
 	 * Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
 	 * </pre>
+	 *
+	 * @see #parse(HTTPRequest)
 	 *
 	 * @param httpResponse The HTTP response to parse. Must not be 
 	 *                     {@code null}.
@@ -346,15 +306,57 @@ public class AuthenticationSuccessResponse
 	public static AuthenticationSuccessResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 		
-		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)
-			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + 
-			                         httpResponse.getStatusCode());
-		
 		URI location = httpResponse.getLocation();
 		
 		if (location == null)
 			throw new ParseException("Missing redirection URI / HTTP Location header");
 
 		return parse(location);
+	}
+
+
+	/**
+	 * Parses an OpenID Connect authentication success response from the
+	 * specified HTTP request at the client redirection (callback) URI.
+	 * Applies to {@code query}, {@code fragment} and {@code form_post}
+	 * response modes.
+	 *
+	 * <p>Example HTTP request (authentication success):
+	 *
+	 * <pre>
+	 * GET /cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz HTTP/1.1
+	 * Host: client.example.com
+	 * </pre>
+	 *
+	 * @see #parse(HTTPResponse)
+	 *
+	 * @param httpRequest The HTTP request to parse. Must not be
+	 *                    {@code null}.
+	 *
+	 * @throws ParseException If the HTTP request couldn't be parsed to an
+	 *                        OpenID Connect authentication success
+	 *                        response.
+	 */
+	public static AuthenticationSuccessResponse parse(final HTTPRequest httpRequest)
+		throws ParseException {
+
+		final URI baseURI;
+
+		try {
+			baseURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		if (httpRequest.getQuery() != null) {
+			// For query string and form_post response mode
+			return parse(baseURI, URLUtils.parseParameters(httpRequest.getQuery()));
+		} else if (httpRequest.getFragment() != null) {
+			// For fragment response mode (never available in actual HTTP request from browser)
+			return parse(baseURI, URLUtils.parseParameters(httpRequest.getFragment()));
+		} else {
+			throw new ParseException("Missing URI fragment, query string or post body");
+		}
 	}
 }

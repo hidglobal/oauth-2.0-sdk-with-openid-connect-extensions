@@ -14,6 +14,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
+import com.nimbusds.oauth2.sdk.ResponseMode;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.State;
 
@@ -53,7 +54,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		idToken.sign(new MACSigner("01234567890123456789012345678901"));
 
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
-			REDIRECT_URI, null, idToken, null, new State("abc"));
+			REDIRECT_URI, null, idToken, null, new State("abc"), null, ResponseMode.FRAGMENT);
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
@@ -64,6 +65,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getSessionState());
 
 		assertTrue(new ResponseType("id_token").equals(response.impliedResponseType()));
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 
 		URI responseURI = response.toURI();
 
@@ -84,6 +86,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
 		assertNull(response.getSessionState());
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 	}
 
 
@@ -105,7 +108,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		idToken.sign(new MACSigner("01234567890123456789012345678901"));
 
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
-			REDIRECT_URI, code, idToken, null, new State("abc"));
+			REDIRECT_URI, code, idToken, null, new State("abc"), null, ResponseMode.FRAGMENT);
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
@@ -116,6 +119,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getSessionState());
 
 		assertTrue(new ResponseType("code", "id_token").equals(response.impliedResponseType()));
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 
 		URI responseURI = response.toURI();
 
@@ -136,6 +140,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
 		assertNull(response.getSessionState());
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 	}
 
 
@@ -157,7 +162,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		idToken.sign(new MACSigner("01234567890123456789012345678901"));
 
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
-			REDIRECT_URI, code, idToken, null, new State("abc"), new State("xyz"));
+			REDIRECT_URI, code, idToken, null, new State("abc"), new State("xyz"), ResponseMode.FRAGMENT);
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
@@ -168,6 +173,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertEquals("xyz", response.getSessionState().getValue());
 
 		assertTrue(new ResponseType("code", "id_token").equals(response.impliedResponseType()));
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 
 		URI responseURI = response.toURI();
 
@@ -188,6 +194,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
 		assertEquals("xyz", response.getSessionState().getValue());
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 	}
 
 
@@ -197,7 +204,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		AuthorizationCode code = new AuthorizationCode();
 
 		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(
-			REDIRECT_URI, code, null, null, new State("abc"));
+			REDIRECT_URI, code, null, null, new State("abc"), null, ResponseMode.QUERY);
 
 		assertTrue(response.indicatesSuccess());
 		assertEquals(REDIRECT_URI, response.getRedirectionURI());
@@ -208,6 +215,7 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getSessionState());
 
 		assertTrue(new ResponseType("code").equals(response.impliedResponseType()));
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
 
 		URI responseURI = response.toURI();
 
@@ -223,5 +231,6 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertNull(response.getAccessToken());
 		assertEquals("abc", response.getState().getValue());
 		assertNull(response.getSessionState());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
 	}
 }

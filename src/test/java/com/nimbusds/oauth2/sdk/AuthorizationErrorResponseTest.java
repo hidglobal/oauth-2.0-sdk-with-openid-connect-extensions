@@ -53,19 +53,20 @@ public class AuthorizationErrorResponseTest extends TestCase {
 	public void testSerializeAndParse()
 		throws Exception {
 	
-		ResponseType rts = new ResponseType();
-		rts.add(ResponseType.Value.CODE);
-
 		State state = new State("xyz");
 	
-		AuthorizationErrorResponse r = new AuthorizationErrorResponse(REDIRECT_URI,
-		                                                              OAuth2Error.INVALID_REQUEST,
-									      rts,
-									      state);
+		AuthorizationErrorResponse r = new AuthorizationErrorResponse(
+			REDIRECT_URI,
+			OAuth2Error.INVALID_REQUEST,
+			state,
+			ResponseMode.QUERY);
+
 		assertFalse(r.indicatesSuccess());
 		assertEquals(REDIRECT_URI, r.getRedirectionURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
-		assertEquals(rts, r.getResponseType());
+		assertEquals(ResponseMode.QUERY, r.getResponseMode());
+		assertEquals(ResponseMode.QUERY, r.impliedResponseMode());
+
 		assertEquals(state, r.getState());
 
 		Map<String,String> params = r.toParameters();
@@ -103,26 +104,27 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertFalse(r.indicatesSuccess());
 		assertEquals(REDIRECT_URI, r.getRedirectionURI());
 		assertEquals(OAuth2Error.INVALID_REQUEST, r.getErrorObject());
-		assertNull(r.getResponseType());
+		assertNull(r.getResponseMode());
+		assertEquals(ResponseMode.QUERY, r.impliedResponseMode()); // default
 		assertEquals(state, r.getState());
 	}
 
 
-	public void testCodeErrorResponse()
+	public void testCodeErrorInQueryString()
 		throws Exception {
 
 		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
-		ResponseType responseType = new ResponseType("code");
 		State state = new State();
 
 		AuthorizationErrorResponse response = new AuthorizationErrorResponse(
-			redirectURI, error, responseType, state);
+			redirectURI, error, state, ResponseMode.QUERY);
 
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertEquals(responseType, response.getResponseType());
+		assertEquals(ResponseMode.QUERY, response.getResponseMode());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
 		assertEquals(state, response.getState());
 
 		URI responseURI = response.toURI();
@@ -135,26 +137,27 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertNull(response.getResponseType());
+		assertNull(response.getResponseMode());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode()); // default
 		assertEquals(state, response.getState());
 	}
 
 
-	public void testTokenErrorResponse()
+	public void testErrorInFragment()
 		throws Exception {
 
 		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
-		ResponseType responseType = new ResponseType("token");
 		State state = new State();
 
 		AuthorizationErrorResponse response = new AuthorizationErrorResponse(
-			redirectURI, error, responseType, state);
+			redirectURI, error, state, ResponseMode.FRAGMENT);
 
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertEquals(responseType, response.getResponseType());
+		assertEquals(ResponseMode.FRAGMENT, response.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 		assertEquals(state, response.getState());
 
 		URI responseURI = response.toURI();
@@ -167,7 +170,8 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertNull(response.getResponseType());
+		assertNull(response.getResponseMode());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode()); // default
 		assertEquals(state, response.getState());
 	}
 	
@@ -193,7 +197,8 @@ public class AuthorizationErrorResponseTest extends TestCase {
 		assertEquals(ERROR_PAGE_URL, r.getErrorObject().getURI());
 		assertEquals(new State("123"), r.getState());
 		
-		assertNull(r.getResponseType());
+		assertNull(r.getResponseMode());
+		assertEquals(ResponseMode.QUERY, r.impliedResponseMode());
 	}
 	
 	

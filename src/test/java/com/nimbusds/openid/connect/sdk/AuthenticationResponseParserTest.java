@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
-import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.ResponseMode;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.State;
 
@@ -25,7 +25,14 @@ public class AuthenticationResponseParserTest extends TestCase {
 		AuthorizationCode code = new AuthorizationCode("123");
 		State state = new State("xyz");
 
-		AuthenticationSuccessResponse successResponse = new AuthenticationSuccessResponse(redirectURI, code, null, null, state);
+		AuthenticationSuccessResponse successResponse = new AuthenticationSuccessResponse(
+			redirectURI,
+			code,
+			null,
+			null,
+			state,
+			null,
+			null);
 
 		HTTPResponse httpResponse = successResponse.toHTTPResponse();
 
@@ -44,10 +51,14 @@ public class AuthenticationResponseParserTest extends TestCase {
 		throws Exception {
 
 		URI redirectURI = new URI("https://example.com/in");
-		ResponseType rt = new ResponseType(ResponseType.Value.CODE);
 		State state = new State("xyz");
 
-		AuthenticationErrorResponse errorResponse = new AuthenticationErrorResponse(redirectURI, OAuth2Error.ACCESS_DENIED, rt, state);
+		AuthenticationErrorResponse errorResponse = new AuthenticationErrorResponse(
+			redirectURI,
+			OAuth2Error.ACCESS_DENIED,
+			state,
+			ResponseMode.QUERY);
+
 		assertFalse(errorResponse.indicatesSuccess());
 
 		HTTPResponse httpResponse = errorResponse.toHTTPResponse();

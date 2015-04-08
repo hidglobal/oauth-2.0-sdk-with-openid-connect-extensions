@@ -63,6 +63,9 @@ public class HTTPRequestTest extends TestCase {
 		JSONObject jsonObject = request.getQueryAsJSONObject();
 		assertEquals("123", (String)jsonObject.get("apples"));
 
+		request.setFragment("fragment");
+		assertEquals("fragment", request.getFragment());
+
 		assertEquals(0, request.getConnectTimeout());
 		request.setConnectTimeout(250);
 		assertEquals(250, request.getConnectTimeout());
@@ -241,5 +244,12 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals("POST", con.getRequestMethod());
 		assertEquals(250, con.getConnectTimeout());
 		assertEquals(750, con.getReadTimeout());
+	}
+
+
+	public void testSend()
+		throws Exception {
+
+		// TODO
 	}
 }

@@ -17,14 +17,16 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * <ul>
  *     <li>OpenID Connect Core 1.0, sections 3.1.2.5. and 3.1.2.6.
+ *     <li>OAuth 2.0 (RFC 6749), section 3.1.
+ *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
+ *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
  * </ul>
  */
 public class AuthenticationResponseParser {
 
 
 	/**
-	 * Parses an OpenID Connect authentication success or error response
-	 * from the specified redirection URI and parameters.
+	 * Parses an OpenID Connect authentication response.
 	 *
 	 * @param redirectURI The base redirection URI. Must not be
 	 *                    {@code null}.
@@ -34,8 +36,7 @@ public class AuthenticationResponseParser {
 	 * @return The OpenID Connect authentication success or error response.
 	 *
 	 * @throws ParseException If the parameters couldn't be parsed to an
-	 *                        OpenID Connect authentication success or
-	 *                        error response.
+	 *                        OpenID Connect authentication response.
 	 */
 	public static AuthenticationResponse parse(final URI redirectURI,
 						   final Map<String,String> params)
@@ -49,8 +50,14 @@ public class AuthenticationResponseParser {
 
 
 	/**
-	 * Parses an OpenID Connect authentication success or error response
-	 * from the specified URI.
+	 * Parses an OpenID Connect authentication response.
+	 *
+	 * <p>Use a relative URI if the host, port and path details are not
+	 * known:
+	 *
+	 * <pre>
+	 * URI relUrl = new URI("http://?code=Qcb0Orv1...&state=af0ifjsldkj");
+	 * </pre>
 	 *
 	 * <p>Example URI:
 	 *
@@ -65,8 +72,7 @@ public class AuthenticationResponseParser {
 	 * @return The OpenID Connect authentication success or error response.
 	 *
 	 * @throws ParseException If the redirection URI couldn't be parsed to
-	 *                        an OpenID Connect authentication success or
-	 *                        error response.
+	 *                        an OpenID Connect authentication response.
 	 */
 	public static AuthenticationResponse parse(final URI uri)
 		throws ParseException {
@@ -96,8 +102,7 @@ public class AuthenticationResponseParser {
 
 
 	/**
-	 * Parses an OpenID Connect authentication success or error response
-	 * from the specified HTTP response.
+	 * Parses an OpenID Connect authentication response.
 	 *
 	 * <p>Example HTTP response:
 	 *
@@ -112,16 +117,11 @@ public class AuthenticationResponseParser {
 	 * @return The OpenID Connect authentication success or error response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to an 
-	 *                        OpenID Connect authentication success or
-	 *                        error response.
+	 *                        OpenID Connect authentication response.
 	 */
 	public static AuthenticationResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
-		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)
-			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + 
-			                         httpResponse.getStatusCode());
-		
 		URI location = httpResponse.getLocation();
 		
 		if (location == null)

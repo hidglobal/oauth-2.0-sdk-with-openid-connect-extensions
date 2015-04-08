@@ -53,7 +53,7 @@ public class HTTPRequest extends HTTPMessage {
 	/**
 	 * Enumeration of the HTTP methods used in OAuth 2.0 requests.
 	 */
-	public static enum Method {
+	public enum Method {
 	
 		/**
 		 * HTTP GET.
@@ -96,6 +96,12 @@ public class HTTPRequest extends HTTPMessage {
 	 * The query string / post body.
 	 */
 	private String query = null;
+
+
+	/**
+	 * The fragment.
+	 */
+	private String fragment = null;
 
 
 	/**
@@ -467,6 +473,28 @@ public class HTTPRequest extends HTTPMessage {
 
 
 	/**
+	 * Gets the raw (undecoded) request fragment.
+	 *
+	 * @return The request fragment, {@code null} if not specified.
+	 */
+	public String getFragment() {
+
+		return fragment;
+	}
+
+
+	/**
+	 * Sets the raw (undecoded) request fragment.
+	 *
+	 * @param fragment The request fragment, {@code null} if not specified.
+	 */
+	public void setFragment(final String fragment) {
+
+		this.fragment = fragment;
+	}
+
+
+	/**
 	 * Gets the HTTP connect timeout.
 	 *
 	 * @return The HTTP connect read timeout, in milliseconds. Zero implies
@@ -549,6 +577,22 @@ public class HTTPRequest extends HTTPMessage {
 			} catch (MalformedURLException e) {
 
 				throw new IOException("Couldn't append query string: " + e.getMessage(), e);
+			}
+		}
+
+		if (fragment != null) {
+
+			// Append raw fragment
+			StringBuilder sb = new StringBuilder(finalURL.toString());
+			sb.append('#');
+			sb.append(fragment);
+
+			try {
+				finalURL = new URL(sb.toString());
+
+			} catch (MalformedURLException e) {
+
+				throw new IOException("Couldn't append raw fragment: " + e.getMessage(), e);
 			}
 		}
 

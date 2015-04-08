@@ -11,10 +11,11 @@ import java.util.Set;
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.*;
-import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
@@ -62,6 +63,9 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *
  * <ul>
  *     <li>OpenID Connect Core 1.0, section 3.1.2.6.
+ *     <li>OAuth 2.0 (RFC 6749), sections 4.1.2.1 and 4.2.2.1.
+ *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
+ *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
  * </ul>
  */
 @Immutable
@@ -113,50 +117,21 @@ public class AuthenticationErrorResponse
 	 *                    {@link #getStandardErrors standard errors} for an 
 	 *                    OpenID Connect authentication error response.
 	 *                    Must not be {@code null}.
-	 * @param rt          The response type, used to determine the redirect
-	 *                    URI composition. If unknown {@code null}.
 	 * @param state       The state, {@code null} if not requested.
+	 * @param rm          The implied response mode, {@code null} if
+	 *                    unknown.
 	 */
 	public AuthenticationErrorResponse(final URI redirectURI,
 					   final ErrorObject error,
-					   final ResponseType rt,
-					   final State state) {
+					   final State state,
+					   final ResponseMode rm) {
 					  
-		super(redirectURI, error, rt, state);
-	}
-
-
-	@Override
-	public URI toURI()
-		throws SerializeException {
-
-		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
-
-		if (getResponseType() == null ||
-		    getResponseType().contains(ResponseType.Value.TOKEN) ||
-		    getResponseType().contains(OIDCResponseTypeValue.ID_TOKEN)) {
-
-			sb.append("#");
-		} else {
-
-			sb.append("?");
-		}
-
-		sb.append(URLUtils.serializeParameters(toParameters()));
-
-		try {
-			return new URI(sb.toString());
-
-		} catch (URISyntaxException e) {
-
-			throw new SerializeException("Couldn't serialize redirection URI: " + e.getMessage(), e);
-		}
+		super(redirectURI, error, state, rm);
 	}
 
 
 	/**
-	 * Parses an OpenID Connect authentication error response from the
-	 * specified redirection URI and parameters.
+	 * Parses an OpenID Connect authentication error response.
 	 *
 	 * @param redirectURI The base redirection URI. Must not be
 	 *                    {@code null}.
@@ -174,16 +149,23 @@ public class AuthenticationErrorResponse
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(redirectURI, params);
 
-		return new AuthenticationErrorResponse(resp.getRedirectionURI(),
-			                                  resp.getErrorObject(),
-			                                  resp.getResponseType(),
-			                                  resp.getState());
+		return new AuthenticationErrorResponse(
+			resp.getRedirectionURI(),
+			resp.getErrorObject(),
+			resp.getState(),
+			null);
 	}
 
 
 	/**
-	 * Parses an OpenID Connect authentication error response from the
-	 * specified URI.
+	 * Parses an OpenID Connect authentication error response.
+	 *
+	 * <p>Use a relative URI if the host, port and path details are not
+	 * known:
+	 *
+	 * <pre>
+	 * URI relUrl = new URI("http://?error=invalid_request");
+	 * </pre>
 	 *
 	 * <p>Example URI:
 	 *
@@ -194,8 +176,9 @@ public class AuthenticationErrorResponse
 	 * &amp;state=af0ifjsldkj
 	 * </pre>
 	 *
-	 * @param uri The URI to parse. Can be absolute or relative. Must not 
-	 *            be {@code null}.
+	 * @param uri The URI to parse. Can be absolute or relative, with a
+	 *            fragment or query string containing the authorisation
+	 *            response parameters. Must not be {@code null}.
 	 *
 	 * @return The OpenID Connect authentication error response.
 	 *
@@ -207,25 +190,24 @@ public class AuthenticationErrorResponse
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(uri);
 
-		return new AuthenticationErrorResponse(resp.getRedirectionURI(),
-			                                  resp.getErrorObject(),
-			                                  resp.getResponseType(),
-			                                  resp.getState());
+		return new AuthenticationErrorResponse(
+			resp.getRedirectionURI(),
+			resp.getErrorObject(),
+			resp.getState(),
+			null);
 	}
 
 
 	/**
 	 * Parses an OpenID Connect authentication error response from the
-	 * specified HTTP response.
+	 * specified initial HTTP 302 redirect response generated at the
+	 * authorisation endpoint.
 	 *
 	 * <p>Example HTTP response:
 	 *
 	 * <pre>
 	 * HTTP/1.1 302 Found
-	 * Location: https://client.example.com/cb?
-	 * error=invalid_request
-	 * &amp;error_description=the%20request%20is%20not%20valid%20or%20malformed
-	 * &amp;state=af0ifjsldkj
+	 * Location: https://client.example.com/cb?error=invalid_request&amp;state=af0ifjsldkj
 	 * </pre>
 	 *
 	 * @param httpResponse The HTTP response to parse. Must not be 
@@ -241,9 +223,55 @@ public class AuthenticationErrorResponse
 
 		AuthorizationErrorResponse resp = AuthorizationErrorResponse.parse(httpResponse);
 
-		return new AuthenticationErrorResponse(resp.getRedirectionURI(),
-			                                  resp.getErrorObject(),
-			                                  resp.getResponseType(),
-			                                  resp.getState());
+		return new AuthenticationErrorResponse(
+			resp.getRedirectionURI(),
+			resp.getErrorObject(),
+			resp.getState(),
+			null);
+	}
+
+
+	/**
+	 * Parses an OpenID Connect authentication error response from the
+	 * specified HTTP request at the client redirection (callback) URI.
+	 * Applies to {@code query}, {@code fragment} and {@code form_post}
+	 * response modes.
+	 *
+	 * <p>Example HTTP request (authorisation success):
+	 *
+	 * <pre>
+	 * GET /cb?error=invalid_request&amp;state=af0ifjsldkj HTTP/1.1
+	 * Host: client.example.com
+	 * </pre>
+	 *
+	 * @see #parse(HTTPResponse)
+	 *
+	 * @param httpRequest The HTTP request to parse. Must not be
+	 *                    {@code null}.
+	 *
+	 * @throws ParseException If the HTTP request couldn't be parsed to an
+	 *                        OpenID Connect authentication error response.
+	 */
+	public static AuthenticationErrorResponse parse(final HTTPRequest httpRequest)
+		throws ParseException {
+
+		final URI baseURI;
+
+		try {
+			baseURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		if (httpRequest.getQuery() != null) {
+			// For query string and form_post response mode
+			return parse(baseURI, URLUtils.parseParameters(httpRequest.getQuery()));
+		} else if (httpRequest.getFragment() != null) {
+			// For fragment response mode (never available in actual HTTP request from browser)
+			return parse(baseURI, URLUtils.parseParameters(httpRequest.getFragment()));
+		} else {
+			throw new ParseException("Missing URI fragment, query string or post body");
+		}
 	}
 }

@@ -37,6 +37,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getRedirectionURI());
 		assertNull(req.getScope());
 		assertNull(req.getState());
+		assertNull(req.getResponseMode());
 
 		String query = req.toQueryString();
 
@@ -62,6 +63,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getRedirectionURI());
 		assertNull(req.getScope());
 		assertNull(req.getState());
+		assertNull(req.getResponseMode());
 	}
 
 
@@ -89,6 +91,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getRedirectionURI());
 		assertNull(req.getScope());
 		assertNull(req.getState());
+		assertNull(req.getResponseMode());
 	}
 
 

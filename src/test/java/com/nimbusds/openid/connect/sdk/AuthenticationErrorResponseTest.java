@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.OAuth2Error;
-import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.ResponseMode;
 import com.nimbusds.oauth2.sdk.id.State;
 
 
@@ -22,16 +22,16 @@ public class AuthenticationErrorResponseTest extends TestCase {
 
 		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
-		ResponseType responseType = new ResponseType("code");
 		State state = new State("123");
 
 		AuthenticationErrorResponse response = new AuthenticationErrorResponse(
-			redirectURI, error, responseType, state);
+			redirectURI, error, state, ResponseMode.QUERY);
 
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertEquals(responseType, response.getResponseType());
+		assertEquals(ResponseMode.QUERY, response.getResponseMode());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
 		assertEquals(state, response.getState());
 
 		URI responseURI = response.toURI();
@@ -47,8 +47,9 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertNull(response.getResponseType());
 		assertEquals(state, response.getState());
+		assertNull(response.getResponseMode());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
 	}
 
 
@@ -57,16 +58,16 @@ public class AuthenticationErrorResponseTest extends TestCase {
 
 		URI redirectURI = new URI("https://client.com/cb");
 		ErrorObject error = OAuth2Error.ACCESS_DENIED;
-		ResponseType responseType = new ResponseType("id_token");
 		State state = new State("123");
 
 		AuthenticationErrorResponse response = new AuthenticationErrorResponse(
-			redirectURI, error, responseType, state);
+			redirectURI, error, state, ResponseMode.FRAGMENT);
 
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertEquals(responseType, response.getResponseType());
+		assertEquals(ResponseMode.FRAGMENT, response.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, response.impliedResponseMode());
 		assertEquals(state, response.getState());
 
 		URI responseURI = response.toURI();
@@ -82,7 +83,8 @@ public class AuthenticationErrorResponseTest extends TestCase {
 		assertFalse(response.indicatesSuccess());
 		assertEquals(redirectURI, response.getRedirectionURI());
 		assertEquals(error, response.getErrorObject());
-		assertNull(response.getResponseType());
 		assertEquals(state, response.getState());
+		assertNull(response.getResponseMode());
+		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
 	}
 }

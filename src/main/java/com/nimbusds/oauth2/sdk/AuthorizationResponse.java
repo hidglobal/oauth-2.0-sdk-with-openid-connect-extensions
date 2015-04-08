@@ -1,14 +1,18 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
 
-import com.nimbusds.oauth2.sdk.util.URIUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
+import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -19,6 +23,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 3.1.
+ *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
  *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
  * </ul>
  */
@@ -38,44 +43,73 @@ public abstract class AuthorizationResponse implements Response {
 
 
 	/**
+	 * The optional explicit response mode.
+	 */
+	private final ResponseMode rm;
+
+
+	/**
 	 * Creates a new authorisation response.
 	 *
 	 * @param redirectURI The base redirection URI. Must not be
 	 *                    {@code null}.
 	 * @param state       The state, {@code null} if not requested.
+	 * @param rm          The response mode, {@code null} if not specified.
 	 */
-	protected AuthorizationResponse(final URI redirectURI, final State state) {
+	protected AuthorizationResponse(final URI redirectURI, final State state, final ResponseMode rm) {
 
-		if (redirectURI == null)
+		if (redirectURI == null) {
 			throw new IllegalArgumentException("The redirection URI must not be null");
-		
+		}
+
 		this.redirectURI = redirectURI;
 
 		this.state = state;
+
+		this.rm = rm;
 	}
 
 
 	/**
-	 * Gets the base redirection URI.
+	 * Returns the base redirection URI.
 	 *
 	 * @return The base redirection URI (without the appended error
 	 *         response parameters).
 	 */
 	public URI getRedirectionURI() {
-	
+
 		return redirectURI;
 	}
 
 
 	/**
-	 * Gets the optional state.
+	 * Returns the optional state.
 	 *
 	 * @return The state, {@code null} if not requested.
 	 */
 	public State getState() {
-	
+
 		return state;
 	}
+
+
+	/**
+	 * Returns the optional explicit response mode.
+	 *
+	 * @return The response mode, {@code null} if not specified.
+	 */
+	public ResponseMode getResponseMode() {
+
+		return rm;
+	}
+
+
+	/**
+	 * Determines the implied response mode.
+	 *
+	 * @return The implied response mode.
+	 */
+	public abstract ResponseMode impliedResponseMode();
 
 
 	/**
@@ -92,7 +126,7 @@ public abstract class AuthorizationResponse implements Response {
 	 *
 	 * @return The parameters as a map.
 	 *
-	 * @throws SerializeException If this response couldn't be serialised 
+	 * @throws SerializeException If this response couldn't be serialised
 	 *                            to a parameters map.
 	 */
 	public abstract Map<String,String> toParameters()
@@ -100,7 +134,7 @@ public abstract class AuthorizationResponse implements Response {
 
 
 	/**
-	 * Returns the URI representation (redirection URI + fragment / query
+	 * Returns a URI representation (redirection URI + fragment / query
 	 * string) of this authorisation response.
 	 *
 	 * <p>Example URI:
@@ -112,17 +146,42 @@ public abstract class AuthorizationResponse implements Response {
 	 * &amp;expires_in=3600
 	 * </pre>
 	 *
-	 * @return The URI representation of this authorisation response.
+	 * @return A URI representation of this authorisation response.
 	 *
-	 * @throws SerializeException If this response couldn't be serialised 
+	 * @throws SerializeException If this response couldn't be serialised
 	 *                            to a URI.
 	 */
-	public abstract URI toURI()
-		throws SerializeException;
+	public URI toURI()
+		throws SerializeException {
+
+		final ResponseMode rm = impliedResponseMode();
+
+		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
+
+		if (rm.equals(ResponseMode.QUERY)) {
+			sb.append('?');
+		} else if (rm.equals(ResponseMode.FRAGMENT)) {
+			sb.append('#');
+		} else {
+			throw new SerializeException("The (implied) response mode must be query or fragment");
+		}
+
+		sb.append(URLUtils.serializeParameters(toParameters()));
+
+		try {
+			return new URI(sb.toString());
+
+		} catch (URISyntaxException e) {
+
+			throw new SerializeException("Couldn't serialize response: " + e.getMessage(), e);
+		}
+	}
 
 
 	/**
-	 * Returns the HTTP response for this authorisation response.
+	 * Returns an HTTP response for this authorisation response. Applies to
+	 * the {@code query} or {@code fragment} response mode using HTTP 302
+	 * redirection.
 	 *
 	 * <p>Example HTTP response (authorisation success):
 	 *
@@ -134,7 +193,9 @@ public abstract class AuthorizationResponse implements Response {
 	 * &amp;expires_in=3600
 	 * </pre>
 	 *
-	 * @return The HTTP response matching this authorisation response.
+	 * @see #toHTTPRequest()
+	 *
+	 * @return An HTTP response for this authorisation response.
 	 *
 	 * @throws SerializeException If the response couldn't be serialised to
 	 *                            an HTTP response.
@@ -142,10 +203,55 @@ public abstract class AuthorizationResponse implements Response {
 	@Override
 	public HTTPResponse toHTTPResponse()
 		throws SerializeException {
-	
-		HTTPResponse response = new HTTPResponse(HTTPResponse.SC_FOUND);
+
+		if (ResponseMode.FORM_POST.equals(rm)) {
+			throw new SerializeException("The response mode must not be form_post");
+		}
+
+		HTTPResponse response= new HTTPResponse(HTTPResponse.SC_FOUND);
 		response.setLocation(toURI());
 		return response;
+	}
+
+
+	/**
+	 * Returns an HTTP request for this authorisation response. Applies to
+	 * the {@code form_post} response mode.
+	 *
+	 * <p>Example HTTP request (authorisation success):
+	 *
+	 * <pre>
+	 * GET /cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz HTTP/1.1
+	 * Host: client.example.com
+	 * </pre>
+	 *
+	 * @see #toHTTPResponse()
+	 *
+	 * @return An HTTP request for this authorisation response.
+	 *
+	 * @throws SerializeException If the response couldn't be serialised to
+	 *                            an HTTP request.
+	 */
+	public HTTPRequest toHTTPRequest()
+		throws SerializeException {
+
+		if (! ResponseMode.FORM_POST.equals(rm)) {
+			throw new SerializeException("The response mode must be form_post");
+		}
+
+		// Use HTTP POST
+		HTTPRequest request;
+
+		try {
+			request = new HTTPRequest(HTTPRequest.Method.POST, redirectURI.toURL());
+
+		} catch (MalformedURLException e) {
+			throw new SerializeException(e.getMessage(), e);
+		}
+
+		request.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+		request.setQuery(URLUtils.serializeParameters(toParameters()));
+		return request;
 	}
 
 
@@ -154,7 +260,7 @@ public abstract class AuthorizationResponse implements Response {
 	 *
 	 * @param redirectURI The base redirection URI. Must not be
 	 *                    {@code null}.
-	 * @param params      The response parameters to parse. Must not be 
+	 * @param params      The response parameters to parse. Must not be
 	 *                    {@code null}.
 	 *
 	 * @return The authorisation success or error response.
@@ -165,11 +271,11 @@ public abstract class AuthorizationResponse implements Response {
 	public static AuthorizationResponse parse(final URI redirectURI, final Map<String,String> params)
 		throws ParseException {
 
-		if (StringUtils.isNotBlank(params.get("error")))
+		if (StringUtils.isNotBlank(params.get("error"))) {
 			return AuthorizationErrorResponse.parse(redirectURI, params);
-
-		else
+		} else {
 			return AuthorizationSuccessResponse.parse(redirectURI, params);
+		}
 	}
 
 
@@ -181,7 +287,6 @@ public abstract class AuthorizationResponse implements Response {
 	 *
 	 * <pre>
 	 * URI relUrl = new URI("http://?code=Qcb0Orv1...&state=af0ifjsldkj");
-	 * AuthorizationResponse = AuthorizationResponse.parse(relURL);
 	 * </pre>
 	 *
 	 * @param uri The URI to parse. May be absolute or relative, with a
@@ -197,23 +302,22 @@ public abstract class AuthorizationResponse implements Response {
 		throws ParseException {
 
 		Map<String,String> params;
-		
-		if (uri.getRawFragment() != null)
+
+		if (uri.getRawFragment() != null) {
 			params = URLUtils.parseParameters(uri.getRawFragment());
-
-		else if (uri.getQuery() != null)
+		} else if (uri.getQuery() != null) {
 			params = URLUtils.parseParameters(uri.getQuery());
-
-		else
+		} else {
 			throw new ParseException("Missing URI fragment or query string");
+		}
 
-		
 		return parse(URIUtils.getBaseURI(uri), params);
 	}
 
 
 	/**
-	 * Parses an authorisation response.
+	 * Parses an authorisation response from the specified initial HTTP 302
+	 * redirect response output at the authorisation endpoint.
 	 *
 	 * <p>Example HTTP response (authorisation success):
 	 *
@@ -222,24 +326,67 @@ public abstract class AuthorizationResponse implements Response {
 	 * Location: https://client.example.com/cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz
 	 * </pre>
 	 *
-	 * @param httpResponse The HTTP response to parse. Must not be 
+	 * @see #parse(HTTPRequest)
+	 *
+	 * @param httpResponse The HTTP response to parse. Must not be
 	 *                     {@code null}.
 	 *
-	 * @throws ParseException If the HTTP response couldn't be parsed to an 
+	 * @throws ParseException If the HTTP response couldn't be parsed to an
 	 *                        authorisation response.
 	 */
 	public static AuthorizationResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
-		
-		if (httpResponse.getStatusCode() != HTTPResponse.SC_FOUND)
-			throw new ParseException("Unexpected HTTP status code, must be 302 (Found): " + 
-			                         httpResponse.getStatusCode());
-		
+
 		URI location = httpResponse.getLocation();
-		
-		if (location == null)
+
+		if (location == null) {
 			throw new ParseException("Missing redirection URI / HTTP Location header");
+		}
 
 		return parse(location);
+	}
+
+
+	/**
+	 * Parses an authorisation response from the specified HTTP request at
+	 * the client redirection (callback) URI. Applies to the {@code query},
+	 * {@code fragment} and {@code form_post} response modes.
+	 *
+	 * <p>Example HTTP request (authorisation success):
+	 *
+	 * <pre>
+	 * GET /cb?code=SplxlOBeZQQYbYS6WxSbIA&amp;state=xyz HTTP/1.1
+	 * Host: client.example.com
+	 * </pre>
+	 *
+	 * @see #parse(HTTPResponse)
+	 *
+	 * @param httpRequest The HTTP request to parse. Must not be
+	 *                    {@code null}.
+	 *
+	 * @throws ParseException If the HTTP request couldn't be parsed to an
+	 *                        authorisation response.
+	 */
+	public static AuthorizationResponse parse(final HTTPRequest httpRequest)
+		throws ParseException {
+
+		final URI baseURI;
+
+		try {
+			baseURI = httpRequest.getURL().toURI();
+
+		} catch (URISyntaxException e) {
+			throw new ParseException(e.getMessage(), e);
+		}
+
+		if (httpRequest.getQuery() != null) {
+			// For query string and form_post response mode
+			return parse(baseURI, URLUtils.parseParameters(httpRequest.getQuery()));
+		} else if (httpRequest.getFragment() != null) {
+			// For fragment response mode (never available in actual HTTP request from browser)
+			return parse(baseURI, URLUtils.parseParameters(httpRequest.getFragment()));
+		} else {
+			throw new ParseException("Missing URI fragment, query string or post body");
+		}
 	}
 }
