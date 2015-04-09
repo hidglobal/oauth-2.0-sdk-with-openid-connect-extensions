@@ -5,6 +5,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -143,7 +145,37 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	public void testResponseModeFormPost()
 		throws Exception {
 
-		// TODO
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(
+			ABS_REDIRECT_URI,
+			null,
+			TOKEN,
+			STATE,
+			ResponseMode.FORM_POST);
+
+		ResponseType responseType = resp.impliedResponseType();
+		assertTrue(new ResponseType("token").equals(responseType));
+
+		assertEquals(ResponseMode.FORM_POST, resp.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, resp.impliedResponseMode());
+
+		try {
+			resp.toURI();
+			fail();
+		} catch (SerializeException e) {
+			// ok
+		}
+
+		HTTPRequest httpRequest = resp.toHTTPRequest();
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
+		assertEquals(ABS_REDIRECT_URI, httpRequest.getURL().toURI());
+
+		System.out.println(httpRequest.getQuery());
+		assertEquals(STATE.getValue(), httpRequest.getQueryParameters().get("state"));
+		assertEquals("Bearer", httpRequest.getQueryParameters().get("token_type"));
+		assertEquals(TOKEN.getLifetime() + "", httpRequest.getQueryParameters().get("expires_in"));
+		assertEquals(TOKEN.getValue(), httpRequest.getQueryParameters().get("access_token"));
+		assertEquals(4, httpRequest.getQueryParameters().size());
 	}
 
 
