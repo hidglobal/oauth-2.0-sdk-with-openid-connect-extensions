@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -170,11 +171,10 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
 		assertEquals(ABS_REDIRECT_URI, httpRequest.getURL().toURI());
 
-		System.out.println(httpRequest.getQuery());
-		assertEquals(STATE.getValue(), httpRequest.getQueryParameters().get("state"));
 		assertEquals("Bearer", httpRequest.getQueryParameters().get("token_type"));
 		assertEquals(TOKEN.getLifetime() + "", httpRequest.getQueryParameters().get("expires_in"));
 		assertEquals(TOKEN.getValue(), httpRequest.getQueryParameters().get("access_token"));
+		assertEquals(STATE.getValue(), httpRequest.getQueryParameters().get("state"));
 		assertEquals(4, httpRequest.getQueryParameters().size());
 	}
 
@@ -182,14 +182,66 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 	public void testOverrideQueryResponseMode()
 		throws Exception {
 
-		// TODO
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(
+			ABS_REDIRECT_URI,
+			CODE,
+			null,
+			STATE,
+			ResponseMode.FRAGMENT);
+
+		ResponseType responseType = resp.impliedResponseType();
+		assertTrue(new ResponseType("code").equals(responseType));
+
+		assertEquals(ResponseMode.FRAGMENT, resp.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, resp.impliedResponseMode());
+
+		try {
+			resp.toHTTPRequest();
+			fail();
+		} catch (SerializeException e) {
+			// ok
+		}
+
+		URI uri = resp.toURI();
+		assertNull(uri.getQuery());
+		Map<String,String> params = URLUtils.parseParameters(uri.getRawFragment());
+		assertEquals(CODE.getValue(), params.get("code"));
+		assertEquals(STATE.getValue(), params.get("state"));
+		assertEquals(2, params.size());
 	}
 
 
 	public void testOverrideFragmentResponseMode()
 		throws Exception {
 
-		// TODO
+		AuthorizationSuccessResponse resp = new AuthorizationSuccessResponse(
+			ABS_REDIRECT_URI,
+			null,
+			TOKEN,
+			STATE,
+			ResponseMode.QUERY);
+
+		ResponseType responseType = resp.impliedResponseType();
+		assertTrue(new ResponseType("token").equals(responseType));
+
+		assertEquals(ResponseMode.QUERY, resp.getResponseMode());
+		assertEquals(ResponseMode.QUERY, resp.impliedResponseMode());
+
+		try {
+			resp.toHTTPRequest();
+			fail();
+		} catch (SerializeException e) {
+			// ok
+		}
+
+		URI uri = resp.toURI();
+		assertNull(uri.getRawFragment());
+		Map<String,String> params = URLUtils.parseParameters(uri.getQuery());
+		assertEquals("Bearer", params.get("token_type"));
+		assertEquals(TOKEN.getValue(), params.get("access_token"));
+		assertEquals(TOKEN.getLifetime() + "", params.get("expires_in"));
+		assertEquals(STATE.getValue(), params.get("state"));
+		assertEquals(4, params.size());
 	}
 
 
