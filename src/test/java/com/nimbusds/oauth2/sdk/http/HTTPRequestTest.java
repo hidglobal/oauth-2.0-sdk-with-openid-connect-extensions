@@ -214,32 +214,53 @@ public class HTTPRequestTest extends TestCase {
 	}
 
 
-	// TODO Enable when connect2is server is available, passes 2014-08-05
-	public void _test401Response()
+	@Before
+	public void setUp() {
+		initJadler();
+	}
+
+
+	@After
+	public void tearDown() {
+		closeJadler();
+	}
+
+
+	@Test
+	public void test401Response()
 		throws Exception {
 
+		onRequest()
+			.havingMethodEqualTo("POST")
+			.havingHeaderEqualTo("Authorization", "Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW")
+			.havingHeaderEqualTo("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString())
+			.havingPathEqualTo("/c2id/token")
+			.havingBodyEqualTo("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
+				"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb")
+			.respond()
+			.withStatus(401)
+			.withHeader("WWW-Authenticate", "Bearer");
+
 		// Simulate token request with invalid token
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:8080/c2id/token"));
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:" + port() + "/c2id/token"));
 		httpRequest.setAuthorization("Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW");
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		httpRequest.setQuery("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
 			"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
 
 		HTTPResponse httpResponse = httpRequest.send();
-
 		assertEquals(401, httpResponse.getStatusCode());
 		assertEquals("Bearer", httpResponse.getWWWAuthenticate());
 
-		System.out.println("Token error: " + httpResponse.getContent());
 	}
 
 
-	// TODO Enable when connect2is server is available, passes 2014-08-05
-	public void _testToHttpURLConnection()
+	@Test
+	public void testToHttpURLConnection()
 		throws Exception {
 
 		// Simulate token request with invalid token
-		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:8080/c2id/token"));
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:" + port() + "/c2id/token"));
 		httpRequest.setAuthorization("Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW");
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 		httpRequest.setConnectTimeout(250);
@@ -251,16 +272,6 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals("POST", con.getRequestMethod());
 		assertEquals(250, con.getConnectTimeout());
 		assertEquals(750, con.getReadTimeout());
-	}
-
-	@Before
-	public void setUp() {
-		initJadler();
-	}
-
-	@After
-	public void tearDown() {
-		closeJadler();
 	}
 
 
@@ -279,8 +290,6 @@ public class HTTPRequestTest extends TestCase {
 			.withBody("[10, 20]")
 			.withEncoding(Charset.forName("UTF-8"))
 			.withContentType(CommonContentTypes.APPLICATION_JSON.toString());
-
-		System.out.println("Port: " + port());
 
 		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://localhost:" + port() + "/path"));
 		httpRequest.setQuery("apples=10&pears=20");
