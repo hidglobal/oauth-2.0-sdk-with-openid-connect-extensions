@@ -126,6 +126,21 @@ public class AuthenticationSuccessResponse
 			
 		return rt;
 	}
+
+
+	@Override
+	public ResponseMode impliedResponseMode() {
+
+		if (getResponseMode() != null) {
+			return getResponseMode();
+		} else {
+			if (getAccessToken() != null || getIDToken() != null) {
+				return ResponseMode.FRAGMENT;
+			} else {
+				return ResponseMode.QUERY;
+			}
+		}
+	}
 	
 	
 	/**
