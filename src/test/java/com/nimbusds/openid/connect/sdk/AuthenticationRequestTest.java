@@ -826,7 +826,8 @@ public class AuthenticationRequestTest extends TestCase {
 		String query = "response_type=id_token%20token" +
 			"&client_id=s6BhdRkqt3" +
 			"&scope=openid%20profile" +
-			"&state=af0ifjsldkj";
+			"&state=af0ifjsldkj" +
+			"&nonce=n-0S6_WzA2Mj";
 
 		try {
 			AuthenticationRequest.parse(query);
@@ -988,5 +989,51 @@ public class AuthenticationRequestTest extends TestCase {
 		assertEquals(new Scope("openid", "profile"), request.getScope());
 		assertEquals(new State("af0ifjsldkj"), request.getState());
 		assertEquals(new Nonce("n-0S6_WzA2Mj"), request.getNonce());
+	}
+
+
+	public void testParseRequestURIWithRedirectURI()
+		throws Exception {
+
+		// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issue/113/authenticationrequest-fails-to-parse
+
+		// Example from http://openid.net/specs/openid-connect-core-1_0.html#UseRequestUri
+		String query = "response_type=code%20id_token" +
+			"&client_id=s6BhdRkqt3" +
+			"&request_uri=https%3A%2F%2Fclient.example.org%2Frequest.jwt" +
+			"%23GkurKxf5T0Y-mnPFCHqWOMiZi4VS138cQO_V7PZHAdM" +
+			"&state=af0ifjsldkj&nonce=n-0S6_WzA2Mj" +
+			"&scope=openid";
+
+		AuthenticationRequest request = AuthenticationRequest.parse(query);
+
+		assertTrue(request.getResponseType().equals(new ResponseType("code", "id_token")));
+		assertTrue(request.getClientID().equals(new ClientID("s6BhdRkqt3")));
+		assertTrue(request.getRequestURI().equals(new URI("https://client.example.org/request.jwt#GkurKxf5T0Y-mnPFCHqWOMiZi4VS138cQO_V7PZHAdM")));
+		assertTrue(request.getState().equals(new State("af0ifjsldkj")));
+		assertTrue(request.getNonce().equals(new Nonce("n-0S6_WzA2Mj")));
+		assertTrue(request.getScope().equals(Scope.parse("openid")));
+	}
+
+
+	public void testBuilderWithRedirectURIInRequestURI()
+		throws Exception {
+
+		AuthenticationRequest request = new AuthenticationRequest.Builder(
+			new ResponseType("code", "id_token"),
+			new Scope("openid"),
+			new ClientID("s6BhdRkqt3"),
+			null) // redirect_uri
+			.state(new State("af0ifjsldkj"))
+			.nonce(new Nonce("n-0S6_WzA2Mj"))
+			.requestURI(new URI("https://client.example.org/request.jwt#GkurKxf5T0Y-mnPFCHqWOMiZi4VS138cQO_V7PZHAdM"))
+			.build();
+
+		assertTrue(request.getResponseType().equals(new ResponseType("code", "id_token")));
+		assertTrue(request.getClientID().equals(new ClientID("s6BhdRkqt3")));
+		assertTrue(request.getRequestURI().equals(new URI("https://client.example.org/request.jwt#GkurKxf5T0Y-mnPFCHqWOMiZi4VS138cQO_V7PZHAdM")));
+		assertTrue(request.getState().equals(new State("af0ifjsldkj")));
+		assertTrue(request.getNonce().equals(new Nonce("n-0S6_WzA2Mj")));
+		assertTrue(request.getScope().equals(Scope.parse("openid")));
 	}
 }

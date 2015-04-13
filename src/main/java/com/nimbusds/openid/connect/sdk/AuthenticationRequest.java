@@ -285,7 +285,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		 *                    {@code null}.
 		 * @param redirectURI The redirection URI. Corresponds to the
 		 *                    {@code redirect_uri} parameter. Must not
-		 *                    be {@code null}.
+		 *                    be {@code null} unless set by means of
+		 *                    the optional {@code request_object} /
+		 *                    {@code request_uri} parameter.
 		 */
 		public Builder(final ResponseType rt,
 			       final Scope scope,
@@ -312,9 +314,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 			this.clientID = clientID;
 
-			if (redirectURI == null)
-				throw new IllegalArgumentException("The redirection URI must not be null");
-
+			// Check presense at build time
 			this.redirectURI = redirectURI;
 		}
 
@@ -624,7 +624,9 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	 *                      {@code null}.
 	 * @param redirectURI   The redirection URI. Corresponds to the
 	 *                      {@code redirect_uri} parameter. Must not be 
-	 *                      {@code null}.
+	 *                      {@code null} unless set by means of the
+	 *                      optional {@code request_object} /
+	 *                      {@code request_uri} parameter.
 	 * @param state         The state. Corresponds to the recommended 
 	 *                      {@code state} parameter. {@code null} if not 
 	 *                      specified.
@@ -692,7 +694,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				    
 		super(uri, rt, rm, clientID, redirectURI, scope, state);
 
-		if (redirectURI == null)
+		// Redirect URI required unless set in request_object / request_uri
+		if (redirectURI == null && requestObject == null && requestURI == null)
 			throw new IllegalArgumentException("The redirection URI must not be null");
 		
 		OIDCResponseTypeValidator.validate(rt);
@@ -1069,15 +1072,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		State state = ar.getState();
 		ResponseMode rm = ar.getResponseMode();
 
-		// Required in OIDC
+		// Required in OIDC, check later after optional request_object / request_uri is parsed
 		URI redirectURI = ar.getRedirectionURI();
-
-		if (redirectURI == null) {
-			String msg = "Missing \"redirect_uri\" parameter";
-			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, null, state);
-		}
-
 
 		ResponseType rt = ar.getResponseType();
 		
@@ -1301,8 +1297,16 @@ public class AuthenticationRequest extends AuthorizationRequest {
 					                 clientID, redirectURI, state, e);
 			}
 		}
-		
-		
+
+
+		// Redirect URI required unless request_object / request_uri present
+		if (redirectURI == null && requestObject == null && requestURI == null) {
+			String msg = "Missing \"redirect_uri\" parameter";
+			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
+				clientID, null, state);
+		}
+
+
 		return new AuthenticationRequest(
 			uri, rt, rm, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
