@@ -4,10 +4,17 @@ package com.nimbusds.oauth2.sdk.http;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.Map;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import junit.framework.TestCase;
 
+import static net.jadler.Jadler.*;
+
+import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -246,10 +253,51 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals(750, con.getReadTimeout());
 	}
 
+	@Before
+	public void setUp() {
+		initJadler();
+	}
 
+	@After
+	public void tearDown() {
+		closeJadler();
+	}
+
+
+	@Test
 	public void testSend()
 		throws Exception {
 
-		// TODO
+		onRequest()
+			.havingMethodEqualTo("GET")
+			.havingHeaderEqualTo("Authorization", "Bearer xyz")
+			.havingHeaderEqualTo("Accept", CommonContentTypes.APPLICATION_JSON.toString())
+			.havingPathEqualTo("/path")
+			.havingQueryStringEqualTo("apples=10&pears=20")
+			.respond()
+			.withStatus(200)
+			.withBody("[10, 20]")
+			.withEncoding(Charset.forName("UTF-8"))
+			.withContentType(CommonContentTypes.APPLICATION_JSON.toString());
+
+		System.out.println("Port: " + port());
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://localhost:" + port() + "/path"));
+		httpRequest.setQuery("apples=10&pears=20");
+		httpRequest.setFragment("fragment");
+		httpRequest.setAuthorization("Bearer xyz");
+		httpRequest.setAccept(CommonContentTypes.APPLICATION_JSON.toString());
+
+		HTTPResponse httpResponse = httpRequest.send();
+
+		System.out.println(httpResponse.getContent());
+
+		assertEquals(200, httpResponse.getStatusCode());
+		httpResponse.ensureContentType(CommonContentTypes.APPLICATION_JSON);
+
+		JSONArray jsonArray = httpResponse.getContentAsJSONArray();
+		assertEquals(10l, jsonArray.get(0));
+		assertEquals(20l, jsonArray.get(1));
+		assertEquals(2, jsonArray.size());
 	}
 }
