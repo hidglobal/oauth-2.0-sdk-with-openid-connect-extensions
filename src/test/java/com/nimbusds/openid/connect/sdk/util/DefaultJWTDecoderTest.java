@@ -13,8 +13,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collection;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.nimbusds.jose.JWEDecrypter;
@@ -28,20 +26,6 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
  * @author <a href="mailto:mukherjisayan@gmail.com">Sayan Mukherji</a>
  */
 public class DefaultJWTDecoderTest {
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	/**
 	 * Test method for {@link com.nimbusds.openid.connect.sdk.util.DefaultJWTDecoder#DefaultJWTDecoder()}.
@@ -115,7 +99,7 @@ public class DefaultJWTDecoderTest {
 	}
 
 	protected KeyPair generateKeyPair(final String algorithm, final int size) throws NoSuchAlgorithmException {
-		KeyPair keyPair = null;
+		KeyPair keyPair;
 		final KeyPairGenerator generator = KeyPairGenerator.getInstance(algorithm);
 		generator.initialize(size, new SecureRandom());
 		keyPair = generator.generateKeyPair();
