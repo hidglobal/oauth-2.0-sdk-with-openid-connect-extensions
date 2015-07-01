@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.nimbusds.jwt.proc.JWTProcessor;
 import net.jcip.annotations.ThreadSafe;
 
 import net.minidev.json.JSONObject;
@@ -29,11 +30,11 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
 
 
 /**
- * Resolves the final OpenID Connect authentication request by superseding its
- * parameters with those found in the optional OpenID Connect request object.
- * The request object is encoded as a JSON Web Token (JWT) and can be specified 
- * directly (inline) using the {@code request} parameter, or by URL using the 
- * {@code request_uri} parameter.
+ * Resolves the final OpenID Connect authentication request, by superseding its
+ * parameters with those found in the optional OpenID Connect request object if
+ * present. The request object is encoded as a JSON Web Token (JWT) and can be
+ * specified directly (inline) using the {@code request} parameter, or by URL
+ * using the {@code request_uri} parameter.
  *
  * <p>To process signed (JWS) and optionally encrypted (JWE) request object 
  * JWTs a {@link com.nimbusds.openid.connect.sdk.util.JWTDecoder JWT decoder}
@@ -54,9 +55,9 @@ public class AuthenticationRequestResolver {
 
 
 	/**
-	 * The JWT decoder.
+	 * The JWT processor.
 	 */
-	private final JWTDecoder jwtDecoder;
+	private final JWTProcessor<ReadOnlyJWTClaimsSet,C> jwtProcessor;
 
 
 	/**
@@ -73,7 +74,7 @@ public class AuthenticationRequestResolver {
 	 */
 	public AuthenticationRequestResolver() {
 
-		jwtDecoder = null;
+		jwtProcessor = null;
 		jwtRetriever = null;
 	}
 	
@@ -85,16 +86,16 @@ public class AuthenticationRequestResolver {
 	 * {@link ResolveException} if the authentication request includes a
 	 * {@code request_uri} parameter.
 	 *
-	 * @param jwtDecoder A configured JWT decoder providing JWS validation 
+	 * @param jwtProcessor A configured JWT decoder providing JWS validation
 	 *                   and optional JWE decryption of the request
 	 *                   objects. Must not be {@code null}.
 	 */
-	public AuthenticationRequestResolver(final JWTDecoder jwtDecoder) {
+	public AuthenticationRequestResolver(final JWTDecoder jwtProcessor) {
 
-		if (jwtDecoder == null)
+		if (jwtProcessor == null)
 			throw new IllegalArgumentException("The JWT decoder must not be null");
 
-		this.jwtDecoder = jwtDecoder;
+		this.jwtProcessor = jwtProcessor;
 
 		jwtRetriever = null;
 	}
@@ -106,20 +107,20 @@ public class AuthenticationRequestResolver {
 	 * authentication {@code request} parameter) or by reference (using the
 	 * authentication {@code request_uri} parameter).
 	 * 
-	 * @param jwtDecoder   A configured JWT decoder providing JWS 
+	 * @param jwtProcessor   A configured JWT decoder providing JWS
 	 *                     validation and optional JWE decryption of the
 	 *                     request objects. Must not be {@code null}.
 	 * @param jwtRetriever A configured JWT retriever for OpenID Connect
 	 *                     request objects passed by URI. Must not be
 	 *                     {@code null}.
 	 */
-	public AuthenticationRequestResolver(final JWTDecoder jwtDecoder,
+	public AuthenticationRequestResolver(final JWTDecoder jwtProcessor,
 					     final ResourceRetriever jwtRetriever) {
 
-		if (jwtDecoder == null)
+		if (jwtProcessor == null)
 			throw new IllegalArgumentException("The JWT decoder must not be null");
 
-		this.jwtDecoder = jwtDecoder;
+		this.jwtProcessor = jwtProcessor;
 
 
 		if (jwtRetriever == null)
@@ -136,7 +137,7 @@ public class AuthenticationRequestResolver {
 	 */
 	public JWTDecoder getJWTDecoder() {
 	
-		return jwtDecoder;
+		return jwtProcessor;
 	}
 
 
@@ -209,13 +210,13 @@ public class AuthenticationRequestResolver {
 	private ReadOnlyJWTClaimsSet decodeRequestObject(final JWT requestObject)
 		throws ResolveException {
 		
-		if (jwtDecoder == null) {
+		if (jwtProcessor == null) {
 
 			throw new ResolveException("OpenID Connect request object cannot be decoded: No JWT decoder is configured");
 		}
 
 		try {
-			return jwtDecoder.decodeJWT(requestObject);
+			return jwtProcessor.decodeJWT(requestObject);
 				
 		} catch (JOSEException e) {
 		
