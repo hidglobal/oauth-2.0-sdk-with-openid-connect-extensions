@@ -82,11 +82,18 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 * Returns the HTTP Authorization header representation of this client
 	 * secret basic authentication.
 	 *
-	 * <p>Example HTTP Authorization header (for client identifier "Aladdin"
-	 * and password "open sesame"):
+	 * <p>Note that OAuth 2.0 (RFC 6749, section 2.3.1) requires the client
+	 * ID and secret to be {@code application/x-www-form-urlencoded} before
+	 * passing them to the HTTP basic authentication algorithm. This
+	 * behaviour differs from the original HTTP Basic Authentication
+	 * specification (RFC 2617).
+	 *
+	 * <p>Example HTTP Authorization header (for client identifier
+	 * "Aladdin" and password "open sesame"):
 	 *
 	 * <pre>
-	 * Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+	 *
+	 * Authorization: Basic QWxhZGRpbjpvcGVuK3Nlc2FtZQ==
 	 * </pre>
 	 *
 	 * <p>See RFC 2617, section 2.

@@ -69,12 +69,7 @@ public class ClientSecretBasicTest extends TestCase {
 
 		ClientSecretBasic csb = new ClientSecretBasic(clientID, secret);
 
-		String header = csb.toHTTPAuthorizationHeader();
-
-		System.out.println(header);
-		System.out.println("Basic SVgtMUZYVVJQMVU5M1cxMTpjWHFYYkNKVE9VSmZ5cENEOTJaTk52aVF4dllpdEFONnZIMHpGOGhcL25GeTYreUg3RVJWbFBwSVpuVXFZZkN6YUhaWWt6aUk3UUJDSzg4anVMVENcL3Q5V3dqaU1pNldiZWNFM3krdG5EMmxuaUk2UEs3bjRqTVRCaGFKUE5xZkhwdmRoMTNHWnN3YzkySHRQU0xRWWJpS3h6Z0FQaG5tRmFcLzFoVitHZm1uRXArSVhuRFJ1a0hBOEFhWDZMM2Q0eDZUNjA4KzJkWlJucU9NNCtEQjdLNHZGTm0rM2JZY0VwSHo1emhCQXVsWFFNcCtHemlDb0tSY1dyUWZqSHgxY1NzbWgrUlwvRjZCWkxIa1Z2TkY2WEthS0Eyc0RseGM5QngzRXdmTkZKWW9qV2lHcitXVEQ4c2xyRHc2eWZiWktUWXNmZ1lGQ1lmMGdTVXNWOG1ISXhhWlFBPT0=");
-
-		csb = ClientSecretBasic.parse(header);
+		String header = csb.toHTTPAuthorizationHeader();csb = ClientSecretBasic.parse(header);
 
 		assertTrue(clientID.equals(csb.getClientID()));
 		assertTrue(secret.equals(csb.getClientSecret()));
@@ -99,5 +94,17 @@ public class ClientSecretBasicTest extends TestCase {
 
 		assertEquals(header,
 			"Basic SVgtMUZYVVJQMVU5M1cxMTpjWHFYYkNKVE9VSmZ5cENEOTJaTk52aVF4dllpdEFONnZIMHpGOGhcL25GeTYreUg3RVJWbFBwSVpuVXFZZkN6YUhaWWt6aUk3UUJDSzg4anVMVENcL3Q5V3dqaU1pNldiZWNFM3krdG5EMmxuaUk2UEs3bjRqTVRCaGFKUE5xZkhwdmRoMTNHWnN3YzkySHRQU0xRWWJpS3h6Z0FQaG5tRmFcLzFoVitHZm1uRXArSVhuRFJ1a0hBOEFhWDZMM2Q0eDZUNjA4KzJkWlJucU9NNCtEQjdLNHZGTm0rM2JZY0VwSHo1emhCQXVsWFFNcCtHemlDb0tSY1dyUWZqSHgxY1NzbWgrUlwvRjZCWkxIa1Z2TkY2WEthS0Eyc0RseGM5QngzRXdmTkZKWW9qV2lHcitXVEQ4c2xyRHc2eWZiWktUWXNmZ1lGQ1lmMGdTVXNWOG1ISXhhWlFBPT0=");
+	}
+
+
+	public void testWithLegacyExample() {
+
+		final String id = "Aladdin";
+		final String pw = "open sesame";
+
+		ClientSecretBasic cb = new ClientSecretBasic(new ClientID(id), new Secret(pw));
+
+		// Must not match legacy example
+		assertNotSame("QWxhZGRpbjpvcGVuIHNlc2FtZQ==", cb.toHTTPAuthorizationHeader());
 	}
 }
