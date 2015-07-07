@@ -8,15 +8,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.nimbusds.jwt.proc.JWTProcessor;
 import net.jcip.annotations.ThreadSafe;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.proc.BadJOSEException;
+import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.proc.JWTProcessor;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -24,7 +26,6 @@ import com.nimbusds.oauth2.sdk.SerializeException;
 
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.OIDCError;
-import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
 import com.nimbusds.openid.connect.sdk.util.Resource;
 import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
 
@@ -37,8 +38,8 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * using the {@code request_uri} parameter.
  *
  * <p>To process signed (JWS) and optionally encrypted (JWE) request object 
- * JWTs a {@link com.nimbusds.openid.connect.sdk.util.JWTDecoder JWT decoder}
- * for the expected JWS / JWE algorithms must be provided at construction time.
+ * JWTs a {@link com.nimbusds.jwt.proc.JWTProcessor JWT processr} for the
+ * supported JWS / JWE algorithms must be provided at construction time.
  *
  * <p>To fetch OpenID Connect request objects specified by URL a
  * {@link com.nimbusds.openid.connect.sdk.util.ResourceRetriever JWT retriever}
@@ -51,7 +52,7 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * </ul>
  */
 @ThreadSafe
-public class AuthenticationRequestResolver {
+public class AuthenticationRequestResolver <C extends SecurityContext> {
 
 
 	/**
@@ -90,7 +91,7 @@ public class AuthenticationRequestResolver {
 	 *                   and optional JWE decryption of the request
 	 *                   objects. Must not be {@code null}.
 	 */
-	public AuthenticationRequestResolver(final JWTDecoder jwtProcessor) {
+	public AuthenticationRequestResolver(final JWTProcessor<ReadOnlyJWTClaimsSet,C> jwtProcessor) {
 
 		if (jwtProcessor == null)
 			throw new IllegalArgumentException("The JWT decoder must not be null");
@@ -107,14 +108,14 @@ public class AuthenticationRequestResolver {
 	 * authentication {@code request} parameter) or by reference (using the
 	 * authentication {@code request_uri} parameter).
 	 * 
-	 * @param jwtProcessor   A configured JWT decoder providing JWS
+	 * @param jwtProcessor A configured JWT decoder providing JWS
 	 *                     validation and optional JWE decryption of the
 	 *                     request objects. Must not be {@code null}.
 	 * @param jwtRetriever A configured JWT retriever for OpenID Connect
 	 *                     request objects passed by URI. Must not be
 	 *                     {@code null}.
 	 */
-	public AuthenticationRequestResolver(final JWTDecoder jwtProcessor,
+	public AuthenticationRequestResolver(final JWTProcessor<ReadOnlyJWTClaimsSet,C> jwtProcessor,
 					     final ResourceRetriever jwtRetriever) {
 
 		if (jwtProcessor == null)
@@ -131,11 +132,11 @@ public class AuthenticationRequestResolver {
 	
 	
 	/**
-	 * Gets the JWT decoder.
+	 * Gets the JWT processor.
 	 *
-	 * @return The JWT decoder, {@code null} if not specified.
+	 * @return The JWT processor, {@code null} if not specified.
 	 */
-	public JWTDecoder getJWTDecoder() {
+	public JWTProcessor<ReadOnlyJWTClaimsSet,C> getJWTDecoder() {
 	
 		return jwtProcessor;
 	}
@@ -216,15 +217,16 @@ public class AuthenticationRequestResolver {
 		}
 
 		try {
-			return jwtProcessor.decodeJWT(requestObject);
+			return jwtProcessor.process(requestObject, null);
+
+		} catch (BadJOSEException e) {
+			// Deny request
+			throw new ResolveException(""); // todo
 				
 		} catch (JOSEException e) {
-		
+			// Internal exception
 			throw new ResolveException("Couldn't decode OpenID Connect request object JWT: " + e.getMessage(), e);
 			
-		} catch (java.text.ParseException e) {
-
-			throw new ResolveException("Couldn't parse OpenID Connect request object JWT claims: " + e.getMessage(), e);
 		}
 	}
 
