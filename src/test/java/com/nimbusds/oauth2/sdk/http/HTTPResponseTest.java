@@ -99,44 +99,6 @@ public class HTTPResponseTest extends TestCase {
 	}
 
 
-	public void testRedirectApplyToServletResponse()
-		throws Exception {
-
-		HTTPResponse response = new HTTPResponse(302);
-		response.setLocation(new URI("https://client.com/cb"));
-
-		MockServletResponse servletResponse = new MockServletResponse();
-
-		response.applyTo(servletResponse);
-
-		assertFalse(response.indicatesSuccess());
-		assertEquals(302, servletResponse.getStatus());
-		assertEquals("https://client.com/cb", servletResponse.getHeader("Location"));
-	}
-
-
-	public void testJSONContentApplyToServletResponse()
-		throws Exception {
-
-		HTTPResponse response = new HTTPResponse(200);
-		response.setContentType(CommonContentTypes.APPLICATION_JSON);
-		response.setCacheControl("no-cache");
-		response.setPragma("no-cache");
-		response.setContent("{\"apples\":\"123\"}");
-
-		MockServletResponse servletResponse = new MockServletResponse();
-
-		response.applyTo(servletResponse);
-
-		assertTrue(response.indicatesSuccess());
-		assertEquals(200, servletResponse.getStatus());
-		assertEquals("application/json; charset=UTF-8", servletResponse.getContentType());
-		assertEquals("no-cache", servletResponse.getHeader("Cache-Control"));
-		assertEquals("no-cache", servletResponse.getHeader("Pragma"));
-		assertEquals("{\"apples\":\"123\"}", servletResponse.getContent());
-	}
-
-
 	public void testGetContentAsJSONArray()
 		throws Exception {
 

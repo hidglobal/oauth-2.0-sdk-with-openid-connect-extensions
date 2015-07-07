@@ -8,8 +8,6 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
-
 import net.jcip.annotations.ThreadSafe;
 
 import net.minidev.json.JSONArray;
@@ -392,41 +390,5 @@ public class HTTPResponse extends HTTPMessage {
 	public void setContent(final String content) {
 	
 		this.content = content;
-	}
-	
-	
-	/**
-	 * Applies the status code, headers and content of this HTTP response
-	 * object to the specified HTTP servlet response.
-	 *
-	 * @param sr The HTTP servlet response to have the properties of this
-	 *           HTTP request applied to. Must not be {@code null}.
-	 *
-	 * @throws IOException If the response content couldn't be written.
-	 */
-	public void applyTo(final HttpServletResponse sr)
-		throws IOException {
-	
-		// Set the status code
-		sr.setStatus(statusCode);
-	
-	
-		// Set the headers, but only if explicitly specified
-		for (Map.Entry<String,String> header: getHeaders().entrySet()) {
-			sr.setHeader(header.getKey(), header.getValue());
-		}
-		
-		if (getContentType() != null)
-			sr.setContentType(getContentType().toString());
-	
-	
-		// Write out the content
-	
-		if (content != null) {
-		
-			PrintWriter writer = sr.getWriter();
-			writer.print(content);
-			writer.close();
-		}
 	}
 }
