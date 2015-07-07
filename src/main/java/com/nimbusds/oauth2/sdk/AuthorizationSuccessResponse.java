@@ -42,7 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.2 and 4.2.2.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
- *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
+ *     <li>OAuth 2.0 Form Post Response Mode 1.0.
  * </ul>
  */
 @Immutable

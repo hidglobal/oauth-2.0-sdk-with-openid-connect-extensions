@@ -709,7 +709,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		
 		// Nonce required for implicit protocol flow
 		if (rt.impliesImplicitFlow() && nonce == null)
-			throw new IllegalArgumentException("Nonce is required in implicit protocol flow");
+			throw new IllegalArgumentException("Nonce is required in implicit / hybrid protocol flow");
 		
 		this.nonce = nonce;
 		
@@ -1083,7 +1083,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		} catch (IllegalArgumentException e) {
 			String msg = "Unsupported \"response_type\" parameter: " + e.getMessage();
 			throw new ParseException(msg, OAuth2Error.UNSUPPORTED_RESPONSE_TYPE.appendDescription(": " + msg),
-					         clientID, redirectURI, state);
+					         clientID, redirectURI, ar.impliedResponseMode(), state);
 		}
 		
 		// Required in OIDC, must include "openid" parameter
@@ -1092,13 +1092,13 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		if (scope == null) {
 			String msg = "Missing \"scope\" parameter";
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, state);
+				                 clientID, redirectURI, ar.impliedResponseMode(), state);
 		}
 
 		if (! scope.contains(OIDCScopeValue.OPENID)) {
 			String msg = "The scope must include an \"openid\" value";
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, state);
+				                 clientID, redirectURI, ar.impliedResponseMode(), state);
 		}
 
 
@@ -1109,7 +1109,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		if (rt.impliesImplicitFlow() && nonce == null) {
 			String msg = "Missing \"nonce\" parameter: Required in implicit flow";
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, state);
+				                 clientID, redirectURI, ar.impliedResponseMode(), state);
 		}
 		
 		Display display;
@@ -1120,7 +1120,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		} catch (ParseException e) {
 			String msg = "Invalid \"display\" parameter: " + e.getMessage();
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, state, e);
+				                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 		}
 		
 		
@@ -1132,7 +1132,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		} catch (ParseException e) {
 			String msg = "Invalid \"prompt\" parameter: " + e.getMessage();
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, state, e);
+				                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 		}
 
 
@@ -1148,7 +1148,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			} catch (NumberFormatException e) {
 				String msg = "Invalid \"max_age\" parameter: " + v;
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, redirectURI, state, e);
+					                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 			}
 		}
 
@@ -1171,7 +1171,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				} catch (LangTagException e) {
 					String msg = "Invalid \"ui_locales\" parameter: " + e.getMessage();
 					throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-						                 clientID, redirectURI, state, e);
+						                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 				}
 			}
 		}
@@ -1195,7 +1195,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				} catch (LangTagException e) {
 					String msg = "Invalid \"claims_locales\" parameter: " + e.getMessage();
 					throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-						                 clientID, redirectURI, state, e);
+						                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 				}
 			}
 		}
@@ -1213,7 +1213,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			} catch (java.text.ParseException e) {
 				String msg = "Invalid \"id_token_hint\" parameter: " + e.getMessage();
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, redirectURI, state, e);
+					                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 			}
 		}
 
@@ -1251,7 +1251,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			} catch (ParseException e) {
 				String msg = "Invalid \"claims\" parameter: " + e.getMessage();
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, redirectURI, state, e);
+					                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 			}
 
 			// Parse exceptions silently ignored
@@ -1271,7 +1271,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			} catch (URISyntaxException e) {
 				String msg = "Invalid \"request_uri\" parameter: " + e.getMessage();
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, redirectURI, state, e);
+					                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 			}
 		}
 
@@ -1285,7 +1285,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			if (requestURI != null) {
 				String msg = "Invalid request: Found mutually exclusive \"request\" and \"request_uri\" parameters";
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, redirectURI, state, null);
+					                 clientID, redirectURI, ar.impliedResponseMode(), state, null);
 			}
 
 			try {
@@ -1294,7 +1294,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 			} catch (java.text.ParseException e) {
 				String msg = "Invalid \"request_object\" parameter: " + e.getMessage();
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, redirectURI, state, e);
+					                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
 			}
 		}
 
@@ -1303,7 +1303,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		if (redirectURI == null && requestObject == null && requestURI == null) {
 			String msg = "Missing \"redirect_uri\" parameter";
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				clientID, null, state);
+				clientID, null, ar.impliedResponseMode(), state);
 		}
 
 

@@ -59,6 +59,9 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
 
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.QUERY, request.impliedResponseMode());
+
 		Scope scopeOut = request.getScope();
 		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
 		assertTrue(scopeOut.contains(OIDCScopeValue.EMAIL));
@@ -75,9 +78,6 @@ public class AuthenticationRequestTest extends TestCase {
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
-		System.out.println("OIDC login query string: " + queryString);
-
-
 		request = AuthenticationRequest.parse(uri, queryString);
 		
 		assertEquals(uri, request.getEndpointURI());
@@ -85,6 +85,9 @@ public class AuthenticationRequestTest extends TestCase {
 		rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
+
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.QUERY, request.impliedResponseMode());
 
 		scopeOut = request.getScope();
 		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
@@ -134,6 +137,9 @@ public class AuthenticationRequestTest extends TestCase {
 		ResponseType rtsOut = request.getResponseType();
 		assertTrue(rtsOut.contains(ResponseType.Value.CODE));
 		assertEquals(1, rtsOut.size());
+
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.QUERY, request.impliedResponseMode());
 
 		Scope scopeOut = request.getScope();
 		assertTrue(scopeOut.contains(OIDCScopeValue.OPENID));
@@ -228,6 +234,7 @@ public class AuthenticationRequestTest extends TestCase {
 		// Check extended parameters
 
 		assertEquals(rm, request.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, request.impliedResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -294,6 +301,7 @@ public class AuthenticationRequestTest extends TestCase {
 		// Check extended parameters
 
 		assertEquals(rm, request.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, request.impliedResponseMode());
 
 		assertEquals("Display checK", Display.POPUP, request.getDisplay());
 
@@ -705,18 +713,19 @@ public class AuthenticationRequestTest extends TestCase {
 		throws Exception {
 
 		AuthenticationRequest request = new AuthenticationRequest.Builder(
-			new ResponseType("code", "id_token"),
+			new ResponseType("code"),
 			new Scope("openid", "email"),
 			new ClientID("123"),
 			new URI("https://client.com/cb")).build();
 
-		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertTrue(new ResponseType("code").equals(request.getResponseType()));
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
 		assertNull(request.getState());
 		assertNull(request.getNonce());
 		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.QUERY, request.impliedResponseMode());
 		assertNull(request.getDisplay());
 		assertNull(request.getPrompt());
 		assertEquals(0, request.getMaxAge());
@@ -764,6 +773,7 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
 		assertEquals(ResponseMode.FORM_POST, request.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, request.impliedResponseMode());
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
@@ -790,13 +800,16 @@ public class AuthenticationRequestTest extends TestCase {
 			new Scope("openid", "email"),
 			new ClientID("123"),
 			new URI("https://client.com/cb")).
+			nonce(new Nonce("xyz")).
 			requestObject(JWTParser.parse(EXAMPLE_JWT_STRING)).
 			build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 		assertEquals(EXAMPLE_JWT_STRING, request.getRequestObject().getParsedString());
 	}
 
@@ -810,12 +823,15 @@ public class AuthenticationRequestTest extends TestCase {
 			new ClientID("123"),
 			new URI("https://client.com/cb")).
 			requestURI(new URI("https://client.com/request#123")).
+			nonce(new Nonce("xyz")).
 			build();
 
 		assertTrue(new ResponseType("code", "id_token").equals(request.getResponseType()));
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertTrue(new URI("https://client.com/cb").equals(request.getRedirectionURI()));
+		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 		assertTrue(new URI("https://client.com/request#123").equals(request.getRequestURI()));
 	}
 
@@ -836,6 +852,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Missing \"redirect_uri\" parameter", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: Missing \"redirect_uri\" parameter", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.FRAGMENT, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -856,6 +873,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Missing \"scope\" parameter", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: Missing \"scope\" parameter", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.FRAGMENT, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -864,7 +882,7 @@ public class AuthenticationRequestTest extends TestCase {
 	public void testParseMissingScopeOpenIDValue()
 		throws Exception {
 
-		String query = "response_type=id_token%20token" +
+		String query = "response_type=code" +
 			"&client_id=s6BhdRkqt3" +
 			"&redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb" +
 			"&scope=profile" +
@@ -877,6 +895,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("The scope must include an \"openid\" value", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: The scope must include an \"openid\" value", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.QUERY, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -898,6 +917,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Missing \"nonce\" parameter: Required in implicit flow", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: Missing \"nonce\" parameter: Required in implicit flow", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.FRAGMENT, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -920,6 +940,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Invalid \"display\" parameter: Unknown display type: mobile", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: Invalid \"display\" parameter: Unknown display type: mobile", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.QUERY, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -942,6 +963,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Invalid \"max_age\" parameter: zero", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: Invalid \"max_age\" parameter: zero", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.QUERY, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -964,6 +986,7 @@ public class AuthenticationRequestTest extends TestCase {
 			assertEquals("Invalid \"id_token_hint\" parameter: Invalid plain/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid request: Invalid \"id_token_hint\" parameter: Invalid plain/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getErrorObject().getDescription());
+			assertEquals(ResponseMode.QUERY, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}
 	}
@@ -984,6 +1007,8 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertEquals(new URI("https://c2id.com/login"), request.getEndpointURI());
 		assertEquals(new ResponseType("id_token", "token"), request.getResponseType());
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertEquals(new ClientID("s6BhdRkqt3"), request.getClientID());
 		assertEquals(new URI("https://client.example.org/cb"), request.getRedirectionURI());
 		assertEquals(new Scope("openid", "profile"), request.getScope());
@@ -1008,6 +1033,8 @@ public class AuthenticationRequestTest extends TestCase {
 		AuthenticationRequest request = AuthenticationRequest.parse(query);
 
 		assertTrue(request.getResponseType().equals(new ResponseType("code", "id_token")));
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertTrue(request.getClientID().equals(new ClientID("s6BhdRkqt3")));
 		assertTrue(request.getRequestURI().equals(new URI("https://client.example.org/request.jwt#GkurKxf5T0Y-mnPFCHqWOMiZi4VS138cQO_V7PZHAdM")));
 		assertTrue(request.getState().equals(new State("af0ifjsldkj")));
@@ -1030,6 +1057,8 @@ public class AuthenticationRequestTest extends TestCase {
 			.build();
 
 		assertTrue(request.getResponseType().equals(new ResponseType("code", "id_token")));
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertTrue(request.getClientID().equals(new ClientID("s6BhdRkqt3")));
 		assertTrue(request.getRequestURI().equals(new URI("https://client.example.org/request.jwt#GkurKxf5T0Y-mnPFCHqWOMiZi4VS138cQO_V7PZHAdM")));
 		assertTrue(request.getState().equals(new State("af0ifjsldkj")));

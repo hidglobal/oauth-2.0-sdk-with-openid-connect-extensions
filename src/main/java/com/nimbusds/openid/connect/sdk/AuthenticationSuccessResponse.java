@@ -53,7 +53,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>OpenID Connect Session Management 1.0 - draft 23, section 3.
  *     <li>OAuth 2.0 (RFC 6749), section 3.1.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
- *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
+ *     <li>OAuth 2.0 Form Post Response Mode 1.0.
  * </ul>
  */
 @Immutable

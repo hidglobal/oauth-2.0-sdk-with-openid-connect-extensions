@@ -32,7 +32,7 @@ public class ParseException extends GeneralException {
 	 */
 	public ParseException(final String message, final Throwable cause) {
 	
-		this(message, null, null, null, null, cause);
+		this(message, null, null, null, null, null, cause);
 	}
 
 
@@ -59,7 +59,7 @@ public class ParseException extends GeneralException {
 		              final ErrorObject error,
 		              final Throwable cause) {
 	
-		this(message, error, null, null, null, cause);
+		this(message, error, null, null, null, null, cause);
 	}
 	
 	
@@ -73,6 +73,8 @@ public class ParseException extends GeneralException {
 	 *                    {@code null}.
 	 * @param redirectURI The associated redirection URI. Must not be
 	 *                    {@code null}.
+	 * @param responseMode The optional associated response mode,
+	 *                     {@code null} if not specified.
 	 * @param state       The optional associated state parameter, 
 	 *                    {@code null} if not specified.
 	 */
@@ -80,34 +82,38 @@ public class ParseException extends GeneralException {
 		              final ErrorObject error,
 			      final ClientID clientID,
 		              final URI redirectURI,
+			      final ResponseMode responseMode,
 		              final State state) {
 
-		this(message, error, clientID, redirectURI, state, null);
+		this(message, error, clientID, redirectURI, responseMode, state, null);
 	}
 
 
 	/**
 	 * Creates a new parse exception.
 	 *
-	 * @param message     The exception message. May be {@code null}.
-	 * @param error       The associated error, {@code null} if not
-	 *                    specified.
-	 * @param clientID    The associated client identifier. Must not be
-	 *                    {@code null}.
-	 * @param redirectURI The associated redirection URI. Must not be
-	 *                    {@code null}.
-	 * @param state       The optional associated state parameter, 
-	 *                    {@code null} if not specified.
-	 * @param cause       The exception cause, {@code null} if not
-	 *                    specified.
+	 * @param message      The exception message. May be {@code null}.
+	 * @param error        The associated error, {@code null} if not
+	 *                     specified.
+	 * @param clientID     The associated client identifier. Must not be
+	 *                     {@code null}.
+	 * @param redirectURI  The associated redirection URI. Must not be
+	 *                     {@code null}.
+	 * @param responseMode The optional associated response mode,
+	 *                     {@code null} if not specified.
+	 * @param state        The optional associated state parameter,
+	 *                     {@code null} if not specified.
+	 * @param cause        The exception cause, {@code null} if not
+	 *                     specified.
 	 */
 	public ParseException(final String message, 
 		              final ErrorObject error,
 			      final ClientID clientID,
 		              final URI redirectURI,
+			      final ResponseMode responseMode,
 		              final State state,
 		              final Throwable cause) {
 
-		super(message, error, clientID, redirectURI, state, cause);
+		super(message, error, clientID, redirectURI, responseMode, state, cause);
 	}
 }

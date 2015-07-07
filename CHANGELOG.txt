@@ -268,7 +268,11 @@ version 4.13 (2015-04-07)
     * Renames JSONArrayUtils.parseJSONArray() to parse().
     * Fixes EncryptionMethod parsing in OIDCClientMetadata (iss #127).
 
-version 4.14 (2015-04-13)
+version 4.14 (2015-07-07)
     * Adds support for response_mode authorisation request parameter (iss #53).
     * Permits redirect_uri in request_object / request_uri of OpenID Connect
       authentication request (iss #113).
+    * Adds response_mode field to GeneralException.
+    * Improves AuthorizationRequest.impliesCodeFlow and impliesImplicitFlow
+      logic.
+

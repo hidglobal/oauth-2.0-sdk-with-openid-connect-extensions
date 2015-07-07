@@ -33,6 +33,12 @@ public class GeneralException extends Exception {
 
 
 	/**
+	 * Optional response mode parameter, {@code null} if not specified.
+	 */
+	private final ResponseMode responseMode;
+
+
+	/**
 	 * Optional state parameter, {@code null} if not specified.
 	 */
 	private final State state;
@@ -45,7 +51,7 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message) {
 	
-		this(message, null, null, null, null, null);
+		this(message, null, null, null, null, null, null);
 	}
 	
 	
@@ -57,7 +63,7 @@ public class GeneralException extends Exception {
 	 */
 	public GeneralException(final String message, final Throwable cause) {
 	
-		this(message, null, null, null, null, cause);
+		this(message, null, null, null, null, null, cause);
 	}
 
 
@@ -70,7 +76,7 @@ public class GeneralException extends Exception {
 	public GeneralException(final String message,
 				final ErrorObject error) {
 
-		this(message, error, null, null, null, null);
+		this(message, error, null, null, null, null, null);
 	}
 
 
@@ -85,52 +91,58 @@ public class GeneralException extends Exception {
 		                final ErrorObject error,
 		                final Throwable cause) {
 	
-		this(message, error, null, null, null, cause);
+		this(message, error, null, null, null, null, cause);
 	}
 	
 	
 	/**
 	 * Creates a new general exception.
 	 *
-	 * @param message     The exception message. May be {@code null}.
-	 * @param error       The associated error, {@code null} if not 
-	 *                    specified.
-	 * @param clientID    The associated client identifier, {@code null} if
-	 *                    not specified.
-	 * @param redirectURI The associated redirection URI, {@code null} if
-	 *                    not specified.
-	 * @param state       The optional associated state parameter, 
-	 *                    {@code null} if not specified.
+	 * @param message      The exception message. May be {@code null}.
+	 * @param error        The associated error, {@code null} if not
+	 *                     specified.
+	 * @param clientID     The associated client identifier, {@code null} if
+	 *                     not specified.
+	 * @param redirectURI  The associated redirection URI, {@code null} if
+	 *                     not specified.
+	 * @param responseMode The optional associated response mode,
+	 *                     {@code null} if not specified.
+	 * @param state        The optional associated state parameter,
+	 *                     {@code null} if not specified.
 	 */
 	public GeneralException(final String message, 
 		                final ErrorObject error,
 				final ClientID clientID,
 		                final URI redirectURI,
+				final ResponseMode responseMode,
 		                final State state) {
 	
-		this(message, error, clientID, redirectURI, state, null);
+		this(message, error, clientID, redirectURI, responseMode, state, null);
 	}
 
 
 	/**
 	 * Creates a new general exception.
 	 *
-	 * @param message     The exception message. May be {@code null}.
-	 * @param error       The associated error, {@code null} if not 
-	 *                    specified.
-	 * @param clientID    The associated client identifier, {@code null} if
-	 *                    not specified.
-	 * @param redirectURI The associated redirection URI, {@code null} if
-	 *                    not specified.
-	 * @param state       The optional associated state parameter, 
-	 *                    {@code null} if not specified.
-	 * @param cause       The exception cause, {@code null} if not
-	 *                    specified.
+	 * @param message      The exception message. May be {@code null}.
+	 * @param error        The associated error, {@code null} if not
+	 *                     specified.
+	 * @param clientID     The associated client identifier, {@code null}
+	 *                     if not specified.
+	 * @param redirectURI  The associated redirection URI, {@code null} if
+	 *                     not specified.
+	 * @param state        The optional associated state parameter,
+	 *                     {@code null} if not specified.
+	 * @param responseMode The optional associated response mode,
+	 *                     {@code null} if not specified.
+	 * @param cause        The exception cause, {@code null} if not
+	 *                     specified.
 	 */
 	public GeneralException(final String message, 
 		                final ErrorObject error,
 				final ClientID clientID,
 		                final URI redirectURI,
+				final ResponseMode responseMode,
 		                final State state,
 		                final Throwable cause) {
 	
@@ -139,6 +151,7 @@ public class GeneralException extends Exception {
 		this.error = error;
 		this.clientID = clientID;
 		this.redirectURI = redirectURI;
+		this.responseMode = responseMode;
 		this.state = state;
 	}
 
@@ -174,6 +187,17 @@ public class GeneralException extends Exception {
 	public URI getRedirectionURI() {
 
 		return redirectURI;
+	}
+
+
+	/**
+	 * Gets the associated response mode.
+	 *
+	 * @return The response mode, {@code null} if not specified.
+	 */
+	public ResponseMode getResponseMode() {
+
+		return responseMode;
 	}
 
 

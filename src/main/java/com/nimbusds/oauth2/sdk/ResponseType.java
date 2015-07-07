@@ -176,20 +176,18 @@ public class ResponseType extends HashSet<ResponseType.Value> {
 	
 	
 	/**
-	 * Returns {@code true} if this response type implies a code flow. This
-	 * is determined by the presence of a {@code code} value.
+	 * Returns {@code true} if this response type implies a code flow.
 	 *
 	 * @return {@code true} if a code flow is implied, else {@code false}.
 	 */
 	public boolean impliesCodeFlow() {
 
-		return this.contains(Value.CODE);
+		return this.contains(Value.CODE) && this.size() == 1;
 	}
 	
 	
 	/**
 	 * Returns {@code true} if this response type implies an implicit flow.
-	 * This is determined by the absence of a {@code code} value.
 	 *
 	 * @return {@code true} if an implicit flow is implied, else 
 	 *         {@code false}.

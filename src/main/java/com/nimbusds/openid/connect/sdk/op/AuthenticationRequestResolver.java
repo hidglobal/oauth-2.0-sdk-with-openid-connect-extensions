@@ -358,7 +358,7 @@ public class AuthenticationRequestResolver {
 			return new AuthenticationRequest(
 				finalAuthRequest.getEndpointURI(),
 				finalAuthRequest.getResponseType(),
-				finalAuthRequest.getResponseMode(), // TODO?
+				finalAuthRequest.getResponseMode(),
 				finalAuthRequest.getScope(),
 				finalAuthRequest.getClientID(),
 				finalAuthRequest.getRedirectionURI(),
@@ -392,6 +392,7 @@ public class AuthenticationRequestResolver {
 				err,
 				request.getClientID(),
 				request.getRedirectionURI(),
+				request.impliedResponseMode(),
 				request.getState(),
 				e.getCause());
 		}

@@ -38,6 +38,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getScope());
 		assertNull(req.getState());
 		assertNull(req.getResponseMode());
+		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 
 		String query = req.toQueryString();
 
@@ -64,6 +65,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getScope());
 		assertNull(req.getState());
 		assertNull(req.getResponseMode());
+		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 	}
 
 
@@ -86,12 +88,12 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(clientID, req.getClientID());
-
 		assertNull(req.getResponseMode());
 		assertNull(req.getRedirectionURI());
 		assertNull(req.getScope());
 		assertNull(req.getState());
 		assertNull(req.getResponseMode());
+		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 	}
 
 
@@ -118,6 +120,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertNull(req.getResponseMode());
+		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 		assertNull(req.getScope());
 		assertNull(req.getState());
 	}
@@ -146,6 +149,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(rm, req.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, req.impliedResponseMode());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
@@ -174,6 +178,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertEquals(rm, req.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, req.impliedResponseMode());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
@@ -201,6 +206,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertNull(req.getResponseMode());
+		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
@@ -213,6 +219,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
 		assertNull(req.getResponseMode());
+		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 		assertEquals(clientID, req.getClientID());
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
@@ -229,6 +236,24 @@ public class AuthorizationRequestTest extends TestCase {
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertNull(request.getEndpointURI());
 		assertNull(request.getRedirectionURI());
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.QUERY, request.impliedResponseMode());
+		assertNull(request.getScope());
+		assertNull(request.getState());
+	}
+
+
+	public void testBuilderMinimalAlt()
+		throws Exception {
+
+		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("token"), new ClientID("123")).build();
+
+		assertTrue(new ResponseType("token").equals(request.getResponseType()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertNull(request.getEndpointURI());
+		assertNull(request.getRedirectionURI());
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertNull(request.getScope());
 		assertNull(request.getState());
 	}
@@ -247,6 +272,7 @@ public class AuthorizationRequestTest extends TestCase {
 
 		assertTrue(new ResponseType("code").equals(request.getResponseType()));
 		assertEquals(ResponseMode.FORM_POST, request.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, request.impliedResponseMode());
 		assertTrue(new ClientID("123").equals(request.getClientID()));
 		assertEquals("https://c2id.com/login", request.getEndpointURI().toString());
 		assertEquals("https://client.com/cb", request.getRedirectionURI().toString());

@@ -19,7 +19,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>OpenID Connect Core 1.0, sections 3.1.2.5. and 3.1.2.6.
  *     <li>OAuth 2.0 (RFC 6749), section 3.1.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
- *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
+ *     <li>OAuth 2.0 Form Post Response Mode 1.0.
  * </ul>
  */
 public class AuthenticationResponseParser {

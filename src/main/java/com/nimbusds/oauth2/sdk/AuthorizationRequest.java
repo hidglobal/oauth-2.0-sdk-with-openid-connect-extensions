@@ -41,7 +41,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.1 and 4.2.1.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
- *     <li>OAuth 2.0 Form Post Response Mode (draft 04).
+ *     <li>OAuth 2.0 Form Post Response Mode 1.0.
  * </ul>
  */
 @Immutable
@@ -352,6 +352,25 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
+	 * Returns the implied response mode, determined by the optional
+	 * {@code response_mode} parameter, and if that isn't specified, by
+	 * the {@code response_type}.
+	 *
+	 * @return The implied response mode.
+	 */
+	public ResponseMode impliedResponseMode() {
+
+		if (rm != null) {
+			return rm;
+		} else if (rt.impliesImplicitFlow()) {
+			return ResponseMode.FRAGMENT;
+		} else {
+			return ResponseMode.QUERY;
+		}
+	}
+
+
+	/**
 	 * Gets the client identifier. Corresponds to the {@code client_id} 
 	 * parameter.
 	 *
@@ -636,7 +655,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			} catch (URISyntaxException e) {
 				String msg = "Invalid \"redirect_uri\" parameter: " + e.getMessage();
 				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-					                 clientID, null, null, e);
+					                 clientID, null, null, null, e);
 			}
 		}
 
@@ -657,7 +676,7 @@ public class AuthorizationRequest extends AbstractRequest {
 			// Only cause
 			String msg = "Missing \"response_type\" parameter";
 			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, state, e);
+				                 clientID, redirectURI, null, state, e);
 		}
 
 

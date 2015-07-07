@@ -59,12 +59,14 @@ public class GeneralExceptionTest extends TestCase {
 			OAuth2Error.INVALID_REQUEST,
 			new ClientID("abc"),
 			new URI("https://redirect.com"),
+			ResponseMode.QUERY,
 			new State("123"));
 
 		assertEquals("message", e.getMessage());
 		assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
 		assertEquals("abc", e.getClientID().getValue());
 		assertEquals("https://redirect.com", e.getRedirectionURI().toString());
+		assertEquals(ResponseMode.QUERY, e.getResponseMode());
 		assertEquals("123", e.getState().getValue());
 	}
 
@@ -77,6 +79,7 @@ public class GeneralExceptionTest extends TestCase {
 			OAuth2Error.INVALID_REQUEST,
 			new ClientID("abc"),
 			new URI("https://redirect.com"),
+			ResponseMode.FRAGMENT,
 			new State("123"),
 			new IllegalArgumentException());
 
@@ -84,6 +87,7 @@ public class GeneralExceptionTest extends TestCase {
 		assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
 		assertEquals("abc", e.getClientID().getValue());
 		assertEquals("https://redirect.com", e.getRedirectionURI().toString());
+		assertEquals(ResponseMode.FRAGMENT, e.getResponseMode());
 		assertEquals("123", e.getState().getValue());
 	}
 }
