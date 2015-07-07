@@ -69,6 +69,17 @@ public class JSONObjectUtils {
 		else
 			throw new ParseException("The JSON entity is not an object");
 	}
+
+
+	/**
+	 * Use {@link #parse(String)} instead.
+	 */
+	@Deprecated
+	public static JSONObject parseJSONObject(final String s)
+		throws ParseException {
+
+		return parse(s);
+	}
 	
 	
 	/**
