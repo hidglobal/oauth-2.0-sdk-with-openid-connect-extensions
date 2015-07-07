@@ -1,8 +1,8 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import javax.mail.internet.ContentType;
 
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -18,7 +18,7 @@ abstract class HTTPMessage {
 	/**
 	 * The HTTP request / response headers.
 	 */
-	private final Map<String,String> headers = new HashMap<>();
+	private final Map<String,String> headers = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
 
 	/**
@@ -120,7 +120,7 @@ abstract class HTTPMessage {
 	 */
 	public String getHeader(final String name) {
 
-		return headers.get(name.toLowerCase());
+		return headers.get(name);
 	}
 
 
@@ -134,9 +134,9 @@ abstract class HTTPMessage {
 	public void setHeader(final String name, final String value) {
 
 		if (value != null) {
-			headers.put(name.toLowerCase(), value);
+			headers.put(name, value);
 		} else {
-			headers.remove(name.toLowerCase());
+			headers.remove(name);
 		}
 	}
 

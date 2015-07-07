@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk.http;
 
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import junit.framework.TestCase;
 
@@ -110,5 +111,37 @@ public class HTTPResponseTest extends TestCase {
 		assertEquals("apples", array.get(0));
 		assertEquals("pears", array.get(1));
 		assertEquals(2, array.size());
+	}
+
+
+	public void testPreserveHeaderCase() {
+		HTTPResponse response = new HTTPResponse(302);
+		response.setHeader("Location", "http://example.org");
+
+		assertEquals("Location", response.getHeaders().keySet().iterator().next());
+	}
+
+
+	public void testGetHeaderWithCaseMismatch()
+		throws URISyntaxException{
+
+		HTTPResponse response = new HTTPResponse(302);
+		response.setHeader("location", "http://example.org");
+
+		assertEquals(new URI("http://example.org"), response.getLocation());
+	}
+
+
+	public void testRemoveHeaderWithCaseMismatch()
+		throws URISyntaxException{
+
+		HTTPResponse response = new HTTPResponse(302);
+		response.setHeader("location", "http://example.org");
+
+		assertEquals(new URI("http://example.org"), response.getLocation());
+
+		response.setHeader("LOCATION", null);
+
+		assertNull(response.getLocation());
 	}
 }

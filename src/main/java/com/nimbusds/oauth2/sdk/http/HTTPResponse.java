@@ -1,12 +1,9 @@
 package com.nimbusds.oauth2.sdk.http;
 
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.Map;
 
 import net.jcip.annotations.ThreadSafe;
 
