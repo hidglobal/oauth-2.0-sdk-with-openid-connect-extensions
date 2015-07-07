@@ -275,4 +275,7 @@ version 4.14 (2015-07-07)
     * Adds response_mode field to GeneralException.
     * Improves AuthorizationRequest.impliesCodeFlow and impliesImplicitFlow
       logic.
+    * Refactors HTTP code to enable use of the SDK in web servers that are not
+      servlet based (iss #133); the servlet API dependency is made optional.
+      
 
