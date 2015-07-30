@@ -282,5 +282,11 @@ version 4.14 (2015-07-07)
 version 4.14.1 (2015-07-07)
     * Restores JSONObjectUtils.parseJSONObject alias parse, marked deprecated.
 
+version 4.14.2 (2015-07-30)
+    * Fixes URL serialisation of redirect_uri with query component in OAuth 2.0
+      authorisation responses and OpenID authentication responses (iss #140).
+
+
+
 
 
