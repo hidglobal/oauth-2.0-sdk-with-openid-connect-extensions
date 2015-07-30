@@ -215,4 +215,34 @@ public class AuthorizationErrorResponseTest extends TestCase {
 			// ok
 		}
 	}
+
+
+	public void testRedirectionURIWithQueryString()
+		throws Exception {
+		// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/140
+
+		URI redirectURI = URI.create("https://example.com/myservice/?action=oidccallback");
+		assertEquals("action=oidccallback", redirectURI.getQuery());
+
+		State state = new State();
+
+		ErrorObject error = OAuth2Error.ACCESS_DENIED;
+
+		AuthorizationErrorResponse response = new AuthorizationErrorResponse(redirectURI, error, state, ResponseMode.QUERY);
+
+		Map<String,String> params = response.toParameters();
+		assertEquals(OAuth2Error.ACCESS_DENIED.getCode(), params.get("error"));
+		assertEquals(OAuth2Error.ACCESS_DENIED.getDescription(), params.get("error_description"));
+		assertEquals(state.getValue(), params.get("state"));
+		assertEquals(3, params.size());
+
+		URI uri = response.toURI();
+
+		params = URLUtils.parseParameters(uri.getQuery());
+		assertEquals("oidccallback", params.get("action"));
+		assertEquals(OAuth2Error.ACCESS_DENIED.getCode(), params.get("error"));
+		assertEquals(OAuth2Error.ACCESS_DENIED.getDescription(), params.get("error_description"));
+		assertEquals(state.getValue(), params.get("state"));
+		assertEquals(4, params.size());
+	}
 }

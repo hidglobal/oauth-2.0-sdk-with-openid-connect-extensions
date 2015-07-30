@@ -4,6 +4,7 @@ package com.nimbusds.openid.connect.sdk;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -17,6 +18,7 @@ import com.nimbusds.oauth2.sdk.AuthorizationCode;
 import com.nimbusds.oauth2.sdk.ResponseMode;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
 /**
@@ -232,5 +234,32 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 		assertEquals("abc", response.getState().getValue());
 		assertNull(response.getSessionState());
 		assertEquals(ResponseMode.QUERY, response.impliedResponseMode());
+	}
+
+
+	public void testRedirectionURIWithQueryString()
+		throws Exception {
+		// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/140
+
+		URI redirectURI = URI.create("https://example.com/myservice/?action=oidccallback");
+		assertEquals("action=oidccallback", redirectURI.getQuery());
+
+		AuthorizationCode code = new AuthorizationCode();
+		State state = new State();
+
+		AuthenticationSuccessResponse response = new AuthenticationSuccessResponse(redirectURI, code, null, null, state, null, ResponseMode.QUERY);
+
+		Map<String,String> params = response.toParameters();
+		assertEquals(code.getValue(), params.get("code"));
+		assertEquals(state.getValue(), params.get("state"));
+		assertEquals(2, params.size());
+
+		URI uri = response.toURI();
+
+		params = URLUtils.parseParameters(uri.getQuery());
+		assertEquals("oidccallback", params.get("action"));
+		assertEquals(code.getValue(), params.get("code"));
+		assertEquals(state.getValue(), params.get("state"));
+		assertEquals(3, params.size());
 	}
 }

@@ -4,6 +4,7 @@ package com.nimbusds.oauth2.sdk;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -159,7 +160,13 @@ public abstract class AuthorizationResponse implements Response {
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 
 		if (rm.equals(ResponseMode.QUERY)) {
-			sb.append('?');
+			if (StringUtils.isBlank(getRedirectionURI().getQuery())) {
+				sb.append('?');
+			} else {
+				// The original redirect_uri may contain query params,
+				// see http://tools.ietf.org/html/rfc6749#section-3.1.2
+				sb.append('&');
+			}
 		} else if (rm.equals(ResponseMode.FRAGMENT)) {
 			sb.append('#');
 		} else {
