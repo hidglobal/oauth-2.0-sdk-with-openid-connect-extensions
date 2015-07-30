@@ -1065,4 +1065,58 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(request.getNonce().equals(new Nonce("n-0S6_WzA2Mj")));
 		assertTrue(request.getScope().equals(Scope.parse("openid")));
 	}
+
+
+	public void testRequireNonceInHybridFlow()
+		throws Exception {
+
+		// See https://bitbucket.org/openid/connect/issues/972/nonce-requirement-in-hybrid-auth-request
+
+		new AuthenticationRequest.Builder(
+			ResponseType.parse("code"),
+			new Scope("openid"),
+			new ClientID("s6BhdRkqt3"),
+			URI.create("https://example.com/cb")) // redirect_uri
+			.state(new State("af0ifjsldkj"))
+			.build();
+
+		try {
+			new AuthenticationRequest.Builder(
+				ResponseType.parse("code id_token"),
+				new Scope("openid"),
+				new ClientID("s6BhdRkqt3"),
+				URI.create("https://example.com/cb")) // redirect_uri
+				.state(new State("af0ifjsldkj"))
+				.build();
+			fail();
+		} catch (IllegalStateException e) {
+			assertEquals("Nonce is required in implicit / hybrid protocol flow", e.getMessage());
+		}
+
+		try {
+			new AuthenticationRequest.Builder(
+				ResponseType.parse("code id_token token"),
+				new Scope("openid"),
+				new ClientID("s6BhdRkqt3"),
+				URI.create("https://example.com/cb")) // redirect_uri
+				.state(new State("af0ifjsldkj"))
+				.build();
+			fail();
+		} catch (IllegalStateException e) {
+			assertEquals("Nonce is required in implicit / hybrid protocol flow", e.getMessage());
+		}
+
+		try {
+			new AuthenticationRequest.Builder(
+				ResponseType.parse("id_token token"),
+				new Scope("openid"),
+				new ClientID("s6BhdRkqt3"),
+				URI.create("https://example.com/cb")) // redirect_uri
+				.state(new State("af0ifjsldkj"))
+				.build();
+			fail();
+		} catch (IllegalStateException e) {
+			assertEquals("Nonce is required in implicit / hybrid protocol flow", e.getMessage());
+		}
+	}
 }
