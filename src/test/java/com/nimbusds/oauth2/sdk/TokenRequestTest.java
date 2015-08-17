@@ -457,7 +457,32 @@ public class TokenRequestTest extends TestCase {
 		TokenRequest reconstructedRequest = TokenRequest.parse(httpRequest);
 		
 		assertEquals("client", reconstructedRequest.getClientAuthentication().getClientID().getValue());
-		assertEquals("secret", ((ClientSecretPost)reconstructedRequest.getClientAuthentication()).getClientSecret().getValue());
-		assertEquals(code, ((AuthorizationCodeGrant)reconstructedRequest.getAuthorizationGrant()).getAuthorizationCode());
+		assertEquals("secret", ((ClientSecretPost) reconstructedRequest.getClientAuthentication()).getClientSecret().getValue());
+		assertEquals(code, ((AuthorizationCodeGrant) reconstructedRequest.getAuthorizationGrant()).getAuthorizationCode());
+	}
+
+
+	// See issue 141
+	public void testEmptyClientSecret()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://googleapis.com/oauth2/v3/token"));
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+		httpRequest.setQuery("code=0a2b49a9-985d-47cb-b36f-be9ed4927b4c&redirect_uri=https%3A%2F%2Fdevelopers.google.com%2Foauthplayground&client_id=google&client_secret=&scope=&grant_type=authorization_code");
+
+		TokenRequest tokenRequest = TokenRequest.parse(httpRequest);
+
+		assertEquals("https://googleapis.com/oauth2/v3/token", tokenRequest.getEndpointURI().toString());
+		assertNull(tokenRequest.getClientAuthentication());
+		AuthorizationGrant grant = tokenRequest.getAuthorizationGrant();
+		assertTrue(grant instanceof AuthorizationCodeGrant);
+
+		AuthorizationCodeGrant codeGrant = (AuthorizationCodeGrant)grant;
+		assertEquals("0a2b49a9-985d-47cb-b36f-be9ed4927b4c", codeGrant.getAuthorizationCode().getValue());
+		assertEquals("https://developers.google.com/oauthplayground", codeGrant.getRedirectionURI().toString());
+
+		assertEquals("google", tokenRequest.getClientID().getValue());
+
+		assertTrue(tokenRequest.getScope().isEmpty());
 	}
 }
