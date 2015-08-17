@@ -9,6 +9,7 @@ import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -117,11 +118,11 @@ public abstract class ClientAuthentication {
 		Map<String,String> params = URLUtils.parseParameters(query);
 		
 		// We have client secret post
-		if (params.containsKey("client_id") && params.containsKey("client_secret"))
+		if (StringUtils.isNotBlank(params.get("client_id")) && StringUtils.isNotBlank(params.get("client_secret")))
 			return ClientSecretPost.parse(httpRequest);
 		
 		// Do we have a signed JWT assertion?
-		if (params.containsKey("client_assertion") && params.containsKey("client_assertion_type"))
+		if (StringUtils.isNotBlank(params.get("client_assertion")) && StringUtils.isNotBlank(params.get("client_assertion_type")))
 			return JWTAuthentication.parse(httpRequest);
 		else
 			return null;
