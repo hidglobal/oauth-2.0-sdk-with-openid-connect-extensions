@@ -42,6 +42,8 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>On HTTP connect
  *     <li>On HTTP response read
  * </ul>
+ *
+ * <p>HTTP 3xx redirection: follow (default) / don't follow
  */
 @ThreadSafe
 public class HTTPRequest extends HTTPMessage {
@@ -112,6 +114,12 @@ public class HTTPRequest extends HTTPMessage {
 
 	 */
 	private int readTimeout = 0;
+
+
+	/**
+	 * Controls HTTP 3xx redirections.
+	 */
+	private boolean followRedirects = true;
 	
 	
 	/**
@@ -398,6 +406,31 @@ public class HTTPRequest extends HTTPMessage {
 
 
 	/**
+	 * Gets the boolean setting whether HTTP redirects (requests with
+	 * response code 3xx) should be automatically followed.
+	 *
+	 * @return {@code true} if HTTP redirects are automatically followed,
+	 *         else {@code false}.
+	 */
+	public boolean getFollowRedirects() {
+
+		return followRedirects;
+	}
+
+
+	/**
+	 * Sets whether HTTP redirects (requests with response code 3xx) should
+	 * be automatically followed.
+	 *
+	 * @param follow Whether or not to follow HTTP redirects.
+	 */
+	public void setFollowRedirects(final boolean follow) {
+
+		followRedirects = follow;
+	}
+
+
+	/**
 	 * Returns an established HTTP URL connection for this HTTP request.
 	 *
 	 * @return The HTTP URL connection, with the request sent and ready to
@@ -452,6 +485,7 @@ public class HTTPRequest extends HTTPMessage {
 		conn.setRequestMethod(method.name());
 		conn.setConnectTimeout(connectTimeout);
 		conn.setReadTimeout(readTimeout);
+		conn.setInstanceFollowRedirects(followRedirects);
 
 		if (method.equals(HTTPRequest.Method.POST) || method.equals(Method.PUT)) {
 

@@ -79,6 +79,10 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals(0, request.getReadTimeout());
 		request.setReadTimeout(750);
 		assertEquals(750, request.getReadTimeout());
+
+		assertTrue(request.getFollowRedirects());
+		request.setFollowRedirects(false);
+		assertFalse(request.getFollowRedirects());
 	}
 
 
@@ -176,6 +180,29 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals("POST", con.getRequestMethod());
 		assertEquals(250, con.getConnectTimeout());
 		assertEquals(750, con.getReadTimeout());
+		assertTrue(con.getInstanceFollowRedirects());
+	}
+
+
+	@Test
+	public void testToHttpURLConnectionAlt()
+		throws Exception {
+
+		// Simulate token request with invalid token
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("http://localhost:" + port() + "/c2id/token"));
+		httpRequest.setAuthorization("Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW");
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+		httpRequest.setConnectTimeout(250);
+		httpRequest.setReadTimeout(750);
+		httpRequest.setFollowRedirects(false);
+		httpRequest.setQuery("grant_type=authorization_code&code=SplxlOBeZQQYbYS6WxSbIA" +
+			"&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb");
+
+		HttpURLConnection con = httpRequest.toHttpURLConnection();
+		assertEquals("POST", con.getRequestMethod());
+		assertEquals(250, con.getConnectTimeout());
+		assertEquals(750, con.getReadTimeout());
+		assertFalse(con.getInstanceFollowRedirects());
 	}
 
 
