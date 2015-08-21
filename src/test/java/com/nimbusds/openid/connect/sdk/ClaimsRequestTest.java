@@ -612,4 +612,112 @@ public class ClaimsRequestTest extends TestCase {
 		object = r.toJSONObject();
 		assertTrue(object.isEmpty());
 	}
+
+
+	public void testParseFromString()
+		throws Exception {
+
+		// Example from http://openid.net/specs/openid-connect-core-1_0.html#ClaimsParameter
+		String json = "{\n" +
+			"   \"userinfo\":\n" +
+			"    {\n" +
+			"     \"given_name\": {\"essential\": true},\n" +
+			"     \"nickname\": null,\n" +
+			"     \"email\": {\"essential\": true},\n" +
+			"     \"email_verified\": {\"essential\": true},\n" +
+			"     \"picture\": null,\n" +
+			"     \"http://example.info/claims/groups\": null\n" +
+			"    },\n" +
+			"   \"id_token\":\n" +
+			"    {\n" +
+			"     \"auth_time\": {\"essential\": true},\n" +
+			"     \"acr\": {\"values\": [\"urn:mace:incommon:iap:silver\"] }\n" +
+			"    }\n" +
+			"  }";
+
+		ClaimsRequest claimsRequest = ClaimsRequest.parse(json);
+
+		assertTrue(claimsRequest.getUserInfoClaimNames(false).contains("given_name"));
+		assertTrue(claimsRequest.getUserInfoClaimNames(false).contains("nickname"));
+		assertTrue(claimsRequest.getUserInfoClaimNames(false).contains("email"));
+		assertTrue(claimsRequest.getUserInfoClaimNames(false).contains("email_verified"));
+		assertTrue(claimsRequest.getUserInfoClaimNames(false).contains("picture"));
+		assertTrue(claimsRequest.getUserInfoClaimNames(false).contains("http://example.info/claims/groups"));
+		assertEquals(6, claimsRequest.getUserInfoClaimNames(false).size());
+
+		assertTrue(claimsRequest.getIDTokenClaimNames(false).contains("auth_time"));
+		assertTrue(claimsRequest.getIDTokenClaimNames(false).contains("acr"));
+		assertEquals(2, claimsRequest.getIDTokenClaimNames(false).size());
+
+		for (ClaimsRequest.Entry entry: claimsRequest.getUserInfoClaims()) {
+
+			if (entry.getClaimName().equals("given_name")) {
+
+				assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else if (entry.getClaimName().equals("nickname")) {
+
+				assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else if (entry.getClaimName().equals("email")) {
+
+				assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else if (entry.getClaimName().equals("email_verified")) {
+
+				assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else if (entry.getClaimName().equals("picture")) {
+
+				assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else if (entry.getClaimName().equals("http://example.info/claims/groups")) {
+
+				assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else {
+				fail("Unexpected userinfo claim name: " + entry.getClaimName());
+			}
+		}
+
+		for (ClaimsRequest.Entry entry: claimsRequest.getIDTokenClaims()) {
+
+			if (entry.getClaimName().equals("auth_time")) {
+
+				assertEquals(ClaimRequirement.ESSENTIAL, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertNull(entry.getValues());
+
+			} else if (entry.getClaimName().equals("acr")) {
+
+				assertEquals(ClaimRequirement.VOLUNTARY, entry.getClaimRequirement());
+				assertNull(entry.getLangTag());
+				assertNull(entry.getValue());
+				assertTrue(entry.getValues().contains("urn:mace:incommon:iap:silver"));
+				assertEquals(1, entry.getValues().size());
+
+			} else {
+				fail("Unexpected id_token claim name: " + entry.getClaimName());
+			}
+		}
+	}
 }

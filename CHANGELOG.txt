@@ -294,6 +294,10 @@ version 4.15 (2015-08-18)
     * Adds HTTPRequest ability to control follow / not follow HTTP 3xx
       redirections.
 
+version 4.16 (2015-08-21)
+     * Adds convenience ClaimsRequest.parse(String) method.
+
+
 
 
 

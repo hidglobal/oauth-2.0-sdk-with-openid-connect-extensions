@@ -21,7 +21,9 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
 
 import com.nimbusds.oauth2.sdk.ResponseType;
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 import com.nimbusds.openid.connect.sdk.claims.ClaimRequirement;
 
@@ -1015,5 +1017,25 @@ public class ClaimsRequest {
 		}
 
 		return claimsRequest;
+	}
+
+
+	/**
+	 * Parses a claims request from the specified JSON object string
+	 * representation. Unexpected members in the JSON object are silently
+	 * ignored.
+	 *
+	 * @param json The JSON object string to parse. Must not be
+	 *             {@code null}.
+	 *
+	 * @return The claims request.
+	 *
+	 * @throws ParseException If the string couldn't be parsed to a valid
+	 *                        JSON object.
+	 */
+	public static ClaimsRequest parse(final String json)
+		throws ParseException {
+
+		return parse(JSONObjectUtils.parse(json));
 	}
 }
