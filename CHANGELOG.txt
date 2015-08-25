@@ -297,6 +297,13 @@ version 4.15 (2015-08-18)
 version 4.16 (2015-08-21)
      * Adds convenience ClaimsRequest.parse(String) method.
 
+version 4.17 (2015-08-25)
+     * Fixes checks in IDTokenClaimsSet.hasRequiredClaims (iss #132).
+       Introduces second method parameter to indicate the issue endpoint of the
+       ID token (authz endpoint / token endpoint) which is required for hybrid
+       flow checks.
+
+
 
 
 
