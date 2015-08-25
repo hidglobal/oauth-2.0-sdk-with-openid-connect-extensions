@@ -250,24 +250,136 @@ public class IDTokenClaimsSet extends ClaimsSet {
 	 * Checks if this ID token claims set contains all required claims for
 	 * the specified OpenID Connect response type.
 	 *
-	 * @param rt The OpenID Connect response type. Must not be
-	 *           {@code null}.
+	 * @param responseType     The OpenID Connect response type. Must not
+	 *                         be {@code null}.
+	 * @param iatAuthzEndpoint Specifies the endpoint where the ID token
+	 *                         was issued (required for hybrid flow).
+	 *                         {@code true} if the ID token was issued at
+	 *                         the authorisation endpoint, {@code false} if
+	 *                         the ID token was issued at the token
+	 *                         endpoint.
 	 *
 	 * @return {@code true} if the required claims are contained, else
 	 *         {@code false}.
 	 */
-	public boolean hasRequiredClaims(final ResponseType rt) {
+	public boolean hasRequiredClaims(final ResponseType responseType, final boolean iatAuthzEndpoint) {
 
-		if (rt.impliesImplicitFlow() && getNonce() == null)
-			return false;
+		// Code flow
+		// See http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
+		if (new ResponseType("code").equals(responseType)) {
+			// nonce, c_hash and at_hash not required
+			return true; // ok
+		}
 
-		if (rt.impliesImplicitFlow() && rt.contains(ResponseType.Value.TOKEN) && getAccessTokenHash() == null)
-			return false;
+		// Implicit flow
+		// See http://openid.net/specs/openid-connect-core-1_0.html#ImplicitIDToken
+		if (new ResponseType("id_token").equals(responseType)) {
 
-		if (rt.impliesCodeFlow() && getCodeHash() == null)
-			return false;
+			if (getNonce() == null) {
+				// nonce required
+				return false;
+			}
 
-		return true;
+			return true; // ok
+		}
+
+		if (new ResponseType("id_token", "token").equals(responseType)) {
+
+			if (getNonce() == null) {
+				// nonce required
+				return false;
+			}
+
+			if (getAccessTokenHash() == null) {
+				// at_hash required
+				return false;
+			}
+
+			return true; // ok
+		}
+
+		// Hybrid flow
+		// See http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken
+		if (new ResponseType("code", "id_token").equals(responseType)) {
+
+			if (getNonce() == null) {
+				// nonce required
+				return false;
+			}
+
+			if (! iatAuthzEndpoint) {
+				// c_hash and at_hash not required when id_token issued at token endpoint
+				// See http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken2
+				return true;
+			}
+
+			if (getCodeHash() == null) {
+				// c_hash required when issued at authz endpoint
+				return false;
+			}
+
+			return true; // ok
+		}
+
+		if (new ResponseType("code", "token").equals(responseType)) {
+
+			if (getNonce() == null) {
+				// nonce required
+				return false;
+			}
+
+			if (! iatAuthzEndpoint) {
+				// c_hash and at_hash not required when id_token issued at token endpoint
+				// See http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken2
+				return true;
+			}
+
+			return true; // ok
+		}
+
+		if (new ResponseType("code", "id_token", "token").equals(responseType)) {
+
+			if (getNonce() == null) {
+				// nonce required
+				return false;
+			}
+
+			if (! iatAuthzEndpoint) {
+				// c_hash and at_hash not required when id_token issued at token endpoint
+				// See http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken2
+				return true;
+			}
+
+			if (getAccessTokenHash() == null) {
+				// at_hash required when issued at authz endpoint
+				return false;
+			}
+
+			if (getCodeHash() == null) {
+				// c_hash required when issued at authz endpoint
+				return false;
+			}
+
+			return true; // ok
+		}
+
+		throw new IllegalArgumentException("Unsupported response_type: " + responseType);
+	}
+
+
+	/**
+	 * Use {@link #hasRequiredClaims(ResponseType, boolean)} instead.
+	 *
+	 * @param responseType The OpenID Connect response type. Must not be
+	 *                     {@code null}.
+	 *
+	 * @return {@code true} if the required claims are contained, else
+	 *         {@code false}.
+	 */
+	@Deprecated
+	public boolean hasRequiredClaims(final ResponseType responseType) {
+
+		return hasRequiredClaims(responseType, true);
 	}
 
 

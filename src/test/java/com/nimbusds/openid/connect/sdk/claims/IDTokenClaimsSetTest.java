@@ -11,11 +11,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.Audience;
@@ -24,7 +24,6 @@ import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.util.DateUtils;
 
 import com.nimbusds.openid.connect.sdk.Nonce;
-import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
 
 
 /**
@@ -75,7 +74,6 @@ public class IDTokenClaimsSetTest extends TestCase {
 
 	public void testReadOnlyJWTClaimsSetConstructor()
 		throws Exception {
-
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet();
 		claimsSet.setIssuer("https://c2id.com");
@@ -245,11 +243,13 @@ public class IDTokenClaimsSetTest extends TestCase {
 	}
 
 
-	public void testHasRequiredClaimsImplicitFlow() {
+	public void testHasRequiredClaimsCodeFlow()
+		throws Exception {
 
-		ResponseType responseType = new ResponseType();
-		responseType.add(ResponseType.Value.TOKEN);
-		responseType.add(OIDCResponseTypeValue.ID_TOKEN);
+		// See http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
+
+		ResponseType rt_code = ResponseType.parse("code");
+		boolean iatAuthzEndpoint = false;
 
 		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
 			new Issuer("iss"),
@@ -258,19 +258,25 @@ public class IDTokenClaimsSetTest extends TestCase {
 			new Date(),
 			new Date());
 
-		assertFalse(claimsSet.hasRequiredClaims(responseType));
+		// c_hash not required, at_hash optional in response_type=code
+		assertTrue(claimsSet.hasRequiredClaims(rt_code, iatAuthzEndpoint));
 
-		claimsSet.setNonce(new Nonce());
+		claimsSet.setCodeHash(new CodeHash("c_hash"));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code, iatAuthzEndpoint));
+
 		claimsSet.setAccessTokenHash(new AccessTokenHash("at_hash"));
-
-		assertTrue(claimsSet.hasRequiredClaims(responseType));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code, iatAuthzEndpoint));
 	}
 
 
-	public void testHasRequiredClaimsCodeFlow() {
+	public void testHasRequiredClaimsImplicitFlow()
+		throws Exception {
 
-		ResponseType responseType = new ResponseType();
-		responseType.add(ResponseType.Value.CODE);
+		// See http://openid.net/specs/openid-connect-core-1_0.html#ImplicitIDToken
+
+		ResponseType rt_idToken = ResponseType.parse("id_token");
+		ResponseType rt_idToken_token = ResponseType.parse("id_token token");
+		boolean iatAuthzEndpoint = true;
 
 		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
 			new Issuer("iss"),
@@ -279,20 +285,32 @@ public class IDTokenClaimsSetTest extends TestCase {
 			new Date(),
 			new Date());
 
-		assertFalse(claimsSet.hasRequiredClaims(responseType));
+		// nonce always required
+		assertFalse(claimsSet.hasRequiredClaims(rt_idToken, iatAuthzEndpoint));
+		assertFalse(claimsSet.hasRequiredClaims(rt_idToken_token, iatAuthzEndpoint));
 
-		claimsSet.setCodeHash(new CodeHash("c_hash"));
+		claimsSet.setNonce(new Nonce());
 
-		assertTrue(claimsSet.hasRequiredClaims(responseType));
+		// at_hash required in id_token token, not in id_token
+		assertTrue(claimsSet.hasRequiredClaims(rt_idToken, iatAuthzEndpoint));
+		assertFalse(claimsSet.hasRequiredClaims(rt_idToken_token, iatAuthzEndpoint));
+
+		claimsSet.setAccessTokenHash(new AccessTokenHash("at_hash"));
+
+		assertTrue(claimsSet.hasRequiredClaims(rt_idToken, iatAuthzEndpoint));
+		assertTrue(claimsSet.hasRequiredClaims(rt_idToken_token, iatAuthzEndpoint));
 	}
 
 
-	public void testHasRequiredClaimsHybridFlow() {
+	public void testHasRequiredClaimsHybridFlow()
+		throws Exception {
 
-		ResponseType responseType = new ResponseType();
-		responseType.add(ResponseType.Value.CODE);
-		responseType.add(ResponseType.Value.TOKEN);
-		responseType.add(OIDCResponseTypeValue.ID_TOKEN);
+		// See http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken
+		// See http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken2
+
+		ResponseType rt_code_idToken = ResponseType.parse("code id_token");
+		ResponseType rt_code_token = ResponseType.parse("code token");
+		ResponseType rt_code_idToken_token = ResponseType.parse("code id_token token");
 
 		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
 			new Issuer("iss"),
@@ -301,14 +319,58 @@ public class IDTokenClaimsSetTest extends TestCase {
 			new Date(),
 			new Date());
 
-		assertFalse(claimsSet.hasRequiredClaims(responseType));
+		// Nonce always required in hybrid flow, regardless of issue endpoint
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken, true));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_token, true));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken_token, true));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken, false));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_token, false));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken_token, false));
+
+		claimsSet.setNonce(new Nonce());
+
+		// at_hash and c_hash not required when id_token issued at token endpoint
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_idToken, false));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_token, false));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_idToken_token, false));
+
+		// c_hash required with 'code id_token' and 'code id_token token' issued at authz endpoint
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken, true));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_token, true));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken_token, true));
 
 		claimsSet.setCodeHash(new CodeHash("c_hash"));
 
-		claimsSet.setNonce(new Nonce());
+		// at_hash required with 'code id_token token' issued at authz endpoint
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_idToken, true));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_token, true));
+		assertFalse(claimsSet.hasRequiredClaims(rt_code_idToken_token, true));
+
 		claimsSet.setAccessTokenHash(new AccessTokenHash("at_hash"));
 
-		assertTrue(claimsSet.hasRequiredClaims(responseType));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_idToken, true));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_token, true));
+		assertTrue(claimsSet.hasRequiredClaims(rt_code_idToken_token, true));
+	}
+
+
+	public void testRequiredClaims_unsupportedResponseType() {
+
+		ResponseType responseType = new ResponseType("token");
+
+		IDTokenClaimsSet claimsSet = new IDTokenClaimsSet(
+			new Issuer("iss"),
+			new Subject("sub"),
+			new Audience("aud").toSingleAudienceList(),
+			new Date(),
+			new Date());
+
+		try {
+			claimsSet.hasRequiredClaims(responseType, true);
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("Unsupported response_type: token", e.getMessage());
+		}
 	}
 
 
