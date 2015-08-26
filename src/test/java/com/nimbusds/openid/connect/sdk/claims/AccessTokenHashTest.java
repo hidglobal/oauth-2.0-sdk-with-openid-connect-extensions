@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 
 import com.nimbusds.jose.JWSAlgorithm;
 
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.TypelessAccessToken;
 
@@ -45,5 +46,25 @@ public class AccessTokenHashTest extends TestCase {
 		AccessToken token = new TypelessAccessToken("12345678");
 
 		assertNull(AccessTokenHash.compute(token, new JWSAlgorithm("no-such-alg")));
+	}
+
+
+	public void testIDTokenRequirement()
+		throws Exception {
+
+		// code flow
+		// http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
+		assertFalse(AccessTokenHash.isRequiredInIDTokenClaims(ResponseType.parse("code")));
+
+		// implicit flow
+		// http://openid.net/specs/openid-connect-core-1_0.html#ImplicitIDToken
+		assertFalse(AccessTokenHash.isRequiredInIDTokenClaims(ResponseType.parse("id_token")));
+		assertTrue(AccessTokenHash.isRequiredInIDTokenClaims(ResponseType.parse("id_token token")));
+
+		// hybrid flow
+		// http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken
+		assertFalse(AccessTokenHash.isRequiredInIDTokenClaims(ResponseType.parse("code id_token")));
+		assertFalse(AccessTokenHash.isRequiredInIDTokenClaims(ResponseType.parse("code token")));
+		assertTrue(AccessTokenHash.isRequiredInIDTokenClaims(ResponseType.parse("code id_token token")));
 	}
 }

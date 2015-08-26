@@ -5,6 +5,7 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JWSAlgorithm;
 
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 
 
@@ -19,6 +20,31 @@ import com.nimbusds.oauth2.sdk.token.AccessToken;
  */
 @Immutable
 public final class AccessTokenHash extends HashClaim {
+
+
+	/**
+	 * Checks if an access token hash claim must be included in ID tokens
+	 * for the specified response type.
+	 *
+	 * @param responseType The OpenID Connect response type. Must not be
+	 *                     {@code null}.
+	 *
+	 * @return {@code true} if the access token hash is required, else
+	 *         {@code false}.
+	 */
+	public static boolean isRequiredInIDTokenClaims(final ResponseType responseType) {
+
+		// Only required in implicit flow for 'token id_token' and
+		// hybrid flow for 'code id_token token'
+		// Disregard authz / token endpoint!
+		if (    new ResponseType("token", "id_token").equals(responseType) ||
+			new ResponseType("code", "id_token", "token").equals(responseType)) {
+
+			return true;
+		}
+
+		return false;
+	}
 
 
 	/**

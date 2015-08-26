@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 
 import com.nimbusds.jose.JWSAlgorithm;
 
+import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.AuthorizationCode;
 
 
@@ -43,5 +44,25 @@ public class CodeHashTest extends TestCase {
 		AuthorizationCode code = new AuthorizationCode();
 
 		assertNull(CodeHash.compute(code, new JWSAlgorithm("no-such-alg")));
+	}
+
+
+	public void testIDTokenRequirement()
+		throws Exception {
+
+		// code flow
+		// http://openid.net/specs/openid-connect-core-1_0.html#CodeIDToken
+		assertFalse(CodeHash.isRequiredInIDTokenClaims(ResponseType.parse("code")));
+
+		// implicit flow
+		// http://openid.net/specs/openid-connect-core-1_0.html#ImplicitIDToken
+		assertFalse(CodeHash.isRequiredInIDTokenClaims(ResponseType.parse("id_token")));
+		assertFalse(CodeHash.isRequiredInIDTokenClaims(ResponseType.parse("id_token token")));
+
+		// hybrid flow
+		// http://openid.net/specs/openid-connect-core-1_0.html#HybridIDToken
+		assertTrue(CodeHash.isRequiredInIDTokenClaims(ResponseType.parse("code id_token")));
+		assertFalse(CodeHash.isRequiredInIDTokenClaims(ResponseType.parse("code token")));
+		assertTrue(CodeHash.isRequiredInIDTokenClaims(ResponseType.parse("code id_token token")));
 	}
 }
