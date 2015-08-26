@@ -32,10 +32,10 @@ import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-27), section 3.2.1.
- *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol
- *         (draft-ietf-oauth-dyn-reg-management-12), section 3.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591), section
+ *         3.2.1.
+ *     <li>OAuth 2.0 Dynamic Client Registration Management Protocol (RFC
+ *         7592), section 3.
  * </ul>
  */
 @Immutable

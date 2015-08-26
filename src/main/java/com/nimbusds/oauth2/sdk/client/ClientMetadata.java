@@ -47,8 +47,8 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-27), section 2.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591), section
+ *         2.
  * </ul>
  */
 public class ClientMetadata {

@@ -12,8 +12,8 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol 
- *         (draft-ietf-oauth-dyn-reg-27), section 3.2.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591), section
+ *         3.2.
  * </ul>
  */
 public abstract class ClientRegistrationResponse implements Response {

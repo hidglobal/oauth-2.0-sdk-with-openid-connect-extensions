@@ -16,9 +16,9 @@ import net.jcip.annotations.Immutable;
  *
  * <ul>
  *     <li>SAML 2.0 Profile for OAuth 2.0 Client Authentication and
- *     Authorization Grants (draft-ietf-oauth-saml2-bearer-21), section-2.1.
+ *     Authorization Grants (RFC 7522), section-2.1.
  *     <li>Assertion Framework for OAuth 2.0 Client Authentication and
- *         Authorization Grants (draft-ietf-oauth-assertions-16), section 4.1.
+ *         Authorization Grants (RFC 7521), section 4.1.
  * </ul>
  */
 @Immutable

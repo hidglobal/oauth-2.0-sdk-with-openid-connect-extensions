@@ -16,8 +16,8 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  *
  * <ul>
  *     <li>OpenID Connect Dynamic Client Registration 1.0, section 3.2 and 3.3.
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-27), sections 2 and 3.2.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591), sections
+ *         2 and 3.2.
  * </ul>
  */
 @Immutable

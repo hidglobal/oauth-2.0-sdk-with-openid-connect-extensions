@@ -21,7 +21,7 @@ public final class AccessTokenType extends Identifier {
 	
 	/**
 	 * MAC, see OAuth 2.0 Message Authentication Code (MAC) Tokens 
-	 * (draft-ietf-oauth-v2-http-mac-04).
+	 * (draft-ietf-oauth-v2-http-mac-05).
 	 */
 	public static final AccessTokenType MAC = new AccessTokenType("mac");
 

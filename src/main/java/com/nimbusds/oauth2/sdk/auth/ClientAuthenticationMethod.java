@@ -25,8 +25,8 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 2.3.
- *     <li>OAuth 2.0 Dynamic Client Registration Protocol
- *         (draft-ietf-oauth-dyn-reg-20), section 2.
+ *     <li>OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591), section
+ *         2.
  * </ul>
  */
 @Immutable

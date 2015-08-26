@@ -48,15 +48,15 @@ public final class GrantType extends Identifier {
 
 
 	/**
-	 * JWT bearer, as defined in draft-ietf-oauth-jwt-bearer-10. Explicit
-	 * client authentication is optional.
+	 * JWT bearer, as defined in RFC 7523. Explicit client authentication
+	 * is optional.
 	 */
 	public static final GrantType JWT_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer", false, false);
 
 
 	/**
-	 * SAML 2.0 bearer, as defined in draft-ietf-oauth-saml2-bearer-21.
-	 * Explicit client authentication is optional.
+	 * SAML 2.0 bearer, as defined in RFC 7522. Explicit client
+	 * authentication is optional.
 	 */
 	public static final GrantType SAML2_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:saml2-bearer", false, false);
 
