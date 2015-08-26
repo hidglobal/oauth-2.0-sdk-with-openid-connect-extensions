@@ -306,7 +306,8 @@ version 4.17 (2015-08-26)
        Introduces second method parameter to indicate the issue endpoint of the
        ID token (authz endpoint / token endpoint) which is required for hybrid
        flow checks.
-
+     * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
+       7591 and RFC 7592.
 
 
 
