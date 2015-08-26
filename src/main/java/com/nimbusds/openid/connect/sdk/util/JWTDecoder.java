@@ -5,7 +5,7 @@ import java.text.ParseException;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
+import com.nimbusds.jwt.JWTClaimsSet;
 
 
 /**
@@ -29,6 +29,6 @@ public interface JWTDecoder {
 	 *                        decryption of the JWT failed.
 	 * @throws ParseException If parsing of the JWT claims set failed.
 	 */
-	public ReadOnlyJWTClaimsSet decodeJWT(final JWT jwt)
+	JWTClaimsSet decodeJWT(final JWT jwt)
 		throws JOSEException, ParseException;
 }

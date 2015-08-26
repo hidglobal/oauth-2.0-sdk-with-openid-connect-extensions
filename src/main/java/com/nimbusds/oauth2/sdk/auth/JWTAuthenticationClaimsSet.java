@@ -11,7 +11,6 @@ import java.util.Set;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.Audience;
@@ -317,27 +316,15 @@ public class JWTAuthenticationClaimsSet {
 	 */
 	public JWTClaimsSet toJWTClaimsSet() {
 
-		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
-
-		jwtClaimsSet.setIssuer(iss.getValue());
-		jwtClaimsSet.setSubject(sub.getValue());
-
-		List<String> audList = new LinkedList<>();
-		audList.add(aud.getValue());
-
-		jwtClaimsSet.setAudience(audList);
-		jwtClaimsSet.setExpirationTime(exp);
-
-		if (nbf != null)
-			jwtClaimsSet.setNotBeforeTime(nbf);
-		
-		if (iat != null)
-			jwtClaimsSet.setIssueTime(iat);
-		
-		if (jti != null)
-			jwtClaimsSet.setJWTID(jti.getValue());
-
-		return jwtClaimsSet;
+		return new JWTClaimsSet.Builder()
+			.issuer(iss.getValue())
+			.subject(sub.getValue())
+			.audience(aud.getValue())
+			.expirationTime(exp)
+			.notBeforeTime(nbf) // optional
+			.issueTime(iat) // optional
+			.jwtID(jti.getValue()) // optional
+			.build();
 	}
 	
 	
@@ -417,7 +404,7 @@ public class JWTAuthenticationClaimsSet {
 	 * @throws ParseException If the JWT claims set couldn't be parsed to a 
 	 *                        client authentication claims set.
 	 */
-	public static JWTAuthenticationClaimsSet parse(final ReadOnlyJWTClaimsSet jwtClaimsSet)
+	public static JWTAuthenticationClaimsSet parse(final JWTClaimsSet jwtClaimsSet)
 		throws ParseException {
 		
 		return parse(jwtClaimsSet.toJSONObject());

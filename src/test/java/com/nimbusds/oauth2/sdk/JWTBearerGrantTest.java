@@ -20,8 +20,9 @@ public class JWTBearerGrantTest extends TestCase {
 	public void testConstructorAndParser()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setSubject("alice");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
 
 		JWT assertion = new PlainJWT(claimsSet);
 
@@ -44,8 +45,9 @@ public class JWTBearerGrantTest extends TestCase {
 
 	public void testParseInvalidGrant() {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setSubject("alice");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
 
 		Map<String,String> params = new HashMap<>();
 		params.put("grant_type", "invalid-grant");

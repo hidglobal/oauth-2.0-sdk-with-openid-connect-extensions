@@ -306,3 +306,7 @@ version 4.16 (2015-08-26)
        flow checks.
      * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
        7591 and RFC 7592.
+
+version 5.0 (2015-08-xx)
+     * Upgrades to Nimbus JOSE+JWT 4.0-RC4.
+     * Upgrades to Apache Commons Lang 3.4.

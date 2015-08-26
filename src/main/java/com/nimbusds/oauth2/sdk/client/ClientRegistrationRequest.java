@@ -13,8 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ProtectedResourceRequest;
@@ -145,7 +145,7 @@ public class ClientRegistrationRequest extends ProtectedResourceRequest {
 				throw new IllegalArgumentException("The software statement JWT must be signed");
 			}
 
-			ReadOnlyJWTClaimsSet claimsSet;
+			JWTClaimsSet claimsSet;
 
 			try {
 				claimsSet = softwareStatement.getJWTClaimsSet();

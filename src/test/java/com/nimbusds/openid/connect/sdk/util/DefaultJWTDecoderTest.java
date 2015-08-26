@@ -72,7 +72,7 @@ public class DefaultJWTDecoderTest {
 			jwtDecoder.addJWSVerifier(verifier);
 			Collection<JWSVerifier> verifiers = jwtDecoder.getJWSVerifiers();
 			assertNotNull(verifiers);
-			assertEquals(verifier.getAcceptedAlgorithms().size(), verifiers.size());
+			assertEquals(verifier.supportedJWSAlgorithms().size(), verifiers.size());
 		} catch (NoSuchAlgorithmException e) {
 			fail("Failed due to: " + e.getMessage());
 		}
@@ -92,7 +92,7 @@ public class DefaultJWTDecoderTest {
 			jwtDecoder.addJWEDecrypter(decrypter);
 			Collection<JWEDecrypter> decrypters = jwtDecoder.getJWEDecrypters();
 			assertNotNull(decrypters);
-			assertEquals(decrypter.getAcceptedAlgorithms().size(), decrypters.size());
+			assertEquals(decrypter.supportedJWEAlgorithms().size(), decrypters.size());
 		} catch (NoSuchAlgorithmException e) {
 			fail("Failed due to: " + e.getMessage());
 		}

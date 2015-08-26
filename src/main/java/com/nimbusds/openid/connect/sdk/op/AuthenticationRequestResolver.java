@@ -14,8 +14,8 @@ import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
@@ -206,7 +206,7 @@ public class AuthenticationRequestResolver {
 	 *                          decoding, JWS validation or JWE decryption 
 	 *                          failed.
 	 */
-	private ReadOnlyJWTClaimsSet decodeRequestObject(final JWT requestObject)
+	private JWTClaimsSet decodeRequestObject(final JWT requestObject)
 		throws ResolveException {
 		
 		if (jwtDecoder == null) {
@@ -241,10 +241,10 @@ public class AuthenticationRequestResolver {
 	 * @throws ResolveException If reformatting of the JWT claims set 
 	 *                          failed.
 	 */
-	public static Map<String,String> reformatClaims(final ReadOnlyJWTClaimsSet claimsSet)
+	public static Map<String,String> reformatClaims(final JWTClaimsSet claimsSet)
 		throws ResolveException {
 
-		Map<String,Object> claims = claimsSet.getAllClaims();
+		Map<String,Object> claims = claimsSet.getClaims();
 
 		// Reformat all claim values as strings
 		Map<String,String> reformattedClaims = new HashMap<>();
@@ -326,7 +326,7 @@ public class AuthenticationRequestResolver {
 				jwt = request.getRequestObject();
 			}
 
-			ReadOnlyJWTClaimsSet jwtClaims = decodeRequestObject(jwt);
+			JWTClaimsSet jwtClaims = decodeRequestObject(jwt);
 
 			Map<String, String> requestObjectParams = reformatClaims(jwtClaims);
 
