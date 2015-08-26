@@ -297,12 +297,15 @@ version 4.15 (2015-08-18)
 version 4.16 (2015-08-21)
      * Adds convenience ClaimsRequest.parse(String) method.
 
-version 4.17 (2015-08-25)
+version 4.17 (2015-08-26)
+     * Adds static AccessTokenHash.isRequiredInIDTokenClaims and
+       CodeHash.isRequiredInIDTokenClaims methods. Intended for OP to determine
+       when to add c_hash and at_hash claim to ID token claims set based on
+       the requested response_type (iss #144).
      * Fixes checks in IDTokenClaimsSet.hasRequiredClaims (iss #132).
        Introduces second method parameter to indicate the issue endpoint of the
        ID token (authz endpoint / token endpoint) which is required for hybrid
        flow checks.
-
 
 
 
