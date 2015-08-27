@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.token.AccessToken;
+import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
 import com.nimbusds.oauth2.sdk.token.TokenPair;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
