@@ -37,9 +37,9 @@ public class NonceTest extends TestCase {
 	public void testIntConstructorZero() {
 
 		try {
-			Nonce nonceZero = new Nonce(0);
+			new Nonce(0);
 
-			fail("Failed to raise exception");
+			fail();
 
 		} catch (IllegalArgumentException e) {
 
@@ -51,9 +51,9 @@ public class NonceTest extends TestCase {
 	public void testIntConstructorNegative() {
 
 		try {
-			Nonce nonceZero = new Nonce(-1);
+			new Nonce(-1);
 
-			fail("Failed to raise exception");
+			fail();
 
 		} catch (IllegalArgumentException e) {
 

@@ -165,12 +165,8 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	 *
 	 * @return The parameters map, with keys "client_assertion",
 	 *         "client_assertion_type" and "client_id".
-	 *
-	 * @throws SerializeException If the signed JWT couldn't be serialised
-	 *                            to a client assertion string.
 	 */
-	public Map<String,String> toParameters()
-		throws SerializeException {
+	public Map<String,String> toParameters() {
 	
 		Map<String,String> params = new HashMap<>();
 		
@@ -189,8 +185,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	
 	
 	@Override
-	public void applyTo(final HTTPRequest httpRequest)
-		throws SerializeException {
+	public void applyTo(final HTTPRequest httpRequest) {
 		
 		if (httpRequest.getMethod() != HTTPRequest.Method.POST)
 			throw new SerializeException("The HTTP request method must be POST");

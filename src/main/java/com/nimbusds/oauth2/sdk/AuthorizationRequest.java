@@ -430,12 +430,8 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * </pre>
 	 * 
 	 * @return The parameters.
-	 *
-	 * @throws SerializeException If this authorisation request couldn't be
-	 *                            serialised to an parameters map.
 	 */
-	public Map<String,String> toParameters()
-		throws SerializeException {
+	public Map<String,String> toParameters() {
 
 		Map <String,String> params = new LinkedHashMap<>();
 		
@@ -475,12 +471,8 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * </pre>
 	 * 
 	 * @return The URI query string.
-	 *
-	 * @throws SerializeException If this authorisation request couldn't be
-	 *                            serialised to an URI query string.
 	 */
-	public String toQueryString()
-		throws SerializeException {
+	public String toQueryString() {
 		
 		return URLUtils.serializeParameters(toParameters());
 	}
@@ -502,12 +494,8 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * </pre>
 	 *
 	 * @return The URI representation.
-	 *
-	 * @throws SerializeException If this authorisation request couldn't be
-	 *                            serialised to a URI.
 	 */
-	public URI toURI()
-		throws SerializeException {
+	public URI toURI() {
 
 		if (getEndpointURI() == null)
 			throw new SerializeException("The authorization endpoint URI is not specified");
@@ -530,13 +518,8 @@ public class AuthorizationRequest extends AbstractRequest {
 	 *               not be {@code null}.
 	 *
 	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If the authorisation request message
-	 *                            couldn't be serialised to an HTTP  
-	 *                            request.
 	 */
-	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method)
-		throws SerializeException {
+	public HTTPRequest toHTTPRequest(final HTTPRequest.Method method) {
 		
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");
@@ -573,8 +556,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest()
-		throws SerializeException {
+	public HTTPRequest toHTTPRequest() {
 	
 		return toHTTPRequest(HTTPRequest.Method.GET);
 	}

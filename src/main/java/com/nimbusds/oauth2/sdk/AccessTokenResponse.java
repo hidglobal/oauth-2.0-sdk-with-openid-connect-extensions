@@ -213,12 +213,8 @@ public class AccessTokenResponse
 	 * </pre>
 	 *
 	 * @return The JSON object.
-	 *
-	 * @throws SerializeException If this access token response couldn't be
-	 *                            serialised to a JSON object.
 	 */
-	public JSONObject toJSONObject()
-		throws SerializeException {
+	public JSONObject toJSONObject() {
 	
 		JSONObject o = accessToken.toJSONObject();
 
@@ -233,8 +229,7 @@ public class AccessTokenResponse
 	
 	
 	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
+	public HTTPResponse toHTTPResponse() {
 	
 		HTTPResponse httpResponse = new HTTPResponse(HTTPResponse.SC_OK);
 		

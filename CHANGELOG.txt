@@ -308,5 +308,6 @@ version 4.16 (2015-08-26)
        7591 and RFC 7592.
 
 version 5.0 (2015-08-xx)
+     * Converted SerializeException to unchecked.
      * Upgrades to Nimbus JOSE+JWT 4.0-RC4.
      * Upgrades to Apache Commons Lang 3.4.

@@ -909,8 +909,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 	@Override
-	public Map<String,String> toParameters()
-		throws SerializeException {
+	public Map<String,String> toParameters() {
 
 		Map <String,String> params = super.toParameters();
 		

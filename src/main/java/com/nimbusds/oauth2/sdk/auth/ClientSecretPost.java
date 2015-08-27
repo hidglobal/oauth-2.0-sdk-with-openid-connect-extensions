@@ -91,8 +91,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	
 	
 	@Override
-	public void applyTo(final HTTPRequest httpRequest)
-		throws SerializeException {
+	public void applyTo(final HTTPRequest httpRequest) {
 	
 		if (httpRequest.getMethod() != HTTPRequest.Method.POST)
 			throw new SerializeException("The HTTP request method must be POST");

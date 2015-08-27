@@ -97,8 +97,7 @@ public class UserInfoRequest extends ProtectedResourceRequest {
 	
 	
 	@Override
-	public HTTPRequest toHTTPRequest()
-		throws SerializeException {
+	public HTTPRequest toHTTPRequest() {
 		
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");

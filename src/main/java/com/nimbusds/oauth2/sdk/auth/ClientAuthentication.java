@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -136,10 +135,6 @@ public abstract class ClientAuthentication {
 	 * (according to the implemented client authentication method).
 	 *
 	 * @param httpRequest The HTTP request. Must not be {@code null}.
-	 *
-	 * @throws SerializeException If the client authentication parameters
-	 *                            couldn't be applied to the HTTP request.
 	 */
-	public abstract void applyTo(final HTTPRequest httpRequest) 
-		throws SerializeException;
+	public abstract void applyTo(final HTTPRequest httpRequest);
 }
