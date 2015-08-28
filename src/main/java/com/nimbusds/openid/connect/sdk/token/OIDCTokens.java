@@ -19,7 +19,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
- * Access token, ID token and optional refresh token.
+ * ID token, access token and optional refresh token.
  */
 @Immutable
 public final class OIDCTokens extends Tokens {
