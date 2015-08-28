@@ -61,7 +61,7 @@ public final class RefreshToken extends Token {
 
 
 	@Override
-	public Set<String> getParamNames() {
+	public Set<String> getParameterNames() {
 
 		Set<String> paramNames = new HashSet<>();
 		paramNames.add("refresh_token");

@@ -16,8 +16,8 @@ public class RefreshTokenTest extends TestCase {
 
 		RefreshToken rt = new RefreshToken("abc");
 		assertEquals("abc", rt.getValue());
-		assertTrue(rt.getParamNames().contains("refresh_token"));
-		assertEquals(1, rt.getParamNames().size());
+		assertTrue(rt.getParameterNames().contains("refresh_token"));
+		assertEquals(1, rt.getParameterNames().size());
 	}
 
 
@@ -25,7 +25,7 @@ public class RefreshTokenTest extends TestCase {
 
 		RefreshToken rt = new RefreshToken(16);
 		assertEquals(16, new Base64(rt.getValue()).decode().length);
-		assertTrue(rt.getParamNames().contains("refresh_token"));
-		assertEquals(1, rt.getParamNames().size());
+		assertTrue(rt.getParameterNames().contains("refresh_token"));
+		assertEquals(1, rt.getParameterNames().size());
 	}
 }

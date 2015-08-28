@@ -190,7 +190,7 @@ public final class TokenRevocationRequest extends AbstractRequest {
 				}
 
 				@Override
-				public Set<String> getParamNames() {
+				public Set<String> getParameterNames() {
 
 					return Collections.emptySet();
 				}

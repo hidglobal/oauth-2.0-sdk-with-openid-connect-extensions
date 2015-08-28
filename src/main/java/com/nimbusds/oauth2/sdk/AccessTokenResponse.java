@@ -10,10 +10,7 @@ import net.jcip.annotations.Immutable;
 
 import net.minidev.json.JSONObject;
 
-import com.nimbusds.oauth2.sdk.token.AccessToken;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
-import com.nimbusds.oauth2.sdk.token.RefreshToken;
-import com.nimbusds.oauth2.sdk.token.TokenPair;
+import com.nimbusds.oauth2.sdk.token.Tokens;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 
@@ -45,89 +42,48 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
  * </ul>
  */
 @Immutable
-public class AccessTokenResponse 
-	extends TokenResponse
-	implements SuccessResponse {
+public class AccessTokenResponse extends TokenResponse implements SuccessResponse {
 
 
 	/**
-	 * The access token.
+	 * The tokens.
 	 */
-	private final AccessToken accessToken;
-	
-	
-	/**
-	 * Optional refresh token.
-	 */
-	private final RefreshToken refreshToken;
+	private final Tokens tokens;
 
 
 	/**
 	 * Optional custom parameters.
 	 */
 	private final Map<String,Object> customParams;
-	
-	
+
+
 	/**
 	 * Creates a new access token response.
 	 *
-	 * @param accessToken  The access token. Must not be {@code null}.
-	 * @param refreshToken Optional refresh token, {@code null} if none.
+	 * @param tokens The tokens. Must not be {@code null}.
 	 */
-	public AccessTokenResponse(final AccessToken accessToken,
-	                           final RefreshToken refreshToken) {
-				   
-		this(accessToken, refreshToken, null);
+	public AccessTokenResponse(final Tokens tokens) {
+
+		this(tokens, null);
 	}
 
 
 	/**
 	 * Creates a new access token response.
 	 *
-	 * @param accessToken  The access token. Must not be {@code null}.
-	 * @param refreshToken Optional refresh token, {@code null} if none.
+	 * @param tokens       The tokens. Must not be {@code null}.
 	 * @param customParams Optional custom parameters, {@code null} if
 	 *                     none.
 	 */
-	public AccessTokenResponse(final AccessToken accessToken,
-	                           final RefreshToken refreshToken,
+	public AccessTokenResponse(final Tokens tokens,
 				   final Map<String,Object> customParams) {
 
-		if (accessToken == null)
-			throw new IllegalArgumentException("The access token must not be null");
+		if (tokens == null)
+			throw new IllegalArgumentException("The tokens must not be null");
 
-		this.accessToken = accessToken;
-
-		this.refreshToken = refreshToken;
+		this.tokens = tokens;
 
 		this.customParams = customParams;
-	}
-
-
-	/**
-	 * Creates a new access token response.
-	 *
-	 * @param tokenPair The access and refresh token pair. Must not be 
-	 *                  {@code null}.
-	 */
-	public AccessTokenResponse(final TokenPair tokenPair) {
-				   
-		this(tokenPair, null);
-	}
-
-
-	/**
-	 * Creates a new access token response.
-	 *
-	 * @param tokenPair    The access and refresh token pair. Must not be
-	 *                     {@code null}.
-	 * @param customParams Optional custom parameters, {@code null} if
-	 *                     none.
-	 */
-	public AccessTokenResponse(final TokenPair tokenPair,
-				   final Map<String,Object> customParams) {
-
-		this(tokenPair.getAccessToken(), tokenPair.getRefreshToken(), customParams);
 	}
 
 
@@ -136,55 +92,21 @@ public class AccessTokenResponse
 
 		return true;
 	}
-	
-	
+
+
 	/**
-	 * Gets the access token.
+	 * Returns the tokens.
 	 *
-	 * @return The access token.
+	 * @return The tokens.
 	 */
-	public AccessToken getAccessToken() {
-	
-		return accessToken;
+	public Tokens getTokens() {
+
+		return tokens;
 	}
 
 
 	/**
-	 * Gets the access token as type bearer.
-	 *
-	 * @return The bearer access token.
-	 */
-	public BearerAccessToken getBearerAccessToken() {
-
-		// Cast should be safe, only bearer supported at present
-		return (BearerAccessToken)accessToken;
-	}
-	
-	
-	/**
-	 * Gets the optional refresh token.
-	 *
-	 * @return The refresh token, {@code null} if none.
-	 */
-	public RefreshToken getRefreshToken() {
-	
-		return refreshToken;
-	}
-
-
-	/**
-	 * Gets the access and refresh token pair.
-	 *
-	 * @return The access and refresh token pair. Must not be {@code null}.
-	 */
-	public TokenPair getTokenPair() {
-
-		return new TokenPair(accessToken, refreshToken);
-	}
-
-
-	/**
-	 * Gets the custom parameters.
+	 * Returns the custom parameters.
 	 *
 	 * @return The custom parameters, as a unmodifiable map, empty map if
 	 *         none.
@@ -199,16 +121,16 @@ public class AccessTokenResponse
 	
 	
 	/**
-	 * Returns the JSON object representing this access token response.
+	 * Returns a JSON object representation of this access token response.
 	 *
 	 * <p>Example JSON object:
 	 *
 	 * <pre>
 	 * {
-	 *   "access_token" : "SlAV32hkKG",
-	 *   "token_type"   : "Bearer",
-	 *   "refresh_token": "8xLOxBtZp8",
-	 *   "expires_in"   : 3600
+	 *   "access_token"  : "SlAV32hkKG",
+	 *   "token_type"    : "Bearer",
+	 *   "refresh_token" : "8xLOxBtZp8",
+	 *   "expires_in"    : 3600
 	 * }
 	 * </pre>
 	 *
@@ -216,10 +138,7 @@ public class AccessTokenResponse
 	 */
 	public JSONObject toJSONObject() {
 	
-		JSONObject o = accessToken.toJSONObject();
-
-		if (refreshToken != null)
-			o.putAll(refreshToken.toJSONObject());
+		JSONObject o = tokens.toJSONObject();
 
 		if (customParams != null)
 			o.putAll(customParams);
@@ -256,23 +175,16 @@ public class AccessTokenResponse
 	public static AccessTokenResponse parse(final JSONObject jsonObject)
 		throws ParseException {
 		
-		AccessToken accessToken = AccessToken.parse(jsonObject);
-		
-		RefreshToken refreshToken = RefreshToken.parse(jsonObject);
-
-		// Get the std param names for the access + refresh token
-		Set<String> paramNames = accessToken.getParamNames();
-
-		if (refreshToken != null)
-			paramNames.addAll(refreshToken.getParamNames());
+		Tokens tokens = Tokens.parse(jsonObject);
 
 		// Determine the custom param names
+		Set<String> paramNames = tokens.getParameterNames();
 		Set<String> customParamNames = jsonObject.keySet();
 		customParamNames.removeAll(paramNames);
 
 		Map<String,Object> customParams = null;
 
-		if (customParamNames.size() > 0) {
+		if (! customParamNames.isEmpty()) {
 
 			customParams = new HashMap<>();
 
@@ -281,7 +193,7 @@ public class AccessTokenResponse
 			}
 		}
 		
-		return new AccessTokenResponse(accessToken, refreshToken, customParams);
+		return new AccessTokenResponse(tokens, customParams);
 	}
 	
 	
@@ -299,9 +211,7 @@ public class AccessTokenResponse
 		throws ParseException {
 		
 		httpResponse.ensureStatusCode(HTTPResponse.SC_OK);
-		
 		JSONObject jsonObject = httpResponse.getContentAsJSONObject();
-		
 		return parse(jsonObject);
 	}
 }

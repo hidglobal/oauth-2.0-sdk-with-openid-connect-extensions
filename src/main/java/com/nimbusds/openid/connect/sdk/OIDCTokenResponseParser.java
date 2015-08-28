@@ -22,14 +22,13 @@ public class OIDCTokenResponseParser {
 
 
 	/**
-	 * Parses an OpenID Connect access token response or token error
-	 * response from the specified JSON object.
+	 * Parses an OpenID Connect token response or token error response from
+	 * the specified JSON object.
 	 *
 	 * @param jsonObject The JSON object to parse. Must not be 
 	 *                   {@code null}.
 	 *
-	 * @return The OpenID Connect access token response or token error
-	 * response.
+	 * @return The OpenID Connect token response or token error response.
 	 *
 	 * @throws ParseException If the JSON object couldn't be parsed to a
 	 *                        token response.
@@ -40,18 +39,17 @@ public class OIDCTokenResponseParser {
 		if (jsonObject.containsKey("error"))
 			return TokenErrorResponse.parse(jsonObject);
 		else
-			return OIDCAccessTokenResponse.parse(jsonObject);
+			return OIDCTokenResponse.parse(jsonObject);
 	}
 
 
 	/**
-	 * Parses an OpenID Connect access token response or token error
-	 * response from the specified HTTP response.
+	 * Parses an OpenID Connect token response or token error response from
+	 * the specified HTTP response.
 	 *
 	 * @param httpResponse The HTTP response. Must not be {@code null}.
 	 *
-	 * @return The OpenID Connect access token response or token error
-	 * response.
+	 * @return The OpenID Connect token response or token error response.
 	 *
 	 * @throws ParseException If the HTTP response couldn't be parsed to a
 	 *                        token response.
@@ -60,7 +58,7 @@ public class OIDCTokenResponseParser {
 		throws ParseException {
 		
 		if (httpResponse.getStatusCode() == HTTPResponse.SC_OK)
-			return OIDCAccessTokenResponse.parse(httpResponse);
+			return OIDCTokenResponse.parse(httpResponse);
 		else
 			return TokenErrorResponse.parse(httpResponse);
 	}

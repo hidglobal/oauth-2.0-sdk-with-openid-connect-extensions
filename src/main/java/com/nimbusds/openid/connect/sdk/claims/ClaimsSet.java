@@ -26,7 +26,7 @@ public abstract class ClaimsSet {
 
 
 	/**
-	 * The JSON object representing the claims set.
+	 * The JSON object representation of the claims set.
 	 */
 	private final JSONObject claims;
 

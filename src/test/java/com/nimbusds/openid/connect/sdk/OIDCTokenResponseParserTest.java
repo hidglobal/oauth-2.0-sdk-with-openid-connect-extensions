@@ -1,18 +1,18 @@
 package com.nimbusds.openid.connect.sdk;
 
 
-import com.nimbusds.oauth2.sdk.OAuth2Error;
-import com.nimbusds.oauth2.sdk.TokenErrorResponse;
-import com.nimbusds.oauth2.sdk.TokenResponse;
-import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import junit.framework.TestCase;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 
-import com.nimbusds.oauth2.sdk.token.AccessToken;
+import com.nimbusds.oauth2.sdk.OAuth2Error;
+import com.nimbusds.oauth2.sdk.TokenErrorResponse;
+import com.nimbusds.oauth2.sdk.TokenResponse;
+import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
+import com.nimbusds.openid.connect.sdk.token.OIDCTokens;
 
 
 /**
@@ -22,7 +22,8 @@ public class OIDCTokenResponseParserTest extends TestCase {
 
 
 	// Example ID token from OIDC Standard
-	private static final String ID_TOKEN_STRING = "eyJhbGciOiJSUzI1NiJ9.ew0KICAgICJpc3MiOiAiaHR0cDovL"+
+	private static final String ID_TOKEN_STRING =
+		"eyJhbGciOiJSUzI1NiJ9.ew0KICAgICJpc3MiOiAiaHR0cDovL"+
 		"3NlcnZlci5leGFtcGxlLmNvbSIsDQogICAgInVzZXJfaWQiOiAiMjQ4Mjg5NzYxM"+
 		"DAxIiwNCiAgICAiYXVkIjogInM2QmhkUmtxdDMiLA0KICAgICJub25jZSI6ICJuL"+
 		"TBTNl9XekEyTWoiLA0KICAgICJleHAiOiAxMzExMjgxOTcwLA0KICAgICJpYXQiO"+
@@ -49,10 +50,15 @@ public class OIDCTokenResponseParserTest extends TestCase {
 	public void testParseSuccess()
 		throws Exception {
 
-		AccessToken accessToken = new BearerAccessToken("abc123");
-		RefreshToken refreshToken = new RefreshToken("def456");
+		OIDCTokens tokens = new OIDCTokens(
+			ID_TOKEN,
+			new BearerAccessToken("abc123"),
+			new RefreshToken("def456"));
 
-		OIDCAccessTokenResponse response = new OIDCAccessTokenResponse(accessToken, refreshToken, ID_TOKEN);
+		OIDCTokenResponse response = new OIDCTokenResponse(tokens);
+
+		assertEquals(tokens, response.getOIDCTokens());
+		assertEquals(tokens, response.getTokens());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
 
@@ -60,14 +66,14 @@ public class OIDCTokenResponseParserTest extends TestCase {
 
 		assertTrue(tokenResponse.indicatesSuccess());
 
-		assertTrue(tokenResponse instanceof OIDCAccessTokenResponse);
+		assertTrue(tokenResponse instanceof OIDCTokenResponse);
 
-		response = (OIDCAccessTokenResponse)tokenResponse;
+		response = (OIDCTokenResponse)tokenResponse;
 
-		assertEquals("abc123", response.getAccessToken().getValue());
-		assertEquals("def456", response.getRefreshToken().getValue());
-		assertEquals(ID_TOKEN_STRING, response.getIDTokenString());
-		assertEquals(ID_TOKEN_STRING, response.getIDToken().serialize());
+		assertEquals("abc123", response.getTokens().getAccessToken().getValue());
+		assertEquals("def456", response.getTokens().getRefreshToken().getValue());
+		assertEquals(ID_TOKEN_STRING, response.getOIDCTokens().getIDTokenString());
+		assertEquals(ID_TOKEN_STRING, response.getOIDCTokens().getIDToken().serialize());
 	}
 
 
@@ -81,11 +87,8 @@ public class OIDCTokenResponseParserTest extends TestCase {
 		TokenResponse tokenResponse = OIDCTokenResponseParser.parse(httpResponse);
 
 		assertFalse(tokenResponse.indicatesSuccess());
-
 		assertTrue(tokenResponse instanceof TokenErrorResponse);
-
 		response = (TokenErrorResponse)tokenResponse;
-
 		assertEquals(OAuth2Error.INVALID_GRANT, response.getErrorObject());
 	}
 }

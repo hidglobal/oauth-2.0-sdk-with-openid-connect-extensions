@@ -188,7 +188,7 @@ public abstract class AccessToken extends Token {
 
 
 	@Override
-	public Set<String> getParamNames() {
+	public Set<String> getParameterNames() {
 
 		Set<String> paramNames = new HashSet<>();
 		paramNames.add("access_token");
@@ -199,7 +199,6 @@ public abstract class AccessToken extends Token {
 
 		if (getScope() != null)
 			paramNames.add("scope");
-
 
 		return paramNames;
 	}

@@ -307,7 +307,13 @@ version 4.16 (2015-08-26)
      * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
        7591 and RFC 7592.
 
-version 5.0-alpha1 (2015-08-xx)
-     * Converted SerializeException to unchecked.
+version 5.0-alpha1 (2015-08-28)
+     * Refactors OAuth 2.0 and OpenID Connect token response classes. Renames
+       TokenPair class to Tokens and adds JSON serialisation and parsing
+       methods. Extends Tokens with new OIDCTokens to handle ID tokens. Renames
+       OIDCAccessTokenResponse class to OICTokenResponse and makes ID token
+       presence mandatory. Moves token getters to Tokens / OIDCTokens class.
+       Makes BearerAccessToken cast safe.
+     * Makes SerializeException unchecked.
      * Upgrades to Nimbus JOSE+JWT 4.0.
      * Upgrades to Apache Commons Lang 3.4.

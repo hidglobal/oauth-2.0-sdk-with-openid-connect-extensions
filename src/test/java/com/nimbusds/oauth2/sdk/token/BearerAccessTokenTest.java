@@ -3,14 +3,15 @@ package com.nimbusds.oauth2.sdk.token;
 
 import java.net.URL;
 
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import junit.framework.TestCase;
+
+import org.apache.commons.codec.binary.Base64;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 
 /**
@@ -42,9 +43,9 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
-		assertTrue(token.getParamNames().contains("access_token"));
-		assertTrue(token.getParamNames().contains("token_type"));
-		assertEquals(2, token.getParamNames().size());
+		assertTrue(token.getParameterNames().contains("access_token"));
+		assertTrue(token.getParameterNames().contains("token_type"));
+		assertEquals(2, token.getParameterNames().size());
 	}
 
 
@@ -109,11 +110,11 @@ public class BearerAccessTokenTest extends TestCase {
 		assertTrue(Scope.parse((String)json.get("scope")).equals(scope));
 		assertEquals(4, json.size());
 
-		assertTrue(token.getParamNames().contains("access_token"));
-		assertTrue(token.getParamNames().contains("token_type"));
-		assertTrue(token.getParamNames().contains("expires_in"));
-		assertTrue(token.getParamNames().contains("scope"));
-		assertEquals(4, token.getParamNames().size());
+		assertTrue(token.getParameterNames().contains("access_token"));
+		assertTrue(token.getParameterNames().contains("token_type"));
+		assertTrue(token.getParameterNames().contains("expires_in"));
+		assertTrue(token.getParameterNames().contains("scope"));
+		assertEquals(4, token.getParameterNames().size());
 	}
 	
 	
@@ -126,9 +127,9 @@ public class BearerAccessTokenTest extends TestCase {
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
-		assertTrue(token.getParamNames().contains("access_token"));
-		assertTrue(token.getParamNames().contains("token_type"));
-		assertEquals(2, token.getParamNames().size());
+		assertTrue(token.getParameterNames().contains("access_token"));
+		assertTrue(token.getParameterNames().contains("token_type"));
+		assertEquals(2, token.getParameterNames().size());
 	}
 
 
