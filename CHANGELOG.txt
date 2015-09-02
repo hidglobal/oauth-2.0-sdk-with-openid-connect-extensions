@@ -306,3 +306,9 @@ version 4.16 (2015-08-26)
        flow checks.
      * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
        7591 and RFC 7592.
+
+version 4.16.1 (2015-09-02)
+     * Fixes parsing of AuthorizationRequest, AuthorizationResponse,
+       AuthenticationRequest and LogoutRequest URIs with URL-encoded special
+       characters in the parameter values (iss #147).
+

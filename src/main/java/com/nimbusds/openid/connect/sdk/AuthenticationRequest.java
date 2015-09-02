@@ -1401,7 +1401,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 	public static AuthenticationRequest parse(final URI uri)
 		throws ParseException {
 
-		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getQuery()));
+		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getRawQuery()));
 	}
 	
 	

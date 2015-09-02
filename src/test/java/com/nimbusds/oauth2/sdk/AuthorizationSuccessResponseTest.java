@@ -300,4 +300,25 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(state.getValue(), params.get("state"));
 		assertEquals(3, params.size());
 	}
+
+
+	// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/147/authorizationrequestparse-final-uri-uri
+	public void testParseWithEncodedEqualsChar()
+		throws Exception {
+
+		URI redirectURI = URI.create("https://example.com/in");
+
+		AuthorizationCode code = new AuthorizationCode("===code===");
+		State state = new State("===state===");
+
+		AuthorizationSuccessResponse response = new AuthorizationSuccessResponse(redirectURI, code, null, state, ResponseMode.QUERY);
+
+		URI uri = response.toURI();
+
+		response = AuthorizationSuccessResponse.parse(uri);
+
+		assertEquals(code, response.getAuthorizationCode());
+		assertEquals(state, response.getState());
+		assertNull(response.getAccessToken());
+	}
 }

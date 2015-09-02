@@ -441,7 +441,7 @@ public class LogoutRequest extends AbstractRequest {
 	public static LogoutRequest parse(final URI uri)
 		throws ParseException {
 
-		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getQuery()));
+		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getRawQuery()));
 	}
 
 
