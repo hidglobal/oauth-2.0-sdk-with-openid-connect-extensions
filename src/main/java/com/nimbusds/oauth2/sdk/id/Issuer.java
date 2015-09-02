@@ -82,7 +82,7 @@ public final class Issuer extends Identifier {
 		if (value.getScheme() == null || ! value.getScheme().equalsIgnoreCase("https"))
 			return false;
 
-		if (value.getQuery() != null)
+		if (value.getRawQuery() != null)
 			return false;
 
 		if (value.getRawFragment() != null)

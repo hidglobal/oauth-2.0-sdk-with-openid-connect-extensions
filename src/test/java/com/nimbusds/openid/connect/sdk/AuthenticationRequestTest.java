@@ -2,6 +2,7 @@ package com.nimbusds.openid.connect.sdk;
 
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -1118,5 +1119,31 @@ public class AuthenticationRequestTest extends TestCase {
 		} catch (IllegalStateException e) {
 			assertEquals("Nonce is required in implicit / hybrid protocol flow", e.getMessage());
 		}
+	}
+
+
+	// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/147/authorizationrequestparse-final-uri-uri
+	public void testParseWithEncodedEqualsChar()
+		throws Exception {
+
+		URI redirectURI = URI.create("https://client.com/in?app=123");
+
+		String encodedRedirectURI = URLEncoder.encode(redirectURI.toString(), "UTF-8");
+
+		URI requestURI = URI.create("https://server.example.com/authorize?" +
+			"response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj" +
+			"&nonce=n-0S6_WzA2Mj" +
+			"&redirect_uri=" + encodedRedirectURI);
+
+		AuthenticationRequest request = AuthenticationRequest.parse(requestURI);
+
+		assertEquals(ResponseType.parse("id_token token"), request.getResponseType());
+		assertEquals(new ClientID("s6BhdRkqt3"), request.getClientID());
+		assertEquals(new State("af0ifjsldkj"), request.getState());
+		assertEquals(new Nonce("n-0S6_WzA2Mj"), request.getNonce());
+		assertEquals(redirectURI, request.getRedirectionURI());
 	}
 }

@@ -151,7 +151,7 @@ public abstract class AuthorizationResponse implements Response {
 		StringBuilder sb = new StringBuilder(getRedirectionURI().toString());
 
 		if (rm.equals(ResponseMode.QUERY)) {
-			if (StringUtils.isBlank(getRedirectionURI().getQuery())) {
+			if (StringUtils.isBlank(getRedirectionURI().getRawQuery())) {
 				sb.append('?');
 			} else {
 				// The original redirect_uri may contain query params,
@@ -295,8 +295,8 @@ public abstract class AuthorizationResponse implements Response {
 
 		if (uri.getRawFragment() != null) {
 			params = URLUtils.parseParameters(uri.getRawFragment());
-		} else if (uri.getQuery() != null) {
-			params = URLUtils.parseParameters(uri.getQuery());
+		} else if (uri.getRawQuery() != null) {
+			params = URLUtils.parseParameters(uri.getRawQuery());
 		} else {
 			throw new ParseException("Missing URI fragment or query string");
 		}

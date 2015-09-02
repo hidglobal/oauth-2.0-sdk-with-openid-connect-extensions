@@ -763,7 +763,7 @@ public class AuthorizationRequest extends AbstractRequest {
 	public static AuthorizationRequest parse(final URI uri)
 		throws ParseException {
 
-		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getQuery()));
+		return parse(URIUtils.getBaseURI(uri), URLUtils.parseParameters(uri.getRawQuery()));
 	}
 	
 	

@@ -317,3 +317,9 @@ version 5.0-alpha1 (2015-08-28)
      * Makes SerializeException unchecked.
      * Upgrades to Nimbus JOSE+JWT 4.0.
      * Upgrades to Apache Commons Lang 3.4.
+
+version 5.0-alpha2 (2015-09-xx)
+     * Fixes parsing of AuthorizationRequest, AuthorizationResponse,
+       AuthenticationRequest and LogoutRequest URIs with URL-encoded special
+       characters in the parameter values (iss #147).
+

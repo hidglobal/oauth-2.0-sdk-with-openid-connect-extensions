@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk;
 
 
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.Map;
 
 import junit.framework.TestCase;
@@ -340,5 +341,25 @@ public class AuthorizationRequestTest extends TestCase {
 			assertEquals("Invalid request: Missing \"response_type\" parameter", e.getErrorObject().getDescription());
 			assertNull(e.getErrorObject().getURI());
 		}
+	}
+
+
+	// See https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/147/authorizationrequestparse-final-uri-uri
+	public void testParseWithEncodedEqualsChar()
+		throws Exception {
+
+		URI redirectURI = URI.create("https://client.com/in?app=123");
+
+		String encodedRedirectURI = URLEncoder.encode(redirectURI.toString(), "UTF-8");
+
+		URI requestURI = URI.create("https://server.example.com/authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz&redirect_uri=" +
+			encodedRedirectURI);
+
+		AuthorizationRequest request = AuthorizationRequest.parse(requestURI);
+
+		assertEquals(ResponseType.parse("code"), request.getResponseType());
+		assertEquals(new ClientID("s6BhdRkqt3"), request.getClientID());
+		assertEquals(new State("xyz"), request.getState());
+		assertEquals(redirectURI, request.getRedirectionURI());
 	}
 }
