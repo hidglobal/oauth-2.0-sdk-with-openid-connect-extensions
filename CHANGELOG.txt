@@ -322,4 +322,5 @@ version 5.0-alpha2 (2015-09-xx)
      * Fixes parsing of AuthorizationRequest, AuthorizationResponse,
        AuthenticationRequest and LogoutRequest URIs with URL-encoded special
        characters in the parameter values (iss #147).
+     * Adds ClaimsSet.putAll(Map<String,Object) method (iss #146).
 
