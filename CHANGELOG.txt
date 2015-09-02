@@ -322,3 +322,5 @@ version 4.17 (2015-10-10)
     * Adds convenience Issuer(URI) and Issuer(Identifier) constructors.
     * Removes Apache Commons Codec dependency, switches to Nimbus JOSE+JWT
       for BASE64 and BASE64 URL-safe encoding and decoding.
+    * Adds ClaimsSet.putAll(Map<String,Object) method (iss #146).
+    
