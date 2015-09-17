@@ -324,3 +324,7 @@ version 5.0-alpha2 (2015-09-02)
        characters in the parameter values (iss #147).
      * Adds ClaimsSet.putAll(Map<String,Object) method (iss #146).
 
+version 5.0-alpha3 (2015-09-27)
+     * Closes nimbus-jose-jwt dep range exclusively to work around Ivy range
+       handling (iss #148).
+
