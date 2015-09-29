@@ -329,5 +329,7 @@ version 5.0-alpha3 (2015-09-27)
        handling (iss #148).
 
 version 5.0-alpha4 (2015-09-29)
+     * Adds extended ClientSecretJWT and PrivateKeyJWT constructors which
+       provide for JWT claims set and signing (iss #150).
      * Fixes NPE in JWTAuthenticationClaimsSet.toJWTClaimsSet.
 
