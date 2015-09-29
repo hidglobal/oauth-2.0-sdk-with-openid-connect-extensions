@@ -95,4 +95,22 @@ public class JWTAuthenticationClaimsSetTest extends TestCase {
 		assertNull(parsed.getNotBeforeTime());
 		assertEquals(claimsSet.getJWTID(), parsed.getJWTID());
 	}
+
+
+	public void testNullJTI() {
+
+		final long now = new Date().getTime();
+		final Date fiveMinutesFromNow = new Date(now + 5*60*1000l);
+
+		JWTAuthenticationClaimsSet claimsSet = new JWTAuthenticationClaimsSet(
+			new ClientID("123"),
+			new Audience("https://c2id.com/token"),
+			fiveMinutesFromNow,
+			null, // nbf
+			null, // iat
+			null); // jti
+
+		JWTClaimsSet jwtClaimsSet = claimsSet.toJWTClaimsSet();
+		assertNull(jwtClaimsSet.getJWTID());
+	}
 }

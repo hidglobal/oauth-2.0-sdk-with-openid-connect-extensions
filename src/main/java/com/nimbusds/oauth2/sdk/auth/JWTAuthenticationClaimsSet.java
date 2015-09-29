@@ -342,7 +342,7 @@ public class JWTAuthenticationClaimsSet {
 			.expirationTime(exp)
 			.notBeforeTime(nbf) // optional
 			.issueTime(iat) // optional
-			.jwtID(jti.getValue()) // optional TODO NPE!
+			.jwtID(jti != null ? jti.getValue() : null) // optional
 			.build();
 	}
 	
