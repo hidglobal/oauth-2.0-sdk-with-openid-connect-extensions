@@ -328,3 +328,6 @@ version 5.0-alpha3 (2015-09-27)
      * Closes nimbus-jose-jwt dep range exclusively to work around Ivy range
        handling (iss #148).
 
+version 5.0-alpha4 (2015-09-29)
+     * Fixes NPE in JWTAuthenticationClaimsSet.toJWTClaimsSet.
+
