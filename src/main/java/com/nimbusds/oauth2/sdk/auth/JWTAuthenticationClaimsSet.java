@@ -55,17 +55,17 @@ public class JWTAuthenticationClaimsSet {
 	/**
 	 * The names of the reserved client authentication claims.
 	 */
-	private static final Set<String> reservedClaimNames = new LinkedHashSet<>();
+	private static final Set<String> reservedClaimsNames = new LinkedHashSet<>();
 	
 	
 	static {
-		reservedClaimNames.add("iss");
-		reservedClaimNames.add("sub");
-		reservedClaimNames.add("aud");
-		reservedClaimNames.add("exp");
-		reservedClaimNames.add("nbf");
-		reservedClaimNames.add("iat");
-		reservedClaimNames.add("jti");
+		reservedClaimsNames.add("iss");
+		reservedClaimsNames.add("sub");
+		reservedClaimsNames.add("aud");
+		reservedClaimsNames.add("exp");
+		reservedClaimsNames.add("nbf");
+		reservedClaimsNames.add("iat");
+		reservedClaimsNames.add("jti");
 	}
 	
 
@@ -75,9 +75,9 @@ public class JWTAuthenticationClaimsSet {
 	 * @return The names of the reserved client authentication claims 
 	 *         (read-only set).
 	 */
-	public static Set<String> getReservedClaimNames() {
+	public static Set<String> getReservedClaimsNames() {
 	
-		return Collections.unmodifiableSet(reservedClaimNames);
+		return Collections.unmodifiableSet(reservedClaimsNames);
 	}
 	
 	
@@ -131,7 +131,26 @@ public class JWTAuthenticationClaimsSet {
 	 * assertions. 
 	 */
 	private final JWTID jti;
-	
+
+
+	/**
+	 * Creates a new JWT client authentication claims set. The expiration
+	 * time (exp) is set to five minutes from the current system time.
+	 * Generates a default identifier (jti) for the JWT. The issued-at
+	 * (iat) and not-before (nbf) claims are not set.
+	 *
+	 * @param clientID The client identifier. Used to specify the issuer
+	 *                 and the subject. Must not be {@code null}.
+	 * @param aud      The audience identifier, typically the URI of the
+	 *                 authorisation server's Token endpoint. Must not be
+	 *                 {@code null}.
+	 */
+	public JWTAuthenticationClaimsSet(final ClientID clientID,
+					  final Audience aud) {
+
+		this(clientID, aud, new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID());
+	}
+
 	
 	/**
 	 * Creates a new JWT client authentication claims set.
@@ -289,8 +308,8 @@ public class JWTAuthenticationClaimsSet {
 		o.put("iss", iss.getValue());
 		o.put("sub", sub.getValue());
 
-		List<Object> audList = new LinkedList<>();
-		audList.add(aud);
+		List<String> audList = new LinkedList<>();
+		audList.add(aud.getValue());
 		o.put("aud", audList);
 
 		o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
@@ -323,7 +342,7 @@ public class JWTAuthenticationClaimsSet {
 			.expirationTime(exp)
 			.notBeforeTime(nbf) // optional
 			.issueTime(iat) // optional
-			.jwtID(jti.getValue()) // optional
+			.jwtID(jti.getValue()) // optional TODO NPE!
 			.build();
 	}
 	
