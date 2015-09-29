@@ -29,6 +29,8 @@ public class ClientSecretBasicTest extends TestCase {
 		Secret secret = new Secret(pw);
 		
 		ClientSecretBasic csb = new ClientSecretBasic(clientID, secret);
+
+		assertTrue(csb instanceof PlainClientSecret);
 		
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, csb.getMethod());
 		
