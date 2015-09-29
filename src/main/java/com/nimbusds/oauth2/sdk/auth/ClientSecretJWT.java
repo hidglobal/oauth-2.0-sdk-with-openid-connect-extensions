@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.auth;
 
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -8,10 +9,14 @@ import java.util.Set;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -58,6 +63,65 @@ public final class ClientSecretJWT extends JWTAuthentication {
 		supported.add(JWSAlgorithm.HS512);
 		
 		return Collections.unmodifiableSet(supported);
+	}
+
+
+	/**
+	 * Creates a new client secret JWT assertion.
+	 *
+	 * @param jwtAuthClaimsSet The JWT authentication claims set. Must not
+	 *                         be {@code null}.
+	 * @param jwsAlgorithm     The expected HMAC algorithm (HS256, HS384 or
+	 *                         HS512) for the client secret JWT assertion.
+	 *                         Must be supported and not {@code null}.
+	 * @param clientSecret     The client secret. Must be at least 256-bits
+	 *                         long.
+	 *
+	 * @return The client secret JWT assertion.
+	 *
+	 * @throws JOSEException If the client secret is too short, or HMAC
+	 *                       computation failed.
+	 */
+	public static SignedJWT createClientAssertion(final JWTAuthenticationClaimsSet jwtAuthClaimsSet,
+						      final JWSAlgorithm jwsAlgorithm,
+						      final Secret clientSecret)
+		throws JOSEException {
+
+		SignedJWT signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), jwtAuthClaimsSet.toJWTClaimsSet());
+		signedJWT.sign(new MACSigner(clientSecret.getValueBytes()));
+		return signedJWT;
+	}
+
+
+	/**
+	 * Creates a new client secret JWT authentication. The expiration
+	 * time (exp) is set to five minutes from the current system time.
+	 * Generates a default identifier (jti) for the JWT. The issued-at
+	 * (iat) and not-before (nbf) claims are not set.
+	 *
+	 * @param clientID      The client identifier. Must not be
+	 *                      {@code null}.
+	 * @param tokenEndpoint The token endpoint URI of the authorisation
+	 *                      server. Must not be {@code null}.
+	 * @param jwsAlgorithm  The expected HMAC algorithm (HS256, HS384 or
+	 *                      HS512) for the client secret JWT assertion.
+	 *                      Must be supported and not {@code null}.
+	 * @param clientSecret  The client secret. Must be at least 256-bits
+	 *                      long.
+	 *
+	 * @throws JOSEException If the client secret is too short, or HMAC
+	 *                       computation failed.
+	 */
+	public ClientSecretJWT(final ClientID clientID,
+			       final URI tokenEndpoint,
+			       final JWSAlgorithm jwsAlgorithm,
+			       final Secret clientSecret)
+		throws JOSEException {
+
+		this(createClientAssertion(
+			new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
+			jwsAlgorithm,
+			clientSecret));
 	}
 
 
