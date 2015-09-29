@@ -28,26 +28,23 @@ import com.nimbusds.oauth2.sdk.http.HTTPRequest;
  *
  * <p>Related specifications:
  *
+ * <p>Related specifications:
+ *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), section 2.3.1.
+ *     <li>OAuth 2.0 (RFC 6749), sections 2.3.1 and 3.2.1.
+ *     <li>OpenID Connect Core 1.0, section 9.
  *     <li>HTTP Authentication: Basic and Digest Access Authentication 
  *         (RFC 2617).
  * </ul>
  */
 @Immutable
-public final class ClientSecretBasic extends ClientAuthentication {
+public final class ClientSecretBasic extends PlainClientSecret {
 
 
 	/**
 	 * The default character set for the client ID and secret encoding.
 	 */
 	private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-	
-	
-	/**
-	 * The client secret.
-	 */
-	private final Secret secret;
 	
 	
 	/**
@@ -58,23 +55,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 	 */
 	public ClientSecretBasic(final ClientID clientID, final Secret secret) {
 	
-		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, clientID);
-		
-		if (secret == null)
-			throw new IllegalArgumentException("The client secret must not be null");
-		
-		this.secret = secret;
-	}
-	
-	
-	/**
-	 * Gets the client secret.
-	 *
-	 * @return The client secret.
-	 */
-	public Secret getClientSecret() {
-	
-		return secret;
+		super(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, clientID, secret);
 	}
 	
 	
@@ -107,7 +88,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 		try {
 			sb.append(URLEncoder.encode(getClientID().getValue(), UTF8_CHARSET.name()));
 			sb.append(':');
-			sb.append(URLEncoder.encode(secret.getValue(), UTF8_CHARSET.name()));
+			sb.append(URLEncoder.encode(getClientSecret().getValue(), UTF8_CHARSET.name()));
 
 		} catch (UnsupportedEncodingException e) {
 

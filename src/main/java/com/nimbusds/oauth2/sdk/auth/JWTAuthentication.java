@@ -25,8 +25,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), section-3.2.1.
- *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 (RFC 7523).
+ *     <li>OAuth 2.0 (RFC 6749), section 3.2.1.
+ *     <li>JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7523).
+ *     <li>OpenID Connect Core 1.0, section 9.
  * </ul>
  */
 public abstract class JWTAuthentication extends ClientAuthentication {
