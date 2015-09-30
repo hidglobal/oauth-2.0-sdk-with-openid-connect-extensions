@@ -1,20 +1,14 @@
-package com.nimbusds.oauth2.sdk.auth.verifiers;
+package com.nimbusds.oauth2.sdk.auth.verifier;
 
 
-import java.security.Key;
-import java.util.List;
 import java.util.Set;
 
 import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.proc.BadJOSEException;
-import com.nimbusds.jose.proc.JWSKeySelector;
-import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
 import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.openid.connect.sdk.rp.OIDCClientInformation;
 import net.jcip.annotations.ThreadSafe;
 
 

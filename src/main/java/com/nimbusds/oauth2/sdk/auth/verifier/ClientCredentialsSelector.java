@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk.auth.verifiers;
+package com.nimbusds.oauth2.sdk.auth.verifier;
 
 
 import java.util.List;
