@@ -125,12 +125,8 @@ public abstract class AuthorizationResponse implements Response {
 	 * </pre>
 	 *
 	 * @return The parameters as a map.
-	 *
-	 * @throws SerializeException If this response couldn't be serialised
-	 *                            to a parameters map.
 	 */
-	public abstract Map<String,String> toParameters()
-		throws SerializeException;
+	public abstract Map<String,String> toParameters();
 
 
 	/**
@@ -147,12 +143,8 @@ public abstract class AuthorizationResponse implements Response {
 	 * </pre>
 	 *
 	 * @return A URI representation of this authorisation response.
-	 *
-	 * @throws SerializeException If this response couldn't be serialised
-	 *                            to a URI.
 	 */
-	public URI toURI()
-		throws SerializeException {
+	public URI toURI() {
 
 		final ResponseMode rm = impliedResponseMode();
 
@@ -202,13 +194,9 @@ public abstract class AuthorizationResponse implements Response {
 	 * @see #toHTTPRequest()
 	 *
 	 * @return An HTTP response for this authorisation response.
-	 *
-	 * @throws SerializeException If the response couldn't be serialised to
-	 *                            an HTTP response.
 	 */
 	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
+	public HTTPResponse toHTTPResponse() {
 
 		if (ResponseMode.FORM_POST.equals(rm)) {
 			throw new SerializeException("The response mode must not be form_post");
@@ -234,12 +222,8 @@ public abstract class AuthorizationResponse implements Response {
 	 * @see #toHTTPResponse()
 	 *
 	 * @return An HTTP request for this authorisation response.
-	 *
-	 * @throws SerializeException If the response couldn't be serialised to
-	 *                            an HTTP request.
 	 */
-	public HTTPRequest toHTTPRequest()
-		throws SerializeException {
+	public HTTPRequest toHTTPRequest() {
 
 		if (! ResponseMode.FORM_POST.equals(rm)) {
 			throw new SerializeException("The response mode must be form_post");

@@ -15,7 +15,6 @@ import junit.framework.TestCase;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.Audience;
@@ -75,16 +74,15 @@ public class IDTokenClaimsSetTest extends TestCase {
 	public void testReadOnlyJWTClaimsSetConstructor()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
-		claimsSet.setSubject("alice");
-		claimsSet.setAudience("client-123");
-		claimsSet.setExpirationTime(new Date(3600000l));
-		claimsSet.setIssueTime(new Date(1000l));
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.subject("alice")
+			.audience("client-123")
+			.expirationTime(new Date(3600000l))
+			.issueTime(new Date(1000l))
+			.build();
 
-		ReadOnlyJWTClaimsSet roClaimsSet = (ReadOnlyJWTClaimsSet)claimsSet;
-
-		IDTokenClaimsSet idTokenClaimsSet = new IDTokenClaimsSet(roClaimsSet);
+		IDTokenClaimsSet idTokenClaimsSet = new IDTokenClaimsSet(claimsSet);
 		assertEquals("https://c2id.com", idTokenClaimsSet.getIssuer().getValue());
 		assertEquals("alice", idTokenClaimsSet.getSubject().getValue());
 		assertEquals("client-123", idTokenClaimsSet.getAudience().get(0).getValue());

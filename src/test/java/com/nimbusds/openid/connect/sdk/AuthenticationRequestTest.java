@@ -984,9 +984,9 @@ public class AuthenticationRequestTest extends TestCase {
 			AuthenticationRequest.parse(query);
 			fail();
 		} catch (ParseException e) {
-			assertEquals("Invalid \"id_token_hint\" parameter: Invalid plain/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getMessage());
+			assertEquals("Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getMessage());
 			assertEquals(OAuth2Error.INVALID_REQUEST.getCode(), e.getErrorObject().getCode());
-			assertEquals("Invalid request: Invalid \"id_token_hint\" parameter: Invalid plain/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getErrorObject().getDescription());
+			assertEquals("Invalid request: Invalid \"id_token_hint\" parameter: Invalid unsecured/JWS/JWE header: Invalid JSON: Unexpected token  at position 1.", e.getErrorObject().getDescription());
 			assertEquals(ResponseMode.QUERY, e.getResponseMode());
 			assertNull(e.getErrorObject().getURI());
 		}

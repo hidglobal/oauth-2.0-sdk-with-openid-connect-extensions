@@ -28,6 +28,8 @@ public class ClientSecretPostTest extends TestCase {
 
 		ClientSecretPost csp = new ClientSecretPost(clientID, secret);
 
+		assertTrue(csp instanceof PlainClientSecret);
+
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_POST, csp.getMethod());
 
 		assertEquals(id, csp.getClientID().getValue());

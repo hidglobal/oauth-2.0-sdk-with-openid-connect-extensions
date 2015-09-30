@@ -63,7 +63,7 @@ public abstract class Token extends Identifier {
 	 *
 	 * @return The token parameter names.
 	 */
-	public abstract Set<String> getParamNames();
+	public abstract Set<String> getParameterNames();
 
 
 	/**

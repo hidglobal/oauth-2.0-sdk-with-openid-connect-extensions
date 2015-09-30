@@ -13,7 +13,7 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
-import com.nimbusds.oauth2.sdk.token.TokenPair;
+import com.nimbusds.oauth2.sdk.token.Tokens;
 
 
 /**
@@ -22,107 +22,76 @@ import com.nimbusds.oauth2.sdk.token.TokenPair;
 public class AccessTokenResponseTest extends TestCase {
 
 
-	public void testConstructor() {
+	public void testConstructor()
+		throws ParseException {
 
-		AccessToken accessToken = new BearerAccessToken();
-		RefreshToken refreshToken = new RefreshToken();
-
-		AccessTokenResponse response = new AccessTokenResponse(accessToken, refreshToken);
+		Tokens tokens = new Tokens(new BearerAccessToken(), new RefreshToken());
+		AccessTokenResponse response = new AccessTokenResponse(tokens);
 
 		assertTrue(response.indicatesSuccess());
-		assertEquals(accessToken, response.getAccessToken());
-		assertEquals(accessToken, response.getBearerAccessToken());
-		assertEquals(refreshToken, response.getRefreshToken());
-		assertEquals(accessToken, response.getTokenPair().getAccessToken());
-		assertEquals(refreshToken, response.getTokenPair().getRefreshToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
+		assertEquals(tokens.getRefreshToken(), response.getTokens().getRefreshToken());
+		assertTrue(response.getCustomParams().isEmpty());
+
+		HTTPResponse httpResponse = response.toHTTPResponse();
+		response = AccessTokenResponse.parse(httpResponse);
+
+		assertTrue(response.indicatesSuccess());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
+		assertEquals(tokens.getRefreshToken(), response.getTokens().getRefreshToken());
 		assertTrue(response.getCustomParams().isEmpty());
 	}
 
 
-	public void testConstructorMinimal() {
+	public void testConstructorMinimal()
+		throws ParseException {
 
-		AccessToken accessToken = new BearerAccessToken();
+		Tokens tokens = new Tokens(new BearerAccessToken(), null);
 
-		AccessTokenResponse response = new AccessTokenResponse(accessToken, null);
+		AccessTokenResponse response = new AccessTokenResponse(tokens, null);
 
 		assertTrue(response.indicatesSuccess());
-		assertEquals(accessToken, response.getAccessToken());
-		assertEquals(accessToken, response.getBearerAccessToken());
-		assertNull(response.getRefreshToken());
-		assertEquals(accessToken, response.getTokenPair().getAccessToken());
-		assertNull(response.getTokenPair().getRefreshToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
+		assertNull(response.getTokens().getRefreshToken());
+		assertTrue(response.getCustomParams().isEmpty());
+
+		HTTPResponse httpResponse = response.toHTTPResponse();
+		response = AccessTokenResponse.parse(httpResponse);
+
+		assertTrue(response.indicatesSuccess());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
+		assertNull(response.getTokens().getRefreshToken());
 		assertTrue(response.getCustomParams().isEmpty());
 	}
 
 
-	public void testConstructorWithCustomParams() {
+	public void testConstructorWithCustomParams()
+		throws ParseException {
 
-		AccessToken accessToken = new BearerAccessToken();
+		Tokens tokens = new Tokens(new BearerAccessToken(), null);
 		Map<String,Object> customParams = new HashMap<>();
 		customParams.put("sub_sid", "abc");
 
-		AccessTokenResponse response = new AccessTokenResponse(accessToken, null, customParams);
+		AccessTokenResponse response = new AccessTokenResponse(tokens, customParams);
 
 		assertTrue(response.indicatesSuccess());
-		assertEquals(accessToken, response.getAccessToken());
-		assertEquals(accessToken, response.getBearerAccessToken());
-		assertNull(response.getRefreshToken());
-		assertEquals(accessToken, response.getTokenPair().getAccessToken());
-		assertNull(response.getTokenPair().getRefreshToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
+		assertNull(response.getTokens().getRefreshToken());
 		assertEquals("abc", (String) response.getCustomParams().get("sub_sid"));
-	}
 
-
-	public void testAltConstructor() {
-
-		AccessToken accessToken = new BearerAccessToken();
-		RefreshToken refreshToken = new RefreshToken();
-		TokenPair tokenPair = new TokenPair(accessToken, refreshToken);
-
-		AccessTokenResponse response = new AccessTokenResponse(tokenPair);
+		HTTPResponse httpResponse = response.toHTTPResponse();
+		response = AccessTokenResponse.parse(httpResponse);
 
 		assertTrue(response.indicatesSuccess());
-		assertEquals(accessToken, response.getAccessToken());
-		assertEquals(accessToken, response.getBearerAccessToken());
-		assertEquals(refreshToken, response.getRefreshToken());
-		assertEquals(accessToken, response.getTokenPair().getAccessToken());
-		assertEquals(refreshToken, response.getTokenPair().getRefreshToken());
-		assertTrue(response.getCustomParams().isEmpty());
-	}
-
-
-	public void testAltConstructorMinimal() {
-
-		AccessToken accessToken = new BearerAccessToken();
-		TokenPair tokenPair = new TokenPair(accessToken, null);
-
-		AccessTokenResponse response = new AccessTokenResponse(tokenPair);
-
-		assertTrue(response.indicatesSuccess());
-		assertEquals(accessToken, response.getAccessToken());
-		assertEquals(accessToken, response.getBearerAccessToken());
-		assertNull(response.getRefreshToken());
-		assertEquals(accessToken, response.getTokenPair().getAccessToken());
-		assertNull(response.getTokenPair().getRefreshToken());
-		assertTrue(response.getCustomParams().isEmpty());
-	}
-
-
-	public void testAltConstructorWithCustomParams() {
-
-		AccessToken accessToken = new BearerAccessToken();
-		TokenPair tokenPair = new TokenPair(accessToken, null);
-		Map<String,Object> customParams = new HashMap<>();
-		customParams.put("sub_sid", "abc");
-
-		AccessTokenResponse response = new AccessTokenResponse(tokenPair, customParams);
-		assertTrue(response.indicatesSuccess());
-		assertEquals(accessToken, response.getAccessToken());
-		assertEquals(accessToken, response.getBearerAccessToken());
-		assertNull(response.getRefreshToken());
-		assertEquals(accessToken, response.getTokenPair().getAccessToken());
-		assertNull(response.getTokenPair().getRefreshToken());
-		assertEquals("abc", (String)response.getCustomParams().get("sub_sid"));
+		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
+		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
+		assertNull(response.getTokens().getRefreshToken());
+		assertEquals("abc", (String) response.getCustomParams().get("sub_sid"));
 	}
 
 
@@ -157,16 +126,16 @@ public class AccessTokenResponseTest extends TestCase {
 
 		assertTrue(atr.indicatesSuccess());
 
-		AccessToken accessToken = atr.getAccessToken();
+		AccessToken accessToken = atr.getTokens().getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
 
-		BearerAccessToken bearerAccessToken = atr.getBearerAccessToken();
+		BearerAccessToken bearerAccessToken = atr.getTokens().getBearerAccessToken();
 		assertEquals(accessTokenString, bearerAccessToken.getValue());
 
 		assertEquals(exp, accessToken.getLifetime());
 		assertNull(accessToken.getScope());
 
-		RefreshToken refreshToken = atr.getRefreshToken();
+		RefreshToken refreshToken = atr.getTokens().getRefreshToken();
 		assertEquals(refreshTokenString, refreshToken.getValue());
 
 		// Custom param
@@ -175,7 +144,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(2, atr.getCustomParams().size());
 
 		// Test pair getter
-		TokenPair pair = atr.getTokenPair();
+		Tokens pair = atr.getTokens();
 		assertEquals(accessToken, pair.getAccessToken());
 		assertEquals(refreshToken, pair.getRefreshToken());
 
@@ -215,19 +184,17 @@ public class AccessTokenResponseTest extends TestCase {
 
 		httpResponse.setContent(o.toString());
 
-
 		AccessTokenResponse atr = AccessTokenResponse.parse(httpResponse);
 
 		assertTrue(atr.indicatesSuccess());
-		AccessToken accessToken = atr.getAccessToken();
+		AccessToken accessToken = atr.getTokens().getAccessToken();
 		assertEquals(accessTokenString, accessToken.getValue());
-		BearerAccessToken bearerAccessToken = atr.getBearerAccessToken();
+		BearerAccessToken bearerAccessToken = atr.getTokens().getBearerAccessToken();
 		assertEquals(accessTokenString, bearerAccessToken.getValue());
 		assertNull(accessToken.getScope());
 
-		// Test pair getter
-		TokenPair pair = atr.getTokenPair();
-		assertEquals(accessToken, pair.getAccessToken());
+		Tokens tokens = atr.getTokens();
+		assertEquals(accessToken, tokens.getAccessToken());
 
 		httpResponse = atr.toHTTPResponse();
 

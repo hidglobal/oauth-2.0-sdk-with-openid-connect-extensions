@@ -2,9 +2,9 @@ package com.nimbusds.oauth2.sdk;
 
 
 /**
- * Serialization exception.
+ * Serialization exception (unchecked).
  */
-public class SerializeException extends GeneralException {
+public class SerializeException extends RuntimeException {
 
 
 	/**

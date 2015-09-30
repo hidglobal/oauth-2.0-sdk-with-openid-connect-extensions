@@ -145,8 +145,7 @@ public class UserInfoSuccessResponse
 	
 	
 	@Override
-	public HTTPResponse toHTTPResponse()
-		throws SerializeException {
+	public HTTPResponse toHTTPResponse() {
 	
 		HTTPResponse httpResponse = new HTTPResponse(HTTPResponse.SC_OK);
 		

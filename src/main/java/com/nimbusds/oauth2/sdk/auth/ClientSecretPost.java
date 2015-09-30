@@ -23,19 +23,14 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), section 2.3.1.
+ *     <li>OAuth 2.0 (RFC 6749), sections 2.3.1 and 3.2.1.
+ *     <li>OpenID Connect Core 1.0, section 9.
  * </ul>
  */
 @Immutable
-public final class ClientSecretPost extends ClientAuthentication {
+public final class ClientSecretPost extends PlainClientSecret {
 
 
-	/**
-	 * The client secret.
-	 */
-	private final Secret secret;
-	
-	
 	/**
 	 * Creates a new client secret post authentication.
 	 *
@@ -44,23 +39,7 @@ public final class ClientSecretPost extends ClientAuthentication {
 	 */
 	public ClientSecretPost(final ClientID clientID, final Secret secret) {
 	
-		super(ClientAuthenticationMethod.CLIENT_SECRET_POST, clientID);
-	
-		if (secret == null)
-			throw new IllegalArgumentException("The client secret must not be null");
-		
-		this.secret = secret;
-	}
-	
-	
-	/**
-	 * Gets the client secret.
-	 *
-	 * @return The client secret.
-	 */
-	public Secret getClientSecret() {
-	
-		return secret;
+		super(ClientAuthenticationMethod.CLIENT_SECRET_POST, clientID, secret);
 	}
 	
 	
@@ -82,17 +61,14 @@ public final class ClientSecretPost extends ClientAuthentication {
 	public Map<String,String> toParameters() {
 	
 		Map<String,String> params = new HashMap<>();
-		
 		params.put("client_id", getClientID().getValue());
-		params.put("client_secret", secret.getValue());
-		
+		params.put("client_secret", getClientSecret().getValue());
 		return params;
 	}
 	
 	
 	@Override
-	public void applyTo(final HTTPRequest httpRequest)
-		throws SerializeException {
+	public void applyTo(final HTTPRequest httpRequest) {
 	
 		if (httpRequest.getMethod() != HTTPRequest.Method.POST)
 			throw new SerializeException("The HTTP request method must be POST");

@@ -307,8 +307,32 @@ version 4.16 (2015-08-26)
      * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
        7591 and RFC 7592.
 
-version 4.16.1 (2015-09-02)
+version 5.0-alpha1 (2015-08-28)
+     * Refactors OAuth 2.0 and OpenID Connect token response classes. Renames
+       TokenPair class to Tokens and adds JSON serialisation and parsing
+       methods. Extends Tokens with new OIDCTokens to handle ID tokens. Renames
+       OIDCAccessTokenResponse class to OICTokenResponse and makes ID token
+       presence mandatory. Moves token getters to Tokens / OIDCTokens class.
+       Makes BearerAccessToken cast safe.
+     * Makes SerializeException unchecked.
+     * Upgrades to Nimbus JOSE+JWT 4.0.
+     * Upgrades to Apache Commons Lang 3.4.
+
+version 5.0-alpha2 (2015-09-02)
      * Fixes parsing of AuthorizationRequest, AuthorizationResponse,
        AuthenticationRequest and LogoutRequest URIs with URL-encoded special
        characters in the parameter values (iss #147).
+     * Adds ClaimsSet.putAll(Map<String,Object) method (iss #146).
+
+version 5.0-alpha3 (2015-09-27)
+     * Closes nimbus-jose-jwt dep range exclusively to work around Ivy range
+       handling (iss #148).
+
+version 5.0-alpha4 (2015-09-29)
+     * Adds extended ClientSecretJWT and PrivateKeyJWT constructors which
+       provide for JWT claims set and signing (iss #150).
+     * Fixes NPE in JWTAuthenticationClaimsSet.toJWTClaimsSet.
+
+version 5.0-alpha5 (2015-09-30)
+    * Adds generic framework for client authentication verification.
 

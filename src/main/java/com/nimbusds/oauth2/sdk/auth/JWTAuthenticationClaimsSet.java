@@ -11,7 +11,6 @@ import java.util.Set;
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.Audience;
@@ -56,17 +55,17 @@ public class JWTAuthenticationClaimsSet {
 	/**
 	 * The names of the reserved client authentication claims.
 	 */
-	private static final Set<String> reservedClaimNames = new LinkedHashSet<>();
+	private static final Set<String> reservedClaimsNames = new LinkedHashSet<>();
 	
 	
 	static {
-		reservedClaimNames.add("iss");
-		reservedClaimNames.add("sub");
-		reservedClaimNames.add("aud");
-		reservedClaimNames.add("exp");
-		reservedClaimNames.add("nbf");
-		reservedClaimNames.add("iat");
-		reservedClaimNames.add("jti");
+		reservedClaimsNames.add("iss");
+		reservedClaimsNames.add("sub");
+		reservedClaimsNames.add("aud");
+		reservedClaimsNames.add("exp");
+		reservedClaimsNames.add("nbf");
+		reservedClaimsNames.add("iat");
+		reservedClaimsNames.add("jti");
 	}
 	
 
@@ -76,9 +75,9 @@ public class JWTAuthenticationClaimsSet {
 	 * @return The names of the reserved client authentication claims 
 	 *         (read-only set).
 	 */
-	public static Set<String> getReservedClaimNames() {
+	public static Set<String> getReservedClaimsNames() {
 	
-		return Collections.unmodifiableSet(reservedClaimNames);
+		return Collections.unmodifiableSet(reservedClaimsNames);
 	}
 	
 	
@@ -132,7 +131,26 @@ public class JWTAuthenticationClaimsSet {
 	 * assertions. 
 	 */
 	private final JWTID jti;
-	
+
+
+	/**
+	 * Creates a new JWT client authentication claims set. The expiration
+	 * time (exp) is set to five minutes from the current system time.
+	 * Generates a default identifier (jti) for the JWT. The issued-at
+	 * (iat) and not-before (nbf) claims are not set.
+	 *
+	 * @param clientID The client identifier. Used to specify the issuer
+	 *                 and the subject. Must not be {@code null}.
+	 * @param aud      The audience identifier, typically the URI of the
+	 *                 authorisation server's Token endpoint. Must not be
+	 *                 {@code null}.
+	 */
+	public JWTAuthenticationClaimsSet(final ClientID clientID,
+					  final Audience aud) {
+
+		this(clientID, aud, new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID());
+	}
+
 	
 	/**
 	 * Creates a new JWT client authentication claims set.
@@ -290,8 +308,8 @@ public class JWTAuthenticationClaimsSet {
 		o.put("iss", iss.getValue());
 		o.put("sub", sub.getValue());
 
-		List<Object> audList = new LinkedList<>();
-		audList.add(aud);
+		List<String> audList = new LinkedList<>();
+		audList.add(aud.getValue());
 		o.put("aud", audList);
 
 		o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
@@ -317,27 +335,15 @@ public class JWTAuthenticationClaimsSet {
 	 */
 	public JWTClaimsSet toJWTClaimsSet() {
 
-		JWTClaimsSet jwtClaimsSet = new JWTClaimsSet();
-
-		jwtClaimsSet.setIssuer(iss.getValue());
-		jwtClaimsSet.setSubject(sub.getValue());
-
-		List<String> audList = new LinkedList<>();
-		audList.add(aud.getValue());
-
-		jwtClaimsSet.setAudience(audList);
-		jwtClaimsSet.setExpirationTime(exp);
-
-		if (nbf != null)
-			jwtClaimsSet.setNotBeforeTime(nbf);
-		
-		if (iat != null)
-			jwtClaimsSet.setIssueTime(iat);
-		
-		if (jti != null)
-			jwtClaimsSet.setJWTID(jti.getValue());
-
-		return jwtClaimsSet;
+		return new JWTClaimsSet.Builder()
+			.issuer(iss.getValue())
+			.subject(sub.getValue())
+			.audience(aud.getValue())
+			.expirationTime(exp)
+			.notBeforeTime(nbf) // optional
+			.issueTime(iat) // optional
+			.jwtID(jti != null ? jti.getValue() : null) // optional
+			.build();
 	}
 	
 	
@@ -417,7 +423,7 @@ public class JWTAuthenticationClaimsSet {
 	 * @throws ParseException If the JWT claims set couldn't be parsed to a 
 	 *                        client authentication claims set.
 	 */
-	public static JWTAuthenticationClaimsSet parse(final ReadOnlyJWTClaimsSet jwtClaimsSet)
+	public static JWTAuthenticationClaimsSet parse(final JWTClaimsSet jwtClaimsSet)
 		throws ParseException {
 		
 		return parse(jwtClaimsSet.toJSONObject());

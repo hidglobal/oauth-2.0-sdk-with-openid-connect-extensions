@@ -18,19 +18,13 @@ public interface Request extends Message {
 	 * 
 	 * @return The endpoint URI, {@code null} if not specified.
 	 */
-	public URI getEndpointURI();
+	URI getEndpointURI();
 	
 	
 	/**
 	 * Returns the matching HTTP request.
 	 *
 	 * @return The HTTP request.
-	 *
-	 * @throws SerializeException If the request message couldn't be
-	 *                            serialised to an HTTP request.
 	 */
-	public HTTPRequest toHTTPRequest() 
-		throws SerializeException;
+	HTTPRequest toHTTPRequest();
 }
-
-

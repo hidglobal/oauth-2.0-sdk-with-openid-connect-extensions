@@ -15,8 +15,8 @@ import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
-import com.nimbusds.jwt.ReadOnlyJWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 
@@ -72,7 +72,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 */
 	public void addJWSVerifier(final JWSVerifier verifier) {
 	
-		for (JWSAlgorithm alg: verifier.getAcceptedAlgorithms()) {
+		for (JWSAlgorithm alg: verifier.supportedJWSAlgorithms()) {
 
 			jwsVerifiers.put(alg, verifier);
 		}
@@ -100,7 +100,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 */
 	public void addJWEDecrypter(final JWEDecrypter decrypter) {
 	
-		for (JWEAlgorithm alg: decrypter.getAcceptedAlgorithms()) {
+		for (JWEAlgorithm alg: decrypter.supportedJWEAlgorithms()) {
 
 			jweDecrypters.put(alg, decrypter);
 		}
@@ -130,7 +130,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 *                        signature is bad or verification failed.
 	 * @throws ParseException If parsing of the JWT claims set failed.
 	 */
-	private ReadOnlyJWTClaimsSet verify(final SignedJWT signedJWT)
+	private JWTClaimsSet verify(final SignedJWT signedJWT)
 		throws JOSEException, ParseException {
 		
 		JWSAlgorithm alg = signedJWT.getHeader().getAlgorithm();
@@ -175,7 +175,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 	 *                        decryption failed.
 	 * @throws ParseException If parsing of the JWT claims set failed.
 	 */
-	private ReadOnlyJWTClaimsSet decrypt(final EncryptedJWT encryptedJWT)
+	private JWTClaimsSet decrypt(final EncryptedJWT encryptedJWT)
 		throws JOSEException, ParseException {
 		
 		JWEAlgorithm alg = encryptedJWT.getHeader().getAlgorithm();
@@ -201,7 +201,7 @@ public class DefaultJWTDecoder implements JWTDecoder {
 
 
 	@Override
-	public ReadOnlyJWTClaimsSet decodeJWT(final JWT jwt)
+	public JWTClaimsSet decodeJWT(final JWT jwt)
 		throws JOSEException, ParseException {
 		
 		if (jwt instanceof PlainJWT) {

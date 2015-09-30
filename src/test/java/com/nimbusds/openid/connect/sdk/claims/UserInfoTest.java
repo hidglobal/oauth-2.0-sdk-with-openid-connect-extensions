@@ -2,6 +2,8 @@ package com.nimbusds.openid.connect.sdk.claims;
 
 
 import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.internet.InternetAddress;
 
@@ -355,5 +357,21 @@ public class UserInfoTest extends TestCase {
 
 			// ok
 		}
+	}
+
+
+	public void testPutAllMap() {
+
+		UserInfo userInfo = new UserInfo(new Subject("alice"));
+		userInfo.setName("Alice");
+		assertEquals("Alice", userInfo.getStringClaim("name"));
+
+		Map<String,Object> claims = new HashMap<>();
+		claims.put("name", "Alice Wonderland");
+		claims.put("given_name", "Alice");
+
+		userInfo.putAll(claims);
+		assertEquals("Alice Wonderland", userInfo.getName());
+		assertEquals("Alice", userInfo.getGivenName());
 	}
 }

@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.auth;
 
 
+import java.net.URI;
 import java.util.*;
 
 import com.nimbusds.jose.*;
@@ -93,5 +94,35 @@ public class ClientSecretJWTTest extends TestCase {
 		System.out.println("Client secret JWT expiration: " + assertion.getExpirationTime());
 		System.out.println("Client secret JWT issue date: " + assertion.getIssueTime());
 		System.out.println("Client secret JWT not before: " + assertion.getNotBeforeTime());
+	}
+
+
+	public void testWithJWTHelper()
+		throws Exception {
+
+		ClientID clientID = new ClientID("123");
+		URI tokenEndpoint = new URI("https://c2id.com/token");
+		Secret secret = new Secret(256 / 8); // generate 256 bit secret
+
+		ClientSecretJWT clientSecretJWT = new ClientSecretJWT(clientID, tokenEndpoint, JWSAlgorithm.HS256, secret);
+
+		clientSecretJWT = ClientSecretJWT.parse(clientSecretJWT.toParameters());
+
+		assertTrue(clientSecretJWT.getClientAssertion().verify(new MACVerifier(secret.getValueBytes())));
+
+		assertEquals(clientID, clientSecretJWT.getJWTAuthenticationClaimsSet().getClientID());
+		assertEquals(clientID.getValue(), clientSecretJWT.getJWTAuthenticationClaimsSet().getIssuer().getValue());
+		assertEquals(clientID.getValue(), clientSecretJWT.getJWTAuthenticationClaimsSet().getSubject().getValue());
+		assertEquals(tokenEndpoint.toString(), clientSecretJWT.getJWTAuthenticationClaimsSet().getAudience().getValue());
+
+		// 4 min < exp < 6 min
+		final long now = new Date().getTime();
+		final Date fourMinutesFromNow = new Date(now + 4*60*1000l);
+		final Date sixMinutesFromNow = new Date(now + 6*60*1000l);
+		assertTrue(clientSecretJWT.getJWTAuthenticationClaimsSet().getExpirationTime().after(fourMinutesFromNow));
+		assertTrue(clientSecretJWT.getJWTAuthenticationClaimsSet().getExpirationTime().before(sixMinutesFromNow));
+		assertNotNull(clientSecretJWT.getJWTAuthenticationClaimsSet().getJWTID());
+		assertNull(clientSecretJWT.getJWTAuthenticationClaimsSet().getIssueTime());
+		assertNull(clientSecretJWT.getJWTAuthenticationClaimsSet().getNotBeforeTime());
 	}
 }

@@ -43,13 +43,14 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 	public void testIDTokenResponse()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
-		claimsSet.setAudience(Arrays.asList("https://client.com"));
-		claimsSet.setSubject("alice");
-		claimsSet.setIssueTime(new Date(10000l));
-		claimsSet.setExpirationTime(new Date(20000l));
-		claimsSet.setClaim("nonce", "123");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.audience(Arrays.asList("https://client.com"))
+			.subject("alice")
+			.issueTime(new Date(10000l))
+			.expirationTime(new Date(20000l))
+			.claim("nonce", "123")
+			.build();
 
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
@@ -97,13 +98,14 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		AuthorizationCode code = new AuthorizationCode();
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
-		claimsSet.setAudience(Arrays.asList("https://client.com"));
-		claimsSet.setSubject("alice");
-		claimsSet.setIssueTime(new Date(10000l));
-		claimsSet.setExpirationTime(new Date(20000l));
-		claimsSet.setClaim("nonce", "123");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.audience(Arrays.asList("https://client.com"))
+			.subject("alice")
+			.issueTime(new Date(10000l))
+			.expirationTime(new Date(20000l))
+			.claim("nonce", "123")
+			.build();
 
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 
@@ -151,13 +153,14 @@ public class AuthenticationSuccessResponseTest extends TestCase {
 
 		AuthorizationCode code = new AuthorizationCode();
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
-		claimsSet.setAudience(Arrays.asList("https://client.com"));
-		claimsSet.setSubject("alice");
-		claimsSet.setIssueTime(new Date(10000l));
-		claimsSet.setExpirationTime(new Date(20000l));
-		claimsSet.setClaim("nonce", "123");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.audience(Arrays.asList("https://client.com"))
+			.subject("alice")
+			.issueTime(new Date(10000l))
+			.expirationTime(new Date(20000l))
+			.claim("nonce", "123")
+			.build();
 
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 

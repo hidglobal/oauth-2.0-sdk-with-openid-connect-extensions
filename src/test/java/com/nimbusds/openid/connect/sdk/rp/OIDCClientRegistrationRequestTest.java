@@ -161,8 +161,9 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 	public void testSoftwareStatement()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.build();
 
 		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 		jwt.sign(new MACSigner("01234567890123456789012345678901"));
@@ -191,8 +192,9 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 	public void testRejectUnsignedSoftwareStatement()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.build();
 
 		OIDCClientMetadata metadata = new OIDCClientMetadata();
 		metadata.setRedirectionURI(new URI("https://client.com/in"));
@@ -217,7 +219,7 @@ public class OIDCClientRegistrationRequestTest extends TestCase {
 	public void testRejectSoftwareStatementWithoutIssuer()
 		throws Exception {
 
-		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), new JWTClaimsSet());
+		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), new JWTClaimsSet.Builder().build());
 		jwt.sign(new MACSigner("01234567890123456789012345678901"));
 
 		OIDCClientMetadata metadata = new OIDCClientMetadata();

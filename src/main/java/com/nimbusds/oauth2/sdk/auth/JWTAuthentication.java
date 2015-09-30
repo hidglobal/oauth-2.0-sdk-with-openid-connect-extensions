@@ -25,8 +25,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>OAuth 2.0 (RFC 6749), section-3.2.1.
- *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 (RFC 7523).
+ *     <li>OAuth 2.0 (RFC 6749), section 3.2.1.
+ *     <li>JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7523).
+ *     <li>OpenID Connect Core 1.0, section 9.
  * </ul>
  */
 public abstract class JWTAuthentication extends ClientAuthentication {
@@ -165,12 +167,8 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	 *
 	 * @return The parameters map, with keys "client_assertion",
 	 *         "client_assertion_type" and "client_id".
-	 *
-	 * @throws SerializeException If the signed JWT couldn't be serialised
-	 *                            to a client assertion string.
 	 */
-	public Map<String,String> toParameters()
-		throws SerializeException {
+	public Map<String,String> toParameters() {
 	
 		Map<String,String> params = new HashMap<>();
 		
@@ -189,8 +187,7 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 	
 	
 	@Override
-	public void applyTo(final HTTPRequest httpRequest)
-		throws SerializeException {
+	public void applyTo(final HTTPRequest httpRequest) {
 		
 		if (httpRequest.getMethod() != HTTPRequest.Method.POST)
 			throw new SerializeException("The HTTP request method must be POST");

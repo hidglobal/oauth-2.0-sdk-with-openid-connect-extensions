@@ -163,12 +163,8 @@ public class LogoutRequest extends AbstractRequest {
 	 * </pre>
 	 *
 	 * @return The parameters.
-	 *
-	 * @throws SerializeException If this logout request couldn't be
-	 *                            serialised to an parameters map.
 	 */
-	public Map<String,String> toParameters()
-		throws SerializeException {
+	public Map<String,String> toParameters() {
 
 		Map <String,String> params = new LinkedHashMap<>();
 
@@ -205,12 +201,8 @@ public class LogoutRequest extends AbstractRequest {
 	 * </pre>
 	 *
 	 * @return The URI query string.
-	 *
-	 * @throws SerializeException If this logout request couldn't be
-	 *                            serialised to an URI query string.
 	 */
-	public String toQueryString()
-		throws SerializeException {
+	public String toQueryString() {
 
 		return URLUtils.serializeParameters(toParameters());
 	}
@@ -231,12 +223,8 @@ public class LogoutRequest extends AbstractRequest {
 	 * </pre>
 	 *
 	 * @return The URI representation.
-	 *
-	 * @throws SerializeException If this logout request couldn't be
-	 *                            serialised to a URI.
 	 */
-	public URI toURI()
-		throws SerializeException {
+	public URI toURI() {
 
 		if (getEndpointURI() == null)
 			throw new SerializeException("The end-session endpoint URI is not specified");
@@ -253,8 +241,7 @@ public class LogoutRequest extends AbstractRequest {
 
 
 	@Override
-	public HTTPRequest toHTTPRequest()
-		throws SerializeException {
+	public HTTPRequest toHTTPRequest() {
 
 		if (getEndpointURI() == null)
 			throw new SerializeException("The endpoint URI is not specified");

@@ -16,17 +16,13 @@ public interface Response extends Message {
 	 * @return {@code true} if the response indicates success, else
 	 *         {@code false}.
 	 */
-	public boolean indicatesSuccess();
+	boolean indicatesSuccess();
 
 	
 	/**
 	 * Returns the matching HTTP response.
 	 *
 	 * @return The HTTP response.
-	 *
-	 * @throws SerializeException If the response message couldn't be 
-	 *                            serialised to an HTTP response.
 	 */
-	public HTTPResponse toHTTPResponse() 
-		throws SerializeException;
+	HTTPResponse toHTTPResponse();
 }

@@ -78,8 +78,9 @@ public class AuthorizationGrantTest extends TestCase {
 	public void testParseJWTBearer()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setSubject("alice");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
 
 		JWT assertion = new PlainJWT(claimsSet);
 

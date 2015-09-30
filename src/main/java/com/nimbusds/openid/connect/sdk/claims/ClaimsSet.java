@@ -26,7 +26,7 @@ public abstract class ClaimsSet {
 
 
 	/**
-	 * The JSON object representing the claims set.
+	 * The JSON object representation of the claims set.
 	 */
 	private final JSONObject claims;
 
@@ -61,7 +61,18 @@ public abstract class ClaimsSet {
 	 */
 	public void putAll(final ClaimsSet other) {
 
-		claims.putAll(other.claims);
+		putAll(other.claims);
+	}
+
+
+	/**
+	 * Puts all claims from the specified map.
+	 *
+	 * @param claims The claims to put. Must not be {@code null}.
+	 */
+	public void putAll(final Map<String,Object> claims) {
+
+		this.claims.putAll(claims);
 	}
 
 

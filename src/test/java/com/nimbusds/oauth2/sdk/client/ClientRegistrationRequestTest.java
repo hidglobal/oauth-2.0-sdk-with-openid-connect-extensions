@@ -5,17 +5,18 @@ import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
+import net.minidev.json.JSONObject;
+
+import com.nimbusds.langtag.LangTag;
+
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
-
-import com.nimbusds.langtag.LangTag;
 
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
@@ -122,8 +123,9 @@ public class ClientRegistrationRequestTest extends TestCase {
 	public void testSoftwareStatement()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.build();
 
 		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 		jwt.sign(new MACSigner("01234567890123456789012345678901"));
@@ -152,8 +154,9 @@ public class ClientRegistrationRequestTest extends TestCase {
 	public void testRejectUnsignedSoftwareStatement()
 		throws Exception {
 
-		JWTClaimsSet claimsSet = new JWTClaimsSet();
-		claimsSet.setIssuer("https://c2id.com");
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.issuer("https://c2id.com")
+			.build();
 
 		ClientMetadata metadata = new ClientMetadata();
 		metadata.setRedirectionURI(new URI("https://client.com/in"));
@@ -178,7 +181,7 @@ public class ClientRegistrationRequestTest extends TestCase {
 	public void testRejectSoftwareStatementWithoutIssuer()
 		throws Exception {
 
-		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), new JWTClaimsSet());
+		SignedJWT jwt = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), new JWTClaimsSet.Builder().build());
 		jwt.sign(new MACSigner("01234567890123456789012345678901"));
 
 		ClientMetadata metadata = new ClientMetadata();
