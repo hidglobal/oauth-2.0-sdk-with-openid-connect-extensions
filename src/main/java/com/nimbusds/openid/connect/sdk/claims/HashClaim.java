@@ -6,9 +6,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
-import org.apache.commons.codec.binary.Base64;
-
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.util.Base64URL;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
 
@@ -105,6 +104,6 @@ public abstract class HashClaim extends Identifier {
 
 		byte[] firstHalf = Arrays.copyOf(hash, hash.length / 2);
 
-		return Base64.encodeBase64URLSafeString(firstHalf);
+		return Base64URL.encode(firstHalf).toString();
 	}
 }

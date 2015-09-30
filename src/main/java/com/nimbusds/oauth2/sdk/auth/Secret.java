@@ -7,7 +7,7 @@ import java.util.Date;
 
 import net.jcip.annotations.Immutable;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64URL;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -107,7 +107,7 @@ public final class Secret {
 		
 		secureRandom.nextBytes(n);
 
-		value = Base64.encodeBase64URLSafe(n);
+		value = Base64URL.encode(n).toString().getBytes(Charset.forName("UTF-8"));
 		
 		this.expDate = expDate;
 	}

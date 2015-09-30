@@ -5,7 +5,7 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64;
 
 import net.minidev.json.JSONObject;
 
@@ -55,7 +55,7 @@ public class BearerAccessTokenTest extends TestCase {
 
 		assertNotNull(token);
 
-		assertEquals(12, Base64.decodeBase64(token.getValue()).length);
+		assertEquals(12, new Base64(token.getValue()).decode().length);
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
@@ -71,7 +71,7 @@ public class BearerAccessTokenTest extends TestCase {
 
 		assertNotNull(token);
 
-		assertEquals(32, Base64.decodeBase64(token.getValue()).length);
+		assertEquals(32, new Base64(token.getValue()).decode().length);
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 

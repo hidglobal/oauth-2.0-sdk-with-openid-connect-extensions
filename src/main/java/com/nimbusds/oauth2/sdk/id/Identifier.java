@@ -6,7 +6,7 @@ import java.security.SecureRandom;
 
 import org.apache.commons.lang3.StringUtils;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64URL;
 
 import net.minidev.json.JSONAware;
 import net.minidev.json.JSONValue;
@@ -71,7 +71,7 @@ public abstract class Identifier implements Serializable, Comparable<Identifier>
 		
 		secureRandom.nextBytes(n);
 
-		value = Base64.encodeBase64URLSafeString(n);
+		value = Base64URL.encode(n).toString();
 	}
 	
 	

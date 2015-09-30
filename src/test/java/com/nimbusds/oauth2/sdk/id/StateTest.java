@@ -3,7 +3,7 @@ package com.nimbusds.oauth2.sdk.id;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64;
 
 
 /**
@@ -81,7 +81,7 @@ public class StateTest extends TestCase {
 		
 		System.out.println("Random state (default byte length): " + state);
 		
-		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, Base64.decodeBase64(state.toString()).length);
+		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, new Base64(state.toString()).decode().length);
 	}
 	
 	
@@ -91,7 +91,7 @@ public class StateTest extends TestCase {
 		
 		System.out.println("Random state (16 byte length): " + state);
 		
-		assertEquals(16, Base64.decodeBase64(state.toString()).length);
+		assertEquals(16, new Base64(state.toString()).decode().length);
 	}
 
 
