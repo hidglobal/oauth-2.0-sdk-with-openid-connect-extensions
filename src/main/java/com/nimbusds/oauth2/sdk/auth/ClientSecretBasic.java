@@ -8,7 +8,7 @@ import java.nio.charset.Charset;
 
 import net.jcip.annotations.Immutable;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -114,7 +114,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 			// UTF-8 should always be supported
 		}
 
-		return "Basic " + Base64.encodeBase64String(sb.toString().getBytes(UTF8_CHARSET));
+		return "Basic " + Base64.encode(sb.toString().getBytes(UTF8_CHARSET));
 	}
 	
 	
@@ -148,7 +148,7 @@ public final class ClientSecretBasic extends ClientAuthentication {
 		if (! parts[0].equalsIgnoreCase("Basic"))
 			throw new ParseException("HTTP authentication must be \"Basic\"");
 		
-		String credentialsString = new String(Base64.decodeBase64(parts[1]), UTF8_CHARSET);
+		String credentialsString = new String(new Base64(parts[1]).decode(), UTF8_CHARSET);
 
 		String[] credentials = credentialsString.split(":", 2);
 		

@@ -3,14 +3,15 @@ package com.nimbusds.oauth2.sdk.token;
 
 import java.net.URL;
 
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.jose.util.Base64;
+
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.Scope;
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 
 
 /**
@@ -54,7 +55,7 @@ public class BearerAccessTokenTest extends TestCase {
 
 		assertNotNull(token);
 
-		assertEquals(12, Base64.decodeBase64(token.getValue()).length);
+		assertEquals(12, new Base64(token.getValue()).decode().length);
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 
@@ -70,7 +71,7 @@ public class BearerAccessTokenTest extends TestCase {
 
 		assertNotNull(token);
 
-		assertEquals(32, Base64.decodeBase64(token.getValue()).length);
+		assertEquals(32, new Base64(token.getValue()).decode().length);
 		assertEquals(0l, token.getLifetime());
 		assertNull(token.getScope());
 

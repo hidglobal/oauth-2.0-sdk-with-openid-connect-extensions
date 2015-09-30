@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64URL;
 
 import com.nimbusds.oauth2.sdk.id.Subject;
 
@@ -101,6 +101,6 @@ public class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifier
 		sha256.update(localSub.getValue().getBytes(charset));
 		byte[] hash = sha256.digest(salt);
 
-		return new Subject(Base64.encodeBase64URLSafeString(hash));
+		return new Subject(Base64URL.encode(hash).toString());
 	}
 }

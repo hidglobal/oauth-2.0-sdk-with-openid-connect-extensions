@@ -3,7 +3,7 @@ package com.nimbusds.openid.connect.sdk;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
 
@@ -20,7 +20,7 @@ public class NonceTest extends TestCase {
 
 		System.out.println("Generated nonce: " + nonce);
 
-		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, Base64.decodeBase64(nonce.getValue()).length);
+		assertEquals(Identifier.DEFAULT_BYTE_LENGTH, new Base64(nonce.getValue()).decode().length);
 	}
 
 
@@ -29,7 +29,7 @@ public class NonceTest extends TestCase {
 		Nonce nonce =  new Nonce(1);
 
 		System.out.println("Generated nonce: " + nonce);
-		assertEquals(1, Base64.decodeBase64(nonce.getValue()).length);
+		assertEquals(1, new Base64(nonce.getValue()).decode().length);
 
 	}
 

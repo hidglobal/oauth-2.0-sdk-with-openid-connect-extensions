@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.codec.binary.Base64;
+import com.nimbusds.jose.util.Base64;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -90,7 +90,7 @@ public class ClientSecretBasicTest extends TestCase {
 
 		String credentials = id + ":" + pw;
 
-		String header = "Basic " + Base64.encodeBase64String(credentials.getBytes(Charset.forName("UTF-8")));
+		String header = "Basic " + Base64.encode(credentials.getBytes(Charset.forName("UTF-8")));
 
 		assertEquals(header,
 			"Basic SVgtMUZYVVJQMVU5M1cxMTpjWHFYYkNKVE9VSmZ5cENEOTJaTk52aVF4dllpdEFONnZIMHpGOGhcL25GeTYreUg3RVJWbFBwSVpuVXFZZkN6YUhaWWt6aUk3UUJDSzg4anVMVENcL3Q5V3dqaU1pNldiZWNFM3krdG5EMmxuaUk2UEs3bjRqTVRCaGFKUE5xZkhwdmRoMTNHWnN3YzkySHRQU0xRWWJpS3h6Z0FQaG5tRmFcLzFoVitHZm1uRXArSVhuRFJ1a0hBOEFhWDZMM2Q0eDZUNjA4KzJkWlJucU9NNCtEQjdLNHZGTm0rM2JZY0VwSHo1emhCQXVsWFFNcCtHemlDb0tSY1dyUWZqSHgxY1NzbWgrUlwvRjZCWkxIa1Z2TkY2WEthS0Eyc0RseGM5QngzRXdmTkZKWW9qV2lHcitXVEQ4c2xyRHc2eWZiWktUWXNmZ1lGQ1lmMGdTVXNWOG1ISXhhWlFBPT0=");
