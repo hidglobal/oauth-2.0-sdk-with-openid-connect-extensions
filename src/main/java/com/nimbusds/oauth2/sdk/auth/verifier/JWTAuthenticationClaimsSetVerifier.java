@@ -3,13 +3,13 @@ package com.nimbusds.oauth2.sdk.auth.verifier;
 
 import java.util.Set;
 
+import net.jcip.annotations.Immutable;
+
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 
 import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
-import net.jcip.annotations.Immutable;
 
 
 /**
@@ -24,13 +24,15 @@ import net.jcip.annotations.Immutable;
  * </ul>
  */
 @Immutable
-public class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier {
+class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 
+	// Cache JWT exceptions for quick processing of bad claims
 
 	/**
-	 * The expected client identifier.
+	 * Missing or invalid JWT claim exception.
 	 */
-	private final ClientID expectedClientID;
+	private static BadJWTException INVALID_CLAIM_EXCEPTION =
+		new BadJWTException("Missing or invalid JWT claim");
 
 
 	/**
@@ -42,28 +44,30 @@ public class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier
 	/**
 	 * Creates a new JWT client authentication claims set verifier.
 	 *
-	 * @param expectedClientID The expected client identifier. Used for
-	 *                         issuer (iss) and subject (sub) claims
-	 *                         checking. Must not be {@code null}.
-	 * @param expectedAudience The possible expected audience (aud). Must
-	 *                         not be empty or {@code null}. Typically the
-	 *                         token endpoint URI and the issuer URI for
-	 *                         OpenID providers.
+	 * @param expectedAudience The permitted audience (aud) claim values.
+	 *                         Must not be empty or {@code null}. Should
+	 *                         typically contain the token endpoint URI and
+	 *                         for OpenID provider it may also include the
+	 *                         issuer URI.
 	 */
-	public JWTAuthenticationClaimsSetVerifier(final ClientID expectedClientID,
-						  final Set<Audience> expectedAudience) {
-
-		if (expectedClientID == null) {
-			throw new IllegalArgumentException("The expected client ID must not be null");
-		}
-
-		this.expectedClientID = expectedClientID;
+	public JWTAuthenticationClaimsSetVerifier(final Set<Audience> expectedAudience) {
 
 		if (expectedAudience == null || expectedAudience.isEmpty()) {
 			throw new IllegalArgumentException("The expected audience set must not be null or empty");
 		}
 
 		this.expectedAudience = expectedAudience;
+	}
+
+
+	/**
+	 * Returns the permitted audience values.
+	 *
+	 * @return The permitted audience (aud) claim values.
+	 */
+	public Set<Audience> getExpectedAudience() {
+
+		return expectedAudience;
 	}
 
 
@@ -74,29 +78,29 @@ public class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier
 		super.verify(claimsSet);
 
 		if (claimsSet.getExpirationTime() == null) {
-			throw new BadJWTException("Missing required expiration (exp) claim");
-		}
-
-		if (! expectedClientID.getValue().equals(claimsSet.getIssuer())) {
-			throw new BadJWTException("Missing or unexpected issuer (iss) claim");
-		}
-
-		if (! expectedClientID.getValue().equals(claimsSet.getSubject())) {
-			throw new BadJWTException("Missing or unexpected subject (sub) claim");
+			throw INVALID_CLAIM_EXCEPTION;
 		}
 
 		if (claimsSet.getAudience() == null || claimsSet.getAudience().isEmpty()) {
-			throw new BadJWTException("Missing audience (aud) claim");
+			throw INVALID_CLAIM_EXCEPTION;
 		}
 
 		if (claimsSet.getAudience().size() > 1) {
-			throw new BadJWTException("The audience (aud) claim must be singular");
+			throw INVALID_CLAIM_EXCEPTION;
 		}
 
 		Audience aud = new Audience(claimsSet.getAudience().get(0));
 
 		if (! expectedAudience.contains(aud)) {
-			throw new BadJWTException("Unxpected audience (aud): " + aud);
+			throw INVALID_CLAIM_EXCEPTION;
+		}
+
+		if (claimsSet.getIssuer() == null || claimsSet.getSubject() == null) {
+			throw INVALID_CLAIM_EXCEPTION;
+		}
+
+		if (! claimsSet.getIssuer().equals(claimsSet.getSubject())) {
+			throw INVALID_CLAIM_EXCEPTION;
 		}
 	}
 }

@@ -333,3 +333,6 @@ version 5.0-alpha4 (2015-09-29)
        provide for JWT claims set and signing (iss #150).
      * Fixes NPE in JWTAuthenticationClaimsSet.toJWTClaimsSet.
 
+version 5.0-alpha5 (2015-09-30)
+    * Adds generic framework for client authentication verification.
+

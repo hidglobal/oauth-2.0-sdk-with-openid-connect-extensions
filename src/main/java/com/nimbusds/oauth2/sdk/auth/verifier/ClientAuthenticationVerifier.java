@@ -1,76 +1,223 @@
 package com.nimbusds.oauth2.sdk.auth.verifier;
 
 
+import java.security.PublicKey;
+import java.util.List;
 import java.util.Set;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.proc.BadJOSEException;
-import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.auth.JWTAuthentication;
-import com.nimbusds.oauth2.sdk.id.Audience;
 import net.jcip.annotations.ThreadSafe;
+
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.crypto.factories.DefaultJWSVerifierFactory;
+import com.nimbusds.jose.proc.JWSVerifierFactory;
+import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.proc.BadJWTException;
+
+import com.nimbusds.oauth2.sdk.auth.*;
+import com.nimbusds.oauth2.sdk.id.Audience;
 
 
 /**
- * Client authentication verifier. Before it can be used it must be
- * provided with a {@link com.nimbusds.jose.proc.JWSKeySelector} to lookup the
- * client keys for the JWT authentication assertions.
+ * Client authentication verifier.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OAuth 2.0 (RFC 6749), sections 2.3.1 and 3.2.1.
+ *     <li>OpenID Connect Core 1.0, section 9.
+ *     <li>JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7523).
+ * </ul>
  */
 @ThreadSafe
 public class ClientAuthenticationVerifier<T> {
 
 
 	/**
-	 * The expected audience.
+	 * The client credentials selector.
 	 */
-	private final Set<Audience> expectedAudience;
-
-
-	private final DefaultJWTProcessor<ClientAuthenticationContext<T>> jwtProcessor;
-
-
 	private final ClientCredentialsSelector<T> clientCredentialsSelector;
 
 
-	public ClientAuthenticationVerifier(final Set<Audience> expectedAudience,
-					    final ClientCredentialsSelector<T> clientCredentialsSelector) {
+	/**
+	 * The JWT assertion claims set verifier.
+	 */
+	private final JWTAuthenticationClaimsSetVerifier claimsSetVerifier;
 
-		if (expectedAudience == null || expectedAudience.isEmpty()) {
-			throw new IllegalArgumentException("The expected audience set must not be null or empty");
+
+	/**
+	 * JWS verifier factory for private_key_jwt authentication.
+	 */
+	private final JWSVerifierFactory jwsVerifierFactory = new DefaultJWSVerifierFactory();
+
+
+	/**
+	 * Creates a new client authentication verifier.
+	 *
+	 * @param clientCredentialsSelector The client credentials selector.
+	 *                                  Must not be {@code null}.
+	 * @param expectedAudience          The permitted audience (aud) claim
+	 *                                  values in JWT authentication
+	 *                                  assertions. Must not be empty or
+	 *                                  {@code null}. Should typically
+	 *                                  contain the token endpoint URI and
+	 *                                  for OpenID provider it may also
+	 *                                  include the issuer URI.
+	 */
+	public ClientAuthenticationVerifier(final ClientCredentialsSelector<T> clientCredentialsSelector,
+					    final Set<Audience> expectedAudience) {
+
+		claimsSetVerifier = new JWTAuthenticationClaimsSetVerifier(expectedAudience);
+
+		if (clientCredentialsSelector == null) {
+			throw new IllegalArgumentException("The client credentials selector must not be null");
 		}
 
-		this.expectedAudience = expectedAudience;
-
-
 		this.clientCredentialsSelector = clientCredentialsSelector;
-
-		this.jwtProcessor = new DefaultJWTProcessor<>();
-
-		this.jwtProcessor.setJWSKeySelector(clientCredentialsSelector);
 	}
 
 
-	public T verify(final ClientAuthentication clientAuth)
-		throws InvalidClientException {
+	/**
+	 * Returns the client credentials selector.
+	 *
+	 * @return The client credentials selector.
+	 */
+	public ClientCredentialsSelector<T> getClientCredentialsSelector() {
 
-		ClientAuthenticationContext<T> ctx = new ClientAuthenticationContext<>(clientAuth);
+		return clientCredentialsSelector;
+	}
 
 
-		if (clientAuth instanceof JWTAuthentication) {
+	/**
+	 * Returns the permitted audience values in JWT authentication
+	 * assertions.
+	 *
+	 * @return The permitted audience (aud) claim values.
+	 */
+	public Set<Audience> getExpectedAudience() {
 
-			JWTAuthentication jwtAuth = (JWTAuthentication)clientAuth;
+		return claimsSetVerifier.getExpectedAudience();
+	}
 
-			try {
-				jwtProcessor.process(jwtAuth.getClientAssertion(), ctx);
 
-			} catch (BadJOSEException e) {
-				throw new InvalidClientException(e.getMessage());
-			} catch (JOSEException e) {
-				throw new RuntimeException(e.getMessage(), e);
+	/**
+	 * Verifies a client authentication request.
+	 *
+	 * @param clientAuth The client authentication. Must not be
+	 *                   {@code null}.
+	 * @param context    Additional context to be passed to the client
+	 *                   credentials selector. May be {@code null}.
+	 *
+	 * @return {@code true} if the client was successfully authenticated,
+	 *         {@code false} if the authentication failed due to an unknown
+	 *         client, invalid credential or unsupported authentication
+	 *         method.
+	 *
+	 * @throws JOSEException
+	 */
+	public boolean verify(final ClientAuthentication clientAuth, final Context<T> context)
+		throws JOSEException {
+
+		if (clientAuth instanceof PlainClientSecret) {
+
+			List<Secret> secretCandidates = clientCredentialsSelector.selectClientSecrets(
+				clientAuth.getClientID(),
+				clientAuth.getMethod(),
+				context);
+
+			if (secretCandidates == null) {
+				return false; // invalid client
 			}
-		}
 
-		return ctx.getData();
+			PlainClientSecret plainAuth = (PlainClientSecret)clientAuth;
+
+			for (Secret candidate: secretCandidates) {
+				if (plainAuth.getClientSecret().equals(candidate)) {
+					return true; // success
+				}
+			}
+
+			return false; // invalid client
+
+		} else if (clientAuth instanceof ClientSecretJWT) {
+
+			ClientSecretJWT jwtAuth = (ClientSecretJWT) clientAuth;
+
+			// Check claims first before calling backend
+			try {
+				claimsSetVerifier.verify(jwtAuth.getJWTAuthenticationClaimsSet().toJWTClaimsSet());
+			} catch (BadJWTException e) {
+				return false; // invalid client
+			}
+
+			List<Secret> secretCandidates = clientCredentialsSelector.selectClientSecrets(
+				clientAuth.getClientID(),
+				clientAuth.getMethod(),
+				context);
+
+			if (secretCandidates == null) {
+				return false; // invalid client
+			}
+
+			SignedJWT assertion = jwtAuth.getClientAssertion();
+
+			for (Secret candidate : secretCandidates) {
+
+				boolean valid = assertion.verify(new MACVerifier(candidate.getValueBytes()));
+
+				if (valid) {
+					return true; // success
+				}
+			}
+
+			return false; // invalid client
+
+		} else if (clientAuth instanceof PrivateKeyJWT) {
+
+			PrivateKeyJWT jwtAuth = (PrivateKeyJWT)clientAuth;
+
+			// Check claims first before calling backend
+			try {
+				claimsSetVerifier.verify(jwtAuth.getJWTAuthenticationClaimsSet().toJWTClaimsSet());
+			} catch (BadJWTException e) {
+				return false; // invalid client
+			}
+
+			List<? extends PublicKey> keyCandidates = clientCredentialsSelector.selectPublicKeys(
+				jwtAuth.getClientID(),
+				jwtAuth.getMethod(),
+				jwtAuth.getClientAssertion().getHeader(),
+				context);
+
+			if  (keyCandidates == null) {
+				return false; // invalid client
+			}
+
+			SignedJWT assertion = jwtAuth.getClientAssertion();
+
+			for (PublicKey candidate: keyCandidates) {
+
+				if (candidate == null) {
+					continue; // skip
+				}
+
+				JWSVerifier jwsVerifier = jwsVerifierFactory.createJWSVerifier(
+					jwtAuth.getClientAssertion().getHeader(),
+					candidate);
+
+				boolean valid = assertion.verify(jwsVerifier);
+
+				if (valid) {
+					return true; // success
+				}
+			}
+
+			return false; // invalid client
+
+		} else {
+			throw new RuntimeException("Unexpected client authentication: " + clientAuth.getMethod());
+		}
 	}
 }
