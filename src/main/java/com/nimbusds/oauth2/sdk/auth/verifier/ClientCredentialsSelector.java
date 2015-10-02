@@ -15,6 +15,7 @@ import com.nimbusds.oauth2.sdk.id.ClientID;
  * Selector of client credential candidates for client authentication
  * verification. The select methods should typically return a single candidate,
  * but may also return multiple in case of client credentials key rotation.
+ * Implementations should be tread-safe.
  *
  * <p>Selection of {@link com.nimbusds.oauth2.sdk.auth.ClientSecretBasic
  * client_secret_basic}, {@link com.nimbusds.oauth2.sdk.auth.ClientSecretPost
