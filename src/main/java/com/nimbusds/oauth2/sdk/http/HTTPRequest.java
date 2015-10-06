@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk.http;
 
 import java.io.*;
 import java.net.*;
+import java.util.List;
 import java.util.Map;
 
 import net.jcip.annotations.ThreadSafe;
@@ -575,39 +576,24 @@ public class HTTPRequest extends HTTPMessage {
 
 		HTTPResponse response = new HTTPResponse(statusCode);
 
-		String location = conn.getHeaderField("Location");
+		// Set headers
+		for (Map.Entry<String,List<String>> responseHeader: conn.getHeaderFields().entrySet()) {
 
-		if (location != null) {
-
-			try {
-				response.setLocation(new URI(location));
-
-			} catch (URISyntaxException e) {
-				throw new IOException("Couldn't parse Location header: " + e.getMessage(), e);
+			if (responseHeader.getKey() == null) {
+				continue; // skip header
 			}
+
+			List<String> values = responseHeader.getValue();
+			if (values == null || values.isEmpty() || values.get(0) == null) {
+				continue; // skip header
+			}
+
+			response.setHeader(responseHeader.getKey(), values.get(0));
 		}
 
-
-		try {
-			response.setContentType(conn.getContentType());
-
-		} catch (ParseException e) {
-
-			throw new IOException("Couldn't parse Content-Type header: " + e.getMessage(), e);
-		}
-
-
-		response.setCacheControl(conn.getHeaderField("Cache-Control"));
-
-		response.setPragma(conn.getHeaderField("Pragma"));
-
-		response.setWWWAuthenticate(conn.getHeaderField("WWW-Authenticate"));
-
-		String bodyContent = body.toString();
-
+		final String bodyContent = body.toString();
 		if (! bodyContent.isEmpty())
 			response.setContent(bodyContent);
-
 
 		return response;
 	}
