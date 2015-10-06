@@ -254,4 +254,44 @@ public class HTTPRequestTest extends TestCase {
 		assertEquals(20l, jsonArray.get(1));
 		assertEquals(2, jsonArray.size());
 	}
+
+
+	@Test
+	public void testWithOtherResponseHeaders()
+		throws Exception {
+
+		onRequest()
+			.havingMethodEqualTo("GET")
+			.havingHeaderEqualTo("Authorization", "Bearer xyz")
+			.havingHeaderEqualTo("Accept", CommonContentTypes.APPLICATION_JSON.toString())
+			.havingPathEqualTo("/path")
+			.havingQueryStringEqualTo("apples=10&pears=20")
+			.respond()
+			.withStatus(200)
+			.withHeader("SID", "abc")
+			.withHeader("X-App", "123")
+			.withBody("[10, 20]")
+			.withEncoding(Charset.forName("UTF-8"))
+			.withContentType(CommonContentTypes.APPLICATION_JSON.toString());
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://localhost:" + port() + "/path"));
+		httpRequest.setQuery("apples=10&pears=20");
+		httpRequest.setFragment("fragment");
+		httpRequest.setAuthorization("Bearer xyz");
+		httpRequest.setAccept(CommonContentTypes.APPLICATION_JSON.toString());
+
+		HTTPResponse httpResponse = httpRequest.send();
+
+		System.out.println(httpResponse.getContent());
+
+		assertEquals(200, httpResponse.getStatusCode());
+		httpResponse.ensureContentType(CommonContentTypes.APPLICATION_JSON);
+		assertEquals("abc", httpResponse.getHeader("SID"));
+		assertEquals("123", httpResponse.getHeader("X-App"));
+
+		JSONArray jsonArray = httpResponse.getContentAsJSONArray();
+		assertEquals(10l, jsonArray.get(0));
+		assertEquals(20l, jsonArray.get(1));
+		assertEquals(2, jsonArray.size());
+	}
 }
