@@ -338,4 +338,6 @@ version 5.0-alpha5 (2015-09-30)
     * Removes Apache Commons Codec dependency, switches to Nimbus JOSE+JWT
       for BASE64 and BASE64 URL-safe encoding and decoding.
 
+version 5.0-alpha6 (2015-10-06)
+    * Fixes parsing of custom response headers in HTTPRequest.send (iss #153).
 
