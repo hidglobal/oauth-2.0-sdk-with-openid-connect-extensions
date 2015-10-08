@@ -105,6 +105,28 @@ public final class Issuer extends Identifier {
 
 
 	/**
+	 * Creates a new issuer identifier with the specified URI value.
+	 *
+	 * @param value The URI value. Must not be {@code null}.
+	 */
+	public Issuer(final URI value) {
+
+		super(value.toString());
+	}
+
+
+	/**
+	 * Creates a new issuer identifier with the specified value.
+	 *
+	 * @param value The value. Must not be {@code null}.
+	 */
+	public Issuer(final Identifier value) {
+
+		super(value.getValue());
+	}
+
+
+	/**
 	 * Checks if this issuer is a valid identifier. This method is
 	 * {@code null}-safe.
 	 *

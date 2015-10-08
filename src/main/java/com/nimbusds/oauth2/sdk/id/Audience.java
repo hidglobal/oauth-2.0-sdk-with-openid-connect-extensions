@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,25 +28,24 @@ public final class Audience extends Identifier {
 
 
 	/**
-	 * Creates a new audience identifier with a randomly generated value of 
-	 * the specified byte length, Base64URL-encoded.
+	 * Creates a new audience identifier with the specified URI value.
 	 *
-	 * @param byteLength The byte length of the value to generate. Must be
-	 *                   greater than one.
+	 * @param value The URI value. Must not be {@code null}.
 	 */
-	public Audience(final int byteLength) {
-	
-		super(byteLength);
-	}
-	
-	
-	/**
-	 * Creates a new audience identifier with a randomly generated 256-bit 
-	 * (32-byte) value, Base64URL-encoded.
-	 */
-	public Audience() {
+	public Audience(final URI value) {
 
-		super();
+		super(value.toString());
+	}
+
+
+	/**
+	 * Creates a new audience identifier with the specified value.
+	 *
+	 * @param value The value. Must not be {@code null}.
+	 */
+	public Audience(final Identifier value) {
+
+		super(value.getValue());
 	}
 
 
