@@ -76,4 +76,18 @@ public class IssuerTest extends TestCase {
 		assertFalse(new Issuer("https://c2id.com/oidc/?query=abc#abc").isValid());
 		assertFalse(new Issuer("ftp://c2id.com/oidc/?query=abc#abc").isValid());
 	}
+
+
+	public void testURIConstructor() {
+
+		assertEquals("https://c2id.com", new Issuer(URI.create("https://c2id.com")).getValue());
+		assertTrue(new Issuer(URI.create("https://c2id.com")).equals(new Issuer("https://c2id.com")));
+	}
+
+
+	public void testClientIDConstructor() {
+
+		assertEquals("123", new Issuer(new ClientID("123")).getValue());
+		assertTrue(new Issuer("123").equals(new Issuer(new ClientID("123"))));
+	}
 }

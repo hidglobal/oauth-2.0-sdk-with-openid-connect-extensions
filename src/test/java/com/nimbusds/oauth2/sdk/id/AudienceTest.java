@@ -1,6 +1,7 @@
 package com.nimbusds.oauth2.sdk.id;
 
 
+import java.net.URI;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -22,4 +23,21 @@ public class AudienceTest extends TestCase {
 		assertEquals(1, audienceList.size());
 	}
 
+
+	public void testURIConstructor() {
+
+		URI uri = URI.create("https://c2id.com");
+		Audience aud = new Audience(uri);
+		assertEquals(uri.toString(), aud.getValue());
+		assertTrue(aud.equals(new Audience("https://c2id.com")));
+	}
+
+
+	public void testClientIDConstructor() {
+
+		ClientID clientID = new ClientID("123");
+		Audience aud = new Audience(clientID);
+		assertEquals(clientID.toString(), aud.getValue());
+		assertTrue(aud.equals(new Audience("123")));
+	}
 }

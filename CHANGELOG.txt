@@ -295,22 +295,22 @@ version 4.15 (2015-08-18)
       redirections.
 
 version 4.16 (2015-08-26)
-     * Adds static AccessTokenHash.isRequiredInIDTokenClaims and
-       CodeHash.isRequiredInIDTokenClaims methods. Intended for OP to determine
-       when to add c_hash and at_hash claim to ID token claims set based on
-       the requested response_type (iss #144).
-     * Adds convenience ClaimsRequest.parse(String) method.
-     * Fixes checks in IDTokenClaimsSet.hasRequiredClaims (iss #132).
-       Introduces second method parameter to indicate the issue endpoint of the
-       ID token (authz endpoint / token endpoint) which is required for hybrid
-       flow checks.
-     * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
-       7591 and RFC 7592.
+    * Adds static AccessTokenHash.isRequiredInIDTokenClaims and
+      CodeHash.isRequiredInIDTokenClaims methods. Intended for OP to determine
+      when to add c_hash and at_hash claim to ID token claims set based on the
+      requested response_type (iss #144).
+    * Adds convenience ClaimsRequest.parse(String) method.
+    * Fixes checks in IDTokenClaimsSet.hasRequiredClaims (iss #132).
+      Introduces second method parameter to indicate the issue endpoint of the
+      ID token (authz endpoint / token endpoint) which is required for hybrid
+      flow checks.
+    * Updates specification references to RFC 7521, RFC 7522, RFC 7523, RFC
+      7591 and RFC 7592.
 
 version 4.16.1 (2015-09-02)
-     * Fixes parsing of AuthorizationRequest, AuthorizationResponse,
-       AuthenticationRequest and LogoutRequest URIs with URL-encoded special
-       characters in the parameter values (iss #147).
+    * Fixes parsing of AuthorizationRequest, AuthorizationResponse,
+      AuthenticationRequest and LogoutRequest URIs with URL-encoded special
+      characters in the parameter values (iss #147).
 
 version 4.17 (2015-10-10)
     * Adds HostnameVerifier and SSLSocketFactory support to HTTPRequest (iss
@@ -318,3 +318,6 @@ version 4.17 (2015-10-10)
     * Moves token_endpoint_auth_signing_alg field from OIDCClientMetadata to
       ClientMetadata to enable its use by generic OAuth 2.0 clients.
     * Adds convenience ClientID(Identifier) constructor.
+    * Adds convenience Audience(URI) and Audience(Identifier) constructors.
+    * Adds convenience Issuer(URI) and Issuer(Identifier) constructors.
+
