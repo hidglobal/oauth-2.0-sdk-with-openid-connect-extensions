@@ -341,7 +341,9 @@ version 5.0-alpha5 (2015-09-30)
 version 5.0-alpha6 (2015-10-06)
     * Fixes parsing of custom response headers in HTTPRequest.send (iss #153).
 
-version 5.0-alpha6 (2015-10-08)
+version 5.0-alpha6 (2015-10-09)
     * Adds convenience Audience(URI) and Audience(Identifier) constructors.
     * Adds convenience Issuer(URI) and Issuer(Identifier) constructors.
+    * Adds convenience ClientID(Identifier) constructor.
+    
 
