@@ -56,7 +56,6 @@ public class OIDCClientMetadata extends ClientMetadata {
 		p.add("request_object_signing_alg");
 		p.add("request_object_encryption_alg");
 		p.add("request_object_encryption_enc");
-		p.add("token_endpoint_auth_signing_alg");
 		p.add("id_token_signed_response_alg");
 		p.add("id_token_encrypted_response_alg");
 		p.add("id_token_encrypted_response_enc");
@@ -118,14 +117,6 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 * request objects sent by this client.
 	 */
 	private EncryptionMethod requestObjectJWEEnc;
-
-
-	/**
-	 * The JSON Web Signature (JWS) algorithm required for
-	 * {@code private_key_jwt} and {@code client_secret_jwt}
-	 * authentication at the Token endpoint.
-	 */
-	private JWSAlgorithm authJWSAlg;
 
 
 	/**
@@ -414,34 +405,6 @@ public class OIDCClientMetadata extends ClientMetadata {
 	public void setRequestObjectJWEEnc(final EncryptionMethod requestObjectJWEEnc) {
 
 		this.requestObjectJWEEnc = requestObjectJWEEnc;
-	}
-
-
-	/**
-	 * Gets the JSON Web Signature (JWS) algorithm required for
-	 * {@code private_key_jwt} and {@code client_secret_jwt}
-	 * authentication at the Token endpoint. Corresponds to the
-	 * {@code token_endpoint_auth_signing_alg} client metadata field.
-	 *
-	 * @return The JWS algorithm, {@code null} if not specified.
-	 */
-	public JWSAlgorithm getTokenEndpointAuthJWSAlg() {
-
-		return authJWSAlg;
-	}
-
-
-	/**
-	 * Sets the JSON Web Signature (JWS) algorithm required for
-	 * {@code private_key_jwt} and {@code client_secret_jwt}
-	 * authentication at the Token endpoint. Corresponds to the
-	 * {@code token_endpoint_auth_signing_alg} client metadata field.
-	 *
-	 * @param authJWSAlg The JWS algorithm, {@code null} if not specified.
-	 */
-	public void setTokenEndpointAuthJWSAlg(final JWSAlgorithm authJWSAlg) {
-
-		this.authJWSAlg = authJWSAlg;
 	}
 
 
@@ -805,9 +768,6 @@ public class OIDCClientMetadata extends ClientMetadata {
 		if (requestObjectJWEEnc != null)
 			o.put("request_object_encryption_enc", requestObjectJWEEnc.getName());
 
-		if (authJWSAlg != null)
-			o.put("token_endpoint_auth_signing_alg", authJWSAlg.getName());
-
 
 		if (idTokenJWSAlg != null)
 			o.put("id_token_signed_response_alg", idTokenJWSAlg.getName());
@@ -947,13 +907,6 @@ public class OIDCClientMetadata extends ClientMetadata {
 				JSONObjectUtils.getString(jsonObject, "request_object_encryption_enc")));
 
 			oidcFields.remove("request_object_encryption_enc");
-		}
-
-		if (jsonObject.containsKey("token_endpoint_auth_signing_alg")) {
-			metadata.setTokenEndpointAuthJWSAlg(new JWSAlgorithm(
-				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_signing_alg")));
-
-			oidcFields.remove("token_endpoint_auth_signing_alg");
 		}
 
 		if (jsonObject.containsKey("id_token_signed_response_alg")) {

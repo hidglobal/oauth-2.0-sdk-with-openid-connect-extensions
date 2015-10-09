@@ -10,7 +10,6 @@ import java.util.Set;
 
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
@@ -24,6 +23,7 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 
@@ -47,6 +47,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("tos_uri"));
 		assertTrue(paramNames.contains("policy_uri"));
 		assertTrue(paramNames.contains("token_endpoint_auth_method"));
+		assertTrue(paramNames.contains("token_endpoint_auth_signing_alg"));
 		assertTrue(paramNames.contains("scope"));
 		assertTrue(paramNames.contains("grant_types"));
 		assertTrue(paramNames.contains("response_types"));
@@ -68,7 +69,6 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("request_object_signing_alg"));
 		assertTrue(paramNames.contains("request_object_encryption_alg"));
 		assertTrue(paramNames.contains("request_object_encryption_enc"));
-		assertTrue(paramNames.contains("token_endpoint_auth_signing_alg"));
 		assertTrue(paramNames.contains("default_max_age"));
 		assertTrue(paramNames.contains("require_auth_time"));
 		assertTrue(paramNames.contains("default_acr_values"));

@@ -315,4 +315,5 @@ version 4.16.1 (2015-09-02)
 version 4.17 (2015-10-10)
     * Adds HostnameVerifier and SSLSocketFactory support to HTTPRequest (iss
       #149).
-      
+    * Moves token_endpoint_auth_signing_alg field from OIDCClientMetadata to
+      ClientMetadata to enable its use by generic OAuth 2.0 clients.
