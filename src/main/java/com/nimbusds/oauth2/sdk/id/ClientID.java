@@ -36,6 +36,17 @@ public final class ClientID extends Identifier {
 
 
 	/**
+	 * Creates a new client identifier with the specified value.
+	 *
+	 * @param value The value. Must not be {@code null}.
+	 */
+	public ClientID(final Identifier value) {
+
+		super(value.getValue());
+	}
+
+
+	/**
 	 * Creates a new client identifier with a randomly generated value of 
 	 * the specified byte length, Base64URL-encoded.
 	 *

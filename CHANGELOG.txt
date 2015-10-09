@@ -317,3 +317,4 @@ version 4.17 (2015-10-10)
       #149).
     * Moves token_endpoint_auth_signing_alg field from OIDCClientMetadata to
       ClientMetadata to enable its use by generic OAuth 2.0 clients.
+    * Adds convenience ClientID(Identifier) constructor.
