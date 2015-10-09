@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import net.minidev.json.JSONObject;
 
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.util.Base64URL;
@@ -44,6 +45,7 @@ public class ClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("tos_uri"));
 		assertTrue(paramNames.contains("policy_uri"));
 		assertTrue(paramNames.contains("token_endpoint_auth_method"));
+		assertTrue(paramNames.contains("token_endpoint_auth_signing_alg"));
 		assertTrue(paramNames.contains("scope"));
 		assertTrue(paramNames.contains("grant_types"));
 		assertTrue(paramNames.contains("response_types"));
@@ -52,7 +54,7 @@ public class ClientMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("software_id"));
 		assertTrue(paramNames.contains("software_version"));
 
-		assertEquals(15, ClientMetadata.getRegisteredParameterNames().size());
+		assertEquals(16, ClientMetadata.getRegisteredParameterNames().size());
 	}
 	
 	
@@ -113,8 +115,11 @@ public class ClientMetadataTest extends TestCase {
 		URI tosDE = new URI("http://example.com/de/tos");
 		meta.setTermsOfServiceURI(tosDE, LangTag.parse("de"));
 		
-		ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_BASIC;
+		ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_JWT;
 		meta.setTokenEndpointAuthMethod(authMethod);
+
+		JWSAlgorithm authJWSAlg = JWSAlgorithm.HS256;
+		meta.setTokenEndpointAuthJWSAlg(authJWSAlg);
 		
 		URI jwksURI = new URI("http://example.com/jwks.json");
 		meta.setJWKSetURI(jwksURI);
@@ -150,6 +155,7 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(tosDE, meta.getTermsOfServiceURI(LangTag.parse("de")));
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
+		assertEquals(authJWSAlg, meta.getTokenEndpointAuthJWSAlg());
 		assertEquals(jwksURI, meta.getJWKSetURI());
 		assertEquals("nabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getModulus().toString());
 		assertEquals("eabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
@@ -185,6 +191,7 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(tosDE, meta.getTermsOfServiceURI(LangTag.parse("de")));
 		assertEquals(2, meta.getTermsOfServiceURIEntries().size());
 		assertEquals(authMethod, meta.getTokenEndpointAuthMethod());
+		assertEquals(authJWSAlg, meta.getTokenEndpointAuthJWSAlg());
 		assertEquals(jwksURI, meta.getJWKSetURI());
 		assertEquals("nabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getModulus().toString());
 		assertEquals("eabc", ((RSAKey)meta.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
@@ -192,13 +199,159 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(softwareID, meta.getSoftwareID());
 		assertEquals(softwareVersion, meta.getSoftwareVersion());
 
-		System.out.println("Meta custom fields: " + meta.getCustomFields());
-
 		assertTrue(meta.getCustomFields().isEmpty());
 	}
 
 
-	public void testApplyDefaults() 
+	public void testCopyConstructor()
+		throws Exception {
+
+		ClientMetadata meta = new ClientMetadata();
+
+		Set<URI> redirectURIs = new HashSet<>();
+		redirectURIs.add(new URI("http://example.com/1"));
+		redirectURIs.add(new URI("http://example.com/2"));
+		meta.setRedirectionURIs(redirectURIs);
+
+		Scope scope = Scope.parse("read write");
+		meta.setScope(scope);
+
+		Set<ResponseType> rts = new HashSet<>();
+		rts.add(ResponseType.parse("code id_token"));
+		meta.setResponseTypes(rts);
+
+		Set<GrantType> grantTypes = new HashSet<>();
+		grantTypes.add(GrantType.AUTHORIZATION_CODE);
+		grantTypes.add(GrantType.REFRESH_TOKEN);
+		meta.setGrantTypes(grantTypes);
+
+		List<InternetAddress> contacts = new LinkedList<>();
+		contacts.add(new InternetAddress("alice@wonderland.net"));
+		contacts.add(new InternetAddress("admin@wonderland.net"));
+		meta.setContacts(contacts);
+
+		String name = "My Example App";
+		meta.setName(name);
+
+		String nameDE = "Mein Beispiel App";
+		meta.setName(nameDE, LangTag.parse("de"));
+
+		URI logo = new URI("http://example.com/logo.png");
+		meta.setLogoURI(logo);
+
+		URI logoDE = new URI("http://example.com/de/logo.png");
+		meta.setLogoURI(logoDE, LangTag.parse("de"));
+
+		URI uri = new URI("http://example.com");
+		meta.setURI(uri);
+
+		URI uriDE = new URI("http://example.com/de");
+		meta.setURI(uriDE, LangTag.parse("de"));
+
+		URI policy = new URI("http://example.com/policy");
+		meta.setPolicyURI(policy);
+
+		URI policyDE = new URI("http://example.com/de/policy");
+		meta.setPolicyURI(policyDE, LangTag.parse("de"));
+
+		URI tos = new URI("http://example.com/tos");
+		meta.setTermsOfServiceURI(tos);
+
+		URI tosDE = new URI("http://example.com/de/tos");
+		meta.setTermsOfServiceURI(tosDE, LangTag.parse("de"));
+
+		ClientAuthenticationMethod authMethod = ClientAuthenticationMethod.CLIENT_SECRET_JWT;
+		meta.setTokenEndpointAuthMethod(authMethod);
+
+		JWSAlgorithm authJWSAlg = JWSAlgorithm.HS256;
+		meta.setTokenEndpointAuthJWSAlg(authJWSAlg);
+
+		URI jwksURI = new URI("http://example.com/jwks.json");
+		meta.setJWKSetURI(jwksURI);
+
+		RSAKey rsaKey = new RSAKey.Builder(new Base64URL("nabc"), new Base64URL("eabc")).build();
+		JWKSet jwkSet = new JWKSet(rsaKey);
+		meta.setJWKSet(jwkSet);
+
+		SoftwareID softwareID = new SoftwareID();
+		meta.setSoftwareID(softwareID);
+
+		SoftwareVersion softwareVersion = new SoftwareVersion("1.0");
+		meta.setSoftwareVersion(softwareVersion);
+
+		// Shallow copy
+		ClientMetadata copy = new ClientMetadata(meta);
+
+		// Test getters
+		assertEquals(redirectURIs, copy.getRedirectionURIs());
+		assertEquals(scope, copy.getScope());
+		assertEquals(grantTypes, copy.getGrantTypes());
+		assertEquals(contacts, copy.getContacts());
+		assertEquals(name, copy.getName());
+		assertEquals(nameDE, copy.getName(LangTag.parse("de")));
+		assertEquals(2, copy.getNameEntries().size());
+		assertEquals(logo, copy.getLogoURI());
+		assertEquals(logoDE, copy.getLogoURI(LangTag.parse("de")));
+		assertEquals(2, copy.getLogoURIEntries().size());
+		assertEquals(uri, copy.getURI());
+		assertEquals(uriDE, copy.getURI(LangTag.parse("de")));
+		assertEquals(2, copy.getURIEntries().size());
+		assertEquals(policy, copy.getPolicyURI());
+		assertEquals(policyDE, copy.getPolicyURI(LangTag.parse("de")));
+		assertEquals(2, copy.getPolicyURIEntries().size());
+		assertEquals(tos, copy.getTermsOfServiceURI());
+		assertEquals(tosDE, copy.getTermsOfServiceURI(LangTag.parse("de")));
+		assertEquals(2, copy.getTermsOfServiceURIEntries().size());
+		assertEquals(authMethod, copy.getTokenEndpointAuthMethod());
+		assertEquals(authJWSAlg, copy.getTokenEndpointAuthJWSAlg());
+		assertEquals(jwksURI, copy.getJWKSetURI());
+		assertEquals("nabc", ((RSAKey)copy.getJWKSet().getKeys().get(0)).getModulus().toString());
+		assertEquals("eabc", ((RSAKey)copy.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
+		assertEquals(1, copy.getJWKSet().getKeys().size());
+		assertEquals(softwareID, copy.getSoftwareID());
+		assertEquals(softwareVersion, copy.getSoftwareVersion());
+		assertTrue(copy.getCustomFields().isEmpty());
+
+		String json = copy.toJSONObject().toJSONString();
+
+		JSONObject jsonObject = JSONObjectUtils.parse(json);
+
+		copy = ClientMetadata.parse(jsonObject);
+
+		// Test getters
+		assertEquals(redirectURIs, copy.getRedirectionURIs());
+		assertEquals(scope, copy.getScope());
+		assertEquals(grantTypes, copy.getGrantTypes());
+		assertEquals(contacts, copy.getContacts());
+		assertEquals(name, copy.getName());
+		assertEquals(nameDE, copy.getName(LangTag.parse("de")));
+		assertEquals(2, copy.getNameEntries().size());
+		assertEquals(logo, copy.getLogoURI());
+		assertEquals(logoDE, copy.getLogoURI(LangTag.parse("de")));
+		assertEquals(2, copy.getLogoURIEntries().size());
+		assertEquals(uri, copy.getURI());
+		assertEquals(uriDE, copy.getURI(LangTag.parse("de")));
+		assertEquals(2, copy.getURIEntries().size());
+		assertEquals(policy, copy.getPolicyURI());
+		assertEquals(policyDE, copy.getPolicyURI(LangTag.parse("de")));
+		assertEquals(2, copy.getPolicyURIEntries().size());
+		assertEquals(tos, copy.getTermsOfServiceURI());
+		assertEquals(tosDE, copy.getTermsOfServiceURI(LangTag.parse("de")));
+		assertEquals(2, copy.getTermsOfServiceURIEntries().size());
+		assertEquals(authMethod, copy.getTokenEndpointAuthMethod());
+		assertEquals(authJWSAlg, copy.getTokenEndpointAuthJWSAlg());
+		assertEquals(jwksURI, copy.getJWKSetURI());
+		assertEquals("nabc", ((RSAKey)copy.getJWKSet().getKeys().get(0)).getModulus().toString());
+		assertEquals("eabc", ((RSAKey)copy.getJWKSet().getKeys().get(0)).getPublicExponent().toString());
+		assertEquals(1, copy.getJWKSet().getKeys().size());
+		assertEquals(softwareID, copy.getSoftwareID());
+		assertEquals(softwareVersion, copy.getSoftwareVersion());
+
+		assertTrue(copy.getCustomFields().isEmpty());
+	}
+
+
+	public void testApplyDefaults()
 		throws Exception {
 		
 		ClientMetadata meta = new ClientMetadata();

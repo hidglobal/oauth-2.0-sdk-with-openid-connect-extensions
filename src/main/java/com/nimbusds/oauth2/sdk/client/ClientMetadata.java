@@ -8,6 +8,7 @@ import java.util.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.jose.JWSAlgorithm;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -77,6 +78,7 @@ public class ClientMetadata {
 		p.add("policy_uri");
 		p.add("tos_uri");
 		p.add("token_endpoint_auth_method");
+		p.add("token_endpoint_auth_signing_alg");
 		p.add("jwks_uri");
 		p.add("jwks");
 		p.add("software_id");
@@ -153,6 +155,14 @@ public class ClientMetadata {
 
 
 	/**
+	 * The JSON Web Signature (JWS) algorithm required for
+	 * {@code private_key_jwt} and {@code client_secret_jwt}
+	 * authentication at the Token endpoint.
+	 */
+	private JWSAlgorithm authJWSAlg;
+
+
+	/**
 	 * URI for this client's JSON Web Key (JWK) set containing key(s) that
 	 * are used in signing requests to the server and key(s) for encrypting
 	 * responses.
@@ -221,8 +231,11 @@ public class ClientMetadata {
 		policyURIEntries = metadata.policyURIEntries;
 		tosURIEntries = metadata.tosURIEntries;
 		authMethod = metadata.authMethod;
+		authJWSAlg = metadata.authJWSAlg;
 		jwkSetURI = metadata.jwkSetURI;
 		jwkSet = metadata.getJWKSet();
+		softwareID = metadata.softwareID;
+		softwareVersion = metadata.softwareVersion;
 		customFields = metadata.customFields;
 	}
 
@@ -750,6 +763,34 @@ public class ClientMetadata {
 
 
 	/**
+	 * Gets the JSON Web Signature (JWS) algorithm required for
+	 * {@code private_key_jwt} and {@code client_secret_jwt}
+	 * authentication at the Token endpoint. Corresponds to the
+	 * {@code token_endpoint_auth_signing_alg} client metadata field.
+	 *
+	 * @return The JWS algorithm, {@code null} if not specified.
+	 */
+	public JWSAlgorithm getTokenEndpointAuthJWSAlg() {
+
+		return authJWSAlg;
+	}
+
+
+	/**
+	 * Sets the JSON Web Signature (JWS) algorithm required for
+	 * {@code private_key_jwt} and {@code client_secret_jwt}
+	 * authentication at the Token endpoint. Corresponds to the
+	 * {@code token_endpoint_auth_signing_alg} client metadata field.
+	 *
+	 * @param authJWSAlg The JWS algorithm, {@code null} if not specified.
+	 */
+	public void setTokenEndpointAuthJWSAlg(final JWSAlgorithm authJWSAlg) {
+
+		this.authJWSAlg = authJWSAlg;
+	}
+
+
+	/**
 	 * Gets the URI for this client's JSON Web Key (JWK) set containing
 	 * key(s) that are used in signing requests to the server and key(s)
 	 * for encrypting responses. Corresponds to the {@code jwks_uri} client
@@ -1112,6 +1153,10 @@ public class ClientMetadata {
 			o.put("token_endpoint_auth_method", authMethod.toString());
 
 
+		if (authJWSAlg != null)
+			o.put("token_endpoint_auth_signing_alg", authJWSAlg.getName());
+
+
 		if (jwkSetURI != null)
 			o.put("jwks_uri", jwkSetURI.toString());
 
@@ -1328,6 +1373,14 @@ public class ClientMetadata {
 				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_method")));
 
 			jsonObject.remove("token_endpoint_auth_method");
+		}
+
+
+		if (jsonObject.containsKey("token_endpoint_auth_signing_alg")) {
+			metadata.setTokenEndpointAuthJWSAlg(new JWSAlgorithm(
+				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_signing_alg")));
+
+			jsonObject.remove("token_endpoint_auth_signing_alg");
 		}
 
 
