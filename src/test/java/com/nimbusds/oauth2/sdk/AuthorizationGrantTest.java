@@ -6,9 +6,13 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.nimbusds.jwt.JWT;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.PlainJWT;
+import com.nimbusds.jwt.SignedJWT;
+
+import com.nimbusds.oauth2.sdk.auth.Secret;
 
 
 /**
@@ -78,11 +82,13 @@ public class AuthorizationGrantTest extends TestCase {
 	public void testParseJWTBearer()
 		throws Exception {
 
+		// Claims set not verified
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.subject("alice")
 			.build();
 
-		JWT assertion = new PlainJWT(claimsSet);
+		SignedJWT assertion = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+		assertion.sign(new MACSigner(new Secret().getValueBytes()));
 
 		Map<String,String> params = new HashMap<>();
 		params.put("grant_type", GrantType.JWT_BEARER.getValue());
@@ -92,6 +98,7 @@ public class AuthorizationGrantTest extends TestCase {
 
 		assertEquals(GrantType.JWT_BEARER, grant.getType());
 		assertEquals(assertion.serialize(), grant.getAssertion());
+		assertEquals(JWSAlgorithm.HS256, grant.getJWTAssertion().getHeader().getAlgorithm());
 	}
 
 
