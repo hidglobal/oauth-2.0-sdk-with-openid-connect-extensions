@@ -345,5 +345,7 @@ version 5.0-alpha6 (2015-10-09)
     * Adds convenience Audience(URI) and Audience(Identifier) constructors.
     * Adds convenience Issuer(URI) and Issuer(Identifier) constructors.
     * Adds convenience ClientID(Identifier) constructor.
-    
+    * Narrows JWTBearerGrant acceptance of assertions to signed JWT only.
+
+
 
