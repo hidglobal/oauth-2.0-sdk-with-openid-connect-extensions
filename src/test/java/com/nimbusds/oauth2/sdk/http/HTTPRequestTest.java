@@ -6,6 +6,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Map;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,18 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * Tests the HTTP request class.
  */
 public class HTTPRequestTest extends TestCase {
+
+
+	public void testDefaultHostnameVerifier() {
+
+		assertEquals(HttpsURLConnection.getDefaultHostnameVerifier(), HTTPRequest.getDefaultHostnameVerifier());
+	}
+
+
+	public void testDefaultSSLSocketFactory() {
+
+		assertNotNull(HTTPRequest.getDefaultSSLSocketFactory());
+	}
 
 
 	public void testConstructorAndAccessors()
