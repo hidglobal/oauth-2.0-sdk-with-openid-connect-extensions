@@ -43,7 +43,7 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 		 * Enumeration of the scope value requirements for 
 		 * application-specific authorisation requests.
 		 */
-		public static enum Requirement {
+		public enum Requirement {
 
 			
 			/**
@@ -119,6 +119,21 @@ public class Scope extends LinkedHashSet<Scope.Value> {
 	 */
 	public Scope() {
 		// Nothing to do
+	}
+
+
+	/**
+	 * Creates a new scope from the specified scope.
+	 *
+	 * @param scope The scope. May be {@code null}.
+	 */
+	public Scope(final Scope scope) {
+
+		if (scope == null) {
+			return;
+		}
+
+		addAll(scope);
 	}
 
 

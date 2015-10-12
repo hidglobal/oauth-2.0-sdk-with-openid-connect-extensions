@@ -350,6 +350,7 @@ version 5.0-alpha7 (2015-10-09)
     * Adds convenience Audience(URI) and Audience(Identifier) constructors.
     * Adds convenience Issuer(URI) and Issuer(Identifier) constructors.
     * Adds convenience ClientID(Identifier) constructor.
+    * Adds Scope copy constructor.
     * Fixes missing software_id copy in ClientMetadata copy constructor.
     * Fixes missing software_version copy in ClientMetadata copy constructor.
 

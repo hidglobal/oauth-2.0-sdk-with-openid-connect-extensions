@@ -13,6 +13,22 @@ import junit.framework.TestCase;
 public class ScopeTest extends TestCase {
 
 
+	public void testCopyConstructor() {
+
+		Scope scope = new Scope(Scope.parse("read write"));
+		assertTrue(scope.contains("read"));
+		assertTrue(scope.contains("write"));
+		assertEquals(2, scope.size());
+	}
+
+
+	public void testCopyConstructorNull() {
+
+		Scope scope = new Scope((Scope)null);
+		assertTrue(scope.isEmpty());
+	}
+
+
 	public void testVarargConstructor() {
 
 		Scope scope = new Scope(new Scope.Value("read"), new Scope.Value("write"));
