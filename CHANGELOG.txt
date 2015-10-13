@@ -342,7 +342,8 @@ version 5.0-alpha6 (2015-10-06)
     * Fixes parsing of custom response headers in HTTPRequest.send (iss #153).
 
 version 5.0-alpha7 (2015-10-09)
-    * Narrows JWTBearerGrant acceptance of assertions to signed JWT only.
+    * Adds JWTBearerGrant checks to reject unsecured JWT assertions or
+      JWT assertion in a state that cannot be serialised.
     * Moves token_endpoint_auth_signing_alg field from OIDCClientMetadata to
       ClientMetadata to enable its use by generic OAuth 2.0 clients.
     * Adds HostnameVerifier and SSLSocketFactory support to HTTPRequest (iss
@@ -353,6 +354,3 @@ version 5.0-alpha7 (2015-10-09)
     * Adds Scope copy constructor.
     * Fixes missing software_id copy in ClientMetadata copy constructor.
     * Fixes missing software_version copy in ClientMetadata copy constructor.
-
-
-

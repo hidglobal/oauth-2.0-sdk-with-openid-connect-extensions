@@ -1,15 +1,16 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
@@ -37,7 +38,21 @@ public class JWTBearerGrantTest extends TestCase {
 	}
 
 
-	public void testConstructorAndParser()
+	public void testRejectUnencryptedAssertion() {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
+
+		try {
+			new JWTBearerGrant(new EncryptedJWT(new JWEHeader(JWEAlgorithm.RSA_OAEP, EncryptionMethod.A128CBC_HS256), claimsSet));
+		} catch (IllegalArgumentException e) {
+			assertEquals("The JWT assertion must not be in a unencrypted state", e.getMessage());
+		}
+	}
+
+
+	public void testSignedJWTConstructorAndParser()
 		throws Exception {
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
@@ -61,6 +76,39 @@ public class JWTBearerGrantTest extends TestCase {
 
 		grant = JWTBearerGrant.parse(params);
 		assertEquals(GrantType.JWT_BEARER, grant.getType());
+		assertTrue(grant.getJWTAssertion() instanceof SignedJWT);
+		assertEquals(assertion.serialize(), grant.getAssertion());
+	}
+
+
+	public void testEncryptedJWTConstructorAndParser()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
+
+		EncryptedJWT assertion = new EncryptedJWT(new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128CBC_HS256), claimsSet);
+
+		byte secret[] = new byte[32];
+		new SecureRandom().nextBytes(secret);
+
+		assertion.encrypt(new DirectEncrypter(secret));
+
+		JWTBearerGrant grant = new JWTBearerGrant(assertion);
+
+		assertEquals(GrantType.JWT_BEARER, grant.getType());
+		assertEquals(assertion, grant.getJWTAssertion());
+		assertEquals(assertion.serialize(), grant.getAssertion());
+
+		Map<String,String> params = grant.toParameters();
+		assertEquals(GrantType.JWT_BEARER.getValue(), params.get("grant_type"));
+		assertEquals(assertion.serialize(), params.get("assertion"));
+		assertEquals(2, params.size());
+
+		grant = JWTBearerGrant.parse(params);
+		assertEquals(GrantType.JWT_BEARER, grant.getType());
+		assertTrue(grant.getJWTAssertion() instanceof EncryptedJWT);
 		assertEquals(assertion.serialize(), grant.getAssertion());
 	}
 
@@ -117,7 +165,7 @@ public class JWTBearerGrantTest extends TestCase {
 	}
 
 
-	public void testRejectPlainJWT() {
+	public void testParseRejectPlainJWT() {
 
 		Map<String,String> params = new HashMap<>();
 		params.put("grant_type", GrantType.JWT_BEARER.getValue());

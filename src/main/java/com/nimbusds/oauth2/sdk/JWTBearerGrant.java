@@ -6,8 +6,9 @@ import java.util.Map;
 
 import net.jcip.annotations.Immutable;
 
+import com.nimbusds.jose.JWEObject;
 import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.*;
 
 
 /**
@@ -36,16 +37,16 @@ public class JWTBearerGrant extends AssertionGrant {
 	/**
 	 * The JWT assertion.
 	 */
-	private final SignedJWT assertion;
+	private final JWT assertion;
 
 
 	/**
-	 * Creates a new JSON Web Token (JWT) bearer assertion grant.
+	 * Creates a new signed JSON Web Token (JWT) bearer assertion grant.
 	 *
-	 * @param assertion The signed JSON Web Token (JWT) assertion. Must be
-	 *                  in a signed or verified state and not {@code null}.
-	 *                  The JWT claims are not validated for compliance
-	 *                  with the standard.
+	 * @param assertion The signed JSON Web Token (JWT) assertion. Must not
+	 *                  be in a unsigned state or {@code null}. The JWT
+	 *                  claims are not validated for compliance with the
+	 *                  standard.
 	 */
 	public JWTBearerGrant(final SignedJWT assertion) {
 
@@ -59,11 +60,31 @@ public class JWTBearerGrant extends AssertionGrant {
 
 
 	/**
+	 * Creates a new signed and encrypted JSON Web Token (JWT) bearer
+	 * assertion grant.
+	 *
+	 * @param assertion The signed and encrypted JSON Web Token (JWT)
+	 *                  assertion. Must not be in a unencrypted state or
+	 *                  {@code null}. The JWT claims are not validated for
+	 *                  compliance with the standard.
+	 */
+	public JWTBearerGrant(final EncryptedJWT assertion) {
+
+		super(GRANT_TYPE);
+
+		if (assertion.getState().equals(JWEObject.State.UNENCRYPTED))
+			throw new IllegalArgumentException("The JWT assertion must not be in a unencrypted state");
+
+		this.assertion = assertion;
+	}
+
+
+	/**
 	 * Gets the JSON Web Token (JWT) bearer assertion.
 	 *
-	 * @return The JWT bearer assertion.
+	 * @return The signed or signed and encrypted JWT bearer assertion.
 	 */
-	public SignedJWT getJWTAssertion() {
+	public JWT getJWTAssertion() {
 
 		return assertion;
 	}
@@ -122,14 +143,20 @@ public class JWTBearerGrant extends AssertionGrant {
 		if (assertionString == null || assertionString.trim().isEmpty())
 			throw new ParseException("Missing or empty \"assertion\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		final SignedJWT assertion;
+		final JWT assertion;
 
 		try {
-			assertion = SignedJWT.parse(assertionString);
+			assertion = JWTParser.parse(assertionString);
 		} catch (java.text.ParseException e) {
-			throw new ParseException("The \"assertion\" is not a signed JWT: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
+			throw new ParseException("The \"assertion\" is not a JWT: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
 		}
 
-		return new JWTBearerGrant(assertion);
+		if (assertion instanceof SignedJWT) {
+			return new JWTBearerGrant((SignedJWT)assertion);
+		} else if (assertion instanceof EncryptedJWT) {
+			return new JWTBearerGrant((EncryptedJWT)assertion);
+		} else {
+			throw new ParseException("The JWT assertion must not be unsecured (plain)", OAuth2Error.INVALID_REQUEST);
+		}
 	}
 }
