@@ -83,19 +83,8 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 	public static Set<JWSAlgorithm> getSupportedJWAs() {
 	
 		Set<JWSAlgorithm> supported = new HashSet<>();
-		
-		supported.add(JWSAlgorithm.RS256);
-		supported.add(JWSAlgorithm.RS384);
-		supported.add(JWSAlgorithm.RS512);
-
-		supported.add(JWSAlgorithm.PS256);
-		supported.add(JWSAlgorithm.PS384);
-		supported.add(JWSAlgorithm.PS512);
-		
-		supported.add(JWSAlgorithm.ES256);
-		supported.add(JWSAlgorithm.ES384);
-		supported.add(JWSAlgorithm.ES512);
-		
+		supported.addAll(JWSAlgorithm.Family.RSA);
+		supported.addAll(JWSAlgorithm.Family.EC);
 		return Collections.unmodifiableSet(supported);
 	}
 
