@@ -15,10 +15,10 @@ import net.jcip.annotations.Immutable;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>SAML 2.0 Profile for OAuth 2.0 Client Authentication and
- *     Authorization Grants (RFC 7522), section-2.1.
  *     <li>Assertion Framework for OAuth 2.0 Client Authentication and
  *         Authorization Grants (RFC 7521), section 4.1.
+ *     <li>SAML 2.0 Profile for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7522), section-2.1.
  * </ul>
  */
 @Immutable
