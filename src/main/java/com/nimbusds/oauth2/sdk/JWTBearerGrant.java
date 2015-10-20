@@ -1,13 +1,11 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import net.jcip.annotations.Immutable;
 
-import com.nimbusds.jose.JWEObject;
-import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.*;
 import com.nimbusds.jwt.*;
 
 

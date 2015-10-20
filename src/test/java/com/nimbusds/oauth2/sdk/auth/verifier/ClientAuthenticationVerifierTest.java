@@ -9,7 +9,6 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
-import com.nimbusds.oauth2.sdk.auth.JWTAuthenticationClaimsSet;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.JOSEException;
@@ -20,6 +19,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.auth.*;
+import com.nimbusds.oauth2.sdk.auth.JWTAuthenticationClaimsSet;
 import com.nimbusds.oauth2.sdk.client.ClientMetadata;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -163,6 +163,7 @@ public class ClientAuthenticationVerifierTest extends TestCase {
 			VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
 			JWSAlgorithm.RS256,
 			VALID_RSA_PRIVATE_KEY,
+			null,
 			null);
 
 		assertTrue(createVerifier().verify(clientAuthentication, null));
@@ -198,6 +199,7 @@ public class ClientAuthenticationVerifierTest extends TestCase {
 			VALID_CLIENT_ID, URI.create("https://c2id.com/token"),
 			JWSAlgorithm.RS256,
 			INVALID_RSA_PRIVATE_KEY,
+			null,
 			null);
 
 		assertFalse(createVerifier().verify(clientAuthentication, null));
@@ -224,6 +226,7 @@ public class ClientAuthenticationVerifierTest extends TestCase {
 			VALID_CLIENT_ID, URI.create("https://other.com/token"),
 			JWSAlgorithm.RS256,
 			INVALID_RSA_PRIVATE_KEY,
+			null,
 			null);
 
 		assertFalse(createVerifier().verify(clientAuthentication, null));

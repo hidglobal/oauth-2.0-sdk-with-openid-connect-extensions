@@ -342,8 +342,8 @@ version 5.0-alpha6 (2015-10-06)
     * Fixes parsing of custom response headers in HTTPRequest.send (iss #153).
 
 version 5.0-alpha7 (2015-10-20)
-    * Factors out JWTAssertionClaimsSet into assertions package.
-    * Factors out JWTAssertionClaimsSetVerifier into assertions package.
+    * Factors out JWTAssertionClaimsSet into assertions.jwt package.
+    * Factors out JWTAssertionClaimsSetVerifier into assertions.jwt package.
     * Adds JWTAssertionClaimsSet support for multiple audiences.
     * Adds JWTBearerGrant checks to reject unsecured JWT assertions or
       JWT assertion in a state that cannot be serialised.

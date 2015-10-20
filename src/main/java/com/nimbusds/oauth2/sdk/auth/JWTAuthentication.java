@@ -321,10 +321,10 @@ public abstract class JWTAuthentication extends ClientAuthentication {
 		
 		JWSAlgorithm alg = parseClientAssertion(params).getHeader().getAlgorithm();
 			
-		if (ClientSecretJWT.getSupportedJWAs().contains(alg))
+		if (ClientSecretJWT.supportedJWAs().contains(alg))
 			return ClientSecretJWT.parse(params);
 				
-		else if (PrivateKeyJWT.getSupportedJWAs().contains(alg))
+		else if (PrivateKeyJWT.supportedJWAs().contains(alg))
 			return PrivateKeyJWT.parse(params);
 			
 		else

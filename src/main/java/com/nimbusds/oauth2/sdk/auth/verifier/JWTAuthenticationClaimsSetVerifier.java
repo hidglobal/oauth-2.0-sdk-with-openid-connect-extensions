@@ -8,7 +8,7 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 
-import com.nimbusds.oauth2.sdk.assertions.JWTAssertionClaimsSetVerifier;
+import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionClaimsSetVerifier;
 import com.nimbusds.oauth2.sdk.id.Audience;
 
 

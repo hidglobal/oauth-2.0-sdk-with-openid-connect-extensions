@@ -25,7 +25,7 @@ public class ClientSecretJWTTest extends TestCase {
 
 	public void testSupportedJWAs() {
 
-		Set<JWSAlgorithm> algs = ClientSecretJWT.getSupportedJWAs();
+		Set<JWSAlgorithm> algs = ClientSecretJWT.supportedJWAs();
 
 		assertTrue(algs.contains(JWSAlgorithm.HS256));
 		assertTrue(algs.contains(JWSAlgorithm.HS384));

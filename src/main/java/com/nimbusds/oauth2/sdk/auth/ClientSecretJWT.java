@@ -11,15 +11,14 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jwt.SignedJWT;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionFactory;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 
 
@@ -49,44 +48,15 @@ public final class ClientSecretJWT extends JWTAuthentication {
 
 
 	/**
-	 * Gets the set of supported signature JSON Web Algorithms (JWAs) by 
-	 * this implementation of client secret JSON Web Token (JWT) 
-	 * authentication.
+	 * Returns the supported signature JSON Web Algorithms (JWAs).
 	 *
-	 * @return The set of supported JSON Web Algorithms (JWAs).
+	 * @return The supported JSON Web Algorithms (JWAs).
 	 */
-	public static Set<JWSAlgorithm> getSupportedJWAs() {
-	
+	public static Set<JWSAlgorithm> supportedJWAs() {
+
 		Set<JWSAlgorithm> supported = new HashSet<>();
 		supported.addAll(JWSAlgorithm.Family.HMAC_SHA);
 		return Collections.unmodifiableSet(supported);
-	}
-
-
-	/**
-	 * Creates a new client secret JWT assertion.
-	 *
-	 * @param jwtAuthClaimsSet The JWT authentication claims set. Must not
-	 *                         be {@code null}.
-	 * @param jwsAlgorithm     The expected HMAC algorithm (HS256, HS384 or
-	 *                         HS512) for the client secret JWT assertion.
-	 *                         Must be supported and not {@code null}.
-	 * @param clientSecret     The client secret. Must be at least 256-bits
-	 *                         long.
-	 *
-	 * @return The client secret JWT assertion.
-	 *
-	 * @throws JOSEException If the client secret is too short, or HMAC
-	 *                       computation failed.
-	 */
-	public static SignedJWT createClientAssertion(final JWTAuthenticationClaimsSet jwtAuthClaimsSet,
-						      final JWSAlgorithm jwsAlgorithm,
-						      final Secret clientSecret)
-		throws JOSEException {
-
-		SignedJWT signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), jwtAuthClaimsSet.toJWTClaimsSet());
-		signedJWT.sign(new MACSigner(clientSecret.getValueBytes()));
-		return signedJWT;
 	}
 
 
@@ -115,7 +85,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
 			       final Secret clientSecret)
 		throws JOSEException {
 
-		this(createClientAssertion(
+		this(JWTAssertionFactory.create(
 			new JWTAuthenticationClaimsSet(clientID, new Audience(tokenEndpoint.toString())),
 			jwsAlgorithm,
 			clientSecret));
@@ -134,7 +104,7 @@ public final class ClientSecretJWT extends JWTAuthentication {
 
 		super(ClientAuthenticationMethod.CLIENT_SECRET_JWT, clientAssertion);
 
-		if (! getSupportedJWAs().contains(clientAssertion.getHeader().getAlgorithm()))
+		if (! JWSAlgorithm.Family.HMAC_SHA.contains(clientAssertion.getHeader().getAlgorithm()))
 			throw new IllegalArgumentException("The client assertion JWT must be HMAC-signed (HS256, HS384 or HS512)");
 	}
 	

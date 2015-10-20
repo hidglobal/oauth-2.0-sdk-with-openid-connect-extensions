@@ -9,7 +9,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jwt.JWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.assertions.JWTAssertionClaimsSet;
+import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionClaimsSet;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
