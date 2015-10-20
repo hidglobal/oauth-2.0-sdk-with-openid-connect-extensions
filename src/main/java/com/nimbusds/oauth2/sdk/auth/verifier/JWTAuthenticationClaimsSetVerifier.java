@@ -7,8 +7,8 @@ import net.jcip.annotations.Immutable;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
-import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 
+import com.nimbusds.oauth2.sdk.claims.JWTAssertionClaimsSetVerifier;
 import com.nimbusds.oauth2.sdk.id.Audience;
 
 
@@ -24,7 +24,7 @@ import com.nimbusds.oauth2.sdk.id.Audience;
  * </ul>
  */
 @Immutable
-class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier {
+class JWTAuthenticationClaimsSetVerifier extends JWTAssertionClaimsSetVerifier {
 
 	// Cache JWT exceptions for quick processing of bad claims
 
@@ -33,12 +33,6 @@ class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 	 */
 	private static BadJWTException INVALID_CLAIM_EXCEPTION =
 		new BadJWTException("Missing or invalid JWT claim");
-
-
-	/**
-	 * The expected audience.
-	 */
-	private final Set<Audience> expectedAudience;
 
 
 	/**
@@ -52,22 +46,7 @@ class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 	 */
 	public JWTAuthenticationClaimsSetVerifier(final Set<Audience> expectedAudience) {
 
-		if (expectedAudience == null || expectedAudience.isEmpty()) {
-			throw new IllegalArgumentException("The expected audience set must not be null or empty");
-		}
-
-		this.expectedAudience = expectedAudience;
-	}
-
-
-	/**
-	 * Returns the permitted audience values.
-	 *
-	 * @return The permitted audience (aud) claim values.
-	 */
-	public Set<Audience> getExpectedAudience() {
-
-		return expectedAudience;
+		super(expectedAudience);
 	}
 
 
@@ -77,28 +56,7 @@ class JWTAuthenticationClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 
 		super.verify(claimsSet);
 
-		if (claimsSet.getExpirationTime() == null) {
-			throw INVALID_CLAIM_EXCEPTION;
-		}
-
-		if (claimsSet.getAudience() == null || claimsSet.getAudience().isEmpty()) {
-			throw INVALID_CLAIM_EXCEPTION;
-		}
-
-		if (claimsSet.getAudience().size() > 1) {
-			throw INVALID_CLAIM_EXCEPTION;
-		}
-
-		Audience aud = new Audience(claimsSet.getAudience().get(0));
-
-		if (! expectedAudience.contains(aud)) {
-			throw INVALID_CLAIM_EXCEPTION;
-		}
-
-		if (claimsSet.getIssuer() == null || claimsSet.getSubject() == null) {
-			throw INVALID_CLAIM_EXCEPTION;
-		}
-
+		// iss == sub
 		if (! claimsSet.getIssuer().equals(claimsSet.getSubject())) {
 			throw INVALID_CLAIM_EXCEPTION;
 		}
