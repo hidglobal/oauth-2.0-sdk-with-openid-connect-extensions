@@ -63,8 +63,10 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>Assertion Framework for OAuth 2.0 (RFC 7521).
- *     <li>JSON Web Token (JWT) Bearer Token Profiles for OAuth 2.0 (RFC 7523).
+ *     <li>Assertion Framework for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7521).
+ *     <li>JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7523)
  * </ul>
  */
 @Immutable

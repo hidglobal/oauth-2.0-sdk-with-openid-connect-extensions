@@ -18,10 +18,10 @@ import com.nimbusds.jwt.*;
  * <p>Related specifications:
  *
  * <ul>
- *     <li>JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
- *         Authorization Grants (RFC 7523), section-2.1.
  *     <li>Assertion Framework for OAuth 2.0 Client Authentication and
  *         Authorization Grants (RFC 7521), section 4.1.
+ *     <li>JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and
+ *         Authorization Grants (RFC 7523), section-2.1.
  * </ul>
  */
 @Immutable
