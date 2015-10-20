@@ -1,4 +1,4 @@
-package com.nimbusds.oauth2.sdk.claims;
+package com.nimbusds.oauth2.sdk.assertions;
 
 
 import java.util.*;
