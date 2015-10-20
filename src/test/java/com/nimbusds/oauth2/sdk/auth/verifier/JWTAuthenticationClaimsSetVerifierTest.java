@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
+
 import com.nimbusds.oauth2.sdk.id.Audience;
 
 
@@ -42,12 +43,6 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 		expectedAud.add(new Audience(opIssuer.toString()));
 
 		return new JWTAuthenticationClaimsSetVerifier(expectedAud);
-	}
-
-
-	private static void ensureRejected(final JWTClaimsSet claimsSet) {
-
-		ensureRejected(claimsSet, "Missing or invalid JWT claim");
 	}
 
 
@@ -130,7 +125,7 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 			.subject("123")
 			.build();
 
-		ensureRejected(claimsSet);
+		ensureRejected(claimsSet, "Missing JWT expiration claim");
 	}
 
 
@@ -145,7 +140,7 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 			.subject("123")
 			.build();
 
-		ensureRejected(claimsSet);
+		ensureRejected(claimsSet, "Missing JWT audience claim");
 	}
 
 
@@ -161,7 +156,19 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 			.subject("123")
 			.build();
 
-		ensureRejected(claimsSet);
+		try {
+			createForAS().verify(claimsSet);
+			fail();
+		} catch (BadJWTException e) {
+			assertEquals("Invalid JWT audience claim, expected [https://c2id.com/token]", e.getMessage());
+		}
+
+		try {
+			createForOP().verify(claimsSet);
+			fail();
+		} catch (BadJWTException e) {
+			assertEquals("Invalid JWT audience claim, expected [https://c2id.com/token, https://c2id.com]", e.getMessage());
+		}
 	}
 
 
@@ -177,7 +184,7 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 			.subject("123")
 			.build();
 
-		ensureRejected(claimsSet);
+		ensureRejected(claimsSet, "Missing JWT issuer claim");
 	}
 
 
@@ -193,7 +200,7 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 			.issuer("123")
 			.build();
 
-		ensureRejected(claimsSet);
+		ensureRejected(claimsSet, "Missing JWT subject claim");
 	}
 
 
@@ -209,6 +216,6 @@ public class JWTAuthenticationClaimsSetVerifierTest extends TestCase {
 			.subject("456")
 			.build();
 
-		ensureRejected(claimsSet);
+		ensureRejected(claimsSet, "Issuer and subject JWT claims don't match");
 	}
 }

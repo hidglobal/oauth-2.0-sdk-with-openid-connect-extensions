@@ -31,8 +31,8 @@ class JWTAuthenticationClaimsSetVerifier extends JWTAssertionClaimsSetVerifier {
 	/**
 	 * Missing or invalid JWT claim exception.
 	 */
-	private static BadJWTException INVALID_CLAIM_EXCEPTION =
-		new BadJWTException("Missing or invalid JWT claim");
+	private static BadJWTException ISS_SUB_MISMATCH_EXCEPTION =
+		new BadJWTException("Issuer and subject JWT claims don't match");
 
 
 	/**
@@ -58,7 +58,7 @@ class JWTAuthenticationClaimsSetVerifier extends JWTAssertionClaimsSetVerifier {
 
 		// iss == sub
 		if (! claimsSet.getIssuer().equals(claimsSet.getSubject())) {
-			throw INVALID_CLAIM_EXCEPTION;
+			throw ISS_SUB_MISMATCH_EXCEPTION;
 		}
 	}
 }

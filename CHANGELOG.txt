@@ -359,3 +359,7 @@ version 5.0-alpha7 (2015-10-20)
     * Upgrades to Nimbus JOSE+JWT 4.3.
     * Fixes missing software_id copy in ClientMetadata copy constructor.
     * Fixes missing software_version copy in ClientMetadata copy constructor.
+
+version 5.0-alpha8 (2015-10-20)
+    * Caches exceptions emitted by JWTAssertionClaimsSetVerifier.
+    * Caches exceptions emitted by JWTAuthenticationClaimsSetVerifier.

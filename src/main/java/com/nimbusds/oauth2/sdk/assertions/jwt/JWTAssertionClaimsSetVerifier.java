@@ -27,19 +27,47 @@ import com.nimbusds.oauth2.sdk.id.Audience;
 public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 
 
-	// Cache JWT exceptions for quick processing of bad claims
+	// Cache JWT exceptions for quick processing of bad claims sets
+
 
 	/**
-	 * Missing or invalid JWT claim exception.
+	 * Missing JWT expiration claim.
 	 */
-	private static BadJWTException INVALID_CLAIM_EXCEPTION =
-		new BadJWTException("Missing or invalid JWT claim");
+	private static BadJWTException MISSING_EXP_CLAIM_EXCEPTION =
+		new BadJWTException("Missing JWT expiration claim");
+
+
+	/**
+	 * Missing JWT audience claim.
+	 */
+	private static BadJWTException MISSING_AUD_CLAIM_EXCEPTION =
+		new BadJWTException("Missing JWT audience claim");
+
+
+	/**
+	 * Missing JWT subject claim.
+	 */
+	private static BadJWTException MISSING_SUB_CLAIM_EXCEPTION =
+		new BadJWTException("Missing JWT subject claim");
+
+
+	/**
+	 * Missing JWT issuer claim.
+	 */
+	private static BadJWTException MISSING_ISS_CLAIM_EXCEPTION =
+		new BadJWTException("Missing JWT issuer claim");
 
 
 	/**
 	 * The expected audience.
 	 */
 	private final Set<Audience> expectedAudience;
+
+
+	/**
+	 * Cached unexpected JWT audience claim exception.
+	 */
+	private final BadJWTException unexpectedAudClaimException;
 
 
 	/**
@@ -58,6 +86,8 @@ public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 		}
 
 		this.expectedAudience = expectedAudience;
+
+		unexpectedAudClaimException = new BadJWTException("Invalid JWT audience claim, expected " + expectedAudience);
 	}
 
 
@@ -79,11 +109,11 @@ public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 		super.verify(claimsSet);
 
 		if (claimsSet.getExpirationTime() == null) {
-			throw INVALID_CLAIM_EXCEPTION;
+			throw MISSING_EXP_CLAIM_EXCEPTION;
 		}
 
 		if (claimsSet.getAudience() == null || claimsSet.getAudience().isEmpty()) {
-			throw INVALID_CLAIM_EXCEPTION;
+			throw MISSING_AUD_CLAIM_EXCEPTION;
 		}
 
 		boolean audMatch = false;
@@ -100,11 +130,15 @@ public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 		}
 
 		if (! audMatch) {
-			throw INVALID_CLAIM_EXCEPTION;
+			throw unexpectedAudClaimException;
 		}
 
-		if (claimsSet.getIssuer() == null || claimsSet.getSubject() == null) {
-			throw INVALID_CLAIM_EXCEPTION;
+		if (claimsSet.getIssuer() == null) {
+			throw MISSING_ISS_CLAIM_EXCEPTION;
+		}
+
+		if (claimsSet.getSubject() == null) {
+			throw MISSING_SUB_CLAIM_EXCEPTION;
 		}
 	}
 }
