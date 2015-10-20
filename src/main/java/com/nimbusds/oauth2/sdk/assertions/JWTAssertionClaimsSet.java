@@ -133,6 +133,26 @@ public class JWTAssertionClaimsSet {
 
 
 	/**
+	 * Creates a new JWT JWT bearer assertion claims set. The expiration
+	 * time (exp) is set to five minutes from the current system time.
+	 * Generates a default identifier (jti) for the JWT. The issued-at
+	 * (iat) and not-before (nbf) claims are not set.
+	 *
+	 * @param iss The issuer identifier. Must not be {@code null}.
+	 * @param sub The subject. Must not be {@code null}.
+	 * @param aud The audience identifier, typically the URI of the
+	 *            authorisation server's Token endpoint. Must not be
+	 *            {@code null}.
+	 */
+	public JWTAssertionClaimsSet(final Issuer iss,
+				     final Subject sub,
+				     final Audience aud) {
+
+		this(iss, sub, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID(), null);
+	}
+
+
+	/**
 	 * Creates a new JWT JWT bearer assertion claims set.
 	 *
 	 * @param iss   The issuer identifier. Must not be {@code null}.
@@ -302,7 +322,11 @@ public class JWTAssertionClaimsSet {
 		
 		if (jti != null)
 			o.put("jti", jti.getValue());
-		
+
+		if (other != null) {
+			o.putAll(other);
+		}
+
 		return o;
 	}
 
