@@ -1,32 +1,26 @@
 package com.nimbusds.oauth2.sdk.auth;
 
 
-import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
 import net.minidev.json.JSONObject;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.claims.JWTAssertionClaimsSet;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.JWTID;
 import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.util.DateUtils;
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 
 
 /**
  * JWT client authentication claims set, serialisable to a JSON object and JWT 
  * claims set.
  *
- * <p>Used for {@link ClientSecretJWT client secret JWT} and 
+ * <p>Used for {@link ClientSecretJWT client secret JWT} and
  * {@link PrivateKeyJWT private key JWT} authentication at the Token endpoint.
  *
  * <p>Example client authentication claims set:
@@ -50,88 +44,7 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  *         Authorization Grants (RFC 7523).
  * </ul>
  */
-public class JWTAuthenticationClaimsSet {
-
-
-	/**
-	 * The names of the reserved client authentication claims.
-	 */
-	private static final Set<String> reservedClaimsNames = new LinkedHashSet<>();
-	
-	
-	static {
-		reservedClaimsNames.add("iss");
-		reservedClaimsNames.add("sub");
-		reservedClaimsNames.add("aud");
-		reservedClaimsNames.add("exp");
-		reservedClaimsNames.add("nbf");
-		reservedClaimsNames.add("iat");
-		reservedClaimsNames.add("jti");
-	}
-	
-
-	/**
-	 * Gets the names of the reserved client authentication claims.
-	 *
-	 * @return The names of the reserved client authentication claims 
-	 *         (read-only set).
-	 */
-	public static Set<String> getReservedClaimsNames() {
-	
-		return Collections.unmodifiableSet(reservedClaimsNames);
-	}
-	
-	
-	/**
-	 * The issuer (required).
-	 */
-	private final Issuer iss;
-	
-	
-	/**
-	 * The subject (required).
-	 */
-	private final Subject sub;
-	
-	
-	/**
-	 * The audience that this token is intended for (required).
-	 */
-	private final Audience aud;
-	
-	
-	/**
-	 * The expiration time that limits the time window during which the JWT 
-	 * can be used (required). The serialised value is number of seconds 
-	 * from 1970-01-01T0:0:0Z as measured in UTC until the desired 
-	 * date/time.
-	 */
-	private final Date exp;
-
-
-	/**
-	 * The time before which this token must not be accepted for 
-	 * processing (optional). The serialised value is number of seconds 
-	 * from 1970-01-01T0:0:0Z as measured in UTC until the desired 
-	 * date/time.
-	 */
-	private final Date nbf;
-	
-	
-	/**
-	 * The time at which this token was issued (optional). The serialised
-	 * value is number of seconds from 1970-01-01T0:0:0Z as measured in UTC 
-	 * until the desired date/time.
-	 */
-	private final Date iat;
-
-
-	/**
-	 * Unique identifier for the JWT (optional). The JWT ID may be used by
-	 * implementations requiring message de-duplication for one-time use 
-	 * assertions. 
-	 */
-	private final JWTID jti;
+public class JWTAuthenticationClaimsSet extends JWTAssertionClaimsSet {
 
 
 	/**
@@ -177,29 +90,7 @@ public class JWTAuthenticationClaimsSet {
 					  final Date iat,
 					  final JWTID jti) {
 
-		if (clientID == null)
-			throw new IllegalArgumentException("The client ID must not be null");
-
-		iss = new Issuer(clientID.getValue());
-
-		sub = new Subject(clientID.getValue());
-
-		
-		if (aud == null)
-			throw new IllegalArgumentException("The audience must not be null");
-
-		this.aud = aud;
-
-
-		if (exp == null)
-			throw new IllegalArgumentException("The expiration time must not be null");
-
-		this.exp = exp;
-
-
-		this.nbf = nbf;
-		this.iat = iat;
-		this.jti = jti;
+		super(new Issuer(clientID.getValue()), new Subject(clientID.getValue()), aud, exp, nbf, iat, jti, null);
 	}
 
 
@@ -211,142 +102,8 @@ public class JWTAuthenticationClaimsSet {
 	 */
 	public ClientID getClientID() {
 
-		return new ClientID(iss.getValue());
+		return new ClientID(getIssuer());
 	}
-
-	
-	
-	/**
-	 * Gets the issuer. Corresponds to the {@code iss} claim.
-	 *
-	 * @return The issuer. Contains the identifier of the OAuth client.
-	 */
-	public Issuer getIssuer() {
-	
-		return iss;
-	}
-	
-	
-	/**
-	 * Gets the subject. Corresponds to the {@code sub} claim.
-	 *
-	 * @return The subject. Contains the identifier of the OAuth client.
-	 */
-	public Subject getSubject() {
-	
-		return sub;
-	}
-	
-	
-	/**
-	 * Gets the audience. Corresponds to the {@code aud} claim 
-	 * (single-valued).
-	 *
-	 * @return The audience, typically the URI of the authorisation
-	 *         server's token endpoint.
-	 */
-	public Audience getAudience() {
-	
-		return aud;
-	}
-
-
-	/**
-	 * Gets the expiration time. Corresponds to the {@code exp} claim.
-	 *
-	 * @return The expiration time.
-	 */
-	public Date getExpirationTime() {
-	
-		return exp;
-	}
-	
-	
-	/**
-	 * Gets the not-before time. Corresponds to the {@code nbf} claim.
-	 *
-	 * @return The not-before time, {@code null} if not specified.
-	 */
-	public Date getNotBeforeTime() {
-	
-		return nbf;
-	}
-
-
-	/**
-	 * Gets the optional issue time. Corresponds to the {@code iat} claim.
-	 *
-	 * @return The issued-at time, {@code null} if not specified.
-	 */
-	public Date getIssueTime() {
-	
-		return iat;
-	}
-	
-	
-	/**
-	 * Gets the identifier for the JWT. Corresponds to the {@code jti} 
-	 * claim.
-	 *
-	 * @return The identifier for the JWT, {@code null} if not specified.
-	 */
-	public JWTID getJWTID() {
-	
-		return jti;
-	}
-	
-	
-	/**
-	 * Returns a JSON object representation of this JWT client 
-	 * authentication claims set.
-	 *
-	 * @return The JSON object.
-	 */
-	public JSONObject toJSONObject() {
-	
-		JSONObject o = new JSONObject();
-		
-		o.put("iss", iss.getValue());
-		o.put("sub", sub.getValue());
-
-		List<String> audList = new LinkedList<>();
-		audList.add(aud.getValue());
-		o.put("aud", audList);
-
-		o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
-
-		if (nbf != null)
-			o.put("nbf", DateUtils.toSecondsSinceEpoch(nbf));
-		
-		if (iat != null)
-			o.put("iat", DateUtils.toSecondsSinceEpoch(iat));
-		
-		if (jti != null)
-			o.put("jti", jti.getValue());
-		
-		return o;
-	}
-
-
-	/**
-	 * Returns a JSON Web Token (JWT) claims set representation of this
-	 * client authentication claims set.
-	 *
-	 * @return The JWT claims set.
-	 */
-	public JWTClaimsSet toJWTClaimsSet() {
-
-		return new JWTClaimsSet.Builder()
-			.issuer(iss.getValue())
-			.subject(sub.getValue())
-			.audience(aud.getValue())
-			.expirationTime(exp)
-			.notBeforeTime(nbf) // optional
-			.issueTime(iat) // optional
-			.jwtID(jti != null ? jti.getValue() : null) // optional
-			.build();
-	}
-	
 	
 	/**
 	 * Parses a JWT client authentication claims set from the specified 
@@ -362,54 +119,15 @@ public class JWTAuthenticationClaimsSet {
 	public static JWTAuthenticationClaimsSet parse(final JSONObject jsonObject)
 		throws ParseException {
 		
-		// Parse required claims
-		Issuer iss = new Issuer(JSONObjectUtils.getString(jsonObject, "iss"));
-		Subject sub = new Subject(JSONObjectUtils.getString(jsonObject, "sub"));
+		JWTAssertionClaimsSet assertion = JWTAssertionClaimsSet.parse(jsonObject);
 
-		Audience aud;
-
-		if (jsonObject.get("aud") instanceof String) {
-
-			aud = new Audience(JSONObjectUtils.getString(jsonObject, "aud"));
-
-		} else {
-			String[] audList = JSONObjectUtils.getStringArray(jsonObject, "aud");
-
-			if (audList.length > 1)
-				throw new ParseException("Multiple audiences (aud) not supported");
-
-			aud = new Audience(audList[0]);
-		}
-
-		Date exp = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "exp"));
-
-
-		// Parse optional claims
-
-		Date nbf = null;
-
-		if (jsonObject.containsKey("nbf"))
-			nbf = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "nbf"));
-
-		Date iat = null;
-
-		if (jsonObject.containsKey("iat"))
-			iat = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "iat"));
-
-		JWTID jti = null;
-
-		if (jsonObject.containsKey("jti"))
-			jti = new JWTID(JSONObjectUtils.getString(jsonObject, "jti"));
-
-
-		// Check client ID
-
-		if (! iss.getValue().equals(sub.getValue()))
-			throw new ParseException("JWT issuer and subject must have the same client ID");
-
-		ClientID clientID = new ClientID(iss.getValue());
-
-		return new JWTAuthenticationClaimsSet(clientID, aud, exp, nbf, iat, jti);
+		return new JWTAuthenticationClaimsSet(
+			new ClientID(assertion.getIssuer()), // iss=sub
+			assertion.getAudience(),
+			assertion.getExpirationTime(),
+			assertion.getNotBeforeTime(),
+			assertion.getIssueTime(),
+			assertion.getJWTID());
 	}
 
 

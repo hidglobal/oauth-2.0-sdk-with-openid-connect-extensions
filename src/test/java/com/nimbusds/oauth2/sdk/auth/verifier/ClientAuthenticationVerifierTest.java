@@ -9,6 +9,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 
+import com.nimbusds.oauth2.sdk.auth.JWTAuthenticationClaimsSet;
 import junit.framework.TestCase;
 
 import com.nimbusds.jose.JOSEException;

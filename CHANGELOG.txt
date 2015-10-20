@@ -341,7 +341,8 @@ version 5.0-alpha5 (2015-09-30)
 version 5.0-alpha6 (2015-10-06)
     * Fixes parsing of custom response headers in HTTPRequest.send (iss #153).
 
-version 5.0-alpha7 (2015-10-09)
+version 5.0-alpha7 (2015-10-20)
+    * Factors out JWTAssertionClaimsSet into claims package.
     * Adds JWTBearerGrant checks to reject unsecured JWT assertions or
       JWT assertion in a state that cannot be serialised.
     * Moves token_endpoint_auth_signing_alg field from OIDCClientMetadata to
