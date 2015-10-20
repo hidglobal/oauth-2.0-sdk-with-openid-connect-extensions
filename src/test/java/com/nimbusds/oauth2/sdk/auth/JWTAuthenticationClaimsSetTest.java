@@ -63,6 +63,8 @@ public class JWTAuthenticationClaimsSetTest extends TestCase {
 		assertNotNull(claimsSet.getJWTID());
 		assertEquals(new JWTID().getValue().length(), claimsSet.getJWTID().getValue().length());
 
+		assertNull(claimsSet.getCustomClaims());
+
 		// Test output to JSON object
 		JSONObject jsonObject = claimsSet.toJSONObject();
 		assertEquals("123", jsonObject.get("iss"));
@@ -94,6 +96,7 @@ public class JWTAuthenticationClaimsSetTest extends TestCase {
 		assertNull(parsed.getIssueTime());
 		assertNull(parsed.getNotBeforeTime());
 		assertEquals(claimsSet.getJWTID(), parsed.getJWTID());
+		assertNull(claimsSet.getCustomClaims());
 	}
 
 
