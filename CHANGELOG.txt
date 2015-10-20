@@ -344,12 +344,14 @@ version 5.0-alpha6 (2015-10-06)
 version 5.0-alpha7 (2015-10-20)
     * Factors out JWTAssertionClaimsSet into claims package.
     * Factors out JWTAssertionClaimsSetVerifier into claims package.
+    * Adds JWTAssertionClaimsSet support for multiple audiences.
     * Adds JWTBearerGrant checks to reject unsecured JWT assertions or
       JWT assertion in a state that cannot be serialised.
     * Moves token_endpoint_auth_signing_alg field from OIDCClientMetadata to
       ClientMetadata to enable its use by generic OAuth 2.0 clients.
     * Adds HostnameVerifier and SSLSocketFactory support to HTTPRequest (iss
       #149).
+    * Adds static Audience utilities.
     * Adds convenience Audience(URI) and Audience(Identifier) constructors.
     * Adds convenience Issuer(URI) and Issuer(Identifier) constructors.
     * Adds convenience ClientID(Identifier) constructor.

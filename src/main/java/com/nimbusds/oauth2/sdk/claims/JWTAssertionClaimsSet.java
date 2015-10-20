@@ -3,14 +3,16 @@ package com.nimbusds.oauth2.sdk.claims;
 
 import java.util.*;
 
+import net.minidev.json.JSONObject;
+
 import com.nimbusds.jwt.JWTClaimsSet;
+
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
 import com.nimbusds.oauth2.sdk.auth.PrivateKeyJWT;
 import com.nimbusds.oauth2.sdk.id.*;
 import com.nimbusds.oauth2.sdk.util.DateUtils;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-import net.minidev.json.JSONObject;
 
 
 /**
@@ -87,7 +89,7 @@ public class JWTAssertionClaimsSet {
 	/**
 	 * The audience that this token is intended for (required).
 	 */
-	private final Audience aud;
+	private final List<Audience> aud;
 
 
 	/**
@@ -135,7 +137,7 @@ public class JWTAssertionClaimsSet {
 	 *
 	 * @param iss   The issuer identifier. Must not be {@code null}.
 	 * @param sub   The subject. Must not be {@code null}.
-	 * @param aud   The audience identifier, typically the URI of the
+	 * @param aud   The audience, typically including the URI of the
 	 *              authorisation server's token endpoint. Must not be
 	 *              {@code null}.
 	 * @param exp   The expiration time. Must not be {@code null}.
@@ -149,7 +151,7 @@ public class JWTAssertionClaimsSet {
 	 */
 	public JWTAssertionClaimsSet(final Issuer iss,
 				     final Subject sub,
-				     final Audience aud,
+				     final List<Audience> aud,
 				     final Date exp,
 				     final Date nbf,
 				     final Date iat,
@@ -167,8 +169,8 @@ public class JWTAssertionClaimsSet {
 		this.sub = sub;
 
 		
-		if (aud == null)
-			throw new IllegalArgumentException("The audience must not be null");
+		if (aud == null || aud.isEmpty())
+			throw new IllegalArgumentException("The audience must not be null or empty");
 
 		this.aud = aud;
 
@@ -210,13 +212,12 @@ public class JWTAssertionClaimsSet {
 	
 	
 	/**
-	 * Gets the audience. Corresponds to the {@code aud} claim 
-	 * (single-valued).
+	 * Gets the audience. Corresponds to the {@code aud} claim.
 	 *
-	 * @return The audience, typically the URI of the authorisation
-	 *         server's token endpoint.
+	 * @return The audience, typically including the URI of the
+	 *         authorisation server's token endpoint.
 	 */
-	public Audience getAudience() {
+	public List<Audience> getAudience() {
 	
 		return aud;
 	}
@@ -290,11 +291,7 @@ public class JWTAssertionClaimsSet {
 		
 		o.put("iss", iss.getValue());
 		o.put("sub", sub.getValue());
-
-		List<String> audList = new LinkedList<>();
-		audList.add(aud.getValue());
-		o.put("aud", audList);
-
+		o.put("aud", Audience.toStringList(aud));
 		o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
 
 		if (nbf != null)
@@ -321,7 +318,7 @@ public class JWTAssertionClaimsSet {
 		JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject(sub.getValue())
-			.audience(aud.getValue())
+			.audience(Audience.toStringList(aud))
 			.expirationTime(exp)
 			.notBeforeTime(nbf) // optional
 			.issueTime(iat) // optional
@@ -356,19 +353,12 @@ public class JWTAssertionClaimsSet {
 		Issuer iss = new Issuer(JSONObjectUtils.getString(jsonObject, "iss"));
 		Subject sub = new Subject(JSONObjectUtils.getString(jsonObject, "sub"));
 
-		Audience aud;
+		List<Audience> aud;
 
 		if (jsonObject.get("aud") instanceof String) {
-
-			aud = new Audience(JSONObjectUtils.getString(jsonObject, "aud"));
-
+			aud = new Audience(JSONObjectUtils.getString(jsonObject, "aud")).toSingleAudienceList();
 		} else {
-			String[] audList = JSONObjectUtils.getStringArray(jsonObject, "aud");
-
-			if (audList.length > 1)
-				throw new ParseException("Multiple audiences (aud) not supported");
-
-			aud = new Audience(audList[0]);
+			aud = Audience.create(JSONObjectUtils.getStringList(jsonObject, "aud"));
 		}
 
 		Date exp = DateUtils.fromSecondsSinceEpoch(JSONObjectUtils.getLong(jsonObject, "exp"));

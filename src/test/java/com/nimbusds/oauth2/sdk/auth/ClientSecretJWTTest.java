@@ -44,7 +44,7 @@ public class ClientSecretJWTTest extends TestCase {
 		Date iat = DateUtils.fromSecondsSinceEpoch(new Date().getTime() / 1000);
 		JWTID jti = new JWTID();
 
-		JWTAuthenticationClaimsSet assertion = new JWTAuthenticationClaimsSet(clientID, audience, exp, nbf, iat, jti);
+		JWTAuthenticationClaimsSet assertion = new JWTAuthenticationClaimsSet(clientID, audience.toSingleAudienceList(), exp, nbf, iat, jti);
 
 		System.out.println("Client secret JWT claims set: " + assertion.toJSONObject());
 
@@ -85,15 +85,11 @@ public class ClientSecretJWTTest extends TestCase {
 		assertEquals(clientID.getValue(), assertion.getClientID().getValue());
 		assertEquals(clientID.getValue(), assertion.getIssuer().getValue());
 		assertEquals(clientID.getValue(), assertion.getSubject().getValue());
-		assertEquals(audience.getValue(), assertion.getAudience().getValue());
+		assertEquals(audience.getValue(), assertion.getAudience().get(0).getValue());
 		assertEquals(exp.getTime(), assertion.getExpirationTime().getTime());
 		assertEquals(nbf.getTime(), assertion.getNotBeforeTime().getTime());
 		assertEquals(iat.getTime(), assertion.getIssueTime().getTime());
 		assertEquals(jti.getValue(), assertion.getJWTID().getValue());
-
-		System.out.println("Client secret JWT expiration: " + assertion.getExpirationTime());
-		System.out.println("Client secret JWT issue date: " + assertion.getIssueTime());
-		System.out.println("Client secret JWT not before: " + assertion.getNotBeforeTime());
 	}
 
 
@@ -113,7 +109,7 @@ public class ClientSecretJWTTest extends TestCase {
 		assertEquals(clientID, clientSecretJWT.getJWTAuthenticationClaimsSet().getClientID());
 		assertEquals(clientID.getValue(), clientSecretJWT.getJWTAuthenticationClaimsSet().getIssuer().getValue());
 		assertEquals(clientID.getValue(), clientSecretJWT.getJWTAuthenticationClaimsSet().getSubject().getValue());
-		assertEquals(tokenEndpoint.toString(), clientSecretJWT.getJWTAuthenticationClaimsSet().getAudience().getValue());
+		assertEquals(tokenEndpoint.toString(), clientSecretJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue());
 
 		// 4 min < exp < 6 min
 		final long now = new Date().getTime();

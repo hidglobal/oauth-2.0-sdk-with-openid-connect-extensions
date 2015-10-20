@@ -63,7 +63,7 @@ public class PrivateKeyJWTTest extends TestCase {
 		assertEquals(clientID, privateKeyJWT.getJWTAuthenticationClaimsSet().getClientID());
 		assertEquals(clientID.getValue(), privateKeyJWT.getJWTAuthenticationClaimsSet().getIssuer().getValue());
 		assertEquals(clientID.getValue(), privateKeyJWT.getJWTAuthenticationClaimsSet().getSubject().getValue());
-		assertEquals(tokenEndpoint.toString(), privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().getValue());
+		assertEquals(tokenEndpoint.toString(), privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue());
 
 		// 4 min < exp < 6 min
 		final long now = new Date().getTime();
@@ -97,7 +97,7 @@ public class PrivateKeyJWTTest extends TestCase {
 		assertEquals(clientID, privateKeyJWT.getJWTAuthenticationClaimsSet().getClientID());
 		assertEquals(clientID.getValue(), privateKeyJWT.getJWTAuthenticationClaimsSet().getIssuer().getValue());
 		assertEquals(clientID.getValue(), privateKeyJWT.getJWTAuthenticationClaimsSet().getSubject().getValue());
-		assertEquals(tokenEndpoint.toString(), privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().getValue());
+		assertEquals(tokenEndpoint.toString(), privateKeyJWT.getJWTAuthenticationClaimsSet().getAudience().get(0).getValue());
 
 		// 4 min < exp < 6 min
 		final long now = new Date().getTime();

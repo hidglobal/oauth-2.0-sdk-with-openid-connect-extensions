@@ -238,7 +238,7 @@ public class ClientAuthenticationVerifierTest extends TestCase {
 
 		JWTAuthenticationClaimsSet claimsSet = new JWTAuthenticationClaimsSet(
 			VALID_CLIENT_ID,
-			EXPECTED_JWT_AUDIENCE.iterator().next(),
+			EXPECTED_JWT_AUDIENCE.iterator().next().toSingleAudienceList(),
 			before5min,
 			null,
 			now,
@@ -261,7 +261,7 @@ public class ClientAuthenticationVerifierTest extends TestCase {
 
 		JWTAuthenticationClaimsSet claimsSet = new JWTAuthenticationClaimsSet(
 			VALID_CLIENT_ID,
-			EXPECTED_JWT_AUDIENCE.iterator().next(),
+			EXPECTED_JWT_AUDIENCE.iterator().next().toSingleAudienceList(),
 			before5min,
 			null,
 			now,

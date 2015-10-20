@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk.id;
 
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -39,5 +40,34 @@ public class AudienceTest extends TestCase {
 		Audience aud = new Audience(clientID);
 		assertEquals(clientID.toString(), aud.getValue());
 		assertTrue(aud.equals(new Audience("123")));
+	}
+
+
+	public void testToStringListSingle() {
+
+		assertNull(Audience.toStringList((Audience)null));
+
+		assertEquals("A", Audience.toStringList(new Audience("A")).get(0));
+		assertEquals(1, Audience.toStringList(new Audience("A")).size());
+	}
+
+
+	public void testToStringList() {
+
+		assertNull(Audience.toStringList((List<Audience>)null));
+
+		assertEquals("A", Audience.toStringList(Arrays.asList(new Audience("A"), new Audience("B"))).get(0));
+		assertEquals("B", Audience.toStringList(Arrays.asList(new Audience("A"), new Audience("B"))).get(1));
+		assertEquals(2, Audience.toStringList(Arrays.asList(new Audience("A"), new Audience("B"))).size());
+	}
+
+
+	public void testFromStringList() {
+
+		assertNull(Audience.create(null));
+
+		assertEquals(new Audience("A"), Audience.create(Arrays.asList("A", "B")).get(0));
+		assertEquals(new Audience("B"), Audience.create(Arrays.asList("A", "B")).get(1));
+		assertEquals(2, Audience.create(Arrays.asList("A", "B")).size());
 	}
 }

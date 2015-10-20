@@ -2,6 +2,7 @@ package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.util.Date;
+import java.util.List;
 
 import net.minidev.json.JSONObject;
 
@@ -62,7 +63,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionClaimsSet {
 	public JWTAuthenticationClaimsSet(final ClientID clientID,
 					  final Audience aud) {
 
-		this(clientID, aud, new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID());
+		this(clientID, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID());
 	}
 
 	
@@ -71,7 +72,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionClaimsSet {
 	 *
 	 * @param clientID The client identifier. Used to specify the issuer 
 	 *                 and the subject. Must not be {@code null}.
-	 * @param aud      The audience identifier, typically the URI of the
+	 * @param aud      The audience, typically including the URI of the
 	 *                 authorisation server's Token endpoint. Must not be 
 	 *                 {@code null}.
 	 * @param exp      The expiration time. Must not be {@code null}.
@@ -84,7 +85,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionClaimsSet {
 	 *                 not specified.
 	 */
 	public JWTAuthenticationClaimsSet(final ClientID clientID,
-					  final Audience aud,
+					  final List<Audience> aud,
 					  final Date exp,
 					  final Date nbf,
 					  final Date iat,
