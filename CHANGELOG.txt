@@ -363,3 +363,7 @@ version 5.0-alpha7 (2015-10-20)
 version 5.0-alpha8 (2015-10-20)
     * Caches exceptions emitted by JWTAssertionClaimsSetVerifier.
     * Caches exceptions emitted by JWTAuthenticationClaimsSetVerifier.
+
+version 5.0-alpha9 (2015-10-30)
+    * Adds GeneralException(ErrorObject) constructor.
+

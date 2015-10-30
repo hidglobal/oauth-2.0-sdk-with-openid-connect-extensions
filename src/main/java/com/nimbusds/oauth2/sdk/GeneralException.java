@@ -70,6 +70,19 @@ public class GeneralException extends Exception {
 	/**
 	 * Creates a new general exception.
 	 *
+	 * @param error The associated error. The error description, if
+	 *              specified, is used to set the exception message. Must
+	 *              not be {@code null}.
+	 */
+	public GeneralException(final ErrorObject error) {
+
+		this(error.getDescription(), error, null, null, null, null, null);
+	}
+
+
+	/**
+	 * Creates a new general exception.
+	 *
 	 * @param message The exception message. May be {@code null}.
 	 * @param error   The associated error, {@code null} if not specified.
 	 */

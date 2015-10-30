@@ -90,4 +90,14 @@ public class GeneralExceptionTest extends TestCase {
 		assertEquals(ResponseMode.FRAGMENT, e.getResponseMode());
 		assertEquals("123", e.getState().getValue());
 	}
+
+
+	public void testErrorObjectConstructor() {
+
+		GeneralException e = new GeneralException(OAuth2Error.INVALID_GRANT.setDescription("Invalid code"));
+
+		assertEquals("Invalid code", e.getMessage());
+		assertEquals(OAuth2Error.INVALID_GRANT.getCode(), e.getErrorObject().getCode());
+		assertEquals("Invalid code", e.getErrorObject().getDescription());
+	}
 }
