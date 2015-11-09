@@ -64,10 +64,24 @@ public class AudienceTest extends TestCase {
 
 	public void testFromStringList() {
 
-		assertNull(Audience.create(null));
+		assertNull(Audience.create((List<String>)null));
 
 		assertEquals(new Audience("A"), Audience.create(Arrays.asList("A", "B")).get(0));
 		assertEquals(new Audience("B"), Audience.create(Arrays.asList("A", "B")).get(1));
 		assertEquals(2, Audience.create(Arrays.asList("A", "B")).size());
+	}
+
+
+	public void testMatchesAny() {
+
+		assertTrue(Audience.matchesAny(Audience.create("A"), Audience.create("A")));
+		assertTrue(Audience.matchesAny(Audience.create("A", "B"), Audience.create("A")));
+		assertTrue(Audience.matchesAny(Audience.create("A"), Audience.create("A", "B")));
+		assertFalse(Audience.matchesAny(Audience.create("A"), Audience.create("B")));
+		assertFalse(Audience.matchesAny(Audience.create("B"), Audience.create("A")));
+		assertFalse(Audience.matchesAny(Audience.create("B", "B"), Audience.create("A", "A")));
+		assertFalse(Audience.matchesAny(null, Audience.create("A", "A")));
+		assertFalse(Audience.matchesAny(Audience.create("A", "A"), null));
+		assertFalse(Audience.matchesAny(null, null));
 	}
 }

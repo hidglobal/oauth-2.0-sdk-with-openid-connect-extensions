@@ -2,15 +2,20 @@ package com.nimbusds.oauth2.sdk.id;
 
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import net.jcip.annotations.Immutable;
 
 
 /**
  * Audience identifier.
+ *
+ * <p>Provides helper methods for:
+ *
+ * <ul>
+ *     <li>Converting to / from string arrays and collections
+ *     <li>Matching audience values
+ * </ul>
  */
 @Immutable
 public final class Audience extends Identifier {
@@ -51,9 +56,9 @@ public final class Audience extends Identifier {
 
 
 	/**
-	 * Returns a list consisting of this audience only.
+	 * Returns a singleton list of this audience.
 	 *
-	 * @return A list consisting of this audience only.
+	 * @return A singleton list consisting of this audience only.
 	 */
 	public List<Audience> toSingleAudienceList() {
 
@@ -131,5 +136,50 @@ public final class Audience extends Identifier {
 			audienceList.add(new Audience(s));
 		}
 		return audienceList;
+	}
+
+
+	/**
+	 * Creates an audience list from the specified string array.
+	 *
+	 * @param strings The strings. May be {@code null}.
+	 *
+	 * @return The audience list, {@code null} if the argument was
+	 *         {@code null}.
+	 */
+	public static List<Audience> create(final String ... strings) {
+
+		if (strings == null) {
+			return null;
+		}
+
+		return create(Arrays.asList(strings));
+	}
+
+
+	/**
+	 * Returns {@code true} if the specified collections have at at least
+	 * one matching audience value.
+	 *
+	 * @param c1 The first audience collection. May be {@code null}.
+	 * @param c2 The second audience collection. May be {@code null}.
+	 *
+	 * @return {@code true} if the specified collections have at at least
+	 *         one matching audience value, {@code false} if there are no
+	 *         matches or either collection is {@code null} or empty.
+	 */
+	public static boolean matchesAny(final Collection<Audience> c1, final Collection<Audience> c2) {
+
+		if (c1 == null || c2 == null) {
+			return false;
+		}
+
+		for (Audience aud: c1) {
+			if (c2.contains(aud)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
