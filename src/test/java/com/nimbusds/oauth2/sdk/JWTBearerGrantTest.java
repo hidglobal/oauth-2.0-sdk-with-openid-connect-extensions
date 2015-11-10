@@ -4,18 +4,21 @@ package com.nimbusds.oauth2.sdk;
 import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
-
-import junit.framework.TestCase;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import com.nimbusds.jose.*;
+import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.crypto.bc.BouncyCastleProviderSingleton;
 import com.nimbusds.jwt.EncryptedJWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
-
 import com.nimbusds.oauth2.sdk.auth.Secret;
+import junit.framework.TestCase;
 
 
 /**
@@ -177,5 +180,177 @@ public class JWTBearerGrantTest extends TestCase {
 		} catch (ParseException e) {
 			assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
 		}
+	}
+
+
+	public void testEncryptedJWT()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
+
+		JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128GCM);
+
+		EncryptedJWT jwt = new EncryptedJWT(header, claimsSet);
+
+		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+		keyGen.init(128);
+		SecretKey key = keyGen.generateKey();
+
+		DirectEncrypter encrypter = new DirectEncrypter(key);
+		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jwt.encrypt(encrypter);
+
+		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jwt);
+
+		Map<String,String> params = jwtBearerGrant.toParameters();
+
+		jwtBearerGrant = JWTBearerGrant.parse(params);
+
+		jwt = (EncryptedJWT)jwtBearerGrant.getJWTAssertion();
+		assertNotNull(jwt);
+
+		DirectDecrypter decrypter = new DirectDecrypter(key);
+		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jwt.decrypt(decrypter);
+		assertEquals("alice", jwt.getJWTClaimsSet().getSubject());
+	}
+
+
+	public void testEncryptedJWT_asJOSEObject()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+			.subject("alice")
+			.build();
+
+		JWEHeader header = new JWEHeader(JWEAlgorithm.DIR, EncryptionMethod.A128GCM);
+
+		EncryptedJWT jwt = new EncryptedJWT(header, claimsSet);
+
+		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+		keyGen.init(128);
+		SecretKey key = keyGen.generateKey();
+
+		DirectEncrypter encrypter = new DirectEncrypter(key);
+		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jwt.encrypt(encrypter);
+
+		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jwt);
+
+		Map<String,String> params = jwtBearerGrant.toParameters();
+
+		jwtBearerGrant = JWTBearerGrant.parse(params);
+
+		jwt = (EncryptedJWT)jwtBearerGrant.getJOSEAssertion();
+		assertNotNull(jwt);
+
+		DirectDecrypter decrypter = new DirectDecrypter(key);
+		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jwt.decrypt(decrypter);
+		assertEquals("alice", jwt.getJWTClaimsSet().getSubject());
+	}
+
+
+	public void testNestedJWT()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.subject("alice")
+				.build();
+
+		// Sign
+		JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
+		SignedJWT jwt = new SignedJWT(jwsHeader, claimsSet);
+		Secret secret = new Secret();
+		jwt.sign(new MACSigner(secret.getValueBytes()));
+
+
+		// Encrypt
+		JWEHeader jweHeader = new JWEHeader.Builder(JWEAlgorithm.DIR, EncryptionMethod.A128GCM)
+				.contentType("JWT")
+				.build();
+
+		JWEObject jweObject = new JWEObject(jweHeader, new Payload(jwt));
+
+		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+		keyGen.init(128);
+		SecretKey key = keyGen.generateKey();
+
+		DirectEncrypter encrypter = new DirectEncrypter(key);
+		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jweObject.encrypt(encrypter);
+
+		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jweObject);
+
+		Map<String,String> params = jwtBearerGrant.toParameters();
+
+		jwtBearerGrant = JWTBearerGrant.parse(params);
+
+		assertNull(jwtBearerGrant.getJWTAssertion());
+
+		jweObject = (JWEObject)jwtBearerGrant.getJOSEAssertion();
+
+		DirectDecrypter decrypter = new DirectDecrypter(key);
+		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jweObject.decrypt(decrypter);
+
+		jwt = jweObject.getPayload().toSignedJWT();
+
+		assertTrue(jwt.verify(new MACVerifier(secret.getValueBytes())));
+
+		assertEquals("alice", jwt.getJWTClaimsSet().getSubject());
+	}
+
+
+	public void testNestedJWT_ctyLowerCase()
+		throws Exception {
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.subject("alice")
+				.build();
+
+		// Sign
+		JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS256);
+		SignedJWT jwt = new SignedJWT(jwsHeader, claimsSet);
+		Secret secret = new Secret();
+		jwt.sign(new MACSigner(secret.getValueBytes()));
+
+
+		// Encrypt
+		JWEHeader jweHeader = new JWEHeader.Builder(JWEAlgorithm.DIR, EncryptionMethod.A128GCM)
+				.contentType("jwt")
+				.build();
+
+		JWEObject jweObject = new JWEObject(jweHeader, new Payload(jwt));
+
+		KeyGenerator keyGen = KeyGenerator.getInstance("AES");
+		keyGen.init(128);
+		SecretKey key = keyGen.generateKey();
+
+		DirectEncrypter encrypter = new DirectEncrypter(key);
+		encrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jweObject.encrypt(encrypter);
+
+		JWTBearerGrant jwtBearerGrant = new JWTBearerGrant(jweObject);
+
+		Map<String,String> params = jwtBearerGrant.toParameters();
+
+		jwtBearerGrant = JWTBearerGrant.parse(params);
+
+		assertNull(jwtBearerGrant.getJWTAssertion());
+
+		jweObject = (JWEObject)jwtBearerGrant.getJOSEAssertion();
+
+		DirectDecrypter decrypter = new DirectDecrypter(key);
+		decrypter.getJCAContext().setContentEncryptionProvider(BouncyCastleProviderSingleton.getInstance());
+		jweObject.decrypt(decrypter);
+
+		jwt = jweObject.getPayload().toSignedJWT();
+
+		assertTrue(jwt.verify(new MACVerifier(secret.getValueBytes())));
+
+		assertEquals("alice", jwt.getJWTClaimsSet().getSubject());
 	}
 }

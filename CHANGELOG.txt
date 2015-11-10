@@ -372,4 +372,8 @@ version 5.0-alpha10 (2015-11-09)
     * Adds Audience.matchesAny(Collection<Audience>,Collection<Audience>)
       static helper.
 
+version 5.0-alpha11 (2015-11-10)
+    * Adds support for nested (JWS-signed then JWE-encrypted) JWT bearer
+      assertions.
+
 

@@ -13,6 +13,14 @@ import com.nimbusds.jwt.*;
  * JWT bearer grant. Used in access token requests with a JSON Web Token (JWT),
  * such an OpenID Connect ID token.
  *
+ * <p>The JWT assertion can be:
+ *
+ * <ul>
+ *     <li>Signed or MAC protected with JWS
+ *     <li>Encrypted with JWE
+ *     <li>Nested - signed / MAC protected with JWS and then encrypted with JWE
+ * </ul>
+ *
  * <p>Related specifications:
  *
  * <ul>
@@ -33,9 +41,10 @@ public class JWTBearerGrant extends AssertionGrant {
 
 
 	/**
-	 * The JWT assertion.
+	 * The assertion - signed JWT, encrypted JWT or nested signed+encrypted
+	 * JWT.
 	 */
-	private final JWT assertion;
+	private final JOSEObject assertion;
 
 
 	/**
@@ -58,15 +67,15 @@ public class JWTBearerGrant extends AssertionGrant {
 
 
 	/**
-	 * Creates a new signed and encrypted JSON Web Token (JWT) bearer
-	 * assertion grant.
+	 * Creates a new nested signed and encrypted JSON Web Token (JWT)
+	 * bearer assertion grant.
 	 *
-	 * @param assertion The signed and encrypted JSON Web Token (JWT)
-	 *                  assertion. Must not be in a unencrypted state or
-	 *                  {@code null}. The JWT claims are not validated for
-	 *                  compliance with the standard.
+	 * @param assertion The nested signed and encrypted JSON Web Token
+	 *                  (JWT) assertion. Must not be in a unencrypted state
+	 *                  or {@code null}. The JWT claims are not validated
+	 *                  for compliance with the standard.
 	 */
-	public JWTBearerGrant(final EncryptedJWT assertion) {
+	public JWTBearerGrant(final JWEObject assertion) {
 
 		super(GRANT_TYPE);
 
@@ -78,11 +87,39 @@ public class JWTBearerGrant extends AssertionGrant {
 
 
 	/**
+	 * Creates a new signed and encrypted JSON Web Token (JWT) bearer
+	 * assertion grant.
+	 *
+	 * @param assertion The signed and encrypted JSON Web Token (JWT)
+	 *                  assertion. Must not be in a unencrypted state or
+	 *                  {@code null}. The JWT claims are not validated for
+	 *                  compliance with the standard.
+	 */
+	public JWTBearerGrant(final EncryptedJWT assertion) {
+
+		this((JWEObject) assertion);
+	}
+
+
+	/**
 	 * Gets the JSON Web Token (JWT) bearer assertion.
 	 *
-	 * @return The signed or signed and encrypted JWT bearer assertion.
+	 * @return The assertion as a signed or encrypted JWT, {@code null} if
+	 *         the assertion is a signed and encrypted JWT.
 	 */
 	public JWT getJWTAssertion() {
+
+		return assertion instanceof JWT ?  (JWT)assertion : null;
+	}
+
+
+	/**
+	 * Gets the JSON Web Token (JWT) bearer assertion.
+	 *
+	 * @return The assertion as a generic JOSE object (signed JWT,
+	 *         encrypted JWT, or signed and encrypted JWT).
+	 */
+	public JOSEObject getJOSEAssertion() {
 
 		return assertion;
 	}
@@ -141,20 +178,40 @@ public class JWTBearerGrant extends AssertionGrant {
 		if (assertionString == null || assertionString.trim().isEmpty())
 			throw new ParseException("Missing or empty \"assertion\" parameter", OAuth2Error.INVALID_REQUEST);
 
-		final JWT assertion;
-
 		try {
-			assertion = JWTParser.parse(assertionString);
+			final JOSEObject assertion = JOSEObject.parse(assertionString);
+
+			if (assertion instanceof PlainObject) {
+
+				throw new ParseException("The JWT assertion must not be unsecured (plain)", OAuth2Error.INVALID_REQUEST);
+
+			} else if (assertion instanceof JWSObject) {
+
+				return new JWTBearerGrant(new SignedJWT(
+						assertion.getParsedParts()[0],
+						assertion.getParsedParts()[1],
+						assertion.getParsedParts()[2]));
+
+			} else {
+				// JWE
+
+				if ("JWT".equalsIgnoreCase(assertion.getHeader().getContentType())) {
+					// Assume nested: signed JWT inside JWE
+					// http://tools.ietf.org/html/rfc7519#section-5.2
+					return new JWTBearerGrant((JWEObject)assertion);
+				} else {
+					// Assume encrypted JWT
+					return new JWTBearerGrant(new EncryptedJWT(
+							assertion.getParsedParts()[0],
+							assertion.getParsedParts()[1],
+							assertion.getParsedParts()[2],
+							assertion.getParsedParts()[3],
+							assertion.getParsedParts()[4]));
+				}
+			}
+
 		} catch (java.text.ParseException e) {
 			throw new ParseException("The \"assertion\" is not a JWT: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
-		}
-
-		if (assertion instanceof SignedJWT) {
-			return new JWTBearerGrant((SignedJWT)assertion);
-		} else if (assertion instanceof EncryptedJWT) {
-			return new JWTBearerGrant((EncryptedJWT)assertion);
-		} else {
-			throw new ParseException("The JWT assertion must not be unsecured (plain)", OAuth2Error.INVALID_REQUEST);
 		}
 	}
 }
