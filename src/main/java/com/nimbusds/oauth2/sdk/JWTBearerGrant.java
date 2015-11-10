@@ -41,6 +41,26 @@ public class JWTBearerGrant extends AssertionGrant {
 
 
 	/**
+	 * Cached {@code unsupported_grant_type} exception.
+	 */
+	private static final ParseException UNSUPPORTED_GRANT_TYPE_EXCEPTION
+		= new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+
+
+	/**
+	 * Cached plain JOSE / JWT rejected exception.
+	 */
+	private static final ParseException PLAIN_ASSERTION_REJECTED_EXCEPTION
+		= new ParseException("The JWT assertion must not be unsecured (plain)", OAuth2Error.INVALID_REQUEST);
+
+
+	/**
+	 * Cached JWT assertion parse exception.
+	 */
+	private static final ParseException JWT_PARSE_EXCEPTION
+		= new ParseException("The \"assertion\" is not a JWT", OAuth2Error.INVALID_REQUEST);
+
+	/**
 	 * The assertion - signed JWT, encrypted JWT or nested signed+encrypted
 	 * JWT.
 	 */
@@ -167,23 +187,23 @@ public class JWTBearerGrant extends AssertionGrant {
 		String grantTypeString = params.get("grant_type");
 
 		if (grantTypeString == null)
-			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
+			throw MISSING_GRANT_TYPE_PARAM_EXCEPTION;
 
 		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+			throw UNSUPPORTED_GRANT_TYPE_EXCEPTION;
 
 		// Parse JWT assertion
 		String assertionString = params.get("assertion");
 
 		if (assertionString == null || assertionString.trim().isEmpty())
-			throw new ParseException("Missing or empty \"assertion\" parameter", OAuth2Error.INVALID_REQUEST);
+			throw MISSING_ASSERTION_PARAM_EXCEPTION;
 
 		try {
 			final JOSEObject assertion = JOSEObject.parse(assertionString);
 
 			if (assertion instanceof PlainObject) {
 
-				throw new ParseException("The JWT assertion must not be unsecured (plain)", OAuth2Error.INVALID_REQUEST);
+				throw PLAIN_ASSERTION_REJECTED_EXCEPTION;
 
 			} else if (assertion instanceof JWSObject) {
 
@@ -211,7 +231,7 @@ public class JWTBearerGrant extends AssertionGrant {
 			}
 
 		} catch (java.text.ParseException e) {
-			throw new ParseException("The \"assertion\" is not a JWT: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
+			throw JWT_PARSE_EXCEPTION;
 		}
 	}
 }

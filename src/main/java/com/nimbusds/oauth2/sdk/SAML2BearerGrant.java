@@ -32,6 +32,13 @@ public class SAML2BearerGrant extends AssertionGrant {
 
 
 	/**
+	 * Cached {@code unsupported_grant_type} exception.
+	 */
+	private static final ParseException UNSUPPORTED_GRANT_TYPE_EXCEPTION
+			= new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+
+
+	/**
 	 * The SAML 2.0 assertion.
 	 */
 	private final Base64URL assertion;
@@ -106,16 +113,16 @@ public class SAML2BearerGrant extends AssertionGrant {
 		String grantTypeString = params.get("grant_type");
 
 		if (grantTypeString == null)
-			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
+			throw MISSING_GRANT_TYPE_PARAM_EXCEPTION;
 
 		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+			throw UNSUPPORTED_GRANT_TYPE_EXCEPTION;
 
 		// Parse JWT assertion
 		String assertionString = params.get("assertion");
 
 		if (assertionString == null || assertionString.trim().isEmpty())
-			throw new ParseException("Missing or empty \"assertion\" parameter", OAuth2Error.INVALID_REQUEST);
+			throw MISSING_ASSERTION_PARAM_EXCEPTION;
 
 		return new SAML2BearerGrant(new Base64URL(assertionString));
 	}

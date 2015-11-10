@@ -16,6 +16,20 @@ public abstract class AssertionGrant extends AuthorizationGrant {
 
 
 	/**
+	 * Cached missing {@code grant_type} parameter exception.
+	 */
+	protected static final ParseException MISSING_GRANT_TYPE_PARAM_EXCEPTION
+		= new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
+
+
+	/**
+	 * Caches missing {@code assertion} parameter exception.
+	 */
+	protected static final ParseException MISSING_ASSERTION_PARAM_EXCEPTION
+		= new ParseException("Missing or empty \"assertion\" parameter", OAuth2Error.INVALID_REQUEST);
+
+
+	/**
 	 * Creates a new assertion-based authorisation grant.
 	 *
 	 * @param type The authorisation grant type. Must not be {@code null}.
