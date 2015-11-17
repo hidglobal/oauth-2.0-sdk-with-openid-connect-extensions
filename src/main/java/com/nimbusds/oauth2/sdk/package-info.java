@@ -1,6 +1,6 @@
 /**
  * Classes for representing, serialising and parsing OAuth 2.0 client requests
- * and server responses.
+ * and authorisation server responses.
  *
  * <p>Authorisation endpoint messages:
  *
@@ -33,6 +33,21 @@
  *                 token.
  *             <li>{@link com.nimbusds.oauth2.sdk.TokenErrorResponse} The
  *                 server responds with a token error.
+ *         </ul>
+ * </ul>
+ *
+ * <p>Token introspection endpoint messages:
+ *
+ * <ul>
+ *     <li>{@link com.nimbusds.oauth2.sdk.TokenIntrospectionRequest} The
+ *         resource server requests an access token to be introspected.
+ *     <li>{@link com.nimbusds.oauth2.sdk.TokenIntrospectionResponse} The
+ *         server responds with a token metadata or returns an error:
+ *         <ul>
+ *             <li>{@link com.nimbusds.oauth2.sdk.TokenIntrospectionSuccessResponse}
+ *                 The server responds with the token metadata.
+ *             <li>{@link com.nimbusds.oauth2.sdk.TokenIntrospectionErrorResponse}
+ *                 The server responds with an error.
  *         </ul>
  * </ul>
  *
