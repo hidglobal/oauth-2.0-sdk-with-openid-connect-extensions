@@ -52,24 +52,24 @@ import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
  * </ul>
  */
 @Immutable
-public class TokenErrorResponse 
-	extends TokenResponse
-	implements ErrorResponse {
+public class TokenErrorResponse extends TokenResponse implements ErrorResponse {
 
 
 	/**
 	 * The standard OAuth 2.0 errors for an Access Token error response.
 	 */
-	private static final Set<ErrorObject> stdErrors = new HashSet<>();
+	private static final Set<ErrorObject> STANDARD_ERRORS;
 	
 	
 	static {
-		stdErrors.add(OAuth2Error.INVALID_REQUEST);
-		stdErrors.add(OAuth2Error.INVALID_CLIENT);
-		stdErrors.add(OAuth2Error.INVALID_GRANT);
-		stdErrors.add(OAuth2Error.UNAUTHORIZED_CLIENT);
-		stdErrors.add(OAuth2Error.UNSUPPORTED_GRANT_TYPE);
-		stdErrors.add(OAuth2Error.INVALID_SCOPE);
+		Set<ErrorObject> errors = new HashSet<>();
+		errors.add(OAuth2Error.INVALID_REQUEST);
+		errors.add(OAuth2Error.INVALID_CLIENT);
+		errors.add(OAuth2Error.INVALID_GRANT);
+		errors.add(OAuth2Error.UNAUTHORIZED_CLIENT);
+		errors.add(OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+		errors.add(OAuth2Error.INVALID_SCOPE);
+		STANDARD_ERRORS = Collections.unmodifiableSet(errors);
 	}
 	
 	
@@ -81,7 +81,7 @@ public class TokenErrorResponse
 	 */
 	public static Set<ErrorObject> getStandardErrors() {
 	
-		return Collections.unmodifiableSet(stdErrors);
+		return STANDARD_ERRORS;
 	}
 	
 	
@@ -92,7 +92,7 @@ public class TokenErrorResponse
 
 
 	/**
-	 * Creates a new OAuth 2.0 Access Token error response. No OAuth 2.0 
+	 * Creates a new OAuth 2.0 Access Token error response. No OAuth 2.0
 	 * error is specified.
 	 */
 	protected TokenErrorResponse() {
@@ -242,15 +242,6 @@ public class TokenErrorResponse
 		throws ParseException {
 		
 		httpResponse.ensureStatusCodeNotOK();
-
-		if (StringUtils.isNotEmpty(httpResponse.getContent()) &&
-		    CommonContentTypes.APPLICATION_JSON.match(httpResponse.getContentType())) {
-
-			JSONObject jsonObject = httpResponse.getContentAsJSONObject();
-
-			return parse(jsonObject);
-		}
-
-		return new TokenErrorResponse();
+		return new TokenErrorResponse(ErrorObject.parse(httpResponse));
 	}
 }
