@@ -5,13 +5,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -87,7 +85,10 @@ public class TokenErrorResponseTest extends TestCase {
 		TokenErrorResponse errorResponse = TokenErrorResponse.parse(httpResponse);
 
 		assertFalse(errorResponse.indicatesSuccess());
-		assertNull(errorResponse.getErrorObject());
+		assertEquals(404, errorResponse.getErrorObject().getHTTPStatusCode());
+		assertNull(errorResponse.getErrorObject().getCode());
+		assertNull(errorResponse.getErrorObject().getDescription());
+		assertNull(errorResponse.getErrorObject().getURI());
 	}
 
 
@@ -121,7 +122,10 @@ public class TokenErrorResponseTest extends TestCase {
 
 		errorResponse = TokenErrorResponse.parse(httpResponse);
 		assertFalse(errorResponse.indicatesSuccess());
-		assertNull(errorResponse.getErrorObject());
-		assertTrue(errorResponse.toJSONObject().isEmpty());
+		assertEquals(400, errorResponse.getErrorObject().getHTTPStatusCode());
+		assertNull(errorResponse.getErrorObject().getCode());
+		assertNull(errorResponse.getErrorObject().getDescription());
+		assertNull(errorResponse.getErrorObject().getURI());
+		assertEquals("{\"error\":null}", errorResponse.toJSONObject().toJSONString());
 	}
 }
