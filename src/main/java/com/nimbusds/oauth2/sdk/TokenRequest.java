@@ -42,13 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  */
 @Immutable
-public class TokenRequest extends AbstractRequest {
-
-
-	/**
-	 * The client authentication, {@code null} if none.
-	 */
-	private final ClientAuthentication clientAuth;
+public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 
 
 	/**
@@ -87,12 +81,10 @@ public class TokenRequest extends AbstractRequest {
 			    final AuthorizationGrant authzGrant,
 			    final Scope scope) {
 
-		super(uri);
+		super(uri, clientAuth);
 
 		if (clientAuth == null)
 			throw new IllegalArgumentException("The client authentication must not be null");
-
-		this.clientAuth = clientAuth;
 
 		clientID = null; // must not be set when client auth is present
 
@@ -139,7 +131,7 @@ public class TokenRequest extends AbstractRequest {
 			    final AuthorizationGrant authzGrant,
 			    final Scope scope) {
 
-		super(uri);
+		super(uri, null);
 
 		if (authzGrant.getType().requiresClientAuthentication()) {
 			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires client authentication");
@@ -152,7 +144,6 @@ public class TokenRequest extends AbstractRequest {
 		this.authzGrant = authzGrant;
 
 		this.clientID = clientID;
-		clientAuth = null;
 
 		this.scope = scope;
 	}
@@ -213,19 +204,6 @@ public class TokenRequest extends AbstractRequest {
 
 
 	/**
-	 * Gets the client authentication.
-	 *
-	 * @see #getClientID()
-	 *
-	 * @return The client authentication, {@code null} if none.
-	 */
-	public ClientAuthentication getClientAuthentication() {
-
-		return clientAuth;
-	}
-
-
-	/**
 	 * Gets the client identifier (for a token request without explicit
 	 * client authentication).
 	 *
@@ -237,7 +215,6 @@ public class TokenRequest extends AbstractRequest {
 
 		return clientID;
 	}
-
 
 
 	/**

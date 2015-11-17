@@ -45,13 +45,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  */
 @Immutable
-public final class TokenRevocationRequest extends AbstractRequest {
-
-
-	/**
-	 * The client authentication, {@code null} if none.
-	 */
-	private final ClientAuthentication clientAuth;
+public final class TokenRevocationRequest extends AbstractOptionallyAuthenticatedRequest {
 
 
 	/**
@@ -61,6 +55,7 @@ public final class TokenRevocationRequest extends AbstractRequest {
 
 
 	/**
+	 * Creates a new token revocation request.
 	 *
 	 * @param uri        The URI of the token revocation endpoint. May be
 	 *                   {@code null} if the {@link #toHTTPRequest} method
@@ -73,9 +68,7 @@ public final class TokenRevocationRequest extends AbstractRequest {
 				      final ClientAuthentication clientAuth,
 				      final Token token) {
 
-		super(uri);
-
-		this.clientAuth = clientAuth;
+		super(uri, clientAuth);
 
 		if (token == null)
 			throw new IllegalArgumentException("The token must not be null");
@@ -85,22 +78,11 @@ public final class TokenRevocationRequest extends AbstractRequest {
 
 
 	/**
-	 * Gets the client authentication.
-	 *
-	 * @return The client authentication, {@code null} if none.
-	 */
-	public ClientAuthentication getClientAuthentication() {
-
-		return clientAuth;
-	}
-
-
-	/**
 	 * Returns the token to revoke. The {@code instanceof} operator can be
 	 * used to infer the token type. If it's neither
 	 * {@link com.nimbusds.oauth2.sdk.token.AccessToken} nor
 	 * {@link com.nimbusds.oauth2.sdk.token.RefreshToken} the
-	 * {@code token_type_hint} has not be provided as part of the token
+	 * {@code token_type_hint} has not been provided as part of the token
 	 * revocation request.
 	 *
 	 * @return The token.
