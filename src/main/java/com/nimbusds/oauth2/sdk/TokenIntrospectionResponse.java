@@ -17,13 +17,24 @@ import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 public abstract class TokenIntrospectionResponse implements Response {
 	
 
+	/**
+	 * Parses a token introspection response from the specified HTTP
+	 * response.
+	 *
+	 * @param httpResponse The HTTP response. Must not be {@code null}.
+	 *
+	 * @return The token introspection success or error response.
+	 *
+	 * @throws ParseException If the HTTP response couldn't be parsed to a
+	 *                        token introspection response.
+	 */
 	public static TokenIntrospectionResponse parse(final HTTPResponse httpResponse)
 		throws ParseException {
 
 		if (httpResponse.getStatusCode() == HTTPResponse.SC_OK) {
 			return TokenIntrospectionSuccessResponse.parse(httpResponse);
 		} else {
-			return null; // TODO
+			return TokenIntrospectionErrorResponse.parse(httpResponse);
 		}
 	}
 }
