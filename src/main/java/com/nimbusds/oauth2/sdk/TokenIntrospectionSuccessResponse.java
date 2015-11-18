@@ -331,7 +331,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
 	 *               required {@code active} parameter and not be
 	 *               {@code null}.
 	 */
-	protected TokenIntrospectionSuccessResponse(final JSONObject params) {
+	public TokenIntrospectionSuccessResponse(final JSONObject params) {
 
 		if (! (params.get("active") instanceof Boolean)) {
 			throw new IllegalArgumentException("Missing / invalid boolean active parameter");
