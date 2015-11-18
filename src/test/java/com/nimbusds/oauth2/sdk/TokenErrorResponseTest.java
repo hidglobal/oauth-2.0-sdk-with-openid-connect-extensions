@@ -126,6 +126,6 @@ public class TokenErrorResponseTest extends TestCase {
 		assertNull(errorResponse.getErrorObject().getCode());
 		assertNull(errorResponse.getErrorObject().getDescription());
 		assertNull(errorResponse.getErrorObject().getURI());
-		assertEquals("{\"error\":null}", errorResponse.toJSONObject().toJSONString());
+		assertEquals("{\"error\":null}", errorResponse.toJSONObject().toJSONString()); // TODO
 	}
 }
