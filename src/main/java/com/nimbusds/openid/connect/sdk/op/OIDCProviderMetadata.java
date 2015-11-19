@@ -1328,6 +1328,23 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Gets the specified custom (not registered) URI parameter.
+	 *
+	 * @param name The parameter name. Must not be {@code null}.
+	 *
+	 * @return The parameter URI value, {@code null} if not specified.
+	 */
+	public URI getCustomURIParameter(final String name) {
+
+		try {
+			return JSONObjectUtils.getURI(customParameters, name);
+		} catch (ParseException e) {
+			return null;
+		}
+	}
+
+
+	/**
 	 * Sets the specified custom (not registered) parameter.
 	 *
 	 * @param name  The parameter name. Must not be {@code null}.

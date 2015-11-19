@@ -656,6 +656,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameter("token_introspection_endpoint"));
 		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameter("token_revocation_endpoint"));
+		assertEquals(URI.create("https://c2id.com/token/introspect"), meta.getCustomURIParameter("token_introspection_endpoint"));
+		assertEquals(URI.create("https://c2id.com/token/revoke"), meta.getCustomURIParameter("token_revocation_endpoint"));
 
 		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameters().get("token_introspection_endpoint"));
 		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameters().get("token_revocation_endpoint"));
@@ -667,6 +669,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 
 		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameter("token_introspection_endpoint"));
 		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameter("token_revocation_endpoint"));
+		assertEquals(URI.create("https://c2id.com/token/introspect"), meta.getCustomURIParameter("token_introspection_endpoint"));
+		assertEquals(URI.create("https://c2id.com/token/revoke"), meta.getCustomURIParameter("token_revocation_endpoint"));
 
 		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameters().get("token_introspection_endpoint"));
 		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameters().get("token_revocation_endpoint"));
