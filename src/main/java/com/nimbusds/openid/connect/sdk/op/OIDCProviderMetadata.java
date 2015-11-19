@@ -319,6 +319,12 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Custom (not-registered) parameters.
+	 */
+	private final JSONObject customParameters = new JSONObject();
+
+
+	/**
 	 * Creates a new OpenID Connect provider metadata instance.
 	 * 
 	 * @param issuer       The issuer identifier. Must be an URI using the
@@ -1309,6 +1315,46 @@ public class OIDCProviderMetadata {
 
 
 	/**
+	 * Gets the specified custom (not registered) parameter.
+	 *
+	 * @param name The parameter name. Must not be {@code null}.
+	 *
+	 * @return The parameter value, {@code null} if not specified.
+	 */
+	public Object getCustomParameter(final String name) {
+
+		return customParameters.get(name);
+	}
+
+
+	/**
+	 * Sets the specified custom (not registered) parameter.
+	 *
+	 * @param name  The parameter name. Must not be {@code null}.
+	 * @param value The parameter value, {@code null} if not specified.
+	 */
+	public void setCustomParameter(final String name, final Object value) {
+
+		if (REGISTERED_PARAMETER_NAMES.contains(name)) {
+			throw new IllegalArgumentException("The " + name + " parameter is registered");
+		}
+
+		customParameters.put(name, value);
+	}
+
+
+	/**
+	 * Gets the custom (not registered) parameters.
+	 *
+	 * @return The custom parameters, empty JSON object if none.
+	 */
+	public JSONObject getCustomParameters() {
+
+		return customParameters;
+	}
+
+
+	/**
 	 * Applies the OpenID Connect provider metadata defaults where no
 	 * values have been specified.
 	 *
@@ -1598,6 +1644,9 @@ public class OIDCProviderMetadata {
 		o.put("request_uri_parameter_supported", requestURIParamSupported);
 
 		o.put("require_request_uri_registration", requireRequestURIReg);
+
+		// Append any custom (not registered) parameters
+		o.putAll(customParameters);
 
 		return o;
 	}
@@ -1943,6 +1992,13 @@ public class OIDCProviderMetadata {
 		
 		if (jsonObject.containsKey("require_request_uri_registration"))
 			op.requireRequestURIReg = JSONObjectUtils.getBoolean(jsonObject, "require_request_uri_registration");
+
+		// Parse custom (not registered) parameters
+		JSONObject customParams = new JSONObject(jsonObject);
+		customParams.keySet().removeAll(REGISTERED_PARAMETER_NAMES);
+		for (Map.Entry<String,Object> customEntry: customParams.entrySet()) {
+			op.setCustomParameter(customEntry.getKey(), customEntry.getValue());
+		}
 
 		return op;
 	}

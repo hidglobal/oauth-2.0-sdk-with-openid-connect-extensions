@@ -376,9 +376,10 @@ version 5.0-alpha11 (2015-11-10)
     * Adds support for nested (JWS-signed then JWE-encrypted) JWT bearer
       assertions.
 
-version 5.0-alpha12 (2015-11-17)
+version 5.0-alpha12 (2015-11-19)
     * Implements OAuth 2.0 token introspection (RFC 7662) request and response
       classes.
+    * Adds OIDCProviderMetadata support for custom (not registered) parameters.
 
 
 

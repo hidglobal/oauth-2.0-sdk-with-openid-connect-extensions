@@ -627,4 +627,43 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(claimTypes.contains(ClaimType.NORMAL));
 		assertEquals(1, claimTypes.size());
 	}
+
+
+	public void testWithCustomParameters()
+		throws Exception {
+
+		Issuer issuer = new Issuer("https://c2id.com");
+
+		List<SubjectType> subjectTypes = new ArrayList<>();
+		subjectTypes.add(SubjectType.PUBLIC);
+
+		URI jwksURI = new URI("https://c2id.com/jwks.json");
+
+		OIDCProviderMetadata meta = new OIDCProviderMetadata(issuer, subjectTypes, jwksURI);
+
+		meta.applyDefaults();
+
+		assertTrue(meta.getCustomParameters().isEmpty());
+
+		meta.setCustomParameter("token_introspection_endpoint", "https://c2id.com/token/introspect");
+		meta.setCustomParameter("token_revocation_endpoint", "https://c2id.com/token/revoke");
+
+		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameter("token_introspection_endpoint"));
+		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameter("token_revocation_endpoint"));
+
+		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameters().get("token_introspection_endpoint"));
+		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameters().get("token_revocation_endpoint"));
+		assertEquals(2, meta.getCustomParameters().size());
+
+		JSONObject o = meta.toJSONObject();
+
+		meta = OIDCProviderMetadata.parse(o);
+
+		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameter("token_introspection_endpoint"));
+		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameter("token_revocation_endpoint"));
+
+		assertEquals("https://c2id.com/token/introspect", meta.getCustomParameters().get("token_introspection_endpoint"));
+		assertEquals("https://c2id.com/token/revoke", meta.getCustomParameters().get("token_revocation_endpoint"));
+		assertEquals(2, meta.getCustomParameters().size());
+	}
 }
