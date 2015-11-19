@@ -289,6 +289,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(uiLocales.contains(LangTag.parse("fr-FR")));
 		assertTrue(uiLocales.contains(LangTag.parse("fr-CA")));
 		assertEquals(5, uiLocales.size());
+
+		assertTrue(op.getCustomParameters().isEmpty());
 	}
 
 
@@ -471,6 +473,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 		meta.setRequiresRequestURIRegistration(true);
 		assertTrue(meta.requiresRequestURIRegistration());
 
+		assertTrue(meta.getCustomParameters().isEmpty());
+
 		String json = meta.toJSONObject().toJSONString();
 
 		meta = OIDCProviderMetadata.parse(JSONObjectUtils.parseJSONObject(json));
@@ -551,6 +555,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(meta.supportsRequestURIParam());
 
 		assertTrue(meta.requiresRequestURIRegistration());
+
+		assertTrue(meta.getCustomParameters().isEmpty());
 	}
 
 
