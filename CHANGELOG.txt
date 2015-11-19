@@ -380,6 +380,8 @@ version 5.0-alpha12 (2015-11-19)
     * Implements OAuth 2.0 token introspection (RFC 7662) request and response
       classes.
     * Adds OIDCProviderMetadata support for custom (not registered) parameters.
+    * Adds helper ClientMetadata.hasScopeValue method.
+
 
 
 

@@ -3,28 +3,23 @@ package com.nimbusds.oauth2.sdk.client;
 
 import java.net.URI;
 import java.util.*;
-
 import javax.mail.internet.InternetAddress;
-
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.util.Base64URL;
-
 import com.nimbusds.langtag.LangTag;
-
-import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.Scope;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.SoftwareID;
 import com.nimbusds.oauth2.sdk.id.SoftwareVersion;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -69,8 +64,11 @@ public class ClientMetadataTest extends TestCase {
 		meta.setRedirectionURIs(redirectURIs);
 		
 		Scope scope = Scope.parse("read write");
+		assertFalse(meta.hasScopeValue(new Scope.Value("read")));
 		meta.setScope(scope);
-		
+		assertTrue(meta.hasScopeValue(new Scope.Value("read")));
+		assertTrue(meta.hasScopeValue(new Scope.Value("write")));
+
 		Set<ResponseType> rts = new HashSet<>();
 		rts.add(ResponseType.parse("code id_token"));
 		meta.setResponseTypes(rts);
@@ -173,6 +171,8 @@ public class ClientMetadataTest extends TestCase {
 		// Test getters
 		assertEquals(redirectURIs, meta.getRedirectionURIs());
 		assertEquals(scope, meta.getScope());
+		assertTrue(meta.hasScopeValue(new Scope.Value("read")));
+		assertTrue(meta.hasScopeValue(new Scope.Value("write")));
 		assertEquals(grantTypes, meta.getGrantTypes());
 		assertEquals(contacts, meta.getContacts());
 		assertEquals(name, meta.getName());

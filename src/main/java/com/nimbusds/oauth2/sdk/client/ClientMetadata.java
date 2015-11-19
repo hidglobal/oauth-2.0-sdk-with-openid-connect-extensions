@@ -4,19 +4,13 @@ package com.nimbusds.oauth2.sdk.client;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
 import com.nimbusds.jose.JWSAlgorithm;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagUtils;
-
-import com.nimbusds.jose.jwk.JWKSet;
-
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
@@ -25,6 +19,8 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.SoftwareID;
 import com.nimbusds.oauth2.sdk.id.SoftwareVersion;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -326,6 +322,21 @@ public class ClientMetadata {
 	public Scope getScope() {
 
 		return scope;
+	}
+
+
+	/**
+	 * Checks if the scope matadata field is set and contains the specified
+	 * scope value.
+	 *
+	 * @param scopeValue The scope value. Must not be {@code null}.
+	 *
+	 * @return {@code true} if the scope value is contained, else
+	 *         {@code false}.
+	 */
+	public boolean hasScopeValue(final Scope.Value scopeValue) {
+
+		return scope != null && scope.contains(scopeValue);
 	}
 
 
