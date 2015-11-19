@@ -111,12 +111,19 @@ public class AccessTokenResponse extends TokenResponse implements SuccessRespons
 	 * @return The custom parameters, as a unmodifiable map, empty map if
 	 *         none.
 	 */
-	public Map<String,Object> getCustomParams() {
+	public Map<String,Object> getCustomParameters() {
 
 		if (customParams == null)
 			return Collections.emptyMap();
 
 		return Collections.unmodifiableMap(customParams);
+	}
+
+
+	@Deprecated
+	public Map<String,Object> getCustomParams() {
+
+		return getCustomParameters();
 	}
 	
 	

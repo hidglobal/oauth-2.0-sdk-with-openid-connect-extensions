@@ -32,6 +32,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
 		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
 		assertEquals(tokens.getRefreshToken(), response.getTokens().getRefreshToken());
+		assertTrue(response.getCustomParameters().isEmpty());
 		assertTrue(response.getCustomParams().isEmpty());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
@@ -41,6 +42,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
 		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
 		assertEquals(tokens.getRefreshToken(), response.getTokens().getRefreshToken());
+		assertTrue(response.getCustomParameters().isEmpty());
 		assertTrue(response.getCustomParams().isEmpty());
 	}
 
@@ -56,6 +58,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
 		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
 		assertNull(response.getTokens().getRefreshToken());
+		assertTrue(response.getCustomParameters().isEmpty());
 		assertTrue(response.getCustomParams().isEmpty());
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
@@ -65,6 +68,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
 		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
 		assertNull(response.getTokens().getRefreshToken());
+		assertTrue(response.getCustomParameters().isEmpty());
 		assertTrue(response.getCustomParams().isEmpty());
 	}
 
@@ -82,6 +86,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
 		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
 		assertNull(response.getTokens().getRefreshToken());
+		assertEquals("abc", (String) response.getCustomParameters().get("sub_sid"));
 		assertEquals("abc", (String) response.getCustomParams().get("sub_sid"));
 
 		HTTPResponse httpResponse = response.toHTTPResponse();
@@ -91,6 +96,7 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(tokens.getAccessToken(), response.getTokens().getAccessToken());
 		assertEquals(tokens.getAccessToken(), response.getTokens().getBearerAccessToken());
 		assertNull(response.getTokens().getRefreshToken());
+		assertEquals("abc", (String) response.getCustomParameters().get("sub_sid"));
 		assertEquals("abc", (String) response.getCustomParams().get("sub_sid"));
 	}
 
@@ -139,8 +145,11 @@ public class AccessTokenResponseTest extends TestCase {
 		assertEquals(refreshTokenString, refreshToken.getValue());
 
 		// Custom param
+		assertEquals("abc", (String)atr.getCustomParameters().get("sub_sid"));
 		assertEquals("abc", (String)atr.getCustomParams().get("sub_sid"));
+		assertEquals(10, ((Number)atr.getCustomParameters().get("priority")).intValue());
 		assertEquals(10, ((Number)atr.getCustomParams().get("priority")).intValue());
+		assertEquals(2, atr.getCustomParameters().size());
 		assertEquals(2, atr.getCustomParams().size());
 
 		// Test pair getter
