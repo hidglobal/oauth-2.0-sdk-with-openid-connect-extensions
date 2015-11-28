@@ -422,7 +422,7 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 	}
 
 
-	public void testIssueTimeAhead() {
+	public void testAcceptIssueTimeAhead() {
 
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
@@ -436,13 +436,14 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 
 		final Date now = new Date();
 		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		final Date inTwoHours = new Date(now.getTime() + 2*60*60*1000L);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(inTwoHours)
+			.issueTime(inOneHour)
 			.claim("nonce", nonce.getValue())
 			.build();
 
@@ -476,14 +477,14 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 			.audience(clientID.getValue())
 			.expirationTime(inOneHour)
 			.issueTime(now)
-			.claim("nonce", nonce.getValue())
+			.claim("nonce", "xxx")
 			.build();
 
 		try {
 			verifier.verify(claimsSet);
 			fail();
 		} catch (BadJWTException e) {
-			assertEquals("", e.getMessage());
+			assertEquals("Unexpected JWT nonce (nonce) claim: xxx", e.getMessage());
 		}
 	}
 }

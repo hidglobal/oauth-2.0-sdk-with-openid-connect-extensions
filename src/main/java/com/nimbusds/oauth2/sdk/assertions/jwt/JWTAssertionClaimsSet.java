@@ -3,16 +3,17 @@ package com.nimbusds.oauth2.sdk.assertions.jwt;
 
 import java.util.*;
 
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.jwt.JWTClaimsSet;
-
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
 import com.nimbusds.oauth2.sdk.auth.PrivateKeyJWT;
-import com.nimbusds.oauth2.sdk.id.*;
-import com.nimbusds.oauth2.sdk.util.DateUtils;
+import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.id.JWTID;
+import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.minidev.json.JSONObject;
 
 
 /**

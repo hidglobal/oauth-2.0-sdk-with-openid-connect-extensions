@@ -1,11 +1,11 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.*;
 import com.nimbusds.oauth2.sdk.token.AccessTokenType;
-import com.nimbusds.oauth2.sdk.util.DateUtils;
 import junit.framework.TestCase;
 import net.minidev.json.JSONObject;
 

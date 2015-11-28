@@ -2,18 +2,20 @@ package com.nimbusds.oauth2.sdk.auth;
 
 
 import java.net.URI;
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
-import com.nimbusds.jose.*;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.JWSObject;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jwt.*;
-
+import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.JWTID;
-import com.nimbusds.oauth2.sdk.util.DateUtils;
-
 import junit.framework.TestCase;
 
 

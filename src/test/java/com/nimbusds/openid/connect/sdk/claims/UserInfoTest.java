@@ -4,15 +4,12 @@ package com.nimbusds.openid.connect.sdk.claims;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.mail.internet.InternetAddress;
 
-import junit.framework.TestCase;
-
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.langtag.LangTag;
-
 import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.util.DateUtils;
+import junit.framework.TestCase;
 
 
 /**

@@ -4,19 +4,15 @@ package com.nimbusds.openid.connect.sdk.claims;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
-
 import javax.mail.internet.InternetAddress;
 
-import net.minidev.json.JSONObject;
-
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagUtils;
-
-import com.nimbusds.jwt.JWTClaimsSet;
-
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.util.DateUtils;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.minidev.json.JSONObject;
 
 
 /**

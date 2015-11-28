@@ -1,11 +1,13 @@
 package com.nimbusds.openid.connect.sdk.token;
 
 
+import java.util.Date;
 import java.util.List;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
-import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
+import com.nimbusds.jwt.proc.JWTClaimsVerifier;
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
@@ -25,12 +27,17 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
-public class IDTokenClaimsVerifier extends DefaultJWTClaimsVerifier {
+public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
+
+
+	/**
+	 * The default maximum accepted clock skew for validating the ID token
+	 * issue, not-before and expiration times, in seconds.
+	 */
+	public final static long DEFAULT_MAX_CLOCK_SKEW_SECONDS = 60;
 
 
 	// Cache general exceptions
-
-
 	/**
 	 * Missing {@code exp} claim exception.
 	 */
@@ -71,6 +78,20 @@ public class IDTokenClaimsVerifier extends DefaultJWTClaimsVerifier {
 	 */
 	private static final BadJWTException MISSING_NONCE_CLAIM_EXCEPTION =
 		new BadJWTException("Missing JWT nonce (nonce) claim");
+
+
+	/**
+	 * Expired ID token exception.
+	 */
+	private static final BadJWTException EXPIRED_EXCEPTION =
+		new BadJWTException("Expired JWT");
+
+
+	/**
+	 * ID token issue time ahead of current time exception.
+	 */
+	private static final BadJWTException IAT_CLAIM_AHEAD_EXCEPTION =
+		new BadJWTException("JWT issue time ahead of current time");
 	
 
 	/**
@@ -89,6 +110,12 @@ public class IDTokenClaimsVerifier extends DefaultJWTClaimsVerifier {
 	 * The expected nonce, {@code null} if not required or specified.
 	 */
 	private final Nonce expectedNonce;
+
+
+	/**
+	 * The max accepted clock skew, in seconds.
+	 */
+	private long maxClockSkewSeconds = DEFAULT_MAX_CLOCK_SKEW_SECONDS;
 
 
 	/**
@@ -151,21 +178,39 @@ public class IDTokenClaimsVerifier extends DefaultJWTClaimsVerifier {
 	}
 
 
+	/**
+	 * Returns the maximum accepted clock skew for checking the ID token
+	 * issue, not-before and expiration times.
+	 *
+	 * @return The maximum accepted clock skew, in seconds.
+	 */
+	public long getMaxClockSkew() {
+
+		return maxClockSkewSeconds;
+	}
+
+
+	/**
+	 * Sets the maximum accepted clock skew for checking the ID token
+	 * issue, not-before and expiration times.
+	 *
+	 * @param maxClockSkewSeconds The maximum accepted clock skew, in
+	 *                            seconds. Must not be negative.
+	 */
+	public void setMaxClockSkew(final long maxClockSkewSeconds) {
+
+		if (maxClockSkewSeconds < 0L) {
+			throw new IllegalArgumentException("The maximum accepted clock skew must not be negative");
+		}
+		this.maxClockSkewSeconds = maxClockSkewSeconds;
+	}
+
+
 	@Override
 	public void verify(final JWTClaimsSet claimsSet)
 		throws BadJWTException {
 
 		// See http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation
-
-		super.verify(claimsSet);
-
-		if (claimsSet.getExpirationTime() == null) {
-			throw MISSING_EXP_CLAIM_EXCEPTION;
-		}
-
-		if (claimsSet.getIssueTime() == null) {
-			throw MISSING_IAT_CLAIM_EXCEPTION;
-		}
 
 		final String tokenIssuer = claimsSet.getIssuer();
 
@@ -207,6 +252,29 @@ public class IDTokenClaimsVerifier extends DefaultJWTClaimsVerifier {
 					throw new BadJWTException("Unexpected JWT authorized party (azp) claim: " + tokenAzp);
 				}
 			}
+		}
+
+		final Date exp = claimsSet.getExpirationTime();
+
+		if (exp == null) {
+			throw MISSING_EXP_CLAIM_EXCEPTION;
+		}
+
+		final Date iat = claimsSet.getIssueTime();
+
+		if (iat == null) {
+			throw MISSING_IAT_CLAIM_EXCEPTION;
+		}
+
+
+		final Date now = new Date();
+
+		if (DateUtils.isBefore(exp, now, maxClockSkewSeconds)) {
+			throw EXPIRED_EXCEPTION;
+		}
+
+		if (DateUtils.isAfter(iat, now, maxClockSkewSeconds)) {
+			throw IAT_CLAIM_AHEAD_EXCEPTION;
 		}
 
 
