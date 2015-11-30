@@ -7,7 +7,6 @@ import java.util.List;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.JWTClaimsVerifier;
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
@@ -28,13 +27,6 @@ import net.jcip.annotations.ThreadSafe;
  */
 @ThreadSafe
 public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
-
-
-	/**
-	 * The default maximum accepted clock skew for validating the ID token
-	 * issue, not-before and expiration times, in seconds.
-	 */
-	public final static long DEFAULT_MAX_CLOCK_SKEW_SECONDS = 60;
 
 
 	// Cache general exceptions
@@ -113,12 +105,6 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 
 
 	/**
-	 * The max accepted clock skew, in seconds.
-	 */
-	private long maxClockSkewSeconds = DEFAULT_MAX_CLOCK_SKEW_SECONDS;
-
-
-	/**
 	 * Creates a new ID token claims verifier.
 	 *
 	 * @param issuer   The expected ID token issuer. Must not be
@@ -175,34 +161,6 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 	public Nonce getExpectedNonce() {
 
 		return expectedNonce;
-	}
-
-
-	/**
-	 * Returns the maximum accepted clock skew for checking the ID token
-	 * issue, not-before and expiration times.
-	 *
-	 * @return The maximum accepted clock skew, in seconds.
-	 */
-	public long getMaxClockSkew() {
-
-		return maxClockSkewSeconds;
-	}
-
-
-	/**
-	 * Sets the maximum accepted clock skew for checking the ID token
-	 * issue, not-before and expiration times.
-	 *
-	 * @param maxClockSkewSeconds The maximum accepted clock skew, in
-	 *                            seconds. Must not be negative.
-	 */
-	public void setMaxClockSkew(final long maxClockSkewSeconds) {
-
-		if (maxClockSkewSeconds < 0L) {
-			throw new IllegalArgumentException("The maximum accepted clock skew must not be negative");
-		}
-		this.maxClockSkewSeconds = maxClockSkewSeconds;
 	}
 
 
@@ -269,11 +227,11 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 
 		final Date now = new Date();
 
-		if (DateUtils.isBefore(exp, now, maxClockSkewSeconds)) {
+		if (exp.before(now)) {
 			throw EXPIRED_EXCEPTION;
 		}
 
-		if (DateUtils.isAfter(iat, now, maxClockSkewSeconds)) {
+		if (iat.after(now)) {
 			throw IAT_CLAIM_AHEAD_EXCEPTION;
 		}
 

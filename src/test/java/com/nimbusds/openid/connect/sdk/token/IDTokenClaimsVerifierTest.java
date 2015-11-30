@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
@@ -235,14 +236,14 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		final Date now = DateUtils.fromSecondsSinceEpoch(1000);
+		final Date exp = DateUtils.fromSecondsSinceEpoch(1001);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
+			.expirationTime(exp)
 			.issueTime(now)
 			.build();
 
@@ -401,8 +402,8 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		assertEquals(nonce, verifier.getExpectedNonce());
 
 		final Date now = new Date();
-		final Date twoHoursAgo = new Date(now.getTime() - 2*60*60*1000L);
 		final Date oneHourAgo = new Date(now.getTime() - 60*60*1000L);
+		final Date twoHoursAgo = new Date(now.getTime() - 2*60*60*1000L);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
@@ -451,7 +452,7 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 			verifier.verify(claimsSet);
 			fail();
 		} catch (BadJWTException e) {
-			assertEquals("", e.getMessage());
+			assertEquals("JWT issue time ahead of current time", e.getMessage());
 		}
 	}
 
