@@ -24,7 +24,7 @@ import com.nimbusds.oauth2.sdk.SerializeException;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.OIDCError;
 import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
-import com.nimbusds.openid.connect.sdk.util.Resource;
+import com.nimbusds.oauth2.sdk.http.Resource;
 import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
 
 

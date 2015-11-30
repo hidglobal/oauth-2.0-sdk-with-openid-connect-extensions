@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.http;
 
 
 import javax.mail.internet.ContentType;
@@ -35,11 +35,11 @@ public class Resource {
 	 */
 	public Resource(final String content, final ContentType contentType) {
 
-		if (content == null)
+		if (content == null) {
 			throw new IllegalArgumentException("The resource content must not be null");
+		}
 
 		this.content = content;
-
 		this.contentType = contentType;
 	}
 

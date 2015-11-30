@@ -1,24 +1,26 @@
-package com.nimbusds.openid.connect.sdk.util;
+package com.nimbusds.oauth2.sdk.http;
 
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
 
 import net.jcip.annotations.ThreadSafe;
+import org.apache.commons.io.input.BoundedInputStream;
 
 
 /**
  * The default retriever of resources specified by URL. Provides setting of
- * HTTP connect and read timeouts. Caching header directives are not honoured.
+ * HTTP connect and read timeouts as well as a size limit of the retrieved
+ * entity. Caching header directives are not honoured.
  */
 @ThreadSafe
-public class DefaultResourceRetriever implements ResourceRetriever {
+public class DefaultResourceRetriever extends AbstractRestrictedResourceRetriever implements RestrictedResourceRetriever {
 
 
 	/**
@@ -28,20 +30,8 @@ public class DefaultResourceRetriever implements ResourceRetriever {
 	
 	
 	/**
-	 * The HTTP connect timeout, in milliseconds.
-	 */
-	private int connectTimeout;
-	
-	
-	/**
-	 * The HTTP read timeout, in milliseconds.
-	 */
-	private int readTimeout;
-	
-	
-	/**
-	 * Creates a new resource retriever. The HTTP connect and read timeouts
-	 * are set to zero (infinite).
+	 * Creates a new resource retriever. The HTTP timeouts and entity size
+	 * limit are set to zero (infinite).
 	 */
 	public DefaultResourceRetriever() {
 	
@@ -50,7 +40,8 @@ public class DefaultResourceRetriever implements ResourceRetriever {
 	
 	
 	/**
-	 * Creates a new resource retriever.
+	 * Creates a new resource retriever. The HTTP entity size limit is set
+	 * to zero (infinite).
 	 *
 	 * @param connectTimeout The HTTP connects timeout, in milliseconds, 
 	 *                       zero for infinite. Must not be negative.
@@ -58,104 +49,67 @@ public class DefaultResourceRetriever implements ResourceRetriever {
 	 *                       for infinite. Must not be negative.
 	 */
 	public DefaultResourceRetriever(final int connectTimeout, final int readTimeout) {
+
+		this(0, 0, 0);
+	}
+
+
+	/**
+	 * Creates a new resource retriever.
+	 *
+	 * @param connectTimeout The HTTP connects timeout, in milliseconds,
+	 *                       zero for infinite. Must not be negative.
+	 * @param readTimeout    The HTTP read timeout, in milliseconds, zero
+	 *                       for infinite. Must not be negative.
+	 * @param sizeLimit      The HTTP entity size limit, in bytes, zero for
+	 *                       infinite. Must not be negative.
+	 */
+	public DefaultResourceRetriever(final int connectTimeout, final int readTimeout, final int sizeLimit) {
 	
-		setConnectTimeout(connectTimeout);
-		setReadTimeout(readTimeout);
-		
+		super(connectTimeout, readTimeout, sizeLimit);
 		lineSeparator = System.getProperty("line.separator");
 	}
-	
-	
-	/**
-	 * Gets the HTTP connect timeout.
-	 *
-	 * @return The HTTP connect timeout, in milliseconds, zero for 
-	 *         infinite.
-	 */
-	public int getConnectTimeout() {
-	
-		return connectTimeout;
-	}
-	
-	
-	/**
-	 * Sets the HTTP connect timeout.
-	 *
-	 * @param connectTimeout The HTTP connect timeout, in milliseconds, 
-	 *                       zero for infinite. Must not be negative.
-	 */
-	public void setConnectTimeout(final int connectTimeout) {
-	
-		if (connectTimeout < 0)
-			throw new IllegalArgumentException("The connect timeout must not be negative");
-		
-		this.connectTimeout = connectTimeout;
-	}
-	
-	
-	/**
-	 * Gets the HTTP read timeout.
-	 *
-	 * @return The HTTP read timeout, in milliseconds, zero for infinite.
-	 */
-	public int getReadTimeout() {
-	
-		return readTimeout;
-	}
-	
-	
-	/**
-	 * Sets the HTTP read timeout.
-	 *
-	 * @param readTimeout The HTTP read timeout, in milliseconds, zero for
-	 *                    infinite. Must not be negative.
-	 */
-	public void setReadTimeout(final int readTimeout) {
-	
-		if (readTimeout < 0)
-			throw new IllegalArgumentException("The read timeout must not be negative");
-		
-		this.readTimeout = readTimeout;
-	}
-	
-	
-	@Override	
+
+
+	@Override
 	public Resource retrieveResource(final URL url)
 		throws IOException {
 		
 		HttpURLConnection con;
-
 		try {
 			con = (HttpURLConnection)url.openConnection();
-
 		} catch (ClassCastException e) {
-
 			throw new IOException("Couldn't open HTTP(S) connection: " + e.getMessage(), e);
 		}
 
-		con.setConnectTimeout(connectTimeout);
-		con.setReadTimeout(readTimeout);
-		
+		con.setConnectTimeout(getConnectTimeout());
+		con.setReadTimeout(getReadTimeout());
+
 		StringBuilder sb = new StringBuilder();
-		
-		BufferedReader input = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		
+
+		InputStream inputStream = con.getInputStream();
+
+		if (getSizeLimit() > 0) {
+			inputStream = new BoundedInputStream(inputStream, getSizeLimit());
+		}
+
+		BufferedReader input = new BufferedReader(new InputStreamReader(inputStream));
+
 		String line;
-		
+
 		while ((line = input.readLine()) != null) {
-		
+
 			sb.append(line);
 			sb.append(lineSeparator);
 		}
-		
+
 		input.close();
-		
+
 		// Check HTTP code + message
 		final int statusCode = con.getResponseCode();
 		final String statusMessage = con.getResponseMessage();
 
 		if (statusCode != HttpURLConnection.HTTP_OK) {
-
 			throw new IOException("HTTP " + statusCode + ": " + statusMessage);
 		}
 
@@ -163,12 +117,9 @@ public class DefaultResourceRetriever implements ResourceRetriever {
 		ContentType contentType = null;
 
 		if (con.getContentType() != null) {
-
 			try {
 				contentType = new ContentType(con.getContentType());
-
 			} catch (ParseException e) {
-
 				throw new IOException("Couldn't parse Content-Type header: " + e.getMessage(), e);
 			}
 		}
