@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.token;
+package com.nimbusds.openid.connect.sdk.token.verifiers;
 
 
 import java.util.Date;

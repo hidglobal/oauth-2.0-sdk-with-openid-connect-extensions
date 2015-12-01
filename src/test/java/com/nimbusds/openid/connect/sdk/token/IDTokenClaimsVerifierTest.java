@@ -10,6 +10,7 @@ import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
+import com.nimbusds.openid.connect.sdk.token.verifiers.IDTokenClaimsVerifier;
 import junit.framework.TestCase;
 
 
