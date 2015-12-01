@@ -1,27 +1,25 @@
 package com.nimbusds.openid.connect.sdk.token.verifiers;
 
 
-import com.nimbusds.jose.Algorithm;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSAlgorithm;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import com.nimbusds.jose.*;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jose.proc.JWEKeySelector;
 import com.nimbusds.jose.proc.JWSKeySelector;
-import com.nimbusds.jwt.JWT;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
+import com.nimbusds.jwt.*;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
+import com.nimbusds.jwt.proc.JWTClaimsVerifier;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import com.nimbusds.openid.connect.sdk.jwt.ClientSecretSelector;
-import com.nimbusds.openid.connect.sdk.jwt.JWKSetSource;
-import com.nimbusds.openid.connect.sdk.jwt.SignatureKeySelector;
+import com.nimbusds.openid.connect.sdk.jwt.*;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import com.nimbusds.openid.connect.sdk.rp.OIDCClientInformation;
 import net.jcip.annotations.ThreadSafe;
@@ -176,19 +174,43 @@ public class IDTokenVerifier {
 	}
 
 
-	public IDTokenClaimsSet verify(final JWT idToken, final Nonce expectedNonce, final boolean viaHTTPS)
+	public IDTokenClaimsSet verify(final JWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
-		if (idToken instanceof SignedJWT) {
-			return verify((SignedJWT) idToken, expectedNonce, viaHTTPS);
-
+		if (idToken instanceof PlainJWT) {
+			return verify((PlainJWT)idToken, expectedNonce);
+		} else if (idToken instanceof SignedJWT) {
+			return verify((SignedJWT) idToken, expectedNonce);
+		} else if (idToken instanceof EncryptedJWT) {
+			return verify((EncryptedJWT) idToken, expectedNonce);
+		} else {
+			throw new JOSEException("Unexpected JWT type: " + idToken.getClass());
 		}
-
-		return null;
 	}
 
 
-	private IDTokenClaimsSet verify(final SignedJWT idToken, final Nonce expectedNonce, final boolean viaHTTPS)
+	private IDTokenClaimsSet verify(final PlainJWT idToken, final Nonce expectedNonce)
+		throws BadJOSEException, JOSEException {
+
+		if (jwsKeySelector != null) {
+			throw new BadJWTException("Signed ID token expected");
+		}
+
+		JWTClaimsSet jwtClaimsSet;
+
+		try {
+			jwtClaimsSet = idToken.getJWTClaimsSet();
+		} catch (java.text.ParseException e) {
+			throw new BadJWTException(e.getMessage(), e);
+		}
+
+		JWTClaimsVerifier claimsVerifier = new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce);
+		claimsVerifier.verify(jwtClaimsSet);
+		return toIDTokenClaimsSet(jwtClaimsSet);
+	}
+
+
+	private IDTokenClaimsSet verify(final SignedJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
 		if (jwsKeySelector == null) {
@@ -198,8 +220,34 @@ public class IDTokenVerifier {
 		ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
 		jwtProcessor.setJWSKeySelector(jwsKeySelector);
 		jwtProcessor.setJWTClaimsVerifier(new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce));
+		JWTClaimsSet jwtClaimsSet = jwtProcessor.process(idToken, null);
+		return toIDTokenClaimsSet(jwtClaimsSet);
+	}
+
+
+	private IDTokenClaimsSet verify(final EncryptedJWT idToken, final Nonce expectedNonce)
+		throws BadJOSEException, JOSEException {
+
+		if (jweKeySelector == null) {
+			throw new BadJWTException("Decryption of JWTs not configured");
+		}
+		if (jwsKeySelector == null) {
+			throw new BadJWTException("Verification of signed JWTs not configured");
+		}
+
+		ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
+		jwtProcessor.setJWSKeySelector(jwsKeySelector);
+		jwtProcessor.setJWEKeySelector(jweKeySelector);
+		jwtProcessor.setJWTClaimsVerifier(new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce));
 
 		JWTClaimsSet jwtClaimsSet = jwtProcessor.process(idToken, null);
+
+		return toIDTokenClaimsSet(jwtClaimsSet);
+	}
+
+
+	private static IDTokenClaimsSet toIDTokenClaimsSet(final JWTClaimsSet jwtClaimsSet)
+		throws JOSEException {
 
 		try {
 			return new IDTokenClaimsSet(jwtClaimsSet);
@@ -225,21 +273,70 @@ public class IDTokenVerifier {
 					     final OIDCClientInformation clientInfo) {
 
 		Issuer expectedIssuer = opMetadata.getIssuer();
-		ClientID expectedClientID = clientInfo.getID();
+		ClientID clientID = clientInfo.getID();
 
-		JWSAlgorithm expectedJWSAlgorithm = clientInfo.getOIDCMetadata().getIDTokenJWSAlg();
+		JWSAlgorithm expectedJWSAlg = clientInfo.getOIDCMetadata().getIDTokenJWSAlg();
 
-		if (Algorithm.NONE.equals(expectedJWSAlgorithm)) {
+		final JWSKeySelector jwsKeySelector;
 
-			return null;
-		} else if (JWSAlgorithm.Family.RSA.contains(expectedJWSAlgorithm) || JWSAlgorithm.Family.EC.contains(expectedJWSAlgorithm)) {
+		if (Algorithm.NONE.equals(expectedJWSAlg)) {
 
-			return null;
-		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(expectedJWSAlgorithm)) {
+			// Skip creation of JWS / JWE key selectors
+			jwsKeySelector = null;
 
-			return null;
+		} else if (JWSAlgorithm.Family.RSA.contains(expectedJWSAlg) || JWSAlgorithm.Family.EC.contains(expectedJWSAlg)) {
+
+			JWKSetSource jwkSetSource;
+
+			if (clientInfo.getOIDCMetadata().getJWKSet() != null) {
+				jwkSetSource = new StaticSingletonJWKSetSource(clientID, clientInfo.getOIDCMetadata().getJWKSet());
+			} else if (clientInfo.getOIDCMetadata().getJWKSetURI() != null) {
+				URL jwkSetURL;
+				try {
+					jwkSetURL = clientInfo.getOIDCMetadata().getJWKSetURI().toURL();
+				} catch (MalformedURLException e) {
+					throw new IllegalArgumentException("Invalid jwk set URI: " + e.getMessage(), e);
+				}
+				jwkSetSource = new RemoteSingletonJWKSetSource(clientID, jwkSetURL, null);
+			} else {
+				throw new IllegalArgumentException("Missing JWK set source");
+			}
+
+			jwsKeySelector = new SignatureKeySelector(expectedIssuer, expectedJWSAlg, jwkSetSource);
+
+		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(expectedJWSAlg)) {
+
+			Secret clientSecret = clientInfo.getSecret();
+
+			if (clientSecret == null) {
+				throw new IllegalArgumentException("Missing client secret");
+			}
+
+			jwsKeySelector = new ClientSecretSelector(expectedIssuer, expectedJWSAlg, clientSecret);
+
 		} else {
-			return null;
+			throw new IllegalArgumentException("Unsupported JWS algorithm: " +expectedJWSAlg);
 		}
+
+
+		JWEAlgorithm expectedJWEAlg = clientInfo.getOIDCMetadata().getIDTokenJWEAlg();
+		EncryptionMethod expectedJWEEnc = clientInfo.getOIDCMetadata().getIDTokenJWEEnc();
+
+		if (expectedJWEAlg == null) {
+			// Encrypted ID tokens not expected
+			return new IDTokenVerifier(expectedIssuer, clientID, jwsKeySelector, null);
+		}
+
+
+		final JWEKeySelector jweKeySelector;
+
+		if (Algorithm.NONE.equals(expectedJWSAlg)) {
+
+			// Skip creation of JWS / JWE key selectors
+			jweKeySelector = null;
+
+		} else if (JWEAlgorithm.Family.RSA.contains())
+
+		return new IDTokenVerifier(expectedIssuer, clientID, jwsKeySelector, jweKeySelector);
 	}
 }
