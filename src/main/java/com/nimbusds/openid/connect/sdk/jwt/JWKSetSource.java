@@ -9,7 +9,9 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
 
 
 /**
- * JSON Web Key (JWK) set source. Implementations must be thread-safe.
+ * JSON Web Key (JWK) set source. Exposes a method for selecting keys for a
+ * given party (OpenID Provider or Relying Party) based on specified criteria.
+ * Implementations must be thread-safe.
  */
 public interface JWKSetSource {
 	
@@ -20,10 +22,10 @@ public interface JWKSetSource {
 	 * @param id         Identifier for the JWK set source, typically an
 	 *                   OpenID Provider issuer ID, or client ID. Must not
 	 *                   be {@code null}.
-	 * @param jwkMatcher Matcher for the JWKs to select. Must not be
-	 *                   {@code null}.
+	 * @param jwkMatcher A matcher specifying the parameters for the JWKs
+	 *                   to select. Must not be {@code null}.
 	 *
-	 * @return The matching JWKs, empty list if no matches found or
+	 * @return The matching JWKs, empty list if no matches were found or
 	 *         retrieval failed.
 	 */
 	List<JWK> get(final Identifier id, final JWKMatcher jwkMatcher);

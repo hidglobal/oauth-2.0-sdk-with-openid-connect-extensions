@@ -2,13 +2,15 @@ package com.nimbusds.openid.connect.sdk.jwt;
 
 
 import java.security.Key;
-import java.util.LinkedList;
+import java.util.Collections;
 import java.util.List;
 
-import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.jwk.*;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKMatcher;
+import com.nimbusds.jose.jwk.KeyType;
+import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -16,15 +18,15 @@ import net.jcip.annotations.ThreadSafe;
 
 
 /**
- * Selector of public RSA and EC keys for verifying JWS signatures used in
+ * Selector of public RSA and EC keys for verifying signed JWS objects used in
  * OpenID Connect.
  *
- * <p>Selects key candidates for verification of:
+ * <p>Can be used to select key candidates for the verification of:
  *
  * <ul>
- *     <li>Signed ID tokens.
- *     <li>Signed JWT-encoded UserInfo responses.
- *     <li>Signed OpenID request objects.
+ *     <li>Signed ID tokens
+ *     <li>Signed JWT-encoded UserInfo responses
+ *     <li>Signed OpenID request objects
  * </ul>
  */
 @ThreadSafe
@@ -53,16 +55,19 @@ public class SignatureKeySelector extends AbstractKeySelectorWithJWKSetSource im
 	/**
 	 * Creates a new signature key selector.
 	 *
-	 * @param id           Identifier for the JWS author, typically an
+	 * @param id           Identifier for the JWS originator, typically an
 	 *                     OpenID Provider issuer ID, or client ID. Must
 	 *                     not be {@code null}.
 	 * @param jwsAlg       The expected JWS algorithm for the objects to be
-	 *                     verified. Must not be {@code null}.
+	 *                     verified. Must be RSA or EC based. Must not be
+	 *                     {@code null}.
 	 * @param jwkSetSource The JWK set source. Must not be {@code null}.
 	 */
 	public SignatureKeySelector(final Identifier id, final JWSAlgorithm jwsAlg, final JWKSetSource jwkSetSource) {
-
 		super(id, jwkSetSource);
+		if (jwsAlg == null) {
+			throw new IllegalArgumentException("The JWS algorithm must not be null");
+		}
 		ensureSignatureAlgorithm(jwsAlg);
 		this.jwsAlg = jwsAlg;
 	}
@@ -80,7 +85,7 @@ public class SignatureKeySelector extends AbstractKeySelectorWithJWKSetSource im
 
 
 	/**
-	 * Creates a JWK matchers for the expected JWS algorithm and the
+	 * Creates a JWK matcher for the expected JWS algorithm and the
 	 * specified JWS header.
 	 *
 	 * @param jwsHeader The JWS header. Must not be {@code null}.
@@ -101,22 +106,13 @@ public class SignatureKeySelector extends AbstractKeySelectorWithJWKSetSource im
 	@Override
 	public List<? extends Key> selectJWSKeys(final JWSHeader jwsHeader, final SecurityContext context) {
 
+		if (! jwsAlg.equals(jwsHeader.getAlgorithm())) {
+			// Unexpected JWS alg
+			return Collections.emptyList();
+		}
+
 		JWKMatcher jwkMatcher = createJWKMatcher(jwsHeader);
 		List<JWK> jwkMatches = getJWKSetSource().get(getIdentifier(), jwkMatcher);
-
-		// Convert JWKs to Java key types
-		List<Key> keyMatches = new LinkedList<>();
-		for (JWK jwk: jwkMatches) {
-			try {
-				if (jwk instanceof RSAKey) {
-					keyMatches.add(((RSAKey) jwk).toRSAPublicKey());
-				} else if (jwk instanceof ECKey) {
-					keyMatches.add(((ECKey) jwk).toECPublicKey());
-				}
-			} catch (JOSEException e) {
-				// ignore and continue
-			}
-		}
-		return keyMatches;
+		return KeyConverter.toJavaKeys(jwkMatches);
 	}
 }

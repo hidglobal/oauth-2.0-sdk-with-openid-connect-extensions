@@ -19,10 +19,10 @@ import net.jcip.annotations.ThreadSafe;
 
 
 /**
- * Selector of client secret keys for verifying JWS HMAC used in OpenID
- * Connect.
+ * Selector of client secret keys for verifying HMAC protected JWS objects used
+ * in OpenID Connect.
  *
- * <p>Selects key candidates for verification of:
+ * <p>Can be used to select key candidates for the verification of:
  *
  * <ul>
  *     <li>HMAC ID tokens.
@@ -49,7 +49,7 @@ public class ClientSecretSelector extends AbstractKeySelector implements JWSKeyS
 	/**
 	 * Creates a new client secret selector.
 	 *
-	 * @param id           Identifier for the JWS author, typically the
+	 * @param id           Identifier for the JWS originator, typically the
 	 *                     client ID. Must not be {@code null}.
 	 * @param hmacAlg      The expected HMAC JWS algorithm. Must not be
 	 *                     {@code null}.

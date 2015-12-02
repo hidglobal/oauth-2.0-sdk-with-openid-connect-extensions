@@ -13,6 +13,7 @@ import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import com.nimbusds.jwt.proc.JWTClaimsVerifier;
+import com.nimbusds.oauth2.sdk.GeneralException;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -258,6 +259,92 @@ public class IDTokenVerifier {
 	}
 
 
+	private static JWSKeySelector createJWSKeySelector(final OIDCProviderMetadata opMetadata,
+							   final OIDCClientInformation clientInfo)
+		throws GeneralException {
+
+		final Issuer expectedIssuer = opMetadata.getIssuer();
+		final ClientID clientID = clientInfo.getID();
+		final JWSAlgorithm expectedJWSAlg = clientInfo.getOIDCMetadata().getIDTokenJWSAlg();
+
+		if (opMetadata.getIDTokenJWSAlgs() == null) {
+			throw new GeneralException("Missing OpenID Provider id_token_signing_alg_values_supported parameter");
+		}
+
+		if (! opMetadata.getIDTokenJWSAlgs().contains(expectedJWSAlg)) {
+			throw new GeneralException("The OpenID Provider doesn't support " + expectedJWSAlg + " ID tokens");
+		}
+
+		if (Algorithm.NONE.equals(expectedJWSAlg)) {
+			// Skip creation of JWS key selector, plain ID tokens expected
+			return null;
+
+		} else if (JWSAlgorithm.Family.RSA.contains(expectedJWSAlg) || JWSAlgorithm.Family.EC.contains(expectedJWSAlg)) {
+
+			JWKSetSource jwkSetSource;
+
+			if (clientInfo.getOIDCMetadata().getJWKSet() != null) {
+				// The JWK set is specified by value
+				jwkSetSource = new StaticSingletonJWKSetSource(clientID, clientInfo.getOIDCMetadata().getJWKSet());
+			} else if (clientInfo.getOIDCMetadata().getJWKSetURI() != null) {
+				// The JWK set is specified by URL reference
+				URL jwkSetURL;
+				try {
+					jwkSetURL = clientInfo.getOIDCMetadata().getJWKSetURI().toURL();
+				} catch (MalformedURLException e) {
+					throw new GeneralException("Invalid jwk set URI: " + e.getMessage(), e);
+				}
+				jwkSetSource = new RemoteSingletonJWKSetSource(clientID, jwkSetURL, null);
+			} else {
+				throw new GeneralException("Missing JWK set source");
+			}
+
+			return new SignatureKeySelector(expectedIssuer, expectedJWSAlg, jwkSetSource);
+
+		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(expectedJWSAlg)) {
+
+			Secret clientSecret = clientInfo.getSecret();
+			if (clientSecret == null) {
+				throw new GeneralException("Missing client secret");
+			}
+
+			return new ClientSecretSelector(expectedIssuer, expectedJWSAlg, clientSecret);
+
+		} else {
+			throw new GeneralException("Unsupported JWS algorithm: " + expectedJWSAlg);
+		}
+	}
+
+
+	private static JWEKeySelector createJWEKeySelector(final OIDCProviderMetadata opMetadata,
+							   final OIDCClientInformation clientInfo,
+							   final JWKSetSource clientJWKSetSource)
+		throws GeneralException {
+
+		final JWEAlgorithm expectedJWEAlg = clientInfo.getOIDCMetadata().getIDTokenJWEAlg();
+		final EncryptionMethod expectedJWEEnc = clientInfo.getOIDCMetadata().getIDTokenJWEEnc();
+
+		if (expectedJWEAlg == null) {
+			// Encrypted ID tokens not expected
+			return null;
+		}
+
+		if (expectedJWEEnc == null) {
+			throw new GeneralException("Missing required ID token JWE encryption method for " + expectedJWEAlg);
+		}
+
+		if (opMetadata.getIDTokenJWEAlgs() == null || ! opMetadata.getIDTokenJWEAlgs().contains(expectedJWEAlg)) {
+			throw new GeneralException("The OpenID Provider doesn't support " + expectedJWEAlg + " ID tokens");
+		}
+
+		if (opMetadata.getIDTokenJWEEncs() == null || ! opMetadata.getIDTokenJWEEncs().contains(expectedJWEEnc)) {
+			throw new GeneralException("The OpenID Provider doesn't support " + expectedJWEAlg + " / " + expectedJWEEnc + " ID tokens");
+		}
+
+		return new JWEDecryptionKeySelector(clientInfo.getID(), expectedJWEAlg, expectedJWEEnc, clientJWKSetSource);
+	}
+
+
 	/**
 	 * Creates a new ID token verifier for the specified OpenID Provider
 	 * metadata and OpenID Relying Party registration.
@@ -268,75 +355,21 @@ public class IDTokenVerifier {
 	 *                   {@code null}.
 	 *
 	 * @return The ID token verifier.
+	 *
+	 * @throws GeneralException If the supplied OpenID Provider metadata or
+	 *                          Relying Party metadata are missing a
+	 *                          required parameter or inconsistent.
 	 */
 	public static IDTokenVerifier create(final OIDCProviderMetadata opMetadata,
-					     final OIDCClientInformation clientInfo) {
+					     final OIDCClientInformation clientInfo)
+		throws GeneralException {
 
-		Issuer expectedIssuer = opMetadata.getIssuer();
-		ClientID clientID = clientInfo.getID();
+		// Create JWS key selector, unless id_token alg = none
+		final JWSKeySelector jwsKeySelector = createJWSKeySelector(opMetadata, clientInfo);
 
-		JWSAlgorithm expectedJWSAlg = clientInfo.getOIDCMetadata().getIDTokenJWSAlg();
+		// Create JWE key selector if encrypted ID tokens are expected
+		final JWEKeySelector jweKeySelector = createJWEKeySelector(opMetadata, clientInfo, null);
 
-		final JWSKeySelector jwsKeySelector;
-
-		if (Algorithm.NONE.equals(expectedJWSAlg)) {
-
-			// Skip creation of JWS / JWE key selectors
-			jwsKeySelector = null;
-
-		} else if (JWSAlgorithm.Family.RSA.contains(expectedJWSAlg) || JWSAlgorithm.Family.EC.contains(expectedJWSAlg)) {
-
-			JWKSetSource jwkSetSource;
-
-			if (clientInfo.getOIDCMetadata().getJWKSet() != null) {
-				jwkSetSource = new StaticSingletonJWKSetSource(clientID, clientInfo.getOIDCMetadata().getJWKSet());
-			} else if (clientInfo.getOIDCMetadata().getJWKSetURI() != null) {
-				URL jwkSetURL;
-				try {
-					jwkSetURL = clientInfo.getOIDCMetadata().getJWKSetURI().toURL();
-				} catch (MalformedURLException e) {
-					throw new IllegalArgumentException("Invalid jwk set URI: " + e.getMessage(), e);
-				}
-				jwkSetSource = new RemoteSingletonJWKSetSource(clientID, jwkSetURL, null);
-			} else {
-				throw new IllegalArgumentException("Missing JWK set source");
-			}
-
-			jwsKeySelector = new SignatureKeySelector(expectedIssuer, expectedJWSAlg, jwkSetSource);
-
-		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(expectedJWSAlg)) {
-
-			Secret clientSecret = clientInfo.getSecret();
-
-			if (clientSecret == null) {
-				throw new IllegalArgumentException("Missing client secret");
-			}
-
-			jwsKeySelector = new ClientSecretSelector(expectedIssuer, expectedJWSAlg, clientSecret);
-
-		} else {
-			throw new IllegalArgumentException("Unsupported JWS algorithm: " +expectedJWSAlg);
-		}
-
-
-		JWEAlgorithm expectedJWEAlg = clientInfo.getOIDCMetadata().getIDTokenJWEAlg();
-		EncryptionMethod expectedJWEEnc = clientInfo.getOIDCMetadata().getIDTokenJWEEnc();
-
-		if (expectedJWEAlg == null) {
-			// Encrypted ID tokens not expected
-			return new IDTokenVerifier(expectedIssuer, clientID, jwsKeySelector, null);
-		}
-
-
-		final JWEKeySelector jweKeySelector;
-
-		if (Algorithm.NONE.equals(expectedJWSAlg)) {
-
-			// Skip creation of JWS / JWE key selectors
-			jweKeySelector = null;
-
-		} else if (JWEAlgorithm.Family.RSA.contains())
-
-		return new IDTokenVerifier(expectedIssuer, clientID, jwsKeySelector, jweKeySelector);
+		return new IDTokenVerifier(opMetadata.getIssuer(), clientInfo.getID(), jwsKeySelector, jweKeySelector);
 	}
 }
