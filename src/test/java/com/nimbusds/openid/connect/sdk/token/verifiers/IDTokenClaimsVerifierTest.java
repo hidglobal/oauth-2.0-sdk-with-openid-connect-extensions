@@ -236,8 +236,8 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = DateUtils.fromSecondsSinceEpoch(1000);
-		final Date exp = DateUtils.fromSecondsSinceEpoch(1001);
+		Date now = new Date();
+		Date exp = DateUtils.fromSecondsSinceEpoch(now.getTime() + 5*60);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
