@@ -215,6 +215,18 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Verifies the specified ID token.
+	 *
+	 * @param idToken       The ID token. Must not be {@code null}.
+	 * @param expectedNonce The expected nonce, {@code null} if none.
+	 *
+	 * @return The claims set of the verified ID token.
+	 *
+	 * @throws BadJOSEException If the ID token is invalid or expired.
+	 * @throws JOSEException    If an internal JOSE exception was
+	 *                          encountered.
+	 */
 	public IDTokenClaimsSet verify(final JWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
@@ -230,6 +242,18 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Verifies the specified unsecured (plain) ID token.
+	 *
+	 * @param idToken       The ID token. Must not be {@code null}.
+	 * @param expectedNonce The expected nonce, {@code null} if none.
+	 *
+	 * @return The claims set of the verified ID token.
+	 *
+	 * @throws BadJOSEException If the ID token is invalid or expired.
+	 * @throws JOSEException    If an internal JOSE exception was
+	 *                          encountered.
+	 */
 	private IDTokenClaimsSet verify(final PlainJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
@@ -251,6 +275,18 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Verifies the specified signed ID token.
+	 *
+	 * @param idToken       The ID token. Must not be {@code null}.
+	 * @param expectedNonce The expected nonce, {@code null} if none.
+	 *
+	 * @return The claims set of the verified ID token.
+	 *
+	 * @throws BadJOSEException If the ID token is invalid or expired.
+	 * @throws JOSEException    If an internal JOSE exception was
+	 *                          encountered.
+	 */
 	private IDTokenClaimsSet verify(final SignedJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
@@ -266,6 +302,18 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Verifies the specified signed and encrypted ID token.
+	 *
+	 * @param idToken       The ID token. Must not be {@code null}.
+	 * @param expectedNonce The expected nonce, {@code null} if none.
+	 *
+	 * @return The claims set of the verified ID token.
+	 *
+	 * @throws BadJOSEException If the ID token is invalid or expired.
+	 * @throws JOSEException    If an internal JOSE exception was
+	 *                          encountered.
+	 */
 	private IDTokenClaimsSet verify(final EncryptedJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
@@ -287,6 +335,15 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Converts a JWT claims set to ID token claims set.
+	 *
+	 * @param jwtClaimsSet The JWT claims set. Must not be {@code null}.
+	 *
+	 * @return The ID token claims set.
+	 *
+	 * @throws JOSEException If conversion failed.
+	 */
 	private static IDTokenClaimsSet toIDTokenClaimsSet(final JWTClaimsSet jwtClaimsSet)
 		throws JOSEException {
 
@@ -299,6 +356,20 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Creates a key selector for JWS verification.
+	 *
+	 * @param opMetadata The OpenID Provider metadata. Must not be
+	 *                   {@code null}.
+	 * @param clientInfo The Relying Party metadata. Must not be
+	 *                   {@code null}.
+	 *
+	 * @return The JWS key selector.
+	 *
+	 * @throws GeneralException If the supplied OpenID Provider metadata or
+	 *                          Relying Party metadata are missing a
+	 *                          required parameter or inconsistent.
+	 */
 	private static JWSKeySelector createJWSKeySelector(final OIDCProviderMetadata opMetadata,
 							   final OIDCClientInformation clientInfo)
 		throws GeneralException {
@@ -356,6 +427,22 @@ public class IDTokenVerifier {
 	}
 
 
+	/**
+	 * Creates a key selector for JWE decryption.
+	 *
+	 * @param opMetadata      The OpenID Provider metadata. Must not be
+	 *                        {@code null}.
+	 * @param clientInfo      The Relying Party metadata. Must not be
+	 *                        {@code null}.
+	 * @param clientJWKSource The client private JWK source, {@code null}
+	 *                        if encrypted ID tokens are not expected.
+	 *
+	 * @return The JWE key selector.
+	 *
+	 * @throws GeneralException If the supplied OpenID Provider metadata or
+	 *                          Relying Party metadata are missing a
+	 *                          required parameter or inconsistent.
+	 */
 	private static JWEKeySelector createJWEKeySelector(final OIDCProviderMetadata opMetadata,
 							   final OIDCClientInformation clientInfo,
 							   final JWKSource clientJWKSource)
@@ -389,10 +476,12 @@ public class IDTokenVerifier {
 	 * Creates a new ID token verifier for the specified OpenID Provider
 	 * metadata and OpenID Relying Party registration.
 	 *
-	 * @param opMetadata The OpenID Provider metadata. Must not be
-	 *                   {@code null}.
-	 * @param clientInfo The OpenID Relying Party registration. Must not be
-	 *                   {@code null}.
+	 * @param opMetadata      The OpenID Provider metadata. Must not be
+	 *                        {@code null}.
+	 * @param clientInfo      The OpenID Relying Party registration. Must
+	 *                        not be {@code null}.
+	 * @param clientJWKSource The client private JWK source, {@code null}
+	 *                        if encrypted ID tokens are not expected.
 	 *
 	 * @return The ID token verifier.
 	 *
@@ -401,14 +490,15 @@ public class IDTokenVerifier {
 	 *                          required parameter or inconsistent.
 	 */
 	public static IDTokenVerifier create(final OIDCProviderMetadata opMetadata,
-					     final OIDCClientInformation clientInfo)
+					     final OIDCClientInformation clientInfo,
+					     final JWKSource clientJWKSource)
 		throws GeneralException {
 
 		// Create JWS key selector, unless id_token alg = none
 		final JWSKeySelector jwsKeySelector = createJWSKeySelector(opMetadata, clientInfo);
 
 		// Create JWE key selector if encrypted ID tokens are expected
-		final JWEKeySelector jweKeySelector = createJWEKeySelector(opMetadata, clientInfo, null);
+		final JWEKeySelector jweKeySelector = createJWEKeySelector(opMetadata, clientInfo, clientJWKSource);
 
 		return new IDTokenVerifier(opMetadata.getIssuer(), clientInfo.getID(), jwsKeySelector, jweKeySelector);
 	}
