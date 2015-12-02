@@ -9,6 +9,7 @@ import java.util.List;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.ECKey;
 import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
 
 
@@ -20,8 +21,8 @@ public class KeyConverter {
 
 	/**
 	 * Converts the specified list of JSON Web Keys (JWK) their standard
-	 * Java class representation. Only RSA and EC keys are converted. Key
-	 * conversion exceptions are silently ignored.
+	 * Java class representation. Only RSA, EC and OCT keys are converted.
+	 * Key conversion exceptions are silently ignored.
 	 *
 	 * @param jwkList The JWK list. May be {@code null}.
 	 *
@@ -40,6 +41,8 @@ public class KeyConverter {
 					out.add(((RSAKey) jwk).toRSAPublicKey());
 				} else if (jwk instanceof ECKey) {
 					out.add(((ECKey) jwk).toECPublicKey());
+				} else if (jwk instanceof OctetSequenceKey) {
+					out.add(((OctetSequenceKey) jwk).toSecretKey());
 				}
 			} catch (JOSEException e) {
 				// ignore and continue

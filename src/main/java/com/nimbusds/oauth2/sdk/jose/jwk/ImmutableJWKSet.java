@@ -53,9 +53,7 @@ public class ImmutableJWKSet extends AbstractJWKSource {
 
 	@Override
 	public List<JWK> get(final Identifier id, final JWKSelector jwkSelector) {
-		if (! getOwner().equals(id)) {
-			return Collections.emptyList();
-		}
+		// Owner not checked, mismatch for client secret (see ImmutableClientSecret)
 		return jwkSelector.select(jwkSet);
 	}
 }

@@ -9,14 +9,17 @@ import java.util.Date;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
+import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.util.ByteUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
 import com.nimbusds.jwt.SignedJWT;
 import com.nimbusds.jwt.proc.BadJWTException;
+import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
@@ -162,6 +165,41 @@ public class IDTokenVerifierTest extends TestCase {
 		idToken.sign(new RSASSASigner(rsaJWK));
 
 		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.RS256, jwkSet);
+		assertNotNull(idTokenVerifier.getJWSKeySelector());
+		assertNull(idTokenVerifier.getJWEKeySelector());
+
+		IDTokenClaimsSet idTokenClaimsSet = idTokenVerifier.verify(idToken, new Nonce("xyz"));
+		assertEquals(iss, idTokenClaimsSet.getIssuer());
+		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
+		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
+		assertNotNull(idTokenClaimsSet.getExpirationTime());
+		assertNotNull(idTokenClaimsSet.getIssueTime());
+		assertEquals(new Nonce("xyz"), idTokenClaimsSet.getNonce());
+	}
+
+
+	public void testVerifyHmacWithNonce()
+		throws Exception {
+
+		Secret clientSecret = new Secret(ByteUtils.byteLength(256));
+
+		Issuer iss = new Issuer("https://c2id.com");
+		ClientID clientID = new ClientID("123");
+		Date now = new Date();
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.issuer(iss.getValue())
+				.subject("alice")
+				.audience(clientID.getValue())
+				.expirationTime(new Date(now.getTime() + 10*60*1000L))
+				.issueTime(now)
+				.claim("nonce", "xyz")
+				.build();
+
+		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+		idToken.sign(new MACSigner(clientSecret.getValueBytes()));
+
+		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.HS256, clientSecret);
 		assertNotNull(idTokenVerifier.getJWSKeySelector());
 		assertNull(idTokenVerifier.getJWEKeySelector());
 

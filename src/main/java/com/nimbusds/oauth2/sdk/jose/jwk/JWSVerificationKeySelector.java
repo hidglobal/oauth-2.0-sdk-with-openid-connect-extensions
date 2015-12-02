@@ -79,16 +79,28 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 	 *
 	 * @param jwsHeader The JWS header. Must not be {@code null}.
 	 *
-	 * @return The JWK matcher.
+	 * @return The JWK matcher, {@code null} if none could be created.
 	 */
 	protected JWKMatcher createJWKMatcher(final JWSHeader jwsHeader) {
 
-		return new JWKMatcher.Builder()
-				.keyType(KeyType.forAlgorithm(getExpectedJWSAlgorithm()))
-				.keyID(jwsHeader.getKeyID())
-				.keyUses(KeyUse.SIGNATURE, null)
-				.algorithms(getExpectedJWSAlgorithm(), null)
-				.build();
+		if (JWSAlgorithm.Family.RSA.contains(getExpectedJWSAlgorithm()) || JWSAlgorithm.Family.EC.contains(getExpectedJWSAlgorithm())) {
+
+			return new JWKMatcher.Builder()
+					.keyType(KeyType.forAlgorithm(getExpectedJWSAlgorithm()))
+					.publicOnly(true)
+					.keyID(jwsHeader.getKeyID())
+					.keyUses(KeyUse.SIGNATURE, null)
+					.algorithms(getExpectedJWSAlgorithm(), null)
+					.build();
+		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(getExpectedJWSAlgorithm())) {
+			return new JWKMatcher.Builder()
+					.keyType(KeyType.forAlgorithm(getExpectedJWSAlgorithm()))
+					.privateOnly(true)
+					.algorithms(getExpectedJWSAlgorithm(), null)
+					.build();
+		} else {
+			return null; // Unsupported algorithm
+		}
 	}
 
 
@@ -101,6 +113,10 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 		}
 
 		JWKMatcher jwkMatcher = createJWKMatcher(jwsHeader);
+		if (jwkMatcher == null) {
+			return Collections.emptyList();
+		}
+
 		List<JWK> jwkMatches = getJWKSource().get(getIdentifier(), new JWKSelector(jwkMatcher));
 		return KeyConverter.toJavaKeys(jwkMatches);
 	}
