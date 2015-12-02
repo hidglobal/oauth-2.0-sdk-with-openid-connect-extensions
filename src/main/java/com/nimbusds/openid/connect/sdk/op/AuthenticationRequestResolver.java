@@ -8,24 +8,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.jcip.annotations.ThreadSafe;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.JWTParser;
-
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.SerializeException;
-
+import com.nimbusds.oauth2.sdk.http.Resource;
+import com.nimbusds.oauth2.sdk.http.ResourceRetriever;
 import com.nimbusds.openid.connect.sdk.AuthenticationRequest;
 import com.nimbusds.openid.connect.sdk.OIDCError;
 import com.nimbusds.openid.connect.sdk.util.JWTDecoder;
-import com.nimbusds.oauth2.sdk.http.Resource;
-import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
+import net.jcip.annotations.ThreadSafe;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -40,7 +36,7 @@ import com.nimbusds.openid.connect.sdk.util.ResourceRetriever;
  * for the expected JWS / JWE algorithms must be provided at construction time.
  *
  * <p>To fetch OpenID Connect request objects specified by URL a
- * {@link com.nimbusds.openid.connect.sdk.util.ResourceRetriever JWT retriever}
+ * {@link com.nimbusds.oauth2.sdk.http.ResourceRetriever JWT retriever}
  * must be provided, otherwise only inlined request objects can be processed.
  *
  * <p>Related specifications:
