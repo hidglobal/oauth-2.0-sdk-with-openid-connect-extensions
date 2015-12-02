@@ -14,6 +14,8 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.proc.BadJWSException;
+import com.nimbusds.jose.util.Base64URL;
 import com.nimbusds.jose.util.ByteUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.PlainJWT;
@@ -88,6 +90,7 @@ public class IDTokenVerifierTest extends TestCase {
 
 		try {
 			idTokenVerifier.verify(idToken, null);
+			fail();
 		} catch (BadJWTException e) {
 			assertEquals("Expired JWT", e.getMessage());
 		}
@@ -132,6 +135,46 @@ public class IDTokenVerifierTest extends TestCase {
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
 		assertNotNull(idTokenClaimsSet.getExpirationTime());
 		assertNotNull(idTokenClaimsSet.getIssueTime());
+	}
+
+
+	public void testVerifyBadSigned()
+		throws Exception {
+
+		KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
+		gen.initialize(1024);
+		KeyPair keyPair = gen.generateKeyPair();
+		RSAKey rsaJWK = new RSAKey.Builder((RSAPublicKey)keyPair.getPublic())
+				.privateKey((RSAPrivateKey)keyPair.getPrivate())
+				.keyID("1")
+				.keyUse(KeyUse.SIGNATURE)
+				.build();
+		JWKSet jwkSet = new JWKSet(rsaJWK);
+
+		Issuer iss = new Issuer("https://c2id.com");
+		ClientID clientID = new ClientID("123");
+		Date now = new Date();
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.issuer(iss.getValue())
+				.subject("alice")
+				.audience(clientID.getValue())
+				.expirationTime(new Date(now.getTime() + 10*60*1000L))
+				.issueTime(now)
+				.build();
+
+		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
+		idToken.sign(new RSASSASigner(rsaJWK));
+		idToken = new SignedJWT(idToken.getHeader().toBase64URL(), idToken.getPayload().toBase64URL(), Base64URL.encode("bad-sig"));
+
+		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.RS256, jwkSet);
+
+		try {
+			idTokenVerifier.verify(idToken, null);
+			fail();
+		} catch (BadJWSException e) {
+			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
+		}
 	}
 
 
@@ -210,5 +253,36 @@ public class IDTokenVerifierTest extends TestCase {
 		assertNotNull(idTokenClaimsSet.getExpirationTime());
 		assertNotNull(idTokenClaimsSet.getIssueTime());
 		assertEquals(new Nonce("xyz"), idTokenClaimsSet.getNonce());
+	}
+
+
+	public void testVerifyBadHmac()
+		throws Exception {
+
+		Secret clientSecret = new Secret(ByteUtils.byteLength(256));
+
+		Issuer iss = new Issuer("https://c2id.com");
+		ClientID clientID = new ClientID("123");
+		Date now = new Date();
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.issuer(iss.getValue())
+				.subject("alice")
+				.audience(clientID.getValue())
+				.expirationTime(new Date(now.getTime() + 10*60*1000L))
+				.issueTime(now)
+				.build();
+
+		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+		idToken.sign(new MACSigner(new Secret(ByteUtils.byteLength(256)).getValueBytes()));
+
+		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.HS256, clientSecret);
+
+		try {
+			idTokenVerifier.verify(idToken, null);
+			fail();
+		} catch (BadJWSException e) {
+			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
+		}
 	}
 }

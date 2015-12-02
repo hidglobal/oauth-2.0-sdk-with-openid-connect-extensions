@@ -87,7 +87,6 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 
 			return new JWKMatcher.Builder()
 					.keyType(KeyType.forAlgorithm(getExpectedJWSAlgorithm()))
-					.publicOnly(true)
 					.keyID(jwsHeader.getKeyID())
 					.keyUses(KeyUse.SIGNATURE, null)
 					.algorithms(getExpectedJWSAlgorithm(), null)
