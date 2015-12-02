@@ -382,12 +382,16 @@ version 5.0-alpha12 (2015-11-25)
     * Adds OIDCProviderMetadata support for custom (not registered) parameters.
     * Adds helper ClientMetadata.hasScopeValue method.
 
-version 5.0-alpha13(2015-11-30)
+version 5.0-alpha13(2015-12-02)
+    * Adds IDTokenVerifier.
+    * Adds JWSVerificationKeySelector for verifying JWS objects in OpenID
+      Connect.
+    * Adds JWEDecryptionKeySelector for decrypting JWE objects in OpenID
+      Connect.
+    * Adds JWKSource interface with client secret, local JWK set and remote
+      JWK set implementations.
     * Moves Resource, ResourceRetriever and DefaultResourceRetriever to http
       package.
     * Creates RestrictedResourceRetriever interface which permits setting of
       HTTP connection timeout, HTTP read timeout and HTTP entity size limit.
     * Lets DefaultResourceRetriever implement RestrictedResourceRetriever.
-
-
-
