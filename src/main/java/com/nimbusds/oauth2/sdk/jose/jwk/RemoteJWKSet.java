@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.jwt;
+package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
 import java.io.IOException;
@@ -20,11 +20,11 @@ import net.jcip.annotations.ThreadSafe;
 
 
 /**
- * Remote singleton JWK set source. Intended for JWK sets specified by URL
- * reference and tied to a single source. The retrieved JWK set is cached.
+ * Remote JSON Web Key (JWK) set. Intended for a JWK set specified by URL
+ * reference. The retrieved JWK set is cached.
  */
 @ThreadSafe
-public class RemoteSingletonJWKSetSource extends AbstractSingletonJWKSetSource {
+public class RemoteJWKSet extends AbstractJWKSource {
 
 
 	/**
@@ -67,19 +67,20 @@ public class RemoteSingletonJWKSetSource extends AbstractSingletonJWKSetSource {
 
 
 	/**
-	 * Creates a new remote singleton JWK set source.
+	 * Creates a new remote JWK set.
 	 *
-	 * @param id                The source identifier. Must not be
-	 *                           {@code null}.
+	 * @param id                The JWK set owner identifier. Typically the
+	 *                          OAuth 2.0 server issuer ID, or client ID.
+	 *                          Must not be {@code null}.
 	 * @param jwkSetURL         The JWK set URL. Must not be {@code null}.
 	 * @param resourceRetriever The HTTP resource retriever to use,
 	 *                          {@code null} to use the
 	 *                          {@link DefaultResourceRetriever default
 	 *                          one}.
 	 */
-	public RemoteSingletonJWKSetSource(final Identifier id,
-					   final URL jwkSetURL,
-					   final RestrictedResourceRetriever resourceRetriever) {
+	public RemoteJWKSet(final Identifier id,
+			    final URL jwkSetURL,
+			    final RestrictedResourceRetriever resourceRetriever) {
 		super(id);
 
 		if (jwkSetURL == null) {
@@ -170,8 +171,8 @@ public class RemoteSingletonJWKSetSource extends AbstractSingletonJWKSetSource {
 
 
 	@Override
-	public List<JWK> get(final Identifier id, final JWKMatcher jwkMatcher) {
-		if (! getSourceID().equals(id)) {
+	public List<JWK> get(final Identifier id, final JWKSelector jwkSelector) {
+		if (! getOwner().equals(id)) {
 			return Collections.emptyList();
 		}
 
@@ -181,7 +182,6 @@ public class RemoteSingletonJWKSetSource extends AbstractSingletonJWKSetSource {
 			// Retrieval has failed
 			return Collections.emptyList();
 		}
-		JWKSelector jwkSelector = new JWKSelector(jwkMatcher);
 		List<JWK> matches = jwkSelector.select(jwkSet);
 
 		if (! matches.isEmpty()) {
@@ -190,7 +190,7 @@ public class RemoteSingletonJWKSetSource extends AbstractSingletonJWKSetSource {
 		}
 
 		// Refresh the JWK set if the sought key ID is not in the cached JWK set
-		String soughtKeyID = getFirstSpecifiedKeyID(jwkMatcher);
+		String soughtKeyID = getFirstSpecifiedKeyID(jwkSelector.getMatcher());
 		if (soughtKeyID == null) {
 			// No key ID specified, return no matches
 			return matches;

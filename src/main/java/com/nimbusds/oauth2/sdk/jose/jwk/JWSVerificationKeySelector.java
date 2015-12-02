@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.jwt;
+package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
 import java.security.Key;
@@ -7,10 +7,7 @@ import java.util.List;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKMatcher;
-import com.nimbusds.jose.jwk.KeyType;
-import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.*;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -18,19 +15,26 @@ import net.jcip.annotations.ThreadSafe;
 
 
 /**
- * Selector of public RSA and EC keys for verifying signed JWS objects used in
- * OpenID Connect.
+ * Key selector for verifying JWS objects used in OpenID Connect.
  *
- * <p>Can be used to select key candidates for the verification of:
+ * <p>Can be used to select RSA and EC key candidates for the verification of:
  *
  * <ul>
  *     <li>Signed ID tokens
  *     <li>Signed JWT-encoded UserInfo responses
  *     <li>Signed OpenID request objects
  * </ul>
+ *
+ * <p>Client secret candidates for the verification of:
+ *
+ * <ul>
+ *     <li>HMAC ID tokens
+ *     <li>HMAC JWT-encoded UserInfo responses
+ *     <li>HMAC OpenID request objects
+ * </ul>
  */
 @ThreadSafe
-public class SignatureKeySelector extends AbstractKeySelectorWithJWKSetSource implements JWSKeySelector {
+public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource implements JWSKeySelector {
 
 
 	/**
@@ -40,35 +44,20 @@ public class SignatureKeySelector extends AbstractKeySelectorWithJWKSetSource im
 
 
 	/**
-	 * Ensures the specified JWS algorithm is RSA or EC based.
+	 * Creates a new JWS verification key selector.
 	 *
-	 * @param jwsAlg The JWS algorithm to check.
+	 * @param id        Identifier for the JWS originator, typically an
+	 *                  OAuth 2.0 server issuer ID, or client ID. Must not
+	 *                  be {@code null}.
+	 * @param jwsAlg    The expected JWS algorithm for the objects to be
+	 *                  verified. Must not be {@code null}.
+	 * @param jwkSource The JWK source. Must not be {@code null}.
 	 */
-	private static void ensureSignatureAlgorithm(final JWSAlgorithm jwsAlg) {
-
-		if (! JWSAlgorithm.Family.RSA.contains(jwsAlg) || ! JWSAlgorithm.Family.EC.contains(jwsAlg)) {
-			throw new IllegalArgumentException("The JWS algorithm must be RSA or EC based");
-		}
-	}
-
-
-	/**
-	 * Creates a new signature key selector.
-	 *
-	 * @param id           Identifier for the JWS originator, typically an
-	 *                     OpenID Provider issuer ID, or client ID. Must
-	 *                     not be {@code null}.
-	 * @param jwsAlg       The expected JWS algorithm for the objects to be
-	 *                     verified. Must be RSA or EC based. Must not be
-	 *                     {@code null}.
-	 * @param jwkSetSource The JWK set source. Must not be {@code null}.
-	 */
-	public SignatureKeySelector(final Identifier id, final JWSAlgorithm jwsAlg, final JWKSetSource jwkSetSource) {
-		super(id, jwkSetSource);
+	public JWSVerificationKeySelector(final Identifier id, final JWSAlgorithm jwsAlg, final JWKSource jwkSource) {
+		super(id, jwkSource);
 		if (jwsAlg == null) {
 			throw new IllegalArgumentException("The JWS algorithm must not be null");
 		}
-		ensureSignatureAlgorithm(jwsAlg);
 		this.jwsAlg = jwsAlg;
 	}
 
@@ -112,7 +101,7 @@ public class SignatureKeySelector extends AbstractKeySelectorWithJWKSetSource im
 		}
 
 		JWKMatcher jwkMatcher = createJWKMatcher(jwsHeader);
-		List<JWK> jwkMatches = getJWKSetSource().get(getIdentifier(), jwkMatcher);
+		List<JWK> jwkMatches = getJWKSource().get(getIdentifier(), new JWKSelector(jwkMatcher));
 		return KeyConverter.toJavaKeys(jwkMatches);
 	}
 }

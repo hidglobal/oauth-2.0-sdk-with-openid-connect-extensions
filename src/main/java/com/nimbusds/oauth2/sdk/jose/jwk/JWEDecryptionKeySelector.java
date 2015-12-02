@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.jwt;
+package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
 import java.security.Key;
@@ -8,10 +8,7 @@ import java.util.List;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKMatcher;
-import com.nimbusds.jose.jwk.KeyType;
-import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.*;
 import com.nimbusds.jose.proc.JWEKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -19,10 +16,9 @@ import net.jcip.annotations.ThreadSafe;
 
 
 /**
- * Selector of private RSA and EC keys for decrypting JWE objects used in
- * OpenID Connect.
+ * Key selector for decrypting JWE objects used in OpenID Connect.
  *
- * <p>Can be used to select key candidates for the decryption of:
+ * <p>Can be used to select RSA and EC key candidates for the decryption of:
  *
  * <ul>
  *     <li>Encrypted ID tokens
@@ -31,7 +27,7 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
-public class JWEDecryptionKeySelector extends AbstractKeySelectorWithJWKSetSource implements JWEKeySelector {
+public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource implements JWEKeySelector {
 
 
 	/**
@@ -62,22 +58,22 @@ public class JWEDecryptionKeySelector extends AbstractKeySelectorWithJWKSetSourc
 	/**
 	 * Creates a new decryption key selector.
 	 *
-	 * @param id           Identifier for the JWE recipient, typically an
-	 *                     OpenID Provider issuer ID, or client ID. Must
-	 *                     not be {@code null}.
-	 * @param jweAlg       The expected JWE algorithm for the objects to be
-	 *                     decrypted. Must not be {@code null}.
-	 * @param jweEnc       The expected JWE encryption method for the
-	 *                     objects to be decrypted. Must be RSA or EC
-	 *                     based. Must not be {@code null}.
-	 * @param jwkSetSource The JWK set source. Must include the private
-	 *                     keys and must not be {@code null}.
+	 * @param id        Identifier for the JWE recipient, typically an
+	 *                  OAuth 2.0 server issuer ID, or client ID. Must not
+	 *                  be {@code null}.
+	 * @param jweAlg    The expected JWE algorithm for the objects to be
+	 *                  decrypted. Must not be {@code null}.
+	 * @param jweEnc    The expected JWE encryption method for the objects
+	 *                  to be decrypted. Must be RSA or EC based. Must not
+	 *                  be {@code null}.
+	 * @param jwkSource The JWK source. Must include the private keys and
+	 *                  must not be {@code null}.
 	 */
 	public JWEDecryptionKeySelector(final Identifier id,
 					final JWEAlgorithm jweAlg,
 					final EncryptionMethod jweEnc,
-					final JWKSetSource jwkSetSource) {
-		super(id, jwkSetSource);
+					final JWKSource jwkSource) {
+		super(id, jwkSource);
 		if (jweAlg == null) {
 			throw new IllegalArgumentException("The JWE algorithm must not be null");
 		}
@@ -111,7 +107,7 @@ public class JWEDecryptionKeySelector extends AbstractKeySelectorWithJWKSetSourc
 
 
 	/**
-	 * Creates a JWK matcher for the expected JWE algorithm and the
+	 * Creates a JWK matcher for the expected JWE algorithms and the
 	 * specified JWE header.
 	 *
 	 * @param jweHeader The JWE header. Must not be {@code null}.
@@ -139,7 +135,7 @@ public class JWEDecryptionKeySelector extends AbstractKeySelectorWithJWKSetSourc
 		}
 
 		JWKMatcher jwkMatcher = createJWKMatcher(jweHeader);
-		List<JWK> jwkMatches = getJWKSetSource().get(getIdentifier(), jwkMatcher);
+		List<JWK> jwkMatches = getJWKSource().get(getIdentifier(), new JWKSelector(jwkMatcher));
 		return KeyConverter.toJavaKeys(jwkMatches);
 	}
 }

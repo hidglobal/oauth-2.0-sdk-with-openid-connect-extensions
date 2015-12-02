@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.jwt;
+package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
 import java.security.Key;
@@ -15,7 +15,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 /**
  * Key converter.
  */
-class KeyConverter {
+public class KeyConverter {
 	
 
 	/**

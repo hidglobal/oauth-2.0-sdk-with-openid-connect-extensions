@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.nimbusds.jose.*;
+import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jose.proc.JWEKeySelector;
 import com.nimbusds.jose.proc.JWSKeySelector;
@@ -18,9 +19,9 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.jose.jwk.*;
 import com.nimbusds.openid.connect.sdk.Nonce;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
-import com.nimbusds.openid.connect.sdk.jwt.*;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
 import com.nimbusds.openid.connect.sdk.rp.OIDCClientInformation;
 import net.jcip.annotations.ThreadSafe;
@@ -29,15 +30,14 @@ import net.jcip.annotations.ThreadSafe;
 /**
  * Verifier of ID tokens issued by an OpenID Provider (OP).
  *
- * <p>Supported ID tokens:
+ * <p>Supports processing of ID tokens with the following protection:
  *
  * <ul>
  *     <li>ID tokens signed (JWS) with the OP's RSA or EC key, require the
  *         OP public JWK set (provided by value or URL) to verify them.
  *     <li>ID tokens authenticated with a JWS HMAC, require the client's secret
  *         to verify them.
- *     <li>Unsecured (plain) ID tokens received
- *
+ *     <li>Unsecured (plain) ID tokens received at the token endpoint.
  * </ul>
  */
 @ThreadSafe
@@ -71,8 +71,9 @@ public class IDTokenVerifier {
 	/**
 	 * Creates a new verifier for unsecured (plain) ID tokens.
 	 *
-	 * @param expectedIssuer
-	 * @param clientID
+	 * @param expectedIssuer The expected ID token issuer (OpenID
+	 *                       Provider). Must not be {@code null}.
+	 * @param clientID       The client ID. Must not be {@code null}.
 	 */
 	public IDTokenVerifier(final Issuer expectedIssuer,
 			       final ClientID clientID) {
@@ -82,51 +83,90 @@ public class IDTokenVerifier {
 
 
 	/**
-	 * Creates a new verifier for RSA or EC signed ID tokens.
+	 * Creates a new verifier for RSA or EC signed ID tokens where the
+	 * OpenID Provider's JWK set is specified by value.
 	 *
-	 * @param expectedIssuer
-	 * @param clientID
-	 * @param expectedJWSAlg
-	 * @param jwkSetSource
+	 * @param expectedIssuer The expected ID token issuer (OpenID
+	 *                       Provider). Must not be {@code null}.
+	 * @param clientID       The client ID. Must not be {@code null}.
+	 * @param expectedJWSAlg The expected RSA or EC JWS algorithm. Must not
+	 *                       be {@code null}.
+	 * @param jwkSet         The OpenID Provider JWK set. Must not be
+	 *                       {@code null}.
 	 */
 	public IDTokenVerifier(final Issuer expectedIssuer,
 			       final ClientID clientID,
 			       final JWSAlgorithm expectedJWSAlg,
-			       final JWKSetSource jwkSetSource) {
+			       final JWKSet jwkSet) {
 
-		this(expectedIssuer, clientID, new SignatureKeySelector(expectedIssuer, expectedJWSAlg, jwkSetSource),  null);
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableJWKSet(expectedIssuer, jwkSet)),  null);
+	}
+
+
+	/**
+	 * Creates a new verifier for RSA or EC signed ID tokens where the
+	 * OpenID Provider's JWK set is specified by URL.
+	 *
+	 * @param expectedIssuer The expected ID token issuer (OpenID
+	 *                       Provider). Must not be {@code null}.
+	 * @param clientID       The client ID. Must not be {@code null}.
+	 * @param expectedJWSAlg The expected RSA or EC JWS algorithm. Must not
+	 *                       be {@code null}.
+	 * @param jwkSetURI      The OpenID Provider JWK set URL. Must not be
+	 *                       {@code null}.
+	 */
+	public IDTokenVerifier(final Issuer expectedIssuer,
+			       final ClientID clientID,
+			       final JWSAlgorithm expectedJWSAlg,
+			       final URL jwkSetURI) {
+
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new RemoteJWKSet(expectedIssuer, jwkSetURI, null)),  null);
 	}
 
 
 	/**
 	 * Creates a new verifier for HMAC protected ID tokens.
 	 *
-	 * @param expectedIssuer
-	 * @param clientID
-	 * @param expectedJWSAlg
-	 * @param clientSecret
+	 * @param expectedIssuer The expected ID token issuer (OpenID
+	 *                       Provider). Must not be {@code null}.
+	 * @param clientID       The client ID. Must not be {@code null}.
+	 * @param expectedJWSAlg The expected HMAC JWS algorithm. Must not be
+	 *                       {@code null}.
+	 * @param clientSecret   The client secret. Must not be {@code null}.
 	 */
 	public IDTokenVerifier(final Issuer expectedIssuer,
 			       final ClientID clientID,
 			       final JWSAlgorithm expectedJWSAlg,
 			       final Secret clientSecret) {
 
-		this(expectedIssuer, clientID, new ClientSecretSelector(expectedIssuer, expectedJWSAlg, clientSecret), null);
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableClientSecret(clientID, clientSecret)), null);
 	}
 
 
 	/**
 	 * Creates a new ID token verifier.
 	 *
-	 * @param expectedIssuer
-	 * @param clientID
-	 * @param jwsKeySelector
+	 * @param expectedIssuer The expected ID token issuer (OpenID
+	 *                       Provider). Must not be {@code null}.
+	 * @param clientID       The client ID. Must not be {@code null}.
+	 * @param jwsKeySelector The key selector for JWS verification,
+	 *                       {@code null} if unsecured (plain) ID tokens
+	 *                       are expected.
+	 * @param jweKeySelector The key selector for JWE decryption,
+	 *                       {@code null} if encrypted ID tokens are not
+	 *                       expected.
 	 */
 	public IDTokenVerifier(final Issuer expectedIssuer,
 			       final ClientID clientID,
 			       final JWSKeySelector jwsKeySelector,
 			       final JWEKeySelector jweKeySelector) {
+		if (expectedIssuer == null) {
+			throw new IllegalArgumentException("The expected ID token issuer must not be null");
+		}
 		this.expectedIssuer = expectedIssuer;
+		if (clientID == null) {
+			throw new IllegalArgumentException("The client ID must not be null");
+		}
 		this.clientID = clientID;
 		this.jwsKeySelector = jwsKeySelector;
 		this.jweKeySelector = jweKeySelector;
@@ -281,11 +321,11 @@ public class IDTokenVerifier {
 
 		} else if (JWSAlgorithm.Family.RSA.contains(expectedJWSAlg) || JWSAlgorithm.Family.EC.contains(expectedJWSAlg)) {
 
-			JWKSetSource jwkSetSource;
+			JWKSource jwkSource;
 
 			if (clientInfo.getOIDCMetadata().getJWKSet() != null) {
 				// The JWK set is specified by value
-				jwkSetSource = new StaticSingletonJWKSetSource(clientID, clientInfo.getOIDCMetadata().getJWKSet());
+				jwkSource = new ImmutableJWKSet(clientID, clientInfo.getOIDCMetadata().getJWKSet());
 			} else if (clientInfo.getOIDCMetadata().getJWKSetURI() != null) {
 				// The JWK set is specified by URL reference
 				URL jwkSetURL;
@@ -294,12 +334,12 @@ public class IDTokenVerifier {
 				} catch (MalformedURLException e) {
 					throw new GeneralException("Invalid jwk set URI: " + e.getMessage(), e);
 				}
-				jwkSetSource = new RemoteSingletonJWKSetSource(clientID, jwkSetURL, null);
+				jwkSource = new RemoteJWKSet(clientID, jwkSetURL, null);
 			} else {
 				throw new GeneralException("Missing JWK set source");
 			}
 
-			return new SignatureKeySelector(expectedIssuer, expectedJWSAlg, jwkSetSource);
+			return new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, jwkSource);
 
 		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(expectedJWSAlg)) {
 
@@ -308,7 +348,7 @@ public class IDTokenVerifier {
 				throw new GeneralException("Missing client secret");
 			}
 
-			return new ClientSecretSelector(expectedIssuer, expectedJWSAlg, clientSecret);
+			return new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableClientSecret(clientID, clientSecret));
 
 		} else {
 			throw new GeneralException("Unsupported JWS algorithm: " + expectedJWSAlg);
@@ -318,7 +358,7 @@ public class IDTokenVerifier {
 
 	private static JWEKeySelector createJWEKeySelector(final OIDCProviderMetadata opMetadata,
 							   final OIDCClientInformation clientInfo,
-							   final JWKSetSource clientJWKSetSource)
+							   final JWKSource clientJWKSource)
 		throws GeneralException {
 
 		final JWEAlgorithm expectedJWEAlg = clientInfo.getOIDCMetadata().getIDTokenJWEAlg();
@@ -341,7 +381,7 @@ public class IDTokenVerifier {
 			throw new GeneralException("The OpenID Provider doesn't support " + expectedJWEAlg + " / " + expectedJWEEnc + " ID tokens");
 		}
 
-		return new JWEDecryptionKeySelector(clientInfo.getID(), expectedJWEAlg, expectedJWEEnc, clientJWKSetSource);
+		return new JWEDecryptionKeySelector(clientInfo.getID(), expectedJWEAlg, expectedJWEEnc, clientJWKSource);
 	}
 
 
