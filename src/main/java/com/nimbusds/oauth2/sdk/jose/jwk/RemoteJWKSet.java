@@ -133,6 +133,17 @@ public class RemoteJWKSet extends AbstractJWKSource {
 
 
 	/**
+	 * Returns the HTTP resource retriever.
+	 *
+	 * @return The HTTP resource retriever.
+	 */
+	public RestrictedResourceRetriever getResourceRetriever() {
+
+		return jwkSetRetriever;
+	}
+
+
+	/**
 	 * Returns the cached JWK set.
 	 *
 	 * @return The cached JWK set, {@code null} if none.
