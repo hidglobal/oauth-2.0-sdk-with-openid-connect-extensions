@@ -1,7 +1,6 @@
 package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
-import java.util.Collections;
 import java.util.List;
 
 import com.nimbusds.jose.jwk.JWK;
