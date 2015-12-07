@@ -395,3 +395,11 @@ version 5.0-alpha13 (2015-12-02)
     * Creates RestrictedResourceRetriever interface which permits setting of
       HTTP connection timeout, HTTP read timeout and HTTP entity size limit.
     * Lets DefaultResourceRetriever implement RestrictedResourceRetriever.
+
+version 5.0-alpha14 (2015-12-08)
+    * Fixes cache update bug in RemoteJWKSet.
+    * Simplifies JWEDecryptionKeySelector.
+    * Updates ImmutableClientSecret and ImmutableJWKSet.
+    * Modifies KeyConverter.toJavaKeys to include private keys.
+    * Upgrades to Nimbus JOSE+JWT 4.10.
+
