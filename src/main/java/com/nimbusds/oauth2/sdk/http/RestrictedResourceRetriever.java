@@ -20,10 +20,10 @@ public interface RestrictedResourceRetriever extends ResourceRetriever {
 	/**
 	 * Sets the HTTP connect timeout.
 	 *
-	 * @param connectTimeout The HTTP connect timeout, in milliseconds,
-	 *                       zero for infinite. Must not be negative.
+	 * @param connectTimeoutMs The HTTP connect timeout, in milliseconds,
+	 *                         zero for infinite. Must not be negative.
 	 */
-	void setConnectTimeout(final int connectTimeout);
+	void setConnectTimeout(final int connectTimeoutMs);
 
 
 	/**
@@ -37,10 +37,10 @@ public interface RestrictedResourceRetriever extends ResourceRetriever {
 	/**
 	 * Sets the HTTP read timeout.
 	 *
-	 * @param readTimeout The HTTP read timeout, in milliseconds, zero for
-	 *                    infinite. Must not be negative.
+	 * @param readTimeoutMs The HTTP read timeout, in milliseconds, zero
+	 *                      for infinite. Must not be negative.
 	 */
-	void setReadTimeout(final int readTimeout);
+	void setReadTimeout(final int readTimeoutMs);
 
 
 	/**
@@ -54,8 +54,8 @@ public interface RestrictedResourceRetriever extends ResourceRetriever {
 	/**
 	 * Sets the HTTP entity size limit.
 	 *
-	 * @param sizeLimit The HTTP entity size limit, in bytes, zero for
-	 *                  infinite. Must not be negative.
+	 * @param sizeLimitBytes The HTTP entity size limit, in bytes, zero for
+	 *                       infinite. Must not be negative.
 	 */
-	void setSizeLimit(int sizeLimit);
+	void setSizeLimit(int sizeLimitBytes);
 }

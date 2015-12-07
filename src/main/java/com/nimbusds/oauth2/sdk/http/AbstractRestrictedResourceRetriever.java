@@ -55,13 +55,13 @@ public abstract class AbstractRestrictedResourceRetriever implements RestrictedR
 
 
 	@Override
-	public void setConnectTimeout(final int connectTimeout) {
+	public void setConnectTimeout(final int connectTimeoutMs) {
 
-		if (connectTimeout < 0) {
+		if (connectTimeoutMs < 0) {
 			throw new IllegalArgumentException("The connect timeout must not be negative");
 		}
 
-		this.connectTimeout = connectTimeout;
+		this.connectTimeout = connectTimeoutMs;
 	}
 
 
@@ -73,13 +73,13 @@ public abstract class AbstractRestrictedResourceRetriever implements RestrictedR
 
 
 	@Override
-	public void setReadTimeout(final int readTimeout) {
+	public void setReadTimeout(final int readTimeoutMs) {
 
-		if (readTimeout < 0) {
+		if (readTimeoutMs < 0) {
 			throw new IllegalArgumentException("The read timeout must not be negative");
 		}
 
-		this.readTimeout = readTimeout;
+		this.readTimeout = readTimeoutMs;
 	}
 
 
@@ -91,12 +91,12 @@ public abstract class AbstractRestrictedResourceRetriever implements RestrictedR
 
 
 	@Override
-	public void setSizeLimit(int sizeLimit) {
+	public void setSizeLimit(int sizeLimitBytes) {
 
-		if (sizeLimit < 0) {
+		if (sizeLimitBytes < 0) {
 			throw new IllegalArgumentException("The size limit must not be negative");
 		}
 
-		this.sizeLimit = sizeLimit;
+		this.sizeLimit = sizeLimitBytes;
 	}
 }

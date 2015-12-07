@@ -50,7 +50,7 @@ public class DefaultResourceRetriever extends AbstractRestrictedResourceRetrieve
 	 */
 	public DefaultResourceRetriever(final int connectTimeout, final int readTimeout) {
 
-		this(0, 0, 0);
+		this(connectTimeout, readTimeout, 0);
 	}
 
 
@@ -109,7 +109,8 @@ public class DefaultResourceRetriever extends AbstractRestrictedResourceRetrieve
 		final int statusCode = con.getResponseCode();
 		final String statusMessage = con.getResponseMessage();
 
-		if (statusCode != HttpURLConnection.HTTP_OK) {
+		// Ensure 2xx status code
+		if (statusCode > 299 || statusCode < 200) {
 			throw new IOException("HTTP " + statusCode + ": " + statusMessage);
 		}
 
