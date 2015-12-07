@@ -114,7 +114,7 @@ public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource impl
 	 *
 	 * @param jweHeader The JWE header. Must not be {@code null}.
 	 *
-	 * @return The JWK matcher.
+	 * @return The JWK matcher, {@code null} if none could be created.
 	 */
 	protected JWKMatcher createJWKMatcher(final JWEHeader jweHeader) {
 
