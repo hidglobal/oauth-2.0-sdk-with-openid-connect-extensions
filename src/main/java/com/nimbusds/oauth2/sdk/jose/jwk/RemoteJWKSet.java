@@ -212,7 +212,7 @@ public class RemoteJWKSet extends AbstractJWKSource {
 			return matches;
 		}
 		// Make new HTTP GET to the JWK set URL
-		jwkSet = getJWKSet();
+		jwkSet = updateJWKSetFromURL();
 		if (jwkSet == null) {
 			// Retrieval has failed
 			return null;
