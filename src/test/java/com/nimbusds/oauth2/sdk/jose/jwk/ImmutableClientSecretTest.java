@@ -3,9 +3,9 @@ package com.nimbusds.oauth2.sdk.jose.jwk;
 
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
+import java.util.List;
 
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.OctetSequenceKey;
+import com.nimbusds.jose.jwk.*;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import junit.framework.TestCase;
@@ -49,5 +49,35 @@ public class ImmutableClientSecretTest extends TestCase {
 		JWKSet jwkSet = clientSecret.getJWKSet();
 		Assert.assertArrayEquals(secretBytes, ((OctetSequenceKey)jwkSet.getKeys().get(0)).toByteArray());
 		assertEquals(1, jwkSet.getKeys().size());
+	}
+
+
+	public void testSelect() {
+
+		ClientID id = new ClientID("123");
+
+		byte[] secretBytes = new byte[32];
+		new SecureRandom().nextBytes(secretBytes);
+
+		ImmutableClientSecret clientSecret = new ImmutableClientSecret(id, new OctetSequenceKey.Builder(secretBytes).build());
+
+		List<JWK> matches = clientSecret.get(id, new JWKSelector(new JWKMatcher.Builder().keyType(KeyType.OCT).build()));
+		Assert.assertArrayEquals(secretBytes, ((OctetSequenceKey)matches.get(0)).toByteArray());
+		assertEquals(1, matches.size());
+	}
+
+
+	public void testSelectIgnoreOwnerOnSelect() {
+
+		ClientID id = new ClientID("123");
+
+		byte[] secretBytes = new byte[32];
+		new SecureRandom().nextBytes(secretBytes);
+
+		ImmutableClientSecret clientSecret = new ImmutableClientSecret(id, new OctetSequenceKey.Builder(secretBytes).build());
+
+		List<JWK> matches = clientSecret.get(new ClientID("xxx"), new JWKSelector(new JWKMatcher.Builder().keyType(KeyType.OCT).build()));
+		Assert.assertArrayEquals(secretBytes, ((OctetSequenceKey)matches.get(0)).toByteArray());
+		assertEquals(1, matches.size());
 	}
 }

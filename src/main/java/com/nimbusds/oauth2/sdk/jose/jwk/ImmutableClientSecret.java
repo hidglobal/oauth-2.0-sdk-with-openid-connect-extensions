@@ -1,10 +1,15 @@
 package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
+import java.util.List;
+
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.Identifier;
 import net.jcip.annotations.Immutable;
 
 
@@ -46,5 +51,12 @@ public final class ImmutableClientSecret extends ImmutableJWKSet {
 	public OctetSequenceKey getClientSecret() {
 
 		return (OctetSequenceKey) getJWKSet().getKeys().get(0);
+	}
+
+
+	@Override
+	public List<JWK> get(final Identifier id, final JWKSelector jwkSelector) {
+		// Owner not checked
+		return jwkSelector.select(getJWKSet());
 	}
 }
