@@ -6,7 +6,6 @@ import java.security.PrivateKey;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import javax.crypto.SecretKey;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -150,7 +149,7 @@ public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource impl
 		List<Key> sanitizedKeyList = new LinkedList<>();
 
 		for (Key key: KeyConverter.toJavaKeys(jwkMatches)) {
-			if (key instanceof PrivateKey || key instanceof SecretKey) {
+			if (key instanceof PrivateKey) {
 				sanitizedKeyList.add(key);
 			} // skip public keys
 		}

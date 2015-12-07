@@ -12,7 +12,6 @@ import java.util.List;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWEHeader;
-import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.*;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Identifier;
