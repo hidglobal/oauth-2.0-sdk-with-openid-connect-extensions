@@ -87,8 +87,11 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 	 */
 	protected JWKMatcher createJWKMatcher(final JWSHeader jwsHeader) {
 
-		if (JWSAlgorithm.Family.RSA.contains(getExpectedJWSAlgorithm()) || JWSAlgorithm.Family.EC.contains(getExpectedJWSAlgorithm())) {
-
+		if (! getExpectedJWSAlgorithm().equals(jwsHeader.getAlgorithm())) {
+			// Unexpected JWS alg
+			return null;
+		} else if (JWSAlgorithm.Family.RSA.contains(getExpectedJWSAlgorithm()) || JWSAlgorithm.Family.EC.contains(getExpectedJWSAlgorithm())) {
+			// RSA or EC key matcher
 			return new JWKMatcher.Builder()
 					.keyType(KeyType.forAlgorithm(getExpectedJWSAlgorithm()))
 					.keyID(jwsHeader.getKeyID())
@@ -96,8 +99,10 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 					.algorithms(getExpectedJWSAlgorithm(), null)
 					.build();
 		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(getExpectedJWSAlgorithm())) {
+			// Client secret matcher
 			return new JWKMatcher.Builder()
 					.keyType(KeyType.forAlgorithm(getExpectedJWSAlgorithm()))
+					.keyID(jwsHeader.getKeyID())
 					.privateOnly(true)
 					.algorithms(getExpectedJWSAlgorithm(), null)
 					.build();
@@ -108,7 +113,7 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 
 
 	@Override
-	public List<? extends Key> selectJWSKeys(final JWSHeader jwsHeader, final SecurityContext context) {
+	public List<Key> selectJWSKeys(final JWSHeader jwsHeader, final SecurityContext context) {
 
 		if (! jwsAlg.equals(jwsHeader.getAlgorithm())) {
 			// Unexpected JWS alg
