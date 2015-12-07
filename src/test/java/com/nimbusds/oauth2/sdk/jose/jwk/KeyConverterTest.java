@@ -25,6 +25,7 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.RSAKey;
 import junit.framework.TestCase;
+import org.junit.Assert;
 
 
 /**
@@ -89,9 +90,17 @@ public class KeyConverterTest extends TestCase {
 		List<Key> outList = KeyConverter.toJavaKeys(jwkList);
 
 		assertTrue(outList.get(0) instanceof RSAPublicKey);
-		assertTrue(outList.get(1) instanceof ECPublicKey);
-		assertTrue(outList.get(2) instanceof SecretKey);
+		assertTrue(outList.get(1) instanceof RSAPrivateKey);
+		assertTrue(outList.get(2) instanceof ECPublicKey);
+		assertTrue(outList.get(3) instanceof ECPrivateKey);
+		assertTrue(outList.get(4) instanceof SecretKey);
 
-		assertEquals(3, outList.size());
+		Assert.assertArrayEquals(rsaJWK.toRSAPublicKey().getEncoded(), outList.get(0).getEncoded());
+		Assert.assertArrayEquals(rsaJWK.toRSAPrivateKey().getEncoded(), outList.get(1).getEncoded());
+		Assert.assertArrayEquals(ecJWK.toECPublicKey().getEncoded(), outList.get(2).getEncoded());
+		Assert.assertArrayEquals(ecJWK.toECPrivateKey().getEncoded(), outList.get(3).getEncoded());
+		Assert.assertArrayEquals(octJWK.toSecretKey().getEncoded(), outList.get(4).getEncoded());
+
+		assertEquals(5, outList.size());
 	}
 }
