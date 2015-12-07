@@ -2,8 +2,11 @@ package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
 import java.security.Key;
+import java.security.PrivateKey;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import javax.crypto.SecretKey;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -49,7 +52,7 @@ public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource impl
 	 */
 	private static void ensureAsymmetricEncryptionAlgorithm(final JWEAlgorithm jweAlg) {
 
-		if (! JWEAlgorithm.Family.RSA.contains(jweAlg) || ! JWEAlgorithm.Family.ECDH_ES.contains(jweAlg)) {
+		if (! JWEAlgorithm.Family.RSA.contains(jweAlg) && ! JWEAlgorithm.Family.ECDH_ES.contains(jweAlg)) {
 			throw new IllegalArgumentException("The JWE algorithm must be RSA or EC based");
 		}
 	}
@@ -116,18 +119,25 @@ public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource impl
 	 */
 	protected JWKMatcher createJWKMatcher(final JWEHeader jweHeader) {
 
+		if (! getExpectedJWEAlgorithm().equals(jweHeader.getAlgorithm())) {
+			return null;
+		}
+
+		if (! getExpectedJWEEncryptionMethod().equals(jweHeader.getEncryptionMethod())) {
+			return null;
+		}
+
 		return new JWKMatcher.Builder()
-				.privateOnly(true)
-				.keyType(KeyType.forAlgorithm(getExpectedJWEAlgorithm()))
-				.keyID(jweHeader.getKeyID())
-				.keyUses(KeyUse.ENCRYPTION, null)
-				.algorithms(getExpectedJWEAlgorithm(), null)
-				.build();
+			.keyType(KeyType.forAlgorithm(getExpectedJWEAlgorithm()))
+			.keyID(jweHeader.getKeyID())
+			.keyUses(KeyUse.ENCRYPTION, null)
+			.algorithms(getExpectedJWEAlgorithm(), null)
+			.build();
 	}
 
 
 	@Override
-	public List<? extends Key> selectJWEKeys(final JWEHeader jweHeader, final SecurityContext context) {
+	public List<Key> selectJWEKeys(final JWEHeader jweHeader, final SecurityContext context) {
 
 		if (! jweAlg.equals(jweHeader.getAlgorithm()) || ! jweEnc.equals(jweHeader.getEncryptionMethod())) {
 			// Unexpected JWE alg or enc
@@ -136,6 +146,15 @@ public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource impl
 
 		JWKMatcher jwkMatcher = createJWKMatcher(jweHeader);
 		List<JWK> jwkMatches = getJWKSource().get(getIdentifier(), new JWKSelector(jwkMatcher));
-		return KeyConverter.toJavaKeys(jwkMatches);
+
+		List<Key> sanitizedKeyList = new LinkedList<>();
+
+		for (Key key: KeyConverter.toJavaKeys(jwkMatches)) {
+			if (key instanceof PrivateKey || key instanceof SecretKey) {
+				sanitizedKeyList.add(key);
+			} // skip public keys
+		}
+
+		return sanitizedKeyList;
 	}
 }

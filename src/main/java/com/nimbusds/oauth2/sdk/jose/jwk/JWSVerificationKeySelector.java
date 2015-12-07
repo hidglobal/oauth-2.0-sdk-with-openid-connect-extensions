@@ -2,8 +2,7 @@ package com.nimbusds.oauth2.sdk.jose.jwk;
 
 
 import java.security.Key;
-import java.security.interfaces.ECPublicKey;
-import java.security.interfaces.RSAPublicKey;
+import java.security.PublicKey;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -130,7 +129,7 @@ public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource im
 		List<Key> sanitizedKeyList = new LinkedList<>();
 
 		for (Key key: KeyConverter.toJavaKeys(jwkMatches)) {
-			if (key instanceof RSAPublicKey || key instanceof ECPublicKey || key instanceof SecretKey) {
+			if (key instanceof PublicKey || key instanceof SecretKey) {
 				sanitizedKeyList.add(key);
 			} // skip asymmetric private keys
 		}
