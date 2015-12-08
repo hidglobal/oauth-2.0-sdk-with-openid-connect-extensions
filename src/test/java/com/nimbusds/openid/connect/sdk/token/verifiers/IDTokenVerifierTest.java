@@ -440,4 +440,13 @@ public class IDTokenVerifierTest extends TestCase {
 			assertEquals("Encrypted JWT rejected: Given final block not properly padded", e.getMessage());
 		}
 	}
+
+
+	public void testGetSetClockSkew() {
+
+		IDTokenVerifier verifier = new IDTokenVerifier(new Issuer("https://c2id.com"), new ClientID("123"));
+		assertEquals(IDTokenVerifier.DEFAULT_MAX_CLOCK_SKEW, verifier.getMaxClockSkew());
+		verifier.setMaxClockSkew(30);
+		assertEquals(30, verifier.getMaxClockSkew());
+	}
 }
