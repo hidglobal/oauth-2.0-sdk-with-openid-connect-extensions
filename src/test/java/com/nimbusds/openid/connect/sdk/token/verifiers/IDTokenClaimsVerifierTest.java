@@ -6,7 +6,6 @@ import java.util.Date;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
@@ -26,21 +25,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.claim("nonce", nonce.getValue())
 			.build();
 
@@ -54,21 +54,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertNull(verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.build();
 
 		verifier.verify(claimsSet);
@@ -80,20 +81,21 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertNull(verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.build();
 
 		try {
@@ -110,20 +112,21 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertNull(verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.build();
 
 		try {
@@ -140,20 +143,21 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertNull(verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.build();
 
 		try {
@@ -170,19 +174,20 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertNull(verifier.getExpectedNonce());
 
-		final Date now = new Date();
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.issueTime(now)
+			.issueTime(iat)
 			.build();
 
 		try {
@@ -199,20 +204,20 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, null, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertNull(verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
+			.expirationTime(exp)
 			.build();
 
 		try {
@@ -230,21 +235,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
 		Date now = new Date();
-		Date exp = DateUtils.fromSecondsSinceEpoch(now.getTime() + 5*60);
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
 			.expirationTime(exp)
-			.issueTime(now)
+			.issueTime(iat)
 			.build();
 
 		try {
@@ -262,21 +268,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer("https://other-issuer.com")
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.claim("nonce", nonce.getValue())
 			.build();
 
@@ -295,21 +302,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience("789")
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.claim("nonce", nonce.getValue())
 			.build();
 
@@ -328,21 +336,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(Arrays.asList("456", "789"))
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.claim("nonce", nonce.getValue())
 			.build();
 
@@ -361,22 +370,23 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(Arrays.asList(clientID.getValue(), "456"))
 			.claim("azp", "456")
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.claim("nonce", nonce.getValue())
 			.build();
 
@@ -395,7 +405,7 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
@@ -423,13 +433,13 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 	}
 
 
-	public void testAcceptIssueTimeAhead() {
+	public void testIssueTimeAhead() {
 
 		Issuer iss = new Issuer("https://c2id.com");
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
@@ -463,21 +473,22 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		ClientID clientID = new ClientID("123");
 		Nonce nonce = new Nonce("xyz");
 
-		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce);
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 0);
 
 		assertEquals(iss, verifier.getExpectedIssuer());
 		assertEquals(clientID, verifier.getClientID());
 		assertEquals(nonce, verifier.getExpectedNonce());
 
-		final Date now = new Date();
-		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+		Date now = new Date();
+		Date iat = new Date(now.getTime() - 5*60*1000);
+		Date exp = new Date(now.getTime() + 5*60*1000);
 
 		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
 			.issuer(iss.getValue())
 			.subject("alice")
 			.audience(clientID.getValue())
-			.expirationTime(inOneHour)
-			.issueTime(now)
+			.expirationTime(exp)
+			.issueTime(iat)
 			.claim("nonce", "xxx")
 			.build();
 
@@ -487,5 +498,65 @@ public class IDTokenClaimsVerifierTest extends TestCase {
 		} catch (BadJWTException e) {
 			assertEquals("Unexpected JWT nonce (nonce) claim: xxx", e.getMessage());
 		}
+	}
+
+
+	public void testIssuedAtWithPositiveClockSkew()
+		throws BadJWTException {
+
+		Issuer iss = new Issuer("https://c2id.com");
+		ClientID clientID = new ClientID("123");
+		Nonce nonce = new Nonce("xyz");
+
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 60);
+
+		assertEquals(iss, verifier.getExpectedIssuer());
+		assertEquals(clientID, verifier.getClientID());
+		assertEquals(nonce, verifier.getExpectedNonce());
+
+		final Date now = new Date();
+		final Date in30Seconds = new Date(now.getTime() + 30*1000L);
+		final Date inOneHour = new Date(now.getTime() + 60*60*1000L);
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.issuer(iss.getValue())
+				.subject("alice")
+				.audience(clientID.getValue())
+				.expirationTime(inOneHour)
+				.issueTime(in30Seconds)
+				.claim("nonce", nonce.getValue())
+				.build();
+
+		verifier.verify(claimsSet);
+	}
+
+
+	public void testExpirationWithNegativeClockSkew()
+		throws BadJWTException {
+
+		Issuer iss = new Issuer("https://c2id.com");
+		ClientID clientID = new ClientID("123");
+		Nonce nonce = new Nonce("xyz");
+
+		IDTokenClaimsVerifier verifier = new IDTokenClaimsVerifier(iss, clientID, nonce, 60);
+
+		assertEquals(iss, verifier.getExpectedIssuer());
+		assertEquals(clientID, verifier.getClientID());
+		assertEquals(nonce, verifier.getExpectedNonce());
+
+		final Date now = new Date();
+		final Date oneHourAgo = new Date(now.getTime() - 60*60*1000L);
+		final Date before30Seconds = new Date(now.getTime() - 30*1000L);
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.issuer(iss.getValue())
+				.subject("alice")
+				.audience(clientID.getValue())
+				.expirationTime(before30Seconds)
+				.issueTime(oneHourAgo)
+				.claim("nonce", nonce.getValue())
+				.build();
+
+		verifier.verify(claimsSet);
 	}
 }

@@ -45,6 +45,13 @@ public class IDTokenVerifier {
 
 
 	/**
+	 * The default maximum acceptable clock skew for verifying ID token
+	 * timestamps, in seconds.
+	 */
+	public static final int DEFAULT_MAX_CLOCK_SKEW = 60;
+
+
+	/**
 	 * The expected ID token issuer.
 	 */
 	private final Issuer expectedIssuer;
@@ -66,6 +73,12 @@ public class IDTokenVerifier {
 	 * The JWE key selector.
 	 */
 	private final JWEKeySelector jweKeySelector;
+
+
+	/**
+	 * The maximum acceptable clock skew, in seconds.
+	 */
+	private int maxClockSkew = DEFAULT_MAX_CLOCK_SKEW;
 
 
 	/**
@@ -216,6 +229,32 @@ public class IDTokenVerifier {
 
 
 	/**
+	 * Gets the maximum acceptable clock skew for verifying the ID token
+	 * timestamps.
+	 *
+	 * @return The maximum acceptable clock skew, in seconds. Zero
+	 *         indicates none.
+	 */
+	public int getMaxClockSkew() {
+
+		return maxClockSkew;
+	}
+
+
+	/**
+	 * Sets the maximum acceptable clock skew for verifying the ID token
+	 * timestamps.
+	 *
+	 * @param maxClockSkew The maximum acceptable clock skew, in seconds.
+	 *                     Zero indicates none. Must not be negative.
+	 */
+	public void setMaxClockSkew(final int maxClockSkew) {
+
+		this.maxClockSkew = maxClockSkew;
+	}
+
+
+	/**
 	 * Verifies the specified ID token.
 	 *
 	 * @param idToken       The ID token. Must not be {@code null}.
@@ -269,7 +308,7 @@ public class IDTokenVerifier {
 			throw new BadJWTException(e.getMessage(), e);
 		}
 
-		JWTClaimsVerifier claimsVerifier = new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce);
+		JWTClaimsVerifier claimsVerifier = new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce, maxClockSkew);
 		claimsVerifier.verify(jwtClaimsSet);
 		return toIDTokenClaimsSet(jwtClaimsSet);
 	}
@@ -296,7 +335,7 @@ public class IDTokenVerifier {
 
 		ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
 		jwtProcessor.setJWSKeySelector(jwsKeySelector);
-		jwtProcessor.setJWTClaimsVerifier(new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce));
+		jwtProcessor.setJWTClaimsVerifier(new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce, maxClockSkew));
 		JWTClaimsSet jwtClaimsSet = jwtProcessor.process(idToken, null);
 		return toIDTokenClaimsSet(jwtClaimsSet);
 	}
@@ -327,7 +366,7 @@ public class IDTokenVerifier {
 		ConfigurableJWTProcessor jwtProcessor = new DefaultJWTProcessor();
 		jwtProcessor.setJWSKeySelector(jwsKeySelector);
 		jwtProcessor.setJWEKeySelector(jweKeySelector);
-		jwtProcessor.setJWTClaimsVerifier(new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce));
+		jwtProcessor.setJWTClaimsVerifier(new IDTokenClaimsVerifier(expectedIssuer, clientID, expectedNonce, maxClockSkew));
 
 		JWTClaimsSet jwtClaimsSet = jwtProcessor.process(idToken, null);
 

@@ -403,3 +403,6 @@ version 5.0-alpha14 (2015-12-08)
     * Modifies KeyConverter.toJavaKeys to include private keys.
     * Upgrades to Nimbus JOSE+JWT 4.10.
 
+version 5.0-alpha15 (2015-12-08)
+    * Adds clock skew support to IDTokenVerifier and IDTokenClaimsVerifier.
+

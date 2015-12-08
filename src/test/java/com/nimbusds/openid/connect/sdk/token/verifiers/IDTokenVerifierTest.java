@@ -42,6 +42,12 @@ import junit.framework.TestCase;
 public class IDTokenVerifierTest extends TestCase {
 
 
+	public void testConstant() {
+
+		assertEquals(60, IDTokenVerifier.DEFAULT_MAX_CLOCK_SKEW);
+	}
+
+
 	public void testVerifyPlain()
 		throws Exception {
 

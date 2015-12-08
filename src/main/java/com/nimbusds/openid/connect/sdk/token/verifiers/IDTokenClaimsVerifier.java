@@ -7,6 +7,7 @@ import java.util.List;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.JWTClaimsVerifier;
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;
@@ -105,17 +106,29 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 
 
 	/**
+	 * The maximum acceptable clock skew, in seconds.
+	 */
+	private final int maxClockSkew;
+
+
+	/**
 	 * Creates a new ID token claims verifier.
 	 *
-	 * @param issuer   The expected ID token issuer. Must not be
-	 *                 {@code null}.
-	 * @param clientID The client ID. Must not be {@code null}.
-	 * @param nonce    The nonce, required in the implicit flow or for
-	 *                 ID tokens returned by the authorisation endpoint in
-	 *                 the hybrid flow. {@code null} if not required or
-	 *                 specified.
+	 * @param issuer       The expected ID token issuer. Must not be
+	 *                     {@code null}.
+	 * @param clientID     The client ID. Must not be {@code null}.
+	 * @param nonce        The nonce, required in the implicit flow or for
+	 *                     ID tokens returned by the authorisation endpoint
+	 *                     int the hybrid flow. {@code null} if not
+	 *                     required or specified.
+	 * @param maxClockSkew The maximum acceptable clock skew (absolute
+	 *                     value), in seconds. Must be zero (no clock skew)
+	 *                     or positive integer.
 	 */
-	public IDTokenClaimsVerifier(final Issuer issuer, final ClientID clientID, final Nonce nonce) {
+	public IDTokenClaimsVerifier(final Issuer issuer,
+				     final ClientID clientID,
+				     final Nonce nonce,
+				     final int maxClockSkew) {
 
 		if (issuer == null) {
 			throw new IllegalArgumentException("The expected ID token issuer must not be null");
@@ -128,6 +141,11 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 		this.expectedClientID = clientID;
 
 		this.expectedNonce = nonce;
+
+		if (maxClockSkew < 0) {
+			throw new IllegalArgumentException("The max clock skew must be zero or positive");
+		}
+		this.maxClockSkew = maxClockSkew;
 	}
 
 
@@ -161,6 +179,17 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 	public Nonce getExpectedNonce() {
 
 		return expectedNonce;
+	}
+
+
+	/**
+	 * Returns the maximum acceptable clock skew.
+	 *
+	 * @return The maximum acceptable clock skew, in seconds. Zero if none.
+	 */
+	public int getMaxClockSkew() {
+
+		return maxClockSkew;
 	}
 
 
@@ -225,13 +254,15 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 		}
 
 
-		final Date now = new Date();
+		final Date nowRef = new Date();
 
-		if (exp.before(now)) {
+		// Expiration must be after current time, given acceptable clock skew
+		if (! DateUtils.isAfter(exp, nowRef, maxClockSkew)) {
 			throw EXPIRED_EXCEPTION;
 		}
 
-		if (iat.after(now)) {
+		// Issue time must be after current time, given acceptable clock skew
+		if (! DateUtils.isBefore(iat, nowRef, maxClockSkew)) {
 			throw IAT_CLAIM_AHEAD_EXCEPTION;
 		}
 
