@@ -6,22 +6,23 @@ import java.util.*;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.assertions.AssertionDetails;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;
 import com.nimbusds.oauth2.sdk.auth.PrivateKeyJWT;
-import com.nimbusds.oauth2.sdk.id.Audience;
-import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.id.JWTID;
-import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.oauth2.sdk.id.*;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.jcip.annotations.Immutable;
 import net.minidev.json.JSONObject;
 
 
 /**
- * JSON Web Token (JWT) bearer assertion claims set for OAuth 2.0 client
- * authentication and authorisation grants.
+ * JSON Web Token (JWT) bearer assertion details (claims set) for OAuth 2.0
+ * client authentication and authorisation grants.
  *
  * <p>Used for {@link ClientSecretJWT client secret JWT} and
- * {@link PrivateKeyJWT private key JWT} authentication at the Token endpoint.
+ * {@link PrivateKeyJWT private key JWT} authentication at the Token endpoint
+ * as well as {@link com.nimbusds.oauth2.sdk.JWTBearerGrant JWT bearer
+ * assertion grants}.
  *
  * <p>Example JWT bearer assertion claims set for client authentication:
  *
@@ -43,7 +44,8 @@ import net.minidev.json.JSONObject;
  *         Authorization Grants (RFC 7523), section 3.
  * </ul>
  */
-public class JWTAssertionClaimsSet {
+@Immutable
+public class JWTAssertionDetails extends AssertionDetails {
 
 
 	/**
@@ -76,33 +78,6 @@ public class JWTAssertionClaimsSet {
 
 
 	/**
-	 * The issuer (required).
-	 */
-	private final Issuer iss;
-
-
-	/**
-	 * The subject (required).
-	 */
-	private final Subject sub;
-
-
-	/**
-	 * The audience that this token is intended for (required).
-	 */
-	private final List<Audience> aud;
-
-
-	/**
-	 * The expiration time that limits the time window during which the JWT
-	 * can be used (required). The serialised value is number of seconds
-	 * from 1970-01-01T0:0:0Z as measured in UTC until the desired
-	 * date/time.
-	 */
-	private final Date exp;
-
-
-	/**
 	 * The time before which this token must not be accepted for
 	 * processing (optional). The serialised value is number of seconds
 	 * from 1970-01-01T0:0:0Z as measured in UTC until the desired
@@ -112,32 +87,16 @@ public class JWTAssertionClaimsSet {
 
 
 	/**
-	 * The time at which this token was issued (optional). The serialised
-	 * value is number of seconds from 1970-01-01T0:0:0Z as measured in UTC
-	 * until the desired date/time.
-	 */
-	private final Date iat;
-
-
-	/**
-	 * Unique identifier for the JWT (optional). The JWT ID may be used by
-	 * implementations requiring message de-duplication for one-time use
-	 * assertions.
-	 */
-	private final JWTID jti;
-
-
-	/**
 	 * Other optional custom claims.
 	 */
 	private final Map<String,Object> other;
 
 
 	/**
-	 * Creates a new JWT JWT bearer assertion claims set. The expiration
-	 * time (exp) is set to five minutes from the current system time.
-	 * Generates a default identifier (jti) for the JWT. The issued-at
-	 * (iat) and not-before (nbf) claims are not set.
+	 * Creates a new JWT bearer assertion details (claims set) instance.
+	 * The expiration time (exp) is set to five minutes from the current
+	 * system time. Generates a default identifier (jti) for the JWT. The
+	 * issued-at (iat) and not-before (nbf) claims are not set.
 	 *
 	 * @param iss The issuer identifier. Must not be {@code null}.
 	 * @param sub The subject. Must not be {@code null}.
@@ -145,16 +104,16 @@ public class JWTAssertionClaimsSet {
 	 *            authorisation server's Token endpoint. Must not be
 	 *            {@code null}.
 	 */
-	public JWTAssertionClaimsSet(final Issuer iss,
-				     final Subject sub,
-				     final Audience aud) {
+	public JWTAssertionDetails(final Issuer iss,
+				   final Subject sub,
+				   final Audience aud) {
 
-		this(iss, sub, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID(), null);
+		this(iss, sub, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5*60*1000L), null, null, new JWTID(), null);
 	}
 
 
 	/**
-	 * Creates a new JWT JWT bearer assertion claims set.
+	 * Creates a new JWT bearer assertion details (claims set) instance.
 	 *
 	 * @param iss   The issuer identifier. Must not be {@code null}.
 	 * @param sub   The subject. Must not be {@code null}.
@@ -170,93 +129,24 @@ public class JWTAssertionClaimsSet {
 	 *              specified.
 	 * @param other Other custom claims to include, {@code null} if none.
 	 */
-	public JWTAssertionClaimsSet(final Issuer iss,
-				     final Subject sub,
-				     final List<Audience> aud,
-				     final Date exp,
-				     final Date nbf,
-				     final Date iat,
-				     final JWTID jti,
-				     final Map<String,Object> other) {
+	public JWTAssertionDetails(final Issuer iss,
+				   final Subject sub,
+				   final List<Audience> aud,
+				   final Date exp,
+				   final Date nbf,
+				   final Date iat,
+				   final JWTID jti,
+				   final Map<String,Object> other) {
 
-		if (iss == null)
-			throw new IllegalArgumentException("The issuer must not be null");
-
-		this.iss = iss;
-
-		if (sub == null)
-			throw new IllegalArgumentException("The subject must not be null");
-
-		this.sub = sub;
-
-		
-		if (aud == null || aud.isEmpty())
-			throw new IllegalArgumentException("The audience must not be null or empty");
-
-		this.aud = aud;
-
-
-		if (exp == null)
-			throw new IllegalArgumentException("The expiration time must not be null");
-
-		this.exp = exp;
-
+		super(iss, sub, aud, iat, exp, jti);
 		this.nbf = nbf;
-		this.iat = iat;
-		this.jti = jti;
-
 		this.other = other;
 	}
-
 	
 	
 	/**
-	 * Gets the issuer. Corresponds to the {@code iss} claim.
-	 *
-	 * @return The issuer. Contains the identifier of the OAuth client.
-	 */
-	public Issuer getIssuer() {
-	
-		return iss;
-	}
-	
-	
-	/**
-	 * Gets the subject. Corresponds to the {@code sub} claim.
-	 *
-	 * @return The subject. Contains the identifier of the OAuth client.
-	 */
-	public Subject getSubject() {
-	
-		return sub;
-	}
-	
-	
-	/**
-	 * Gets the audience. Corresponds to the {@code aud} claim.
-	 *
-	 * @return The audience, typically including the URI of the
-	 *         authorisation server's token endpoint.
-	 */
-	public List<Audience> getAudience() {
-	
-		return aud;
-	}
-
-
-	/**
-	 * Gets the expiration time. Corresponds to the {@code exp} claim.
-	 *
-	 * @return The expiration time.
-	 */
-	public Date getExpirationTime() {
-	
-		return exp;
-	}
-	
-	
-	/**
-	 * Gets the not-before time. Corresponds to the {@code nbf} claim.
+	 * Returns the optional not-before time. Corresponds to the {@code nbf}
+	 * claim.
 	 *
 	 * @return The not-before time, {@code null} if not specified.
 	 */
@@ -267,30 +157,22 @@ public class JWTAssertionClaimsSet {
 
 
 	/**
-	 * Gets the optional issue time. Corresponds to the {@code iat} claim.
+	 * Returns the optional assertion identifier, as a JWT ID. Corresponds
+	 * to the {@code jti} claim.
 	 *
-	 * @return The issued-at time, {@code null} if not specified.
-	 */
-	public Date getIssueTime() {
-	
-		return iat;
-	}
-	
-	
-	/**
-	 * Gets the identifier for the JWT. Corresponds to the {@code jti} 
-	 * claim.
+	 * @see #getID()
 	 *
-	 * @return The identifier for the JWT, {@code null} if not specified.
+	 * @return The optional JWT ID, {@code null} if not specified.
 	 */
 	public JWTID getJWTID() {
-	
-		return jti;
+
+		Identifier id = getID();
+		return id != null ? new JWTID(id.getValue()) : null;
 	}
 
 
 	/**
-	 * Gets the custom claims.
+	 * Returns the custom claims.
 	 *
 	 * @return The custom claims, {@code null} if not specified.
 	 */
@@ -302,7 +184,7 @@ public class JWTAssertionClaimsSet {
 	
 	/**
 	 * Returns a JSON object representation of this JWT bearer assertion
-	 * claims set.
+	 * details.
 	 *
 	 * @return The JSON object.
 	 */
@@ -310,19 +192,19 @@ public class JWTAssertionClaimsSet {
 	
 		JSONObject o = new JSONObject();
 		
-		o.put("iss", iss.getValue());
-		o.put("sub", sub.getValue());
-		o.put("aud", Audience.toStringList(aud));
-		o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
+		o.put("iss", getIssuer().getValue());
+		o.put("sub", getSubject().getValue());
+		o.put("aud", Audience.toStringList(getAudience()));
+		o.put("exp", DateUtils.toSecondsSinceEpoch(getExpirationTime()));
 
 		if (nbf != null)
 			o.put("nbf", DateUtils.toSecondsSinceEpoch(nbf));
 		
-		if (iat != null)
-			o.put("iat", DateUtils.toSecondsSinceEpoch(iat));
+		if (getIssueTime() != null)
+			o.put("iat", DateUtils.toSecondsSinceEpoch(getIssueTime()));
 		
-		if (jti != null)
-			o.put("jti", jti.getValue());
+		if (getID() != null)
+			o.put("jti", getID().getValue());
 
 		if (other != null) {
 			o.putAll(other);
@@ -334,20 +216,20 @@ public class JWTAssertionClaimsSet {
 
 	/**
 	 * Returns a JSON Web Token (JWT) claims set representation of this
-	 * JWT bearer assertion claims set.
+	 * JWT bearer assertion details.
 	 *
 	 * @return The JWT claims set.
 	 */
 	public JWTClaimsSet toJWTClaimsSet() {
 
 		JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder()
-			.issuer(iss.getValue())
-			.subject(sub.getValue())
-			.audience(Audience.toStringList(aud))
-			.expirationTime(exp)
+			.issuer(getIssuer().getValue())
+			.subject(getSubject().getValue())
+			.audience(Audience.toStringList(getAudience()))
+			.expirationTime(getExpirationTime())
 			.notBeforeTime(nbf) // optional
-			.issueTime(iat) // optional
-			.jwtID(jti != null ? jti.getValue() : null); // optional
+			.issueTime(getIssueTime()) // optional
+			.jwtID(getID() != null ? getJWTID().getValue() : null); // optional
 
 		// Append custom claims if any
 		if (other != null) {
@@ -361,17 +243,17 @@ public class JWTAssertionClaimsSet {
 	
 	
 	/**
-	 * Parses a JWT bearer assertion claims set from the specified JSON
-	 * object.
+	 * Parses a JWT bearer assertion details (claims set) instance from the
+	 * specified JSON object.
 	 *
 	 * @param jsonObject The JSON object. Must not be {@code null}.
 	 *
-	 * @return The JWT bearer assertion claims set.
+	 * @return The JWT bearer assertion details.
 	 *
 	 * @throws ParseException If the JSON object couldn't be parsed to a 
-	 *                        JWT bearer assertion claims set.
+	 *                        JWT bearer assertion details instance.
 	 */
-	public static JWTAssertionClaimsSet parse(final JSONObject jsonObject)
+	public static JWTAssertionDetails parse(final JSONObject jsonObject)
 		throws ParseException {
 		
 		// Parse required claims
@@ -417,22 +299,22 @@ public class JWTAssertionClaimsSet {
 			}
 		}
 
-		return new JWTAssertionClaimsSet(iss, sub, aud, exp, nbf, iat, jti, other);
+		return new JWTAssertionDetails(iss, sub, aud, exp, nbf, iat, jti, other);
 	}
 
 
 	/**
-	 * Parses a JWT bearer assertion claims set from the specified JWT
-	 * claims set.
+	 * Parses a JWT bearer assertion details instance from the specified
+	 * JWT claims set.
 	 *
 	 * @param jwtClaimsSet The JWT claims set. Must not be {@code null}.
 	 *
-	 * @return The JWT bearer assertion claims set.
+	 * @return The JWT bearer assertion details.
 	 *
 	 * @throws ParseException If the JWT claims set couldn't be parsed to a 
-	 *                        JWT bearer assertion claims set.
+	 *                        JWT bearer assertion details instance.
 	 */
-	public static JWTAssertionClaimsSet parse(final JWTClaimsSet jwtClaimsSet)
+	public static JWTAssertionDetails parse(final JWTClaimsSet jwtClaimsSet)
 		throws ParseException {
 		
 		return parse(jwtClaimsSet.toJSONObject());

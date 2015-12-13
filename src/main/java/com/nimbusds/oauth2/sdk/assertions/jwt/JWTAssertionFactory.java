@@ -52,7 +52,7 @@ public class JWTAssertionFactory {
 	/**
 	 * Creates a new HMAC-protected JWT bearer assertion.
 	 *
-	 * @param jwtClaimsSet The JWT bearer assertion claims set. Must not be
+	 * @param details      The JWT bearer assertion details. Must not be
 	 *                     {@code null}.
 	 * @param jwsAlgorithm The expected HMAC algorithm (HS256, HS384 or
 	 *                     HS512) for the JWT assertion. Must be supported
@@ -64,12 +64,12 @@ public class JWTAssertionFactory {
 	 * @throws JOSEException If the client secret is too short, or HMAC
 	 *                       computation failed.
 	 */
-	public static SignedJWT create(final JWTAssertionClaimsSet jwtClaimsSet,
+	public static SignedJWT create(final JWTAssertionDetails details,
 				       final JWSAlgorithm jwsAlgorithm,
 				       final Secret secret)
 		throws JOSEException {
 
-		SignedJWT signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), jwtClaimsSet.toJWTClaimsSet());
+		SignedJWT signedJWT = new SignedJWT(new JWSHeader(jwsAlgorithm), details.toJWTClaimsSet());
 		signedJWT.sign(new MACSigner(secret.getValueBytes()));
 		return signedJWT;
 	}
@@ -78,7 +78,7 @@ public class JWTAssertionFactory {
 	/**
 	 * Creates a new RSA-signed JWT bearer assertion.
 	 *
-	 * @param jwtClaimsSet  The JWT bearer assertion claims set. Must not
+	 * @param details       The JWT bearer assertion details. Must not be
 	 *                      be {@code null}.
 	 * @param jwsAlgorithm  The expected RSA signature algorithm (RS256,
 	 *                      RS384, RS512, PS256, PS384 or PS512) for the
@@ -95,7 +95,7 @@ public class JWTAssertionFactory {
 	 *
 	 * @throws JOSEException If RSA signing failed.
 	 */
-	public static SignedJWT create(final JWTAssertionClaimsSet jwtClaimsSet,
+	public static SignedJWT create(final JWTAssertionDetails details,
 				       final JWSAlgorithm jwsAlgorithm,
 				       final RSAPrivateKey rsaPrivateKey,
 				       final String keyID,
@@ -104,7 +104,7 @@ public class JWTAssertionFactory {
 
 		SignedJWT signedJWT = new SignedJWT(
 			new JWSHeader.Builder(jwsAlgorithm).keyID(keyID).build(),
-			jwtClaimsSet.toJWTClaimsSet());
+			details.toJWTClaimsSet());
 		RSASSASigner signer = new RSASSASigner(rsaPrivateKey);
 		if (jcaProvider != null) {
 			signer.getJCAContext().setProvider(jcaProvider);
@@ -117,7 +117,7 @@ public class JWTAssertionFactory {
 	/**
 	 * Creates a new EC-signed JWT bearer assertion.
 	 *
-	 * @param jwtClaimsSet The JWT bearer assertion claims set. Must not be
+	 * @param details      The JWT bearer assertion details. Must not be
 	 *                     {@code null}.
 	 * @param jwsAlgorithm The expected EC signature algorithm (ES256,
 	 *                     ES384 or ES512) for the JWT assertion. Must be
@@ -133,7 +133,7 @@ public class JWTAssertionFactory {
 	 *
 	 * @throws JOSEException If RSA signing failed.
 	 */
-	public static SignedJWT create(final JWTAssertionClaimsSet jwtClaimsSet,
+	public static SignedJWT create(final JWTAssertionDetails details,
 				       final JWSAlgorithm jwsAlgorithm,
 				       final ECPrivateKey ecPrivateKey,
 				       final String keyID,
@@ -142,7 +142,7 @@ public class JWTAssertionFactory {
 
 		SignedJWT signedJWT = new SignedJWT(
 			new JWSHeader.Builder(jwsAlgorithm).keyID(keyID).build(),
-			jwtClaimsSet.toJWTClaimsSet());
+			details.toJWTClaimsSet());
 		ECDSASigner signer = new ECDSASigner(ecPrivateKey);
 		if (jcaProvider != null) {
 			signer.getJCAContext().setProvider(jcaProvider);

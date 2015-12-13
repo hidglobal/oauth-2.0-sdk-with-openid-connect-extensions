@@ -13,13 +13,13 @@ import net.minidev.json.JSONValue;
 
 
 /**
- * The base abstract class for representing identifiers and identities. 
- * Provides constructors that generate Base64URL-encoded secure random 
- * identifier values.
+ * The base class for representing identifiers and identities. Provides
+ * constructors that generate Base64URL-encoded secure random identifier
+ * values.
  *
  * <p>Extending classes must override the {@link #equals} method.
  */
-public abstract class Identifier implements Serializable, Comparable<Identifier>, JSONAware {
+public class Identifier implements Serializable, Comparable<Identifier>, JSONAware {
 	
 	
 	/**
@@ -128,26 +128,20 @@ public abstract class Identifier implements Serializable, Comparable<Identifier>
 	}
 
 
-	/**
-	 * Overrides {@code Object.hashCode()}.
-	 *
-	 * @return The object hash code.
-	 */
+	@Override
+	public boolean equals(final Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Identifier that = (Identifier) o;
+
+		return getValue() != null ? getValue().equals(that.getValue()) : that.getValue() == null;
+
+	}
+
+
 	@Override
 	public int hashCode() {
-	
-		return value.hashCode();
+		return getValue() != null ? getValue().hashCode() : 0;
 	}
-	
-	
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects have the same value, otherwise
-	 *         {@code false}.
-	 */
-	@Override
-	public abstract boolean equals(final Object object);
 }

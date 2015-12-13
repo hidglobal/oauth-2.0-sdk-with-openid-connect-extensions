@@ -6,33 +6,33 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.jwt.JWTClaimsSet;
-
-import com.nimbusds.oauth2.sdk.id.*;
+import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.id.JWTID;
+import com.nimbusds.oauth2.sdk.id.Subject;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
- * Tests the JWT bearer assertion claims set.
+ * Tests the JWT bearer assertion details (claims set).
  */
-public class JWTAssertionClaimsSetTest extends TestCase {
+public class JWTAssertionDetailsTest extends TestCase {
 
 
 	public void testReservedClaimsNames() {
 
 		// http://tools.ietf.org/html/rfc7523#section-3
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("iss"));
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("sub"));
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("aud"));
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("exp"));
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("nbf"));
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("iat"));
-		assertTrue(JWTAssertionClaimsSet.getReservedClaimsNames().contains("jti"));
-		assertEquals(7, JWTAssertionClaimsSet.getReservedClaimsNames().size());
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("iss"));
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("sub"));
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("aud"));
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("exp"));
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("nbf"));
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("iat"));
+		assertTrue(JWTAssertionDetails.getReservedClaimsNames().contains("jti"));
+		assertEquals(7, JWTAssertionDetails.getReservedClaimsNames().size());
 	}
 
 
@@ -43,7 +43,7 @@ public class JWTAssertionClaimsSetTest extends TestCase {
 		Subject sub = new Subject("alice");
 		Audience aud = new Audience("https://c2id.com/token");
 
-		JWTAssertionClaimsSet claimsSet = new JWTAssertionClaimsSet(iss, sub, aud);
+		JWTAssertionDetails claimsSet = new JWTAssertionDetails(iss, sub, aud);
 
 		// Test getters
 		assertEquals(iss, claimsSet.getIssuer());
@@ -87,7 +87,7 @@ public class JWTAssertionClaimsSetTest extends TestCase {
 		assertEquals(5, jwtClaimsSet.toJSONObject().size());
 
 		// Test parse
-		JWTAssertionClaimsSet parsed = JWTAssertionClaimsSet.parse(jwtClaimsSet);
+		JWTAssertionDetails parsed = JWTAssertionDetails.parse(jwtClaimsSet);
 		assertEquals(iss, parsed.getIssuer());
 		assertEquals(sub, parsed.getSubject());
 		assertEquals(aud, parsed.getAudience().get(0));
@@ -106,7 +106,7 @@ public class JWTAssertionClaimsSetTest extends TestCase {
 		other.put("A", "B");
 		other.put("ten", 10l);
 
-		JWTAssertionClaimsSet claimsSet = new JWTAssertionClaimsSet(
+		JWTAssertionDetails claimsSet = new JWTAssertionDetails(
 			new Issuer("123"),
 			new Subject("alice"),
 			new Audience("https://c2id.com/token").toSingleAudienceList(),
@@ -141,7 +141,7 @@ public class JWTAssertionClaimsSetTest extends TestCase {
 		assertEquals(10l, jwtClaimsSet.getLongClaim("ten").longValue());
 
 		// Test parse
-		JWTAssertionClaimsSet parsed = JWTAssertionClaimsSet.parse(jwtClaimsSet);
+		JWTAssertionDetails parsed = JWTAssertionDetails.parse(jwtClaimsSet);
 		assertEquals("123", parsed.getIssuer().getValue());
 		assertEquals("alice", parsed.getSubject().getValue());
 		assertEquals("https://c2id.com/token", parsed.getAudience().get(0).getValue());

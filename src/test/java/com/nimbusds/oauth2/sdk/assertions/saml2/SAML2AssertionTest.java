@@ -1,21 +1,28 @@
 package com.nimbusds.oauth2.sdk.assertions.saml2;
 
 
-import java.net.URI;
+import java.net.InetAddress;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Collections;
+import java.util.*;
 
+import com.nimbusds.oauth2.sdk.id.Audience;
+import com.nimbusds.oauth2.sdk.id.Identifier;
+import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
 import junit.framework.TestCase;
 import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.NameIDType;
 import org.opensaml.saml2.core.SubjectConfirmation;
 import org.opensaml.xml.security.credential.BasicCredential;
 import org.opensaml.xml.security.credential.UsageType;
+import org.opensaml.xml.signature.SignatureConstants;
 import org.opensaml.xml.util.Pair;
+import org.opensaml.xml.util.XMLHelper;
 
 
 /**
@@ -34,33 +41,147 @@ public class SAML2AssertionTest extends TestCase {
 	}
 
 
-	public void testCreateAndValidate()
+	public void testCreateAndValidateMinimal()
 		throws Exception {
 
-		URI issuer = URI.create("https://saml.idp.com");
-		String subjectFormat = NameIDType.EMAIL;
-		int lifetime =5*60;
+		Issuer issuer = new Issuer("https://saml.idp.com");
+		Subject subject = new Subject("alice@wonderland.net");
+		Audience audience = new Audience("https://c2id.com/token");
+
+		SAML2AssertionDetails details = new SAML2AssertionDetails(
+			issuer,
+			subject,
+			audience);
+
+		assertEquals(issuer, details.getIssuer());
+		assertEquals(subject, details.getSubject());
+		assertTrue(details.getAudience().contains(audience));
+		assertEquals(1, details.getAudience().size());
+		assertNull(details.getSubjectFormat());
+		assertNull(details.getSubjectAuthenticationTime());
+		assertNull(details.getSubjectACR());
+		assertTrue(details.getExpirationTime().after(new Date()));
+		assertNull(details.getNotBeforeTime());
+		assertNotNull(details.getIssueTime());
+		assertNotNull(details.getID());
+		assertNull(details.getClientInetAddress());
+		assertNull(details.getAttributeStatement());
+
 		BasicCredential credential = new BasicCredential();
 		Pair<RSAPublicKey,RSAPrivateKey> keyPair = generateRSAKeyPair();
 		credential.setPublicKey(keyPair.getFirst());
 		credential.setPrivateKey(keyPair.getSecond());
 		credential.setUsageType(UsageType.SIGNING);
 
-		SAML2AssertionFactory f = new SAML2AssertionFactory(issuer.toString(), subjectFormat, lifetime, credential);
-
-		assertEquals(issuer.toString(), f.getIssuer());
-		assertEquals(subjectFormat, f.getSubjectFormat());
-		assertEquals(lifetime, f.getAssertionLifetime());
-		assertEquals(credential, f.getSigningCredential());
-
-		String xml = f.createAssertionString(URI.create("https://c2id.com/token"), "alice@wonderland.net");
+		String xml = SAML2AssertionFactory.createAsString(details, keyPair.getSecond());
 
 		assertFalse(xml.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 
-		// Parse back
-		SAML2AssertionValidator v = new SAML2AssertionValidator(Collections.singletonList("https://c2id.com/token"));
+//		System.out.println(XMLHelper.prettyPrintXML(SAML2AssertionFactory.createAsElement(
+//			details,
+//			SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256,
+//			credential)));
 
-		assertTrue(v.getExpectedAudience().contains("https://c2id.com/token"));
+		// Parse back
+		SAML2AssertionValidator v = new SAML2AssertionValidator(Collections.singletonList(new Audience("https://c2id.com/token")));
+
+		assertTrue(v.getExpectedAudience().contains(new Audience("https://c2id.com/token")));
+		assertEquals(1, v.getExpectedAudience().size());
+
+		Assertion a = v.validate(xml, keyPair.getFirst());
+
+		assertNotNull(a.getID());
+		assertNotNull(a.getIssueInstant());
+		assertEquals(issuer.toString(), a.getIssuer().getValue());
+		assertNotNull(a.getSignature());
+		assertNull(a.getSubject().getNameID().getFormat());
+		assertEquals("alice@wonderland.net", a.getSubject().getNameID().getValue());
+		assertEquals(SubjectConfirmation.METHOD_BEARER, a.getSubject().getSubjectConfirmations().get(0).getMethod());
+		assertTrue(a.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData().getNotOnOrAfter().isAfterNow());
+		assertEquals("https://c2id.com/token", a.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData().getRecipient());
+		assertEquals("https://c2id.com/token", a.getConditions().getAudienceRestrictions().get(0).getAudiences().get(0).getAudienceURI());
+		assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", a.getSignature().getSignatureAlgorithm());
+
+		details = SAML2AssertionDetails.parse(a);
+
+		assertEquals(issuer, details.getIssuer());
+		assertEquals(subject, details.getSubject());
+		assertTrue(details.getAudience().contains(audience));
+		assertEquals(1, details.getAudience().size());
+		assertNull(details.getSubjectFormat());
+		assertNull(details.getSubjectAuthenticationTime());
+		assertNull(details.getSubjectACR());
+		assertTrue(details.getExpirationTime().after(new Date()));
+		assertNull(details.getNotBeforeTime());
+		assertNotNull(details.getIssueTime());
+		assertNotNull(details.getID());
+		assertNull(details.getClientInetAddress());
+		assertNull(details.getAttributeStatement());
+	}
+
+
+	public void testCreateAndValidateComplete()
+		throws Exception {
+
+		Date now = new Date();
+
+		Issuer issuer = new Issuer("https://saml.idp.com");
+		Subject subject = new Subject("alice@wonderland.net");
+		String subjectFormat = NameIDType.EMAIL;
+		Date subjectAuthTime = new Date(now.getTime() - 24*60*60*1000L);
+		ACR subjectACR = new ACR("0");
+		List<Audience> audience = Audience.create("https://c2id.com/token", "https://c2id.com");
+		Date expirationTime = new Date(now.getTime() + 5*60*1000L);
+		Date notBeforeTime = now;
+		Date issueTime = now;
+		Identifier id = new Identifier();
+		InetAddress clientAddress = InetAddress.getByName("192.168.0.1");
+		Map<String,List<String>> attrs = new HashMap<>();
+		attrs.put("roles", Arrays.asList("audit", "admin"));
+		attrs.put("manager", Collections.singletonList("claire"));
+		attrs.put("office", Collections.singletonList("A315"));
+
+		SAML2AssertionDetails details = new SAML2AssertionDetails(
+			issuer,
+			subject, subjectFormat, subjectAuthTime, subjectACR,
+			audience,
+			expirationTime, notBeforeTime, issueTime,
+			id,
+			clientAddress,
+			attrs);
+
+		assertEquals(issuer, details.getIssuer());
+		assertEquals(subject, details.getSubject());
+		assertEquals(subjectFormat, details.getSubjectFormat());
+		assertEquals(subjectAuthTime, details.getSubjectAuthenticationTime());
+		assertEquals(subjectACR, details.getSubjectACR());
+		assertEquals(audience, details.getAudience());
+		assertEquals(expirationTime, details.getExpirationTime());
+		assertEquals(notBeforeTime, details.getNotBeforeTime());
+		assertEquals(issueTime, details.getIssueTime());
+		assertEquals(id, details.getID());
+		assertEquals(clientAddress, details.getClientInetAddress());
+		assertEquals(attrs, details.getAttributeStatement());
+
+		BasicCredential credential = new BasicCredential();
+		Pair<RSAPublicKey,RSAPrivateKey> keyPair = generateRSAKeyPair();
+		credential.setPublicKey(keyPair.getFirst());
+		credential.setPrivateKey(keyPair.getSecond());
+		credential.setUsageType(UsageType.SIGNING);
+
+		String xml = SAML2AssertionFactory.createAsString(details, keyPair.getSecond());
+
+		assertFalse(xml.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+
+		System.out.println(XMLHelper.prettyPrintXML(SAML2AssertionFactory.createAsElement(
+			details,
+			SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256,
+			credential)));
+
+		// Parse back
+		SAML2AssertionValidator v = new SAML2AssertionValidator(Collections.singletonList(new Audience("https://c2id.com/token")));
+
+		assertTrue(v.getExpectedAudience().contains(new Audience("https://c2id.com/token")));
 		assertEquals(1, v.getExpectedAudience().size());
 
 		Assertion a = v.validate(xml, keyPair.getFirst());
@@ -76,5 +197,20 @@ public class SAML2AssertionTest extends TestCase {
 		assertEquals("https://c2id.com/token", a.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData().getRecipient());
 		assertEquals("https://c2id.com/token", a.getConditions().getAudienceRestrictions().get(0).getAudiences().get(0).getAudienceURI());
 		assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", a.getSignature().getSignatureAlgorithm());
+
+		details = SAML2AssertionDetails.parse(a);
+
+		assertEquals(issuer, details.getIssuer());
+		assertEquals(subject, details.getSubject());
+		assertEquals(subjectFormat, details.getSubjectFormat());
+		assertEquals(subjectAuthTime, details.getSubjectAuthenticationTime());
+		assertEquals(subjectACR, details.getSubjectACR());
+		assertEquals(audience, details.getAudience());
+		assertEquals(expirationTime, details.getExpirationTime());
+		assertEquals(notBeforeTime, details.getNotBeforeTime());
+		assertEquals(issueTime, details.getIssueTime());
+		assertEquals(id, details.getID());
+		assertEquals(clientAddress, details.getClientInetAddress());
+		assertEquals(attrs, details.getAttributeStatement());
 	}
 }

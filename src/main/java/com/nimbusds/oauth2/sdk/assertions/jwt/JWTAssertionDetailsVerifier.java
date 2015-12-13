@@ -3,18 +3,16 @@ package com.nimbusds.oauth2.sdk.assertions.jwt;
 
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
-
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
-
 import com.nimbusds.oauth2.sdk.id.Audience;
+import net.jcip.annotations.Immutable;
 
 
 /**
- * JSON Web Token (JWT) bearer assertion claims set verifier for OAuth 2.0
- * client authentication and authorisation grants.
+ * JSON Web Token (JWT) bearer assertion details (claims set) verifier for
+ * OAuth 2.0 client authentication and authorisation grants.
  *
  * <p>Related specifications:
  *
@@ -24,7 +22,7 @@ import com.nimbusds.oauth2.sdk.id.Audience;
  * </ul>
  */
 @Immutable
-public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
+public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
 
 
 	// Cache JWT exceptions for quick processing of bad claims sets
@@ -71,7 +69,7 @@ public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 
 
 	/**
-	 * Creates a new JWT bearer assertion claims set verifier.
+	 * Creates a new JWT bearer assertion details (claims set) verifier.
 	 *
 	 * @param expectedAudience The permitted audience (aud) claim values.
 	 *                         Must not be empty or {@code null}. Should
@@ -79,7 +77,7 @@ public class JWTAssertionClaimsSetVerifier extends DefaultJWTClaimsVerifier {
 	 *                         for OpenID provider it may also include the
 	 *                         issuer URI.
 	 */
-	public JWTAssertionClaimsSetVerifier(final Set<Audience> expectedAudience) {
+	public JWTAssertionDetailsVerifier(final Set<Audience> expectedAudience) {
 
 		if (expectedAudience == null || expectedAudience.isEmpty()) {
 			throw new IllegalArgumentException("The expected audience set must not be null or empty");

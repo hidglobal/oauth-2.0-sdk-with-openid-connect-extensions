@@ -8,7 +8,7 @@ import net.jcip.annotations.Immutable;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 
-import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionClaimsSetVerifier;
+import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionDetailsVerifier;
 import com.nimbusds.oauth2.sdk.id.Audience;
 
 
@@ -24,7 +24,7 @@ import com.nimbusds.oauth2.sdk.id.Audience;
  * </ul>
  */
 @Immutable
-class JWTAuthenticationClaimsSetVerifier extends JWTAssertionClaimsSetVerifier {
+class JWTAuthenticationClaimsSetVerifier extends JWTAssertionDetailsVerifier {
 
 	// Cache JWT exceptions for quick processing of bad claims
 

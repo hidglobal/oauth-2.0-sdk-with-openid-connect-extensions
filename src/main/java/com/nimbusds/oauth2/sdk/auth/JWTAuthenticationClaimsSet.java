@@ -9,7 +9,7 @@ import net.minidev.json.JSONObject;
 import com.nimbusds.jwt.JWTClaimsSet;
 
 import com.nimbusds.oauth2.sdk.ParseException;
-import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionClaimsSet;
+import com.nimbusds.oauth2.sdk.assertions.jwt.JWTAssertionDetails;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
@@ -45,7 +45,7 @@ import com.nimbusds.oauth2.sdk.id.Subject;
  *         Authorization Grants (RFC 7523).
  * </ul>
  */
-public class JWTAuthenticationClaimsSet extends JWTAssertionClaimsSet {
+public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
 
 
 	/**
@@ -120,7 +120,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionClaimsSet {
 	public static JWTAuthenticationClaimsSet parse(final JSONObject jsonObject)
 		throws ParseException {
 		
-		JWTAssertionClaimsSet assertion = JWTAssertionClaimsSet.parse(jsonObject);
+		JWTAssertionDetails assertion = JWTAssertionDetails.parse(jsonObject);
 
 		return new JWTAuthenticationClaimsSet(
 			new ClientID(assertion.getIssuer()), // iss=sub

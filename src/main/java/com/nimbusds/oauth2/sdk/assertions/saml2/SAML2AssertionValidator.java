@@ -4,16 +4,17 @@ package com.nimbusds.oauth2.sdk.assertions.saml2;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Date;
 import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import com.nimbusds.jwt.util.DateUtils;
+import com.nimbusds.oauth2.sdk.ParseException;
 import net.jcip.annotations.ThreadSafe;
-import org.apache.commons.collections4.CollectionUtils;
-import org.joda.time.DateTime;
 import org.opensaml.DefaultBootstrap;
-import org.opensaml.saml2.core.*;
+import org.opensaml.saml2.core.Assertion;
 import org.opensaml.security.SAMLSignatureProfileValidator;
 import org.opensaml.xml.Configuration;
 import org.opensaml.xml.ConfigurationException;
@@ -43,7 +44,7 @@ public class SAML2AssertionValidator {
 	/**
 	 * List of the expected audience values.
 	 */
-	private final List<String> expectedAudience;
+	private final List<com.nimbusds.oauth2.sdk.id.Audience> expectedAudience;
 
 
 	/**
@@ -55,7 +56,7 @@ public class SAML2AssertionValidator {
 	 * @throws ConfigurationException If bootstrapping of the OpenSAML
 	 *                                library failed.
 	 */
-	public SAML2AssertionValidator(final List<String> expectedAudience)
+	public SAML2AssertionValidator(final List<com.nimbusds.oauth2.sdk.id.Audience> expectedAudience)
 		throws ConfigurationException {
 		if (expectedAudience.isEmpty()) {
 			throw new IllegalArgumentException("The expected audience / recipient list must not be empty");
@@ -70,7 +71,7 @@ public class SAML2AssertionValidator {
 	 *
 	 * @return The expected audience / recipient values.
 	 */
-	public List<String> getExpectedAudience() {
+	public List<com.nimbusds.oauth2.sdk.id.Audience> getExpectedAudience() {
 
 		return expectedAudience;
 	}
@@ -146,102 +147,28 @@ public class SAML2AssertionValidator {
 	private void validateStatements(final Assertion assertion)
 		throws ValidationException {
 
-		if (assertion.getID() == null) {
-			throw new ValidationException("Missing Assertion ID attribute");
+		final SAML2AssertionDetails assertionDetails;
+		try {
+			assertionDetails = SAML2AssertionDetails.parse(assertion);
+		} catch (ParseException e) {
+			throw new ValidationException(e.getMessage(), e);
 		}
 
-		if (assertion.getIssueInstant() == null) {
-			throw new ValidationException("Missing Assertion IssueInstant attribute");
+		// match audiences
+		if (! com.nimbusds.oauth2.sdk.id.Audience.matchesAny(expectedAudience, assertionDetails.getAudience())) {
+			throw new ValidationException("Audience mismatch");
 		}
 
-		Conditions conditions = assertion.getConditions();
+		// Check expiration, with 60 seconds permitted skew
+		final Date now = new Date();
 
-		if (conditions == null) {
-			throw new ValidationException("Missing Conditions element");
+		if (! DateUtils.isAfter(assertionDetails.getExpirationTime(), now, 60)) {
+			throw new ValidationException("Expired assertion");
 		}
 
-		List<AudienceRestriction> audRestrictions = conditions.getAudienceRestrictions();
-
-		if (CollectionUtils.isEmpty(audRestrictions)) {
-			throw new ValidationException("Missing AudienceRestriction element");
-		}
-
-		boolean audMatch = false;
-
-		for (AudienceRestriction audRestriction: audRestrictions) {
-
-			List<Audience> audList = audRestriction.getAudiences();
-
-			if (CollectionUtils.isEmpty(audList)) {
-				continue; // go to next
-			}
-
-			for (Audience aud: audList) {
-				if (expectedAudience.contains(aud.getAudienceURI())) {
-					audMatch = true;
-					break;
-				}
-			}
-		}
-
-		if (! audMatch) {
-			throw new ValidationException("Unexpected Audience");
-		}
-
-		Subject sub = assertion.getSubject();
-
-		if (sub == null) {
-			throw new ValidationException("Missing Subject element");
-		}
-
-		List<SubjectConfirmation> subCms = sub.getSubjectConfirmations();
-
-		if (CollectionUtils.isEmpty(subCms)) {
-			throw new ValidationException("Missing SubjectConfirmation element");
-		}
-
-		boolean bearerMethodFound = false;
-		for (SubjectConfirmation subCm: subCms) {
-
-			if (SubjectConfirmation.METHOD_BEARER.equals(subCm.getMethod())) {
-				bearerMethodFound = true;
-				break;
-			}
-		}
-
-		if (! bearerMethodFound) {
-			throw new ValidationException("Missing SubjectConfirmation Method " + SubjectConfirmation.METHOD_BEARER + " attribute");
-		}
-
-		// Check expiration, try in Conditions first
-		DateTime exp = conditions.getNotOnOrAfter();
-		if (exp != null) {
-			if (exp.isBeforeNow()) {
-				throw new ValidationException("Expired assertion");
-			}
-		} else {
-			// Try in Subject > SubjectConfirmation > SubjectConfirmationData
-			for (SubjectConfirmation subCm: subCms) {
-				SubjectConfirmationData subCmData = subCm.getSubjectConfirmationData();
-				exp = subCmData.getNotOnOrAfter();
-				if (exp == null) {
-					continue;
-				}
-				if (exp.isBeforeNow()) {
-					throw new ValidationException("Expired assertion");
-				}
-				// SubjectConfirmationData with NotOnOrAfter requires Recipient
-				String recipient = subCmData.getRecipient();
-				if (recipient == null) {
-					throw new ValidationException("Missing SubjectConfirmationData Recipient attribute");
-				}
-				if (! expectedAudience.contains(recipient)) {
-					throw new ValidationException("Unexpected Recipient: " + recipient);
-				}
-			}
-			if (exp == null) {
-				throw new ValidationException("Missing expiration statement (NotOnOrAfter)");
-			}
+		if (assertionDetails.getNotBeforeTime() != null &&
+			! DateUtils.isBefore(assertionDetails.getNotBeforeTime(), now, 60)) {
+			throw new ValidationException("Assertion ahead of use time");
 		}
 	}
 
