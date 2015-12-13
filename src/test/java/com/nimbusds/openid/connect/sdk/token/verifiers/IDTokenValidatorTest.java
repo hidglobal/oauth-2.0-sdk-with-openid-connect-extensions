@@ -39,12 +39,12 @@ import junit.framework.TestCase;
 /**
  * Tests the ID token verifier.
  */
-public class IDTokenVerifierTest extends TestCase {
+public class IDTokenValidatorTest extends TestCase {
 
 
 	public void testConstant() {
 
-		assertEquals(60, IDTokenVerifier.DEFAULT_MAX_CLOCK_SKEW);
+		assertEquals(60, IDTokenValidator.DEFAULT_MAX_CLOCK_SKEW);
 	}
 
 
@@ -65,13 +65,13 @@ public class IDTokenVerifierTest extends TestCase {
 
 		PlainJWT idToken = new PlainJWT(claimsSet);
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID);
-		assertEquals(iss, idTokenVerifier.getExpectedIssuer());
-		assertEquals(clientID, idTokenVerifier.getClientID());
-		assertNull(idTokenVerifier.getJWSKeySelector());
-		assertNull(idTokenVerifier.getJWEKeySelector());
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID);
+		assertEquals(iss, idTokenValidator.getExpectedIssuer());
+		assertEquals(clientID, idTokenValidator.getClientID());
+		assertNull(idTokenValidator.getJWSKeySelector());
+		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenVerifier.verify(idToken, null);
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, null);
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -97,10 +97,10 @@ public class IDTokenVerifierTest extends TestCase {
 
 		PlainJWT idToken = new PlainJWT(claimsSet);
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID);
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID);
 
 		try {
-			idTokenVerifier.verify(idToken, null);
+			idTokenValidator.verify(idToken, null);
 			fail();
 		} catch (BadJWTException e) {
 			assertEquals("Expired JWT", e.getMessage());
@@ -136,11 +136,11 @@ public class IDTokenVerifierTest extends TestCase {
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
 		idToken.sign(new RSASSASigner(rsaJWK));
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.RS256, jwkSet);
-		assertNotNull(idTokenVerifier.getJWSKeySelector());
-		assertNull(idTokenVerifier.getJWEKeySelector());
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.RS256, jwkSet);
+		assertNotNull(idTokenValidator.getJWSKeySelector());
+		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenVerifier.verify(idToken, null);
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, null);
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -178,10 +178,10 @@ public class IDTokenVerifierTest extends TestCase {
 		idToken.sign(new RSASSASigner(rsaJWK));
 		idToken = new SignedJWT(idToken.getHeader().toBase64URL(), idToken.getPayload().toBase64URL(), Base64URL.encode("bad-sig"));
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.RS256, jwkSet);
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.RS256, jwkSet);
 
 		try {
-			idTokenVerifier.verify(idToken, null);
+			idTokenValidator.verify(idToken, null);
 			fail();
 		} catch (BadJWSException e) {
 			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
@@ -218,11 +218,11 @@ public class IDTokenVerifierTest extends TestCase {
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
 		idToken.sign(new RSASSASigner(rsaJWK));
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.RS256, jwkSet);
-		assertNotNull(idTokenVerifier.getJWSKeySelector());
-		assertNull(idTokenVerifier.getJWEKeySelector());
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.RS256, jwkSet);
+		assertNotNull(idTokenValidator.getJWSKeySelector());
+		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenVerifier.verify(idToken, new Nonce("xyz"));
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, new Nonce("xyz"));
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -253,11 +253,11 @@ public class IDTokenVerifierTest extends TestCase {
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 		idToken.sign(new MACSigner(clientSecret.getValueBytes()));
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.HS256, clientSecret);
-		assertNotNull(idTokenVerifier.getJWSKeySelector());
-		assertNull(idTokenVerifier.getJWEKeySelector());
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.HS256, clientSecret);
+		assertNotNull(idTokenValidator.getJWSKeySelector());
+		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenVerifier.verify(idToken, new Nonce("xyz"));
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, new Nonce("xyz"));
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -287,10 +287,10 @@ public class IDTokenVerifierTest extends TestCase {
 		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
 		idToken.sign(new MACSigner(new Secret(ByteUtils.byteLength(256)).getValueBytes()));
 
-		IDTokenVerifier idTokenVerifier = new IDTokenVerifier(iss, clientID, JWSAlgorithm.HS256, clientSecret);
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.HS256, clientSecret);
 
 		try {
-			idTokenVerifier.verify(idToken, null);
+			idTokenValidator.verify(idToken, null);
 			fail();
 		} catch (BadJWSException e) {
 			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
@@ -342,7 +342,7 @@ public class IDTokenVerifierTest extends TestCase {
 
 		String idTokenString = jweObject.serialize();
 
-		IDTokenVerifier verifier = new IDTokenVerifier(iss, clientID,
+		IDTokenValidator verifier = new IDTokenValidator(iss, clientID,
 				new JWSVerificationKeySelector(
 						iss,
 						JWSAlgorithm.RS256,
@@ -422,7 +422,7 @@ public class IDTokenVerifierTest extends TestCase {
 
 		String idTokenString = jweObject.serialize();
 
-		IDTokenVerifier verifier = new IDTokenVerifier(iss, clientID,
+		IDTokenValidator verifier = new IDTokenValidator(iss, clientID,
 				new JWSVerificationKeySelector(
 						iss,
 						JWSAlgorithm.RS256,
@@ -444,8 +444,8 @@ public class IDTokenVerifierTest extends TestCase {
 
 	public void testGetSetClockSkew() {
 
-		IDTokenVerifier verifier = new IDTokenVerifier(new Issuer("https://c2id.com"), new ClientID("123"));
-		assertEquals(IDTokenVerifier.DEFAULT_MAX_CLOCK_SKEW, verifier.getMaxClockSkew());
+		IDTokenValidator verifier = new IDTokenValidator(new Issuer("https://c2id.com"), new ClientID("123"));
+		assertEquals(IDTokenValidator.DEFAULT_MAX_CLOCK_SKEW, verifier.getMaxClockSkew());
 		verifier.setMaxClockSkew(30);
 		assertEquals(30, verifier.getMaxClockSkew());
 	}

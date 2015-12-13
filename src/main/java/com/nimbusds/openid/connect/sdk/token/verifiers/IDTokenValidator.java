@@ -25,7 +25,7 @@ import net.jcip.annotations.ThreadSafe;
 
 
 /**
- * Verifier of ID tokens issued by an OpenID Provider (OP).
+ * Validator of ID tokens issued by an OpenID Provider (OP).
  *
  * <p>Supports processing of ID tokens with the following protection:
  *
@@ -38,7 +38,7 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
-public class IDTokenVerifier implements ClockSkewAware {
+public class IDTokenValidator implements ClockSkewAware {
 
 
 	/**
@@ -79,21 +79,21 @@ public class IDTokenVerifier implements ClockSkewAware {
 
 
 	/**
-	 * Creates a new verifier for unsecured (plain) ID tokens.
+	 * Creates a new validator for unsecured (plain) ID tokens.
 	 *
 	 * @param expectedIssuer The expected ID token issuer (OpenID
 	 *                       Provider). Must not be {@code null}.
 	 * @param clientID       The client ID. Must not be {@code null}.
 	 */
-	public IDTokenVerifier(final Issuer expectedIssuer,
-			       final ClientID clientID) {
+	public IDTokenValidator(final Issuer expectedIssuer,
+				final ClientID clientID) {
 
 		this(expectedIssuer, clientID, (JWSKeySelector) null, (JWEKeySelector) null);
 	}
 
 
 	/**
-	 * Creates a new verifier for RSA or EC signed ID tokens where the
+	 * Creates a new validator for RSA or EC signed ID tokens where the
 	 * OpenID Provider's JWK set is specified by value.
 	 *
 	 * @param expectedIssuer The expected ID token issuer (OpenID
@@ -104,17 +104,17 @@ public class IDTokenVerifier implements ClockSkewAware {
 	 * @param jwkSet         The OpenID Provider JWK set. Must not be
 	 *                       {@code null}.
 	 */
-	public IDTokenVerifier(final Issuer expectedIssuer,
-			       final ClientID clientID,
-			       final JWSAlgorithm expectedJWSAlg,
-			       final JWKSet jwkSet) {
+	public IDTokenValidator(final Issuer expectedIssuer,
+				final ClientID clientID,
+				final JWSAlgorithm expectedJWSAlg,
+				final JWKSet jwkSet) {
 
 		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableJWKSet(expectedIssuer, jwkSet)),  null);
 	}
 
 
 	/**
-	 * Creates a new verifier for RSA or EC signed ID tokens where the
+	 * Creates a new validator for RSA or EC signed ID tokens where the
 	 * OpenID Provider's JWK set is specified by URL.
 	 *
 	 * @param expectedIssuer The expected ID token issuer (OpenID
@@ -125,17 +125,17 @@ public class IDTokenVerifier implements ClockSkewAware {
 	 * @param jwkSetURI      The OpenID Provider JWK set URL. Must not be
 	 *                       {@code null}.
 	 */
-	public IDTokenVerifier(final Issuer expectedIssuer,
-			       final ClientID clientID,
-			       final JWSAlgorithm expectedJWSAlg,
-			       final URL jwkSetURI) {
+	public IDTokenValidator(final Issuer expectedIssuer,
+				final ClientID clientID,
+				final JWSAlgorithm expectedJWSAlg,
+				final URL jwkSetURI) {
 
 		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new RemoteJWKSet(expectedIssuer, jwkSetURI, null)),  null);
 	}
 
 
 	/**
-	 * Creates a new verifier for HMAC protected ID tokens.
+	 * Creates a new validator for HMAC protected ID tokens.
 	 *
 	 * @param expectedIssuer The expected ID token issuer (OpenID
 	 *                       Provider). Must not be {@code null}.
@@ -144,17 +144,17 @@ public class IDTokenVerifier implements ClockSkewAware {
 	 *                       {@code null}.
 	 * @param clientSecret   The client secret. Must not be {@code null}.
 	 */
-	public IDTokenVerifier(final Issuer expectedIssuer,
-			       final ClientID clientID,
-			       final JWSAlgorithm expectedJWSAlg,
-			       final Secret clientSecret) {
+	public IDTokenValidator(final Issuer expectedIssuer,
+				final ClientID clientID,
+				final JWSAlgorithm expectedJWSAlg,
+				final Secret clientSecret) {
 
 		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableClientSecret(clientID, clientSecret)), null);
 	}
 
 
 	/**
-	 * Creates a new ID token verifier.
+	 * Creates a new ID token validator.
 	 *
 	 * @param expectedIssuer The expected ID token issuer (OpenID
 	 *                       Provider). Must not be {@code null}.
@@ -166,10 +166,10 @@ public class IDTokenVerifier implements ClockSkewAware {
 	 *                       {@code null} if encrypted ID tokens are not
 	 *                       expected.
 	 */
-	public IDTokenVerifier(final Issuer expectedIssuer,
-			       final ClientID clientID,
-			       final JWSKeySelector jwsKeySelector,
-			       final JWEKeySelector jweKeySelector) {
+	public IDTokenValidator(final Issuer expectedIssuer,
+				final ClientID clientID,
+				final JWSKeySelector jwsKeySelector,
+				final JWEKeySelector jweKeySelector) {
 		if (expectedIssuer == null) {
 			throw new IllegalArgumentException("The expected ID token issuer must not be null");
 		}
@@ -511,7 +511,7 @@ public class IDTokenVerifier implements ClockSkewAware {
 
 
 	/**
-	 * Creates a new ID token verifier for the specified OpenID Provider
+	 * Creates a new ID token validator for the specified OpenID Provider
 	 * metadata and OpenID Relying Party registration.
 	 *
 	 * @param opMetadata      The OpenID Provider metadata. Must not be
@@ -521,15 +521,15 @@ public class IDTokenVerifier implements ClockSkewAware {
 	 * @param clientJWKSource The client private JWK source, {@code null}
 	 *                        if encrypted ID tokens are not expected.
 	 *
-	 * @return The ID token verifier.
+	 * @return The ID token validator.
 	 *
 	 * @throws GeneralException If the supplied OpenID Provider metadata or
 	 *                          Relying Party metadata are missing a
 	 *                          required parameter or inconsistent.
 	 */
-	public static IDTokenVerifier create(final OIDCProviderMetadata opMetadata,
-					     final OIDCClientInformation clientInfo,
-					     final JWKSource clientJWKSource)
+	public static IDTokenValidator create(final OIDCProviderMetadata opMetadata,
+					      final OIDCClientInformation clientInfo,
+					      final JWKSource clientJWKSource)
 		throws GeneralException {
 
 		// Create JWS key selector, unless id_token alg = none
@@ -538,6 +538,6 @@ public class IDTokenVerifier implements ClockSkewAware {
 		// Create JWE key selector if encrypted ID tokens are expected
 		final JWEKeySelector jweKeySelector = createJWEKeySelector(opMetadata, clientInfo, clientJWKSource);
 
-		return new IDTokenVerifier(opMetadata.getIssuer(), clientInfo.getID(), jwsKeySelector, jweKeySelector);
+		return new IDTokenValidator(opMetadata.getIssuer(), clientInfo.getID(), jwsKeySelector, jweKeySelector);
 	}
 }
