@@ -32,8 +32,7 @@ import org.xml.sax.SAXException;
 
 
 /**
- * SAML 2.0 assertion validator. Expects assertions signed with RSA-SHA256
- * (mandatory to implement XML signature).
+ * SAML 2.0 assertion validator.
  */
 @ThreadSafe
 public class SAML2AssertionValidator {

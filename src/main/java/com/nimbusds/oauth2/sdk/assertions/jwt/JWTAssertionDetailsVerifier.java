@@ -13,7 +13,15 @@ import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * JSON Web Token (JWT) bearer assertion details (claims set) verifier for
- * OAuth 2.0 client authentication and authorisation grants.
+ * OAuth 2.0 client authentication and authorisation grants. Intended for
+ * initial validation of JWT assertions:
+ *
+ * <ul>
+ *     <li>Audience check
+ *     <li>Expiration time check
+ *     <li>Not-before time check (is set)
+ *     <li>Subject and issuer presence check
+ * </ul>
  *
  * <p>Related specifications:
  *

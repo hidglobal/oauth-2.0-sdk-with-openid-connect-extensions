@@ -13,7 +13,14 @@ import org.apache.commons.collections4.CollectionUtils;
 
 /**
  * SAML 2.0 bearer assertion details verifier for OAuth 2.0 client
- * authentication and authorisation grants.
+ * authentication and authorisation grants. Intended for initial validation of
+ * SAML 2.0 assertions:
+ *
+ * <ul>
+ *     <li>Audience check
+ *     <li>Expiration time check
+ *     <li>Not-before time check (is set)
+ * </ul>
  *
  * <p>Related specifications:
  *
