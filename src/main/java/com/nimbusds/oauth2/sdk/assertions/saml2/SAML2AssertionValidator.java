@@ -4,14 +4,12 @@ package com.nimbusds.oauth2.sdk.assertions.saml2;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Date;
-import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.id.Issuer;
 import net.jcip.annotations.ThreadSafe;
 import org.opensaml.DefaultBootstrap;
 import org.opensaml.saml2.core.Assertion;
@@ -42,38 +40,45 @@ public class SAML2AssertionValidator {
 
 
 	/**
-	 * List of the expected audience values.
+	 * The SAML 2.0 assertion details verifier.
 	 */
-	private final List<com.nimbusds.oauth2.sdk.id.Audience> expectedAudience;
+	private final SAML2AssertionDetailsVerifier detailsVerifier;
+
+
+	static {
+		try {
+			DefaultBootstrap.bootstrap();
+		} catch (ConfigurationException e) {
+			throw new RuntimeException(e.getMessage(), e);
+		}
+	}
 
 
 	/**
 	 * Creates a new SAML 2.0 assertion validator.
 	 *
-	 * @param expectedAudience The expected audience / recipient value(s).
-	 *                         Must not be empty or {@code null}.
+	 * @param detailsVerifier The SAML 2.0 assertion details verifier. Must
+	 *                        not be {@code null}.
 	 *
 	 * @throws ConfigurationException If bootstrapping of the OpenSAML
 	 *                                library failed.
 	 */
-	public SAML2AssertionValidator(final List<com.nimbusds.oauth2.sdk.id.Audience> expectedAudience)
+	public SAML2AssertionValidator(final SAML2AssertionDetailsVerifier detailsVerifier)
 		throws ConfigurationException {
-		if (expectedAudience.isEmpty()) {
-			throw new IllegalArgumentException("The expected audience / recipient list must not be empty");
+		if (detailsVerifier == null) {
+			throw new IllegalArgumentException("The SAML 2.0 assertion details verifier must not be null");
 		}
-		this.expectedAudience = expectedAudience;
-		DefaultBootstrap.bootstrap();
+		this.detailsVerifier = detailsVerifier;
 	}
 
 
 	/**
-	 * Returns the expected audience / recipient values.
+	 * Gets the SAML 2.0 assertion details verifier.
 	 *
-	 * @return The expected audience / recipient values.
+	 * @return The SAML 2.0 assertion details verifier.
 	 */
-	public List<com.nimbusds.oauth2.sdk.id.Audience> getExpectedAudience() {
-
-		return expectedAudience;
+	public SAML2AssertionDetailsVerifier getDetailsVerifier() {
+		return detailsVerifier;
 	}
 
 
@@ -84,10 +89,10 @@ public class SAML2AssertionValidator {
 	 *
 	 * @return The SAML 2.0 assertion.
 	 *
-	 * @throws ValidationException If parsing of the assertion failed.
+	 * @throws ParseException If parsing of the assertion failed.
 	 */
 	public static Assertion parse(final String xml)
-		throws ValidationException {
+		throws ParseException {
 
 		DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 		documentBuilderFactory.setNamespaceAware(true);
@@ -105,11 +110,11 @@ public class SAML2AssertionValidator {
 			xmlObject = unmarshaller.unmarshall(element);
 
 		} catch (ParserConfigurationException | IOException | SAXException | UnmarshallingException e) {
-			throw new ValidationException("Assertion parsing failed: " + e.getMessage(), e);
+			throw new ParseException("SAML 2.0 assertion parsing failed: " + e.getMessage(), e);
 		}
 
 		if (! (xmlObject instanceof Assertion)) {
-			throw new ValidationException("Top-level element not an assertion");
+			throw new ParseException("Top-level XML element not a SAML 2.0 assertion");
 		}
 
 		return (Assertion)xmlObject;
@@ -117,58 +122,33 @@ public class SAML2AssertionValidator {
 
 
 	/**
-	 * Checks the specified XML signature.
+	 * Verifies the specified XML signature.
 	 *
 	 * @param signature The XML signature. Must not be {@code null}.
-	 * @param publicKey The public RSA key to validate the signature. Must
+	 * @param publicKey The public RSA key to verify the signature. Must
 	 *                  not be {@code null}.
 	 *
-	 * @throws ValidationException If the signature is invalid.
+	 * @throws BadSAML2AssertionException If the signature is invalid.
 	 */
-	public static void validateSignature(final Signature signature, final RSAPublicKey publicKey)
-		throws ValidationException {
+	public static void verifySignature(final Signature signature, final RSAPublicKey publicKey)
+		throws BadSAML2AssertionException {
+
+		SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
+		try {
+			profileValidator.validate(signature);
+		} catch (ValidationException e) {
+			throw new BadSAML2AssertionException("Invalid SAML 2.0 siganture format: " + e.getMessage(), e);
+		}
 
 		BasicCredential publicCredential = new BasicCredential();
 		publicCredential.setPublicKey(publicKey);
 		publicCredential.setUsageType(UsageType.SIGNING);
 		SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
-		signatureValidator.validate(signature);
-	}
 
-
-	/**
-	 * Validates the required statements of the specified SAML 2.0
-	 * assertion. See http://tools.ietf.org/html/rfc7522#section-3
-	 *
-	 * @param assertion The SAML 2.0 assertion. Must not be {@code null}.
-	 *
-	 * @throws ValidationException If the assertion is invalid.
-	 */
-	private void validateStatements(final Assertion assertion)
-		throws ValidationException {
-
-		final SAML2AssertionDetails assertionDetails;
 		try {
-			assertionDetails = SAML2AssertionDetails.parse(assertion);
-		} catch (ParseException e) {
-			throw new ValidationException(e.getMessage(), e);
-		}
-
-		// match audiences
-		if (! com.nimbusds.oauth2.sdk.id.Audience.matchesAny(expectedAudience, assertionDetails.getAudience())) {
-			throw new ValidationException("Audience mismatch");
-		}
-
-		// Check expiration, with 60 seconds permitted skew
-		final Date now = new Date();
-
-		if (! DateUtils.isAfter(assertionDetails.getExpirationTime(), now, 60)) {
-			throw new ValidationException("Expired assertion");
-		}
-
-		if (assertionDetails.getNotBeforeTime() != null &&
-			! DateUtils.isBefore(assertionDetails.getNotBeforeTime(), now, 60)) {
-			throw new ValidationException("Assertion ahead of use time");
+			signatureValidator.validate(signature);
+		} catch (ValidationException e) {
+			throw new BadSAML2AssertionException("Bad SAML 2.0 signature: " + e.getMessage(), e);
 		}
 	}
 
@@ -183,23 +163,34 @@ public class SAML2AssertionValidator {
 	 *
 	 * @return The validated SAML 2.0 assertion.
 	 *
-	 * @throws ValidationException If the assertion is invalid.
+	 * @throws BadSAML2AssertionException If the assertion is invalid.
 	 */
-	public Assertion validate(final String xml, final RSAPublicKey rsaPublicKey)
-		throws ValidationException {
+	public Assertion validate(final String xml,
+				  final Issuer expectedIssuer,
+				  final RSAPublicKey rsaPublicKey)
+		throws BadSAML2AssertionException {
 
 		// Parse string to XML, then to SAML 2.0 assertion object
-		Assertion assertion = parse(xml);
+		final Assertion assertion;
+		final SAML2AssertionDetails assertionDetails;
 
-		// Validate signature profile
-		SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
-		profileValidator.validate(assertion.getSignature());
+		try {
+			assertion = parse(xml);
+			assertionDetails = SAML2AssertionDetails.parse(assertion);
+		} catch (ParseException e) {
+			throw new BadSAML2AssertionException("Invalid SAML 2.0 assertion: " + e.getMessage(), e);
+		}
 
-		// Validate signature itself
-		validateSignature(assertion.getSignature(), rsaPublicKey);
+		// Check the audience and time window details
+		detailsVerifier.verify(assertionDetails);
 
-		// Validate audience, expiration and other required statements
-		validateStatements(assertion);
+		// Check the issuer
+		if (! expectedIssuer.equals(assertionDetails.getIssuer())) {
+			throw new BadSAML2AssertionException("Unexpected issuer: " + assertionDetails.getIssuer());
+		}
+
+		// Verify the signature
+		verifySignature(assertion.getSignature(), rsaPublicKey);
 
 		return assertion; // OK
 	}

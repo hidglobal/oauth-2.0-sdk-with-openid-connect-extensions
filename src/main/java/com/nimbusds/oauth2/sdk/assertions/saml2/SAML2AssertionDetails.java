@@ -536,8 +536,6 @@ public class SAML2AssertionDetails extends AssertionDetails {
 				nbf = subCm.getSubjectConfirmationData().getNotBefore() != null ?
 					subCm.getSubjectConfirmationData().getNotBefore().toDate()
 					: null;
-
-				System.out.println("Nbf:" + nbf);
 			}
 		}
 

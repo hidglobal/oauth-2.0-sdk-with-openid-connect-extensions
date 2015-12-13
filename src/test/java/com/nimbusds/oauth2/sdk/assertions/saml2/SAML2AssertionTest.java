@@ -83,12 +83,10 @@ public class SAML2AssertionTest extends TestCase {
 //			credential)));
 
 		// Parse back
-		SAML2AssertionValidator v = new SAML2AssertionValidator(Collections.singletonList(new Audience("https://c2id.com/token")));
+		SAML2AssertionValidator v = new SAML2AssertionValidator(
+			new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token")))));
 
-		assertTrue(v.getExpectedAudience().contains(new Audience("https://c2id.com/token")));
-		assertEquals(1, v.getExpectedAudience().size());
-
-		Assertion a = v.validate(xml, keyPair.getFirst());
+		Assertion a = v.validate(xml, issuer, keyPair.getFirst());
 
 		assertNotNull(a.getID());
 		assertNotNull(a.getIssueInstant());
@@ -179,12 +177,10 @@ public class SAML2AssertionTest extends TestCase {
 			credential)));
 
 		// Parse back
-		SAML2AssertionValidator v = new SAML2AssertionValidator(Collections.singletonList(new Audience("https://c2id.com/token")));
+		SAML2AssertionValidator v = new SAML2AssertionValidator(
+			new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token")))));
 
-		assertTrue(v.getExpectedAudience().contains(new Audience("https://c2id.com/token")));
-		assertEquals(1, v.getExpectedAudience().size());
-
-		Assertion a = v.validate(xml, keyPair.getFirst());
+		Assertion a = v.validate(xml, issuer, keyPair.getFirst());
 
 		assertNotNull(a.getID());
 		assertNotNull(a.getIssueInstant());
