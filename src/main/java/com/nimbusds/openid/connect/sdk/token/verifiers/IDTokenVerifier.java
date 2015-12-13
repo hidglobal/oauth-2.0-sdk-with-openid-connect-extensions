@@ -10,10 +10,7 @@ import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jose.proc.JWEKeySelector;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jwt.*;
-import com.nimbusds.jwt.proc.BadJWTException;
-import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
-import com.nimbusds.jwt.proc.DefaultJWTProcessor;
-import com.nimbusds.jwt.proc.JWTClaimsVerifier;
+import com.nimbusds.jwt.proc.*;
 import com.nimbusds.oauth2.sdk.GeneralException;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
@@ -41,7 +38,7 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
-public class IDTokenVerifier {
+public class IDTokenVerifier implements ClockSkewAware {
 
 
 	/**
@@ -235,6 +232,7 @@ public class IDTokenVerifier {
 	 * @return The maximum acceptable clock skew, in seconds. Zero
 	 *         indicates none.
 	 */
+	@Override
 	public int getMaxClockSkew() {
 
 		return maxClockSkew;
@@ -248,6 +246,7 @@ public class IDTokenVerifier {
 	 * @param maxClockSkew The maximum acceptable clock skew, in seconds.
 	 *                     Zero indicates none. Must not be negative.
 	 */
+	@Override
 	public void setMaxClockSkew(final int maxClockSkew) {
 
 		this.maxClockSkew = maxClockSkew;
