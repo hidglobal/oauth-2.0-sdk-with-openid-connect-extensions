@@ -4,6 +4,7 @@ package com.nimbusds.oauth2.sdk.assertions.saml2;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.interfaces.RSAPublicKey;
+import javax.crypto.SecretKey;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -32,7 +33,9 @@ import org.xml.sax.SAXException;
 
 
 /**
- * SAML 2.0 assertion validator.
+ * SAML 2.0 assertion validator. Supports RSA signatures and HMAC. Provides
+ * static methods for each validation step for putting together tailored
+ * assertion validation strategies.
  */
 @ThreadSafe
 public class SAML2AssertionValidator {
@@ -136,7 +139,7 @@ public class SAML2AssertionValidator {
 		try {
 			profileValidator.validate(signature);
 		} catch (ValidationException e) {
-			throw new BadSAML2AssertionException("Invalid SAML 2.0 siganture format: " + e.getMessage(), e);
+			throw new BadSAML2AssertionException("Invalid SAML 2.0 signature format: " + e.getMessage(), e);
 		}
 
 		BasicCredential publicCredential = new BasicCredential();
@@ -153,7 +156,37 @@ public class SAML2AssertionValidator {
 
 
 	/**
-	 * Validates the specified SAML 2.0 assertion.
+	 * Verifies the specified XML HMAC.
+	 *
+	 * @param hmac    The XML HMAC. Must not be {@code null}.
+	 * @param hmacKey The HMAC key. Must not be {@code null}.
+	 *
+	 * @throws BadSAML2AssertionException If the signature is invalid.
+	 */
+	public static void verifyHMAC(final Signature hmac, final SecretKey hmacKey)
+		throws BadSAML2AssertionException {
+
+		SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
+		try {
+			profileValidator.validate(hmac);
+		} catch (ValidationException e) {
+			throw new BadSAML2AssertionException("Invalid SAML 2.0 signature format: " + e.getMessage(), e);
+		}
+
+		BasicCredential publicCredential = new BasicCredential();
+		publicCredential.setSecretKey(hmacKey);
+		SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
+
+		try {
+			signatureValidator.validate(hmac);
+		} catch (ValidationException e) {
+			throw new BadSAML2AssertionException("Bad SAML 2.0 HMAC: " + e.getMessage(), e);
+		}
+	}
+
+
+	/**
+	 * Validates the specified RSA-signed SAML 2.0 assertion.
 	 *
 	 * @param xml          The SAML 2.0 assertion XML. Must not be
 	 *                     {@code null}.
@@ -190,6 +223,47 @@ public class SAML2AssertionValidator {
 
 		// Verify the signature
 		verifySignature(assertion.getSignature(), rsaPublicKey);
+
+		return assertion; // OK
+	}
+
+
+	/**
+	 * Validates the specified HMAC-protected SAML 2.0 assertion.
+	 *
+	 * @param xml     The SAML 2.0 assertion XML. Must not be {@code null}.
+	 * @param hmacKey The HMAC key. Must not be {@code null}.
+	 *
+	 * @return The validated SAML 2.0 assertion.
+	 *
+	 * @throws BadSAML2AssertionException If the assertion is invalid.
+	 */
+	public Assertion validate(final String xml,
+				  final Issuer expectedIssuer,
+				  final SecretKey hmacKey)
+		throws BadSAML2AssertionException {
+
+		// Parse string to XML, then to SAML 2.0 assertion object
+		final Assertion assertion;
+		final SAML2AssertionDetails assertionDetails;
+
+		try {
+			assertion = parse(xml);
+			assertionDetails = SAML2AssertionDetails.parse(assertion);
+		} catch (ParseException e) {
+			throw new BadSAML2AssertionException("Invalid SAML 2.0 assertion: " + e.getMessage(), e);
+		}
+
+		// Check the audience and time window details
+		detailsVerifier.verify(assertionDetails);
+
+		// Check the issuer
+		if (! expectedIssuer.equals(assertionDetails.getIssuer())) {
+			throw new BadSAML2AssertionException("Unexpected issuer: " + assertionDetails.getIssuer());
+		}
+
+		// Verify the HMAC
+		verifyHMAC(assertion.getSignature(), hmacKey);
 
 		return assertion; // OK
 	}

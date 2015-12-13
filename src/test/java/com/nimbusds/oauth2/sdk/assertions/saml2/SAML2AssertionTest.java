@@ -8,6 +8,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.*;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -41,7 +43,15 @@ public class SAML2AssertionTest extends TestCase {
 	}
 
 
-	public void testCreateAndValidateMinimal()
+	private static SecretKey generateHMACKey()
+		throws NoSuchAlgorithmException {
+
+		KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacSha256");
+		return keyGenerator.generateKey();
+	}
+
+
+	public void testCreateAndValidateMinimal_RSA()
 		throws Exception {
 
 		Issuer issuer = new Issuer("https://saml.idp.com");
@@ -99,6 +109,76 @@ public class SAML2AssertionTest extends TestCase {
 		assertEquals("https://c2id.com/token", a.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData().getRecipient());
 		assertEquals("https://c2id.com/token", a.getConditions().getAudienceRestrictions().get(0).getAudiences().get(0).getAudienceURI());
 		assertEquals("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", a.getSignature().getSignatureAlgorithm());
+
+		details = SAML2AssertionDetails.parse(a);
+
+		assertEquals(issuer, details.getIssuer());
+		assertEquals(subject, details.getSubject());
+		assertTrue(details.getAudience().contains(audience));
+		assertEquals(1, details.getAudience().size());
+		assertNull(details.getSubjectFormat());
+		assertNull(details.getSubjectAuthenticationTime());
+		assertNull(details.getSubjectACR());
+		assertTrue(details.getExpirationTime().after(new Date()));
+		assertNull(details.getNotBeforeTime());
+		assertNotNull(details.getIssueTime());
+		assertNotNull(details.getID());
+		assertNull(details.getClientInetAddress());
+		assertNull(details.getAttributeStatement());
+	}
+
+
+	public void testCreateAndValidateMinimal_HMAC()
+		throws Exception {
+
+		Issuer issuer = new Issuer("https://saml.idp.com");
+		Subject subject = new Subject("alice@wonderland.net");
+		Audience audience = new Audience("https://c2id.com/token");
+
+		SAML2AssertionDetails details = new SAML2AssertionDetails(
+			issuer,
+			subject,
+			audience);
+
+		assertEquals(issuer, details.getIssuer());
+		assertEquals(subject, details.getSubject());
+		assertTrue(details.getAudience().contains(audience));
+		assertEquals(1, details.getAudience().size());
+		assertNull(details.getSubjectFormat());
+		assertNull(details.getSubjectAuthenticationTime());
+		assertNull(details.getSubjectACR());
+		assertTrue(details.getExpirationTime().after(new Date()));
+		assertNull(details.getNotBeforeTime());
+		assertNotNull(details.getIssueTime());
+		assertNotNull(details.getID());
+		assertNull(details.getClientInetAddress());
+		assertNull(details.getAttributeStatement());
+
+		BasicCredential credential = new BasicCredential();
+		SecretKey hmacKey = generateHMACKey();
+		credential.setSecretKey(hmacKey);
+
+		String xml = SAML2AssertionFactory.createAsString(details, SignatureConstants.ALGO_ID_MAC_HMAC_SHA256, credential);
+
+		assertFalse(xml.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
+
+		// Parse back
+		SAML2AssertionValidator v = new SAML2AssertionValidator(
+			new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token")))));
+
+		Assertion a = v.validate(xml, issuer, credential.getSecretKey());
+
+		assertNotNull(a.getID());
+		assertNotNull(a.getIssueInstant());
+		assertEquals(issuer.toString(), a.getIssuer().getValue());
+		assertNotNull(a.getSignature());
+		assertNull(a.getSubject().getNameID().getFormat());
+		assertEquals("alice@wonderland.net", a.getSubject().getNameID().getValue());
+		assertEquals(SubjectConfirmation.METHOD_BEARER, a.getSubject().getSubjectConfirmations().get(0).getMethod());
+		assertTrue(a.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData().getNotOnOrAfter().isAfterNow());
+		assertEquals("https://c2id.com/token", a.getSubject().getSubjectConfirmations().get(0).getSubjectConfirmationData().getRecipient());
+		assertEquals("https://c2id.com/token", a.getConditions().getAudienceRestrictions().get(0).getAudiences().get(0).getAudienceURI());
+		assertEquals("http://www.w3.org/2001/04/xmldsig-more#hmac-sha256", a.getSignature().getSignatureAlgorithm());
 
 		details = SAML2AssertionDetails.parse(a);
 
