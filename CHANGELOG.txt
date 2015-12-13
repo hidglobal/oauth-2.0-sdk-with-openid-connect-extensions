@@ -412,6 +412,7 @@ version 5.0-alpha16 (2015-12-13)
       compliance with spec.
     * Makes IDTokenValidator ClockSkewAware.
     * Upgrades to Nimbus JOSE+JWT 4.11.
+    * Adds AMR constants from draft-jones-oauth-amr-values-02.
 
 
 
