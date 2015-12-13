@@ -86,7 +86,13 @@ This SDK version implements the following standards and drafts:
 
 	* The OAuth 2.0 Authorization Framework: Bearer Token Usage (RFC 6750)
 
+	* OAuth 2.0 Token Introspection (RFC 7662)
+
 	* OAuth 2.0 Token Revocation (RFC 7009)
+
+	* OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591)
+
+	* OAuth 2.0 Dynamic Client Registration Management Protocol (RFC 7592)
 
 	* Assertion Framework for OAuth 2.0 Client Authentication and Authorization
 	  Grants (RFC 7521)
@@ -96,10 +102,6 @@ This SDK version implements the following standards and drafts:
 
     * SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization
       Grants (RFC 7522)
-	
-	* OAuth 2.0 Dynamic Client Registration Protocol (RFC 7591)
-
-	* OAuth 2.0 Dynamic Client Registration Management Protocol (RFC 7592)
 
 	* OpenID Connect Core 1.0 (2014-02-25).
 
@@ -118,4 +120,4 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2015-08-26
+2015-12-13
