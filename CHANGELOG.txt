@@ -410,4 +410,8 @@ version 5.0-alpha16 (2015-12-13)
     * Adds SAML 2.0 assertion package.
     * Renames IDTokenVerifier to IDTokenValidator to fix terminology and
       compliance with spec.
+    * Makes IDTokenValidator ClockSkewAware.
+    * Upgrades to Nimbus JOSE+JWT 4.11.
+
+
 
