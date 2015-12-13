@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
+import com.nimbusds.jwt.proc.ClockSkewAware;
 import com.nimbusds.jwt.proc.JWTClaimsVerifier;
 import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -27,7 +28,7 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
-public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
+public class IDTokenClaimsVerifier implements JWTClaimsVerifier, ClockSkewAware {
 
 
 	// Cache general exceptions
@@ -108,7 +109,7 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 	/**
 	 * The maximum acceptable clock skew, in seconds.
 	 */
-	private final int maxClockSkew;
+	private int maxClockSkew;
 
 
 	/**
@@ -142,10 +143,7 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 
 		this.expectedNonce = nonce;
 
-		if (maxClockSkew < 0) {
-			throw new IllegalArgumentException("The max clock skew must be zero or positive");
-		}
-		this.maxClockSkew = maxClockSkew;
+		setMaxClockSkew(maxClockSkew);
 	}
 
 
@@ -182,14 +180,19 @@ public class IDTokenClaimsVerifier implements JWTClaimsVerifier {
 	}
 
 
-	/**
-	 * Returns the maximum acceptable clock skew.
-	 *
-	 * @return The maximum acceptable clock skew, in seconds. Zero if none.
-	 */
+	@Override
 	public int getMaxClockSkew() {
 
 		return maxClockSkew;
+	}
+
+
+	@Override
+	public void setMaxClockSkew(final int maxClockSkew) {
+		if (maxClockSkew < 0) {
+			throw new IllegalArgumentException("The max clock skew must be zero or positive");
+		}
+		this.maxClockSkew = maxClockSkew;
 	}
 
 

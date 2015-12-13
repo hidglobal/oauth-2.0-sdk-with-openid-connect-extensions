@@ -8,6 +8,7 @@ import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import net.jcip.annotations.Immutable;
+import org.apache.commons.collections4.CollectionUtils;
 
 
 /**
@@ -71,7 +72,7 @@ public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
 	/**
 	 * Creates a new JWT bearer assertion details (claims set) verifier.
 	 *
-	 * @param expectedAudience The permitted audience (aud) claim values.
+	 * @param expectedAudience The expected audience (aud) claim values.
 	 *                         Must not be empty or {@code null}. Should
 	 *                         typically contain the token endpoint URI and
 	 *                         for OpenID provider it may also include the
@@ -79,7 +80,7 @@ public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
 	 */
 	public JWTAssertionDetailsVerifier(final Set<Audience> expectedAudience) {
 
-		if (expectedAudience == null || expectedAudience.isEmpty()) {
+		if (CollectionUtils.isEmpty(expectedAudience)) {
 			throw new IllegalArgumentException("The expected audience set must not be null or empty");
 		}
 
@@ -90,9 +91,9 @@ public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
 
 
 	/**
-	 * Returns the permitted audience values.
+	 * Returns the expected audience values.
 	 *
-	 * @return The permitted audience (aud) claim values.
+	 * @return The expected audience (aud) claim values.
 	 */
 	public Set<Audience> getExpectedAudience() {
 
