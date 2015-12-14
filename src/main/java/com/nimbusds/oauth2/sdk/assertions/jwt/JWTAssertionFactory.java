@@ -150,4 +150,10 @@ public class JWTAssertionFactory {
 		signedJWT.sign(signer);
 		return signedJWT;
 	}
+
+
+	/**
+	 * Prevents public instantiation.
+	 */
+	private JWTAssertionFactory() {}
 }

@@ -159,4 +159,10 @@ public class SAML2AssertionFactory {
 		credential.setUsageType(UsageType.SIGNING);
 		return createAsString(details, SignatureConstants.ALGO_ID_SIGNATURE_RSA_SHA256, credential);
 	}
+
+
+	/**
+	 * Prevents public instantiation.
+	 */
+	private SAML2AssertionFactory() {}
 }
