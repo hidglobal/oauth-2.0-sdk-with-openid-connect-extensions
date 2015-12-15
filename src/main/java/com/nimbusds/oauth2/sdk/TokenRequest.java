@@ -329,7 +329,7 @@ public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 			// Parse optional client ID
 			String clientIDString = params.get("client_id");
 
-			if (clientIDString != null && clientIDString.trim().length() > 0)
+			if (clientIDString != null && ! clientIDString.trim().isEmpty())
 				clientID = new ClientID(clientIDString);
 
 			if (clientID == null && grant.getType().requiresClientID()) {
