@@ -37,10 +37,9 @@ and OpenID Connect based applications:
 
 	* Developing OpenID Connect provider (OP) servers:
 	
-		- Parse and process requests at the OpenID Connect 
-		  Authorisation Endpoint, then generate the appropriate 
-		  responses with an authorisation code, ID Token and / or
-		  UserInfo access token;
+		- Parse and process requests at the OpenID Connect Authorisation
+		  Endpoint, then generate the appropriate responses with an
+		  authorisation code, ID Token and / or UserInfo access token;
 		  
 		- Parse and process requests at the OpenID Connect Token Endpoint, then
 		  generate the appropriate responses;
@@ -103,6 +102,8 @@ This SDK version implements the following standards and drafts:
     * SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization
       Grants (RFC 7522)
 
+    * Authentication Method Reference Values (draft-jones-oauth-amr-values-02)
+
 	* OpenID Connect Core 1.0 (2014-02-25).
 
 	* OpenID Connect Discovery 1.0 (2014-02-25).
@@ -120,4 +121,5 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2015-12-13
+2015-12-15
+
