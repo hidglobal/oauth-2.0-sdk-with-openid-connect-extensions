@@ -7,15 +7,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import com.nimbusds.langtag.*;
-
-import com.nimbusds.jwt.*;
-
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.*;
-import com.nimbusds.oauth2.sdk.id.*;
-import com.nimbusds.openid.connect.sdk.claims.*;
+import com.nimbusds.oauth2.sdk.id.ClientID;
+import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.openid.connect.sdk.claims.ACR;
+import junit.framework.TestCase;
 
 
 /**
@@ -76,6 +75,19 @@ public class AuthenticationRequestTest extends TestCase {
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
 
+		assertNull(request.getResponseMode());
+		assertNull(request.getDisplay());
+		assertNull(request.getPrompt());
+		assertEquals(0, request.getMaxAge());
+		assertNull(request.getUILocales());
+		assertNull(request.getIDTokenHint());
+		assertNull(request.getLoginHint());
+		assertNull(request.getACRValues());
+		assertNull(request.getClaims());
+		assertNull(request.getClaimsLocales());
+		assertNull(request.getRequestObject());
+		assertNull(request.getRequestURI());
+
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
@@ -102,6 +114,19 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
+
+		assertNull(request.getResponseMode());
+		assertNull(request.getDisplay());
+		assertNull(request.getPrompt());
+		assertEquals(0, request.getMaxAge());
+		assertNull(request.getUILocales());
+		assertNull(request.getIDTokenHint());
+		assertNull(request.getLoginHint());
+		assertNull(request.getACRValues());
+		assertNull(request.getClaims());
+		assertNull(request.getClaimsLocales());
+		assertNull(request.getRequestObject());
+		assertNull(request.getRequestURI());
 	}
 
 

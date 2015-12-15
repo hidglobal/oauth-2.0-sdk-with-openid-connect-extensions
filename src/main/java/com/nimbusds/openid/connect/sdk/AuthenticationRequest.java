@@ -3,33 +3,23 @@ package com.nimbusds.openid.connect.sdk;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import net.jcip.annotations.Immutable;
-
-import org.apache.commons.lang3.StringUtils;
-
-import net.minidev.json.JSONObject;
-
-import com.nimbusds.langtag.LangTag;
-import com.nimbusds.langtag.LangTagException;
+import java.util.*;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-
+import com.nimbusds.langtag.LangTag;
+import com.nimbusds.langtag.LangTagException;
 import com.nimbusds.oauth2.sdk.*;
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
-
 import com.nimbusds.openid.connect.sdk.claims.ACR;
+import net.jcip.annotations.Immutable;
+import net.minidev.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -1111,15 +1101,17 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				                 clientID, redirectURI, ar.impliedResponseMode(), state);
 		}
 		
-		Display display;
-		
-		try {
-			display = Display.parse(params.get("display"));
+		Display display = null;
 
-		} catch (ParseException e) {
-			String msg = "Invalid \"display\" parameter: " + e.getMessage();
-			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
-				                 clientID, redirectURI, ar.impliedResponseMode(), state, e);
+		if (params.containsKey("display")) {
+			try {
+				display = Display.parse(params.get("display"));
+
+			} catch (ParseException e) {
+				String msg = "Invalid \"display\" parameter: " + e.getMessage();
+				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg),
+					clientID, redirectURI, ar.impliedResponseMode(), state, e);
+			}
 		}
 		
 		
