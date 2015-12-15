@@ -56,12 +56,44 @@ public class ResolveException extends GeneralException {
 		                final Throwable cause) {
 
 		super(exMessage,
-			(authRequest.getRequestURI() != null ? OIDCError.INVALID_REQUEST_URI : OIDCError.INVALID_REQUEST_OBJECT)
-				.setDescription(clientMessage != null ? clientMessage : "Request (URI) parameter not supported"),
+			resolveErrorObject(clientMessage, authRequest),
 			authRequest.getClientID(),
 			authRequest.getRedirectionURI(),
 			authRequest.getResponseMode(),
 			authRequest.getState(),
 			cause);
+	}
+
+
+	/**
+	 * Resolves the error object ({@code invalid_request_uri} or
+	 * {@code invalid_request_object}) for the specified OpenID
+	 * authentication request.
+	 *
+	 * @param clientMessage The message to pass back to the client in the
+	 *                      {@code error_description} of the error code,
+	 *                      {@code null} to use the default one.
+	 * @param authRequest   The associated OpenID Connect authentication
+	 *                      request, used to determine the error object.
+	 *                      Must not be {@code null}.
+	 *
+	 * @return The error object.
+	 */
+	private static ErrorObject resolveErrorObject(final String clientMessage,
+						      final AuthenticationRequest authRequest) {
+
+		ErrorObject errorObject;
+
+		if (authRequest.getRequestURI() != null) {
+			errorObject = OIDCError.INVALID_REQUEST_URI;
+		} else {
+			errorObject = OIDCError.INVALID_REQUEST_OBJECT;
+		}
+
+		if (clientMessage != null) {
+			return errorObject.setDescription(clientMessage);
+		}
+
+		return errorObject;
 	}
 }
