@@ -415,6 +415,9 @@ version 5.0-alpha16 (2015-12-15)
     * Refactors AuthenticationRequestResolver for new JWT processor framework.
     * Removes obsolete JWTDecoder interface and default implementation.
     * Adds AMR constants from draft-jones-oauth-amr-values-02.
+    * AuthenticationRequest no longer parses unspecified display as default
+      "page".
+
 
 
 
