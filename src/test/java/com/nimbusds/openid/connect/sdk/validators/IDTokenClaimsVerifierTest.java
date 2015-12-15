@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.token.validators;
+package com.nimbusds.openid.connect.sdk.validators;
 
 
 import java.util.Arrays;

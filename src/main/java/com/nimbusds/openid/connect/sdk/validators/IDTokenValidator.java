@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.token.validators;
+package com.nimbusds.openid.connect.sdk.validators;
 
 
 import java.net.MalformedURLException;
@@ -254,7 +254,7 @@ public class IDTokenValidator implements ClockSkewAware {
 
 
 	/**
-	 * Verifies the specified ID token.
+	 * Validates the specified ID token.
 	 *
 	 * @param idToken       The ID token. Must not be {@code null}.
 	 * @param expectedNonce The expected nonce, {@code null} if none.
@@ -265,15 +265,15 @@ public class IDTokenValidator implements ClockSkewAware {
 	 * @throws JOSEException    If an internal JOSE exception was
 	 *                          encountered.
 	 */
-	public IDTokenClaimsSet verify(final JWT idToken, final Nonce expectedNonce)
+	public IDTokenClaimsSet validate(final JWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
 		if (idToken instanceof PlainJWT) {
-			return verify((PlainJWT)idToken, expectedNonce);
+			return validate((PlainJWT)idToken, expectedNonce);
 		} else if (idToken instanceof SignedJWT) {
-			return verify((SignedJWT) idToken, expectedNonce);
+			return validate((SignedJWT) idToken, expectedNonce);
 		} else if (idToken instanceof EncryptedJWT) {
-			return verify((EncryptedJWT) idToken, expectedNonce);
+			return validate((EncryptedJWT) idToken, expectedNonce);
 		} else {
 			throw new JOSEException("Unexpected JWT type: " + idToken.getClass());
 		}
@@ -292,7 +292,7 @@ public class IDTokenValidator implements ClockSkewAware {
 	 * @throws JOSEException    If an internal JOSE exception was
 	 *                          encountered.
 	 */
-	private IDTokenClaimsSet verify(final PlainJWT idToken, final Nonce expectedNonce)
+	private IDTokenClaimsSet validate(final PlainJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
 		if (jwsKeySelector != null) {
@@ -325,7 +325,7 @@ public class IDTokenValidator implements ClockSkewAware {
 	 * @throws JOSEException    If an internal JOSE exception was
 	 *                          encountered.
 	 */
-	private IDTokenClaimsSet verify(final SignedJWT idToken, final Nonce expectedNonce)
+	private IDTokenClaimsSet validate(final SignedJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
 		if (jwsKeySelector == null) {
@@ -352,7 +352,7 @@ public class IDTokenValidator implements ClockSkewAware {
 	 * @throws JOSEException    If an internal JOSE exception was
 	 *                          encountered.
 	 */
-	private IDTokenClaimsSet verify(final EncryptedJWT idToken, final Nonce expectedNonce)
+	private IDTokenClaimsSet validate(final EncryptedJWT idToken, final Nonce expectedNonce)
 		throws BadJOSEException, JOSEException {
 
 		if (jweKeySelector == null) {

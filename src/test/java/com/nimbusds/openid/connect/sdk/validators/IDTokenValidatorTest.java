@@ -1,4 +1,4 @@
-package com.nimbusds.openid.connect.sdk.token.validators;
+package com.nimbusds.openid.connect.sdk.validators;
 
 
 import java.security.KeyPair;
@@ -71,7 +71,7 @@ public class IDTokenValidatorTest extends TestCase {
 		assertNull(idTokenValidator.getJWSKeySelector());
 		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, null);
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.validate(idToken, null);
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -100,7 +100,7 @@ public class IDTokenValidatorTest extends TestCase {
 		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID);
 
 		try {
-			idTokenValidator.verify(idToken, null);
+			idTokenValidator.validate(idToken, null);
 			fail();
 		} catch (BadJWTException e) {
 			assertEquals("Expired JWT", e.getMessage());
@@ -140,7 +140,7 @@ public class IDTokenValidatorTest extends TestCase {
 		assertNotNull(idTokenValidator.getJWSKeySelector());
 		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, null);
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.validate(idToken, null);
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -181,7 +181,7 @@ public class IDTokenValidatorTest extends TestCase {
 		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.RS256, jwkSet);
 
 		try {
-			idTokenValidator.verify(idToken, null);
+			idTokenValidator.validate(idToken, null);
 			fail();
 		} catch (BadJWSException e) {
 			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
@@ -222,7 +222,7 @@ public class IDTokenValidatorTest extends TestCase {
 		assertNotNull(idTokenValidator.getJWSKeySelector());
 		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, new Nonce("xyz"));
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.validate(idToken, new Nonce("xyz"));
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -257,7 +257,7 @@ public class IDTokenValidatorTest extends TestCase {
 		assertNotNull(idTokenValidator.getJWSKeySelector());
 		assertNull(idTokenValidator.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.verify(idToken, new Nonce("xyz"));
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.validate(idToken, new Nonce("xyz"));
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
 		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
@@ -290,7 +290,7 @@ public class IDTokenValidatorTest extends TestCase {
 		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.HS256, clientSecret);
 
 		try {
-			idTokenValidator.verify(idToken, null);
+			idTokenValidator.validate(idToken, null);
 			fail();
 		} catch (BadJWSException e) {
 			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
@@ -358,7 +358,7 @@ public class IDTokenValidatorTest extends TestCase {
 		assertNotNull(verifier.getJWSKeySelector());
 		assertNotNull(verifier.getJWEKeySelector());
 
-		IDTokenClaimsSet idTokenClaimsSet = verifier.verify(JWTParser.parse(idTokenString), null);
+		IDTokenClaimsSet idTokenClaimsSet = verifier.validate(JWTParser.parse(idTokenString), null);
 
 		assertEquals(iss, idTokenClaimsSet.getIssuer());
 		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
@@ -434,7 +434,7 @@ public class IDTokenValidatorTest extends TestCase {
 						new ImmutableJWKSet(clientID, rpJWKSet)));
 
 		try {
-			verifier.verify(JWTParser.parse(idTokenString), null);
+			verifier.validate(JWTParser.parse(idTokenString), null);
 			fail();
 		} catch (BadJWEException e) {
 			assertEquals("Encrypted JWT rejected: Given final block not properly padded", e.getMessage());
