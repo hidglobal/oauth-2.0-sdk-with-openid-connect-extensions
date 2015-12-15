@@ -126,17 +126,23 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 		// Parse grant type
 		String grantTypeString = params.get("grant_type");
 
-		if (grantTypeString == null)
-			throw new ParseException("Missing \"grant_type\" parameter", OAuth2Error.INVALID_REQUEST);
+		if (grantTypeString == null) {
+			String msg = "Missing \"grant_type\" parameter";
+			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg));
+		}
 
-		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE))
-			throw new ParseException("The \"grant_type\" must be " + GRANT_TYPE, OAuth2Error.UNSUPPORTED_GRANT_TYPE);
+		if (! GrantType.parse(grantTypeString).equals(GRANT_TYPE)) {
+			String msg = "The \"grant_type\" must be \"" + GRANT_TYPE + "\"";
+			throw new ParseException(msg, OAuth2Error.UNSUPPORTED_GRANT_TYPE.appendDescription(": " + msg));
+		}
 
 		// Parse authorisation code
 		String codeString = params.get("code");
 
-		if (codeString == null || codeString.trim().isEmpty())
-			throw new ParseException("Missing or empty \"code\" parameter", OAuth2Error.INVALID_REQUEST);
+		if (codeString == null || codeString.trim().isEmpty()) {
+			String msg = "Missing or empty \"code\" parameter";
+			throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg));
+		}
 
 		AuthorizationCode code = new AuthorizationCode(codeString);
 
@@ -146,11 +152,11 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 		URI redirectURI = null;
 
 		if (redirectURIString != null) {
-
 			try {
 				redirectURI = new URI(redirectURIString);
 			} catch (URISyntaxException e) {
-				throw new ParseException("Invalid \"redirect_uri\" parameter: " + e.getMessage(), OAuth2Error.INVALID_REQUEST, e);
+				String msg = "Invalid \"redirect_uri\" parameter: " + e.getMessage();
+				throw new ParseException(msg, OAuth2Error.INVALID_REQUEST.appendDescription(": " + msg), e);
 			}
 		}
 
