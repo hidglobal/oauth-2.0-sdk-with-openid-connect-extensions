@@ -65,7 +65,7 @@ public abstract class AccessToken extends Token {
 	 */
 	public AccessToken(final AccessTokenType type, final int byteLength) {
 	
-		this(type, byteLength, 0l, null);
+		this(type, byteLength, 0L, null);
 	}
 
 
@@ -123,7 +123,7 @@ public abstract class AccessToken extends Token {
 	 */
 	public AccessToken(final AccessTokenType type, final String value) {
 	
-		this(type, value, 0l, null);
+		this(type, value, 0L, null);
 	}
 	
 	

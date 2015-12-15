@@ -36,7 +36,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
 		/**
 		 * Determines whether the token is active.
 		 */
-		private boolean active;
+		private final boolean active;
 
 
 		/**
@@ -108,7 +108,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
 		/**
 		 * Optional custom parameters.
 		 */
-		private JSONObject customParams = new JSONObject();
+		private final JSONObject customParams = new JSONObject();
 
 
 		/**

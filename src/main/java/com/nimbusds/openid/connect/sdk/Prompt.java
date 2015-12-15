@@ -26,7 +26,7 @@ public class Prompt extends LinkedHashSet<Prompt.Type> {
 	/**
 	 * Enumeration of the prompt types.
 	 */
-	public static enum Type {
+	public enum Type {
 	
 	
 		/** 

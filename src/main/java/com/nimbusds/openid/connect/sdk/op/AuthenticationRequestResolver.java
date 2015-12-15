@@ -241,8 +241,6 @@ public class AuthenticationRequestResolver<C extends SecurityContext> {
 		finalParams.remove("request_uri"); // make sure request_uri is deleted
 
 		// Create new updated OpenID auth request
-		AuthenticationRequest finalAuthRequest;
-
 		try {
 			return AuthenticationRequest.parse(request.getEndpointURI(), finalParams);
 		} catch (ParseException e) {

@@ -40,28 +40,28 @@ public class JWTAssertionDetailsVerifier extends DefaultJWTClaimsVerifier {
 	/**
 	 * Missing JWT expiration claim.
 	 */
-	private static BadJWTException MISSING_EXP_CLAIM_EXCEPTION =
+	private static final BadJWTException MISSING_EXP_CLAIM_EXCEPTION =
 		new BadJWTException("Missing JWT expiration claim");
 
 
 	/**
 	 * Missing JWT audience claim.
 	 */
-	private static BadJWTException MISSING_AUD_CLAIM_EXCEPTION =
+	private static final BadJWTException MISSING_AUD_CLAIM_EXCEPTION =
 		new BadJWTException("Missing JWT audience claim");
 
 
 	/**
 	 * Missing JWT subject claim.
 	 */
-	private static BadJWTException MISSING_SUB_CLAIM_EXCEPTION =
+	private static final BadJWTException MISSING_SUB_CLAIM_EXCEPTION =
 		new BadJWTException("Missing JWT subject claim");
 
 
 	/**
 	 * Missing JWT issuer claim.
 	 */
-	private static BadJWTException MISSING_ISS_CLAIM_EXCEPTION =
+	private static final BadJWTException MISSING_ISS_CLAIM_EXCEPTION =
 		new BadJWTException("Missing JWT issuer claim");
 
 

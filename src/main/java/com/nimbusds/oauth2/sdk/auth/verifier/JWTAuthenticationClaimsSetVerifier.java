@@ -31,7 +31,7 @@ class JWTAuthenticationClaimsSetVerifier extends JWTAssertionDetailsVerifier {
 	/**
 	 * Missing or invalid JWT claim exception.
 	 */
-	private static BadJWTException ISS_SUB_MISMATCH_EXCEPTION =
+	private static final BadJWTException ISS_SUB_MISMATCH_EXCEPTION =
 		new BadJWTException("Issuer and subject JWT claims don't match");
 
 

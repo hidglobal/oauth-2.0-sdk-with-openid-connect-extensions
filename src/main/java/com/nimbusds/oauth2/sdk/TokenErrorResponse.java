@@ -7,15 +7,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
-
-import org.apache.commons.lang3.StringUtils;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.jcip.annotations.Immutable;
+import net.minidev.json.JSONObject;
 
 
 /**

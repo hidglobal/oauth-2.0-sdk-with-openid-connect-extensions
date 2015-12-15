@@ -67,7 +67,7 @@ public final class BearerAccessToken extends AccessToken {
 	 */
 	public BearerAccessToken(final int byteLength) {
 	
-		this(byteLength, 0l, null);
+		this(byteLength, 0L, null);
 	}
 
 
@@ -108,7 +108,7 @@ public final class BearerAccessToken extends AccessToken {
 	 */
 	public BearerAccessToken(final String value) {
 	
-		this(value, 0l, null);
+		this(value, 0L, null);
 	}
 	
 	

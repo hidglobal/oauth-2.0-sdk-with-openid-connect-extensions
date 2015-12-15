@@ -63,7 +63,7 @@ public class JWTAuthenticationClaimsSet extends JWTAssertionDetails {
 	public JWTAuthenticationClaimsSet(final ClientID clientID,
 					  final Audience aud) {
 
-		this(clientID, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5*60*1000l), null, null, new JWTID());
+		this(clientID, aud.toSingleAudienceList(), new Date(new Date().getTime() + 5*60* 1000L), null, null, new JWTID());
 	}
 
 	

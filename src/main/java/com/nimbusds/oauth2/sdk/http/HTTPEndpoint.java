@@ -15,5 +15,5 @@ public interface HTTPEndpoint {
 	 *
 	 * @return The HTTP response.
 	 */
-	public HTTPResponse process(final HTTPRequest httpRequest);
+	HTTPResponse process(final HTTPRequest httpRequest);
 }

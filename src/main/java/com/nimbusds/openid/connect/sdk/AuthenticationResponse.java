@@ -25,7 +25,7 @@ public interface AuthenticationResponse extends Response {
 	 * @return The base redirection URI (without the appended error
 	 *         response parameters).
 	 */
-	public URI getRedirectionURI();
+	URI getRedirectionURI();
 
 
 	/**
@@ -33,5 +33,5 @@ public interface AuthenticationResponse extends Response {
 	 *
 	 * @return The state, {@code null} if not requested.
 	 */
-	public State getState();
+	State getState();
 }

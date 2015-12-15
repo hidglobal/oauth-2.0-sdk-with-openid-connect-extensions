@@ -306,7 +306,7 @@ public class ClientMetadata {
 	public void setRedirectionURI(final URI redirectURI) {
 
 		if (redirectURI != null) {
-			redirectURIs = new HashSet<>(Arrays.asList(redirectURI));
+			redirectURIs = new HashSet<>(Collections.singletonList(redirectURI));
 		} else {
 			redirectURIs = null;
 		}

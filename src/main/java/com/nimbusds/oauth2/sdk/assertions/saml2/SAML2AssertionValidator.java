@@ -61,12 +61,8 @@ public class SAML2AssertionValidator {
 	 *
 	 * @param detailsVerifier The SAML 2.0 assertion details verifier. Must
 	 *                        not be {@code null}.
-	 *
-	 * @throws ConfigurationException If bootstrapping of the OpenSAML
-	 *                                library failed.
 	 */
-	public SAML2AssertionValidator(final SAML2AssertionDetailsVerifier detailsVerifier)
-		throws ConfigurationException {
+	public SAML2AssertionValidator(final SAML2AssertionDetailsVerifier detailsVerifier) {
 		if (detailsVerifier == null) {
 			throw new IllegalArgumentException("The SAML 2.0 assertion details verifier must not be null");
 		}

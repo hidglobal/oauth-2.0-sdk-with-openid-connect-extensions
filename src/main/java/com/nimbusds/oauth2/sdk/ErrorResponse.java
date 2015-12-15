@@ -12,5 +12,5 @@ public interface ErrorResponse extends Response {
 	 *
 	 * @return The error, {@code null} if none.
 	 */
-	public ErrorObject getErrorObject();
+	ErrorObject getErrorObject();
 }
