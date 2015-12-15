@@ -11,6 +11,12 @@ import net.jcip.annotations.ThreadSafe;
  * Authorisation code validator, using the {@code c_hash} ID token claim.
  * Required in the hybrid flow where the authorisation code is returned
  * together with an ID token at the authorisation endpoint.
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Core 1.0, section 3.3.2.10.
+ * </ul>
  */
 @ThreadSafe
 public class AuthorizationCodeValidator {

@@ -36,6 +36,12 @@ import net.jcip.annotations.ThreadSafe;
  *         to verify them.
  *     <li>Unsecured (plain) ID tokens received at the token endpoint.
  * </ul>
+ *
+ * <p>Related specifications:
+ *
+ * <ul>
+ *     <li>OpenID Connect Core 1.0, sections 3.1.3.7, 3.2.2.11 and 3.3.2.12.
+ * </ul>
  */
 @ThreadSafe
 public class IDTokenValidator implements ClockSkewAware {
