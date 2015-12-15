@@ -406,18 +406,19 @@ version 5.0-alpha14 (2015-12-08)
 version 5.0-alpha15 (2015-12-08)
     * Adds clock skew support to IDTokenVerifier and IDTokenClaimsVerifier.
 
-version 5.0-alpha16 (2015-12-15)
-    * Adds SAML 2.0 assertion package.
+version 5.0 (2015-12-15)
+    * Adds SAML 2.0 assertion package with simple factory and validator.
     * Renames IDTokenVerifier to IDTokenValidator to fix terminology and
       compliance with spec.
     * Makes IDTokenValidator ClockSkewAware.
-    * Upgrades to Nimbus JOSE+JWT 4.11.
+    * Adds AccessTokenValidator (at_hash).
+    * Adds AuthorizationCodeValidator (c_hash).
     * Refactors AuthenticationRequestResolver for new JWT processor framework.
     * Removes obsolete JWTDecoder interface and default implementation.
     * Adds AMR constants from draft-jones-oauth-amr-values-02.
     * AuthenticationRequest no longer parses unspecified display as default
       "page".
-
+    * Upgrades to Nimbus JOSE+JWT 4.11.
 
 
 
