@@ -244,6 +244,7 @@ public class AuthenticationRequestResolver<C extends SecurityContext> {
 		try {
 			finalAuthRequest = AuthenticationRequest.parse(request.getEndpointURI(), finalParams);
 		} catch (ParseException e) {
+			// E.g. missing OIDC required redirect_uri
 			throw new ResolveException("Couldn't create final OpenID authentication request: " + e.getMessage(),
 				"Invalid request object parameter(s): " + e.getMessage(), // error_description for client
 				request, e);

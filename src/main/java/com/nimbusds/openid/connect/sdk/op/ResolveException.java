@@ -23,7 +23,7 @@ public class ResolveException extends GeneralException {
 	 */
 	public ResolveException(final ErrorObject error, final AuthenticationRequest authRequest) {
 
-		super(null,
+		super(error.getDescription(),
 			error,
 			authRequest.getClientID(),
 			authRequest.getRedirectionURI(),
@@ -34,7 +34,10 @@ public class ResolveException extends GeneralException {
 
 
 	/**
-	 * Creates a new resolve exception.
+	 * Creates a new resolve exception. The error code is set to
+	 * {@link OIDCError#INVALID_REQUEST_URI} or
+	 * {@link OIDCError#INVALID_REQUEST_OBJECT} depending on the request
+	 * type.
 	 *
 	 * @param exMessage     The original exception message (to be logged).
 	 *                      May be {@code null}.
@@ -53,7 +56,7 @@ public class ResolveException extends GeneralException {
 		                final Throwable cause) {
 
 		super(exMessage,
-			(authRequest.getRequestURI() != null ? OIDCError.REQUEST_URI_NOT_SUPPORTED : OIDCError.REQUEST_NOT_SUPPORTED)
+			(authRequest.getRequestURI() != null ? OIDCError.INVALID_REQUEST_URI : OIDCError.INVALID_REQUEST_OBJECT)
 				.setDescription(clientMessage != null ? clientMessage : "Request (URI) parameter not supported"),
 			authRequest.getClientID(),
 			authRequest.getRedirectionURI(),
