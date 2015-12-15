@@ -70,4 +70,17 @@ public class ClientRegistrationErrorResponseTest extends TestCase {
 		assertFalse(errorResponse.indicatesSuccess());
 		assertEquals(RegistrationError.INVALID_CLIENT_METADATA, errorResponse.getErrorObject());
 	}
+
+
+	public void testParse404NotFound()
+		throws Exception {
+
+		HTTPResponse httpResponse = new HTTPResponse(404);
+
+		ClientRegistrationErrorResponse errorResponse =
+			ClientRegistrationErrorResponse.parse(httpResponse);
+
+		assertFalse(errorResponse.indicatesSuccess());
+		assertTrue(errorResponse.getErrorObject().toJSONObject().isEmpty());
+	}
 }
