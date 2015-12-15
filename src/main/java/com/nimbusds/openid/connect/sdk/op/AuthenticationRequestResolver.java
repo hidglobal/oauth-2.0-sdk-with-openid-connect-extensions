@@ -230,45 +230,26 @@ public class AuthenticationRequestResolver<C extends SecurityContext> {
 			jwtClaims = jwtProcessor.process(jwt, securityContext);
 		} catch (BadJOSEException e) {
 			throw new ResolveException("Invalid request object: " + e.getMessage(),
-				"Bad JWT signature / HMAC / encryption", // error_description for client, hide details
+				"Bad JWT / signature / HMAC / encryption", // error_description for client, hide details
 				request, e);
 		}
 
 		Map<String,String> finalParams = new HashMap<>();
 		finalParams.putAll(request.toParameters());
 		finalParams.putAll(reformatClaims(jwtClaims)); // Merge params from request object
+		finalParams.remove("request"); // make sure request object is deleted
+		finalParams.remove("request_uri"); // make sure request_uri is deleted
 
 		// Create new updated OpenID auth request
 		AuthenticationRequest finalAuthRequest;
 
 		try {
-			finalAuthRequest = AuthenticationRequest.parse(request.getEndpointURI(), finalParams);
+			return AuthenticationRequest.parse(request.getEndpointURI(), finalParams);
 		} catch (ParseException e) {
 			// E.g. missing OIDC required redirect_uri
 			throw new ResolveException("Couldn't create final OpenID authentication request: " + e.getMessage(),
 				"Invalid request object parameter(s): " + e.getMessage(), // error_description for client
 				request, e);
 		}
-			
-		return new AuthenticationRequest(
-			finalAuthRequest.getEndpointURI(),
-			finalAuthRequest.getResponseType(),
-			finalAuthRequest.getResponseMode(),
-			finalAuthRequest.getScope(),
-			finalAuthRequest.getClientID(),
-			finalAuthRequest.getRedirectionURI(),
-			finalAuthRequest.getState(),
-			finalAuthRequest.getNonce(),
-			finalAuthRequest.getDisplay(),
-			finalAuthRequest.getPrompt(),
-			finalAuthRequest.getMaxAge(),
-			finalAuthRequest.getUILocales(),
-			finalAuthRequest.getClaimsLocales(),
-			finalAuthRequest.getIDTokenHint(),
-			finalAuthRequest.getLoginHint(),
-			finalAuthRequest.getACRValues(),
-			finalAuthRequest.getClaims(),
-			null, // request object
-			null); // request URI
 	}
 }
