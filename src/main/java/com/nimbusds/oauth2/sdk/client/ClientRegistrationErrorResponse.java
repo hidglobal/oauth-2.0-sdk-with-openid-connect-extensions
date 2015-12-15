@@ -5,19 +5,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
-
-import org.apache.commons.lang3.StringUtils;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.ErrorObject;
 import com.nimbusds.oauth2.sdk.ErrorResponse;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.token.BearerTokenError;
-import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import net.jcip.annotations.Immutable;
+import net.minidev.json.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -209,25 +205,9 @@ public class ClientRegistrationErrorResponse
 		String wwwAuth = httpResponse.getWWWAuthenticate();
 		
 		if (StringUtils.isNotBlank(wwwAuth)) {
-
 			error = BearerTokenError.parse(wwwAuth);
-
 		} else {
-			
-			String code = null;
-			String description = null;
-			
-			if (CommonContentTypes.APPLICATION_JSON.match(httpResponse.getContentType())) {
-				
-				JSONObject jsonObject = httpResponse.getContentAsJSONObject();
-
-				code = JSONObjectUtils.getString(jsonObject, "error");
-
-				if (jsonObject.containsKey("error_description"))
-					description = JSONObjectUtils.getString(jsonObject, "error_description");
-			}
-			
-			error = new ErrorObject(code, description, httpResponse.getStatusCode());
+			error = ErrorObject.parse(httpResponse);
 		}
 
 		return new ClientRegistrationErrorResponse(error);
