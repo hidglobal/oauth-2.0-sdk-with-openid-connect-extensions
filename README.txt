@@ -17,7 +17,9 @@ and OpenID Connect based applications:
 		- Parse and process requests at the Token Endpoint, then generate the
 		  appropriate responses;
 
-		- Parse and process requests at the Token Revocation Endpoint.
+		- Parse and process requests at the Token Introspection Endpoint;
+
+		- Parse and process requests at the Token Revocation Endpoint;
 
 		- Parse and process requests at the Client Registration Endpoint, then
 		  generate the appropriate responses.
@@ -28,6 +30,9 @@ and OpenID Connect based applications:
 		  responses;
 
 		- Make requests to an OAuth 2.0 Token Endpoint and parse the responses;
+
+		- Make requests to an OAuth 2.0 Token Introspection Endpoint and
+		  process the responses;
 
 		- Make requests to an OAuth 2.0 Token Revocation Endpoint and parse the
 		  responses;
@@ -48,24 +53,24 @@ and OpenID Connect based applications:
 		  then generate the appropriate responses;
 		  
 		- Parse and process requests at the OpenID Connect Client Registration
-		  Endpoint, then generate the appropriate responses.
+		  Endpoint, then generate the appropriate responses;
 
 		- Parse and process requests at the OpenID Connect End-Session (Logout)
 		  Endpoint.
 	
 	* Developing OpenID Connect relying party (RP) clients:
 	
-		- Make requests to an OpenID Connect Authorisation Endpoint and parse
+		- Make requests to an OpenID Connect Authorisation Endpoint and process
 		  the responses;
 		  
-		- Make requests to an OpenID Connect Token Endpoint and parse the
+		- Make requests to an OpenID Connect Token Endpoint and process the
 		  responses;
 		  
-		- Make requests to an OpenID Connect UserInfo Endpoint and parse the
+		- Make requests to an OpenID Connect UserInfo Endpoint and process the
 		  responses;
 		  
 		- Make requests to an OpenID Connect Client Registration Endpoint and
-		  parse the responses.
+		  process the responses.
 
 		- Make requests to an OpenID Connect End-Session (Logout) Endpoint.
 
