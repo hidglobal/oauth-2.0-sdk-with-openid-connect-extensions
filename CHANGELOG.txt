@@ -420,5 +420,8 @@ version 5.0 (2015-12-15)
       "page".
     * Upgrades to Nimbus JOSE+JWT 4.11.
 
+version 5.1 (2015-12-17)
+    * Lets SAML2AssertionValidator accept java.security.Key instances.
+
 
 

@@ -3,7 +3,10 @@ package com.nimbusds.oauth2.sdk.assertions.saml2;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.Key;
+import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.interfaces.ECPublicKey;
 import javax.crypto.SecretKey;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -120,15 +123,21 @@ public class SAML2AssertionValidator {
 
 
 	/**
-	 * Verifies the specified XML signature.
+	 * Verifies the specified XML signature (HMAC, RSA or EC) with the
+	 * provided key.
 	 *
 	 * @param signature The XML signature. Must not be {@code null}.
-	 * @param publicKey The public RSA key to verify the signature. Must
-	 *                  not be {@code null}.
+	 * @param key       The key to verify the signature. Should be an
+	 *                  {@link SecretKey} instance for HMAC,
+	 *                  {@link RSAPublicKey} for RSA signatures or
+	 *                  {@link ECPublicKey} for EC signatures. Must not be
+	 *                  {@code null}.
 	 *
-	 * @throws BadSAML2AssertionException If the signature is invalid.
+	 * @throws BadSAML2AssertionException If the key type doesn't match the
+	 *                                    signature, or the signature is
+	 *                                    invalid.
 	 */
-	public static void verifySignature(final Signature signature, final RSAPublicKey publicKey)
+	public static void verifySignature(final Signature signature, final Key key)
 		throws BadSAML2AssertionException {
 
 		SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
@@ -138,11 +147,17 @@ public class SAML2AssertionValidator {
 			throw new BadSAML2AssertionException("Invalid SAML 2.0 signature format: " + e.getMessage(), e);
 		}
 
-		BasicCredential publicCredential = new BasicCredential();
-		publicCredential.setPublicKey(publicKey);
-		publicCredential.setUsageType(UsageType.SIGNING);
-		SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
+		BasicCredential credential = new BasicCredential();
+		if (key instanceof SecretKey) {
+			credential.setSecretKey((SecretKey)key);
+		} else if (key instanceof PublicKey) {
+			credential.setPublicKey((PublicKey)key);
+			credential.setUsageType(UsageType.SIGNING);
+		} else {
+			throw new BadSAML2AssertionException("Unsupported key type: " + key.getAlgorithm());
+		}
 
+		SignatureValidator signatureValidator = new SignatureValidator(credential);
 		try {
 			signatureValidator.validate(signature);
 		} catch (ValidationException e) {
@@ -152,58 +167,28 @@ public class SAML2AssertionValidator {
 
 
 	/**
-	 * Verifies the specified XML HMAC.
+	 * Validates the specified SAML 2.0 assertion.
 	 *
-	 * @param hmac    The XML HMAC. Must not be {@code null}.
-	 * @param hmacKey The HMAC key. Must not be {@code null}.
-	 *
-	 * @throws BadSAML2AssertionException If the signature is invalid.
-	 */
-	public static void verifyHMAC(final Signature hmac, final SecretKey hmacKey)
-		throws BadSAML2AssertionException {
-
-		SAMLSignatureProfileValidator profileValidator = new SAMLSignatureProfileValidator();
-		try {
-			profileValidator.validate(hmac);
-		} catch (ValidationException e) {
-			throw new BadSAML2AssertionException("Invalid SAML 2.0 signature format: " + e.getMessage(), e);
-		}
-
-		BasicCredential publicCredential = new BasicCredential();
-		publicCredential.setSecretKey(hmacKey);
-		SignatureValidator signatureValidator = new SignatureValidator(publicCredential);
-
-		try {
-			signatureValidator.validate(hmac);
-		} catch (ValidationException e) {
-			throw new BadSAML2AssertionException("Bad SAML 2.0 HMAC: " + e.getMessage(), e);
-		}
-	}
-
-
-	/**
-	 * Validates the specified RSA-signed SAML 2.0 assertion.
-	 *
-	 * @param xml          The SAML 2.0 assertion XML. Must not be
-	 *                     {@code null}.
-	 * @param rsaPublicKey The public RSA key to validate the signature.
-	 *                     Must not be {@code null}.
+	 * @param assertion The SAML 2.0 assertion XML. Must not be
+	 *                  {@code null}.
+	 * @param key       The key to verify the signature. Should be an
+	 *                  {@link SecretKey} instance for HMAC,
+	 *                  {@link RSAPublicKey} for RSA signatures or
+	 *                  {@link ECPublicKey} for EC signatures. Must not be
+	 *                  {@code null}.
 	 *
 	 * @return The validated SAML 2.0 assertion.
 	 *
 	 * @throws BadSAML2AssertionException If the assertion is invalid.
 	 */
-	public Assertion validate(final String xml,
+	public Assertion validate(final Assertion assertion,
 				  final Issuer expectedIssuer,
-				  final RSAPublicKey rsaPublicKey)
+				  final Key key)
 		throws BadSAML2AssertionException {
 
-		// Parse string to XML, then to SAML 2.0 assertion object
-		final Assertion assertion;
 		final SAML2AssertionDetails assertionDetails;
 
 		try {
-			assertion = parse(xml);
 			assertionDetails = SAML2AssertionDetails.parse(assertion);
 		} catch (ParseException e) {
 			throw new BadSAML2AssertionException("Invalid SAML 2.0 assertion: " + e.getMessage(), e);
@@ -218,17 +203,20 @@ public class SAML2AssertionValidator {
 		}
 
 		// Verify the signature
-		verifySignature(assertion.getSignature(), rsaPublicKey);
+		verifySignature(assertion.getSignature(), key);
 
 		return assertion; // OK
 	}
 
 
 	/**
-	 * Validates the specified HMAC-protected SAML 2.0 assertion.
+	 * Validates the specified SAML 2.0 assertion.
 	 *
-	 * @param xml     The SAML 2.0 assertion XML. Must not be {@code null}.
-	 * @param hmacKey The HMAC key. Must not be {@code null}.
+	 * @param xml The SAML 2.0 assertion XML. Must not be {@code null}.
+	 * @param key The key to verify the signature. Should be an
+	 *            {@link SecretKey} instance for HMAC, {@link RSAPublicKey}
+	 *            for RSA signatures or {@link ECPublicKey} for EC
+	 *            signatures. Must not be {@code null}.
 	 *
 	 * @return The validated SAML 2.0 assertion.
 	 *
@@ -236,31 +224,18 @@ public class SAML2AssertionValidator {
 	 */
 	public Assertion validate(final String xml,
 				  final Issuer expectedIssuer,
-				  final SecretKey hmacKey)
+				  final Key key)
 		throws BadSAML2AssertionException {
 
 		// Parse string to XML, then to SAML 2.0 assertion object
 		final Assertion assertion;
-		final SAML2AssertionDetails assertionDetails;
 
 		try {
 			assertion = parse(xml);
-			assertionDetails = SAML2AssertionDetails.parse(assertion);
 		} catch (ParseException e) {
 			throw new BadSAML2AssertionException("Invalid SAML 2.0 assertion: " + e.getMessage(), e);
 		}
 
-		// Check the audience and time window details
-		detailsVerifier.verify(assertionDetails);
-
-		// Check the issuer
-		if (! expectedIssuer.equals(assertionDetails.getIssuer())) {
-			throw new BadSAML2AssertionException("Unexpected issuer: " + assertionDetails.getIssuer());
-		}
-
-		// Verify the HMAC
-		verifyHMAC(assertion.getSignature(), hmacKey);
-
-		return assertion; // OK
+		return validate(assertion, expectedIssuer, key);
 	}
 }

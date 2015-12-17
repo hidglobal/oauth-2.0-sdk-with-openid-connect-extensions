@@ -93,8 +93,9 @@ public class SAML2AssertionTest extends TestCase {
 //			credential)));
 
 		// Parse back
-		SAML2AssertionValidator v = new SAML2AssertionValidator(
-			new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token")))));
+		SAML2AssertionDetailsVerifier detailsVerifier = new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token"))));
+		SAML2AssertionValidator v = new SAML2AssertionValidator(detailsVerifier);
+		assertEquals(detailsVerifier, v.getDetailsVerifier());
 
 		Assertion a = v.validate(xml, issuer, keyPair.getFirst());
 
@@ -163,8 +164,9 @@ public class SAML2AssertionTest extends TestCase {
 		assertFalse(xml.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
 
 		// Parse back
-		SAML2AssertionValidator v = new SAML2AssertionValidator(
-			new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token")))));
+		SAML2AssertionDetailsVerifier detailsVerifier = new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token"))));
+		SAML2AssertionValidator v = new SAML2AssertionValidator(detailsVerifier);
+		assertEquals(detailsVerifier, v.getDetailsVerifier());
 
 		Assertion a = v.validate(xml, issuer, credential.getSecretKey());
 
@@ -257,8 +259,9 @@ public class SAML2AssertionTest extends TestCase {
 			credential)));
 
 		// Parse back
-		SAML2AssertionValidator v = new SAML2AssertionValidator(
-			new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token")))));
+		SAML2AssertionDetailsVerifier detailsVerifier = new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://c2id.com/token"))));
+		SAML2AssertionValidator v = new SAML2AssertionValidator(detailsVerifier);
+		assertEquals(detailsVerifier, v.getDetailsVerifier());
 
 		Assertion a = v.validate(xml, issuer, keyPair.getFirst());
 
