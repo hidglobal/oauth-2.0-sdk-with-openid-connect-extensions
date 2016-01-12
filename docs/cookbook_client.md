@@ -2,6 +2,8 @@
 
 This document describes how to implement an OpenID Connect (OIDC) Public Client
 using this library, [Nimbus OAuth 2.0 SDK with OpenID Connect extensions](https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions).
+Full javadoc can be found [here](http://www.javadoc.io/doc/com.nimbusds/oauth2-oidc-sdk/), and
+for the accompanying JOSE library [Nimbus JOSE + JWT](http://www.javadoc.io/doc/com.nimbusds/nimbus-jose-jwt/).
 
 The basic authentication flow in OpenID Connect consists of the following steps:
 
@@ -42,10 +44,7 @@ using the [client registration](http://openid.net/specs/openid-connect-registrat
 
 ```java
 String jsonMetadata = "{\"application_type\": \"web\",\"redirect_uris\": [\"http://client.example.com/auth_callback\"],\"response_types\": [\"code\"]}";
-OIDCClientMetadata metadata = OIDCClientMetadata.parse(JSONObjectUtils.parseJSONObject(jsonMetadata));
-
-// Select the first (and only) redirect URI
-URI redirectURI = metadata.getRedirectionURIs().iterator().next();
+OIDCClientMetadata metadata = OIDCClientMetadata.parse(JSONObjectUtils.parse(jsonMetadata));
 
 // Make registration request
 OIDCClientRegistrationRequest registrationRequest = new OIDCClientRegistrationRequest(providerMetadata.getRegistrationEndpointURI(), metadata, null);
@@ -92,7 +91,9 @@ Note:
   * If the provider does not support the discovery protocol, replace ``providerMetadata.getAuthorizationEndpointURI()`` with the authorization endpoint URL received out-of-band.
   * If the provider does not support dynamic client registration, replace ``clientInformation.getID()`` with the client id received out-of-band.
   * Make sure ``redirectURI`` matches a URI known by the provider.
-  * If you want to specify additional parameters in the authentication request, use ``com.nimbusds.openid.connect.sdk.AuthenticationRequest.Builder``.
+  * The ``state`` and ``nonce`` should be stored so they can be retrieved later.
+  * If you want to specify additional parameters in the authentication request, use 
+    [``AuthenticationRequest.Builder``](http://static.javadoc.io/com.nimbusds/oauth2-oidc-sdk/4.15/com/nimbusds/openid/connect/sdk/AuthenticationRequest.Builder.html).
 
 ### Receive the Authentication Response
 The authentication response is sent from the provider by redirecting the end
@@ -132,8 +133,8 @@ When using either implicit or hybrid flow the authentication response is encoded
 in the fragment part of the URL. This requires additional handling, e.g.
 using Javascript, see [Implementation Notes](http://openid.net/specs/openid-connect-core-1_0.html#FragmentNotes).
 
-After receiving the response back in the client, it can be parsed as described
-in the above section.
+After receiving the response back in the client, it can be parsed in the same way as when using
+Code flow.
 
 ## Token Request
 
@@ -144,8 +145,9 @@ can made to get the access token and the id token:
 ```java
 TokenRequest tokenReq = new TokenRequest(
   providerMetadata.getTokenEndpointURI(),
-  clientInformation.getID(), new AuthorizationCodeGrant(authCode,
-  redirectURI));
+  new ClientSecretBasic(clientInformation.getID(),
+						clientInformation.getSecret()),
+  new AuthorizationCodeGrant(authCode, redirectURI));
 
 HTTPResponse tokenHTTPResp = null;
 try {
@@ -172,7 +174,7 @@ accessTokenResponse.getAccessToken();
 accessTokenResponse.getIDToken();
 ```
 
-### Verify the ID token
+### Validate the ID token
 
 The id token obtained from the token request must be validated, see [ID token validation](http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation):
 
@@ -210,7 +212,7 @@ private JSONObject getProviderRSAJWK(InputStream is) {
 
   // Parse the data as json
   String jsonString = sb.toString();
-  JSONObject json = JSONObjectUtils.parseJSONObject(jsonString);
+  JSONObject json = JSONObjectUtils.parse(jsonString);
 
   // Find the RSA signing key
   JSONArray keyList = (JSONArray) json.get("keys");
