@@ -40,4 +40,16 @@ public class RefreshTokenGrantTest extends TestCase {
 		assertEquals(GrantType.REFRESH_TOKEN, grant.getType());
 		assertEquals("abc123", grant.getRefreshToken().getValue());
 	}
+
+
+	public void testEquality() {
+
+		assertTrue(new RefreshTokenGrant(new RefreshToken("xyz")).equals(new RefreshTokenGrant(new RefreshToken("xyz"))));
+	}
+
+
+	public void testInequality() {
+
+		assertFalse(new RefreshTokenGrant(new RefreshToken("abc")).equals(new RefreshTokenGrant(new RefreshToken("xyz"))));
+	}
 }

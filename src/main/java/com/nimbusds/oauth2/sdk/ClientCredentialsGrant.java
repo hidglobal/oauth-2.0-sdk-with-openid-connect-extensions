@@ -8,8 +8,8 @@ import net.jcip.annotations.Immutable;
 
 
 /**
- * Client credentials grant. Used in access token requests with a client's
- * identifier and secret.
+ * Client credentials grant. Used in access token requests where the client is
+ * acting on its own behalf.
  *
  * <p>Related specifications:
  *

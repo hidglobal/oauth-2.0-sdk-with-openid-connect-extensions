@@ -152,4 +152,30 @@ public class AuthorizationCodeGrantTest extends TestCase {
 			assertTrue(e.getCause() instanceof URISyntaxException);
 		}
 	}
+
+
+	public void testEquality() {
+
+		assertTrue(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), null)
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), null)));
+
+		assertTrue(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))));
+	}
+
+
+	public void testInequality() {
+
+		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), null)
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("abc"), null)));
+
+		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://client.com/cb"))));
+
+		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), null)));
+
+		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://other.com/cb"))));
+	}
 }

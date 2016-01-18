@@ -99,6 +99,24 @@ public class ResourceOwnerPasswordCredentialsGrant extends AuthorizationGrant {
 	}
 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ResourceOwnerPasswordCredentialsGrant that = (ResourceOwnerPasswordCredentialsGrant) o;
+		if (!username.equals(that.username)) return false;
+		return password.equals(that.password);
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = username.hashCode();
+		result = 31 * result + password.hashCode();
+		return result;
+	}
+
+
 	/**
 	 * Parses a resource owner password credentials grant from the
 	 * specified parameters.

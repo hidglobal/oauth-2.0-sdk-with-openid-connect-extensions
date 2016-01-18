@@ -103,6 +103,27 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 	}
 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		AuthorizationCodeGrant codeGrant = (AuthorizationCodeGrant) o;
+
+		if (!code.equals(codeGrant.code)) return false;
+		return redirectURI != null ? redirectURI.equals(codeGrant.redirectURI) : codeGrant.redirectURI == null;
+
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = code.hashCode();
+		result = 31 * result + (redirectURI != null ? redirectURI.hashCode() : 0);
+		return result;
+	}
+
+
 	/**
 	 * Parses an authorisation code grant from the specified parameters.
 	 *
