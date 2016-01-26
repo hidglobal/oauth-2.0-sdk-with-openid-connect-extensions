@@ -434,3 +434,7 @@ version 5.2 (2016-01-19)
     * ClientMetadata.applyDefaults set token_endpoint_auth_method to 'none' for
       implicit authorisation grant (iss #163).
 
+version 5.3 (2015-01-26)
+    * Fixes authorisation response JavaDocs concerning use of relative callback
+      URIs (issue #162).
+    
