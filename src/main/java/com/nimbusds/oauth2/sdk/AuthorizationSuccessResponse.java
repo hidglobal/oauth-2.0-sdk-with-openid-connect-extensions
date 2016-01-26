@@ -222,7 +222,7 @@ public class AuthorizationSuccessResponse
 	 * known:
 	 *
 	 * <pre>
-	 * URI relUrl = new URI("http://?code=Qcb0Orv1...&state=af0ifjsldkj");
+	 * URI relUrl = new URI("https:///?code=Qcb0Orv1...&state=af0ifjsldkj");
 	 * </pre>
 	 *
 	 * <p>Example URI:
