@@ -280,6 +280,26 @@ public class AuthorizationRequestTest extends TestCase {
 	}
 
 
+	public void testBuilderMinimalNullCodeChallenge()
+		throws Exception {
+
+		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("token"), new ClientID("123"))
+			.codeChallenge(null, null)
+			.build();
+
+		assertTrue(new ResponseType("token").equals(request.getResponseType()));
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertNull(request.getEndpointURI());
+		assertNull(request.getRedirectionURI());
+		assertNull(request.getResponseMode());
+		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
+		assertNull(request.getScope());
+		assertNull(request.getState());
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
+	}
+
+
 	public void testBuilderFull()
 		throws Exception {
 

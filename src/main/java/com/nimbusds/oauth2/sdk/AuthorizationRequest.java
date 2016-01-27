@@ -342,9 +342,9 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @param state               The state. Corresponds to the recommended
 	 *                            {@code state} parameter. {@code null} if
 	 *                            not specified.
-	 * @param codeChallenge       The code challenge, {@code null}
+	 * @param codeChallenge       The code challenge for PKCE, {@code null}
 	 *                            if not specified.
-	 * @param codeChallengeMethod The code challenge method,
+	 * @param codeChallengeMethod The code challenge method for PKCE,
 	 *                            {@code null} if not specified.
 	 */
 	public AuthorizationRequest(final URI uri,

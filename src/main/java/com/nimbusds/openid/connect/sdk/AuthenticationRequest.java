@@ -13,6 +13,8 @@ import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
@@ -43,6 +45,7 @@ import org.apache.commons.lang3.StringUtils;
  *
  * <ul>
  *     <li>OpenID Connect Core 1.0, section 3.1.2.1.
+ *     <li>Proof Key for Code Exchange by OAuth Public Clients (RFC 7636).
  * </ul>
  */
 @Immutable
@@ -260,6 +263,18 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 		/**
+		 * The authorisation code challenge for PKCE (optional).
+		 */
+		private CodeChallenge codeChallenge;
+
+
+		/**
+		 * The authorisation code challenge method for PKCE (optional).
+		 */
+		private CodeChallengeMethod codeChallengeMethod;
+
+
+		/**
 		 * Creates a new OpenID Connect authentication request builder.
 		 *
 		 * @param rt          The response type. Corresponds to the
@@ -304,7 +319,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 			this.clientID = clientID;
 
-			// Check presense at build time
+			// Check presence at build time
 			this.redirectURI = redirectURI;
 		}
 
@@ -528,6 +543,25 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 		/**
+		 * Sets the code challenge for Proof Key for Code Exchange
+		 * (PKCE) by public OAuth clients.
+		 *
+		 * @param codeChallenge       The code challenge, {@code null}
+		 *                            if not specified.
+		 * @param codeChallengeMethod The code challenge method,
+		 *                            {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder codeChallenge(final CodeChallenge codeChallenge, final CodeChallengeMethod codeChallengeMethod) {
+
+			this.codeChallenge = codeChallenge;
+			this.codeChallengeMethod = codeChallengeMethod;
+			return this;
+		}
+
+
+		/**
 		 * Builds a new authentication request.
 		 *
 		 * @return The authentication request.
@@ -539,7 +573,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
 					uri, rt, rm, scope, clientID, redirectURI, state, nonce,
 					display, prompt, maxAge, uiLocales, claimsLocales,
 					idTokenHint, loginHint, acrValues, claims,
-					requestObject, requestURI);
+					requestObject, requestURI,
+					codeChallenge, codeChallengeMethod);
 
 			} catch (IllegalArgumentException e) {
 
@@ -584,83 +619,95 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		// Not specified: display, prompt, maxAge, uiLocales, claimsLocales, 
 		// idTokenHint, loginHint, acrValues, claims
+		// codeChallenge, codeChallengeMethod
 		this(uri, rt, null, scope, clientID, redirectURI, state, nonce,
 		     null, null, 0, null, null, 
-		     null, null, null, null, null, null);
+		     null, null, null, null, null, null,
+			null, null);
 	}
 	
 	
 	/**
 	 * Creates a new OpenID Connect authentication request.
 	 *
-	 * @param uri           The URI of the OAuth 2.0 authorisation
-	 *                      endpoint. May be {@code null} if the
-	 *                      {@link #toHTTPRequest} method will not be used.
-	 * @param rt            The response type set. Corresponds to the 
-	 *                      {@code response_type} parameter. Must specify a
-	 *                      valid OpenID Connect response type. Must not be
-	 *                      {@code null}.
-	 * @param rm            The response mode. Corresponds to the optional
-	 *                      {@code response_mode} parameter. Use of this
-	 *                      parameter is not recommended unless a
-	 *                      non-default response mode is requested (e.g.
-	 *                      form_post).
-	 * @param scope         The request scope. Corresponds to the
-	 *                      {@code scope} parameter. Must contain an
-	 *                      {@link OIDCScopeValue#OPENID openid value}. 
-	 *                      Must not be {@code null}.
-	 * @param clientID      The client identifier. Corresponds to the
-	 *                      {@code client_id} parameter. Must not be 
-	 *                      {@code null}.
-	 * @param redirectURI   The redirection URI. Corresponds to the
-	 *                      {@code redirect_uri} parameter. Must not be 
-	 *                      {@code null} unless set by means of the
-	 *                      optional {@code request_object} /
-	 *                      {@code request_uri} parameter.
-	 * @param state         The state. Corresponds to the recommended 
-	 *                      {@code state} parameter. {@code null} if not 
-	 *                      specified.
-	 * @param nonce         The nonce. Corresponds to the {@code nonce} 
-	 *                      parameter. May be {@code null} for code flow.
-	 * @param display       The requested display type. Corresponds to the 
-	 *                      optional {@code display} parameter. 
-	 *                      {@code null} if not specified.
-	 * @param prompt        The requested prompt. Corresponds to the 
-	 *                      optional {@code prompt} parameter. {@code null} 
-	 *                      if not specified.
-	 * @param maxAge        The required maximum authentication age, in
-	 *                      seconds. Corresponds to the optional 
-	 *                      {@code max_age} parameter. Zero if not 
-	 *                      specified.
-	 * @param uiLocales     The preferred languages and scripts for the 
-	 *                      user interface. Corresponds to the optional 
-	 *                      {@code ui_locales} parameter. {@code null} if 
-	 *                      not specified.
-	 * @param claimsLocales The preferred languages and scripts for claims
-	 *                      being returned. Corresponds to the optional
-	 *                      {@code claims_locales} parameter. {@code null}
-	 *                      if not specified.
-	 * @param idTokenHint   The ID Token hint. Corresponds to the optional 
-	 *                      {@code id_token_hint} parameter. {@code null} 
-	 *                      if not specified.
-	 * @param loginHint     The login hint. Corresponds to the optional
-	 *                      {@code login_hint} parameter. {@code null} if 
-	 *                      not specified.
-	 * @param acrValues     The requested Authentication Context Class
-	 *                      Reference values. Corresponds to the optional
-	 *                      {@code acr_values} parameter. {@code null} if
-	 *                      not specified.
-	 * @param claims        The individual claims to be returned. 
-	 *                      Corresponds to the optional {@code claims} 
-	 *                      parameter. {@code null} if not specified.
-	 * @param requestObject The request object. Corresponds to the optional
-	 *                      {@code request} parameter. Must not be
-	 *                      specified together with a request object URI.
-	 *                      {@code null} if not specified.
-	 * @param requestURI    The request object URI. Corresponds to the
-	 *                      optional {@code request_uri} parameter. Must
-	 *                      not be specified together with a request
-	 *                      object. {@code null} if not specified.
+	 * @param uri                 The URI of the OAuth 2.0 authorisation
+	 *                            endpoint. May be {@code null} if the
+	 *                            {@link #toHTTPRequest} method will not be
+	 *                            used.
+	 * @param rt                  The response type set. Corresponds to the
+	 *                            {@code response_type} parameter. Must
+	 *                            specify a valid OpenID Connect response
+	 *                            type. Must not be {@code null}.
+	 * @param rm                  The response mode. Corresponds to the
+	 *                            optional {@code response_mode} parameter.
+	 *                            Use of this parameter is not recommended
+	 *                            unless a non-default response mode is
+	 *                            requested (e.g. form_post).
+	 * @param scope               The request scope. Corresponds to the
+	 *                            {@code scope} parameter. Must contain an
+	 *                            {@link OIDCScopeValue#OPENID openid value}.
+	 *                            Must not be {@code null}.
+	 * @param clientID            The client identifier. Corresponds to the
+	 *                            {@code client_id} parameter. Must not be
+	 *                            {@code null}.
+	 * @param redirectURI         The redirection URI. Corresponds to the
+	 *                            {@code redirect_uri} parameter. Must not
+	 *                            be {@code null} unless set by means of
+	 *                            the optional {@code request_object} /
+	 *                            {@code request_uri} parameter.
+	 * @param state               The state. Corresponds to the recommended
+	 *                            {@code state} parameter. {@code null} if
+	 *                            not specified.
+	 * @param nonce               The nonce. Corresponds to the
+	 *                            {@code nonce} parameter. May be
+	 *                            {@code null} for code flow.
+	 * @param display             The requested display type. Corresponds
+	 *                            to the optional {@code display}
+	 *                            parameter.
+	 *                            {@code null} if not specified.
+	 * @param prompt              The requested prompt. Corresponds to the
+	 *                            optional {@code prompt} parameter.
+	 *                            {@code null} if not specified.
+	 * @param maxAge              The required maximum authentication age,
+	 *                            in seconds. Corresponds to the optional
+	 *                            {@code max_age} parameter. Zero if not
+	 *                            specified.
+	 * @param uiLocales           The preferred languages and scripts for
+	 *                            the user interface. Corresponds to the
+	 *                            optional {@code ui_locales} parameter.
+	 *                            {@code null} if not specified.
+	 * @param claimsLocales       The preferred languages and scripts for
+	 *                            claims being returned. Corresponds to the
+	 *                            optional {@code claims_locales}
+	 *                            parameter. {@code null} if not specified.
+	 * @param idTokenHint         The ID Token hint. Corresponds to the
+	 *                            optional {@code id_token_hint} parameter.
+	 *                            {@code null} if not specified.
+	 * @param loginHint           The login hint. Corresponds to the
+	 *                            optional {@code login_hint} parameter.
+	 *                            {@code null} if not specified.
+	 * @param acrValues           The requested Authentication Context
+	 *                            Class Reference values. Corresponds to
+	 *                            the optional {@code acr_values}
+	 *                            parameter. {@code null} if not specified.
+	 * @param claims              The individual claims to be returned.
+	 *                            Corresponds to the optional
+	 *                            {@code claims} parameter. {@code null} if
+	 *                            not specified.
+	 * @param requestObject       The request object. Corresponds to the
+	 *                            optional {@code request} parameter. Must
+	 *                            not be specified together with a request
+	 *                            object URI. {@code null} if not
+	 *                            specified.
+	 * @param requestURI          The request object URI. Corresponds to
+	 *                            the optional {@code request_uri}
+	 *                            parameter. Must not be specified together
+	 *                            with a request object. {@code null} if
+	 *                            not specified.
+	 * @param codeChallenge       The code challenge for PKCE, {@code null}
+	 *                            if not specified.
+	 * @param codeChallengeMethod The code challenge method for PKCE,
+	 *                            {@code null} if not specified.
 	 */
 	public AuthenticationRequest(final URI uri,
 				     final ResponseType rt,
@@ -680,9 +727,11 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				     final List<ACR> acrValues,
 				     final ClaimsRequest claims,
 				     final JWT requestObject,
-				     final URI requestURI) {
-				    
-		super(uri, rt, rm, clientID, redirectURI, scope, state, null, null); // TODO
+				     final URI requestURI,
+				     final CodeChallenge codeChallenge,
+				     final CodeChallengeMethod codeChallengeMethod) {
+
+		super(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
 
 		// Redirect URI required unless set in request_object / request_uri
 		if (redirectURI == null && requestObject == null && requestURI == null)
@@ -1301,7 +1350,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		return new AuthenticationRequest(
 			uri, rt, rm, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
-			idTokenHint, loginHint, acrValues, claims, requestObject, requestURI);
+			idTokenHint, loginHint, acrValues, claims, requestObject, requestURI,
+			ar.getCodeChallenge(), ar.getCodeChallengeMethod());
 	}
 	
 	
