@@ -5,25 +5,22 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.jose.Algorithm;
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
-
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagException;
-
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.Issuer;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
-
 import com.nimbusds.openid.connect.sdk.Display;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -62,6 +59,7 @@ public class OIDCProviderMetadata {
 		p.add("response_types_supported");
 		p.add("response_modes_supported");
 		p.add("grant_types_supported");
+		p.add("code_challenge_methods_supported");
 		p.add("acr_values_supported");
 		p.add("subject_types_supported");
 		p.add("token_endpoint_auth_methods_supported");
@@ -162,6 +160,12 @@ public class OIDCProviderMetadata {
 	 * The supported grant types.
 	 */
 	private List<GrantType> gts;
+
+
+	/**
+	 * The supported code challenge methods for PKCE.
+	 */
+	private List<CodeChallengeMethod> codeChallengeMethods;
 
 
 	/**
@@ -657,6 +661,33 @@ public class OIDCProviderMetadata {
 		this.gts = gts;
 	}
 
+
+	/**
+	 * Gets the supported authorisation code challenge methods for PKCE.
+	 * Corresponds to the {@code code_challenge_methods_supported} metadata
+	 * field.
+	 *
+	 * @return The supported code challenge methods, {@code null} if not
+	 *         specified.
+	 */
+	public List<CodeChallengeMethod> getCodeChallengeMethods() {
+
+		return codeChallengeMethods;
+	}
+
+
+	/**
+	 * Gets the supported authorisation code challenge methods for PKCE.
+	 * Corresponds to the {@code code_challenge_methods_supported} metadata
+	 * field.
+	 *
+	 * @param codeChallengeMethods The supported code challenge methods,
+	 *                             {@code null} if not specified.
+	 */
+	public void setCodeChallengeMethods(final List<CodeChallengeMethod> codeChallengeMethods) {
+
+		this.codeChallengeMethods = codeChallengeMethods;
+	}
 
 	/**
 	 * Gets the supported Authentication Context Class References (ACRs).
@@ -1481,6 +1512,16 @@ public class OIDCProviderMetadata {
 			o.put("grant_types_supported", stringList);
 		}
 
+		if (codeChallengeMethods != null) {
+
+			stringList = new ArrayList<>(codeChallengeMethods.size());
+
+			for (CodeChallengeMethod m: codeChallengeMethods)
+				stringList.add(m.getValue());
+
+			o.put("code_challenge_methods_supported", stringList);
+		}
+
 		if (acrValues != null) {
 
 			stringList = new ArrayList<>(acrValues.size());
@@ -1761,6 +1802,17 @@ public class OIDCProviderMetadata {
 				
 				if (v != null)
 					op.gts.add(GrantType.parse(v));
+			}
+		}
+
+		if (jsonObject.containsKey("code_challenge_methods_supported")) {
+
+			op.codeChallengeMethods = new ArrayList<>();
+
+			for (String v: JSONObjectUtils.getStringArray(jsonObject, "code_challenge_methods_supported")) {
+
+				if (v != null)
+					op.codeChallengeMethods.add(CodeChallengeMethod.parse(v));
 			}
 		}
 
