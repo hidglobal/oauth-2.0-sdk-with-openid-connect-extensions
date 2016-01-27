@@ -8,15 +8,15 @@ import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import net.jcip.annotations.Immutable;
-
-import org.apache.commons.lang3.StringUtils;
-
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
+import net.jcip.annotations.Immutable;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -42,6 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  *     <li>OAuth 2.0 (RFC 6749), sections 4.1.1 and 4.2.1.
  *     <li>OAuth 2.0 Multiple Response Type Encoding Practices 1.0.
  *     <li>OAuth 2.0 Form Post Response Mode 1.0.
+ *     <li>Proof Key for Code Exchange by OAuth Public Clients (RFC 7636).
  * </ul>
  */
 @Immutable
@@ -83,6 +84,18 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * The response mode (optional).
 	 */
 	private final ResponseMode rm;
+
+
+	/**
+	 * The authorisation code challenge for PKCE (optional).
+	 */
+	private final CodeChallenge codeChallenge;
+
+
+	/**
+	 * The authorisation code challenge method for PKCE (optional).
+	 */
+	private final CodeChallengeMethod codeChallengeMethod;
 
 
 	/**
@@ -133,6 +146,18 @@ public class AuthorizationRequest extends AbstractRequest {
 		 * The response mode (optional).
 		 */
 		private ResponseMode rm;
+
+
+		/**
+		 * The authorisation code challenge for PKCE (optional).
+		 */
+		private CodeChallenge codeChallenge;
+
+
+		/**
+		 * The authorisation code challenge method for PKCE (optional).
+		 */
+		private CodeChallengeMethod codeChallengeMethod;
 
 
 		/**
@@ -224,6 +249,25 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 		/**
+		 * Sets the code challenge for Proof Key for Code Exchange
+		 * (PKCE) by public OAuth clients.
+		 *
+		 * @param codeChallenge       The code challenge, {@code null}
+		 *                            if not specified.
+		 * @param codeChallengeMethod The code challenge method,
+		 *                            {@code null} if not specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder codeChallenge(final CodeChallenge codeChallenge, final CodeChallengeMethod codeChallengeMethod) {
+
+			this.codeChallenge = codeChallenge;
+			this.codeChallengeMethod = codeChallengeMethod;
+			return this;
+		}
+
+
+		/**
 		 * Sets the URI of the endpoint (HTTP or HTTPS) for which the
 		 * request is intended.
 		 *
@@ -245,7 +289,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		 */
 		public AuthorizationRequest build() {
 
-			return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state);
+			return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
 		}
 	}
 
@@ -267,35 +311,41 @@ public class AuthorizationRequest extends AbstractRequest {
 		                    final ResponseType rt,
 	                            final ClientID clientID) {
 
-		this(uri, rt, null, clientID, null, null, null);
+		this(uri, rt, null, clientID, null, null, null, null, null);
 	}
 
 
 	/**
 	 * Creates a new authorisation request.
 	 *
-	 * @param uri         The URI of the authorisation endpoint. May be
-	 *                    {@code null} if the {@link #toHTTPRequest} method
-	 *                    will not be used.
-	 * @param rt          The response type. Corresponds to the
-	 *                    {@code response_type} parameter. Must not be
-	 *                    {@code null}.
-	 * @param rm          The response mode. Corresponds to the optional
-	 *                    {@code response_mode} parameter. Use of this
-	 *                    parameter is not recommended unless a non-default
-	 *                    response mode is requested (e.g. form_post).
-	 * @param clientID    The client identifier. Corresponds to the
-	 *                    {@code client_id} parameter. Must not be
-	 *                    {@code null}.
-	 * @param redirectURI The redirection URI. Corresponds to the optional
-	 *                    {@code redirect_uri} parameter. {@code null} if
-	 *                    not specified.
-	 * @param scope       The request scope. Corresponds to the optional
-	 *                    {@code scope} parameter. {@code null} if not
-	 *                    specified.
-	 * @param state       The state. Corresponds to the recommended
-	 *                    {@code state} parameter. {@code null} if not
-	 *                    specified.
+	 * @param uri                 The URI of the authorisation endpoint.
+	 *                            May be {@code null} if the
+	 *                            {@link #toHTTPRequest} method will not be
+	 *                            used.
+	 * @param rt                  The response type. Corresponds to the
+	 *                            {@code response_type} parameter. Must not
+	 *                            be {@code null}.
+	 * @param rm                  The response mode. Corresponds to the
+	 *                            optional {@code response_mode} parameter.
+	 *                            Use of this parameter is not recommended
+	 *                            unless a non-default response mode is
+	 *                            requested (e.g. form_post).
+	 * @param clientID            The client identifier. Corresponds to the
+	 *                            {@code client_id} parameter. Must not be
+	 *                            {@code null}.
+	 * @param redirectURI         The redirection URI. Corresponds to the
+	 *                            optional {@code redirect_uri} parameter.
+	 *                            {@code null} if not specified.
+	 * @param scope               The request scope. Corresponds to the
+	 *                            optional {@code scope} parameter.
+	 *                            {@code null} if not specified.
+	 * @param state               The state. Corresponds to the recommended
+	 *                            {@code state} parameter. {@code null} if
+	 *                            not specified.
+	 * @param codeChallenge       The code challenge, {@code null}
+	 *                            if not specified.
+	 * @param codeChallengeMethod The code challenge method,
+	 *                            {@code null} if not specified.
 	 */
 	public AuthorizationRequest(final URI uri,
 		                    final ResponseType rt,
@@ -303,7 +353,9 @@ public class AuthorizationRequest extends AbstractRequest {
 	                            final ClientID clientID,
 				    final URI redirectURI,
 	                            final Scope scope,
-				    final State state) {
+				    final State state,
+				    final CodeChallenge codeChallenge,
+				    final CodeChallengeMethod codeChallengeMethod) {
 
 		super(uri);
 
@@ -324,6 +376,9 @@ public class AuthorizationRequest extends AbstractRequest {
 		this.redirectURI = redirectURI;
 		this.scope = scope;
 		this.state = state;
+
+		this.codeChallenge = codeChallenge;
+		this.codeChallengeMethod = codeChallengeMethod;
 	}
 	
 	
@@ -418,6 +473,28 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
+	 * Returns the code challenge for PKCE.
+	 *
+	 * @return The code challenge, {@code null} if not specified.
+	 */
+	public CodeChallenge getCodeChallenge() {
+
+		return codeChallenge;
+	}
+
+
+	/**
+	 * Returns the code challenge method for PKCE.
+	 *
+	 * @return The code challenge method, {@code null} if not specified.
+	 */
+	public CodeChallengeMethod getCodeChallengeMethod() {
+
+		return codeChallengeMethod;
+	}
+
+
+	/**
 	 * Returns the parameters for this authorisation request.
 	 *
 	 * <p>Example parameters:
@@ -450,6 +527,14 @@ public class AuthorizationRequest extends AbstractRequest {
 		
 		if (state != null)
 			params.put("state", state.getValue());
+
+		if (codeChallenge != null) {
+			params.put("code_challenge", codeChallenge.getValue());
+
+			if (codeChallengeMethod != null) {
+				params.put("code_challenge_method", codeChallengeMethod.getValue());
+			}
+		}
 
 		return params;
 	}
@@ -681,7 +766,25 @@ public class AuthorizationRequest extends AbstractRequest {
 			scope = Scope.parse(v);
 
 
-		return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state);
+		// Parse optional code challenge and method for PKCE
+		CodeChallenge codeChallenge = null;
+		CodeChallengeMethod codeChallengeMethod = null;
+
+		v = params.get("code_challenge");
+
+		if (StringUtils.isNotBlank(v))
+			codeChallenge = new CodeChallenge(v);
+
+		if (codeChallenge != null) {
+
+			v = params.get("code_challenge_method");
+
+			if (StringUtils.isNotBlank(v))
+				codeChallengeMethod = CodeChallengeMethod.parse(v);
+		}
+
+
+		return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
 	}
 
 

@@ -5,12 +5,14 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
+import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
-import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
+import junit.framework.TestCase;
 
 
 /**
@@ -145,7 +147,12 @@ public class AuthorizationRequestTest extends TestCase {
 
 		State state = new State();
 
-		AuthorizationRequest req = new AuthorizationRequest(uri, rts, rm, clientID, redirectURI, scope, state);
+		CodeVerifier codeVerifier = new CodeVerifier();
+		CodeChallengeMethod codeChallengeMethod = CodeChallengeMethod.S256;
+		CodeChallenge codeChallenge = CodeChallenge.compute(codeChallengeMethod, codeVerifier);
+
+
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
 
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
@@ -168,7 +175,9 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(redirectURI.toString(), params.get("redirect_uri"));
 		assertEquals(scope, Scope.parse(params.get("scope")));
 		assertEquals(state, new State(params.get("state")));
-		assertEquals(6, params.size());
+		assertEquals(codeChallenge.getValue(), params.get("code_challenge"));
+		assertEquals(codeChallengeMethod.getValue(), params.get("code_challenge_method"));
+		assertEquals(8, params.size());
 
 		HTTPRequest httpReq = req.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
@@ -184,6 +193,8 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
 		assertEquals(state, req.getState());
+		assertEquals(codeChallenge, req.getCodeChallenge());
+		assertEquals(codeChallengeMethod, req.getCodeChallengeMethod());
 	}
 
 
@@ -202,7 +213,10 @@ public class AuthorizationRequestTest extends TestCase {
 
 		State state = new State();
 
-		AuthorizationRequest req = new AuthorizationRequest(uri, rts, null, clientID, redirectURI, scope, state);
+		CodeVerifier verifier = new CodeVerifier();
+		CodeChallenge codeChallenge = CodeChallenge.compute(CodeChallengeMethod.PLAIN, verifier);
+
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, null, clientID, redirectURI, scope, state, codeChallenge, null);
 
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
@@ -225,6 +239,8 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(redirectURI, req.getRedirectionURI());
 		assertEquals(scope, req.getScope());
 		assertEquals(state, req.getState());
+		assertEquals(codeChallenge, req.getCodeChallenge());
+		assertNull(req.getCodeChallengeMethod());
 	}
 
 
@@ -241,6 +257,8 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(ResponseMode.QUERY, request.impliedResponseMode());
 		assertNull(request.getScope());
 		assertNull(request.getState());
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 	}
 
 
@@ -257,11 +275,16 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(ResponseMode.FRAGMENT, request.impliedResponseMode());
 		assertNull(request.getScope());
 		assertNull(request.getState());
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 	}
 
 
 	public void testBuilderFull()
 		throws Exception {
+
+		CodeVerifier codeVerifier = new CodeVerifier();
+		CodeChallenge codeChallenge = CodeChallenge.compute(CodeChallengeMethod.S256, codeVerifier);
 
 		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123")).
 			endpointURI(new URI("https://c2id.com/login")).
@@ -269,6 +292,7 @@ public class AuthorizationRequestTest extends TestCase {
 			scope(new Scope("openid", "email")).
 			state(new State("123")).
 			responseMode(ResponseMode.FORM_POST).
+			codeChallenge(codeChallenge, CodeChallengeMethod.S256).
 			build();
 
 		assertTrue(new ResponseType("code").equals(request.getResponseType()));
@@ -279,6 +303,36 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals("https://client.com/cb", request.getRedirectionURI().toString());
 		assertTrue(new Scope("openid", "email").equals(request.getScope()));
 		assertTrue(new State("123").equals(request.getState()));
+		assertEquals(codeChallenge, request.getCodeChallenge());
+		assertEquals(CodeChallengeMethod.S256, request.getCodeChallengeMethod());
+	}
+
+
+	public void testBuilderFullAlt()
+		throws Exception {
+
+		CodeVerifier codeVerifier = new CodeVerifier();
+		CodeChallenge codeChallenge = CodeChallenge.compute(CodeChallengeMethod.PLAIN, codeVerifier);
+
+		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123")).
+			endpointURI(new URI("https://c2id.com/login")).
+			redirectionURI(new URI("https://client.com/cb")).
+			scope(new Scope("openid", "email")).
+			state(new State("123")).
+			responseMode(ResponseMode.FORM_POST).
+			codeChallenge(codeChallenge, null).
+			build();
+
+		assertTrue(new ResponseType("code").equals(request.getResponseType()));
+		assertEquals(ResponseMode.FORM_POST, request.getResponseMode());
+		assertEquals(ResponseMode.FORM_POST, request.impliedResponseMode());
+		assertTrue(new ClientID("123").equals(request.getClientID()));
+		assertEquals("https://c2id.com/login", request.getEndpointURI().toString());
+		assertEquals("https://client.com/cb", request.getRedirectionURI().toString());
+		assertTrue(new Scope("openid", "email").equals(request.getScope()));
+		assertTrue(new State("123").equals(request.getState()));
+		assertEquals(codeChallenge, request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 	}
 
 

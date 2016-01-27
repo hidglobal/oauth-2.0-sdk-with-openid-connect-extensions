@@ -5,10 +5,8 @@ import java.nio.charset.Charset;
 import java.security.SecureRandom;
 import java.util.Date;
 
-import net.jcip.annotations.Immutable;
-
 import com.nimbusds.jose.util.Base64URL;
-
+import net.jcip.annotations.Immutable;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
  * longer in use.
  */
 @Immutable
-public final class Secret {
+public class Secret {
 	
 	
 	/**
@@ -30,7 +28,7 @@ public final class Secret {
 	/**
 	 * The secure random generator.
 	 */
-	private static final SecureRandom secureRandom = new SecureRandom();
+	private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
 
 	/**
@@ -105,7 +103,7 @@ public final class Secret {
 		
 		byte[] n = new byte[byteLength];
 		
-		secureRandom.nextBytes(n);
+		SECURE_RANDOM.nextBytes(n);
 
 		value = Base64URL.encode(n).toString().getBytes(Charset.forName("UTF-8"));
 		

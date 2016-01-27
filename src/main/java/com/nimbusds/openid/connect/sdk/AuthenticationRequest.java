@@ -682,7 +682,7 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				     final JWT requestObject,
 				     final URI requestURI) {
 				    
-		super(uri, rt, rm, clientID, redirectURI, scope, state);
+		super(uri, rt, rm, clientID, redirectURI, scope, state, null, null); // TODO
 
 		// Redirect URI required unless set in request_object / request_uri
 		if (redirectURI == null && requestObject == null && requestURI == null)
