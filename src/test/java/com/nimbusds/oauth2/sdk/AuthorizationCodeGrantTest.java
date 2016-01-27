@@ -6,6 +6,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import junit.framework.TestCase;
 
 
@@ -38,6 +39,37 @@ public class AuthorizationCodeGrantTest extends TestCase {
 		assertEquals(code, grant.getAuthorizationCode());
 		assertEquals(redirectURI, grant.getRedirectionURI());
 		assertEquals(GrantType.AUTHORIZATION_CODE, grant.getType());
+	}
+
+
+	// PKCE
+	public void testConstructorWithCodeVerifier()
+		throws Exception {
+
+		AuthorizationCode code = new AuthorizationCode("abc");
+		URI redirectURI = new URI("https://client.com/in");
+		CodeVerifier codeVerifier = new CodeVerifier("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk");
+
+		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(code, redirectURI, codeVerifier);
+
+		assertEquals(code, grant.getAuthorizationCode());
+		assertEquals(redirectURI, grant.getRedirectionURI());
+		assertEquals(codeVerifier, grant.getCodeVerifier());
+
+		assertEquals(GrantType.AUTHORIZATION_CODE, grant.getType());
+
+		Map<String,String> params = grant.toParameters();
+		assertEquals("abc", params.get("code"));
+		assertEquals("https://client.com/in", params.get("redirect_uri"));
+		assertEquals("authorization_code", params.get("grant_type"));
+		assertEquals(codeVerifier.getValue(), params.get("code_verifier"));
+		assertEquals(4, params.size());
+
+		grant = AuthorizationCodeGrant.parse(params);
+		assertEquals(code, grant.getAuthorizationCode());
+		assertEquals(redirectURI, grant.getRedirectionURI());
+		assertEquals(GrantType.AUTHORIZATION_CODE, grant.getType());
+		assertEquals(codeVerifier, grant.getCodeVerifier());
 	}
 
 
@@ -78,6 +110,24 @@ public class AuthorizationCodeGrantTest extends TestCase {
 		assertEquals(GrantType.AUTHORIZATION_CODE, grant.getType());
 		assertEquals("abc", grant.getAuthorizationCode().getValue());
 		assertEquals("https://client.com/in", grant.getRedirectionURI().toString());
+	}
+
+
+	public void testParse_codeVerifierTooShort()
+		throws Exception {
+
+		Map<String,String> params = new HashMap<>();
+		params.put("grant_type", "authorization_code");
+		params.put("code", "abc");
+		params.put("redirect_uri", "https://client.com/in");
+		params.put("code_verifier", "abc");
+
+		try {
+			AuthorizationCodeGrant.parse(params);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("The code verifier must be at least 43 characters", e.getMessage());
+		}
 	}
 
 
@@ -161,6 +211,9 @@ public class AuthorizationCodeGrantTest extends TestCase {
 
 		assertTrue(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
 			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))));
+
+		assertTrue(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"), new CodeVerifier("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"), new CodeVerifier("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"))));
 	}
 
 
@@ -171,6 +224,12 @@ public class AuthorizationCodeGrantTest extends TestCase {
 
 		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
 			.equals(new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://client.com/cb"))));
+
+		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://client.com/cb"), new CodeVerifier("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://client.com/cb"))));
+
+		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://client.com/cb"), new CodeVerifier("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"))
+			.equals(new AuthorizationCodeGrant(new AuthorizationCode("abc"), URI.create("https://client.com/cb"), new CodeVerifier("DBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"))));
 
 		assertFalse(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), URI.create("https://client.com/cb"))
 			.equals(new AuthorizationCodeGrant(new AuthorizationCode("xyz"), null)));

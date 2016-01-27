@@ -20,6 +20,7 @@ import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import junit.framework.TestCase;
@@ -285,8 +286,50 @@ public class TokenRequestTest extends TestCase {
 		assertEquals("https://client.example.com/cb", httpRequest.getQueryParameters().get("redirect_uri"));
 		assertEquals(3, httpRequest.getQueryParameters().size());
 	}
-	
-	
+
+
+	public void testCodeGrantWithPKCE()
+		throws Exception {
+
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.POST, new URL("https://connect2id.com/token/"));
+		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
+
+		String postBody =
+			"grant_type=authorization_code" +
+			"&code=SplxlOBeZQQYbYS6WxSbIA" +
+			"&redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb" +
+			"&code_verifier=dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk" +
+			"&client_id=123";
+
+		httpRequest.setQuery(postBody);
+
+		TokenRequest tr = TokenRequest.parse(httpRequest);
+
+		assertTrue(new URI("https://connect2id.com/token/").equals(tr.getEndpointURI()));
+
+		assertNull(tr.getClientAuthentication());
+		assertEquals(new ClientID("123"), tr.getClientID());
+
+		AuthorizationCodeGrant codeGrant = (AuthorizationCodeGrant)tr.getAuthorizationGrant();
+		assertEquals(GrantType.AUTHORIZATION_CODE, codeGrant.getType());
+		assertEquals("SplxlOBeZQQYbYS6WxSbIA", codeGrant.getAuthorizationCode().getValue());
+		assertEquals("https://client.example.com/cb", codeGrant.getRedirectionURI().toString());
+		assertEquals("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk", codeGrant.getCodeVerifier().getValue());
+
+		httpRequest = tr.toHTTPRequest();
+
+		assertTrue(new URL("https://connect2id.com/token/").equals(httpRequest.getURL()));
+		assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
+		assertNull(httpRequest.getAuthorization());
+		assertEquals("authorization_code", httpRequest.getQueryParameters().get("grant_type"));
+		assertEquals("SplxlOBeZQQYbYS6WxSbIA", httpRequest.getQueryParameters().get("code"));
+		assertEquals("https://client.example.com/cb", httpRequest.getQueryParameters().get("redirect_uri"));
+		assertEquals("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk", httpRequest.getQueryParameters().get("code_verifier"));
+		assertEquals("123", httpRequest.getQueryParameters().get("client_id"));
+		assertEquals(5, httpRequest.getQueryParameters().size());
+	}
+
+
 	public void testParseRefreshTokenGrantWithBasicSecret()
 		throws Exception {
 	
@@ -537,6 +580,33 @@ public class TokenRequestTest extends TestCase {
 		URI tokenEndpoint = new URI("https://c2id.com/token");
 		ClientID clientID = new ClientID("123");
 		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(new AuthorizationCode("xyz"), new URI("https://example.com/cb"));
+
+		TokenRequest request = new TokenRequest(tokenEndpoint, clientID, codeGrant);
+
+		assertEquals(tokenEndpoint, request.getEndpointURI());
+		assertEquals(clientID, request.getClientID());
+		assertNull(request.getClientAuthentication());
+		assertEquals(codeGrant, request.getAuthorizationGrant());
+		assertNull(request.getScope());
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		request = TokenRequest.parse(httpRequest);
+
+		assertEquals(tokenEndpoint, request.getEndpointURI());
+		assertEquals(clientID, request.getClientID());
+		assertNull(request.getClientAuthentication());
+		assertEquals(codeGrant, request.getAuthorizationGrant());
+		assertNull(request.getScope());
+	}
+
+
+	public void testCodeGrant_publicClient_pkce()
+		throws Exception {
+
+		URI tokenEndpoint = new URI("https://c2id.com/token");
+		ClientID clientID = new ClientID("123");
+		AuthorizationCodeGrant codeGrant = new AuthorizationCodeGrant(new AuthorizationCode("xyz"), new URI("https://example.com/cb"), new CodeVerifier());
 
 		TokenRequest request = new TokenRequest(tokenEndpoint, clientID, codeGrant);
 
