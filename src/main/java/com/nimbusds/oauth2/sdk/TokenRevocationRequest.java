@@ -55,13 +55,7 @@ import org.apache.commons.lang.StringUtils;
  * </ul>
  */
 @Immutable
-public final class TokenRevocationRequest extends AbstractOptionallyAuthenticatedRequest {
-
-
-	/**
-	 * The client identifier, {@code null} if not specified.
-	 */
-	private final ClientID clientID;
+public final class TokenRevocationRequest extends AbstractOptionallyIdentifiedRequest {
 
 
 	/**
@@ -91,8 +85,6 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 			throw new IllegalArgumentException("The client authentication must not be null");
 		}
 
-		clientID = null;
-
 		if (token == null)
 			throw new IllegalArgumentException("The token must not be null");
 
@@ -114,33 +106,16 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 				      final ClientID clientID,
 				      final Token token) {
 
-		super(uri, null);
+		super(uri, clientID);
 
 		if (clientID == null) {
 			throw new IllegalArgumentException("The client ID must not be null");
 		}
 
-		this.clientID = clientID;
-
 		if (token == null)
 			throw new IllegalArgumentException("The token must not be null");
 
 		this.token = token;
-	}
-
-
-	/**
-	 * Gets the client identifier (for a token revocation request by a
-	 * public client).
-	 *
-	 * @see #getClientAuthentication()
-	 *
-	 * @return The client identifier, {@code null} if the client is
-	 *         confidential.
-	 */
-	public ClientID getClientID() {
-
-		return clientID;
 	}
 
 

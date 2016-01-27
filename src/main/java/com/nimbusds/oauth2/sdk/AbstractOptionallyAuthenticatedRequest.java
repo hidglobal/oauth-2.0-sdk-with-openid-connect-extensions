@@ -7,7 +7,7 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 
 
 /**
- * Optionally authenticated requests.
+ * Abstract request with optional client authentication.
  *
  * <p>Client authentication methods:
  *
@@ -28,12 +28,13 @@ public abstract class AbstractOptionallyAuthenticatedRequest extends AbstractReq
 
 
 	/**
-	 * Creates a new abstract optionally authenticated request.
+	 * Creates a new abstract request with optional client authentication.
 	 *
-	 * @param uri The URI of the endpoint (HTTP or HTTPS) for which the
-	 *            request is intended, {@code null} if not specified (if,
-	 *            for example, the {@link #toHTTPRequest()} method will not
-	 *            be used).
+	 * @param uri        The URI of the endpoint (HTTP or HTTPS) for which
+	 *                   the request is intended, {@code null} if not
+	 *                   specified (if, for example, the
+	 *                   {@link #toHTTPRequest()} method will not be used).
+	 * @param clientAuth The client authentication, {@code null} if none.
 	 */
 	public AbstractOptionallyAuthenticatedRequest(final URI uri,
 						      final ClientAuthentication clientAuth) {
