@@ -10,24 +10,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.AccessToken;
 import com.nimbusds.oauth2.sdk.token.RefreshToken;
 import com.nimbusds.oauth2.sdk.token.Token;
 import com.nimbusds.oauth2.sdk.token.TypelessAccessToken;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
+import net.jcip.annotations.Immutable;
+import net.minidev.json.JSONObject;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
  * Token revocation request. Used to revoke an issued access or refresh token.
  *
- * <p>Example token revocation request with client authentication:
+ * <p>Example token revocation request for a confidential client:
  *
  * <pre>
  * POST /revoke HTTP/1.1
@@ -36,6 +36,16 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW
  *
  * token=45ghiukldjahdnhzdauz&token_type_hint=refresh_token
+ * </pre>
+ *
+ * <p>Example token revocation request for a public client:
+ *
+ * <pre>
+ * POST /revoke HTTP/1.1
+ * Host: server.example.com
+ * Content-Type: application/x-www-form-urlencoded
+ *
+ * token=45ghiukldjahdnhzdauz&token_type_hint=refresh_token&client_id=123456
  * </pre>
  *
  * <p>Related specifications:
@@ -49,18 +59,25 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 
 
 	/**
+	 * The client identifier, {@code null} if not specified.
+	 */
+	private final ClientID clientID;
+
+
+	/**
 	 * The token to revoke.
 	 */
 	private final Token token;
 
 
 	/**
-	 * Creates a new token revocation request.
+	 * Creates a new token revocation request for a confidential client.
 	 *
 	 * @param uri        The URI of the token revocation endpoint. May be
 	 *                   {@code null} if the {@link #toHTTPRequest} method
 	 *                   will not be used.
-	 * @param clientAuth The client authentication, {@code null} if none.
+	 * @param clientAuth The client authentication. Must not be
+	 *                   {@code null}.
 	 * @param token      The access or refresh token to revoke. Must not be
 	 *                   {@code null}.
 	 */
@@ -70,10 +87,60 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 
 		super(uri, clientAuth);
 
+		if (clientAuth == null) {
+			throw new IllegalArgumentException("The client authentication must not be null");
+		}
+
+		clientID = null;
+
 		if (token == null)
 			throw new IllegalArgumentException("The token must not be null");
 
 		this.token = token;
+	}
+
+
+	/**
+	 * Creates a new token revocation request for a public client.
+	 *
+	 * @param uri      The URI of the token revocation endpoint. May be
+	 *                 {@code null} if the {@link #toHTTPRequest} method
+	 *                 will not be used.
+	 * @param clientID The client ID. Must not be {@code null}.
+	 * @param token    The access or refresh token to revoke. Must not be
+	 *                 {@code null}.
+	 */
+	public TokenRevocationRequest(final URI uri,
+				      final ClientID clientID,
+				      final Token token) {
+
+		super(uri, null);
+
+		if (clientID == null) {
+			throw new IllegalArgumentException("The client ID must not be null");
+		}
+
+		this.clientID = clientID;
+
+		if (token == null)
+			throw new IllegalArgumentException("The token must not be null");
+
+		this.token = token;
+	}
+
+
+	/**
+	 * Gets the client identifier (for a token revocation request by a
+	 * public client).
+	 *
+	 * @see #getClientAuthentication()
+	 *
+	 * @return The client identifier, {@code null} if the client is
+	 *         confidential.
+	 */
+	public ClientID getClientID() {
+
+		return clientID;
 	}
 
 
@@ -113,6 +180,12 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 		httpRequest.setContentType(CommonContentTypes.APPLICATION_URLENCODED);
 
 		Map<String,String> params = new HashMap<>();
+
+		if (getClientID() != null) {
+			// public client
+			params.put("client_id", getClientID().getValue());
+		}
+
 		params.put("token", token.getValue());
 
 		if (token instanceof AccessToken) {
@@ -123,8 +196,10 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 
 		httpRequest.setQuery(URLUtils.serializeParameters(params));
 
-		if (getClientAuthentication() != null)
+		if (getClientAuthentication() != null) {
+			// confidential client
 			getClientAuthentication().applyTo(httpRequest);
+		}
 
 		return httpRequest;
 	}
@@ -199,10 +274,6 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 			token = new RefreshToken(tokenValue);
 		}
 
-
-		// Parse client auth
-		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
-
 		URI uri;
 
 		try {
@@ -213,6 +284,20 @@ public final class TokenRevocationRequest extends AbstractOptionallyAuthenticate
 			throw new ParseException(e.getMessage(), e);
 		}
 
-		return new TokenRevocationRequest(uri, clientAuth, token);
+		// Parse client auth
+		ClientAuthentication clientAuth = ClientAuthentication.parse(httpRequest);
+
+		if (clientAuth != null) {
+			return new TokenRevocationRequest(uri, clientAuth, token);
+		}
+
+		// Public client
+		final String clientIDString = params.get("client_id");
+
+		if (StringUtils.isBlank(clientIDString)) {
+			throw new ParseException("Invalid token revocation request: No client authentication or client_id parameter found");
+		}
+
+		return new TokenRevocationRequest(uri, new ClientID(clientIDString), token);
 	}
 }

@@ -18,7 +18,7 @@ import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
  *     <li>{@link com.nimbusds.oauth2.sdk.auth.PrivateKeyJWT private_key_jwt}
  * </ul>
  */
-public abstract class AbstractOptionallyAuthenticatedRequest extends AbstractRequest{
+public abstract class AbstractOptionallyAuthenticatedRequest extends AbstractRequest {
 	
 
 	/**
@@ -28,7 +28,7 @@ public abstract class AbstractOptionallyAuthenticatedRequest extends AbstractReq
 
 
 	/**
-	 * Creates a new abstract optionally authenticted request.
+	 * Creates a new abstract optionally authenticated request.
 	 *
 	 * @param uri The URI of the endpoint (HTTP or HTTPS) for which the
 	 *            request is intended, {@code null} if not specified (if,
