@@ -426,18 +426,16 @@ version 5.1 (2015-12-17)
 version 5.1.1 (2016-01-07)
     * Fixes NPE in SAML2AssertionValidator.validate on missing XML signature.
 
-version 5.2 (2016-01-19)
-    * Overrides equals and hashCode for AuthorizationCodeGrant.
-    * Overrides equals and hashCode for ResourceOwnerPasswordCredentialsGrant.
-    * Overrides equals and hashCode for RefreshTokenGrant.
-    * Overrides equals and hashCode for SAML2BearerGrant.
-    * ClientMetadata.applyDefaults set token_endpoint_auth_method to 'none' for
-      implicit authorisation grant (iss #163).
-
-version 5.3 (2015-01-28)
+version 5.2 (2015-01-28)
     * Adds support for Proof Key for Code Exchange by OAuth Public Clients (RFC
       7636).
     * Adds code_challenge_methods_supported to OIDCProviderMetadata.
     * Adds public client support to TokenRevocationRequest (issue #164).
+    * ClientMetadata.applyDefaults set token_endpoint_auth_method to 'none' for
+      implicit authorisation grant (iss #163).
+    * Overrides equals and hashCode for AuthorizationCodeGrant.
+    * Overrides equals and hashCode for ResourceOwnerPasswordCredentialsGrant.
+    * Overrides equals and hashCode for RefreshTokenGrant.
+    * Overrides equals and hashCode for SAML2BearerGrant.
     * Fixes authorisation response JavaDocs concerning use of relative callback
       URIs (issue #162).
