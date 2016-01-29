@@ -439,3 +439,10 @@ version 5.2 (2015-01-28)
     * Overrides equals and hashCode for SAML2BearerGrant.
     * Fixes authorisation response JavaDocs concerning use of relative callback
       URIs (issue #162).
+
+version 5.3 (2015-01-29)
+    * Adds ClientInformation.inferType method to deduce whether a client is
+      confidential or public, based on the token endpoint authentication method
+      and the presence of key material.
+    * Moves ClientType enum to client package.
+
