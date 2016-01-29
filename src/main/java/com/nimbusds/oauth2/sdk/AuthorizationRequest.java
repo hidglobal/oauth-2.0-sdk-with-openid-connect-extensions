@@ -342,6 +342,46 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * @param state               The state. Corresponds to the recommended
 	 *                            {@code state} parameter. {@code null} if
 	 *                            not specified.
+	 */
+	public AuthorizationRequest(final URI uri,
+		                    final ResponseType rt,
+				    final ResponseMode rm,
+	                            final ClientID clientID,
+				    final URI redirectURI,
+	                            final Scope scope,
+				    final State state) {
+
+		this(uri, rt, rm, clientID, redirectURI, scope, state, null, null);
+	}
+
+
+	/**
+	 * Creates a new authorisation request with PKCE support.
+	 *
+	 * @param uri                 The URI of the authorisation endpoint.
+	 *                            May be {@code null} if the
+	 *                            {@link #toHTTPRequest} method will not be
+	 *                            used.
+	 * @param rt                  The response type. Corresponds to the
+	 *                            {@code response_type} parameter. Must not
+	 *                            be {@code null}.
+	 * @param rm                  The response mode. Corresponds to the
+	 *                            optional {@code response_mode} parameter.
+	 *                            Use of this parameter is not recommended
+	 *                            unless a non-default response mode is
+	 *                            requested (e.g. form_post).
+	 * @param clientID            The client identifier. Corresponds to the
+	 *                            {@code client_id} parameter. Must not be
+	 *                            {@code null}.
+	 * @param redirectURI         The redirection URI. Corresponds to the
+	 *                            optional {@code redirect_uri} parameter.
+	 *                            {@code null} if not specified.
+	 * @param scope               The request scope. Corresponds to the
+	 *                            optional {@code scope} parameter.
+	 *                            {@code null} if not specified.
+	 * @param state               The state. Corresponds to the recommended
+	 *                            {@code state} parameter. {@code null} if
+	 *                            not specified.
 	 * @param codeChallenge       The code challenge for PKCE, {@code null}
 	 *                            if not specified.
 	 * @param codeChallengeMethod The code challenge method for PKCE,
@@ -380,8 +420,8 @@ public class AuthorizationRequest extends AbstractRequest {
 		this.codeChallenge = codeChallenge;
 		this.codeChallengeMethod = codeChallengeMethod;
 	}
-	
-	
+
+
 	/**
 	 * Gets the response type. Corresponds to the {@code response_type}
 	 * parameter.
