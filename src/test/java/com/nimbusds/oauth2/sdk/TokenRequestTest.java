@@ -3,6 +3,9 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -1108,6 +1111,28 @@ public class TokenRequestTest extends TestCase {
 		assertNull(request.getClientAuthentication());
 		assertEquals(grant, request.getAuthorizationGrant());
 		assertNull(request.getScope());
+	}
+
+
+	// https://bitbucket.org/connect2id/openid-connect-dev-client/issues/5/stripping-equal-sign-from-access_code-in
+	public void testCodeGrantEqualsCharEncoding()
+		throws Exception {
+
+		AuthorizationCode code = new AuthorizationCode("abc=");
+		AuthorizationCodeGrant grant = new AuthorizationCodeGrant(code, URI.create("https://example.com/cb"));
+
+		TokenRequest request = new TokenRequest(URI.create("https://openid.c2id.com/token"), new ClientID("123"), grant);
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		String query = httpRequest.getQuery();
+		List<String> queryTokens = Arrays.asList(query.split("&"));
+
+		assertTrue(queryTokens.contains("client_id=123"));
+		assertTrue(queryTokens.contains("grant_type=authorization_code"));
+		assertTrue(queryTokens.contains("code=abc%3D"));
+		assertTrue(queryTokens.contains("redirect_uri=https%3A%2F%2Fexample.com%2Fcb"));
+		assertEquals(4, queryTokens.size());
 	}
 }
 

@@ -150,4 +150,19 @@ public class URLUtilsTest extends TestCase {
 		assertEquals("def", params.get("p2"));
 		assertEquals(2, params.size());
 	}
+
+
+	// See https://bitbucket.org/connect2id/openid-connect-dev-client/issues/5/stripping-equal-sign-from-access_code-in
+	public void testDecodeQueryStringWithEscapedChars() {
+
+		String fragment = "scope=openid+email+profile" +
+			"&state=cVIe4g4D1J3tYtZgnTL-Po9QpozQJdikDCBp7KJorIQ" +
+			"&code=1nf1ljB0JkPIbhMcYMeoT9Q5oGt28ggDsUiWLvCL81YTqCZMzAbVCGLUPrDHouda4cELZRujcS7d8rUNcZVl7HxUXdDsOUtc65s2knGbxSo%3D";
+
+		Map<String,String> params = URLUtils.parseParameters(fragment);
+
+		assertEquals("openid email profile", params.get("scope"));
+		assertEquals("cVIe4g4D1J3tYtZgnTL-Po9QpozQJdikDCBp7KJorIQ", params.get("state"));
+		assertEquals("1nf1ljB0JkPIbhMcYMeoT9Q5oGt28ggDsUiWLvCL81YTqCZMzAbVCGLUPrDHouda4cELZRujcS7d8rUNcZVl7HxUXdDsOUtc65s2knGbxSo=", params.get("code"));
+	}
 }
