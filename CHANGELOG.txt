@@ -453,3 +453,7 @@ version 5.5 (2016-02-04)
     * Adds an Actor class to represent the authorised actor in impersonation
       and delegation cases (draft-ietf-oauth-token-exchange-03).
 
+version 5.5.1 (2016-02-14)
+    * Permits unencoded equals '=' characters in parameter values passed to
+      URLUtils.parseParameters (issue #169).
+
