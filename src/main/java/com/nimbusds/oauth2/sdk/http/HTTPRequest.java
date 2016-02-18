@@ -602,9 +602,14 @@ public class HTTPRequest extends HTTPMessage {
 				conn.setRequestProperty("Content-Type", getContentType().toString());
 
 			if (query != null) {
-				OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-				writer.write(query);
-				writer.close();
+				try {
+					OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+					writer.write(query);
+					writer.close();
+				} catch (IOException e) {
+					closeStreams(conn);
+					throw e; // Rethrow
+				}
 			}
 		}
 
@@ -674,8 +679,7 @@ public class HTTPRequest extends HTTPMessage {
 			statusCode = conn.getResponseCode();
 
 			if (statusCode == -1) {
-				// Rethrow IO exception
-				throw e;
+				throw e; // Rethrow IO exception
 			} else {
 				// HTTP status code indicates the response got
 				// through, read the content but using error stream
@@ -692,20 +696,12 @@ public class HTTPRequest extends HTTPMessage {
 		}
 
 		StringBuilder body = new StringBuilder();
-
-		try {
-			String line;
-
-			while ((line = reader.readLine()) != null) {
-				body.append(line);
-				body.append(System.getProperty("line.separator"));
-			}
-
-			reader.close();
-
-		} finally {
-			conn.disconnect();
+		String line;
+		while ((line = reader.readLine()) != null) {
+			body.append(line);
+			body.append(System.getProperty("line.separator"));
 		}
+		reader.close();
 
 
 		HTTPResponse response = new HTTPResponse(statusCode);
@@ -725,10 +721,52 @@ public class HTTPRequest extends HTTPMessage {
 			response.setHeader(responseHeader.getKey(), values.get(0));
 		}
 
+		closeStreams(conn);
+
 		final String bodyContent = body.toString();
 		if (! bodyContent.isEmpty())
 			response.setContent(bodyContent);
 
 		return response;
+	}
+
+
+	/**
+	 * Closes the input, output and error streams of the specified HTTP URL
+	 * connection. No attempt is made to close the underlying socket with
+	 * {@code conn.disconnect} so it may be cached (HTTP 1.1 keep live).
+	 * See http://techblog.bozho.net/caveats-of-httpurlconnection/
+	 *
+	 * @param conn The HTTP URL connection. May be {@code null}.
+	 */
+	private static void closeStreams(final HttpURLConnection conn) {
+
+		if (conn == null) {
+			return;
+		}
+
+		try {
+			if (conn.getInputStream() != null) {
+				conn.getInputStream().close();
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		try {
+			if (conn.getOutputStream() != null) {
+				conn.getOutputStream().close();
+			}
+		} catch (Exception e) {
+			// ignore
+		}
+
+		try {
+			if (conn.getErrorStream() != null) {
+				conn.getOutputStream().close();
+			}
+		} catch (Exception e) {
+			// ignore
+		}
 	}
 }
