@@ -42,13 +42,7 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
  * </ul>
  */
 @Immutable
-public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
-
-
-	/**
-	 * The client identifier, {@code null} if not specified.
-	 */
-	private final ClientID clientID;
+public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 
 
 	/**
@@ -85,8 +79,6 @@ public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 
 		if (clientAuth == null)
 			throw new IllegalArgumentException("The client authentication must not be null");
-
-		clientID = null; // must not be set when client auth is present
 
 		this.authzGrant = authzGrant;
 
@@ -131,7 +123,7 @@ public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 			    final AuthorizationGrant authzGrant,
 			    final Scope scope) {
 
-		super(uri, null);
+		super(uri, clientID);
 
 		if (authzGrant.getType().requiresClientAuthentication()) {
 			throw new IllegalArgumentException("The \"" + authzGrant.getType() + "\" grant type requires client authentication");
@@ -142,8 +134,6 @@ public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 		}
 
 		this.authzGrant = authzGrant;
-
-		this.clientID = clientID;
 
 		this.scope = scope;
 	}
@@ -204,20 +194,6 @@ public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 
 
 	/**
-	 * Gets the client identifier (for a token request without explicit
-	 * client authentication).
-	 *
-	 * @see #getClientAuthentication()
-	 *
-	 * @return The client identifier, {@code null} if not specified.
-	 */
-	public ClientID getClientID() {
-
-		return clientID;
-	}
-
-
-	/**
 	 * Gets the authorisation grant.
 	 *
 	 * @return The authorisation grant.
@@ -270,8 +246,8 @@ public class TokenRequest extends AbstractOptionallyAuthenticatedRequest {
 			params.put("scope", scope.toString());
 		}
 
-		if (clientID != null) {
-			params.put("client_id", clientID.getValue());
+		if (getClientID() != null) {
+			params.put("client_id", getClientID().getValue());
 		}
 
 		httpRequest.setQuery(URLUtils.serializeParameters(params));

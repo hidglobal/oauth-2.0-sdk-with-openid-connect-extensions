@@ -562,4 +562,18 @@ public class ClientMetadataTest extends TestCase {
 
 		assertEquals(ClientAuthenticationMethod.CLIENT_SECRET_BASIC, metadata.getTokenEndpointAuthMethod());
 	}
+
+
+	public void testClientAuthNoneWithImplicitGrant() {
+
+		ClientMetadata clientMetadata = new ClientMetadata();
+		clientMetadata.setGrantTypes(Collections.singleton(GrantType.IMPLICIT));
+		clientMetadata.setResponseTypes(Collections.singleton(new ResponseType("token")));
+
+		clientMetadata.applyDefaults();
+
+		assertEquals(Collections.singleton(GrantType.IMPLICIT), clientMetadata.getGrantTypes());
+		assertEquals(Collections.singleton(new ResponseType("token")), clientMetadata.getResponseTypes());
+		assertEquals(ClientAuthenticationMethod.NONE, clientMetadata.getTokenEndpointAuthMethod());
+	}
 }

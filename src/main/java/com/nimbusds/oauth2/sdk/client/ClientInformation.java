@@ -7,14 +7,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.jcip.annotations.Immutable;
-
-import net.minidev.json.JSONObject;
-
 import com.nimbusds.oauth2.sdk.ParseException;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
+import net.jcip.annotations.Immutable;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -221,6 +220,23 @@ public class ClientInformation {
 	public Secret getSecret() {
 
 		return secret;
+	}
+
+
+	/**
+	 * Infers the client type.
+	 *
+	 * @return The client type.
+	 */
+	public ClientType inferClientType() {
+
+		// The client must by unambiguously public, else it is marked as confidential
+
+		return secret == null
+			&& ClientAuthenticationMethod.NONE.equals(getMetadata().getTokenEndpointAuthMethod())
+			&& getMetadata().getJWKSetURI() == null
+			&& getMetadata().getJWKSet() == null
+			? ClientType.PUBLIC : ClientType.CONFIDENTIAL;
 	}
 
 

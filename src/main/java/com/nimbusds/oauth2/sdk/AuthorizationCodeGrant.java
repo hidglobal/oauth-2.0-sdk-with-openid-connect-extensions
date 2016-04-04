@@ -6,7 +6,9 @@ import java.net.URISyntaxException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import net.jcip.annotations.Immutable;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -17,6 +19,7 @@ import net.jcip.annotations.Immutable;
  *
  * <ul>
  *     <li>OAuth 2.0 (RFC 6749), section 4.1.3.
+ *     <li>Proof Key for Code Exchange by OAuth Public Clients (RFC 7636).
  * </ul>
  */
 @Immutable
@@ -43,6 +46,12 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 
 
 	/**
+	 * The optional authorisation code verifier for PKCE.
+	 */
+	private final CodeVerifier codeVerifier;
+
+
+	/**
 	 * Creates a new authorisation code grant.
 	 *
 	 * @param code        The authorisation code. Must not be {@code null}.
@@ -54,6 +63,25 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 	public AuthorizationCodeGrant(final AuthorizationCode code,
 				      final URI redirectURI) {
 
+		this(code, redirectURI, null);
+	}
+
+
+	/**
+	 * Creates a new authorisation code grant.
+	 *
+	 * @param code         The authorisation code. Must not be {@code null}.
+	 * @param redirectURI  The redirection URI of the original
+	 *                     authorisation request. Required if the
+	 *                     {redirect_uri} parameter was included in the
+	 *                     authorisation request, else {@code null}.
+	 * @param codeVerifier The authorisation code verifier for PKCE,
+	 *                     {@code null} if not specified.
+	 */
+	public AuthorizationCodeGrant(final AuthorizationCode code,
+				      final URI redirectURI,
+				      final CodeVerifier codeVerifier) {
+
 		super(GRANT_TYPE);
 
 		if (code == null)
@@ -62,6 +90,8 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 		this.code = code;
 
 		this.redirectURI = redirectURI;
+
+		this.codeVerifier = codeVerifier;
 	}
 
 
@@ -89,6 +119,18 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 	}
 
 
+	/**
+	 * Gets the authorisation code verifier for PKCE.
+	 *
+	 * @return The authorisation code verifier, {@code null} if not
+	 *         specified.
+	 */
+	public CodeVerifier getCodeVerifier() {
+
+		return codeVerifier;
+	}
+
+
 	@Override
 	public Map<String,String> toParameters() {
 
@@ -99,7 +141,34 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 		if (redirectURI != null)
 			params.put("redirect_uri", redirectURI.toString());
 
+		if (codeVerifier != null)
+			params.put("code_verifier", codeVerifier.getValue());
+
 		return params;
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof AuthorizationCodeGrant)) return false;
+
+		AuthorizationCodeGrant codeGrant = (AuthorizationCodeGrant) o;
+
+		if (!code.equals(codeGrant.code)) return false;
+		if (redirectURI != null ? !redirectURI.equals(codeGrant.redirectURI) : codeGrant.redirectURI != null)
+			return false;
+		return codeVerifier != null ? codeVerifier.equals(codeGrant.codeVerifier) : codeGrant.codeVerifier == null;
+
+	}
+
+
+	@Override
+	public int hashCode() {
+		int result = code.hashCode();
+		result = 31 * result + (redirectURI != null ? redirectURI.hashCode() : 0);
+		result = 31 * result + (codeVerifier != null ? codeVerifier.hashCode() : 0);
+		return result;
 	}
 
 
@@ -160,6 +229,22 @@ public class AuthorizationCodeGrant extends AuthorizationGrant {
 			}
 		}
 
-		return new AuthorizationCodeGrant(code, redirectURI);
+
+		// Parse optional code verifier
+		String codeVerifierString = params.get("code_verifier");
+
+		CodeVerifier codeVerifier = null;
+
+		if (StringUtils.isNotBlank(codeVerifierString)) {
+
+			try {
+				codeVerifier = new CodeVerifier(codeVerifierString);
+			} catch (IllegalArgumentException e) {
+				// Illegal code verifier
+				throw new ParseException(e.getMessage(), e);
+			}
+		}
+
+		return new AuthorizationCodeGrant(code, redirectURI, codeVerifier);
 	}
 }

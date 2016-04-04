@@ -72,4 +72,19 @@ public class AuthenticationResponseParserTest extends TestCase {
 		errorResponse = (AuthenticationErrorResponse)response;
 		assertEquals(OAuth2Error.ACCESS_DENIED, errorResponse.getErrorObject());
 	}
+
+
+	// see https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/162/authenticationresponseparser-does-not
+	public void testParseAbsoluteURI()
+		throws Exception {
+
+		URI redirectURI = URI.create("http:///?code=Qcb0Orv1&state=af0ifjsldkj");
+
+		AuthenticationResponse response = AuthenticationResponseParser.parse(redirectURI);
+
+		AuthenticationSuccessResponse successResponse = (AuthenticationSuccessResponse)response;
+
+		assertEquals("Qcb0Orv1", successResponse.getAuthorizationCode().getValue());
+		assertEquals("af0ifjsldkj", successResponse.getState().getValue());
+	}
 }

@@ -11,7 +11,7 @@
 
 	<groupId>com.nimbusds</groupId>
 	<artifactId>oauth2-oidc-sdk</artifactId>
-	<version>5.2-SNAPSHOT</version>
+	<version>5.5.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>OAuth 2.0 SDK with OpenID Connect extensions</name>

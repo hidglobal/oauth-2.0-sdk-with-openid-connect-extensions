@@ -106,4 +106,21 @@ public class ResourceOwnerPasswordCredentialsGrantTest extends TestCase {
 			assertEquals(OAuth2Error.INVALID_REQUEST, e.getErrorObject());
 		}
 	}
+
+
+	public void testEquality() {
+
+		assertTrue(new ResourceOwnerPasswordCredentialsGrant("alice", new Secret("secret"))
+			.equals(new ResourceOwnerPasswordCredentialsGrant("alice", new Secret("secret"))));
+	}
+
+
+	public void testInequality() {
+
+		assertFalse(new ResourceOwnerPasswordCredentialsGrant("alice", new Secret("secret"))
+			.equals(new ResourceOwnerPasswordCredentialsGrant("bob", new Secret("secret"))));
+
+		assertFalse(new ResourceOwnerPasswordCredentialsGrant("alice", new Secret("secret"))
+			.equals(new ResourceOwnerPasswordCredentialsGrant("alice", new Secret("no-secret"))));
+	}
 }

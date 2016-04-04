@@ -423,5 +423,40 @@ version 5.0 (2015-12-15)
 version 5.1 (2015-12-17)
     * Lets SAML2AssertionValidator accept java.security.Key instances.
 
+version 5.1.1 (2016-01-07)
+    * Fixes NPE in SAML2AssertionValidator.validate on missing XML signature.
 
+version 5.2 (2016-01-28)
+    * Adds support for Proof Key for Code Exchange by OAuth Public Clients (RFC
+      7636).
+    * Adds code_challenge_methods_supported to OIDCProviderMetadata.
+    * Adds public client support to TokenRevocationRequest (issue #164).
+    * ClientMetadata.applyDefaults set token_endpoint_auth_method to 'none' for
+      implicit authorisation grant (iss #163).
+    * Overrides equals and hashCode for AuthorizationCodeGrant.
+    * Overrides equals and hashCode for ResourceOwnerPasswordCredentialsGrant.
+    * Overrides equals and hashCode for RefreshTokenGrant.
+    * Overrides equals and hashCode for SAML2BearerGrant.
+    * Fixes authorisation response JavaDocs concerning use of relative callback
+      URIs (issue #162).
+
+version 5.3 (2016-01-29)
+    * Adds ClientInformation.inferType method to deduce whether a client is
+      confidential or public, based on the token endpoint authentication method
+      and the presence of key material.
+    * Moves ClientType enum to client package.
+
+version 5.4 (2016-01-29)
+    * Restores non-PKCE AuthorizationRequest constructor.
+
+version 5.5 (2016-02-04)
+    * Adds an Actor class to represent the authorised actor in impersonation
+      and delegation cases (draft-ietf-oauth-token-exchange-03).
+
+version 5.5.1 (2016-02-14)
+    * Permits unencoded equals '=' characters in parameter values passed to
+      URLUtils.parseParameters (issue #169).
+
+version 5.5.2 (2016-02-18)
+    * Allows socket caching in HTTPRequest.send method.
 

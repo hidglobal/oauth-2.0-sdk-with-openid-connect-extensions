@@ -6,14 +6,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
-
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
+import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -247,5 +247,101 @@ public class ClientInformationTest extends TestCase {
 		assertFalse(clientInfo.getSecret().expired());
 		assertNull(clientInfo.getRegistrationURI());
 		assertNull(clientInfo.getRegistrationAccessToken());
+	}
+
+
+	public void testInferConfidentialClientType() {
+
+		ClientID clientID = new ClientID();
+		Date issueDate = new Date();
+		ClientMetadata metadata = new ClientMetadata();
+		metadata.applyDefaults();
+		Secret secret = new Secret();
+
+
+		ClientInformation client;
+
+		// default
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// basic auth
+		metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC);
+		metadata.applyDefaults();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// basic post auth
+		metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST);
+		metadata.applyDefaults();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// secret JWT auth
+		metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT);
+		metadata.applyDefaults();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// private key JWT auth - JWK by ref
+		metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.PRIVATE_KEY_JWT);
+		metadata.setJWKSetURI(URI.create("https://example.com/jwks.json"));
+		metadata.applyDefaults();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// private key JWT auth - JWK by value
+		metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.PRIVATE_KEY_JWT);
+		metadata.setJWKSet(new JWKSet());
+		metadata.applyDefaults();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// private key JWT auth - unspecified key source
+		metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.PRIVATE_KEY_JWT);
+		metadata.setJWKSet(new JWKSet());
+		metadata.applyDefaults();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// secret set, but token endpoint auth method = null
+		metadata = new ClientMetadata();
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+
+		// secret = null, token endpoint auth method = null
+		metadata = new ClientMetadata();
+
+		client = new ClientInformation(clientID, issueDate, metadata, null);
+		assertEquals(ClientType.CONFIDENTIAL, client.inferClientType());
+	}
+
+
+	public void testInferPublicClientType() {
+
+		ClientID clientID = new ClientID();
+		Date issueDate = new Date();
+		ClientMetadata metadata = new ClientMetadata();
+		metadata.setTokenEndpointAuthMethod(ClientAuthenticationMethod.NONE);
+		metadata.applyDefaults();
+		Secret secret = null;
+
+		ClientInformation client;
+
+		client = new ClientInformation(clientID, issueDate, metadata, secret);
+		assertEquals(ClientType.PUBLIC, client.inferClientType());
 	}
 }

@@ -10,6 +10,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.*;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -291,5 +292,23 @@ public class SAML2AssertionTest extends TestCase {
 		assertEquals(id, details.getID());
 		assertEquals(clientAddress, details.getClientInetAddress());
 		assertEquals(attrs, details.getAttributeStatement());
+	}
+
+
+	public void testMissingSignature()
+		throws Exception {
+
+		SAML2AssertionDetails details = new SAML2AssertionDetails(new Issuer("https://c2id.com"), new Subject("alice@wondlerland.net"), new Audience("https://client.com"));
+
+		Assertion assertion = details.toSAML2Assertion();
+
+		SAML2AssertionValidator validator = new SAML2AssertionValidator(new SAML2AssertionDetailsVerifier(new HashSet<>(Collections.singletonList(new Audience("https://client.com")))));
+
+		try {
+			validator.validate(assertion, new Issuer("https://c2id.com"), new SecretKeySpec(new byte[32], "HmacSha256"));
+			fail();
+		} catch (BadSAML2AssertionException e) {
+			assertEquals("Missing XML signature", e.getMessage());
+		}
 	}
 }

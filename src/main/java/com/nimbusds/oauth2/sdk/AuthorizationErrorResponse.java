@@ -221,7 +221,7 @@ public class AuthorizationErrorResponse
 	 * known:
 	 *
 	 * <pre>
-	 * URI relUrl = new URI("http://?error=invalid_request");
+	 * URI relUrl = new URI("https:///?error=invalid_request");
 	 * </pre>
 	 *
 	 * <p>Example URI:

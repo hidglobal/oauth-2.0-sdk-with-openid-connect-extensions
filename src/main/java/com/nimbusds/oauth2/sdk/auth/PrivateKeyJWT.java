@@ -95,8 +95,8 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 	 *                      {@code null}.
 	 * @param tokenEndpoint The token endpoint URI of the authorisation
 	 *                      server. Must not be {@code null}.
-	 * @param jwsAlgorithm  The expected RSA signature algorithm (ES256,
-	 *                      ES384 or ES512) for the private key JWT
+	 * @param jwsAlgorithm  The expected RSA signature algorithm (RS256,
+	 *                      RS384 or RS512) for the private key JWT
 	 *                      assertion. Must be supported and not
 	 *                      {@code null}.
 	 * @param rsaPrivateKey The RSA private key. Must not be {@code null}.
@@ -129,8 +129,8 @@ public final class PrivateKeyJWT extends JWTAuthentication {
 	 *
 	 * @param jwtAuthClaimsSet The JWT authentication claims set. Must not
 	 *                         be {@code null}.
-	 * @param jwsAlgorithm     The expected RSA signature algorithm (ES256,
-	 *                         ES384 or ES512) for the private key JWT
+	 * @param jwsAlgorithm     The expected RSA signature algorithm (RS256,
+	 *                         RS384 or RS512) for the private key JWT
 	 *                         assertion. Must be supported and not
 	 *                         {@code null}.
 	 * @param rsaPrivateKey    The RSA private key. Must not be

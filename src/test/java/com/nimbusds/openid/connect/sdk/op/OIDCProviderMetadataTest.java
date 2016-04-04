@@ -2,29 +2,25 @@ package com.nimbusds.openid.connect.sdk.op;
 
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
-
-import com.nimbusds.langtag.LangTag;
+import java.util.*;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.util.JSONObjectUtils;
-
+import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.id.Issuer;
-
-import com.nimbusds.openid.connect.sdk.*;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
+import com.nimbusds.openid.connect.sdk.Display;
+import com.nimbusds.openid.connect.sdk.OIDCResponseTypeValue;
+import com.nimbusds.openid.connect.sdk.OIDCScopeValue;
+import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import com.nimbusds.openid.connect.sdk.claims.ClaimType;
+import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -47,6 +43,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("response_types_supported"));
 		assertTrue(paramNames.contains("response_modes_supported"));
 		assertTrue(paramNames.contains("grant_types_supported"));
+		assertTrue(paramNames.contains("code_challenge_methods_supported"));
 		assertTrue(paramNames.contains("acr_values_supported"));
 		assertTrue(paramNames.contains("subject_types_supported"));
 		assertTrue(paramNames.contains("id_token_signing_alg_values_supported"));
@@ -75,7 +72,7 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(paramNames.contains("check_session_iframe"));
 		assertTrue(paramNames.contains("end_session_endpoint"));
 
-		assertEquals(37, paramNames.size());
+		assertEquals(38, paramNames.size());
 	}
 
 
@@ -159,6 +156,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(tokenEndpointJWSAlgs.contains(JWSAlgorithm.RS256));
 		assertTrue(tokenEndpointJWSAlgs.contains(JWSAlgorithm.ES256));
 		assertEquals(2, tokenEndpointJWSAlgs.size());
+
+		assertNull(op.getCodeChallengeMethods());
 		
 		assertEquals("https://server.example.com/connect/userinfo", op.getUserInfoEndpointURI().toString());
 		
@@ -358,6 +357,10 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
 		assertEquals(2, meta.getGrantTypes().size());
 
+		List<CodeChallengeMethod> codeChallengeMethods = Arrays.asList(CodeChallengeMethod.S256, CodeChallengeMethod.S256);
+		meta.setCodeChallengeMethods(codeChallengeMethods);
+		assertEquals(codeChallengeMethods, meta.getCodeChallengeMethods());
+
 		List<ACR> acrList = new LinkedList<>();
 		acrList.add(new ACR("1"));
 		meta.setACRs(acrList);
@@ -503,6 +506,8 @@ public class OIDCProviderMetadataTest extends TestCase {
 		assertTrue(meta.getGrantTypes().contains(GrantType.AUTHORIZATION_CODE));
 		assertTrue(meta.getGrantTypes().contains(GrantType.REFRESH_TOKEN));
 		assertEquals(2, meta.getGrantTypes().size());
+
+		assertEquals(codeChallengeMethods, meta.getCodeChallengeMethods());
 
 		assertEquals("1", meta.getACRs().get(0).getValue());
 

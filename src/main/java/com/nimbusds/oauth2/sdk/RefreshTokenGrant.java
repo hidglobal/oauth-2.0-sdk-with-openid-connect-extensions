@@ -74,6 +74,24 @@ public class RefreshTokenGrant extends AuthorizationGrant {
 	}
 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		RefreshTokenGrant grant = (RefreshTokenGrant) o;
+
+		return refreshToken.equals(grant.refreshToken);
+
+	}
+
+
+	@Override
+	public int hashCode() {
+		return refreshToken.hashCode();
+	}
+
+
 	/**
 	 * Parses a refresh token grant from the specified parameters.
 	 *

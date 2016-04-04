@@ -5,6 +5,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
+import com.nimbusds.openid.connect.sdk.AuthenticationSuccessResponse;
 import junit.framework.TestCase;
 
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
@@ -320,5 +323,21 @@ public class AuthorizationSuccessResponseTest extends TestCase {
 		assertEquals(code, response.getAuthorizationCode());
 		assertEquals(state, response.getState());
 		assertNull(response.getAccessToken());
+	}
+
+
+	public void testParseWithEncodedEqualsCharAlt()
+		throws Exception {
+
+		// See https://bitbucket.org/connect2id/openid-connect-dev-client/issues/5/stripping-equal-sign-from-access_code-in
+
+		String uri = "https://demo.c2id.com/oidc-client/cb?" +
+			"&state=cVIe4g4D1J3tYtZgnTL-Po9QpozQJdikDCBp7KJorIQ" +
+			"&code=1nf1ljB0JkPIbhMcYMeoT9Q5oGt28ggDsUiWLvCL81YTqCZMzAbVCGLUPrDHouda4cELZRujcS7d8rUNcZVl7HxUXdDsOUtc65s2knGbxSo%3D";
+
+		AuthorizationSuccessResponse response = AuthorizationSuccessResponse.parse(URI.create(uri));
+
+		assertEquals("cVIe4g4D1J3tYtZgnTL-Po9QpozQJdikDCBp7KJorIQ", response.getState().getValue());
+		assertEquals("1nf1ljB0JkPIbhMcYMeoT9Q5oGt28ggDsUiWLvCL81YTqCZMzAbVCGLUPrDHouda4cELZRujcS7d8rUNcZVl7HxUXdDsOUtc65s2knGbxSo=", response.getAuthorizationCode().getValue());
 	}
 }

@@ -13,6 +13,9 @@ import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.*;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.State;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallenge;
+import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
+import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
 import junit.framework.TestCase;
 
@@ -87,6 +90,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertNull(request.getClaimsLocales());
 		assertNull(request.getRequestObject());
 		assertNull(request.getRequestURI());
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 
 		// Check the resulting query string
 		String queryString = request.toQueryString();
@@ -127,6 +132,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertNull(request.getClaimsLocales());
 		assertNull(request.getRequestObject());
 		assertNull(request.getRequestURI());
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 	}
 
 
@@ -179,6 +186,9 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertTrue(new State("abc").equals(request.getState()));
 		assertTrue(new Nonce("xyz").equals(request.getNonce()));
+
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 	}
 
 
@@ -233,10 +243,15 @@ public class AuthenticationRequestTest extends TestCase {
 		claims.addUserInfoClaim("given_name");
 		claims.addUserInfoClaim("family_name");
 
+		CodeVerifier codeVerifier = new CodeVerifier();
+		CodeChallengeMethod codeChallengeMethod = CodeChallengeMethod.S256;
+		CodeChallenge codeChallenge = CodeChallenge.compute(codeChallengeMethod, codeVerifier);
+
 		AuthenticationRequest request = new AuthenticationRequest(
 			uri, rts, rm, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
-			idTokenHint, loginHint, acrValues, claims, null, null);
+			idTokenHint, loginHint, acrValues, claims, null, null,
+			codeChallenge, codeChallengeMethod);
 
 		assertEquals(uri, request.getEndpointURI());
 		
@@ -296,12 +311,14 @@ public class AuthenticationRequestTest extends TestCase {
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
 
+		assertEquals(codeChallenge, request.getCodeChallenge());
+		assertEquals(codeChallengeMethod, request.getCodeChallengeMethod());
+
 
 		// Check the resulting query string
 		String queryString = request.toQueryString();
 
 		System.out.println("OIDC login query string: " + queryString);
-
 
 		request = AuthenticationRequest.parse(uri, queryString);
 
@@ -362,6 +379,9 @@ public class AuthenticationRequestTest extends TestCase {
 		System.out.println("OIDC login request claims: " + claimsOut.toJSONObject().toString());
 
 		assertEquals(2, claimsOut.getUserInfoClaims().size());
+
+		assertEquals(codeChallenge, request.getCodeChallenge());
+		assertEquals(codeChallengeMethod, request.getCodeChallengeMethod());
 	}
 
 
@@ -419,7 +439,8 @@ public class AuthenticationRequestTest extends TestCase {
 		AuthenticationRequest request = new AuthenticationRequest(
 			uri, rts, null, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
-			idTokenHint, loginHint, acrValues, claims, requestObject, null);
+			idTokenHint, loginHint, acrValues, claims, requestObject, null,
+			null, null);
 
 		assertEquals(uri, request.getEndpointURI());
 		
@@ -604,7 +625,8 @@ public class AuthenticationRequestTest extends TestCase {
 		AuthenticationRequest request = new AuthenticationRequest(
 			uri, rts, null, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
-			idTokenHint, loginHint, acrValues, claims, null, requestURI);
+			idTokenHint, loginHint, acrValues, claims, null, requestURI,
+			null, null);
 
 		assertEquals(uri, request.getEndpointURI());
 		
@@ -763,6 +785,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertNull(request.getClaims());
 		assertNull(request.getRequestObject());
 		assertNull(request.getRequestURI());
+		assertNull(request.getCodeChallenge());
+		assertNull(request.getCodeChallengeMethod());
 	}
 
 
@@ -776,6 +800,9 @@ public class AuthenticationRequestTest extends TestCase {
 		ClaimsRequest claims = new ClaimsRequest();
 		claims.addUserInfoClaim("given_name");
 		claims.addUserInfoClaim("family_name");
+
+		CodeVerifier codeVerifier = new CodeVerifier();
+		CodeChallenge codeChallenge = CodeChallenge.compute(CodeChallengeMethod.S256, codeVerifier);
 
 		AuthenticationRequest request = new AuthenticationRequest.Builder(
 			new ResponseType("code", "id_token"),
@@ -794,6 +821,7 @@ public class AuthenticationRequestTest extends TestCase {
 			acrValues(acrValues).
 			claims(claims).
 			responseMode(ResponseMode.FORM_POST).
+			codeChallenge(codeChallenge, CodeChallengeMethod.S256).
 			endpointURI(new URI("https://c2id.com/login")).
 			build();
 
@@ -814,6 +842,8 @@ public class AuthenticationRequestTest extends TestCase {
 		assertEquals("alice@wonderland.net", request.getLoginHint());
 		assertEquals(acrValues, request.getACRValues());
 		assertEquals(claims, request.getClaims());
+		assertEquals(codeChallenge, request.getCodeChallenge());
+		assertEquals(CodeChallengeMethod.S256, request.getCodeChallengeMethod());
 		assertTrue(new URI("https://c2id.com/login").equals(request.getEndpointURI()));
 	}
 
@@ -1170,5 +1200,34 @@ public class AuthenticationRequestTest extends TestCase {
 		assertEquals(new State("af0ifjsldkj"), request.getState());
 		assertEquals(new Nonce("n-0S6_WzA2Mj"), request.getNonce());
 		assertEquals(redirectURI, request.getRedirectionURI());
+	}
+
+
+	public void testParsePKCEExample()
+		throws Exception {
+
+		URI redirectURI = URI.create("https://client.com/cb");
+
+		String encodedRedirectURI = URLEncoder.encode(redirectURI.toString(), "UTF-8");
+
+		URI requestURI = URI.create("https://server.example.com/authorize?" +
+			"response_type=id_token%20token" +
+			"&client_id=s6BhdRkqt3" +
+			"&scope=openid%20profile" +
+			"&state=af0ifjsldkj" +
+			"&nonce=n-0S6_WzA2Mj" +
+			"&redirect_uri=" + encodedRedirectURI +
+			"&code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM" +
+			"&code_challenge_method=S256");
+
+		AuthenticationRequest request = AuthenticationRequest.parse(requestURI);
+
+		assertEquals(ResponseType.parse("id_token token"), request.getResponseType());
+		assertEquals(new ClientID("s6BhdRkqt3"), request.getClientID());
+		assertEquals(new State("af0ifjsldkj"), request.getState());
+		assertEquals(new Nonce("n-0S6_WzA2Mj"), request.getNonce());
+		assertEquals(redirectURI, request.getRedirectionURI());
+		assertEquals("E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM", request.getCodeChallenge().getValue());
+		assertEquals(CodeChallengeMethod.S256, request.getCodeChallengeMethod());
 	}
 }

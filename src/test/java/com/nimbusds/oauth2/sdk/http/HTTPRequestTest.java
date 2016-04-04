@@ -178,6 +178,38 @@ public class HTTPRequestTest extends TestCase {
 
 
 	@Test
+	public void test404Response()
+		throws Exception {
+
+		onRequest()
+			.respond()
+			.withStatus(404);
+
+		// Simulate token request with invalid token
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://localhost:" + port() + "/c2id/.well-known/openid"));
+
+		HTTPResponse httpResponse = httpRequest.send();
+		assertEquals(404, httpResponse.getStatusCode());
+	}
+
+
+	@Test
+	public void test405Response()
+		throws Exception {
+
+		onRequest()
+			.respond()
+			.withStatus(405);
+
+		// Simulate token request with invalid token
+		HTTPRequest httpRequest = new HTTPRequest(HTTPRequest.Method.GET, new URL("http://localhost:" + port() + "/c2id/.well-known/openid"));
+
+		HTTPResponse httpResponse = httpRequest.send();
+		assertEquals(405, httpResponse.getStatusCode());
+	}
+
+
+	@Test
 	public void testToHttpURLConnection()
 		throws Exception {
 

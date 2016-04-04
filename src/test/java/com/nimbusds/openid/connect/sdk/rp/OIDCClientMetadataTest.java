@@ -3,29 +3,21 @@ package com.nimbusds.openid.connect.sdk.rp;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
+import java.util.*;
 import javax.mail.internet.InternetAddress;
-
-import junit.framework.TestCase;
-
-import net.minidev.json.JSONObject;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
-
 import com.nimbusds.langtag.LangTag;
-
 import com.nimbusds.oauth2.sdk.GrantType;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
+import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
@@ -392,5 +384,19 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(128, metadata.getIDTokenJWEEnc().cekBitLength());
 		assertEquals(128, metadata.getUserInfoJWEEnc().cekBitLength());
 		assertEquals(256, metadata.getRequestObjectJWEEnc().cekBitLength());
+	}
+
+
+	public void testClientAuthNoneWithImplicitGrant() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setGrantTypes(Collections.singleton(GrantType.IMPLICIT));
+		clientMetadata.setResponseTypes(Collections.singleton(new ResponseType("token")));
+
+		clientMetadata.applyDefaults();
+
+		assertEquals(Collections.singleton(GrantType.IMPLICIT), clientMetadata.getGrantTypes());
+		assertEquals(Collections.singleton(new ResponseType("token")), clientMetadata.getResponseTypes());
+		assertEquals(ClientAuthenticationMethod.NONE, clientMetadata.getTokenEndpointAuthMethod());
 	}
 }

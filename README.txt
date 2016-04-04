@@ -1,6 +1,6 @@
 Nimbus OAuth 2.0 SDK with OpenID Connect extensions
 
-Copyright (c) Connect2id Ltd., 2012 - 2015
+Copyright (c) Connect2id Ltd., 2012 - 2016
 
 
 README
@@ -107,6 +107,8 @@ This SDK version implements the following standards and drafts:
     * SAML 2.0 Profile for OAuth 2.0 Client Authentication and Authorization
       Grants (RFC 7522)
 
+    * Proof Key for Code Exchange by OAuth Public Clients (RFC 7636)
+
     * Authentication Method Reference Values (draft-jones-oauth-amr-values-02)
 
 	* OpenID Connect Core 1.0 (2014-02-25).
@@ -126,5 +128,5 @@ This SDK is provided under the terms of the Apache 2.0 licence.
 Questions or comments? Email support@connect2id.com
 
 
-2015-12-15
+2016-01-07
 

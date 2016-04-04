@@ -202,6 +202,10 @@ public class SAML2AssertionValidator {
 			throw new BadSAML2AssertionException("Unexpected issuer: " + assertionDetails.getIssuer());
 		}
 
+		if (! assertion.isSigned()) {
+			throw new BadSAML2AssertionException("Missing XML signature");
+		}
+
 		// Verify the signature
 		verifySignature(assertion.getSignature(), key);
 

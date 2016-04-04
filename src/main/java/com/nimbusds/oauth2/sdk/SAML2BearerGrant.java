@@ -89,6 +89,24 @@ public class SAML2BearerGrant extends AssertionGrant {
 	}
 
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		SAML2BearerGrant that = (SAML2BearerGrant) o;
+
+		return assertion.equals(that.assertion);
+
+	}
+
+
+	@Override
+	public int hashCode() {
+		return assertion.hashCode();
+	}
+
+
 	/**
 	 * Parses a SAML 2.0 bearer grant from the specified parameters.
 	 *

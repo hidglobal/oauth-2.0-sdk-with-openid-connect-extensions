@@ -10,7 +10,7 @@ import junit.framework.TestCase;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 
-import com.nimbusds.oauth2.sdk.ClientType;
+import com.nimbusds.oauth2.sdk.client.ClientType;
 import com.nimbusds.oauth2.sdk.ParseException;
 
 

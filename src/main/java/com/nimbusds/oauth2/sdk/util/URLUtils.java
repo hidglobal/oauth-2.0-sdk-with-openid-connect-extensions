@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang3.StringUtils;
+
 
 /**
  * URL operations.
@@ -132,7 +134,7 @@ public class URLUtils {
 		
 		Map<String,String> params = new HashMap<>();
 		
-		if (query == null || query.trim().isEmpty()) {
+		if (StringUtils.isBlank(query)) {
 			return params; // empty map
 		}
 		
@@ -143,7 +145,7 @@ public class URLUtils {
 
 				String param = st.nextToken();
 
-				String pair[] = param.split("=");
+				String pair[] = param.split("=", 2); // Split around the first '=', see issue #169
 
 				String key = URLDecoder.decode(pair[0], CHARSET);
 				
@@ -153,8 +155,9 @@ public class URLUtils {
 
 				String value = "";
 
-				if (pair.length > 1)
+				if (pair.length > 1) {
 					value = URLDecoder.decode(pair[1], CHARSET);
+				}
 				
 				params.put(key, value);
 			}

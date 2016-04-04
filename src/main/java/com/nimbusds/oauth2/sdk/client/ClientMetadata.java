@@ -968,9 +968,10 @@ public class ClientMetadata {
 	 *
 	 * <ul>
 	 *     <li>The response types default to {@code ["code"]}.
-	 *     <li>The grant types default to {@code "authorization_code".}
+	 *     <li>The grant types default to {@code ["authorization_code"]}.
 	 *     <li>The client authentication method defaults to
-	 *         "client_secret_basic".
+	 *         "client_secret_basic", unless the grant type is "implicit"
+	 *         only.
 	 * </ul>
 	 */
 	public void applyDefaults() {
@@ -986,7 +987,12 @@ public class ClientMetadata {
 		}
 
 		if (authMethod == null) {
-			authMethod = ClientAuthenticationMethod.getDefault();
+
+			if (grantTypes.contains(GrantType.IMPLICIT) && grantTypes.size() == 1) {
+				authMethod = ClientAuthenticationMethod.NONE;
+			} else {
+				authMethod = ClientAuthenticationMethod.getDefault();
+			}
 		}
 	}
 
