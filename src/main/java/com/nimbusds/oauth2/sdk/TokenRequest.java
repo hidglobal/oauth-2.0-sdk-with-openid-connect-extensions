@@ -5,15 +5,16 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.Map;
 
-import net.jcip.annotations.Immutable;
-
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
-import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
+import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
+import net.jcip.annotations.Immutable;
+import org.apache.commons.collections4.MapUtils;
 
 
 /**
@@ -58,6 +59,12 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 
 
 	/**
+	 * Additional custom request parameters.
+	 */
+	private final Map<String,String> customParams;
+
+
+	/**
 	 * Creates a new token request with the specified client
 	 * authentication.
 	 *
@@ -75,6 +82,33 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 			    final AuthorizationGrant authzGrant,
 			    final Scope scope) {
 
+		this(uri, clientAuth, authzGrant, scope, null);
+	}
+
+
+	/**
+	 * Creates a new token request with the specified client
+	 * authentication and additional custom parameters.
+	 *
+	 * @param uri          The URI of the token endpoint. May be
+	 *                     {@code null} if the {@link #toHTTPRequest}
+	 *                     method will not be used.
+	 * @param clientAuth   The client authentication. Must not be
+	 *                     {@code null}.
+	 * @param authzGrant   The authorisation grant. Must not be
+	 *                     {@code null}.
+	 * @param scope        The requested scope, {@code null} if not
+	 *                     specified.
+	 * @param customParams Additional custom parameters to be included in
+	 *                     the request body, empty map or {@code null} if
+	 *                     none.
+	 */
+	public TokenRequest(final URI uri,
+			    final ClientAuthentication clientAuth,
+			    final AuthorizationGrant authzGrant,
+			    final Scope scope,
+			    final Map<String,String> customParams) {
+
 		super(uri, clientAuth);
 
 		if (clientAuth == null)
@@ -83,6 +117,12 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 		this.authzGrant = authzGrant;
 
 		this.scope = scope;
+
+		if (MapUtils.isNotEmpty(customParams)) {
+			this.customParams = customParams;
+		} else {
+			this.customParams = Collections.emptyMap();
+		}
 	}
 
 
@@ -123,6 +163,34 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 			    final AuthorizationGrant authzGrant,
 			    final Scope scope) {
 
+		this(uri, clientID, authzGrant, scope, null);
+	}
+
+
+	/**
+	 * Creates a new token request, with no explicit client authentication
+	 * (may be present in the grant depending on its type) and additional
+	 * custom parameters.
+	 *
+	 * @param uri          The URI of the token endpoint. May be
+	 *                     {@code null} if the {@link #toHTTPRequest}
+	 *                     method will not be used.
+	 * @param clientID     The client identifier, {@code null} if not
+	 *                     specified.
+	 * @param authzGrant   The authorisation grant. Must not be
+	 *                     {@code null}.
+	 * @param scope        The requested scope, {@code null} if not
+	 *                     specified.
+	 * @param customParams Additional custom parameters to be included in
+	 *                     the request body, empty map or {@code null} if
+	 *                     none.
+	 */
+	public TokenRequest(final URI uri,
+			    final ClientID clientID,
+			    final AuthorizationGrant authzGrant,
+			    final Scope scope,
+			    final Map<String,String> customParams) {
+
 		super(uri, clientID);
 
 		if (authzGrant.getType().requiresClientAuthentication()) {
@@ -136,6 +204,12 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 		this.authzGrant = authzGrant;
 
 		this.scope = scope;
+
+		if (MapUtils.isNotEmpty(customParams)) {
+			this.customParams = customParams;
+		} else {
+			this.customParams = Collections.emptyMap();
+		}
 	}
 
 
@@ -212,6 +286,38 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 	public Scope getScope() {
 
 		return scope;
+	}
+
+
+	/**
+	 * Returns the additional custom parameters included in the request
+	 * body.
+	 *
+	 * <p>Example:
+	 *
+	 * <pre>
+	 * resource=http://xxxxxx/PartyOData
+	 * </pre>
+	 *
+	 * @return The additional custom parameters as a unmodifiable map,
+	 *         empty map if none.
+	 */
+	public Map<String,String> getCustomParameters() {
+
+		return customParams;
+	}
+
+
+	/**
+	 * Returns the specified custom parameter included in the request body.
+	 *
+	 * @param name The parameter name. Must not be {@code null}.
+	 *
+	 * @return The parameter value, {@code null} if not specified.
+	 */
+	public String getCustomParameter(final String name) {
+
+		return customParams.get(name);
 	}
 
 
