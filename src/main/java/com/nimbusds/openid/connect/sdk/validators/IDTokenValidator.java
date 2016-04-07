@@ -436,23 +436,13 @@ public class IDTokenValidator implements ClockSkewAware {
 
 		} else if (JWSAlgorithm.Family.RSA.contains(expectedJWSAlg) || JWSAlgorithm.Family.EC.contains(expectedJWSAlg)) {
 
-			JWKSource jwkSource;
-
-			if (clientInfo.getOIDCMetadata().getJWKSet() != null) {
-				// The JWK set is specified by value
-				jwkSource = new ImmutableJWKSet(clientID, clientInfo.getOIDCMetadata().getJWKSet());
-			} else if (clientInfo.getOIDCMetadata().getJWKSetURI() != null) {
-				// The JWK set is specified by URL reference
-				URL jwkSetURL;
-				try {
-					jwkSetURL = clientInfo.getOIDCMetadata().getJWKSetURI().toURL();
-				} catch (MalformedURLException e) {
-					throw new GeneralException("Invalid jwk set URI: " + e.getMessage(), e);
-				}
-				jwkSource = new RemoteJWKSet(clientID, jwkSetURL, null);
-			} else {
-				throw new GeneralException("Missing JWK set source");
+			URL jwkSetURL;
+			try {
+				jwkSetURL = opMetadata.getJWKSetURI().toURL();
+			} catch (MalformedURLException e) {
+				throw new GeneralException("Invalid jwk set URI: " + e.getMessage(), e);
 			}
+			JWKSource jwkSource = new RemoteJWKSet(opMetadata.getIssuer(), jwkSetURL, null); // TODO specify HTTP response limits
 
 			return new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, jwkSource);
 
@@ -462,7 +452,6 @@ public class IDTokenValidator implements ClockSkewAware {
 			if (clientSecret == null) {
 				throw new GeneralException("Missing client secret");
 			}
-
 			return new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableClientSecret(clientID, clientSecret));
 
 		} else {
