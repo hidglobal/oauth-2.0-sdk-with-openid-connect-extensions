@@ -1,6 +1,11 @@
 package com.nimbusds.oauth2.sdk;
 
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import net.jcip.annotations.Immutable;
 
 import com.nimbusds.oauth2.sdk.id.Identifier;
@@ -17,48 +22,48 @@ public final class GrantType extends Identifier {
 	 * Authorisation code. Client authentication required only for
 	 * confidential clients.
 	 */
-	public static final GrantType AUTHORIZATION_CODE = new GrantType("authorization_code", false, true);
+	public static final GrantType AUTHORIZATION_CODE = new GrantType("authorization_code", false, true, new HashSet<>(Arrays.asList("code", "redirect_uri", "code_verifier")));
 
 
 	/**
 	 * Implicit. Client authentication is not performed (except for signed
 	 * OpenID Connect authentication requests).
 	 */
-	public static final GrantType IMPLICIT = new GrantType("implicit", false, true);
+	public static final GrantType IMPLICIT = new GrantType("implicit", false, true, Collections.<String>emptySet());
 	
 	
 	/**
 	 * Refresh token. Client authentication required only for confidential
 	 * clients.
 	 */
-	public static final GrantType REFRESH_TOKEN = new GrantType("refresh_token", false, false);
+	public static final GrantType REFRESH_TOKEN = new GrantType("refresh_token", false, false, Collections.singleton("refresh_token"));
 
 
 	/**
 	 * Password. Client authentication required only for confidential
 	 * clients.
 	 */
-	public static final GrantType PASSWORD = new GrantType("password", false, false);
+	public static final GrantType PASSWORD = new GrantType("password", false, false, new HashSet<>(Arrays.asList("username", "password")));
 
 
 	/**
 	 * Client credentials. Client authentication is required.
 	 */
-	public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials", true, true);
+	public static final GrantType CLIENT_CREDENTIALS = new GrantType("client_credentials", true, true, Collections.<String>emptySet());
 
 
 	/**
 	 * JWT bearer, as defined in RFC 7523. Explicit client authentication
 	 * is optional.
 	 */
-	public static final GrantType JWT_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer", false, false);
+	public static final GrantType JWT_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:jwt-bearer", false, false, Collections.singleton("assertion"));
 
 
 	/**
 	 * SAML 2.0 bearer, as defined in RFC 7522. Explicit client
 	 * authentication is optional.
 	 */
-	public static final GrantType SAML2_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:saml2-bearer", false, false);
+	public static final GrantType SAML2_BEARER = new GrantType("urn:ietf:params:oauth:grant-type:saml2-bearer", false, false, Collections.singleton("assertion"));
 
 
 	/**
@@ -74,6 +79,13 @@ public final class GrantType extends Identifier {
 
 
 	/**
+	 * The names of the token request parameters specific to this grant
+	 * type.
+	 */
+	private final Set<String> requestParamNames;
+
+
+	/**
 	 * Creates a new OAuth 2.0 authorisation grant type with the specified
 	 * value. The client authentication requirement is set to
 	 * {@code false}. So is the client identifier requirement.
@@ -83,7 +95,7 @@ public final class GrantType extends Identifier {
 	 */
 	public GrantType(final String value) {
 
-		this(value, false, false);
+		this(value, false, false, Collections.<String>emptySet());
 	}
 
 
@@ -95,14 +107,19 @@ public final class GrantType extends Identifier {
 	 *                           not be {@code null} or empty string.
 	 * @param requiresClientAuth The client authentication requirement.
 	 * @param requiresClientID   The client identifier requirement.
+	 * @param requestParamNames  The names of the token request parameters
+	 *                           specific to this grant type, empty set or
+	 *                           {@code null} if none.
 	 */
 	private GrantType(final String value,
 			  final boolean requiresClientAuth,
-			  final boolean requiresClientID) {
+			  final boolean requiresClientID,
+			  final Set<String> requestParamNames) {
 
 		super(value);
 		this.requiresClientAuth = requiresClientAuth;
 		this.requiresClientID = requiresClientID;
+		this.requestParamNames = requestParamNames == null ? Collections.<String>emptySet() : Collections.unmodifiableSet(requestParamNames);
 	}
 
 
@@ -129,6 +146,18 @@ public final class GrantType extends Identifier {
 	public boolean requiresClientID() {
 
 		return requiresClientID;
+	}
+
+
+	/**
+	 * Gets the names of the token request parameters specific to this
+	 * grant type.
+	 *
+	 * @return The parameter names, empty set if none.
+	 */
+	public Set<String> getRequestParameterNames() {
+
+		return requestParamNames;
 	}
 
 
