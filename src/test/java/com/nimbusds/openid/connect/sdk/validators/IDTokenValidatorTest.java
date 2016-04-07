@@ -546,9 +546,7 @@ public class IDTokenValidatorTest extends TestCase {
 		metadata.setIDTokenJWSAlg(JWSAlgorithm.HS256);
 		metadata.applyDefaults();
 
-		OIDCClientInformation clientInfo = new OIDCClientInformation(new ClientID("123"), new Date(), metadata, new Secret());
-
-		System.out.println(clientInfo.toJSONObject());
+		OIDCClientInformation clientInfo = new OIDCClientInformation(new ClientID("123"), new Date(), metadata, new Secret(ByteUtils.byteLength(256)));
 
 		// Create validator
 		IDTokenValidator v = IDTokenValidator.create(opMetadata, clientInfo, null);
@@ -580,6 +578,8 @@ public class IDTokenValidatorTest extends TestCase {
 		idToken.sign(new MACSigner(clientInfo.getSecret().getValueBytes()));
 		idToken = SignedJWT.parse(idToken.serialize());
 
+		assertEquals(1, v.getJWSKeySelector().selectJWSKeys(idToken.getHeader(), null).size());
+
 		// Validate
 		IDTokenClaimsSet validated = v.validate(idToken, null);
 		assertEquals(claimsSet.getIssuer(), validated.getIssuer());
@@ -606,12 +606,12 @@ public class IDTokenValidatorTest extends TestCase {
 		try {
 			v.validate(idToken, null);
 			fail();
-		} catch (BadJWSException e) {
-			assertEquals("Signed JWT rejected: Invalid signature", e.getMessage());
+		} catch (BadJOSEException e) {
+			assertEquals("Signed JWT rejected: No matching key(s) found", e.getMessage());
 		}
 
 		// Sign ID token with bad HMAC key
-		idToken = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.RS256).keyID("XXXXXXX").build(), claimsSet.toJWTClaimsSet());
+		idToken = new SignedJWT(new JWSHeader.Builder(JWSAlgorithm.HS256).keyID("XXXXXXX").build(), claimsSet.toJWTClaimsSet());
 		idToken.sign(new MACSigner("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"));
 		assertEquals(JWSObject.State.SIGNED, idToken.getState());
 
