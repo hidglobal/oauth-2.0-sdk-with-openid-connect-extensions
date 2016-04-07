@@ -56,7 +56,7 @@ public final class ImmutableClientSecret extends ImmutableJWKSet {
 
 	@Override
 	public List<JWK> get(final Identifier id, final JWKSelector jwkSelector) {
-		// Owner not checked
+		// Owner not checked, we have a shared secret
 		return jwkSelector.select(getJWKSet());
 	}
 }
