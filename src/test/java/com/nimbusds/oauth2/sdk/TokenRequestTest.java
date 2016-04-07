@@ -3,8 +3,8 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URI;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.crypto.spec.SecretKeySpec;
@@ -1133,6 +1133,147 @@ public class TokenRequestTest extends TestCase {
 		assertTrue(queryTokens.contains("code=abc%3D"));
 		assertTrue(queryTokens.contains("redirect_uri=https%3A%2F%2Fexample.com%2Fcb"));
 		assertEquals(4, queryTokens.size());
+	}
+
+
+	public void testCustomParams_codeGrant_basicAuth()
+		throws Exception {
+
+		AuthorizationGrant grant = new AuthorizationCodeGrant(new AuthorizationCode(), URI.create("https://example.com/cb"));
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("resource", "http://xxxxxx/PartyOData");
+
+		TokenRequest request = new TokenRequest(URI.create("https://c2id.com/token"), new ClientSecretBasic(new ClientID(), new Secret()), grant, Scope.parse("read write"), customParams);
+
+		assertEquals(customParams, request.getCustomParameters());
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		assertEquals("http://xxxxxx/PartyOData", httpRequest.getQueryParameters().get("resource"));
+		assertEquals(5, httpRequest.getQueryParameters().size());
+
+		request = TokenRequest.parse(httpRequest);
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+		assertEquals(1, request.getCustomParameters().size());
+	}
+
+
+	public void testCustomParams_codeGrant_postAuth()
+		throws Exception {
+
+		AuthorizationGrant grant = new AuthorizationCodeGrant(new AuthorizationCode(), URI.create("https://example.com/cb"));
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("resource", "http://xxxxxx/PartyOData");
+
+		TokenRequest request = new TokenRequest(URI.create("https://c2id.com/token"), new ClientSecretPost(new ClientID(), new Secret()), grant, Scope.parse("read write"), customParams);
+
+		assertEquals(customParams, request.getCustomParameters());
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		assertEquals("http://xxxxxx/PartyOData", httpRequest.getQueryParameters().get("resource"));
+		assertEquals(7, httpRequest.getQueryParameters().size());
+
+		request = TokenRequest.parse(httpRequest);
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+		assertEquals(1, request.getCustomParameters().size());
+	}
+
+
+	public void testCustomParams_passwordGrant_postAuth()
+		throws Exception {
+
+		AuthorizationGrant grant = new ResourceOwnerPasswordCredentialsGrant("alice", new Secret());
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("resource", "http://xxxxxx/PartyOData");
+
+		TokenRequest request = new TokenRequest(URI.create("https://c2id.com/token"), new ClientSecretPost(new ClientID(), new Secret()), grant, Scope.parse("read write"), customParams);
+
+		assertEquals(customParams, request.getCustomParameters());
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+		assertEquals("http://xxxxxx/PartyOData", httpRequest.getQueryParameters().get("resource"));
+		assertEquals(7, httpRequest.getQueryParameters().size());
+
+		request = TokenRequest.parse(httpRequest);
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+		assertEquals(1, request.getCustomParameters().size());
+	}
+
+
+	public void testCustomParams_clientCredentialsGrant_basicAuth()
+		throws Exception {
+
+		AuthorizationGrant grant = new ClientCredentialsGrant();
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("resource", "http://xxxxxx/PartyOData");
+
+		TokenRequest request = new TokenRequest(URI.create("https://c2id.com/token"), new ClientSecretBasic(new ClientID(), new Secret()), grant, Scope.parse("read write"), customParams);
+
+		assertEquals(customParams, request.getCustomParameters());
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		System.out.println(httpRequest.getQuery());
+		assertEquals("client_credentials", httpRequest.getQueryParameters().get("grant_type"));
+		assertEquals("read write", httpRequest.getQueryParameters().get("scope"));
+		assertEquals("http://xxxxxx/PartyOData", httpRequest.getQueryParameters().get("resource"));
+		assertEquals(3, httpRequest.getQueryParameters().size());
+
+		request = TokenRequest.parse(httpRequest);
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+		assertEquals(1, request.getCustomParameters().size());
+	}
+
+
+	public void testCustomParams_clientCredentialsGrant_postAuth()
+		throws Exception {
+
+		AuthorizationGrant grant = new ClientCredentialsGrant();
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("resource", "http://xxxxxx/PartyOData");
+
+		TokenRequest request = new TokenRequest(URI.create("https://c2id.com/token"), new ClientSecretPost(new ClientID(), new Secret()), grant, Scope.parse("read write"), customParams);
+
+		assertEquals(customParams, request.getCustomParameters());
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		System.out.println(httpRequest.getQuery());
+		assertEquals("http://xxxxxx/PartyOData", httpRequest.getQueryParameters().get("resource"));
+
+		request = TokenRequest.parse(httpRequest);
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+		assertEquals(1, request.getCustomParameters().size());
+	}
+
+
+	public void testCustomParams_clientCredentialsGrant_jwtAuth()
+		throws Exception {
+
+		AuthorizationGrant grant = new ClientCredentialsGrant();
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("resource", "http://xxxxxx/PartyOData");
+
+		TokenRequest request = new TokenRequest(URI.create("https://c2id.com/token"), new ClientSecretJWT(new ClientID(), URI.create("https://c2id.com/token"), JWSAlgorithm.HS256, new Secret()), grant, Scope.parse("read write"), customParams);
+
+		assertEquals(customParams, request.getCustomParameters());
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+
+		HTTPRequest httpRequest = request.toHTTPRequest();
+
+		System.out.println(httpRequest.getQuery());
+		assertEquals("http://xxxxxx/PartyOData", httpRequest.getQueryParameters().get("resource"));
+
+		request = TokenRequest.parse(httpRequest);
+		assertEquals("http://xxxxxx/PartyOData", request.getCustomParameter("resource"));
+		System.out.println(request.getCustomParameters());
+		assertEquals(1, request.getCustomParameters().size());
 	}
 }
 

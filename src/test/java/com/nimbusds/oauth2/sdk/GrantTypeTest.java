@@ -46,6 +46,29 @@ public class GrantTypeTest extends TestCase {
 	}
 
 
+	public void testRequestParameters() {
+
+		assertTrue(GrantType.AUTHORIZATION_CODE.getRequestParameterNames().contains("code"));
+		assertTrue(GrantType.AUTHORIZATION_CODE.getRequestParameterNames().contains("redirect_uri"));
+		assertTrue(GrantType.AUTHORIZATION_CODE.getRequestParameterNames().contains("code_verifier"));
+		assertEquals(3, GrantType.AUTHORIZATION_CODE.getRequestParameterNames().size());
+
+		assertTrue(GrantType.IMPLICIT.getRequestParameterNames().isEmpty());
+
+		assertTrue(GrantType.PASSWORD.getRequestParameterNames().contains("username"));
+		assertTrue(GrantType.PASSWORD.getRequestParameterNames().contains("password"));
+		assertEquals(2, GrantType.PASSWORD.getRequestParameterNames().size());
+
+		assertTrue(GrantType.CLIENT_CREDENTIALS.getRequestParameterNames().isEmpty());
+
+		assertTrue(GrantType.JWT_BEARER.getRequestParameterNames().contains("assertion"));
+		assertEquals(1, GrantType.JWT_BEARER.getRequestParameterNames().size());
+
+		assertTrue(GrantType.SAML2_BEARER.getRequestParameterNames().contains("assertion"));
+		assertEquals(1, GrantType.SAML2_BEARER.getRequestParameterNames().size());
+	}
+
+
 	public void testDefaultConstructor() {
 
 		GrantType grantType = new GrantType("custom");
@@ -76,6 +99,7 @@ public class GrantTypeTest extends TestCase {
 		assertEquals("custom", grantType.getValue());
 		assertFalse(grantType.requiresClientAuthentication());
 		assertFalse(grantType.requiresClientID());
+		assertTrue(grantType.getRequestParameterNames().isEmpty());
 	}
 
 

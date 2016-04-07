@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.auth.ClientAuthentication;
@@ -21,7 +22,8 @@ import org.apache.commons.collections4.MapUtils;
  * Token request. Used to obtain an
  * {@link com.nimbusds.oauth2.sdk.token.AccessToken access token} and an
  * optional {@link com.nimbusds.oauth2.sdk.token.RefreshToken refresh token}
- * at the Token endpoint of the authorisation server.
+ * at the Token endpoint of the authorisation server. Supports custom request
+ * parameters.
  *
  * <p>Example token request with an authorisation code grant:
  *
@@ -302,7 +304,7 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 	 * @return The additional custom parameters as a unmodifiable map,
 	 *         empty map if none.
 	 */
-	public Map<String,String> getCustomParameters() {
+	public Map<String,String> getCustomParameters () {
 
 		return customParams;
 	}
@@ -354,6 +356,10 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 
 		if (getClientID() != null) {
 			params.put("client_id", getClientID().getValue());
+		}
+
+		if (! getCustomParameters().isEmpty()) {
+			params.putAll(getCustomParameters());
 		}
 
 		httpRequest.setQuery(URLUtils.serializeParameters(params));
@@ -429,11 +435,45 @@ public class TokenRequest extends AbstractOptionallyIdentifiedRequest {
 			scope = Scope.parse(scopeValue);
 		}
 
+		// Parse custom parameters
+		Map<String,String> customParams = new HashMap<>();
+
+		for (Map.Entry<String,String> p: params.entrySet()) {
+
+			if (p.getKey().equalsIgnoreCase("grant_type")) {
+				continue; // skip
+			}
+
+			if (p.getKey().equalsIgnoreCase("client_id")) {
+				continue; // skip
+			}
+
+			if (p.getKey().equalsIgnoreCase("client_secret")) {
+				continue; // skip
+			}
+
+			if (p.getKey().equalsIgnoreCase("client_assertion_type")) {
+				continue; // skip
+			}
+
+			if (p.getKey().equalsIgnoreCase("client_assertion")) {
+				continue; // skip
+			}
+
+			if (p.getKey().equalsIgnoreCase("scope")) {
+				continue; // skip
+			}
+
+			if (! grant.getType().getRequestParameterNames().contains(p.getKey())) {
+				// We have a custom (non-registered) parameter
+				customParams.put(p.getKey(), p.getValue());
+			}
+		}
 
 		if (clientAuth != null) {
-			return new TokenRequest(uri, clientAuth, grant, scope);
+			return new TokenRequest(uri, clientAuth, grant, scope, customParams);
 		} else {
-			return new TokenRequest(uri, clientID, grant, scope);
+			return new TokenRequest(uri, clientID, grant, scope, customParams);
 		}
 	}
 }
