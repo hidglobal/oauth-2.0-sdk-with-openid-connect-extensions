@@ -298,6 +298,40 @@ public class IDTokenValidatorTest extends TestCase {
 	}
 
 
+	public void testVerifyHmacWithoutNonce()
+		throws Exception {
+
+		Secret clientSecret = new Secret(ByteUtils.byteLength(256));
+
+		Issuer iss = new Issuer("https://c2id.com");
+		ClientID clientID = new ClientID("123");
+		Date now = new Date();
+
+		JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+				.issuer(iss.getValue())
+				.subject("alice")
+				.audience(clientID.getValue())
+				.expirationTime(new Date(now.getTime() + 10*60*1000L))
+				.issueTime(now)
+				.build();
+
+		SignedJWT idToken = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
+		idToken.sign(new MACSigner(clientSecret.getValueBytes()));
+
+		IDTokenValidator idTokenValidator = new IDTokenValidator(iss, clientID, JWSAlgorithm.HS256, clientSecret);
+		assertNotNull(idTokenValidator.getJWSKeySelector());
+		assertNull(idTokenValidator.getJWEKeySelector());
+
+		IDTokenClaimsSet idTokenClaimsSet = idTokenValidator.validate(idToken, null);
+		assertEquals(iss, idTokenClaimsSet.getIssuer());
+		assertEquals(new Subject("alice"), idTokenClaimsSet.getSubject());
+		assertTrue(idTokenClaimsSet.getAudience().contains(new Audience("123")));
+		assertNotNull(idTokenClaimsSet.getExpirationTime());
+		assertNotNull(idTokenClaimsSet.getIssueTime());
+		assertNull(idTokenClaimsSet.getNonce());
+	}
+
+
 	public void testVerifyBadHmac()
 		throws Exception {
 
@@ -625,7 +659,7 @@ public class IDTokenValidatorTest extends TestCase {
 	}
 
 
-	public void testStaticFactoryMethod_HS256()
+	public void _testStaticFactoryMethod_HS256()
 		throws Exception {
 
 		// Create OP metadata
