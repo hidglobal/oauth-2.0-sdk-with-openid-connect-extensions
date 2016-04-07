@@ -460,3 +460,12 @@ version 5.5.1 (2016-02-14)
 version 5.5.2 (2016-02-18)
     * Allows socket caching in HTTPRequest.send method.
 
+version 5.6 (2016-04-07)
+    * Adds support for custom TokenRequest parameters (issue #171).
+    * Fixes key selection bug in static factory method IDTokenValidator.create
+      (iss #173).
+    * Adds support for OSGi bundling in pom.xml.
+    * Upgrades minimal dependency to Nimbus JOSE+JWT 4.13.1.
+
+
+
