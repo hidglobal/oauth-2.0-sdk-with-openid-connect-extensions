@@ -8,6 +8,7 @@ import java.net.URL;
 /**
  * Retriever of resources specified by URL.
  */
+@Deprecated
 public interface ResourceRetriever {
 
 

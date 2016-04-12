@@ -9,6 +9,7 @@ import net.jcip.annotations.ThreadSafe;
  * Abstract JSON Web Key (JWK) source.
  */
 @ThreadSafe
+@Deprecated
 abstract class AbstractJWKSource implements JWKSource {
 	
 

@@ -12,6 +12,7 @@ import com.nimbusds.oauth2.sdk.id.Identifier;
  * JSON Web Key (JWK) source. Exposes a method for retrieving selected keys for
  * a party (OAuth 2.0 server or client). Implementations must be thread-safe.
  */
+@Deprecated
 public interface JWKSource {
 	
 

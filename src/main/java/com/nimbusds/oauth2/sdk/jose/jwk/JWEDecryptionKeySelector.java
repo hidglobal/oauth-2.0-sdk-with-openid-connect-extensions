@@ -29,6 +29,7 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
+@Deprecated
 public class JWEDecryptionKeySelector extends AbstractJWKSelectorWithSource implements JWEKeySelector {
 
 

@@ -20,6 +20,7 @@ import org.apache.commons.io.input.BoundedInputStream;
  * entity. Caching header directives are not honoured.
  */
 @ThreadSafe
+@Deprecated
 public class DefaultResourceRetriever extends AbstractRestrictedResourceRetriever implements RestrictedResourceRetriever {
 
 

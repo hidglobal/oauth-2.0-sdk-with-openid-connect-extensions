@@ -9,6 +9,7 @@ import net.jcip.annotations.ThreadSafe;
  * restrictions.
  */
 @ThreadSafe
+@Deprecated
 public abstract class AbstractRestrictedResourceRetriever implements RestrictedResourceRetriever {
 	
 

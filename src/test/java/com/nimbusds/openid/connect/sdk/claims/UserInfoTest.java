@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.mail.internet.InternetAddress;
 
-import com.nimbusds.jwt.util.DateUtils;
+import com.nimbusds.jose.util.DateUtils;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.id.Subject;
 import junit.framework.TestCase;

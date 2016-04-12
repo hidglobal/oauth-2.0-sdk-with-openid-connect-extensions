@@ -20,6 +20,7 @@ import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jose.proc.BadJWSException;
 import com.nimbusds.jwt.SignedJWT;
@@ -29,7 +30,6 @@ import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.oauth2.sdk.id.Subject;
-import com.nimbusds.oauth2.sdk.jose.jwk.ImmutableJWKSet;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
@@ -232,7 +232,7 @@ public class IDTokenValidatorWithHTTPTest extends TestCase {
 		OIDCClientInformation clientInfo = new OIDCClientInformation(new ClientID("123"), new Date(), metadata, new Secret());
 
 		// Create validator
-		IDTokenValidator v = IDTokenValidator.create(opMetadata, clientInfo, new ImmutableJWKSet(clientInfo.getID(), new JWKSet(clientJWK)));
+		IDTokenValidator v = IDTokenValidator.create(opMetadata, clientInfo, new ImmutableJWKSet(new JWKSet(clientJWK)));
 		assertEquals(opMetadata.getIssuer(), v.getExpectedIssuer());
 		assertEquals(clientInfo.getID(), v.getClientID());
 		assertNotNull(v.getJWSKeySelector());

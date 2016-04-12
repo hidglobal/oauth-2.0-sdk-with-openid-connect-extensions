@@ -15,6 +15,7 @@ import net.jcip.annotations.Immutable;
  * Immutable JSON Web Key (JWK) set. Intended for a JWK set specified by value.
  */
 @Immutable
+@Deprecated
 public class ImmutableJWKSet extends AbstractJWKSource {
 
 

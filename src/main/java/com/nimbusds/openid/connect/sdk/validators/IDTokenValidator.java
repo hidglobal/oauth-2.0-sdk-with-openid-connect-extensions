@@ -6,9 +6,11 @@ import java.net.URL;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.proc.BadJOSEException;
-import com.nimbusds.jose.proc.JWEKeySelector;
-import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.proc.*;
 import com.nimbusds.jwt.*;
 import com.nimbusds.jwt.proc.*;
 import com.nimbusds.oauth2.sdk.GeneralException;
@@ -16,7 +18,6 @@ import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.auth.Secret;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
-import com.nimbusds.oauth2.sdk.jose.jwk.*;
 import com.nimbusds.openid.connect.sdk.Nonce;
 import com.nimbusds.openid.connect.sdk.claims.IDTokenClaimsSet;
 import com.nimbusds.openid.connect.sdk.op.OIDCProviderMetadata;
@@ -115,7 +116,7 @@ public class IDTokenValidator implements ClockSkewAware {
 				final JWSAlgorithm expectedJWSAlg,
 				final JWKSet jwkSet) {
 
-		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableJWKSet(expectedIssuer, jwkSet)),  null);
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedJWSAlg, new ImmutableJWKSet(jwkSet)),  null);
 	}
 
 
@@ -136,7 +137,7 @@ public class IDTokenValidator implements ClockSkewAware {
 				final JWSAlgorithm expectedJWSAlg,
 				final URL jwkSetURI) {
 
-		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new RemoteJWKSet(expectedIssuer, jwkSetURI, null)),  null);
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedJWSAlg, new RemoteJWKSet(jwkSetURI)),  null);
 	}
 
 
@@ -155,7 +156,7 @@ public class IDTokenValidator implements ClockSkewAware {
 				final JWSAlgorithm expectedJWSAlg,
 				final Secret clientSecret) {
 
-		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableClientSecret(clientID, clientSecret)), null);
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedJWSAlg, new ImmutableSecret(clientSecret.getValueBytes())), null);
 	}
 
 
@@ -442,9 +443,9 @@ public class IDTokenValidator implements ClockSkewAware {
 			} catch (MalformedURLException e) {
 				throw new GeneralException("Invalid jwk set URI: " + e.getMessage(), e);
 			}
-			JWKSource jwkSource = new RemoteJWKSet(opMetadata.getIssuer(), jwkSetURL, null); // TODO specify HTTP response limits
+			JWKSource jwkSource = new RemoteJWKSet(jwkSetURL); // TODO specify HTTP response limits
 
-			return new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, jwkSource);
+			return new JWSVerificationKeySelector(expectedJWSAlg, jwkSource);
 
 		} else if (JWSAlgorithm.Family.HMAC_SHA.contains(expectedJWSAlg)) {
 
@@ -452,7 +453,7 @@ public class IDTokenValidator implements ClockSkewAware {
 			if (clientSecret == null) {
 				throw new GeneralException("Missing client secret");
 			}
-			return new JWSVerificationKeySelector(expectedIssuer, expectedJWSAlg, new ImmutableClientSecret(clientID, clientSecret));
+			return new JWSVerificationKeySelector(expectedJWSAlg, new ImmutableSecret(clientSecret.getValueBytes()));
 
 		} else {
 			throw new GeneralException("Unsupported JWS algorithm: " + expectedJWSAlg);
@@ -501,7 +502,7 @@ public class IDTokenValidator implements ClockSkewAware {
 			throw new GeneralException("The OpenID Provider doesn't support " + expectedJWEAlg + " / " + expectedJWEEnc + " ID tokens");
 		}
 
-		return new JWEDecryptionKeySelector(clientInfo.getID(), expectedJWEAlg, expectedJWEEnc, clientJWKSource);
+		return new JWEDecryptionKeySelector(expectedJWEAlg, expectedJWEEnc, clientJWKSource);
 	}
 
 

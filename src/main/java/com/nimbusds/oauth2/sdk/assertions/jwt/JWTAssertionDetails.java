@@ -3,8 +3,8 @@ package com.nimbusds.oauth2.sdk.assertions.jwt;
 
 import java.util.*;
 
+import com.nimbusds.jose.util.DateUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.assertions.AssertionDetails;
 import com.nimbusds.oauth2.sdk.auth.ClientSecretJWT;

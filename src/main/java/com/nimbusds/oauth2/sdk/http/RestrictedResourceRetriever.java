@@ -5,6 +5,7 @@ package com.nimbusds.oauth2.sdk.http;
  * Retriever of resources specified by URL which permits setting of HTTP
  * connect and read timeouts as well as a size limit.
  */
+@Deprecated
 public interface RestrictedResourceRetriever extends ResourceRetriever {
 	
 

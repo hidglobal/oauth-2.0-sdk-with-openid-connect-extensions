@@ -9,6 +9,7 @@ import net.jcip.annotations.ThreadSafe;
  * Abstract JSON Web Key (JWK) selector.
  */
 @ThreadSafe
+@Deprecated
 public abstract class AbstractJWKSelector {
 
 

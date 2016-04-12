@@ -17,6 +17,7 @@ import net.jcip.annotations.Immutable;
  * Immutable client secret.
  */
 @Immutable
+@Deprecated
 public final class ImmutableClientSecret extends ImmutableJWKSet {
 
 

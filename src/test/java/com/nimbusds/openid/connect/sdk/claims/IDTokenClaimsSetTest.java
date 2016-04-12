@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 import com.nimbusds.jose.jwk.RSAKey;
+import com.nimbusds.jose.util.DateUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.id.Audience;
 import com.nimbusds.oauth2.sdk.id.Issuer;

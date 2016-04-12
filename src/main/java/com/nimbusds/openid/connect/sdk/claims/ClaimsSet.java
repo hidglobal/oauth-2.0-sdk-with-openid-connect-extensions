@@ -6,8 +6,8 @@ import java.net.URL;
 import java.util.*;
 import javax.mail.internet.InternetAddress;
 
+import com.nimbusds.jose.util.DateUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.langtag.LangTagUtils;
 import com.nimbusds.oauth2.sdk.ParseException;

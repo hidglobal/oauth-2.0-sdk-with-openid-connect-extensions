@@ -24,6 +24,7 @@ import net.jcip.annotations.ThreadSafe;
  * reference. The retrieved JWK set is cached.
  */
 @ThreadSafe
+@Deprecated
 public class RemoteJWKSet extends AbstractJWKSource {
 
 

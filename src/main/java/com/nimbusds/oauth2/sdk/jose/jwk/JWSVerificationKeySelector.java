@@ -37,6 +37,7 @@ import net.jcip.annotations.ThreadSafe;
  * </ul>
  */
 @ThreadSafe
+@Deprecated
 public class JWSVerificationKeySelector extends AbstractJWKSelectorWithSource implements JWSKeySelector {
 
 

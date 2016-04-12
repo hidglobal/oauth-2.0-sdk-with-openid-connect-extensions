@@ -4,11 +4,11 @@ package com.nimbusds.openid.connect.sdk.validators;
 import java.util.Date;
 import java.util.List;
 
+import com.nimbusds.jose.util.DateUtils;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.BadJWTException;
 import com.nimbusds.jwt.proc.ClockSkewAware;
 import com.nimbusds.jwt.proc.JWTClaimsVerifier;
-import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.id.ClientID;
 import com.nimbusds.oauth2.sdk.id.Issuer;
 import com.nimbusds.openid.connect.sdk.Nonce;

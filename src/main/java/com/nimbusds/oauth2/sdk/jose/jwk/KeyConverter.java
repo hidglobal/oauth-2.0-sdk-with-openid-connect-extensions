@@ -14,6 +14,7 @@ import com.nimbusds.jose.jwk.*;
 /**
  * Key converter.
  */
+@Deprecated
 public class KeyConverter {
 	
 
