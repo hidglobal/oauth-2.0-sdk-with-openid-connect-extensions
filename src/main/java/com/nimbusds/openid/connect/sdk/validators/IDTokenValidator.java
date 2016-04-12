@@ -11,6 +11,7 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.*;
+import com.nimbusds.jose.util.ResourceRetriever;
 import com.nimbusds.jwt.*;
 import com.nimbusds.jwt.proc.*;
 import com.nimbusds.oauth2.sdk.GeneralException;
@@ -137,7 +138,37 @@ public class IDTokenValidator implements ClockSkewAware {
 				final JWSAlgorithm expectedJWSAlg,
 				final URL jwkSetURI) {
 
-		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedJWSAlg, new RemoteJWKSet(jwkSetURI)),  null);
+		this(expectedIssuer, clientID, expectedJWSAlg, jwkSetURI, null);
+	}
+
+
+	/**
+	 * Creates a new validator for RSA or EC signed ID tokens where the
+	 * OpenID Provider's JWK set is specified by URL. Permits setting of a
+	 * specific resource retriever (HTTP client) for the JWK set.
+	 *
+	 * @param expectedIssuer    The expected ID token issuer (OpenID
+	 *                          Provider). Must not be {@code null}.
+	 * @param clientID          The client ID. Must not be {@code null}.
+	 * @param expectedJWSAlg    The expected RSA or EC JWS algorithm. Must
+	 *                          not be {@code null}.
+	 * @param jwkSetURI         The OpenID Provider JWK set URL. Must not
+	 *                          be {@code null}.
+	 * @param resourceRetriever For retrieving the OpenID Connect Provider
+	 *                          JWK set from the specified URL. If
+	 *                          {@code null} the
+	 *                          {@link com.nimbusds.jose.util.DefaultResourceRetriever
+	 *                          default retriever} will be used, with
+	 *                          preset HTTP connect timeout, HTTP read
+	 *                          timeout and entity size limit.
+	 */
+	public IDTokenValidator(final Issuer expectedIssuer,
+				final ClientID clientID,
+				final JWSAlgorithm expectedJWSAlg,
+				final URL jwkSetURI,
+				final ResourceRetriever resourceRetriever) {
+
+		this(expectedIssuer, clientID, new JWSVerificationKeySelector(expectedJWSAlg, new RemoteJWKSet(jwkSetURI, resourceRetriever)),  null);
 	}
 
 

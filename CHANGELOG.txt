@@ -467,5 +467,12 @@ version 5.6 (2016-04-07)
     * Adds support for OSGi bundling in pom.xml.
     * Upgrades minimal dependency to Nimbus JOSE+JWT 4.13.1.
 
-
+version 5.7 (2016-04-12)
+    * Switches to the new Nimbus JOSE+JWT facilities (introduced in v4.14) for
+      JSON Web Key (JWK) sourcing and key selection. The classes in the
+      com.nimbusds.oauth2.sdk.jose.jwk package are deprecated.
+    * Adds new IDTokenValidator constructor to permit setting of a specific
+      resource retriever (HTTP client) for obtaining the OpenID Connect JWK
+      set.
+    * Upgrades to Nimbus JOSE+JWT 4.16.
 
