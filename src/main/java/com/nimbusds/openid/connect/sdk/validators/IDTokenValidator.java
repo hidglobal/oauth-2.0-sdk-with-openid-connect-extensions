@@ -419,8 +419,6 @@ public class IDTokenValidator implements ClockSkewAware {
 							   final OIDCClientInformation clientInfo)
 		throws GeneralException {
 
-		final Issuer expectedIssuer = opMetadata.getIssuer();
-		final ClientID clientID = clientInfo.getID();
 		final JWSAlgorithm expectedJWSAlg = clientInfo.getOIDCMetadata().getIDTokenJWSAlg();
 
 		if (opMetadata.getIDTokenJWSAlgs() == null) {
