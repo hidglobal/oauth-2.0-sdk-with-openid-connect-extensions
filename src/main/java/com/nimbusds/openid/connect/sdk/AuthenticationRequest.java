@@ -27,7 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * OpenID Connect authentication request. Intended to authenticate an end-user
  * and request the end-user's authorisation to release information to the
- * client.
+ * client. Supports custom request parameters.
  *
  * <p>Example HTTP request (code flow):
  *
@@ -50,6 +50,37 @@ import org.apache.commons.lang3.StringUtils;
  */
 @Immutable
 public class AuthenticationRequest extends AuthorizationRequest {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<>();
+
+		p.addAll(AuthorizationRequest.getRegisteredParameterNames());
+
+		p.add("nonce");
+		p.add("display");
+		p.add("prompt");
+		p.add("max_age");
+		p.add("ui_locales");
+		p.add("claims_locales");
+		p.add("id_token_hint");
+		p.add("login_hint");
+		p.add("acr_values");
+		p.add("claims");
+		p.add("request_uri");
+		p.add("request");
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 	
 	
 	/**
@@ -272,6 +303,12 @@ public class AuthenticationRequest extends AuthorizationRequest {
 		 * The authorisation code challenge method for PKCE (optional).
 		 */
 		private CodeChallengeMethod codeChallengeMethod;
+
+
+		/**
+		 * The additional custom parameters.
+		 */
+		private Map<String,String> customParams = new HashMap<>();
 
 
 		/**
@@ -562,6 +599,22 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 		/**
+		 * Sets the specified additional custom parameter.
+		 *
+		 * @param name  The parameter name. Must not be {@code null}.
+		 * @param value The parameter value, {@code null} if not
+		 *              specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder customParameter(final String name, final String value) {
+
+			customParams.put(name, value);
+			return this;
+		}
+
+
+		/**
 		 * Builds a new authentication request.
 		 *
 		 * @return The authentication request.
@@ -574,7 +627,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
 					display, prompt, maxAge, uiLocales, claimsLocales,
 					idTokenHint, loginHint, acrValues, claims,
 					requestObject, requestURI,
-					codeChallenge, codeChallengeMethod);
+					codeChallenge, codeChallengeMethod,
+					customParams);
 
 			} catch (IllegalArgumentException e) {
 
@@ -731,7 +785,122 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				     final CodeChallenge codeChallenge,
 				     final CodeChallengeMethod codeChallengeMethod) {
 
-		super(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
+		this(uri, rt, rm, scope, clientID, redirectURI, state,
+			nonce, display, prompt, maxAge, uiLocales, claimsLocales,
+			idTokenHint, loginHint, acrValues, claims,
+			requestObject, requestURI, codeChallenge, codeChallengeMethod,
+			Collections.<String, String>emptyMap());
+	}
+
+
+	/**
+	 * Creates a new OpenID Connect authentication request.
+	 *
+	 * @param uri                 The URI of the OAuth 2.0 authorisation
+	 *                            endpoint. May be {@code null} if the
+	 *                            {@link #toHTTPRequest} method will not be
+	 *                            used.
+	 * @param rt                  The response type set. Corresponds to the
+	 *                            {@code response_type} parameter. Must
+	 *                            specify a valid OpenID Connect response
+	 *                            type. Must not be {@code null}.
+	 * @param rm                  The response mode. Corresponds to the
+	 *                            optional {@code response_mode} parameter.
+	 *                            Use of this parameter is not recommended
+	 *                            unless a non-default response mode is
+	 *                            requested (e.g. form_post).
+	 * @param scope               The request scope. Corresponds to the
+	 *                            {@code scope} parameter. Must contain an
+	 *                            {@link OIDCScopeValue#OPENID openid value}.
+	 *                            Must not be {@code null}.
+	 * @param clientID            The client identifier. Corresponds to the
+	 *                            {@code client_id} parameter. Must not be
+	 *                            {@code null}.
+	 * @param redirectURI         The redirection URI. Corresponds to the
+	 *                            {@code redirect_uri} parameter. Must not
+	 *                            be {@code null} unless set by means of
+	 *                            the optional {@code request_object} /
+	 *                            {@code request_uri} parameter.
+	 * @param state               The state. Corresponds to the recommended
+	 *                            {@code state} parameter. {@code null} if
+	 *                            not specified.
+	 * @param nonce               The nonce. Corresponds to the
+	 *                            {@code nonce} parameter. May be
+	 *                            {@code null} for code flow.
+	 * @param display             The requested display type. Corresponds
+	 *                            to the optional {@code display}
+	 *                            parameter.
+	 *                            {@code null} if not specified.
+	 * @param prompt              The requested prompt. Corresponds to the
+	 *                            optional {@code prompt} parameter.
+	 *                            {@code null} if not specified.
+	 * @param maxAge              The required maximum authentication age,
+	 *                            in seconds. Corresponds to the optional
+	 *                            {@code max_age} parameter. Zero if not
+	 *                            specified.
+	 * @param uiLocales           The preferred languages and scripts for
+	 *                            the user interface. Corresponds to the
+	 *                            optional {@code ui_locales} parameter.
+	 *                            {@code null} if not specified.
+	 * @param claimsLocales       The preferred languages and scripts for
+	 *                            claims being returned. Corresponds to the
+	 *                            optional {@code claims_locales}
+	 *                            parameter. {@code null} if not specified.
+	 * @param idTokenHint         The ID Token hint. Corresponds to the
+	 *                            optional {@code id_token_hint} parameter.
+	 *                            {@code null} if not specified.
+	 * @param loginHint           The login hint. Corresponds to the
+	 *                            optional {@code login_hint} parameter.
+	 *                            {@code null} if not specified.
+	 * @param acrValues           The requested Authentication Context
+	 *                            Class Reference values. Corresponds to
+	 *                            the optional {@code acr_values}
+	 *                            parameter. {@code null} if not specified.
+	 * @param claims              The individual claims to be returned.
+	 *                            Corresponds to the optional
+	 *                            {@code claims} parameter. {@code null} if
+	 *                            not specified.
+	 * @param requestObject       The request object. Corresponds to the
+	 *                            optional {@code request} parameter. Must
+	 *                            not be specified together with a request
+	 *                            object URI. {@code null} if not
+	 *                            specified.
+	 * @param requestURI          The request object URI. Corresponds to
+	 *                            the optional {@code request_uri}
+	 *                            parameter. Must not be specified together
+	 *                            with a request object. {@code null} if
+	 *                            not specified.
+	 * @param codeChallenge       The code challenge for PKCE, {@code null}
+	 *                            if not specified.
+	 * @param codeChallengeMethod The code challenge method for PKCE,
+	 *                            {@code null} if not specified.
+	 * @param customParams        Additional custom parameters, empty map
+	 *                            or {@code null} if none.
+	 */
+	public AuthenticationRequest(final URI uri,
+				     final ResponseType rt,
+				     final ResponseMode rm,
+				     final Scope scope,
+				     final ClientID clientID,
+				     final URI redirectURI,
+				     final State state,
+				     final Nonce nonce,
+				     final Display display,
+				     final Prompt prompt,
+				     final int maxAge,
+				     final List<LangTag> uiLocales,
+				     final List<LangTag> claimsLocales,
+				     final JWT idTokenHint,
+				     final String loginHint,
+				     final List<ACR> acrValues,
+				     final ClaimsRequest claims,
+				     final JWT requestObject,
+				     final URI requestURI,
+				     final CodeChallenge codeChallenge,
+				     final CodeChallengeMethod codeChallengeMethod,
+				     final Map<String,String> customParams) {
+
+		super(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod, customParams);
 
 		// Redirect URI required unless set in request_object / request_uri
 		if (redirectURI == null && requestObject == null && requestURI == null)
@@ -782,6 +951,19 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 		this.requestObject = requestObject;
 		this.requestURI = requestURI;
+	}
+
+
+	/**
+	 * Returns the registered (standard) OpenID Connect authentication
+	 * request parameter names.
+	 *
+	 * @return The registered OpenID Connect authentication request
+	 *         parameter names, as a unmodifiable set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 	
 	
@@ -1346,12 +1528,27 @@ public class AuthenticationRequest extends AuthorizationRequest {
 				clientID, null, ar.impliedResponseMode(), state);
 		}
 
+		// Parse additional custom parameters
+		Map<String,String> customParams = null;
+
+		for (Map.Entry<String,String> p: params.entrySet()) {
+
+			if (! REGISTERED_PARAMETER_NAMES.contains(p.getKey())) {
+				// We have a custom parameter
+				if (customParams == null) {
+					customParams = new HashMap<>();
+				}
+				customParams.put(p.getKey(), p.getValue());
+			}
+		}
+
 
 		return new AuthenticationRequest(
 			uri, rt, rm, scope, clientID, redirectURI, state, nonce,
 			display, prompt, maxAge, uiLocales, claimsLocales,
 			idTokenHint, loginHint, acrValues, claims, requestObject, requestURI,
-			ar.getCodeChallenge(), ar.getCodeChallengeMethod());
+			ar.getCodeChallenge(), ar.getCodeChallengeMethod(),
+			customParams);
 	}
 	
 	

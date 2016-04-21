@@ -535,8 +535,8 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * Returns the registered (standard) OAuth 2.0 authorisation request
 	 * parameter names.
 	 *
-	 * @return The registered OAuth 2.0 parameter names, as a unmodifiable
-	 *         set.
+	 * @return The registered OAuth 2.0 authorisation request parameter
+	 *         names, as a unmodifiable set.
 	 */
 	public static Set<String> getRegisteredParameterNames() {
 
