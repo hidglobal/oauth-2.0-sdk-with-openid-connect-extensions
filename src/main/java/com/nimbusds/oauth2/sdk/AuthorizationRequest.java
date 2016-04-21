@@ -5,8 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
 import com.nimbusds.oauth2.sdk.id.ClientID;
@@ -16,12 +15,14 @@ import com.nimbusds.oauth2.sdk.pkce.CodeChallengeMethod;
 import com.nimbusds.oauth2.sdk.util.URIUtils;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
 import net.jcip.annotations.Immutable;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 
 /**
  * Authorisation request. Used to authenticate an end-user and request the
  * end-user's consent to grant the client access to a protected resource.
+ * Supports custom request parameters.
  *
  * <p>Extending classes may define additional request parameters as well as 
  * enforce tighter requirements on the base parameters.
@@ -47,6 +48,31 @@ import org.apache.commons.lang3.StringUtils;
  */
 @Immutable
 public class AuthorizationRequest extends AbstractRequest {
+
+
+	/**
+	 * The registered parameter names.
+	 */
+	private static final Set<String> REGISTERED_PARAMETER_NAMES;
+
+
+	/**
+	 * Initialises the registered parameter name set.
+	 */
+	static {
+		Set<String> p = new HashSet<>();
+
+		p.add("response_type");
+		p.add("client_id");
+		p.add("redirect_uri");
+		p.add("scope");
+		p.add("state");
+		p.add("response_mode");
+		p.add("code_challenge");
+		p.add("code_challenge_method");
+
+		REGISTERED_PARAMETER_NAMES = Collections.unmodifiableSet(p);
+	}
 
 
 	/**
@@ -96,6 +122,12 @@ public class AuthorizationRequest extends AbstractRequest {
 	 * The authorisation code challenge method for PKCE (optional).
 	 */
 	private final CodeChallengeMethod codeChallengeMethod;
+
+
+	/**
+	 * Additional custom parameters.
+	 */
+	private final Map<String,String> customParams;
 
 
 	/**
@@ -158,6 +190,12 @@ public class AuthorizationRequest extends AbstractRequest {
 		 * The authorisation code challenge method for PKCE (optional).
 		 */
 		private CodeChallengeMethod codeChallengeMethod;
+
+
+		/**
+		 * The additional custom parameters.
+		 */
+		private Map<String,String> customParams = new HashMap<>();
 
 
 		/**
@@ -268,6 +306,22 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 		/**
+		 * Sets the specified additional custom parameter.
+		 *
+		 * @param name  The parameter name. Must not be {@code null}.
+		 * @param value The parameter value, {@code null} if not
+		 *              specified.
+		 *
+		 * @return This builder.
+		 */
+		public Builder customParameter(final String name, final String value) {
+
+			customParams.put(name, value);
+			return this;
+		}
+
+
+		/**
 		 * Sets the URI of the endpoint (HTTP or HTTPS) for which the
 		 * request is intended.
 		 *
@@ -289,7 +343,7 @@ public class AuthorizationRequest extends AbstractRequest {
 		 */
 		public AuthorizationRequest build() {
 
-			return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
+			return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod, customParams);
 		}
 	}
 
@@ -397,6 +451,55 @@ public class AuthorizationRequest extends AbstractRequest {
 				    final CodeChallenge codeChallenge,
 				    final CodeChallengeMethod codeChallengeMethod) {
 
+		this(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod, Collections.<String,String>emptyMap());
+	}
+
+
+	/**
+	 * Creates a new authorisation request with PKCE support.
+	 *
+	 * @param uri                 The URI of the authorisation endpoint.
+	 *                            May be {@code null} if the
+	 *                            {@link #toHTTPRequest} method will not be
+	 *                            used.
+	 * @param rt                  The response type. Corresponds to the
+	 *                            {@code response_type} parameter. Must not
+	 *                            be {@code null}.
+	 * @param rm                  The response mode. Corresponds to the
+	 *                            optional {@code response_mode} parameter.
+	 *                            Use of this parameter is not recommended
+	 *                            unless a non-default response mode is
+	 *                            requested (e.g. form_post).
+	 * @param clientID            The client identifier. Corresponds to the
+	 *                            {@code client_id} parameter. Must not be
+	 *                            {@code null}.
+	 * @param redirectURI         The redirection URI. Corresponds to the
+	 *                            optional {@code redirect_uri} parameter.
+	 *                            {@code null} if not specified.
+	 * @param scope               The request scope. Corresponds to the
+	 *                            optional {@code scope} parameter.
+	 *                            {@code null} if not specified.
+	 * @param state               The state. Corresponds to the recommended
+	 *                            {@code state} parameter. {@code null} if
+	 *                            not specified.
+	 * @param codeChallenge       The code challenge for PKCE, {@code null}
+	 *                            if not specified.
+	 * @param codeChallengeMethod The code challenge method for PKCE,
+	 *                            {@code null} if not specified.
+	 * @param customParams        Additional custom parameters, empty map
+	 *                            or {@code null} if none.
+	 */
+	public AuthorizationRequest(final URI uri,
+		                    final ResponseType rt,
+				    final ResponseMode rm,
+	                            final ClientID clientID,
+				    final URI redirectURI,
+	                            final Scope scope,
+				    final State state,
+				    final CodeChallenge codeChallenge,
+				    final CodeChallengeMethod codeChallengeMethod,
+				    final Map<String,String> customParams) {
+
 		super(uri);
 
 		if (rt == null)
@@ -419,6 +522,25 @@ public class AuthorizationRequest extends AbstractRequest {
 
 		this.codeChallenge = codeChallenge;
 		this.codeChallengeMethod = codeChallengeMethod;
+
+		if (MapUtils.isNotEmpty(customParams)) {
+			this.customParams = Collections.unmodifiableMap(customParams);
+		} else {
+			this.customParams = Collections.emptyMap();
+		}
+	}
+
+
+	/**
+	 * Returns the registered (standard) OAuth 2.0 authorisation request
+	 * parameter names.
+	 *
+	 * @return The registered OAuth 2.0 parameter names, as a unmodifiable
+	 *         set.
+	 */
+	public static Set<String> getRegisteredParameterNames() {
+
+		return REGISTERED_PARAMETER_NAMES;
 	}
 
 
@@ -535,6 +657,31 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
+	 * Returns the additional custom parameters.
+	 *
+	 * @return The additional custom parameters as a unmodifiable map,
+	 *         empty map if none.
+	 */
+	public Map<String,String> getCustomParameters () {
+
+		return customParams;
+	}
+
+
+	/**
+	 * Returns the specified custom parameter.
+	 *
+	 * @param name The parameter name. Must not be {@code null}.
+	 *
+	 * @return The parameter value, {@code null} if not specified.
+	 */
+	public String getCustomParameter(final String name) {
+
+		return customParams.get(name);
+	}
+
+
+	/**
 	 * Returns the parameters for this authorisation request.
 	 *
 	 * <p>Example parameters:
@@ -551,6 +698,9 @@ public class AuthorizationRequest extends AbstractRequest {
 	public Map<String,String> toParameters() {
 
 		Map <String,String> params = new LinkedHashMap<>();
+
+		// Put custom params first, so they may be overwritten by std params
+		params.putAll(customParams);
 		
 		params.put("response_type", rt.toString());
 		params.put("client_id", clientID.getValue());
@@ -823,8 +973,22 @@ public class AuthorizationRequest extends AbstractRequest {
 				codeChallengeMethod = CodeChallengeMethod.parse(v);
 		}
 
+		// Parse additional custom parameters
+		Map<String,String> customParams = null;
 
-		return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
+		for (Map.Entry<String,String> p: params.entrySet()) {
+
+			if (! REGISTERED_PARAMETER_NAMES.contains(p.getKey())) {
+				// We have a custom parameter
+				if (customParams == null) {
+					customParams = new HashMap<>();
+				}
+				customParams.put(p.getKey(), p.getValue());
+			}
+		}
+
+
+		return new AuthorizationRequest(uri, rt, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod, customParams);
 	}
 
 

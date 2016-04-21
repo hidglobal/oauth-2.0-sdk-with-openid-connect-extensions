@@ -3,6 +3,7 @@ package com.nimbusds.oauth2.sdk;
 
 import java.net.URI;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.http.HTTPRequest;
@@ -15,10 +16,21 @@ import com.nimbusds.oauth2.sdk.util.URLUtils;
 import junit.framework.TestCase;
 
 
-/**
- * Tests authorisation request serialisation and parsing.
- */
 public class AuthorizationRequestTest extends TestCase {
+
+
+	public void testRegisteredParameters() {
+
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("response_type"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("response_mode"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("client_id"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("redirect_uri"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("scope"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("state"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("code_challenge"));
+		assertTrue(AuthorizationRequest.getRegisteredParameterNames().contains("code_challenge_method"));
+		assertEquals(8, AuthorizationRequest.getRegisteredParameterNames().size());
+	}
 	
 	
 	public void testMinimal()
@@ -42,6 +54,9 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getState());
 		assertNull(req.getResponseMode());
 		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
+
+		assertNull(req.getCustomParameter("custom-param"));
+		assertTrue(req.getCustomParameters().isEmpty());
 
 		String query = req.toQueryString();
 
@@ -69,6 +84,9 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getState());
 		assertNull(req.getResponseMode());
 		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
+
+		assertNull(req.getCustomParameter("custom-param"));
+		assertTrue(req.getCustomParameters().isEmpty());
 	}
 
 
@@ -97,6 +115,8 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(req.getState());
 		assertNull(req.getResponseMode());
 		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
+		assertNull(req.getCustomParameter("custom-param"));
+		assertTrue(req.getCustomParameters().isEmpty());
 	}
 
 
@@ -126,6 +146,8 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(ResponseMode.QUERY, req.impliedResponseMode());
 		assertNull(req.getScope());
 		assertNull(req.getState());
+		assertNull(req.getCustomParameter("custom-param"));
+		assertTrue(req.getCustomParameters().isEmpty());
 	}
 
 
@@ -151,8 +173,13 @@ public class AuthorizationRequestTest extends TestCase {
 		CodeChallengeMethod codeChallengeMethod = CodeChallengeMethod.S256;
 		CodeChallenge codeChallenge = CodeChallenge.compute(codeChallengeMethod, codeVerifier);
 
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put("x", "100");
+		customParams.put("y", "200");
+		customParams.put("z", "300");
 
-		AuthorizationRequest req = new AuthorizationRequest(uri, rts, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod);
+
+		AuthorizationRequest req = new AuthorizationRequest(uri, rts, rm, clientID, redirectURI, scope, state, codeChallenge, codeChallengeMethod, customParams);
 
 		assertEquals(uri, req.getEndpointURI());
 		assertEquals(rts, req.getResponseType());
@@ -177,7 +204,10 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(state, new State(params.get("state")));
 		assertEquals(codeChallenge.getValue(), params.get("code_challenge"));
 		assertEquals(codeChallengeMethod.getValue(), params.get("code_challenge_method"));
-		assertEquals(8, params.size());
+		assertEquals("100", params.get("x"));
+		assertEquals("200", params.get("y"));
+		assertEquals("300", params.get("z"));
+		assertEquals(11, params.size());
 
 		HTTPRequest httpReq = req.toHTTPRequest();
 		assertEquals(HTTPRequest.Method.GET, httpReq.getMethod());
@@ -195,6 +225,13 @@ public class AuthorizationRequestTest extends TestCase {
 		assertEquals(state, req.getState());
 		assertEquals(codeChallenge, req.getCodeChallenge());
 		assertEquals(codeChallengeMethod, req.getCodeChallengeMethod());
+		assertEquals("100", req.getCustomParameter("x"));
+		assertEquals("200", req.getCustomParameter("y"));
+		assertEquals("300", req.getCustomParameter("z"));
+		assertEquals("100", req.getCustomParameters().get("x"));
+		assertEquals("200", req.getCustomParameters().get("y"));
+		assertEquals("300", req.getCustomParameters().get("z"));
+		assertEquals(3, req.getCustomParameters().size());
 	}
 
 
@@ -259,6 +296,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(request.getState());
 		assertNull(request.getCodeChallenge());
 		assertNull(request.getCodeChallengeMethod());
+		assertTrue(request.getCustomParameters().isEmpty());
 	}
 
 
@@ -277,6 +315,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(request.getState());
 		assertNull(request.getCodeChallenge());
 		assertNull(request.getCodeChallengeMethod());
+		assertTrue(request.getCustomParameters().isEmpty());
 	}
 
 
@@ -297,6 +336,7 @@ public class AuthorizationRequestTest extends TestCase {
 		assertNull(request.getState());
 		assertNull(request.getCodeChallenge());
 		assertNull(request.getCodeChallengeMethod());
+		assertTrue(request.getCustomParameters().isEmpty());
 	}
 
 
@@ -334,14 +374,18 @@ public class AuthorizationRequestTest extends TestCase {
 		CodeVerifier codeVerifier = new CodeVerifier();
 		CodeChallenge codeChallenge = CodeChallenge.compute(CodeChallengeMethod.PLAIN, codeVerifier);
 
-		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123")).
-			endpointURI(new URI("https://c2id.com/login")).
-			redirectionURI(new URI("https://client.com/cb")).
-			scope(new Scope("openid", "email")).
-			state(new State("123")).
-			responseMode(ResponseMode.FORM_POST).
-			codeChallenge(codeChallenge, null).
-			build();
+
+		AuthorizationRequest request = new AuthorizationRequest.Builder(new ResponseType("code"), new ClientID("123"))
+			.endpointURI(new URI("https://c2id.com/login"))
+			.redirectionURI(new URI("https://client.com/cb"))
+			.scope(new Scope("openid", "email"))
+			.state(new State("123"))
+			.responseMode(ResponseMode.FORM_POST)
+			.codeChallenge(codeChallenge, null)
+			.customParameter("x", "100")
+			.customParameter("y", "200")
+			.customParameter("z", "300")
+			.build();
 
 		assertTrue(new ResponseType("code").equals(request.getResponseType()));
 		assertEquals(ResponseMode.FORM_POST, request.getResponseMode());
@@ -353,6 +397,13 @@ public class AuthorizationRequestTest extends TestCase {
 		assertTrue(new State("123").equals(request.getState()));
 		assertEquals(codeChallenge, request.getCodeChallenge());
 		assertNull(request.getCodeChallengeMethod());
+		assertEquals("100", request.getCustomParameter("x"));
+		assertEquals("200", request.getCustomParameter("y"));
+		assertEquals("300", request.getCustomParameter("z"));
+		assertEquals("100", request.getCustomParameters().get("x"));
+		assertEquals("200", request.getCustomParameters().get("y"));
+		assertEquals("300", request.getCustomParameters().get("z"));
+		assertEquals(3, request.getCustomParameters().size());
 	}
 
 

@@ -476,3 +476,6 @@ version 5.7 (2016-04-12)
       set.
     * Upgrades to Nimbus JOSE+JWT 4.16.
 
+version 5.8 (2016-04-21)
+    * Adds support for custom OAuth 2.0 authorization request parameters.
+    * Adds support for custom OpenID Connect authentication request parameters.
