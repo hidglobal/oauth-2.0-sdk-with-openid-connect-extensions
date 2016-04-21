@@ -237,7 +237,8 @@ public class ClientMetadata {
 
 
 	/**
-	 * Gets the registered client metadata parameter names.
+	 * Gets the registered (standard) OAuth 2.0 client metadata parameter
+	 * names.
 	 *
 	 * @return The registered parameter names, as an unmodifiable set.
 	 */

@@ -216,7 +216,8 @@ public class OIDCClientMetadata extends ClientMetadata {
 
 
 	/**
-	 * Gets the registered OpenID Connect client metadata parameter names.
+	 * Gets the registered (standard) OpenID Connect client metadata
+	 * parameter names.
 	 *
 	 * @return The registered OpenID Connect parameter names, as an
 	 *         unmodifiable set.
