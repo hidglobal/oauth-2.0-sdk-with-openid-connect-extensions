@@ -456,7 +456,8 @@ public class AuthorizationRequest extends AbstractRequest {
 
 
 	/**
-	 * Creates a new authorisation request with PKCE support.
+	 * Creates a new authorisation request with PKCE support and additional
+	 * custom parameters.
 	 *
 	 * @param uri                 The URI of the authorisation endpoint.
 	 *                            May be {@code null} if the

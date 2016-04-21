@@ -794,7 +794,8 @@ public class AuthenticationRequest extends AuthorizationRequest {
 
 
 	/**
-	 * Creates a new OpenID Connect authentication request.
+	 * Creates a new OpenID Connect authentication request with additional
+	 * custom parameters.
 	 *
 	 * @param uri                 The URI of the OAuth 2.0 authorisation
 	 *                            endpoint. May be {@code null} if the
