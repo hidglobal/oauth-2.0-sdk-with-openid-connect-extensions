@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.nimbusds.oauth2.sdk.pkce.CodeVerifier;
 import net.jcip.annotations.Immutable;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
