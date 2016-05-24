@@ -19,6 +19,7 @@ public class MockServletRequest implements HttpServletRequest {
 
 	private Map<String,String> headers = new HashMap<>();
 
+	private Map<String, String[]> parameters = new LinkedHashMap<>();
 
 	private String addr;
 
@@ -296,27 +297,31 @@ public class MockServletRequest implements HttpServletRequest {
 
 	@Override
 	public String getParameter(String s) {
-		return null;
+	    String[] values = parameters.get(s);
+		return values != null ? values[0] : null;
 	}
 
 
 	@Override
 	public Enumeration<String> getParameterNames() {
-		return null;
+		return Collections.enumeration(parameters.keySet());
 	}
 
 
 	@Override
 	public String[] getParameterValues(String s) {
-		return new String[0];
+		return parameters.get(s);
 	}
 
 
 	@Override
 	public Map<String, String[]> getParameterMap() {
-		return null;
+		return parameters;
 	}
 
+	public void setParameter(String key, String... values) {
+	    parameters.put(key, values);
+	}
 
 	@Override
 	public String getProtocol() {

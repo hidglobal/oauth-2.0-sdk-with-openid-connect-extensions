@@ -37,6 +37,30 @@ public class ServletUtilsTest extends TestCase {
 		assertEquals(2, queryParams.size());
 	}
 
+    public void testConstructFromServletRequestURLEncodedWithEmptyEntityBody()
+        throws Exception {
+
+        MockServletRequest servletRequest = new MockServletRequest();
+        servletRequest.setMethod("POST");
+        servletRequest.setHeader("Content-Type", CommonContentTypes.APPLICATION_URLENCODED.toString());
+        servletRequest.setLocalAddr("c2id.com");
+        servletRequest.setLocalPort(8080);
+        servletRequest.setRequestURI("/token");
+        servletRequest.setQueryString(null);
+        servletRequest.setEntityBody("");
+        servletRequest.setParameter("token", "abc");
+        servletRequest.setParameter("type", "bearer");
+
+        HTTPRequest httpRequest = ServletUtils.createHTTPRequest(servletRequest);
+        assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+        assertEquals(CommonContentTypes.APPLICATION_URLENCODED.toString(), httpRequest.getContentType().toString());
+        assertNull(httpRequest.getAccept());
+        assertNull(httpRequest.getAuthorization());
+        Map<String, String> queryParams = httpRequest.getQueryParameters();
+        assertEquals("abc", queryParams.get("token"));
+        assertEquals("bearer", queryParams.get("type"));
+        assertEquals(2, queryParams.size());
+    }
 
 	public void testConstructFromServletRequestWithQueryString()
 		throws Exception {
