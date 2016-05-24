@@ -183,19 +183,21 @@ public class ServletUtils {
 			request.setQuery(body.toString());
 
 			// Some application servers are emptying the content in case of application/x-www-form-urlencoded
-            if (StringUtils.isEmpty(request.getQuery()) && request.getContentType() != null && request.getContentType()
-                .getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
-                StringBuilder newContent = new StringBuilder();
-                for (Map.Entry<String, String[]> entry : sr.getParameterMap().entrySet()) {
-                    if (newContent.length() > 0) {
-                        newContent.append('&');
-                    }
-                    newContent.append(URLEncoder.encode(entry.getKey(), "UTF8"));
-                    newContent.append('=');
-                    newContent.append(URLEncoder.encode(entry.getValue()[0], "UTF8"));
-                }
-                request.setQuery(newContent.toString());
-            }
+			if (StringUtils.isEmpty(request.getQuery()) && request.getContentType() != null && request.getContentType()
+				.getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
+
+				StringBuilder recreatedContent = new StringBuilder();
+
+				for (Map.Entry<String, String[]> entry : sr.getParameterMap().entrySet()) {
+					if (recreatedContent.length() > 0) {
+						recreatedContent.append('&');
+					}
+					recreatedContent.append(URLEncoder.encode(entry.getKey(), "UTF8"));
+					recreatedContent.append('=');
+					recreatedContent.append(URLEncoder.encode(entry.getValue()[0], "UTF8"));
+				}
+				request.setQuery(recreatedContent.toString());
+			}
 		}
 
 		return request;
