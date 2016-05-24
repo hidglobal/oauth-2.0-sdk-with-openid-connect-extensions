@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
 
 import net.jcip.annotations.ThreadSafe;
 
@@ -178,6 +181,21 @@ public class ServletUtils {
 			reader.close();
 
 			request.setQuery(body.toString());
+
+			// Some application servers are emptying the content in case of application/x-www-form-urlencoded
+            if (StringUtils.isEmpty(request.getQuery()) && request.getContentType() != null && request.getContentType()
+                .getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
+                StringBuilder newContent = new StringBuilder();
+                for (Map.Entry<String, String[]> entry : sr.getParameterMap().entrySet()) {
+                    if (newContent.length() > 0) {
+                        newContent.append('&');
+                    }
+                    newContent.append(URLEncoder.encode(entry.getKey(), "UTF8"));
+                    newContent.append('=');
+                    newContent.append(URLEncoder.encode(entry.getValue()[0], "UTF8"));
+                }
+                request.setQuery(newContent.toString());
+            }
 		}
 
 		return request;
