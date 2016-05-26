@@ -489,3 +489,10 @@ version 5.8.2 (2016-05-24)
       Content-Type application/x-www-form-urlencoded if stripped by the servlet
       container (issue #184).
 
+version 5.9 (2016-05-26)
+    * Modifies the Secret class to permit empty values (empty passwords allowed
+      by the HTTP basic authentication specification, see RFC 2617, section 2)
+      (issue #182).
+
+
+

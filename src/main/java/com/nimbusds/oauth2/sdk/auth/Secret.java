@@ -3,12 +3,12 @@ package com.nimbusds.oauth2.sdk.auth;
 
 import java.nio.charset.Charset;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Date;
 
 import com.nimbusds.jose.util.Base64URL;
 import net.jcip.annotations.Immutable;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -58,17 +58,13 @@ public class Secret {
 	/**
 	 * Creates a new secret with the specified value and expiration date.
 	 *
-	 * @param value   The secret value. Must be UTF-8 encoded, not 
-	 *                {@code null} or empty string.
+	 * @param value   The secret value. May be an empty string. Must be
+	 *                UTF-8 encoded and not {@code null}.
 	 * @param expDate The expiration date, {@code null} if not specified.
 	 */
 	public Secret(final String value, final Date expDate) {
 
-		if (StringUtils.isBlank(value))
-			throw new IllegalArgumentException("The value must not be null or empty string");
-
 		this.value = value.getBytes(Charset.forName("utf-8"));
-
 		this.expDate = expDate;
 	}
 	
@@ -129,9 +125,10 @@ public class Secret {
 	 */
 	public String getValue() {
 
-		if (ArrayUtils.isEmpty(value))
-			return null;
-		
+		if (value == null) {
+			return null; // value has been erased
+		}
+
 		return new String(value, Charset.forName("utf-8"));
 	}
 	
@@ -153,11 +150,13 @@ public class Secret {
 	 */
 	public void erase() {
 
-		if (ArrayUtils.isEmpty(value))
-			return;
-		
-		for (int i=0; i < value.length; i++)
+		if (value == null) {
+			return; // Already erased
+		}
+
+		for (int i=0; i < value.length; i++) {
 			value[i] = 0;
+		}
 		
 		value = null;
 	}
@@ -183,8 +182,9 @@ public class Secret {
 	 */
 	public boolean expired() {
 
-		if (expDate == null)
-			return false;
+		if (expDate == null) {
+			return false; // never expires
+		}
 
 		final Date now = new Date();
 
@@ -192,19 +192,20 @@ public class Secret {
 	}
 
 	
-	
-	/**
-	 * Overrides {@code Object.equals()}.
-	 *
-	 * @param object The object to compare to.
-	 *
-	 * @return {@code true} if the objects are secrets the same value, 
-	 *         otherwise {@code false}.
-	 */
 	@Override
-	public boolean equals(final Object object) {
-	
-		return object instanceof Secret &&
-		       this.getValue().equals(((Secret)object).getValue());
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Secret)) return false;
+
+		Secret secret = (Secret) o;
+
+		return Arrays.equals(value, secret.value);
+
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(value);
 	}
 }
