@@ -60,13 +60,25 @@ public class URLUtilsTest extends TestCase {
 		
 		String query = URLUtils.serializeParameters(params);
 		
-		assertNotNull(query);
-		assertEquals("response_type=code+id_token" + 
+		assertEquals("response_type=code+id_token" +
 		             "&client_id=s6BhdRkqt3" +
 			     "&redirect_uri=https%3A%2F%2Fclient.example.com%2Fcb" +
 			     "&scope=openid" +
 			     "&nonce=n-0S6_WzA2Mj" +
 			     "&state=af0ifjsldkj", query);
+	}
+
+
+	public void testSerializeParameters_nullValue() {
+
+		Map<String,String> params = new LinkedHashMap<>();
+
+		params.put("response_type", "code");
+		params.put("display", null);
+
+		String query = URLUtils.serializeParameters(params);
+
+		assertEquals("response_type=code&display=", query);
 	}
 	
 	
@@ -74,7 +86,6 @@ public class URLUtilsTest extends TestCase {
 	
 		String query = URLUtils.serializeParameters(null);
 		
-		assertNotNull(query);
 		assertTrue(query.isEmpty());
 	}
 	
@@ -149,5 +160,31 @@ public class URLUtilsTest extends TestCase {
 		assertEquals("value==", params.get("key2"));
 		assertEquals("value===", params.get("key3"));
 		assertEquals(4, params.size());
+	}
+
+
+	public void testSerializeAlt_duplicateKeys() {
+
+		Map<String,String[]> params = new LinkedHashMap<>();
+
+		params.put("fruit", new String[]{"apple", "orange"});
+		params.put("veg", new String[]{"lettuce"});
+
+		String s = URLUtils.serializeParametersAlt(params);
+
+		assertEquals("fruit=apple&fruit=orange&veg=lettuce", s);
+	}
+
+
+	public void testSerializeAlt_nullKey() {
+
+		Map<String,String[]> params = new LinkedHashMap<>();
+
+		params.put("fruit", new String[]{"apple", null});
+		params.put("veg", new String[]{"lettuce"});
+
+		String s = URLUtils.serializeParametersAlt(params);
+
+		assertEquals("fruit=apple&fruit=&veg=lettuce", s);
 	}
 }

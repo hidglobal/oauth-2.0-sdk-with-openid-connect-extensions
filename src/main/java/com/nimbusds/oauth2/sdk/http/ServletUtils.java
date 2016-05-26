@@ -8,11 +8,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nimbusds.oauth2.sdk.util.URLUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import net.jcip.annotations.ThreadSafe;
@@ -186,17 +188,8 @@ public class ServletUtils {
 			if (StringUtils.isEmpty(request.getQuery()) && request.getContentType() != null && request.getContentType()
 				.getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
 
-				StringBuilder recreatedContent = new StringBuilder();
-
-				for (Map.Entry<String, String[]> entry : sr.getParameterMap().entrySet()) {
-					if (recreatedContent.length() > 0) {
-						recreatedContent.append('&');
-					}
-					recreatedContent.append(URLEncoder.encode(entry.getKey(), "UTF8"));
-					recreatedContent.append('=');
-					recreatedContent.append(URLEncoder.encode(entry.getValue()[0], "UTF8"));
-				}
-				request.setQuery(recreatedContent.toString());
+				// Recreate the content
+				request.setQuery(URLUtils.serializeParametersAlt(sr.getParameterMap()));
 			}
 		}
 
