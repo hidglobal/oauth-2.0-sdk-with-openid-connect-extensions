@@ -57,18 +57,17 @@ public enum SubjectType {
                 if (s == null || s.trim().isEmpty())
                         throw new ParseException("Null or empty subject type string");
 
-		switch (s) {
-			case "pairwise":
+		if ("pairwise".equals(s)) {
 
-				return PAIRWISE;
+			return PAIRWISE;
 
-			case "public":
+		} else if ("public".equals(s)) {
 
-				return PUBLIC;
+			return PUBLIC;
 
-			default:
+		} else {
 
-				throw new ParseException("Unknown subject type: " + s);
+			throw new ParseException("Unknown subject type: " + s);
 		}
         }
 }
