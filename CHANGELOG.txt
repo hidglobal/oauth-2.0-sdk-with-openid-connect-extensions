@@ -493,6 +493,12 @@ version 5.9 (2016-05-26)
     * Modifies the Secret class to permit empty values (empty passwords allowed
       by the HTTP basic authentication specification, see RFC 2617, section 2)
       (issue #182).
+    * Switches to an alternative JCIP annotation dependency under the Apache
+      License, version 2.0. The original JCIP annotation package has a Creative
+      Commons which is not recommended for licensing software, see
+      https://creativecommons.org/faq/ .
+
+
 
 
 
