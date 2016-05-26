@@ -1,4 +1,6 @@
+/.project/
 /.idea/
-/oauth2-oidc-sdk.iml
+/*.iml
 /target/
 /.settings
+/release.properties
