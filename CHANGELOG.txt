@@ -497,8 +497,7 @@ version 5.9 (2016-05-26)
       License, version 2.0. The original JCIP annotation package has a Creative
       Commons which is not recommended for licensing software, see
       https://creativecommons.org/faq/ .
-
-
-
+    * Adds Maven profile for building a Java 1.6 compatible JAR package (issue
+      #183).
 
 
