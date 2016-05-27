@@ -500,4 +500,11 @@ version 5.9 (2016-05-26)
     * Adds Maven profile for building a Java 1.6 compatible JAR package (issue
       #183).
 
+version 5.9.1 (2016-05-27)
+    * Refactors ServletUtils.createHTTPRequest for HTTP POST and PUT requests
+      with Content-Type application/x-www-form-urlencoded to construct the
+      HTTPRequest entity body from ServletRequest.getParameterMap() (issue
+      #186).
+
+
 
