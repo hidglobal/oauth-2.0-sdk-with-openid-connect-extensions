@@ -6,20 +6,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import net.jcip.annotations.ThreadSafe;
-
-import com.nimbusds.oauth2.sdk.ParseException;
 
 
 /**
@@ -174,35 +170,37 @@ public class ServletUtils {
 
 		} else if (method.equals(HTTPRequest.Method.POST) || method.equals(HTTPRequest.Method.PUT)) {
 
-			// read body
-			StringBuilder body = new StringBuilder(256);
+		    // Impossible to read application/x-www-form-urlencoded request content on which parameters
+		    // APIs have been used. To be safe we recreate the content based on the parameters in this case.
+            if (request.getContentType() != null && request.getContentType()
+                .getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
 
-			BufferedReader reader = sr.getReader();
+                // Recreate the content based on parameters
+                request.setQuery(URLUtils.serializeParametersAlt(sr.getParameterMap()));
+            } else {
+                // read body
+                StringBuilder body = new StringBuilder(256);
 
-			char[] cbuf = new char[256];
+                BufferedReader reader = sr.getReader();
 
-			int readChars;
+                char[] cbuf = new char[256];
 
-			while ((readChars = reader.read(cbuf)) != -1) {
+                int readChars;
 
-				body.append(cbuf, 0, readChars);
+                while ((readChars = reader.read(cbuf)) != -1) {
 
-				if (maxEntityLength > 0 && body.length() > maxEntityLength) {
-					throw new IOException("Request entity body is too large, limit is " + maxEntityLength + " chars");
-				}
-			}
+                    body.append(cbuf, 0, readChars);
 
-			reader.close();
+                    if (maxEntityLength > 0 && body.length() > maxEntityLength) {
+                        throw new IOException(
+                            "Request entity body is too large, limit is " + maxEntityLength + " chars");
+                    }
+                }
 
-			request.setQuery(body.toString());
+                reader.close();
 
-			// Some application servers are emptying the content in case of application/x-www-form-urlencoded
-			if (StringUtils.isEmpty(request.getQuery()) && request.getContentType() != null && request.getContentType()
-				.getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
-
-				// Recreate the content
-				request.setQuery(URLUtils.serializeParametersAlt(sr.getParameterMap()));
-			}
+                request.setQuery(body.toString());
+            }
 		}
 
 		return request;
