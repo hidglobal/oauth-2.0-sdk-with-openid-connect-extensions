@@ -5,13 +5,42 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
+import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import junit.framework.TestCase;
+import net.minidev.json.JSONObject;
 
 
 /**
  * Tests the HTTP to / from servet request / response.
  */
 public class ServletUtilsTest extends TestCase {
+
+
+	public void testConstructFromServletRequestWithJSONEntityBody()
+		throws Exception {
+
+		MockServletRequest servletRequest = new MockServletRequest();
+		servletRequest.setMethod("POST");
+		servletRequest.setHeader("Content-Type", CommonContentTypes.APPLICATION_JSON.toString());
+		servletRequest.setLocalAddr("c2id.com");
+		servletRequest.setLocalPort(8080);
+		servletRequest.setRequestURI("/clients");
+		servletRequest.setQueryString(null);
+		String entityBody = "{\"grant_types\":[\"code\"]}";
+		servletRequest.setEntityBody(entityBody);
+
+		HTTPRequest httpRequest = ServletUtils.createHTTPRequest(servletRequest);
+		assertEquals(HTTPRequest.Method.POST, httpRequest.getMethod());
+		assertEquals(CommonContentTypes.APPLICATION_JSON.toString(), httpRequest.getContentType().toString());
+		assertNull(httpRequest.getAccept());
+		assertNull(httpRequest.getAuthorization());
+		assertEquals(entityBody, httpRequest.getQuery());
+		JSONObject jsonObject = httpRequest.getQueryAsJSONObject();
+		assertEquals("code", JSONObjectUtils.getStringArray(jsonObject, "grant_types")[0]);
+		assertEquals(1, jsonObject.size());
+	}
+
+
 
 	public void testConstructFromServletRequestURLEncoded()
 		throws Exception {
