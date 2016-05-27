@@ -8,13 +8,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.util.URLUtils;
-
 import net.jcip.annotations.ThreadSafe;
 
 
@@ -170,37 +168,39 @@ public class ServletUtils {
 
 		} else if (method.equals(HTTPRequest.Method.POST) || method.equals(HTTPRequest.Method.PUT)) {
 
-		    // Impossible to read application/x-www-form-urlencoded request content on which parameters
-		    // APIs have been used. To be safe we recreate the content based on the parameters in this case.
-            if (request.getContentType() != null && request.getContentType()
-                .getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
+			// Impossible to read application/x-www-form-urlencoded request content on which parameters
+			// APIs have been used. To be safe we recreate the content based on the parameters in this case.
+			// See issues
+			// https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/184
+			// https://bitbucket.org/connect2id/oauth-2.0-sdk-with-openid-connect-extensions/issues/186
+			if (request.getContentType() != null && request.getContentType()
+				.getBaseType().equals(CommonContentTypes.APPLICATION_URLENCODED.getBaseType())) {
 
-                // Recreate the content based on parameters
-                request.setQuery(URLUtils.serializeParametersAlt(sr.getParameterMap()));
-            } else {
-                // read body
-                StringBuilder body = new StringBuilder(256);
+				// Recreate the content based on parameters
+				request.setQuery(URLUtils.serializeParametersAlt(sr.getParameterMap()));
+			} else {
+				// read body
+				StringBuilder body = new StringBuilder(256);
 
-                BufferedReader reader = sr.getReader();
+				BufferedReader reader = sr.getReader();
 
-                char[] cbuf = new char[256];
+				char[] cbuf = new char[256];
 
-                int readChars;
+				int readChars;
 
-                while ((readChars = reader.read(cbuf)) != -1) {
+				while ((readChars = reader.read(cbuf)) != -1) {
 
-                    body.append(cbuf, 0, readChars);
+					body.append(cbuf, 0, readChars);
 
-                    if (maxEntityLength > 0 && body.length() > maxEntityLength) {
-                        throw new IOException(
-                            "Request entity body is too large, limit is " + maxEntityLength + " chars");
-                    }
-                }
+					if (maxEntityLength > 0 && body.length() > maxEntityLength) {
+						throw new IOException(
+							"Request entity body is too large, limit is " + maxEntityLength + " chars");
+					}
+				}
 
-                reader.close();
-
-                request.setQuery(body.toString());
-            }
+				reader.close();
+				request.setQuery(body.toString());
+			}
 		}
 
 		return request;
