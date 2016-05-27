@@ -85,6 +85,12 @@ public class ServletUtils {
 	/**
 	 * Creates a new HTTP request from the specified HTTP servlet request.
 	 *
+	 * <p><strong>Warning about servlet filters: </strong> Processing of
+	 * HTTP POST and PUT requests requires the entity body to be available
+	 * for reading from the {@link HttpServletRequest}. If you're getting
+	 * unexpected exceptions, please ensure the entity body is not consumed
+	 * or modified by an upstream servlet filter.
+	 *
 	 * @param sr The servlet request. Must not be {@code null}.
 	 *
 	 * @return The HTTP request.
@@ -106,6 +112,12 @@ public class ServletUtils {
 
 	/**
 	 * Creates a new HTTP request from the specified HTTP servlet request.
+	 *
+	 * <p><strong>Warning about servlet filters: </strong> Processing of
+	 * HTTP POST and PUT requests requires the entity body to be available
+	 * for reading from the {@link HttpServletRequest}. If you're getting
+	 * unexpected exceptions, please ensure the entity body is not consumed
+	 * or modified by an upstream servlet filter.
 	 *
 	 * @param sr              The servlet request. Must not be
 	 *                        {@code null}.
