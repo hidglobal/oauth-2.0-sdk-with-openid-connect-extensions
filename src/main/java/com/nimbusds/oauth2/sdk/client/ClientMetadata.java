@@ -295,6 +295,7 @@ public class ClientMetadata {
 	public void setRedirectionURIs(final Set<URI> redirectURIs) {
 
 		if (redirectURIs != null) {
+			// check URIs
 			for (URI uri: redirectURIs) {
 				if (uri == null) {
 					throw new IllegalArgumentException("The redirect_uri must not be null");
@@ -303,6 +304,7 @@ public class ClientMetadata {
 					throw new IllegalArgumentException("The redirect_uri must not contain fragment");
 				}
 			}
+			this.redirectURIs = redirectURIs;
 		} else {
 			this.redirectURIs = null;
 		}
@@ -1242,22 +1244,21 @@ public class ClientMetadata {
 			Set<URI> redirectURIs = new LinkedHashSet<>();
 
 			for (String uriString: JSONObjectUtils.getStringArray(jsonObject, "redirect_uris")) {
-
+				URI uri;
 				try {
-					redirectURIs.add(new URI(uriString));
-
+					uri = new URI(uriString);
 				} catch (URISyntaxException e) {
-
-					throw new ParseException("Invalid \"redirect_uris\" parameter: " +
-						                  e.getMessage());
+					throw new ParseException("Invalid \"redirect_uris\" parameter: " + e.getMessage(), RegistrationError.INVALID_REDIRECT_URI);
 				}
+
+				if (uri.getFragment() != null) {
+					throw new ParseException("Invalid \"redirect_uris\" parameter: URI must not contain fragment", RegistrationError.INVALID_REDIRECT_URI);
+				}
+
+				redirectURIs.add(uri);
 			}
 
-			try {
-				metadata.setRedirectionURIs(redirectURIs);
-			} catch (IllegalArgumentException e) {
-				throw new ParseException(e.getMessage());
-			}
+			metadata.setRedirectionURIs(redirectURIs);
 			jsonObject.remove("redirect_uris");
 		}
 

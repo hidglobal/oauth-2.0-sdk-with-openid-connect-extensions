@@ -483,7 +483,7 @@ public class ClientMetadataTest extends TestCase {
 
 		JSONObject o = new JSONObject();
 		o.put("client_name", "Test App");
-		o.put("grant_types", Arrays.asList("client_credentials"));
+		o.put("grant_types", Collections.singletonList("client_credentials"));
 		o.put("response_types", new ArrayList<String>());
 		o.put("scope", "read write");
 
@@ -511,7 +511,7 @@ public class ClientMetadataTest extends TestCase {
 
 		JSONObject o = new JSONObject();
 		o.put("client_name", "Test App");
-		o.put("grant_types", Arrays.asList("password"));
+		o.put("grant_types", Collections.singletonList("password"));
 		o.put("response_types", new ArrayList<String>());
 		o.put("scope", "read write");
 
@@ -608,7 +608,8 @@ public class ClientMetadataTest extends TestCase {
 			ClientMetadata.parse(o);
 			fail();
 		} catch (ParseException e) {
-			assertEquals("The redirect_uri must not contain fragment", e.getMessage());
+			assertEquals("Invalid \"redirect_uris\" parameter: URI must not contain fragment", e.getMessage());
+			assertEquals(RegistrationError.INVALID_REDIRECT_URI, e.getErrorObject());
 		}
 	}
 }
