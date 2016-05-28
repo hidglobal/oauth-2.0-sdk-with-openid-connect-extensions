@@ -506,7 +506,8 @@ version 5.9.1 (2016-05-27)
       HTTPRequest entity body from ServletRequest.getParameterMap() (issue
       #186).
 
-version 5.9.2 (2016-05-28)
+version 5.10 (2016-05-28)
+    * Adds new SectorIdentifier class.
     * Adds URI fragment check to ClientMetadata redirect_uri setters (issue
       #188).
     * Includes appropriate registration error on ParseExceptions thrown by
