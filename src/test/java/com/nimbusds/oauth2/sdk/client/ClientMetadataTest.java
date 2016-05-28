@@ -410,6 +410,38 @@ public class ClientMetadataTest extends TestCase {
 	}
 
 
+	public void testSetNullRedirectURI() {
+
+		ClientMetadata meta = new ClientMetadata();
+		meta.setRedirectionURI(null);
+		assertNull(meta.getRedirectionURIs());
+		assertNull(meta.getRedirectionURIStrings());
+
+		meta.setRedirectionURI(URI.create("https://example.com/cb"));
+		assertEquals("https://example.com/cb", meta.getRedirectionURIs().iterator().next().toString());
+
+		meta.setRedirectionURI(null);
+		assertNull(meta.getRedirectionURIs());
+		assertNull(meta.getRedirectionURIStrings());
+	}
+
+
+	public void testSetNullRedirectURIs() {
+
+		ClientMetadata meta = new ClientMetadata();
+		meta.setRedirectionURIs(null);
+		assertNull(meta.getRedirectionURIs());
+		assertNull(meta.getRedirectionURIStrings());
+
+		meta.setRedirectionURIs(Collections.singleton(URI.create("https://example.com/cb")));
+		assertEquals("https://example.com/cb", meta.getRedirectionURIs().iterator().next().toString());
+
+		meta.setRedirectionURIs(null);
+		assertNull(meta.getRedirectionURIs());
+		assertNull(meta.getRedirectionURIStrings());
+	}
+
+
 	public void testGetRedirectionURIStrings()
 		throws Exception {
 
@@ -473,7 +505,9 @@ public class ClientMetadataTest extends TestCase {
 			ClientMetadata.parse(JSONObjectUtils.parse(json));
 			fail();
 		} catch (ParseException e) {
-			// ok
+			assertEquals("Invalid \"redirect_uris\" parameter: Expected authority at index 8: https://", e.getMessage());
+			assertEquals(RegistrationError.INVALID_REDIRECT_URI.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid redirection URI(s): Expected authority at index 8: https://", e.getErrorObject().getDescription());
 		}
 	}
 
@@ -609,7 +643,24 @@ public class ClientMetadataTest extends TestCase {
 			fail();
 		} catch (ParseException e) {
 			assertEquals("Invalid \"redirect_uris\" parameter: URI must not contain fragment", e.getMessage());
-			assertEquals(RegistrationError.INVALID_REDIRECT_URI, e.getErrorObject());
+			assertEquals(RegistrationError.INVALID_REDIRECT_URI.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid redirection URI(s): URI must not contain fragment", e.getErrorObject().getDescription());
+		}
+	}
+
+
+	public void testInvalidMetadataError() {
+
+		JSONObject o = new JSONObject();
+		o.put("response_types", 123);
+
+		try {
+			ClientMetadata.parse(o);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Unexpected type of JSON object member with key \"response_types\"", e.getMessage());
+			assertEquals(RegistrationError.INVALID_CLIENT_METADATA.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid client metadata field: Unexpected type of JSON object member with key \"response_types\"", e.getErrorObject().getDescription());
 		}
 	}
 }

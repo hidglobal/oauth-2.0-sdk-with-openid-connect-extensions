@@ -506,5 +506,11 @@ version 5.9.1 (2016-05-27)
       HTTPRequest entity body from ServletRequest.getParameterMap() (issue
       #186).
 
+version 5.9.2 (2016-05-28)
+    * Adds URI fragment check to ClientMetadata redirect_uri setters (issue
+      #188).
+    * Includes appropriate registration error on ParseExceptions thrown by
+      ClientMetadata.parse and OIDCClientMetadata.parse to aid server-side
+      error reporting.
 
 

@@ -11,8 +11,10 @@ import com.nimbusds.jose.JWEAlgorithm;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.langtag.LangTag;
 import com.nimbusds.oauth2.sdk.GrantType;
+import com.nimbusds.oauth2.sdk.ParseException;
 import com.nimbusds.oauth2.sdk.ResponseType;
 import com.nimbusds.oauth2.sdk.auth.ClientAuthenticationMethod;
+import com.nimbusds.oauth2.sdk.client.RegistrationError;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
@@ -398,5 +400,21 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(Collections.singleton(GrantType.IMPLICIT), clientMetadata.getGrantTypes());
 		assertEquals(Collections.singleton(new ResponseType("token")), clientMetadata.getResponseTypes());
 		assertEquals(ClientAuthenticationMethod.NONE, clientMetadata.getTokenEndpointAuthMethod());
+	}
+
+
+	public void testInvalidClientMetadataErrorCode() {
+
+		JSONObject o = new JSONObject();
+		o.put("application_type", "xyz");
+
+		try {
+			OIDCClientMetadata.parse(o);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("Unexpected value of JSON object member with key \"application_type\"", e.getMessage());
+			assertEquals(RegistrationError.INVALID_CLIENT_METADATA.getCode(), e.getErrorObject().getCode());
+			assertEquals("Invalid client metadata field: Unexpected value of JSON object member with key \"application_type\"", e.getErrorObject().getDescription());
+		}
 	}
 }

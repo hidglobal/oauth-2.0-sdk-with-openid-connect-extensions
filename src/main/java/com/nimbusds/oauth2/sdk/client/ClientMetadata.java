@@ -1248,11 +1248,12 @@ public class ClientMetadata {
 				try {
 					uri = new URI(uriString);
 				} catch (URISyntaxException e) {
-					throw new ParseException("Invalid \"redirect_uris\" parameter: " + e.getMessage(), RegistrationError.INVALID_REDIRECT_URI);
+					throw new ParseException("Invalid \"redirect_uris\" parameter: " + e.getMessage(), RegistrationError.INVALID_REDIRECT_URI.appendDescription(": " + e.getMessage()));
 				}
 
 				if (uri.getFragment() != null) {
-					throw new ParseException("Invalid \"redirect_uris\" parameter: URI must not contain fragment", RegistrationError.INVALID_REDIRECT_URI);
+					String detail = "URI must not contain fragment";
+					throw new ParseException("Invalid \"redirect_uris\" parameter: " + detail, RegistrationError.INVALID_REDIRECT_URI.appendDescription(": " + detail));
 				}
 
 				redirectURIs.add(uri);
@@ -1262,185 +1263,193 @@ public class ClientMetadata {
 			jsonObject.remove("redirect_uris");
 		}
 
+		try {
 
-		if (jsonObject.containsKey("scope")) {
-			metadata.setScope(Scope.parse(JSONObjectUtils.getString(jsonObject, "scope")));
-			jsonObject.remove("scope");
-		}
-
-
-		if (jsonObject.containsKey("response_types")) {
-
-			Set<ResponseType> responseTypes = new LinkedHashSet<>();
-
-			for (String rt: JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
-
-				responseTypes.add(ResponseType.parse(rt));
+			if (jsonObject.containsKey("scope")) {
+				metadata.setScope(Scope.parse(JSONObjectUtils.getString(jsonObject, "scope")));
+				jsonObject.remove("scope");
 			}
 
-			metadata.setResponseTypes(responseTypes);
-			jsonObject.remove("response_types");
-		}
 
+			if (jsonObject.containsKey("response_types")) {
 
-		if (jsonObject.containsKey("grant_types")) {
+				Set<ResponseType> responseTypes = new LinkedHashSet<>();
 
-			Set<GrantType> grantTypes = new LinkedHashSet<>();
+				for (String rt : JSONObjectUtils.getStringArray(jsonObject, "response_types")) {
 
-			for (String grant: JSONObjectUtils.getStringArray(jsonObject, "grant_types")) {
+					responseTypes.add(ResponseType.parse(rt));
+				}
 
-				grantTypes.add(GrantType.parse(grant));
+				metadata.setResponseTypes(responseTypes);
+				jsonObject.remove("response_types");
 			}
 
-			metadata.setGrantTypes(grantTypes);
-			jsonObject.remove("grant_types");
-		}
+
+			if (jsonObject.containsKey("grant_types")) {
+
+				Set<GrantType> grantTypes = new LinkedHashSet<>();
+
+				for (String grant : JSONObjectUtils.getStringArray(jsonObject, "grant_types")) {
+
+					grantTypes.add(GrantType.parse(grant));
+				}
+
+				metadata.setGrantTypes(grantTypes);
+				jsonObject.remove("grant_types");
+			}
 
 
-		if (jsonObject.containsKey("contacts")) {
+			if (jsonObject.containsKey("contacts")) {
 
-			List<InternetAddress> emailList = new LinkedList<>();
+				List<InternetAddress> emailList = new LinkedList<>();
 
-			for (String emailString: JSONObjectUtils.getStringArray(jsonObject, "contacts")) {
+				for (String emailString : JSONObjectUtils.getStringArray(jsonObject, "contacts")) {
+
+					try {
+						emailList.add(new InternetAddress(emailString));
+
+					} catch (AddressException e) {
+
+						throw new ParseException("Invalid \"contacts\" parameter: " +
+							e.getMessage());
+					}
+				}
+
+				metadata.setContacts(emailList);
+				jsonObject.remove("contacts");
+			}
+
+
+			// Find lang-tagged client_name params
+			Map<LangTag, Object> matches = LangTagUtils.find("client_name", jsonObject);
+
+			for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
 
 				try {
-					emailList.add(new InternetAddress(emailString));
+					metadata.setName((String) entry.getValue(), entry.getKey());
 
-				} catch (AddressException e) {
+				} catch (ClassCastException e) {
 
-					throw new ParseException("Invalid \"contacts\" parameter: " +
-							         e.getMessage());
+					throw new ParseException("Invalid \"client_name\" (language tag) parameter");
 				}
+
+				removeMember(jsonObject, "client_name", entry.getKey());
 			}
 
-			metadata.setContacts(emailList);
-			jsonObject.remove("contacts");
-		}
 
+			matches = LangTagUtils.find("logo_uri", jsonObject);
 
-		// Find lang-tagged client_name params
-		Map<LangTag,Object> matches = LangTagUtils.find("client_name", jsonObject);
+			for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
 
-		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
+				try {
+					metadata.setLogoURI(new URI((String) entry.getValue()), entry.getKey());
 
-			try {
-				metadata.setName((String)entry.getValue(), entry.getKey());
+				} catch (Exception e) {
 
-			} catch (ClassCastException e) {
+					throw new ParseException("Invalid \"logo_uri\" (language tag) parameter");
+				}
 
-				throw new ParseException("Invalid \"client_name\" (language tag) parameter");
+				removeMember(jsonObject, "logo_uri", entry.getKey());
 			}
 
-			removeMember(jsonObject, "client_name", entry.getKey());
-		}
+
+			matches = LangTagUtils.find("client_uri", jsonObject);
+
+			for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
+
+				try {
+					metadata.setURI(new URI((String) entry.getValue()), entry.getKey());
 
 
-		matches = LangTagUtils.find("logo_uri", jsonObject);
+				} catch (Exception e) {
 
-		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
+					throw new ParseException("Invalid \"client_uri\" (language tag) parameter");
+				}
 
-			try {
-				metadata.setLogoURI(new URI((String)entry.getValue()), entry.getKey());
-
-			} catch (Exception e) {
-
-				throw new ParseException("Invalid \"logo_uri\" (language tag) parameter");
+				removeMember(jsonObject, "client_uri", entry.getKey());
 			}
 
-			removeMember(jsonObject, "logo_uri", entry.getKey());
-		}
 
+			matches = LangTagUtils.find("policy_uri", jsonObject);
 
-		matches = LangTagUtils.find("client_uri", jsonObject);
+			for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
 
-		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
+				try {
+					metadata.setPolicyURI(new URI((String) entry.getValue()), entry.getKey());
 
-			try {
-				metadata.setURI(new URI((String)entry.getValue()), entry.getKey());
+				} catch (Exception e) {
 
+					throw new ParseException("Invalid \"policy_uri\" (language tag) parameter");
+				}
 
-			} catch (Exception e) {
-
-				throw new ParseException("Invalid \"client_uri\" (language tag) parameter");
+				removeMember(jsonObject, "policy_uri", entry.getKey());
 			}
 
-			removeMember(jsonObject, "client_uri", entry.getKey());
-		}
 
+			matches = LangTagUtils.find("tos_uri", jsonObject);
 
-		matches = LangTagUtils.find("policy_uri", jsonObject);
+			for (Map.Entry<LangTag, Object> entry : matches.entrySet()) {
 
-		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
+				try {
+					metadata.setTermsOfServiceURI(new URI((String) entry.getValue()), entry.getKey());
 
-			try {
-				metadata.setPolicyURI(new URI((String)entry.getValue()), entry.getKey());
+				} catch (Exception e) {
 
-			} catch (Exception e) {
+					throw new ParseException("Invalid \"tos_uri\" (language tag) parameter");
+				}
 
-				throw new ParseException("Invalid \"policy_uri\" (language tag) parameter");
+				removeMember(jsonObject, "tos_uri", entry.getKey());
 			}
 
-			removeMember(jsonObject, "policy_uri", entry.getKey());
-		}
 
+			if (jsonObject.containsKey("token_endpoint_auth_method")) {
+				metadata.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(
+					JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_method")));
 
-		matches = LangTagUtils.find("tos_uri", jsonObject);
-
-		for (Map.Entry<LangTag,Object> entry: matches.entrySet()) {
-
-			try {
-				metadata.setTermsOfServiceURI(new URI((String)entry.getValue()), entry.getKey());
-
-			} catch (Exception e) {
-
-				throw new ParseException("Invalid \"tos_uri\" (language tag) parameter");
+				jsonObject.remove("token_endpoint_auth_method");
 			}
 
-			removeMember(jsonObject, "tos_uri", entry.getKey());
-		}
 
+			if (jsonObject.containsKey("token_endpoint_auth_signing_alg")) {
+				metadata.setTokenEndpointAuthJWSAlg(new JWSAlgorithm(
+					JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_signing_alg")));
 
-		if (jsonObject.containsKey("token_endpoint_auth_method")) {
-			metadata.setTokenEndpointAuthMethod(new ClientAuthenticationMethod(
-				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_method")));
-
-			jsonObject.remove("token_endpoint_auth_method");
-		}
-
-
-		if (jsonObject.containsKey("token_endpoint_auth_signing_alg")) {
-			metadata.setTokenEndpointAuthJWSAlg(new JWSAlgorithm(
-				JSONObjectUtils.getString(jsonObject, "token_endpoint_auth_signing_alg")));
-
-			jsonObject.remove("token_endpoint_auth_signing_alg");
-		}
-
-
-		if (jsonObject.containsKey("jwks_uri")) {
-			metadata.setJWKSetURI(JSONObjectUtils.getURI(jsonObject, "jwks_uri"));
-			jsonObject.remove("jwks_uri");
-		}
-
-		if (jsonObject.containsKey("jwks")) {
-
-			try {
-				metadata.setJWKSet(JWKSet.parse(JSONObjectUtils.getJSONObject(jsonObject, "jwks")));
-
-			} catch (java.text.ParseException e) {
-				throw new ParseException(e.getMessage(), e);
+				jsonObject.remove("token_endpoint_auth_signing_alg");
 			}
 
-			jsonObject.remove("jwks");
-		}
 
-		if (jsonObject.containsKey("software_id")) {
-			metadata.setSoftwareID(new SoftwareID(JSONObjectUtils.getString(jsonObject, "software_id")));
-			jsonObject.remove("software_id");
-		}
+			if (jsonObject.containsKey("jwks_uri")) {
+				metadata.setJWKSetURI(JSONObjectUtils.getURI(jsonObject, "jwks_uri"));
+				jsonObject.remove("jwks_uri");
+			}
 
-		if (jsonObject.containsKey("software_version")) {
-			metadata.setSoftwareVersion(new SoftwareVersion(JSONObjectUtils.getString(jsonObject, "software_version")));
-			jsonObject.remove("software_version");
+			if (jsonObject.containsKey("jwks")) {
+
+				try {
+					metadata.setJWKSet(JWKSet.parse(JSONObjectUtils.getJSONObject(jsonObject, "jwks")));
+
+				} catch (java.text.ParseException e) {
+					throw new ParseException(e.getMessage(), e);
+				}
+
+				jsonObject.remove("jwks");
+			}
+
+			if (jsonObject.containsKey("software_id")) {
+				metadata.setSoftwareID(new SoftwareID(JSONObjectUtils.getString(jsonObject, "software_id")));
+				jsonObject.remove("software_id");
+			}
+
+			if (jsonObject.containsKey("software_version")) {
+				metadata.setSoftwareVersion(new SoftwareVersion(JSONObjectUtils.getString(jsonObject, "software_version")));
+				jsonObject.remove("software_version");
+			}
+
+		} catch (ParseException e) {
+			// Insert client_client_metadata error code so that it
+			// can be reported back to the client if we have a
+			// registration event
+			throw new ParseException(e.getMessage(), RegistrationError.INVALID_CLIENT_METADATA.appendDescription(": " + e.getMessage()), e.getCause());
 		}
 
 		// The remaining fields are custom
