@@ -23,8 +23,8 @@ public final class SectorIdentifier extends Identifier {
 	/**
 	 * Ensures the specified URI contains a host component.
 	 *
-	 * @param sectorURI The sector identifier URI. Must contain a host
-	 *                  component and must not be {@code null}.
+	 * @param sectorURI The URI. Must contain a host component and must not
+	 *                  be {@code null}.
 	 *
 	 * @return The host component.
 	 */
@@ -53,8 +53,8 @@ public final class SectorIdentifier extends Identifier {
 	/**
 	 * Creates a new sector identifier for the specified URI.
 	 *
-	 * @param sectorURI The sector identifier URI. Must contain a host
-	 *                  component and must not be {@code null}.
+	 * @param sectorURI The sector URI. Must contain a host component and
+	 *                  must not be {@code null}.
 	 */
 	public SectorIdentifier(final URI sectorURI) {
 		super(ensureHostComponent(sectorURI));

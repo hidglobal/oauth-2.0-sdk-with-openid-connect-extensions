@@ -6,7 +6,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import com.nimbusds.jose.util.Base64URL;
-
 import com.nimbusds.oauth2.sdk.id.Subject;
 
 
@@ -85,7 +84,7 @@ public class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifier
 
 
 	@Override
-	public Subject generate(final String sectorIdentifier, final Subject localSub) {
+	public Subject generate(final SectorIdentifier sectorIdentifier, final Subject localSub) {
 
 		MessageDigest sha256;
 
@@ -93,11 +92,10 @@ public class HashingSubjectIdentifierGenerator extends PairwiseSubjectIdentifier
 			sha256 = MessageDigest.getInstance(HASH_ALGORITHM);
 
 		} catch (NoSuchAlgorithmException e) {
-
 			throw new IllegalStateException(e.getMessage(), e);
 		}
 
-		sha256.update(sectorIdentifier.getBytes(charset));
+		sha256.update(sectorIdentifier.getValue().getBytes(charset));
 		sha256.update(localSub.getValue().getBytes(charset));
 		byte[] hash = sha256.digest(salt);
 

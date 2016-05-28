@@ -22,7 +22,7 @@ public abstract class PairwiseSubjectIdentifierGenerator {
 	 * Generates a new pairwise subject identifier from the specified
 	 * sector identifier URI and local subject.
 	 *
-	 * @param sectorURI The sector identifier URI. Its scheme must be
+	 * @param sectorURI The sector identifier URI. Its scheme should be
 	 *                  "https", must include a host portion and must not
 	 *                  be {@code null}.
 	 * @param localSub  The local subject identifier. Must not be
@@ -32,13 +32,7 @@ public abstract class PairwiseSubjectIdentifierGenerator {
 	 */
 	public Subject generate(final URI sectorURI, final Subject localSub) {
 
-		if (! sectorURI.getScheme().equalsIgnoreCase("https"))
-			throw new IllegalArgumentException("The sector identifier URI scheme must be HTTPS");
-
-		if (sectorURI.getHost() == null)
-			throw new IllegalArgumentException("The sector identifier URI must specify a host");
-
-		return generate(sectorURI.getHost(), localSub);
+		return generate(new SectorIdentifier(sectorURI), localSub);
 	}
 
 
@@ -53,5 +47,5 @@ public abstract class PairwiseSubjectIdentifierGenerator {
 	 *
 	 * @return The pairwise subject identifier.
 	 */
-	public abstract Subject generate(final String sectorIdentifier, final Subject localSub);
+	public abstract Subject generate(final SectorIdentifier sectorIdentifier, final Subject localSub);
 }

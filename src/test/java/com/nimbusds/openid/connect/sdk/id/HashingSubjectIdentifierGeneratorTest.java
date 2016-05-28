@@ -3,9 +3,8 @@ package com.nimbusds.openid.connect.sdk.id;
 
 import java.nio.charset.Charset;
 
-import junit.framework.TestCase;
-
 import com.nimbusds.oauth2.sdk.id.Subject;
+import junit.framework.TestCase;
 
 
 /**
@@ -23,7 +22,7 @@ public class HashingSubjectIdentifierGeneratorTest extends TestCase {
 
 		assertEquals(salt, new String(gen.saltBytes(), Charset.forName("UTF-8")));
 
-		String sectorID = "example.com";
+		SectorIdentifier sectorID = new SectorIdentifier("https://example.com/callback");
 		Subject localSubject = new Subject("alice");
 
 		Subject pairWiseSubject = gen.generate(sectorID, localSubject);
