@@ -576,4 +576,39 @@ public class ClientMetadataTest extends TestCase {
 		assertEquals(Collections.singleton(new ResponseType("token")), clientMetadata.getResponseTypes());
 		assertEquals(ClientAuthenticationMethod.NONE, clientMetadata.getTokenEndpointAuthMethod());
 	}
+
+
+	public void testRejectFragmentInRedirectURI() {
+
+		URI redirectURIWithFragment = URI.create("https://example.com/cb#fragment");
+
+		ClientMetadata metadata = new ClientMetadata();
+
+		// single setter
+		try {
+			metadata.setRedirectionURI(redirectURIWithFragment);
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("The redirect_uri must not contain fragment", e.getMessage());
+		}
+
+		// collection setter
+		try {
+			metadata.setRedirectionURIs(Collections.singleton(redirectURIWithFragment));
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("The redirect_uri must not contain fragment", e.getMessage());
+		}
+
+		// static parse method
+		JSONObject o = new JSONObject();
+		o.put("redirect_uris", Collections.singletonList(redirectURIWithFragment.toString()));
+
+		try {
+			ClientMetadata.parse(o);
+			fail();
+		} catch (ParseException e) {
+			assertEquals("The redirect_uri must not contain fragment", e.getMessage());
+		}
+	}
 }

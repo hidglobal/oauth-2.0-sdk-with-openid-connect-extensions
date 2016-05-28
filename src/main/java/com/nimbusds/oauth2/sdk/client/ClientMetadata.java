@@ -289,11 +289,23 @@ public class ClientMetadata {
 	 * {@code redirect_uris} client metadata field.
 	 *
 	 * @param redirectURIs The redirection URIs, {@code null} if not
-	 *                     specified.
+	 *                     specified. Valid redirection URIs must not
+	 *                     contain a fragment.
 	 */
 	public void setRedirectionURIs(final Set<URI> redirectURIs) {
 
-		this.redirectURIs = redirectURIs;
+		if (redirectURIs != null) {
+			for (URI uri: redirectURIs) {
+				if (uri == null) {
+					throw new IllegalArgumentException("The redirect_uri must not be null");
+				}
+				if (uri.getFragment() != null) {
+					throw new IllegalArgumentException("The redirect_uri must not contain fragment");
+				}
+			}
+		} else {
+			this.redirectURIs = null;
+		}
 	}
 
 
@@ -302,15 +314,12 @@ public class ClientMetadata {
 	 * {@code redirect_uris} client metadata field.
 	 *
 	 * @param redirectURI The redirection URIs, {@code null} if not
-	 *                    specified.
+	 *                    specified. A valid redirection URI must not
+	 *                    contain a fragment.
 	 */
 	public void setRedirectionURI(final URI redirectURI) {
 
-		if (redirectURI != null) {
-			redirectURIs = new HashSet<>(Collections.singletonList(redirectURI));
-		} else {
-			redirectURIs = null;
-		}
+		setRedirectionURIs(redirectURI != null ? Collections.singleton(redirectURI) : null);
 	}
 
 
@@ -1244,7 +1253,11 @@ public class ClientMetadata {
 				}
 			}
 
-			metadata.setRedirectionURIs(redirectURIs);
+			try {
+				metadata.setRedirectionURIs(redirectURIs);
+			} catch (IllegalArgumentException e) {
+				throw new ParseException(e.getMessage());
+			}
 			jsonObject.remove("redirect_uris");
 		}
 
