@@ -151,7 +151,7 @@ public class OIDCClientMetadataTest extends TestCase {
 		assertEquals(SubjectType.PAIRWISE, meta.getSubjectType());
 
 		assertNull(meta.getSectorIDURI());
-		URI sectorIDURI = new URI("http://sector.id");
+		URI sectorIDURI = new URI("https://example.com/callbacks.json");
 		meta.setSectorIDURI(sectorIDURI);
 		assertEquals(sectorIDURI.toString(), meta.getSectorIDURI().toString());
 
@@ -415,6 +415,26 @@ public class OIDCClientMetadataTest extends TestCase {
 			assertEquals("Unexpected value of JSON object member with key \"application_type\"", e.getMessage());
 			assertEquals(RegistrationError.INVALID_CLIENT_METADATA.getCode(), e.getErrorObject().getCode());
 			assertEquals("Invalid client metadata field: Unexpected value of JSON object member with key \"application_type\"", e.getErrorObject().getDescription());
+		}
+	}
+
+
+	public void testSectorIdentifierURICheck() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+
+		try {
+			clientMetadata.setSectorIDURI(URI.create("http://example.com/callbacks.json"));
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("The URI must have a https scheme", e.getMessage());
+		}
+
+		try {
+			clientMetadata.setSectorIDURI(URI.create("https:///callbacks.json"));
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("The URI must contain a host component", e.getMessage());
 		}
 	}
 }

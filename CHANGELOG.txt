@@ -508,6 +508,8 @@ version 5.9.1 (2016-05-27)
 
 version 5.10 (2016-05-28)
     * Adds new SectorIdentifier class.
+    * Adds https schema and host checks to the ClientMetadata
+      sector_identifier_uri setter.
     * Adds URI fragment check to ClientMetadata redirect_uri setters (issue
       #188).
     * Includes appropriate registration error on ParseExceptions thrown by

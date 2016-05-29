@@ -32,4 +32,15 @@ public class SectorIdentifierTest extends TestCase {
 			assertEquals("The URI must contain a host component", e.getMessage());
 		}
 	}
+
+
+	public void testEnsureHTTPScheme() {
+
+		try {
+			SectorIdentifier.ensureHTTPScheme(URI.create("http://example.com/callbacks.json"));
+			fail();
+		} catch (IllegalArgumentException e) {
+			assertEquals("The URI must have a https scheme", e.getMessage());
+		}
+	}
 }

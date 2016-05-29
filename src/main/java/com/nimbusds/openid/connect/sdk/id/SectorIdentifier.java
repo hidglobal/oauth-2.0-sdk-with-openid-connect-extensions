@@ -21,14 +21,28 @@ public final class SectorIdentifier extends Identifier {
 
 
 	/**
+	 * Ensures the specified URI has a {@code https} scheme.
+	 *
+	 * @param sectorURI The URI. Must have a {@code https} scheme and not
+	 *                  be {@code null}.
+	 */
+	public static void ensureHTTPScheme(final URI sectorURI) {
+
+		if (! "https".equalsIgnoreCase(sectorURI.getScheme())) {
+			throw new IllegalArgumentException("The URI must have a https scheme");
+		}
+	}
+
+
+	/**
 	 * Ensures the specified URI contains a host component.
 	 *
-	 * @param sectorURI The URI. Must contain a host component and must not
-	 *                  be {@code null}.
+	 * @param sectorURI The URI. Must contain a host component and not be
+	 *                  {@code null}.
 	 *
 	 * @return The host component.
 	 */
-	private static String ensureHostComponent(final URI sectorURI) {
+	public static String ensureHostComponent(final URI sectorURI) {
 
 		String host = sectorURI.getHost();
 

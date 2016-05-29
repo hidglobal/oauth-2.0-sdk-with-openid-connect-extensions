@@ -14,6 +14,7 @@ import com.nimbusds.oauth2.sdk.client.RegistrationError;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
+import com.nimbusds.openid.connect.sdk.id.SectorIdentifier;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 
@@ -296,6 +297,11 @@ public class OIDCClientMetadata extends ClientMetadata {
 	 *                    specified.
 	 */
 	public void setSectorIDURI(final URI sectorIDURI) {
+
+		if (sectorIDURI != null) {
+			SectorIdentifier.ensureHTTPScheme(sectorIDURI);
+			SectorIdentifier.ensureHostComponent(sectorIDURI);
+		}
 
 		this.sectorIDURI = sectorIDURI;
 	}
