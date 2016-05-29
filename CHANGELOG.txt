@@ -506,8 +506,11 @@ version 5.9.1 (2016-05-27)
       HTTPRequest entity body from ServletRequest.getParameterMap() (issue
       #186).
 
-version 5.10 (2016-05-28)
+version 5.10 (2016-05-29)
+    * Refactors the sector and pairwise subject identifier framework.
     * Adds new SectorIdentifier class.
+    * Adds new AES/CBC/PKCS5Padding based encoder / decoder of pairwise subject
+      identifiers.
     * Adds https schema and host checks to the ClientMetadata
       sector_identifier_uri setter.
     * Adds URI fragment check to ClientMetadata redirect_uri setters (issue
