@@ -513,10 +513,11 @@ version 5.10 (2016-05-29)
     * Adds https schema and host checks to the OIDCClientMetadata
       sector_identifier_uri setter.
     * Adds new OIDCClientMetadata.resolveSectorID method.
+    * Adds new JSONArrayUtils.toStringList method.
+    * Adds new JSONArrayUtils.toURIList method.
     * Adds URI fragment check to ClientMetadata redirect_uri setters (issue
       #188).
     * Includes appropriate registration error on ParseExceptions thrown by
       ClientMetadata.parse and OIDCClientMetadata.parse to aid server-side
       error reporting.
-
 
