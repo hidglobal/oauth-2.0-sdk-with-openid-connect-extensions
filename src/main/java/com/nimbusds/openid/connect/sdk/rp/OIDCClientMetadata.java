@@ -14,9 +14,10 @@ import com.nimbusds.oauth2.sdk.client.RegistrationError;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
-import com.nimbusds.openid.connect.sdk.id.SectorIdentifier;
+import com.nimbusds.openid.connect.sdk.id.SectorID;
 import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
+import org.apache.commons.collections.CollectionUtils;
 
 
 /**
@@ -299,11 +300,45 @@ public class OIDCClientMetadata extends ClientMetadata {
 	public void setSectorIDURI(final URI sectorIDURI) {
 
 		if (sectorIDURI != null) {
-			SectorIdentifier.ensureHTTPScheme(sectorIDURI);
-			SectorIdentifier.ensureHostComponent(sectorIDURI);
+			SectorID.ensureHTTPScheme(sectorIDURI);
+			SectorID.ensureHostComponent(sectorIDURI);
 		}
 
 		this.sectorIDURI = sectorIDURI;
+	}
+
+
+	/**
+	 * Resolves the sector identifier from the client metadata.
+	 *
+	 * @return The sector identifier, {@code null} if the subject type is
+	 *         set to public.
+	 *
+	 * @throws IllegalStateException If resolution failed due to incomplete
+	 *                               or inconsistent metadata.
+	 */
+	public SectorID resolveSectorID() {
+
+		if (! SubjectType.PAIRWISE.equals(getSubjectType())) {
+			// subject type is not pairwise or null
+			return null;
+		}
+
+		// Check sector identifier URI first
+		if (getSectorIDURI() != null) {
+			return new SectorID(getSectorIDURI());
+		}
+
+		// Check redirect URIs second
+		if (CollectionUtils.isEmpty(getRedirectionURIs())) {
+			throw new IllegalStateException("Couldn't resolve sector ID: Missing redirect_uris");
+		}
+
+		if (getRedirectionURIs().size() > 1) {
+			throw new IllegalStateException("Couldn't resolve sector ID: More than one redirect_uri, sector_identifier_uri not specified");
+		}
+
+		return new SectorID(getRedirectionURIs().iterator().next());
 	}
 	
 	

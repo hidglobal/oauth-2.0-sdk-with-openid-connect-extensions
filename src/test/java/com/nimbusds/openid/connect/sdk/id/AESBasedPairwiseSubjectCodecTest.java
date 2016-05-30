@@ -35,13 +35,44 @@ public class AESBasedPairwiseSubjectCodecTest extends TestCase {
 		assertEquals(aesKey, codec.getAESKey());
 		assertNull(codec.getProvider());
 
-		SectorIdentifier sectorID = new SectorIdentifier("example.com");
+		SectorID sectorID = new SectorID("example.com");
 		Subject localSubject = new Subject("alice");
 
 		Subject pairwiseSubject = codec.encode(sectorID, localSubject);
 		System.out.println("Pairwise subject: " + pairwiseSubject);
 
-		Pair<SectorIdentifier,Subject> out = codec.decode(pairwiseSubject);
+		Pair<SectorID,Subject> out = codec.decode(pairwiseSubject);
+		assertEquals(sectorID, out.getKey());
+		assertEquals(localSubject, out.getValue());
+	}
+
+
+	public void testEscapeDelimiter()
+		throws Exception {
+
+		// Generate salt
+		byte[] salt = new byte[16];
+		new SecureRandom().nextBytes(salt);
+
+		// Generate AES key
+		KeyGenerator KeyGen=KeyGenerator.getInstance("AES");
+		KeyGen.init(128);
+		SecretKey aesKey=KeyGen.generateKey();
+
+		AESBasedPairwiseSubjectCodec codec = new AESBasedPairwiseSubjectCodec(aesKey, salt);
+
+		// Test getters
+		assertEquals(salt, codec.getSalt());
+		assertEquals(aesKey, codec.getAESKey());
+		assertNull(codec.getProvider());
+
+		SectorID sectorID = new SectorID("example|com");
+		Subject localSubject = new Subject("alice|adams");
+
+		Subject pairwiseSubject = codec.encode(sectorID, localSubject);
+		System.out.println("Pairwise subject: " + pairwiseSubject);
+
+		Pair<SectorID,Subject> out = codec.decode(pairwiseSubject);
 		assertEquals(sectorID, out.getKey());
 		assertEquals(localSubject, out.getValue());
 	}
@@ -69,13 +100,13 @@ public class AESBasedPairwiseSubjectCodecTest extends TestCase {
 		codec.setProvider(BouncyCastleProviderSingleton.getInstance());
 		assertEquals(BouncyCastleProviderSingleton.getInstance(), codec.getProvider());
 
-		SectorIdentifier sectorID = new SectorIdentifier("example.com");
+		SectorID sectorID = new SectorID("example.com");
 		Subject localSubject = new Subject("alice");
 
 		Subject pairwiseSubject = codec.encode(sectorID, localSubject);
 		System.out.println("Pairwise subject: " + pairwiseSubject);
 
-		Pair<SectorIdentifier,Subject> out = codec.decode(pairwiseSubject);
+		Pair<SectorID,Subject> out = codec.decode(pairwiseSubject);
 		assertEquals(sectorID, out.getKey());
 		assertEquals(localSubject, out.getValue());
 	}
@@ -100,7 +131,7 @@ public class AESBasedPairwiseSubjectCodecTest extends TestCase {
 		assertEquals(aesKey, codec.getAESKey());
 		assertNull(codec.getProvider());
 
-		SectorIdentifier sectorID = new SectorIdentifier("example.com");
+		SectorID sectorID = new SectorID("example.com");
 		Subject localSubject = new Subject("alice");
 
 		Subject firstPairwiseSubject = codec.encode(sectorID, localSubject);

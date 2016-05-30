@@ -95,11 +95,10 @@ public class AESBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
 
 
 	@Override
-	public Subject encode(final SectorIdentifier sectorIdentifier, final Subject localSub) {
+	public Subject encode(final SectorID sectorID, final Subject localSub) {
 
 		// Join parameters, delimited by '\'
-		byte[] plainText = (sectorIdentifier.getValue() + '|' + localSub.getValue()).getBytes(CHARSET);
-
+		byte[] plainText = (sectorID.getValue().replace("|", "\\|") + '|' + localSub.getValue().replace("|", "\\|")).getBytes(CHARSET);
 		byte[] cipherText;
 		try {
 			cipherText = createCipher(Cipher.ENCRYPT_MODE).doFinal(plainText);
@@ -112,7 +111,7 @@ public class AESBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
 
 
 	@Override
-	public Pair<SectorIdentifier, Subject> decode(final Subject pairwiseSubject)
+	public Pair<SectorID, Subject> decode(final Subject pairwiseSubject)
 		throws InvalidPairwiseSubjectException {
 
 		byte[] cipherText = new Base64URL(pairwiseSubject.getValue()).decode();
@@ -126,13 +125,18 @@ public class AESBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
 			throw new InvalidPairwiseSubjectException("Decryption failed: " + e.getMessage(), e);
 		}
 
-		String parts[] = new String(plainText, CHARSET).split("\\|", 2);
+		String parts[] = new String(plainText, CHARSET).split("(?<!\\\\)\\|");
+
+		// Unescape delimiter
+		for (int i=0; i<parts.length; i++) {
+			parts[i] = parts[i].replace("\\|", "|");
+		}
 
 		// Check format
 		if (parts.length != 2) {
 			throw new InvalidPairwiseSubjectException("Invalid format: Unexpected number of tokens: " + parts.length);
 		}
 
-		return new ImmutablePair<>(new SectorIdentifier(parts[0]), new Subject(parts[1]));
+		return new ImmutablePair<>(new SectorID(parts[0]), new Subject(parts[1]));
 	}
 }

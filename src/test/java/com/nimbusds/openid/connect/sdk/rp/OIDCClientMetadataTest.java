@@ -18,6 +18,7 @@ import com.nimbusds.oauth2.sdk.client.RegistrationError;
 import com.nimbusds.oauth2.sdk.util.JSONObjectUtils;
 import com.nimbusds.openid.connect.sdk.SubjectType;
 import com.nimbusds.openid.connect.sdk.claims.ACR;
+import com.nimbusds.openid.connect.sdk.id.SectorID;
 import junit.framework.TestCase;
 import net.minidev.json.JSONObject;
 
@@ -436,5 +437,75 @@ public class OIDCClientMetadataTest extends TestCase {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The URI must contain a host component", e.getMessage());
 		}
+	}
+
+
+	public void testResolveSectorIdentifier_simpleCase() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(SubjectType.PAIRWISE);
+		clientMetadata.setRedirectionURI(URI.create("https://example.com/callback"));
+		assertEquals(new SectorID("example.com"), clientMetadata.resolveSectorID());
+	}
+
+
+	public void testResolveSectorIdentifier_fromSectorIDURI_opt() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(SubjectType.PAIRWISE);
+		clientMetadata.setRedirectionURI(URI.create("https://myapp.com/callback"));
+		clientMetadata.setSectorIDURI(URI.create("https://example.com/apps.json"));
+		assertEquals(new SectorID("example.com"), clientMetadata.resolveSectorID());
+	}
+
+
+	public void testResolveSectorIdentifier_fromSectorIDURI_required() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(SubjectType.PAIRWISE);
+		clientMetadata.setRedirectionURIs(new HashSet<>(Arrays.asList(URI.create("https://myapp.com/callback"), URI.create("https://yourapp.com/callback"))));
+		clientMetadata.setSectorIDURI(URI.create("https://example.com/apps.json"));
+		assertEquals(new SectorID("example.com"), clientMetadata.resolveSectorID());
+	}
+
+
+	public void testResolveSectorIdentifier_missingSectorIDURIError() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(SubjectType.PAIRWISE);
+		clientMetadata.setRedirectionURIs(new HashSet<>(Arrays.asList(URI.create("https://myapp.com/callback"), URI.create("https://yourapp.com/callback"))));
+		try {
+			clientMetadata.resolveSectorID();
+		} catch (IllegalStateException e) {
+			assertEquals("Couldn't resolve sector ID: More than one redirect_uri, sector_identifier_uri not specified", e.getMessage());
+		}
+	}
+
+
+	public void testResolveSectorIdentifier_missingRedirectURIError() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(SubjectType.PAIRWISE);
+		try {
+			clientMetadata.resolveSectorID();
+		} catch (IllegalStateException e) {
+			assertEquals("Couldn't resolve sector ID: Missing redirect_uris", e.getMessage());
+		}
+	}
+
+
+	public void testResolveSectorIdentifier_publicSubjectType() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(SubjectType.PUBLIC);
+		assertNull(clientMetadata.resolveSectorID());
+	}
+
+
+	public void testResolveSectorIdentifier_nullSubjectType() {
+
+		OIDCClientMetadata clientMetadata = new OIDCClientMetadata();
+		clientMetadata.setSubjectType(null);
+		assertNull(clientMetadata.resolveSectorID());
 	}
 }

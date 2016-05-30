@@ -17,7 +17,7 @@ import net.jcip.annotations.Immutable;
  * </ul>
  */
 @Immutable
-public final class SectorIdentifier extends Identifier {
+public final class SectorID extends Identifier {
 
 
 	/**
@@ -59,7 +59,7 @@ public final class SectorIdentifier extends Identifier {
 	 *
 	 * @param host The host. Must not be empty or {@code null}.
 	 */
-	public SectorIdentifier(final String host) {
+	public SectorID(final String host) {
 		super(host);
 	}
 
@@ -70,7 +70,7 @@ public final class SectorIdentifier extends Identifier {
 	 * @param sectorURI The sector URI. Must contain a host component and
 	 *                  must not be {@code null}.
 	 */
-	public SectorIdentifier(final URI sectorURI) {
+	public SectorID(final URI sectorURI) {
 		super(ensureHostComponent(sectorURI));
 	}
 }

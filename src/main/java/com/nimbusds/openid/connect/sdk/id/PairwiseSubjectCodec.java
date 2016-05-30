@@ -106,7 +106,7 @@ public abstract class PairwiseSubjectCodec {
 	 */
 	public Subject encode(final URI sectorURI, final Subject localSub) {
 
-		return encode(new SectorIdentifier(sectorURI), localSub);
+		return encode(new SectorID(sectorURI), localSub);
 	}
 
 
@@ -114,14 +114,14 @@ public abstract class PairwiseSubjectCodec {
 	 * Encodes a new pairwise subject identifier from the specified sector
 	 * identifier and local subject.
 	 *
-	 * @param sectorIdentifier The sector identifier. Must not be
+	 * @param sectorID The sector identifier. Must not be
 	 *                         {@code null}.
 	 * @param localSub         The local subject identifier. Must not be
 	 *                         {@code null}.
 	 *
 	 * @return The pairwise subject identifier.
 	 */
-	public abstract Subject encode(final SectorIdentifier sectorIdentifier, final Subject localSub);
+	public abstract Subject encode(final SectorID sectorID, final Subject localSub);
 
 
 	/**
@@ -138,7 +138,7 @@ public abstract class PairwiseSubjectCodec {
 	 * @throws InvalidPairwiseSubjectException If the pairwise subject is
 	 *                                         invalid.
 	 */
-	public Pair<SectorIdentifier,Subject> decode(final Subject pairwiseSubject)
+	public Pair<SectorID,Subject> decode(final Subject pairwiseSubject)
 		throws InvalidPairwiseSubjectException {
 
 		throw new UnsupportedOperationException("Pairwise subject decoding is not supported");

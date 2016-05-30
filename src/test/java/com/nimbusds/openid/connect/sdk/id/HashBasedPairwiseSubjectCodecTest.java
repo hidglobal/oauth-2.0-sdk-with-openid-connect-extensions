@@ -27,7 +27,7 @@ public class HashBasedPairwiseSubjectCodecTest extends TestCase {
 		assertEquals(salt, codec.getSalt());
 		assertNull(codec.getProvider());
 
-		SectorIdentifier sectorID = new SectorIdentifier("example.com");
+		SectorID sectorID = new SectorID("example.com");
 		Subject localSubject = new Subject("alice");
 
 		Subject pairwiseSubject = codec.encode(sectorID, localSubject);
@@ -46,7 +46,7 @@ public class HashBasedPairwiseSubjectCodecTest extends TestCase {
 		assertEquals(salt, codec.getSalt());
 		assertNull(codec.getProvider());
 
-		SectorIdentifier sectorID = new SectorIdentifier("example.com");
+		SectorID sectorID = new SectorID("example.com");
 		Subject localSubject = new Subject("alice");
 
 		Subject s1 = codec.encode(sectorID, localSubject);
@@ -71,7 +71,7 @@ public class HashBasedPairwiseSubjectCodecTest extends TestCase {
 		codec.setProvider(BouncyCastleProviderSingleton.getInstance());
 		assertEquals(BouncyCastleProviderSingleton.getInstance(), codec.getProvider());
 
-		SectorIdentifier sectorID = new SectorIdentifier("example.com");
+		SectorID sectorID = new SectorID("example.com");
 		Subject localSubject = new Subject("alice");
 
 		Subject pairwiseSubject = codec.encode(sectorID, localSubject);

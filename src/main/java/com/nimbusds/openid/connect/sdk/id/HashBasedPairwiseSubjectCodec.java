@@ -59,7 +59,7 @@ public class HashBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
 
 
 	@Override
-	public Subject encode(final SectorIdentifier sectorIdentifier, final Subject localSub) {
+	public Subject encode(final SectorID sectorID, final Subject localSub) {
 
 		MessageDigest sha256;
 		try {
@@ -72,7 +72,7 @@ public class HashBasedPairwiseSubjectCodec extends PairwiseSubjectCodec {
 			throw new RuntimeException(e.getMessage(), e);
 		}
 
-		sha256.update(sectorIdentifier.getValue().getBytes(CHARSET));
+		sha256.update(sectorID.getValue().getBytes(CHARSET));
 		sha256.update(localSub.getValue().getBytes(CHARSET));
 		byte[] hash = sha256.digest(getSalt());
 
