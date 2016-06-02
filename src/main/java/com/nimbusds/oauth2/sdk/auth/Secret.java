@@ -46,8 +46,8 @@ public class Secret {
 	/**
 	 * Creates a new secret with the specified value.
 	 *
-	 * @param value The secret value. Must not be {@code null} or empty 
-	 *              string.
+	 * @param value The secret value. May be an empty string. Must be
+	 *              UTF-8 encoded and not {@code null}.
 	 */
 	public Secret(final String value) {
 
