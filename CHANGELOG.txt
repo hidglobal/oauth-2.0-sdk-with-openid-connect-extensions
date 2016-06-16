@@ -521,3 +521,7 @@ version 5.10 (2016-05-30)
       ClientMetadata.parse and OIDCClientMetadata.parse to aid server-side
       error reporting.
 
+version 5.10.1 (2016-06-16)
+    * Fixes NPE in TokenIntrospectionSuccessResponse when "iss" is not
+      "iat" not (pull request 12).
+
