@@ -1,7 +1,7 @@
 package com.nimbusds.oauth2.sdk;
 
 
-import com.nimbusds.jose.util.DateUtils;
+import com.nimbusds.jwt.util.DateUtils;
 import com.nimbusds.oauth2.sdk.http.CommonContentTypes;
 import com.nimbusds.oauth2.sdk.http.HTTPResponse;
 import com.nimbusds.oauth2.sdk.id.*;
