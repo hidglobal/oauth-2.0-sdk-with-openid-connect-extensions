@@ -306,7 +306,7 @@ public class TokenIntrospectionSuccessResponse extends TokenIntrospectionRespons
 			if (username != null) o.put("username", username);
 			if (tokenType != null) o.put("token_type", tokenType.getValue());
 			if (exp != null) o.put("exp", DateUtils.toSecondsSinceEpoch(exp));
-			if (iss != null) o.put("iat", DateUtils.toSecondsSinceEpoch(iat));
+			if (iat != null) o.put("iat", DateUtils.toSecondsSinceEpoch(iat));
 			if (nbf != null) o.put("nbf", DateUtils.toSecondsSinceEpoch(nbf));
 			if (sub != null) o.put("sub", sub.getValue());
 			if (audList != null) o.put("aud", Audience.toStringList(audList));
